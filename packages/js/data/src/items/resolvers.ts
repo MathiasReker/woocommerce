@@ -4,8 +4,13 @@
 import { NAMESPACE } from '../constants';
 import { setError, setItems, setItemsTotalCount } from './actions';
 import { request } from '../utils';
+import { BaseQueryParams } from '../types/query-params';
+import { ItemType } from './types';
 
-export function* getItems( itemType, query ) {
+export function* getItems< Query extends BaseQueryParams >(
+	itemType: ItemType,
+	query: Partial< Query >
+) {
 	try {
 		const endpoint =
 			itemType === 'categories' ? 'products/categories' : itemType;
@@ -13,6 +18,7 @@ export function* getItems( itemType, query ) {
 			`${ NAMESPACE }/${ endpoint }`,
 			query
 		);
+
 		yield setItemsTotalCount( itemType, query, totalCount );
 		yield setItems( itemType, query, items );
 	} catch ( error ) {
@@ -20,11 +26,10 @@ export function* getItems( itemType, query ) {
 	}
 }
 
-export function* getReviewsTotalCount( itemType, query ) {
-	yield getItemsTotalCount( itemType, query );
-}
-
-export function* getItemsTotalCount( itemType, query ) {
+export function* getItemsTotalCount< Query extends BaseQueryParams >(
+	itemType: ItemType,
+	query: Partial< Query >
+) {
 	try {
 		const totalsQuery = {
 			...query,
@@ -41,4 +46,11 @@ export function* getItemsTotalCount( itemType, query ) {
 	} catch ( error ) {
 		yield setError( itemType, query, error );
 	}
+}
+
+export function* getReviewsTotalCount< Query extends BaseQueryParams >(
+	itemType: ItemType,
+	query: Partial< Query >
+) {
+	yield getItemsTotalCount( itemType, query );
 }

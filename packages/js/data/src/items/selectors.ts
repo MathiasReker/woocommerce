@@ -8,6 +8,8 @@ import createSelector from 'rememo';
  */
 import { getResourceName } from '../utils';
 import { getTotalCountResourceName } from './utils';
+import { BaseQueryParams } from '../types/query-params';
+import { ItemType, ItemsState } from './types';
 
 export const getItems = createSelector(
 	( state, itemType, query, defaultValue = new Map() ) => {
@@ -17,7 +19,7 @@ export const getItems = createSelector(
 		if ( ! ids ) {
 			return defaultValue;
 		}
-		return ids.reduce( ( map, id ) => {
+		return ids.reduce( ( map: Map< string, unknown >, id: string ) => {
 			map.set( id, state.data[ itemType ][ id ] );
 			return map;
 		}, new Map() );
@@ -28,10 +30,10 @@ export const getItems = createSelector(
 	}
 );
 
-export const getItemsTotalCount = (
-	state,
-	itemType,
-	query,
+export const getItemsTotalCount = < Query extends BaseQueryParams >(
+	state: ItemsState,
+	itemType: ItemType,
+	query: Query,
 	defaultValue = 0
 ) => {
 	const resourceName = getTotalCountResourceName( itemType, query );
@@ -41,7 +43,11 @@ export const getItemsTotalCount = (
 	return totalCount;
 };
 
-export const getItemsError = ( state, itemType, query ) => {
+export const getItemsError = < Query extends BaseQueryParams >(
+	state: ItemsState,
+	itemType: ItemType,
+	query: Query
+) => {
 	const resourceName = getResourceName( itemType, query );
 	return state.errors[ resourceName ];
 };

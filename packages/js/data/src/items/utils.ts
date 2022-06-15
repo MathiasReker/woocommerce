@@ -8,6 +8,17 @@ import { appendTimestamp, getCurrentDates } from '@woocommerce/date';
  */
 import { STORE_NAME } from './constants';
 import { getResourceName } from '../utils';
+import { BaseQueryParams } from '../types';
+
+type Options = {
+	id: string;
+	per_page: number;
+	persisted_query: Record< string, unknown >;
+	filterQuery: Record< string, unknown >;
+	query: Record< string, unknown >;
+	select: unknown;
+	defaultDateRange: string;
+};
 
 /**
  * Returns leaderboard data to render a leaderboard table.
@@ -17,11 +28,12 @@ import { getResourceName } from '../utils';
  * @param {number} options.per_page         Per page limit
  * @param {Object} options.persisted_query  Persisted query passed to endpoint
  * @param {Object} options.query            Query parameters in the url
+ * @param {Object} options.filterQuery      Query parameters to filter the leaderboard
  * @param {Object} options.select           Instance of @wordpress/select
  * @param {string} options.defaultDateRange User specified default date range.
  * @return {Object} Object containing leaderboard responses.
  */
-export function getLeaderboard( options ) {
+export function getLeaderboard( options: Options ) {
 	const endpoint = 'leaderboards';
 	const {
 		per_page: perPage,
@@ -30,6 +42,7 @@ export function getLeaderboard( options ) {
 		select,
 		filterQuery,
 	} = options;
+	// @ts-expect-error ttdd.
 	const { getItems, getItemsError, isResolving } = select( STORE_NAME );
 	const response = {
 		isRequesting: false,
@@ -37,6 +50,7 @@ export function getLeaderboard( options ) {
 		rows: [],
 	};
 
+	// @ts-expect-error ttdd.
 	const datesFromQuery = getCurrentDates( query, options.defaultDateRange );
 	const leaderboardQuery = {
 		...filterQuery,
@@ -70,10 +84,11 @@ export function getLeaderboard( options ) {
  * @return {Object}   Object containing API request information and the matching items.
  */
 export function searchItemsByString(
+	// @ts-expect-error ttdd.
 	selector,
-	endpoint,
-	search,
-	options = {}
+	endpoint: string,
+	search: string[],
+	options: Partial< BaseQueryParams > = {}
 ) {
 	const { getItems, getItemsError, isResolving } = selector;
 
@@ -87,7 +102,8 @@ export function searchItemsByString(
 			...options,
 		};
 		const newItems = getItems( endpoint, query );
-		newItems.forEach( ( item, id ) => {
+		newItems.forEach( ( item: unknown, id: string ) => {
+			// @ts-expect-error ttdd.
 			items[ id ] = item;
 		} );
 		if ( isResolving( 'getItems', [ endpoint, query ] ) ) {
@@ -111,11 +127,16 @@ export function searchItemsByString(
  * @param {Object} query    Query for item totals count.
  * @return {string} Resource name for item totals.
  */
-export function getTotalCountResourceName( itemType, query ) {
+export function getTotalCountResourceName(
+	itemType: string,
+	query: Partial< BaseQueryParams >
+) {
 	// Disable eslint rule because we're using this spread to omit properties
 	// that don't affect item totals count results.
 	// eslint-disable-next-line no-unused-vars, camelcase
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	const { _fields, page, per_page, ...totalsQuery } = query;
 
+	// @ts-expect-error ttdd.
 	return getResourceName( 'total-' + itemType, totalsQuery );
 }
