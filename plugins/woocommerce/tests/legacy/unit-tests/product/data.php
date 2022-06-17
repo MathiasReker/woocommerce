@@ -21,17 +21,17 @@ class WC_Tests_Product_Data extends WC_Unit_Test_Case {
 	public function test_product_getters_and_setters() {
 		global $wpdb;
 
-		$attributes = array();
+		$attributes = [];
 		$attribute  = new WC_Product_Attribute();
 		$attribute->set_id( 0 );
 		$attribute->set_name( 'Test Attribute' );
-		$attribute->set_options( array( 'Fish', 'Fingers' ) );
+		$attribute->set_options( [ 'Fish', 'Fingers' ] );
 		$attribute->set_position( 0 );
 		$attribute->set_visible( true );
 		$attribute->set_variation( false );
 		$attributes['test-attribute'] = $attribute;
 
-		$getters_and_setters = array(
+		$getters_and_setters = [
 			'name'               => 'Test',
 			'slug'               => 'test',
 			'status'             => 'publish',
@@ -54,17 +54,17 @@ class WC_Tests_Product_Data extends WC_Unit_Test_Case {
 			'length'             => 10,
 			'width'              => 10,
 			'height'             => 10,
-			'upsell_ids'         => array( 2, 3 ),
-			'cross_sell_ids'     => array( 4, 5 ),
+			'upsell_ids'         => [ 2, 3 ],
+			'cross_sell_ids'     => [ 4, 5 ],
 			'parent_id'          => 0,
 			'reviews_allowed'    => true,
-			'default_attributes' => array(),
+			'default_attributes' => [],
 			'purchase_note'      => 'A note',
 			'menu_order'         => 2,
-			'gallery_image_ids'  => array(),
+			'gallery_image_ids'  => [],
 			'download_expiry'    => -1,
 			'download_limit'     => 5,
-		);
+		];
 
 		$product = new WC_Product();
 		foreach ( $getters_and_setters as $function => $value ) {
@@ -81,14 +81,14 @@ class WC_Tests_Product_Data extends WC_Unit_Test_Case {
 		$this->assertCount( 1, $product->get_attributes() );
 		$this->assertContains(
 			current( $product->get_attributes() )->get_data(),
-			array(
+			[
 				'attribute_id' => 0,
 				'name'         => 'Test Attribute',
-				'options'      => array( 'Fish', 'Fingers' ),
+				'options'      => [ 'Fish', 'Fingers' ],
 				'position'     => 0,
 				'visible'      => true,
 				'variation'    => false,
-			)
+			]
 		);
 		$this->assertEquals( $product->get_date_on_sale_from()->getTimestamp(), 1475798400 );
 		$this->assertEquals( $product->get_date_on_sale_to()->getTimestamp(), 1477267200 );
@@ -185,10 +185,10 @@ class WC_Tests_Product_Data extends WC_Unit_Test_Case {
 		$test_tag_1 = wp_insert_term( 'Tag 1', 'product_tag' );
 		$test_tag_2 = wp_insert_term( 'Tag 2', 'product_tag' );
 
-		$getters_and_setters = array(
-			'tag_ids'      => array( $test_tag_1['term_id'], $test_tag_2['term_id'] ),
-			'category_ids' => array( $test_cat_1['term_id'], $test_cat_2['term_id'] ),
-		);
+		$getters_and_setters = [
+			'tag_ids'      => [ $test_tag_1['term_id'], $test_tag_2['term_id'] ],
+			'category_ids' => [ $test_cat_1['term_id'], $test_cat_2['term_id'] ],
+		];
 
 		$product = new WC_Product_Simple();
 
@@ -197,8 +197,8 @@ class WC_Tests_Product_Data extends WC_Unit_Test_Case {
 		}
 		$product->save();
 
-		$this->assertEquals( array( $test_cat_1['term_id'], $test_cat_2['term_id'] ), $product->get_category_ids() );
-		$this->assertEquals( array( $test_tag_1['term_id'], $test_tag_2['term_id'] ), $product->get_tag_ids() );
+		$this->assertEquals( [ $test_cat_1['term_id'], $test_cat_2['term_id'] ], $product->get_category_ids() );
+		$this->assertEquals( [ $test_tag_1['term_id'], $test_tag_2['term_id'] ], $product->get_tag_ids() );
 	}
 
 	/**
@@ -207,9 +207,9 @@ class WC_Tests_Product_Data extends WC_Unit_Test_Case {
 	 * @since 3.0.0
 	 */
 	public function test_grouped_product_getters_and_setters() {
-		$getters_and_setters = array(
-			'children' => array( 1, 2, 3 ),
-		);
+		$getters_and_setters = [
+			'children' => [ 1, 2, 3 ],
+		];
 
 		$product = new WC_Product_Grouped();
 
@@ -225,10 +225,10 @@ class WC_Tests_Product_Data extends WC_Unit_Test_Case {
 	 * @since 3.0.0
 	 */
 	public function test_external_product_getters_and_setters() {
-		$getters_and_setters = array(
+		$getters_and_setters = [
 			'button_text' => 'Test Button Text',
 			'product_url' => 'https://wordpress.org',
-		);
+		];
 
 		$product = new WC_Product_External();
 
@@ -290,7 +290,7 @@ class WC_Tests_Product_Data extends WC_Unit_Test_Case {
 
 		$this->assertStringContainsString(
 			sprintf( $needle, 'custom-class' ),
-			$product->get_image( 'single', array( 'class' => 'custom-class' ) )
+			$product->get_image( 'single', [ 'class' => 'custom-class' ] )
 		);
 
 		wp_delete_attachment( $image['id'], true ); // Remove attachment.
@@ -318,7 +318,7 @@ class WC_Tests_Product_Data extends WC_Unit_Test_Case {
 
 		$this->assertStringContainsString(
 			sprintf( $needle, 'custom-class' ),
-			$variation_1->get_image( 'single', array( 'class' => 'custom-class' ) )
+			$variation_1->get_image( 'single', [ 'class' => 'custom-class' ] )
 		);
 
 		wp_delete_attachment( $image['id'], true ); // Remove attachment.
@@ -333,7 +333,7 @@ class WC_Tests_Product_Data extends WC_Unit_Test_Case {
 		$this->assertStringContainsString( wc_placeholder_img_src(), $product->get_image() );
 
 		// Test custom class attribute is honoured.
-		$image = $product->get_image( 'woocommerce_thumbnail', array( 'class' => 'custom-class' ) );
+		$image = $product->get_image( 'woocommerce_thumbnail', [ 'class' => 'custom-class' ] );
 		$this->assertStringContainsString( 'class="custom-class"', $image );
 	}
 
@@ -342,7 +342,7 @@ class WC_Tests_Product_Data extends WC_Unit_Test_Case {
 	 */
 	public function test_get_image_should_return_empty_string() {
 		$product = new WC_Product();
-		$this->assertEquals( '', $product->get_image( 'woocommerce_thumbnail', array(), false ) );
+		$this->assertEquals( '', $product->get_image( 'woocommerce_thumbnail', [], false ) );
 	}
 
 	/**
@@ -363,9 +363,9 @@ class WC_Tests_Product_Data extends WC_Unit_Test_Case {
 		$product->set_image_id( $image_id );
 		$product->save();
 
-		return array(
+		return [
 			'id'  => $image_id,
 			'url' => $image_url,
-		);
+		];
 	}
 }

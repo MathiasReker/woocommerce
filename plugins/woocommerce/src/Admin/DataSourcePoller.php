@@ -29,21 +29,21 @@ abstract class DataSourcePoller {
 	 *
 	 * @var string
 	 */
-	protected $id = array();
+	protected $id = [];
 
 	/**
 	 * Default data sources array.
 	 *
 	 * @var array
 	 */
-	protected $data_sources = array();
+	protected $data_sources = [];
 
 	/**
 	 * Default args.
 	 *
 	 * @var array
 	 */
-	protected $args = array();
+	protected $args = [];
 
 	/**
 	 * The logger instance.
@@ -59,15 +59,15 @@ abstract class DataSourcePoller {
 	 * @param array  $data_sources urls for data sources.
 	 * @param array  $args Options for DataSourcePoller.
 	 */
-	public function __construct( $id, $data_sources = array(), $args = array() ) {
+	public function __construct( $id, $data_sources = [], $args = [] ) {
 		$this->data_sources = $data_sources;
 		$this->id           = $id;
 
-		$arg_defaults = array(
+		$arg_defaults = [
 			'spec_key'         => 'id',
 			'transient_name'   => 'woocommerce_admin_' . $id . '_specs',
 			'transient_expiry' => 7 * DAY_IN_SECONDS,
-		);
+		];
 		$this->args   = wp_parse_args( $args, $arg_defaults );
 	}
 
@@ -111,7 +111,7 @@ abstract class DataSourcePoller {
 			$specs = get_transient( $this->args['transient_name'] );
 		}
 		$specs = apply_filters( self::FILTER_NAME_SPECS, $specs, $this->id );
-		return false !== $specs ? $specs : array();
+		return false !== $specs ? $specs : [];
 	}
 
 	/**
@@ -120,7 +120,7 @@ abstract class DataSourcePoller {
 	 * @return bool Whether any specs were read.
 	 */
 	public function read_specs_from_data_sources() {
-		$specs        = array();
+		$specs        = [];
 		$data_sources = apply_filters( self::FILTER_NAME, $this->data_sources, $this->id );
 
 		// Note that this merges the specs from the data sources based on the
@@ -157,7 +157,7 @@ abstract class DataSourcePoller {
 	 * @return array The specs that have been read from the data source.
 	 */
 	protected static function read_data_source( $url ) {
-		$logger_context = array( 'source' => $url );
+		$logger_context = [ 'source' => $url ];
 		$logger         = self::get_logger();
 		$response       = wp_remote_get(
 			add_query_arg(
@@ -230,7 +230,7 @@ abstract class DataSourcePoller {
 	 */
 	protected function validate_spec( $spec, $url ) {
 		$logger         = self::get_logger();
-		$logger_context = array( 'source' => $url );
+		$logger_context = [ 'source' => $url ];
 
 		if ( ! $this->get_spec_key( $spec ) ) {
 			$logger->error(

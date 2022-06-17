@@ -24,13 +24,13 @@ class WC_Tests_MaxMind_Integration extends WC_Unit_Test_Case {
 		parent::setUp();
 
 		// Override the filesystem method that we're using.
-		add_filter( 'filesystem_method', array( $this, 'override_filesystem_method' ) );
+		add_filter( 'filesystem_method', [ $this, 'override_filesystem_method' ] );
 
 		// Have a mock service be used by all integrations.
 		$this->database_service = $this->getMockBuilder( 'WC_Integration_maxMind_Database_Service' )
 			->disableOriginalConstructor()
 			->getMock();
-		add_filter( 'woocommerce_maxmind_geolocation_database_service', array( $this, 'override_integration_service' ) );
+		add_filter( 'woocommerce_maxmind_geolocation_database_service', [ $this, 'override_integration_service' ] );
 	}
 
 	/**
@@ -77,7 +77,7 @@ class WC_Tests_MaxMind_Integration extends WC_Unit_Test_Case {
 	 * Make sure that the geolocate_ip method does not squash existing country codes.
 	 */
 	public function test_geolocate_ip_returns_existing_country_code() {
-		$data = ( new WC_Integration_MaxMind_Geolocation() )->get_geolocation( array( 'country' => 'US' ), '192.168.1.1' );
+		$data = ( new WC_Integration_MaxMind_Geolocation() )->get_geolocation( [ 'country' => 'US' ], '192.168.1.1' );
 
 		$this->assertEquals( 'US', $data['country'] );
 	}
@@ -86,7 +86,7 @@ class WC_Tests_MaxMind_Integration extends WC_Unit_Test_Case {
 	 * Make sure that the geolocate_ip method does nothing if IP is not set.
 	 */
 	public function test_geolocate_ip_returns_empty_without_ip_address() {
-		$data = ( new WC_Integration_MaxMind_Geolocation() )->get_geolocation( array(), '' );
+		$data = ( new WC_Integration_MaxMind_Geolocation() )->get_geolocation( [], '' );
 
 		$this->assertEmpty( $data );
 	}
@@ -100,7 +100,7 @@ class WC_Tests_MaxMind_Integration extends WC_Unit_Test_Case {
 			->with( '192.168.1.1' )
 			->willReturn( 'US' );
 
-		$data = ( new WC_Integration_MaxMind_Geolocation() )->get_geolocation( array(), '192.168.1.1' );
+		$data = ( new WC_Integration_MaxMind_Geolocation() )->get_geolocation( [], '192.168.1.1' );
 
 		$this->assertEquals( 'US', $data['country'] );
 	}

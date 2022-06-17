@@ -20,10 +20,10 @@ class WC_Product_External extends WC_Product {
 	 *
 	 * @var array
 	 */
-	protected $extra_data = array(
+	protected $extra_data = [
 		'product_url' => '',
 		'button_text' => '',
-	);
+	];
 
 	/**
 	 * Get internal type.

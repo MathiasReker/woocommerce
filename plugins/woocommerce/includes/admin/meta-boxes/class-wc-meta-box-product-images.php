@@ -38,7 +38,7 @@ class WC_Meta_Box_Product_Images {
 
 				$attachments         = array_filter( $product_image_gallery );
 				$update_meta         = false;
-				$updated_gallery_ids = array();
+				$updated_gallery_ids = [];
 
 				if ( ! empty( $attachments ) ) {
 					foreach ( $attachments as $attachment_id ) {
@@ -93,7 +93,7 @@ class WC_Meta_Box_Product_Images {
 		$product_type   = empty( $_POST['product-type'] ) ? WC_Product_Factory::get_product_type( $post_id ) : sanitize_title( stripslashes( $_POST['product-type'] ) );
 		$classname      = WC_Product_Factory::get_product_classname( $post_id, $product_type ? $product_type : 'simple' );
 		$product        = new $classname( $post_id );
-		$attachment_ids = isset( $_POST['product_image_gallery'] ) ? array_filter( explode( ',', wc_clean( $_POST['product_image_gallery'] ) ) ) : array();
+		$attachment_ids = isset( $_POST['product_image_gallery'] ) ? array_filter( explode( ',', wc_clean( $_POST['product_image_gallery'] ) ) ) : [];
 
 		$product->set_gallery_image_ids( $attachment_ids );
 		$product->save();

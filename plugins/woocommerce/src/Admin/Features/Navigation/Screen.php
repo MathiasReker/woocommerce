@@ -25,21 +25,21 @@ class Screen {
 	 *
 	 * @var array
 	 */
-	protected static $screen_ids = array();
+	protected static $screen_ids = [];
 
 	/**
 	 * Registered post types.
 	 *
 	 * @var array
 	 */
-	protected static $post_types = array();
+	protected static $post_types = [];
 
 	/**
 	 * Registered taxonomies.
 	 *
 	 * @var array
 	 */
-	protected static $taxonomies = array();
+	protected static $taxonomies = [];
 
 	/**
 	 * Get class instance.
@@ -55,7 +55,7 @@ class Screen {
 	 * Init.
 	 */
 	public function init() {
-		add_filter( 'admin_body_class', array( $this, 'add_body_class' ) );
+		add_filter( 'admin_body_class', [ $this, 'add_body_class' ] );
 	}
 
 	/**
@@ -89,7 +89,7 @@ class Screen {
 
 		// Get taxonomy if on a taxonomy screen.
 		$taxonomy = '';
-		if ( in_array( $pagenow, array( 'edit-tags.php', 'term.php' ), true ) ) {
+		if ( in_array( $pagenow, [ 'edit-tags.php', 'term.php' ], true ) ) {
 			if ( isset( $_GET['taxonomy'] ) ) { // phpcs:ignore CSRF ok.
 				$taxonomy = sanitize_text_field( wp_unslash( $_GET['taxonomy'] ) ); // phpcs:ignore CSRF ok.
 			}
@@ -98,7 +98,7 @@ class Screen {
 
 		// Get post type if on a post screen.
 		$post_type = '';
-		if ( in_array( $pagenow, array( 'edit.php', 'post.php', 'post-new.php' ), true ) ) {
+		if ( in_array( $pagenow, [ 'edit.php', 'post.php', 'post-new.php' ], true ) ) {
 			if ( isset( $_GET['post'] ) ) { // phpcs:ignore CSRF ok.
 				$post_type = get_post_type( (int) $_GET['post'] ); // phpcs:ignore CSRF ok.
 			} elseif ( isset( $_GET['post_type'] ) ) { // phpcs:ignore CSRF ok.
@@ -131,7 +131,7 @@ class Screen {
 	 * @return bool
 	 */
 	public static function is_woocommerce_core_taxonomy( $taxonomy ) {
-		if ( in_array( $taxonomy, array( 'product_cat', 'product_tag' ), true ) ) {
+		if ( in_array( $taxonomy, [ 'product_cat', 'product_tag' ], true ) ) {
 			return true;
 		}
 

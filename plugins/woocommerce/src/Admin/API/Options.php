@@ -38,27 +38,27 @@ class Options extends \WC_REST_Data_Controller {
 		register_rest_route(
 			$this->namespace,
 			'/' . $this->rest_base,
-			array(
-				array(
+			[
+				[
 					'methods'             => \WP_REST_Server::READABLE,
-					'callback'            => array( $this, 'get_options' ),
-					'permission_callback' => array( $this, 'get_item_permissions_check' ),
-				),
-				'schema' => array( $this, 'get_item_schema' ),
-			)
+					'callback'            => [ $this, 'get_options' ],
+					'permission_callback' => [ $this, 'get_item_permissions_check' ],
+				],
+				'schema' => [ $this, 'get_item_schema' ],
+			]
 		);
 
 		register_rest_route(
 			$this->namespace,
 			'/' . $this->rest_base,
-			array(
-				array(
+			[
+				[
 					'methods'             => \WP_REST_Server::EDITABLE,
-					'callback'            => array( $this, 'update_options' ),
-					'permission_callback' => array( $this, 'update_item_permissions_check' ),
-				),
-				'schema' => array( $this, 'get_item_schema' ),
-			)
+					'callback'            => [ $this, 'update_options' ],
+					'permission_callback' => [ $this, 'update_item_permissions_check' ],
+				],
+				'schema' => [ $this, 'get_item_schema' ],
+			]
 		);
 	}
 
@@ -77,7 +77,7 @@ class Options extends \WC_REST_Data_Controller {
 
 		foreach ( $params as $option ) {
 			if ( ! $this->user_has_permission( $option, $request ) ) {
-				return new \WP_Error( 'woocommerce_rest_cannot_view', __( 'Sorry, you cannot view these options.', 'woocommerce' ), array( 'status' => rest_authorization_required_code() ) );
+				return new \WP_Error( 'woocommerce_rest_cannot_view', __( 'Sorry, you cannot view these options.', 'woocommerce' ), [ 'status' => rest_authorization_required_code() ] );
 			}
 		}
 
@@ -118,7 +118,7 @@ class Options extends \WC_REST_Data_Controller {
 
 		foreach ( $params as $option_name => $option_value ) {
 			if ( ! $this->user_has_permission( $option_name, $request, true ) ) {
-				return new \WP_Error( 'woocommerce_rest_cannot_update', __( 'Sorry, you cannot manage these options.', 'woocommerce' ), array( 'status' => rest_authorization_required_code() ) );
+				return new \WP_Error( 'woocommerce_rest_cannot_update', __( 'Sorry, you cannot manage these options.', 'woocommerce' ), [ 'status' => rest_authorization_required_code() ] );
 			}
 		}
 
@@ -133,7 +133,7 @@ class Options extends \WC_REST_Data_Controller {
 	 */
 	public function get_option_permissions( $request ) {
 		$permissions = self::get_default_option_permissions();
-		return apply_filters_deprecated( 'woocommerce_rest_api_option_permissions', array( $permissions, $request ), '3.1.0' );
+		return apply_filters_deprecated( 'woocommerce_rest_api_option_permissions', [ $permissions, $request ], '3.1.0' );
 	}
 
 	/**
@@ -143,7 +143,7 @@ class Options extends \WC_REST_Data_Controller {
 	 */
 	public static function get_default_option_permissions() {
 		$is_woocommerce_admin    = \Automattic\WooCommerce\Internal\Admin\Homescreen::is_admin_user();
-		$woocommerce_permissions = array(
+		$woocommerce_permissions = [
 			'woocommerce_setup_jetpack_opted_in',
 			'woocommerce_stripe_settings',
 			'woocommerce-ppcp-settings',
@@ -181,12 +181,12 @@ class Options extends \WC_REST_Data_Controller {
 			'woocommerce_show_marketplace_suggestions',
 			'woocommerce_task_list_reminder_bar_hidden',
 			'wc_connect_options',
-		);
+		];
 
-		$theme_permissions = array(
+		$theme_permissions = [
 			'theme_mods_' . get_stylesheet() => current_user_can( 'edit_theme_options' ),
 			'stylesheet'                     => current_user_can( 'edit_theme_options' ),
-		);
+		];
 
 		return array_merge(
 			array_fill_keys( $theme_permissions, current_user_can( 'edit_theme_options' ) ),
@@ -202,10 +202,10 @@ class Options extends \WC_REST_Data_Controller {
 	 */
 	public function get_options( $request ) {
 		$params  = explode( ',', $request['options'] );
-		$options = array();
+		$options = [];
 
 		if ( ! is_array( $params ) ) {
-			return array();
+			return [];
 		}
 
 		foreach ( $params as $option ) {
@@ -223,10 +223,10 @@ class Options extends \WC_REST_Data_Controller {
 	 */
 	public function update_options( $request ) {
 		$params  = $request->get_json_params();
-		$updated = array();
+		$updated = [];
 
 		if ( ! is_array( $params ) ) {
-			return array();
+			return [];
 		}
 
 		foreach ( $params as $key => $value ) {
@@ -242,19 +242,19 @@ class Options extends \WC_REST_Data_Controller {
 	 * @return array
 	 */
 	public function get_item_schema() {
-		$schema = array(
+		$schema = [
 			'$schema'    => 'http://json-schema.org/draft-04/schema#',
 			'title'      => 'options',
 			'type'       => 'object',
-			'properties' => array(
-				'options' => array(
+			'properties' => [
+				'options' => [
 					'type'        => 'array',
 					'description' => __( 'Array of options with associated values.', 'woocommerce' ),
-					'context'     => array( 'view' ),
+					'context'     => [ 'view' ],
 					'readonly'    => true,
-				),
-			),
-		);
+				],
+			],
+		];
 
 		return $this->add_additional_fields_schema( $schema );
 	}

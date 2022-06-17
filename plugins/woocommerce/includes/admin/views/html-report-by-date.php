@@ -32,7 +32,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 			<ul>
 				<?php
 				foreach ( $ranges as $range => $name ) {
-					echo '<li class="' . ( $current_range == $range ? 'active' : '' ) . '"><a href="' . esc_url( remove_query_arg( array( 'start_date', 'end_date' ), add_query_arg( 'range', $range ) ) ) . '">' . esc_html( $name ) . '</a></li>';
+					echo '<li class="' . ( $current_range == $range ? 'active' : '' ) . '"><a href="' . esc_url( remove_query_arg( [ 'start_date', 'end_date' ], add_query_arg( 'range', $range ) ) ) . '">' . esc_html( $name ) . '</a></li>';
 				}
 				?>
 				<li class="custom <?php echo ( 'custom' === $current_range ) ? 'active' : ''; ?>">

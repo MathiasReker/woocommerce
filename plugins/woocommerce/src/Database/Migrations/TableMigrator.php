@@ -26,7 +26,7 @@ abstract class TableMigrator {
 	 * @return void
 	 */
 	protected function clear_errors(): void {
-		$this->errors = array();
+		$this->errors = [];
 	}
 
 	/**
@@ -105,10 +105,10 @@ abstract class TableMigrator {
 			$exception = $ex;
 		}
 
-		return array(
+		return [
 			'errors'    => $this->get_errors(),
 			'exception' => $exception,
-		);
+		];
 	}
 
 	/**

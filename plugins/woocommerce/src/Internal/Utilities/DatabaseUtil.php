@@ -42,7 +42,7 @@ class DatabaseUtil {
 	 * @return array[] An array containing a 'created_tables' key whose value is an array with the names of the tables that have been (or would have been) created.
 	 */
 	public function parse_dbdelta_output( array $dbdelta_output ): array {
-		$created_tables = array();
+		$created_tables = [];
 
 		foreach ( $dbdelta_output as $table_name => $result ) {
 			if ( "Created table $table_name" === $result ) {
@@ -50,7 +50,7 @@ class DatabaseUtil {
 			}
 		}
 
-		return array( 'created_tables' => $created_tables );
+		return [ 'created_tables' => $created_tables ];
 	}
 
 	/**
@@ -177,14 +177,14 @@ AND index_name='$index_name'"
 	 * @throws \Exception When an invalid type is passed.
 	 */
 	public function get_wpdb_format_for_type( string $type ) {
-		static $wpdb_placeholder_for_type = array(
+		static $wpdb_placeholder_for_type = [
 			'int'        => '%d',
 			'decimal'    => '%f',
 			'string'     => '%s',
 			'date'       => '%s',
 			'date_epoch' => '%s',
 			'bool'       => '%d',
-		);
+		];
 
 		if ( ! isset( $wpdb_placeholder_for_type[ $type ] ) ) {
 			throw new \Exception( 'Invalid column type: ' . $type );

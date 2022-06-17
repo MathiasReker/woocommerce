@@ -15,14 +15,14 @@ class MigrationHelper {
 	 *
 	 * @var string[]
 	 */
-	private static $wpdb_placeholder_for_type = array(
+	private static $wpdb_placeholder_for_type = [
 		'int'        => '%d',
 		'decimal'    => '%f',
 		'string'     => '%s',
 		'date'       => '%s',
 		'date_epoch' => '%s',
 		'bool'       => '%d',
-	);
+	];
 
 	/**
 	 * Helper method to escape backtick in various schema fields.
@@ -32,9 +32,9 @@ class MigrationHelper {
 	 * @return array Schema config escaped for backtick.
 	 */
 	public static function escape_schema_for_backtick( array $schema_config ): array {
-		array_walk( $schema_config['source']['entity'], array( self::class, 'escape_and_add_backtick' ) );
-		array_walk( $schema_config['source']['meta'], array( self::class, 'escape_and_add_backtick' ) );
-		array_walk( $schema_config['destination'], array( self::class, 'escape_and_add_backtick' ) );
+		array_walk( $schema_config['source']['entity'], [ self::class, 'escape_and_add_backtick' ] );
+		array_walk( $schema_config['source']['meta'], [ self::class, 'escape_and_add_backtick' ] );
+		array_walk( $schema_config['destination'], [ self::class, 'escape_and_add_backtick' ] );
 		return $schema_config;
 	}
 
@@ -69,7 +69,7 @@ class MigrationHelper {
 	 * @return string SQL clause for INSERT...ON DUPLICATE KEY UPDATE
 	 */
 	public static function generate_on_duplicate_statement_clause( array $columns ): string {
-		$update_value_statements = array();
+		$update_value_statements = [];
 		foreach ( $columns as $column ) {
 			$update_value_statements[] = "$column = VALUES( $column )";
 		}

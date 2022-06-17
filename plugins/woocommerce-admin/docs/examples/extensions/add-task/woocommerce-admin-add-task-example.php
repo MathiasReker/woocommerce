@@ -15,7 +15,7 @@ use Automattic\WooCommerce\Admin\Features\OnboardingTasks\TaskLists;
 function add_task_my_task() {
 	TaskLists::add_task(
 		'extended',
-		array(
+		[
 			'id'             => 'my-task',
 			'title'          => __( 'My task', 'woocommerce-admin' ),
 			'content'        => __(
@@ -28,7 +28,7 @@ function add_task_my_task() {
 			'time'           => __( '2 minutes', 'woocommerce-admin' ),
 			'is_dismissable' => true,
 			'is_snoozeable'  => true,
-		)
+		]
 	);
 }
 

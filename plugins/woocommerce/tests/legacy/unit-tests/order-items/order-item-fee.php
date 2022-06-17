@@ -27,9 +27,9 @@ class WC_Tests_Order_Item_Fee extends WC_Unit_Test_Case {
 		$fee->set_total_tax( '5.01' );
 		$this->assertEquals( '5.01', $fee->get_total_tax() );
 
-		$taxes = array(
-			'total' => array( '10', '2.4' ),
-		);
+		$taxes = [
+			'total' => [ '10', '2.4' ],
+		];
 		$fee->set_taxes( $taxes );
 		$this->assertEquals( $taxes, $fee->get_taxes() );
 		$this->assertEquals( '12.4', $fee->get_total_tax() );
@@ -42,7 +42,7 @@ class WC_Tests_Order_Item_Fee extends WC_Unit_Test_Case {
 	 */
 	public function test_calculate_taxes() {
 		update_option( 'woocommerce_calc_taxes', 'yes' );
-		$tax_rate = array(
+		$tax_rate = [
 			'tax_rate_country'  => '',
 			'tax_rate_state'    => '',
 			'tax_rate'          => '10.0000',
@@ -52,7 +52,7 @@ class WC_Tests_Order_Item_Fee extends WC_Unit_Test_Case {
 			'tax_rate_shipping' => '0',
 			'tax_rate_order'    => '1',
 			'tax_rate_class'    => '',
-		);
+		];
 		WC_Tax::_insert_tax_rate( $tax_rate );
 		$order = WC_Helper_Order::create_order();
 
@@ -63,17 +63,17 @@ class WC_Tests_Order_Item_Fee extends WC_Unit_Test_Case {
 		$fee->set_order_id( $order->get_id() );
 
 		$fee->calculate_taxes(
-			array(
+			[
 				'country'  => 'US',
 				'state'    => 'OR',
 				'postcode' => 97266,
 				'city'     => 'Portland',
-			)
+			]
 		);
 
 		$taxes       = $fee->get_taxes();
 		$total_taxes = array_values( $taxes['total'] );
-		$expected    = array( '0.5' );
+		$expected    = [ '0.5' ];
 		$this->assertEquals( $expected, $total_taxes );
 		$this->assertEquals( '0.5', $fee->get_total_tax() );
 
@@ -84,17 +84,17 @@ class WC_Tests_Order_Item_Fee extends WC_Unit_Test_Case {
 		$fee->set_order_id( $order->get_id() );
 
 		$fee->calculate_taxes(
-			array(
+			[
 				'country'  => 'US',
 				'state'    => 'OR',
 				'postcode' => 97266,
 				'city'     => 'Portland',
-			)
+			]
 		);
 
 		$taxes       = $fee->get_taxes();
 		$total_taxes = array_values( $taxes['total'] );
-		$expected    = array( '-0.5' );
+		$expected    = [ '-0.5' ];
 		$this->assertEquals( $expected, $total_taxes );
 		$this->assertEquals( '-0.5', $fee->get_total_tax() );
 	}

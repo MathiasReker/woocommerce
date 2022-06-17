@@ -63,11 +63,11 @@ abstract class Task {
 	 *
 	 * @var string
 	 */
-	protected $duration_to_ms = array(
+	protected $duration_to_ms = [
 		'day'  => DAY_IN_SECONDS * 1000,
 		'hour' => HOUR_IN_SECONDS * 1000,
 		'week' => WEEK_IN_SECONDS * 1000,
-	);
+	];
 
 	/**
 	 * Constructor
@@ -125,7 +125,7 @@ abstract class Task {
 	 */
 	public function get_parent_options() {
 		if ( ! $this->task_list ) {
-			return array();
+			return [];
 		}
 		return $this->task_list->options;
 	}
@@ -221,7 +221,7 @@ abstract class Task {
 			return false;
 		}
 
-		$dismissed = get_option( self::DISMISSED_OPTION, array() );
+		$dismissed = get_option( self::DISMISSED_OPTION, [] );
 
 		return in_array( $this->get_id(), $dismissed, true );
 	}
@@ -236,12 +236,12 @@ abstract class Task {
 			return false;
 		}
 
-		$dismissed   = get_option( self::DISMISSED_OPTION, array() );
+		$dismissed   = get_option( self::DISMISSED_OPTION, [] );
 		$dismissed[] = $this->get_id();
 		$update      = update_option( self::DISMISSED_OPTION, array_unique( $dismissed ) );
 
 		if ( $update ) {
-			$this->record_tracks_event( 'dismiss_task', array( 'task_name' => $this->get_id() ) );
+			$this->record_tracks_event( 'dismiss_task', [ 'task_name' => $this->get_id() ] );
 		}
 
 		return $update;
@@ -253,12 +253,12 @@ abstract class Task {
 	 * @return bool
 	 */
 	public function undo_dismiss() {
-		$dismissed = get_option( self::DISMISSED_OPTION, array() );
-		$dismissed = array_diff( $dismissed, array( $this->get_id() ) );
+		$dismissed = get_option( self::DISMISSED_OPTION, [] );
+		$dismissed = array_diff( $dismissed, [ $this->get_id() ] );
 		$update    = update_option( self::DISMISSED_OPTION, $dismissed );
 
 		if ( $update ) {
-			$this->record_tracks_event( 'undo_dismiss_task', array( 'task_name' => $this->get_id() ) );
+			$this->record_tracks_event( 'undo_dismiss_task', [ 'task_name' => $this->get_id() ] );
 		}
 
 		return $update;
@@ -279,7 +279,7 @@ abstract class Task {
 	 * @return string
 	 */
 	public function get_snoozed_until() {
-		$snoozed_tasks = get_option( self::SNOOZED_OPTION, array() );
+		$snoozed_tasks = get_option( self::SNOOZED_OPTION, [] );
 		if ( isset( $snoozed_tasks[ $this->get_id() ] ) ) {
 			return $snoozed_tasks[ $this->get_id() ];
 		}
@@ -297,7 +297,7 @@ abstract class Task {
 			return false;
 		}
 
-		$snoozed = get_option( self::SNOOZED_OPTION, array() );
+		$snoozed = get_option( self::SNOOZED_OPTION, [] );
 
 		return isset( $snoozed[ $this->get_id() ] ) && $snoozed[ $this->get_id() ] > ( time() * 1000 );
 	}
@@ -313,14 +313,14 @@ abstract class Task {
 			return false;
 		}
 
-		$snoozed                    = get_option( self::SNOOZED_OPTION, array() );
+		$snoozed                    = get_option( self::SNOOZED_OPTION, [] );
 		$snoozed_until              = $this->duration_to_ms[ $duration ] + ( time() * 1000 );
 		$snoozed[ $this->get_id() ] = $snoozed_until;
 		$update                     = update_option( self::SNOOZED_OPTION, $snoozed );
 
 		if ( $update ) {
 			if ( $update ) {
-				$this->record_tracks_event( 'remindmelater_task', array( 'task_name' => $this->get_id() ) );
+				$this->record_tracks_event( 'remindmelater_task', [ 'task_name' => $this->get_id() ] );
 			}
 		}
 
@@ -333,12 +333,12 @@ abstract class Task {
 	 * @return bool
 	 */
 	public function undo_snooze() {
-		$snoozed = get_option( self::SNOOZED_OPTION, array() );
+		$snoozed = get_option( self::SNOOZED_OPTION, [] );
 		unset( $snoozed[ $this->get_id() ] );
 		$update = update_option( self::SNOOZED_OPTION, $snoozed );
 
 		if ( $update ) {
-			$this->record_tracks_event( 'undo_remindmelater_task', array( 'task_name' => $this->get_id() ) );
+			$this->record_tracks_event( 'undo_remindmelater_task', [ 'task_name' => $this->get_id() ] );
 		}
 
 		return $update;
@@ -350,7 +350,7 @@ abstract class Task {
 	 * @return bool
 	 */
 	public function has_previously_completed() {
-		$complete = get_option( self::COMPLETED_OPTION, array() );
+		$complete = get_option( self::COMPLETED_OPTION, [] );
 		return in_array( $this->get_id(), $complete, true );
 	}
 
@@ -366,10 +366,10 @@ abstract class Task {
 			return;
 		}
 
-		$completed_tasks   = get_option( self::COMPLETED_OPTION, array() );
+		$completed_tasks   = get_option( self::COMPLETED_OPTION, [] );
 		$completed_tasks[] = $this->get_id();
 		update_option( self::COMPLETED_OPTION, $completed_tasks );
-		$this->record_tracks_event( 'task_completed', array( 'task_name' => $this->get_id() ) );
+		$this->record_tracks_event( 'task_completed', [ 'task_name' => $this->get_id() ] );
 	}
 
 	/**
@@ -429,7 +429,7 @@ abstract class Task {
 	public function is_visited() {
 		$user_id       = get_current_user_id();
 		$response      = WCAdminUser::get_user_data_field( $user_id, 'task_list_tracked_started_tasks' );
-		$tracked_tasks = $response ? json_decode( $response, true ) : array();
+		$tracked_tasks = $response ? json_decode( $response, true ) : [];
 
 		return isset( $tracked_tasks[ $this->get_id() ] ) && $tracked_tasks[ $this->get_id() ] > 0;
 	}
@@ -442,7 +442,7 @@ abstract class Task {
 	public function get_json() {
 		$this->possibly_track_completion();
 
-		return array(
+		return [
 			'id'             => $this->get_id(),
 			'parentId'       => $this->get_parent_id(),
 			'title'          => $this->get_title(),
@@ -464,7 +464,7 @@ abstract class Task {
 			'snoozedUntil'   => $this->get_snoozed_until(),
 			'additionalData' => self::convert_object_to_camelcase( $this->get_additional_data() ),
 			'eventPrefix'    => $this->prefix_event( '' ),
-		);
+		];
 	}
 
 	/**
@@ -478,7 +478,7 @@ abstract class Task {
 			return $data;
 		}
 
-		$new_object = (object) array();
+		$new_object = (object) [];
 
 		foreach ( $data as $key => $value ) {
 			$new_key              = lcfirst( implode( '', array_map( 'ucfirst', explode( '_', $key ) ) ) );
@@ -494,13 +494,13 @@ abstract class Task {
 	 * @return bool
 	 */
 	public function mark_actioned() {
-		$actioned = get_option( self::ACTIONED_OPTION, array() );
+		$actioned = get_option( self::ACTIONED_OPTION, [] );
 
 		$actioned[] = $this->get_id();
 		$update     = update_option( self::ACTIONED_OPTION, array_unique( $actioned ) );
 
 		if ( $update ) {
-			$this->record_tracks_event( 'actioned_task', array( 'task_name' => $this->get_id() ) );
+			$this->record_tracks_event( 'actioned_task', [ 'task_name' => $this->get_id() ] );
 		}
 
 		return $update;
@@ -522,7 +522,7 @@ abstract class Task {
 	 * @return bool
 	 */
 	public static function is_task_actioned( $id ) {
-		$actioned = get_option( self::ACTIONED_OPTION, array() );
+		$actioned = get_option( self::ACTIONED_OPTION, [] );
 		return in_array( $id, $actioned, true );
 	}
 
@@ -534,7 +534,7 @@ abstract class Task {
 	 * @param array $sort_by list of columns with sort order.
 	 * @return int
 	 */
-	public static function sort( $a, $b, $sort_by = array() ) {
+	public static function sort( $a, $b, $sort_by = [] ) {
 		$result = 0;
 		foreach ( $sort_by as $data ) {
 			$key   = $data['key'];

@@ -8,7 +8,7 @@ class WC_REST_Products_Controller_Tests extends WC_REST_Unit_Test_Case {
 	/**
 	 * @var WC_Product_Simple[]
 	 */
-	protected static $products = array();
+	protected static $products = [];
 
 	/**
 	 * Create products for tests.
@@ -18,31 +18,31 @@ class WC_REST_Products_Controller_Tests extends WC_REST_Unit_Test_Case {
 	public static function wpSetUpBeforeClass() {
 		self::$products[] = WC_Helper_Product::create_simple_product(
 			true,
-			array(
+			[
 				'name' => 'Pancake',
 				'sku'  => 'pancake-1',
-			)
+			]
 		);
 		self::$products[] = WC_Helper_Product::create_simple_product(
 			true,
-			array(
+			[
 				'name' => 'Waffle 1',
 				'sku'  => 'pancake-2',
-			)
+			]
 		);
 		self::$products[] = WC_Helper_Product::create_simple_product(
 			true,
-			array(
+			[
 				'name' => 'French Toast',
 				'sku'  => 'waffle-2',
-			)
+			]
 		);
 		self::$products[] = WC_Helper_Product::create_simple_product(
 			true,
-			array(
+			[
 				'name' => 'Waffle 3',
 				'sku'  => 'waffle-3',
-			)
+			]
 		);
 	}
 
@@ -64,9 +64,9 @@ class WC_REST_Products_Controller_Tests extends WC_REST_Unit_Test_Case {
 		parent::setUp();
 		$this->endpoint = new WC_REST_Products_Controller();
 		$this->user     = $this->factory->user->create(
-			array(
+			[
 				'role' => 'administrator',
-			)
+			]
 		);
 	}
 
@@ -74,7 +74,7 @@ class WC_REST_Products_Controller_Tests extends WC_REST_Unit_Test_Case {
 	 * Get all expected fields.
 	 */
 	public function get_expected_response_fields() {
-		return array(
+		return [
 			'id',
 			'name',
 			'slug',
@@ -142,7 +142,7 @@ class WC_REST_Products_Controller_Tests extends WC_REST_Unit_Test_Case {
 			'grouped_products',
 			'menu_order',
 			'meta_data',
-		);
+		];
 	}
 
 	/**
@@ -209,11 +209,11 @@ class WC_REST_Products_Controller_Tests extends WC_REST_Unit_Test_Case {
 
 		$request = new WP_REST_Request( 'GET', '/wc/v3/products' );
 		$request->set_query_params(
-			array(
+			[
 				'search'  => 'waffle',
 				'order'   => 'asc',
 				'orderby' => 'id',
-			)
+			]
 		);
 		$response = $this->server->dispatch( $request );
 		$this->assertEquals( 200, $response->get_status() );
@@ -236,11 +236,11 @@ class WC_REST_Products_Controller_Tests extends WC_REST_Unit_Test_Case {
 
 		$request = new WP_REST_Request( 'GET', '/wc/v3/products' );
 		$request->set_query_params(
-			array(
+			[
 				'search_sku' => 'waffle',
 				'order'      => 'asc',
 				'orderby'    => 'id',
-			)
+			]
 		);
 		$response = $this->server->dispatch( $request );
 		$this->assertEquals( 200, $response->get_status() );
@@ -263,12 +263,12 @@ class WC_REST_Products_Controller_Tests extends WC_REST_Unit_Test_Case {
 
 		$request = new WP_REST_Request( 'GET', '/wc/v3/products' );
 		$request->set_query_params(
-			array(
+			[
 				'search'     => 'waffle',
 				'search_sku' => 'waffle',
 				'order'      => 'asc',
 				'orderby'    => 'id',
-			)
+			]
 		);
 		$response = $this->server->dispatch( $request );
 		$this->assertEquals( 200, $response->get_status() );
@@ -291,12 +291,12 @@ class WC_REST_Products_Controller_Tests extends WC_REST_Unit_Test_Case {
 
 		$request = new WP_REST_Request( 'GET', '/wc/v3/products' );
 		$request->set_query_params(
-			array(
+			[
 				'search'     => 'waffle',
 				'search_sku' => 'waffle',
 				'order'      => 'asc',
 				'orderby'    => 'id',
-			)
+			]
 		);
 		$response = $this->server->dispatch( $request );
 		$this->assertEquals( 200, $response->get_status() );

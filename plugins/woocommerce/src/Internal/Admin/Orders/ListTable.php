@@ -19,11 +19,11 @@ class ListTable extends WP_List_Table {
 	 */
 	public function __construct() {
 		parent::__construct(
-			array(
+			[
 				'singular' => 'order',
 				'plural'   => 'orders',
 				'ajax'     => false,
-			)
+			]
 		);
 	}
 
@@ -33,9 +33,9 @@ class ListTable extends WP_List_Table {
 	 * @return void
 	 */
 	public function setup(): void {
-		add_filter( 'manage_woocommerce_page_wc-orders_columns', array( $this, 'get_columns' ) );
-		add_filter( 'set_screen_option_edit_orders_per_page', array( $this, 'set_items_per_page' ), 10, 3 );
-		add_filter( 'default_hidden_columns', array( $this, 'default_hidden_columns' ), 10, 2 );
+		add_filter( 'manage_woocommerce_page_wc-orders_columns', [ $this, 'get_columns' ] );
+		add_filter( 'set_screen_option_edit_orders_per_page', [ $this, 'set_items_per_page' ], 10, 3 );
+		add_filter( 'default_hidden_columns', [ $this, 'default_hidden_columns' ], 10, 2 );
 		$this->items_per_page();
 		set_screen_options();
 	}
@@ -46,10 +46,10 @@ class ListTable extends WP_List_Table {
 	private function items_per_page(): void {
 		add_screen_option(
 			'per_page',
-			array(
+			[
 				'default' => 20,
 				'option'  => 'edit_orders_per_page',
-			)
+			]
 		);
 	}
 
@@ -131,12 +131,12 @@ class ListTable extends WP_List_Table {
 	 * @return array
 	 */
 	protected function get_bulk_actions() {
-		$actions = array(
+		$actions = [
 			'mark_processing' => __( 'Change status to processing', 'woocommerce' ),
 			'mark_on-hold'    => __( 'Change status to on-hold', 'woocommerce' ),
 			'mark_completed'  => __( 'Change status to completed', 'woocommerce' ),
 			'mark_cancelled'  => __( 'Change status to cancelled', 'woocommerce' ),
-		);
+		];
 
 		if ( wc_string_to_bool( get_option( 'woocommerce_allow_bulk_remove_personal_data', 'no' ) ) ) {
 			$actions['remove_personal_data'] = __( 'Remove personal data', 'woocommerce' );
@@ -150,22 +150,22 @@ class ListTable extends WP_List_Table {
 	 */
 	public function prepare_items() {
 		$limit = $this->get_items_per_page( 'edit_orders_per_page' );
-		$args  = array(
+		$args  = [
 			'limit'    => $limit,
 			'page'     => $this->get_pagenum(),
 			'paginate' => true,
 			'status'   => sanitize_text_field( wp_unslash( $_REQUEST['status'] ?? 'all' ) ),
 			'type'     => 'shop_order',
-		);
+		];
 
 		$orders      = wc_get_orders( $args );
 		$this->items = $orders->orders;
 
 		$this->set_pagination_args(
-			array(
+			[
 				'total_items' => $orders->total,
 				'per_page'    => $limit,
-			)
+			]
 		);
 	}
 
@@ -176,8 +176,8 @@ class ListTable extends WP_List_Table {
 	 * @return array
 	 */
 	public function get_views() {
-		$view_counts = array();
-		$view_links  = array();
+		$view_counts = [];
+		$view_links  = [];
 		$statuses    = wc_get_order_statuses();
 		$current     = isset( $_GET['status'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['status'] ?? '' ) ) : 'all';
 
@@ -210,11 +210,11 @@ class ListTable extends WP_List_Table {
 	 */
 	private function count_orders_by_status( string $status ): int {
 		$orders = wc_get_orders(
-			array(
+			[
 				'limit'  => -1,
 				'return' => 'ids',
 				'status' => $status,
-			)
+			]
 		);
 
 		return count( $orders );
@@ -251,7 +251,7 @@ class ListTable extends WP_List_Table {
 			$this->months_filter();
 			$this->customers_filter();
 
-			submit_button( __( 'Filter', 'woocommerce' ), '', 'filter_action', false, array( 'id' => 'order-query-submit' ) );
+			submit_button( __( 'Filter', 'woocommerce' ), '', 'filter_action', false, [ 'id' => 'order-query-submit' ] );
 		}
 
 		if ( $this->is_trash && $this->has_items() && current_user_can( 'edit_others_orders' ) ) {
@@ -351,7 +351,7 @@ class ListTable extends WP_List_Table {
 	 * @return array
 	 */
 	public function get_columns() {
-		return array(
+		return [
 			'cb'               => '<input type="checkbox" />',
 			'order_number'     => esc_html__( 'Order', 'woocommerce' ),
 			'order_date'       => esc_html__( 'Date', 'woocommerce' ),
@@ -360,7 +360,7 @@ class ListTable extends WP_List_Table {
 			'shipping_address' => esc_html__( 'Ship to', 'woocommerce' ),
 			'order_total'      => esc_html__( 'Total', 'woocommerce' ),
 			'wc_actions'       => esc_html__( 'Actions', 'woocommerce' ),
-		);
+		];
 	}
 
 	/**
@@ -375,11 +375,11 @@ class ListTable extends WP_List_Table {
 		if ( isset( $screen->id ) && 'woocommerce_page_wc-orders' === $screen->id ) {
 			$hidden = array_merge(
 				$hidden,
-				array(
+				[
 					'billing_address',
 					'shipping_address',
 					'wc_actions',
-				)
+				]
 			);
 		}
 
@@ -482,11 +482,11 @@ class ListTable extends WP_List_Table {
 
 		if ( $approved_comments_count ) {
 			$latest_notes = wc_get_order_notes(
-				array(
+				[
 					'order_id' => $order->get_id(),
 					'limit'    => 1,
 					'orderby'  => 'date_created_gmt',
-				)
+				]
 			);
 
 			$latest_note = current( $latest_notes );
@@ -586,22 +586,22 @@ class ListTable extends WP_List_Table {
 		 */
 		do_action( 'woocommerce_admin_order_actions_start', $order );
 
-		$actions = array();
+		$actions = [];
 
-		if ( $order->has_status( array( 'pending', 'on-hold' ) ) ) {
-			$actions['processing'] = array(
+		if ( $order->has_status( [ 'pending', 'on-hold' ] ) ) {
+			$actions['processing'] = [
 				'url'    => wp_nonce_url( admin_url( 'admin-ajax.php?action=woocommerce_mark_order_status&status=processing&order_id=' . $order->get_id() ), 'woocommerce-mark-order-status' ),
 				'name'   => __( 'Processing', 'woocommerce' ),
 				'action' => 'processing',
-			);
+			];
 		}
 
-		if ( $order->has_status( array( 'pending', 'on-hold', 'processing' ) ) ) {
-			$actions['complete'] = array(
+		if ( $order->has_status( [ 'pending', 'on-hold', 'processing' ] ) ) {
+			$actions['complete'] = [
 				'url'    => wp_nonce_url( admin_url( 'admin-ajax.php?action=woocommerce_mark_order_status&status=completed&order_id=' . $order->get_id() ), 'woocommerce-mark-order-status' ),
 				'name'   => __( 'Complete', 'woocommerce' ),
 				'action' => 'complete',
-			);
+			];
 		}
 
 		/**
@@ -634,12 +634,12 @@ class ListTable extends WP_List_Table {
 	private function print_hidden_form_fields(): void {
 		echo '<input type="hidden" name="page" value="wc-orders" >';
 
-		$state_params = array(
+		$state_params = [
 			'_customer_user',
 			'm',
 			'paged',
 			'status',
-		);
+		];
 
 		foreach ( $state_params as $param ) {
 			if ( ! isset( $_GET[ $param ] ) ) {

@@ -24,9 +24,9 @@ class MockProductQuery {
 	 * @return array
 	 */
 	public function get_products() {
-		return (object) array(
+		return (object) [
 			'total' => $this->total,
-		);
+		];
 	}
 }
 

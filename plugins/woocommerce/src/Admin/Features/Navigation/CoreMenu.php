@@ -38,9 +38,9 @@ class CoreMenu {
 	 * Init.
 	 */
 	public function init() {
-		add_action( 'admin_menu', array( $this, 'register_post_types' ) );
+		add_action( 'admin_menu', [ $this, 'register_post_types' ] );
 		// Add this after we've finished migrating menu items to avoid hiding these items.
-		add_action( 'admin_menu', array( $this, 'add_dashboard_menu_items' ), PHP_INT_MAX );
+		add_action( 'admin_menu', [ $this, 'add_dashboard_menu_items' ], PHP_INT_MAX );
 	}
 
 	/**
@@ -49,26 +49,26 @@ class CoreMenu {
 	public static function get_setting_items() {
 		// Let the Settings feature add pages to the navigation if enabled.
 		if ( Features::is_enabled( 'settings' ) ) {
-			return array();
+			return [];
 		}
 
 		// Calling this method adds pages to the below tabs filter on non-settings pages.
 		\WC_Admin_Settings::get_settings_pages();
-		$tabs = apply_filters( 'woocommerce_settings_tabs_array', array() );
+		$tabs = apply_filters( 'woocommerce_settings_tabs_array', [] );
 
-		$menu_items = array();
+		$menu_items = [];
 		$order      = 0;
 		foreach ( $tabs as $key => $setting ) {
 			$order       += 10;
 			$menu_items[] = (
-			array(
+			[
 				'parent'     => 'woocommerce-settings',
 				'title'      => $setting,
 				'capability' => 'manage_woocommerce',
 				'id'         => 'settings-' . $key,
 				'url'        => 'admin.php?page=wc-settings&tab=' . $key,
 				'order'      => $order,
-			)
+			]
 			);
 		}
 
@@ -81,7 +81,7 @@ class CoreMenu {
 	 * @return array
 	 */
 	public static function get_shop_order_count() {
-		$status_counts = array_map( 'wc_orders_count', array( 'processing', 'on-hold' ) );
+		$status_counts = array_map( 'wc_orders_count', [ 'processing', 'on-hold' ] );
 		return array_sum( $status_counts );
 	}
 
@@ -92,50 +92,50 @@ class CoreMenu {
 	 */
 	public static function get_categories() {
 		$analytics_enabled = Features::is_enabled( 'analytics' );
-		return array(
-			array(
+		return [
+			[
 				'title' => __( 'Orders', 'woocommerce' ),
 				'id'    => 'woocommerce-orders',
 				'badge' => self::get_shop_order_count(),
 				'order' => 10,
-			),
-			array(
+			],
+			[
 				'title' => __( 'Products', 'woocommerce' ),
 				'id'    => 'woocommerce-products',
 				'order' => 20,
-			),
+			],
 			$analytics_enabled ?
-				array(
+				[
 					'title' => __( 'Analytics', 'woocommerce' ),
 					'id'    => 'woocommerce-analytics',
 					'order' => 30,
-				) : null,
+				] : null,
 			$analytics_enabled ?
-				array(
+				[
 					'title'  => __( 'Reports', 'woocommerce' ),
 					'id'     => 'woocommerce-reports',
 					'parent' => 'woocommerce-analytics',
 					'order'  => 200,
-				) : null,
-			array(
+				] : null,
+			[
 				'title' => __( 'Marketing', 'woocommerce' ),
 				'id'    => 'woocommerce-marketing',
 				'order' => 40,
-			),
-			array(
+			],
+			[
 				'title'  => __( 'Settings', 'woocommerce' ),
 				'id'     => 'woocommerce-settings',
 				'menuId' => 'secondary',
 				'order'  => 20,
 				'url'    => 'admin.php?page=wc-settings',
-			),
-			array(
+			],
+			[
 				'title'  => __( 'Tools', 'woocommerce' ),
 				'id'     => 'woocommerce-tools',
 				'menuId' => 'secondary',
 				'order'  => 30,
-			),
-		);
+			],
+		];
 	}
 
 	/**
@@ -145,25 +145,25 @@ class CoreMenu {
 	 */
 	public static function get_items() {
 		$order_items       = self::get_order_menu_items();
-		$product_items     = Menu::get_post_type_items( 'product', array( 'parent' => 'woocommerce-products' ) );
+		$product_items     = Menu::get_post_type_items( 'product', [ 'parent' => 'woocommerce-products' ] );
 		$product_tag_items = Menu::get_taxonomy_items(
 			'product_tag',
-			array(
+			[
 				'parent' => 'woocommerce-products',
 				'order'  => 30,
-			)
+			]
 		);
 		$product_cat_items = Menu::get_taxonomy_items(
 			'product_cat',
-			array(
+			[
 				'parent' => 'woocommerce-products',
 				'order'  => 20,
-			)
+			]
 		);
 
-		$coupon_items  = Menu::get_post_type_items( 'shop_coupon', array( 'parent' => 'woocommerce-marketing' ) );
+		$coupon_items  = Menu::get_post_type_items( 'shop_coupon', [ 'parent' => 'woocommerce-marketing' ] );
 		$setting_items = self::get_setting_items();
-		$wca_items     = array();
+		$wca_items     = [];
 		$wca_pages     = \Automattic\WooCommerce\Admin\PageController::get_instance()->get_pages();
 
 		foreach ( $wca_pages as $page ) {
@@ -173,12 +173,12 @@ class CoreMenu {
 
 			$path = isset( $page['path'] ) ? $page['path'] : null;
 			$item = array_merge(
-				array(
+				[
 					'id'         => $page['id'],
 					'url'        => $path,
 					'title'      => $page['title'][0],
 					'capability' => isset( $page['capability'] ) ? $page['capability'] : 'manage_woocommerce',
-				),
+				],
 				$page['nav_args']
 			);
 
@@ -190,31 +190,31 @@ class CoreMenu {
 			$wca_items[] = $item;
 		}
 
-		$home_item = array();
+		$home_item = [];
 		$setup_tasks_remaining = TaskLists::setup_tasks_remaining();
 		if ( defined( '\Automattic\WooCommerce\Internal\Admin\Homescreen::MENU_SLUG' ) ) {
-			$home_item = array(
+			$home_item = [
 				'id'              => 'woocommerce-home',
 				'title'           => __( 'Home', 'woocommerce' ),
 				'url'             => \Automattic\WooCommerce\Internal\Admin\Homescreen::MENU_SLUG,
 				'order'           => 0,
 				'matchExpression' => 'page=wc-admin((?!path=).)*$',
 				'badge'           => $setup_tasks_remaining ? $setup_tasks_remaining : null,
-			);
+			];
 		}
 
-		$customers_item = array();
+		$customers_item = [];
 		if ( Features::is_enabled( 'analytics' ) ) {
-			$customers_item = array(
+			$customers_item = [
 				'id'    => 'woocommerce-analytics-customers',
 				'title' => __( 'Customers', 'woocommerce' ),
 				'url'   => 'wc-admin&path=/customers',
 				'order' => 50,
-			);
+			];
 		}
 
 		return array_merge(
-			array(
+			[
 				$home_item,
 				$customers_item,
 				$order_items['all'],
@@ -222,7 +222,7 @@ class CoreMenu {
 				$product_items['all'],
 				$product_cat_items['default'],
 				$product_tag_items['default'],
-				array(
+				[
 					'id'              => 'woocommerce-product-attributes',
 					'title'           => __( 'Attributes', 'woocommerce' ),
 					'url'             => 'edit.php?post_type=product&page=product_attributes',
@@ -230,19 +230,19 @@ class CoreMenu {
 					'order'           => 40,
 					'parent'          => 'woocommerce-products',
 					'matchExpression' => 'edit.php(?=.*[?|&]page=product_attributes(&|$|#))|edit-tags.php(?=.*[?|&]taxonomy=pa_)(?=.*[?|&]post_type=product(&|$|#))',
-				),
-				array_merge( $product_items['new'], array( 'order' => 50 ) ),
+				],
+				array_merge( $product_items['new'], [ 'order' => 50 ] ),
 				$coupon_items['default'],
 				// Marketplace category.
-				array(
+				[
 					'title'      => __( 'Marketplace', 'woocommerce' ),
 					'capability' => 'manage_woocommerce',
 					'id'         => 'woocommerce-marketplace',
 					'url'        => 'wc-addons',
 					'menuId'     => 'secondary',
 					'order'      => 10,
-				),
-			),
+				],
+			],
 			// Tools category.
 			self::get_tool_items(),
 			// WooCommerce Admin items.
@@ -264,16 +264,16 @@ class CoreMenu {
 	 */
 	private static function get_order_menu_items(): ?array {
 		if ( ! wc_get_container()->get( CustomOrdersTableController::class )->custom_orders_table_usage_is_enabled() ) {
-			return Menu::get_post_type_items( 'shop_order', array( 'parent' => 'woocommerce-orders' ) );
+			return Menu::get_post_type_items( 'shop_order', [ 'parent' => 'woocommerce-orders' ] );
 		}
 
-		$main_orders_menu = array(
+		$main_orders_menu = [
 			'title'      => __( 'Orders', 'woocommerce' ),
 			'capability' => 'edit_others_shop_orders',
 			'id'         => 'woocommerce-orders-default',
 			'url'        => 'admin.php?page=wc-orders',
 			'parent'     => 'woocommerce-orders',
-		);
+		];
 
 		$all_orders_entry          = $main_orders_menu;
 		$all_orders_entry['id']    = 'woocommerce-orders-all-items';
@@ -285,11 +285,11 @@ class CoreMenu {
 		$new_orders_entry['url']   = 'admin.php?page=TBD';
 		$new_orders_entry['order'] = 20;
 
-		return array(
+		return [
 			'default' => $main_orders_menu,
 			'all'     => $all_orders_entry,
 			'new'     => $new_orders_entry,
-		);
+		];
 	}
 
 	/**
@@ -298,16 +298,16 @@ class CoreMenu {
 	 * @return array
 	 */
 	public static function get_tool_items() {
-		$tabs = array(
+		$tabs = [
 			'status' => __( 'System status', 'woocommerce' ),
 			'tools'  => __( 'Utilities', 'woocommerce' ),
 			'logs'   => __( 'Logs', 'woocommerce' ),
-		);
+		];
 		$tabs = apply_filters( 'woocommerce_admin_status_tabs', $tabs );
 
 		$order = 1;
-		$items = array(
-			array(
+		$items = [
+			[
 				'parent'     => 'woocommerce-tools',
 				'title'      => __( 'Import / Export', 'woocommerce' ),
 				'capability' => 'import',
@@ -315,18 +315,18 @@ class CoreMenu {
 				'url'        => 'import.php',
 				'migrate'    => false,
 				'order'      => 0,
-			),
-		);
+			],
+		];
 
 		foreach ( $tabs as $key => $tab ) {
-			$items[] = array(
+			$items[] = [
 				'parent'     => 'woocommerce-tools',
 				'title'      => $tab,
 				'capability' => 'manage_woocommerce',
 				'id'         => 'tools-' . $key,
 				'url'        => 'wc-status&tab=' . $key,
 				'order'      => $order,
-			);
+			];
 			$order++;
 		}
 
@@ -340,18 +340,18 @@ class CoreMenu {
 	 */
 	public static function get_legacy_report_items() {
 		$reports    = \WC_Admin_Reports::get_reports();
-		$menu_items = array();
+		$menu_items = [];
 
 		$order = 0;
 		foreach ( $reports as $key => $report ) {
-			$menu_items[] = array(
+			$menu_items[] = [
 				'parent'     => 'woocommerce-reports',
 				'title'      => $report['title'],
 				'capability' => 'view_woocommerce_reports',
 				'id'         => $key,
 				'url'        => 'wc-reports&tab=' . $key,
 				'order'      => $order,
-			);
+			];
 			$order++;
 		}
 
@@ -380,11 +380,11 @@ class CoreMenu {
 			return;
 		}
 
-		$menuIds = array(
+		$menuIds = [
 			'primary',
 			'secondary',
 			'favorites',
-		);
+		];
 
 		foreach ( $menuIds as $menuId ) {
 			foreach( $top_level[ $menuId ] as $item ) {
@@ -392,9 +392,9 @@ class CoreMenu {
 				if (
 					in_array(
 						$item['id'],
-						array(
+						[
 							'woocommerce-tools',
-						),
+						],
 						true
 					)
 				) {
@@ -410,24 +410,24 @@ class CoreMenu {
 						$first_item = $category_items[0];
 
 
-						$submenu['woocommerce'][] = array(
+						$submenu['woocommerce'][] = [
 							$item['title'],
 							$first_item['capability'],
 							isset( $first_item['url'] ) ? $first_item['url'] : null,
 							$item['title'],
-						);
+						];
 					}
 
 					continue;
 				}
 
 				// Show top-level items.
-				$submenu['woocommerce'][] = array(
+				$submenu['woocommerce'][] = [
 					$item['title'],
 					$item['capability'],
 					isset( $item['url'] ) ? $item['url'] : null,
 					$item['title'],
-				);
+				];
 			}
 		}
 		// phpcs:enable
@@ -439,12 +439,12 @@ class CoreMenu {
 	 * @return array
 	 */
 	public static function get_excluded_items() {
-		$excluded_items = array(
+		$excluded_items = [
 			'woocommerce',
 			'wc-reports',
 			'wc-settings',
 			'wc-status',
-		);
+		];
 
 		return apply_filters( 'woocommerce_navigation_core_excluded_items', $excluded_items );
 	}

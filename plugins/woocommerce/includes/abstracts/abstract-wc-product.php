@@ -54,7 +54,7 @@ class WC_Product extends WC_Abstract_Legacy_Product {
 	 *
 	 * @var array
 	 */
-	protected $data = array(
+	protected $data = [
 		'name'               => '',
 		'slug'               => '',
 		'date_created'       => null,
@@ -83,36 +83,36 @@ class WC_Product extends WC_Abstract_Legacy_Product {
 		'length'             => '',
 		'width'              => '',
 		'height'             => '',
-		'upsell_ids'         => array(),
-		'cross_sell_ids'     => array(),
+		'upsell_ids'         => [],
+		'cross_sell_ids'     => [],
 		'parent_id'          => 0,
 		'reviews_allowed'    => true,
 		'purchase_note'      => '',
-		'attributes'         => array(),
-		'default_attributes' => array(),
+		'attributes'         => [],
+		'default_attributes' => [],
 		'menu_order'         => 0,
 		'post_password'      => '',
 		'virtual'            => false,
 		'downloadable'       => false,
-		'category_ids'       => array(),
-		'tag_ids'            => array(),
+		'category_ids'       => [],
+		'tag_ids'            => [],
 		'shipping_class_id'  => 0,
-		'downloads'          => array(),
+		'downloads'          => [],
 		'image_id'           => '',
-		'gallery_image_ids'  => array(),
+		'gallery_image_ids'  => [],
 		'download_limit'     => -1,
 		'download_expiry'    => -1,
-		'rating_counts'      => array(),
+		'rating_counts'      => [],
 		'average_rating'     => 0,
 		'review_count'       => 0,
-	);
+	];
 
 	/**
 	 * Supported features such as 'ajax_add_to_cart'.
 	 *
 	 * @var array
 	 */
-	protected $supports = array();
+	protected $supports = [];
 
 	/**
 	 * Get the product if ID is passed, otherwise the product is new and empty.
@@ -459,11 +459,11 @@ class WC_Product extends WC_Abstract_Legacy_Product {
 			wc_deprecated_argument( 'WC_Product::get_dimensions', '3.0', 'By default, get_dimensions has an argument set to true so that HTML is returned. This is to support the legacy version of the method. To get HTML dimensions, instead use wc_format_dimensions() function. Pass false to this method to return an array of dimensions. This will be the new default behavior in future versions.' );
 			return apply_filters( 'woocommerce_product_dimensions', wc_format_dimensions( $this->get_dimensions( false ) ), $this );
 		}
-		return array(
+		return [
 			'length' => $this->get_length(),
 			'width'  => $this->get_width(),
 			'height' => $this->get_height(),
-		);
+		];
 	}
 
 	/**
@@ -820,7 +820,7 @@ class WC_Product extends WC_Abstract_Legacy_Product {
 		if ( $this->get_object_read() && ! empty( $sku ) && ! wc_product_has_unique_sku( $this->get_id(), $sku ) ) {
 			$sku_found = wc_get_product_id_by_sku( $sku );
 
-			$this->error( 'product_invalid_sku', __( 'Invalid or duplicated SKU.', 'woocommerce' ), 400, array( 'resource_id' => $sku_found ) );
+			$this->error( 'product_invalid_sku', __( 'Invalid or duplicated SKU.', 'woocommerce' ), 400, [ 'resource_id' => $sku_found ] );
 		}
 		$this->set_prop( 'sku', $sku );
 	}
@@ -892,11 +892,11 @@ class WC_Product extends WC_Abstract_Legacy_Product {
 	 * @param  string $status Tax status.
 	 */
 	public function set_tax_status( $status ) {
-		$options = array(
+		$options = [
 			'taxable',
 			'shipping',
 			'none',
-		);
+		];
 
 		// Set default if empty.
 		if ( empty( $status ) ) {
@@ -1211,8 +1211,8 @@ class WC_Product extends WC_Abstract_Legacy_Product {
 	public function set_downloads( $downloads_array ) {
 		// When the object is first hydrated, only the previously persisted downloads will be passed in.
 		$existing_downloads = $this->get_object_read() ? (array) $this->get_prop( 'downloads' ) : $downloads_array;
-		$downloads          = array();
-		$errors             = array();
+		$downloads          = [];
+		$errors             = [];
 
 		$downloads_array    = $this->build_downloads_map( $downloads_array );
 		$existing_downloads = $this->build_downloads_map( $existing_downloads );
@@ -1256,7 +1256,7 @@ class WC_Product extends WC_Abstract_Legacy_Product {
 	 * @return WC_Product_Download[]
 	 */
 	private function build_downloads_map( array $downloads ): array {
-		$downloads_map = array();
+		$downloads_map = [];
 
 		foreach ( $downloads as $download_data ) {
 			// If the item is already a WC_Product_Download we can add it to the map and move on.
@@ -1840,7 +1840,7 @@ class WC_Product extends WC_Abstract_Legacy_Product {
 	 * @return array of IDs
 	 */
 	public function get_children() {
-		return array();
+		return [];
 	}
 
 	/**
@@ -1864,7 +1864,7 @@ class WC_Product extends WC_Abstract_Legacy_Product {
 		if ( '' === $this->get_price() ) {
 			$price = apply_filters( 'woocommerce_empty_price_html', '', $this );
 		} elseif ( $this->is_on_sale() ) {
-			$price = wc_format_sale_price( wc_get_price_to_display( $this, array( 'price' => $this->get_regular_price() ) ), wc_get_price_to_display( $this ) ) . $this->get_price_suffix();
+			$price = wc_format_sale_price( wc_get_price_to_display( $this, [ 'price' => $this->get_regular_price() ] ), wc_get_price_to_display( $this ) ) . $this->get_price_suffix();
 		} else {
 			$price = wc_price( wc_get_price_to_display( $this ) ) . $this->get_price_suffix();
 		}
@@ -1952,7 +1952,7 @@ class WC_Product extends WC_Abstract_Legacy_Product {
 	 * @param  bool   $placeholder True to return $placeholder if no image is found, or false to return an empty string.
 	 * @return string
 	 */
-	public function get_image( $size = 'woocommerce_thumbnail', $attr = array(), $placeholder = true ) {
+	public function get_image( $size = 'woocommerce_thumbnail', $attr = [], $placeholder = true ) {
 		$image = '';
 		if ( $this->get_image_id() ) {
 			$image = wp_get_attachment_image( $this->get_image_id(), $size, false, $attr );
@@ -2004,7 +2004,7 @@ class WC_Product extends WC_Abstract_Legacy_Product {
 		} else {
 			return '';
 		}
-		return $attribute_object->is_taxonomy() ? implode( ', ', wc_get_product_terms( $this->get_id(), $attribute_object->get_name(), array( 'fields' => 'names' ) ) ) : wc_implode_text_attributes( $attribute_object->get_options() );
+		return $attribute_object->is_taxonomy() ? implode( ', ', wc_get_product_terms( $this->get_id(), $attribute_object->get_name(), [ 'fields' => 'names' ] ) ) : wc_implode_text_attributes( $attribute_object->get_options() );
 	}
 
 	/**
@@ -2074,10 +2074,10 @@ class WC_Product extends WC_Abstract_Legacy_Product {
 			if ( '' === $price ) {
 				$price = $this->get_price();
 			}
-			$replacements = array(
-				'{price_including_tax}' => wc_price( wc_get_price_including_tax( $this, array( 'qty' => $qty, 'price' => $price ) ) ), // @phpcs:ignore WordPress.Arrays.ArrayDeclarationSpacing.ArrayItemNoNewLine, WordPress.Arrays.ArrayDeclarationSpacing.AssociativeArrayFound
-				'{price_excluding_tax}' => wc_price( wc_get_price_excluding_tax( $this, array( 'qty' => $qty, 'price' => $price ) ) ), // @phpcs:ignore WordPress.Arrays.ArrayDeclarationSpacing.AssociativeArrayFound
-			);
+			$replacements = [
+				'{price_including_tax}' => wc_price( wc_get_price_including_tax( $this, [ 'qty' => $qty, 'price' => $price ] ) ), // @phpcs:ignore WordPress.Arrays.ArrayDeclarationSpacing.ArrayItemNoNewLine, WordPress.Arrays.ArrayDeclarationSpacing.AssociativeArrayFound
+				'{price_excluding_tax}' => wc_price( wc_get_price_excluding_tax( $this, [ 'qty' => $qty, 'price' => $price ] ) ), // @phpcs:ignore WordPress.Arrays.ArrayDeclarationSpacing.AssociativeArrayFound
+			];
 			$html         = str_replace( array_keys( $replacements ), array_values( $replacements ), ' <small class="woocommerce-price-suffix">' . wp_kses_post( $suffix ) . '</small>' );
 		}
 		return apply_filters( 'woocommerce_get_price_suffix', $html, $this, $price, $qty );
@@ -2091,10 +2091,10 @@ class WC_Product extends WC_Abstract_Legacy_Product {
 	public function get_availability() {
 		return apply_filters(
 			'woocommerce_get_availability',
-			array(
+			[
 				'availability' => $this->get_availability_text(),
 				'class'        => $this->get_availability_class(),
-			),
+			],
 			$this
 		);
 	}

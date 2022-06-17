@@ -63,10 +63,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 	<td class="line_cost" width="1%">
 		<div class="view">
 			<?php
-			echo wp_kses_post( wc_price( $item->get_total(), array( 'currency' => $order->get_currency() ) ) );
+			echo wp_kses_post( wc_price( $item->get_total(), [ 'currency' => $order->get_currency() ] ) );
 			$refunded = -1 * $order->get_total_refunded_for_item( $item_id, 'shipping' );
 			if ( $refunded ) {
-				echo wp_kses_post( '<small class="refunded">' . wc_price( $refunded, array( 'currency' => $order->get_currency() ) ) . '</small>' );
+				echo wp_kses_post( '<small class="refunded">' . wc_price( $refunded, [ 'currency' => $order->get_currency() ] ) . '</small>' );
 			}
 			?>
 		</div>
@@ -88,10 +88,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 			<td class="line_tax" width="1%">
 				<div class="view">
 					<?php
-					echo wp_kses_post( ( '' !== $tax_item_total ) ? wc_price( $tax_item_total, array( 'currency' => $order->get_currency() ) ) : '&ndash;' );
+					echo wp_kses_post( ( '' !== $tax_item_total ) ? wc_price( $tax_item_total, [ 'currency' => $order->get_currency() ] ) : '&ndash;' );
 					$refunded = -1 * $order->get_tax_refunded_for_item( $item_id, $tax_item_id, 'shipping' );
 					if ( $refunded ) {
-						echo wp_kses_post( '<small class="refunded">' . wc_price( $refunded, array( 'currency' => $order->get_currency() ) ) . '</small>' );
+						echo wp_kses_post( '<small class="refunded">' . wc_price( $refunded, [ 'currency' => $order->get_currency() ] ) . '</small>' );
 					}
 					?>
 				</div>

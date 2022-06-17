@@ -28,7 +28,7 @@ class WelcomeToWooCommerceForStoreUsers {
 	 * Attach hooks.
 	 */
 	public function __construct() {
-		add_action( 'init', array( $this, 'possibly_add_note' ) );
+		add_action( 'init', [ $this, 'possibly_add_note' ] );
 	}
 
 	/**

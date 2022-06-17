@@ -109,7 +109,7 @@ class MarketingJetpack {
 		$note->set_image(
 			WC_ADMIN_IMAGES_FOLDER_URL . '/admin_notes/marketing-jetpack-2x.png'
 		);
-		$note->set_content_data( (object) array() );
+		$note->set_content_data( (object) [] );
 		$note->set_source( 'woocommerce-admin-notes' );
 		$note->add_action(
 			'jetpack-backup-woocommerce',

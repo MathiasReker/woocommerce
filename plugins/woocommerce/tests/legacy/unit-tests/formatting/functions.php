@@ -19,7 +19,7 @@ class WC_Tests_Formatting_Functions extends WC_Unit_Test_Case {
 		parent::setUp();
 
 		// Callback used by WP_HTTP_TestCase to decide whether to perform HTTP requests or to provide a mocked response.
-		$this->http_responder = array( $this, 'mock_http_responses' );
+		$this->http_responder = [ $this, 'mock_http_responses' ];
 	}
 
 	/**
@@ -50,7 +50,7 @@ class WC_Tests_Formatting_Functions extends WC_Unit_Test_Case {
 	 * @since 3.3.0
 	 */
 	public function test_wc_bool_to_string() {
-		$this->assertEquals( array( 'yes', 'no' ), array( wc_bool_to_string( true ), wc_bool_to_string( false ) ) );
+		$this->assertEquals( [ 'yes', 'no' ], [ wc_bool_to_string( true ), wc_bool_to_string( false ) ] );
 	}
 
 	/**
@@ -60,10 +60,10 @@ class WC_Tests_Formatting_Functions extends WC_Unit_Test_Case {
 	 */
 	public function test_wc_string_to_array() {
 		$this->assertEquals(
-			array(
+			[
 				'foo',
 				'bar',
-			),
+			],
 			wc_string_to_array( 'foo|bar', '|' )
 		);
 	}
@@ -112,66 +112,66 @@ class WC_Tests_Formatting_Functions extends WC_Unit_Test_Case {
 
 		// cm (default unit).
 		$this->assertEquals(
-			array( 10, 3.937, 0.10936133, 100, 0.1 ),
-			array(
+			[ 10, 3.937, 0.10936133, 100, 0.1 ],
+			[
 				wc_get_dimension( 10, 'cm' ),
 				wc_get_dimension( 10, 'in' ),
 				wc_get_dimension( 10, 'yd' ),
 				wc_get_dimension( 10, 'mm' ),
 				wc_get_dimension( 10, 'm' ),
-			)
+			]
 		);
 
 		// in.
 		update_option( 'woocommerce_dimension_unit', 'in' );
 		$this->assertEquals(
-			array( 25.4, 10, 0.2777777782, 254, 0.254 ),
-			array(
+			[ 25.4, 10, 0.2777777782, 254, 0.254 ],
+			[
 				wc_get_dimension( 10, 'cm' ),
 				wc_get_dimension( 10, 'in' ),
 				wc_get_dimension( 10, 'yd' ),
 				wc_get_dimension( 10, 'mm' ),
 				wc_get_dimension( 10, 'm' ),
-			)
+			]
 		);
 
 		// m.
 		update_option( 'woocommerce_dimension_unit', 'm' );
 		$this->assertEquals(
-			array( 1000, 393.7, 10.936133, 10000, 10 ),
-			array(
+			[ 1000, 393.7, 10.936133, 10000, 10 ],
+			[
 				wc_get_dimension( 10, 'cm' ),
 				wc_get_dimension( 10, 'in' ),
 				wc_get_dimension( 10, 'yd' ),
 				wc_get_dimension( 10, 'mm' ),
 				wc_get_dimension( 10, 'm' ),
-			)
+			]
 		);
 
 		// mm.
 		update_option( 'woocommerce_dimension_unit', 'mm' );
 		$this->assertEquals(
-			array( 1, 0.3937, 0.010936133, 10, 0.01 ),
-			array(
+			[ 1, 0.3937, 0.010936133, 10, 0.01 ],
+			[
 				wc_get_dimension( 10, 'cm' ),
 				wc_get_dimension( 10, 'in' ),
 				wc_get_dimension( 10, 'yd' ),
 				wc_get_dimension( 10, 'mm' ),
 				wc_get_dimension( 10, 'm' ),
-			)
+			]
 		);
 
 		// yd.
 		update_option( 'woocommerce_dimension_unit', 'yd' );
 		$this->assertEquals(
-			array( 914.4, 359.99928, 10, 9144, 9.144 ),
-			array(
+			[ 914.4, 359.99928, 10, 9144, 9.144 ],
+			[
 				wc_get_dimension( 10, 'cm' ),
 				wc_get_dimension( 10, 'in' ),
 				wc_get_dimension( 10, 'yd' ),
 				wc_get_dimension( 10, 'mm' ),
 				wc_get_dimension( 10, 'm' ),
-			)
+			]
 		);
 
 		// Negative.
@@ -179,13 +179,13 @@ class WC_Tests_Formatting_Functions extends WC_Unit_Test_Case {
 
 		// Custom.
 		$this->assertEquals(
-			array( 25.4, 914.4, 393.7, 0.010936133 ),
-			array(
+			[ 25.4, 914.4, 393.7, 0.010936133 ],
+			[
 				wc_get_dimension( 10, 'cm', 'in' ),
 				wc_get_dimension( 10, 'cm', 'yd' ),
 				wc_get_dimension( 10, 'in', 'm' ),
 				wc_get_dimension( 10, 'yd', 'mm' ),
-			)
+			]
 		);
 
 		// Restore default.
@@ -428,7 +428,7 @@ class WC_Tests_Formatting_Functions extends WC_Unit_Test_Case {
 	 */
 	public function test_wc_clean() {
 		$this->assertEquals( 'cleaned', wc_clean( '<script>alert();</script>cleaned' ) );
-		$this->assertEquals( array( 'cleaned', 'foo' ), wc_clean( array( '<script>alert();</script>cleaned', 'foo' ) ) );
+		$this->assertEquals( [ 'cleaned', 'foo' ], wc_clean( [ '<script>alert();</script>cleaned', 'foo' ] ) );
 	}
 
 	/**
@@ -457,29 +457,29 @@ class WC_Tests_Formatting_Functions extends WC_Unit_Test_Case {
 	 * @since 2.2
 	 */
 	public function test_wc_array_overlay() {
-		$a1 = array(
+		$a1 = [
 			'apple'      => 'banana',
 			'pear'       => 'grape',
-			'vegetables' => array(
+			'vegetables' => [
 				'cucumber' => 'asparagus',
-			),
-		);
+			],
+		];
 
-		$a2 = array(
+		$a2 = [
 			'strawberry' => 'orange',
 			'apple'      => 'kiwi',
-			'vegetables' => array(
+			'vegetables' => [
 				'cucumber' => 'peas',
-			),
-		);
+			],
+		];
 
-		$overlayed = array(
+		$overlayed = [
 			'apple'      => 'kiwi',
 			'pear'       => 'grape',
-			'vegetables' => array(
+			'vegetables' => [
 				'cucumber' => 'peas',
-			),
-		);
+			],
+		];
 
 		$this->assertEquals( $overlayed, wc_array_overlay( $a1, $a2 ) );
 	}
@@ -600,7 +600,7 @@ class WC_Tests_Formatting_Functions extends WC_Unit_Test_Case {
 		$this->assertEquals( '<span class="woocommerce-Price-amount amount"><bdi><span class="woocommerce-Price-currencySymbol">&#36;</span>0.00</bdi></span>', wc_price( 0 ) );
 
 		// Different currency.
-		$this->assertEquals( '<span class="woocommerce-Price-amount amount"><bdi><span class="woocommerce-Price-currencySymbol">&pound;</span>1,111.17</bdi></span>', wc_price( 1111.17, array( 'currency' => 'GBP' ) ) );
+		$this->assertEquals( '<span class="woocommerce-Price-amount amount"><bdi><span class="woocommerce-Price-currencySymbol">&pound;</span>1,111.17</bdi></span>', wc_price( 1111.17, [ 'currency' => 'GBP' ] ) );
 
 		// Negative price.
 		$this->assertEquals( '<span class="woocommerce-Price-amount amount"><bdi>-<span class="woocommerce-Price-currencySymbol">&#36;</span>1.17</bdi></span>', wc_price( -1.17 ) );
@@ -618,7 +618,7 @@ class WC_Tests_Formatting_Functions extends WC_Unit_Test_Case {
 		// Ex tax label.
 		$calc_taxes = get_option( 'woocommerce_calc_taxes' );
 		update_option( 'woocommerce_calc_taxes', 'yes' );
-		$this->assertEquals( '<span class="woocommerce-Price-amount amount"><bdi><span class="woocommerce-Price-currencySymbol">&#36;</span>1,111.17</bdi></span> <small class="woocommerce-Price-taxLabel tax_label">(ex. tax)</small>', wc_price( '1111.17', array( 'ex_tax_label' => true ) ) );
+		$this->assertEquals( '<span class="woocommerce-Price-amount amount"><bdi><span class="woocommerce-Price-currencySymbol">&#36;</span>1,111.17</bdi></span> <small class="woocommerce-Price-taxLabel tax_label">(ex. tax)</small>', wc_price( '1111.17', [ 'ex_tax_label' => true ] ) );
 		update_option( 'woocommerce_calc_taxes', $calc_taxes );
 	}
 
@@ -629,8 +629,8 @@ class WC_Tests_Formatting_Functions extends WC_Unit_Test_Case {
 	 */
 	public function test_wc_let_to_num() {
 		$this->assertSame(
-			array( 10240, 10485760, 10737418240, 10995116277760, 11258999068426240, 0, 0, 0, 0 ),
-			array(
+			[ 10240, 10485760, 10737418240, 10995116277760, 11258999068426240, 0, 0, 0, 0 ],
+			[
 				wc_let_to_num( '10K' ),
 				wc_let_to_num( '10M' ),
 				wc_let_to_num( '10G' ),
@@ -640,7 +640,7 @@ class WC_Tests_Formatting_Functions extends WC_Unit_Test_Case {
 				wc_let_to_num( true ),
 				wc_let_to_num( '' ),
 				wc_let_to_num( 'ABC' ),
-			)
+			]
 		);
 	}
 
@@ -699,15 +699,15 @@ class WC_Tests_Formatting_Functions extends WC_Unit_Test_Case {
 
 		// Test with missing UTC offset.
 		delete_option( 'gmt_offset' );
-		$this->assertContains( wc_timezone_string(), array( '+00:00', 'UTC' ) );
+		$this->assertContains( wc_timezone_string(), [ '+00:00', 'UTC' ] );
 
 		// Test with manually set UTC offset.
 		update_option( 'gmt_offset', -4 );
-		$this->assertNotContains( wc_timezone_string(), array( '+00:00', 'UTC' ) );
+		$this->assertNotContains( wc_timezone_string(), [ '+00:00', 'UTC' ] );
 
 		// Test with invalid offset.
 		update_option( 'gmt_offset', 'invalid' );
-		$this->assertContains( wc_timezone_string(), array( '+00:00', 'UTC' ) );
+		$this->assertContains( wc_timezone_string(), [ '+00:00', 'UTC' ] );
 
 		// Restore default.
 		update_option( 'gmt_offset', '0' );
@@ -728,11 +728,11 @@ class WC_Tests_Formatting_Functions extends WC_Unit_Test_Case {
 	 * @since 2.2
 	 */
 	public function test_wc_rgb_from_hex() {
-		$rgb = array(
+		$rgb = [
 			'R' => 0,
 			'G' => 93,
 			'B' => 171,
-		);
+		];
 
 		$this->assertEquals( $rgb, wc_rgb_from_hex( '005dab' ) );
 		$this->assertEquals( $rgb, wc_rgb_from_hex( '#005dab' ) );
@@ -959,7 +959,7 @@ class WC_Tests_Formatting_Functions extends WC_Unit_Test_Case {
 	 * @since 3.3.0
 	 */
 	public function test_wc_format_dimensions() {
-		$this->assertEquals( '10 &times; 10 &times; 10 cm', wc_format_dimensions( array( 10, 10, 10 ) ) );
+		$this->assertEquals( '10 &times; 10 &times; 10 cm', wc_format_dimensions( [ 10, 10, 10 ] ) );
 	}
 
 	/**
@@ -1001,11 +1001,11 @@ class WC_Tests_Formatting_Functions extends WC_Unit_Test_Case {
 		$mocked_response = false;
 
 		if ( false !== strpos( $url, 'https://wordpress.tv/oembed/' ) ) {
-			$mocked_response = array(
+			$mocked_response = [
 				// phpcs:ignore WordPress.WP.EnqueuedResources.NonEnqueuedScript
 				'body'     => '{"type":"video","version":"1.0","title":null,"width":500,"height":281,"html":"<iframe width=\'500\' height=\'281\' src=\'https:\/\/videopress.com\/embed\/9sRCUigm?hd=0\' frameborder=\'0\' allowfullscreen><\/iframe><script src=\'https:\/\/v0.wordpress.com\/js\/next\/videopress-iframe.js?m=1435166243\'><\/script>"}',
-				'response' => array( 'code' => 200 ),
-			);
+				'response' => [ 'code' => 200 ],
+			];
 		}
 
 		return $mocked_response;
@@ -1027,46 +1027,46 @@ class WC_Tests_Formatting_Functions extends WC_Unit_Test_Case {
 	 * @since 3.3.0
 	 */
 	public function test_wc_array_merge_recursive_numeric() {
-		$a = array(
+		$a = [
 			'A'   => 'bob',
 			'sum' => 10,
-			'C'   => array(
+			'C'   => [
 				'x',
 				'y',
 				'z' => 50,
-			),
-		);
-		$b = array(
+			],
+		];
+		$b = [
 			'A'   => 'max',
 			'sum' => 12,
-			'C'   => array(
+			'C'   => [
 				'x',
 				'y',
 				'z' => 45,
-			),
-		);
-		$c = array(
+			],
+		];
+		$c = [
 			'A'   => 'tom',
 			'sum' => 8,
-			'C'   => array(
+			'C'   => [
 				'x',
 				'y',
 				'z' => 50,
 				'w' => 1,
-			),
-		);
+			],
+		];
 
 		$this->assertEquals(
-			array(
+			[
 				'A'   => 'tom',
 				'sum' => 30,
-				'C'   => array(
+				'C'   => [
 					'x',
 					'y',
 					'z' => 145,
 					'w' => 1,
-				),
-			),
+				],
+			],
 			wc_array_merge_recursive_numeric( $a, $b, $c )
 		);
 	}

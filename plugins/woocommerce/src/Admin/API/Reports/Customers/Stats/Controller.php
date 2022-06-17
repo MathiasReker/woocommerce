@@ -39,7 +39,7 @@ class Controller extends \WC_REST_Reports_Controller {
 	 * @return array
 	 */
 	protected function prepare_reports_query( $request ) {
-		$args                        = array();
+		$args                        = [];
 		$args['registered_before']   = $request['registered_before'];
 		$args['registered_after']    = $request['registered_after'];
 		$args['match']               = $request['match'];
@@ -66,9 +66,9 @@ class Controller extends \WC_REST_Reports_Controller {
 		$args['fields']              = $request['fields'];
 		$args['force_cache_refresh'] = $request['force_cache_refresh'];
 
-		$between_params_numeric    = array( 'orders_count', 'total_spend', 'avg_order_value' );
+		$between_params_numeric    = [ 'orders_count', 'total_spend', 'avg_order_value' ];
 		$normalized_params_numeric = TimeInterval::normalize_between_params( $request, $between_params_numeric, false );
-		$between_params_date       = array( 'last_active', 'registered' );
+		$between_params_date       = [ 'last_active', 'registered' ];
 		$normalized_params_date    = TimeInterval::normalize_between_params( $request, $between_params_date, true );
 		$args                      = array_merge( $args, $normalized_params_numeric, $normalized_params_date );
 
@@ -85,9 +85,9 @@ class Controller extends \WC_REST_Reports_Controller {
 		$query_args      = $this->prepare_reports_query( $request );
 		$customers_query = new Query( $query_args );
 		$report_data     = $customers_query->get_data();
-		$out_data        = array(
+		$out_data        = [
 			'totals' => $report_data,
-		);
+		];
 
 		return rest_ensure_response( $out_data );
 	}
@@ -128,49 +128,49 @@ class Controller extends \WC_REST_Reports_Controller {
 	 */
 	public function get_item_schema() {
 		// @todo Should any of these be 'indicator's?
-		$totals = array(
-			'customers_count'     => array(
+		$totals = [
+			'customers_count'     => [
 				'description' => __( 'Number of customers.', 'woocommerce' ),
 				'type'        => 'integer',
-				'context'     => array( 'view', 'edit' ),
+				'context'     => [ 'view', 'edit' ],
 				'readonly'    => true,
-			),
-			'avg_orders_count'    => array(
+			],
+			'avg_orders_count'    => [
 				'description' => __( 'Average number of orders.', 'woocommerce' ),
 				'type'        => 'integer',
-				'context'     => array( 'view', 'edit' ),
+				'context'     => [ 'view', 'edit' ],
 				'readonly'    => true,
-			),
-			'avg_total_spend'     => array(
+			],
+			'avg_total_spend'     => [
 				'description' => __( 'Average total spend per customer.', 'woocommerce' ),
 				'type'        => 'number',
-				'context'     => array( 'view', 'edit' ),
+				'context'     => [ 'view', 'edit' ],
 				'readonly'    => true,
 				'format'      => 'currency',
-			),
-			'avg_avg_order_value' => array(
+			],
+			'avg_avg_order_value' => [
 				'description' => __( 'Average AOV per customer.', 'woocommerce' ),
 				'type'        => 'number',
-				'context'     => array( 'view', 'edit' ),
+				'context'     => [ 'view', 'edit' ],
 				'readonly'    => true,
 				'format'      => 'currency',
-			),
-		);
+			],
+		];
 
-		$schema = array(
+		$schema = [
 			'$schema'    => 'http://json-schema.org/draft-04/schema#',
 			'title'      => 'report_customers_stats',
 			'type'       => 'object',
-			'properties' => array(
-				'totals' => array(
+			'properties' => [
+				'totals' => [
 					'description' => __( 'Totals data.', 'woocommerce' ),
 					'type'        => 'object',
-					'context'     => array( 'view', 'edit' ),
+					'context'     => [ 'view', 'edit' ],
 					'readonly'    => true,
 					'properties'  => $totals,
-				),
-			),
-		);
+				],
+			],
+		];
 
 		return $this->add_additional_fields_schema( $schema );
 	}
@@ -181,217 +181,217 @@ class Controller extends \WC_REST_Reports_Controller {
 	 * @return array
 	 */
 	public function get_collection_params() {
-		$params                            = array();
-		$params['context']                 = $this->get_context_param( array( 'default' => 'view' ) );
-		$params['registered_before']       = array(
+		$params                            = [];
+		$params['context']                 = $this->get_context_param( [ 'default' => 'view' ] );
+		$params['registered_before']       = [
 			'description'       => __( 'Limit response to objects registered before (or at) a given ISO8601 compliant datetime.', 'woocommerce' ),
 			'type'              => 'string',
 			'format'            => 'date-time',
 			'validate_callback' => 'rest_validate_request_arg',
-		);
-		$params['registered_after']        = array(
+		];
+		$params['registered_after']        = [
 			'description'       => __( 'Limit response to objects registered after (or at) a given ISO8601 compliant datetime.', 'woocommerce' ),
 			'type'              => 'string',
 			'format'            => 'date-time',
 			'validate_callback' => 'rest_validate_request_arg',
-		);
-		$params['match']                   = array(
+		];
+		$params['match']                   = [
 			'description'       => __( 'Indicates whether all the conditions should be true for the resulting set, or if any one of them is sufficient. Match affects the following parameters: status_is, status_is_not, product_includes, product_excludes, coupon_includes, coupon_excludes, customer, categories', 'woocommerce' ),
 			'type'              => 'string',
 			'default'           => 'all',
-			'enum'              => array(
+			'enum'              => [
 				'all',
 				'any',
-			),
+			],
 			'validate_callback' => 'rest_validate_request_arg',
-		);
-		$params['search']                  = array(
+		];
+		$params['search']                  = [
 			'description'       => __( 'Limit response to objects with a customer field containing the search term. Searches the field provided by `searchby`.', 'woocommerce' ),
 			'type'              => 'string',
 			'validate_callback' => 'rest_validate_request_arg',
-		);
-		$params['searchby']                = array(
+		];
+		$params['searchby']                = [
 			'description' => 'Limit results with `search` and `searchby` to specific fields containing the search term.',
 			'type'        => 'string',
 			'default'     => 'name',
-			'enum'        => array(
+			'enum'        => [
 				'name',
 				'username',
 				'email',
-			),
-		);
-		$params['name_includes']           = array(
+			],
+		];
+		$params['name_includes']           = [
 			'description'       => __( 'Limit response to objects with specfic names.', 'woocommerce' ),
 			'type'              => 'string',
 			'validate_callback' => 'rest_validate_request_arg',
-		);
-		$params['name_excludes']           = array(
+		];
+		$params['name_excludes']           = [
 			'description'       => __( 'Limit response to objects excluding specfic names.', 'woocommerce' ),
 			'type'              => 'string',
 			'validate_callback' => 'rest_validate_request_arg',
-		);
-		$params['username_includes']       = array(
+		];
+		$params['username_includes']       = [
 			'description'       => __( 'Limit response to objects with specfic usernames.', 'woocommerce' ),
 			'type'              => 'string',
 			'validate_callback' => 'rest_validate_request_arg',
-		);
-		$params['username_excludes']       = array(
+		];
+		$params['username_excludes']       = [
 			'description'       => __( 'Limit response to objects excluding specfic usernames.', 'woocommerce' ),
 			'type'              => 'string',
 			'validate_callback' => 'rest_validate_request_arg',
-		);
-		$params['email_includes']          = array(
+		];
+		$params['email_includes']          = [
 			'description'       => __( 'Limit response to objects including emails.', 'woocommerce' ),
 			'type'              => 'string',
 			'validate_callback' => 'rest_validate_request_arg',
-		);
-		$params['email_excludes']          = array(
+		];
+		$params['email_excludes']          = [
 			'description'       => __( 'Limit response to objects excluding emails.', 'woocommerce' ),
 			'type'              => 'string',
 			'validate_callback' => 'rest_validate_request_arg',
-		);
-		$params['country_includes']        = array(
+		];
+		$params['country_includes']        = [
 			'description'       => __( 'Limit response to objects with specfic countries.', 'woocommerce' ),
 			'type'              => 'string',
 			'validate_callback' => 'rest_validate_request_arg',
-		);
-		$params['country_excludes']        = array(
+		];
+		$params['country_excludes']        = [
 			'description'       => __( 'Limit response to objects excluding specfic countries.', 'woocommerce' ),
 			'type'              => 'string',
 			'validate_callback' => 'rest_validate_request_arg',
-		);
-		$params['last_active_before']      = array(
+		];
+		$params['last_active_before']      = [
 			'description'       => __( 'Limit response to objects last active before (or at) a given ISO8601 compliant datetime.', 'woocommerce' ),
 			'type'              => 'string',
 			'format'            => 'date-time',
 			'validate_callback' => 'rest_validate_request_arg',
-		);
-		$params['last_active_after']       = array(
+		];
+		$params['last_active_after']       = [
 			'description'       => __( 'Limit response to objects last active after (or at) a given ISO8601 compliant datetime.', 'woocommerce' ),
 			'type'              => 'string',
 			'format'            => 'date-time',
 			'validate_callback' => 'rest_validate_request_arg',
-		);
-		$params['last_active_between']     = array(
+		];
+		$params['last_active_between']     = [
 			'description'       => __( 'Limit response to objects last active between two given ISO8601 compliant datetime.', 'woocommerce' ),
 			'type'              => 'array',
-			'validate_callback' => array( '\Automattic\WooCommerce\Admin\API\Reports\TimeInterval', 'rest_validate_between_date_arg' ),
-			'items'             => array(
+			'validate_callback' => [ '\Automattic\WooCommerce\Admin\API\Reports\TimeInterval', 'rest_validate_between_date_arg' ],
+			'items'             => [
 				'type' => 'string',
-			),
-		);
-		$params['registered_before']       = array(
+			],
+		];
+		$params['registered_before']       = [
 			'description'       => __( 'Limit response to objects registered before (or at) a given ISO8601 compliant datetime.', 'woocommerce' ),
 			'type'              => 'string',
 			'format'            => 'date-time',
 			'validate_callback' => 'rest_validate_request_arg',
-		);
-		$params['registered_after']        = array(
+		];
+		$params['registered_after']        = [
 			'description'       => __( 'Limit response to objects registered after (or at) a given ISO8601 compliant datetime.', 'woocommerce' ),
 			'type'              => 'string',
 			'format'            => 'date-time',
 			'validate_callback' => 'rest_validate_request_arg',
-		);
-		$params['registered_between']      = array(
+		];
+		$params['registered_between']      = [
 			'description'       => __( 'Limit response to objects last active between two given ISO8601 compliant datetime.', 'woocommerce' ),
 			'type'              => 'array',
-			'validate_callback' => array( '\Automattic\WooCommerce\Admin\API\Reports\TimeInterval', 'rest_validate_between_date_arg' ),
-			'items'             => array(
+			'validate_callback' => [ '\Automattic\WooCommerce\Admin\API\Reports\TimeInterval', 'rest_validate_between_date_arg' ],
+			'items'             => [
 				'type' => 'string',
-			),
-		);
-		$params['orders_count_min']        = array(
+			],
+		];
+		$params['orders_count_min']        = [
 			'description'       => __( 'Limit response to objects with an order count greater than or equal to given integer.', 'woocommerce' ),
 			'type'              => 'integer',
 			'sanitize_callback' => 'absint',
 			'validate_callback' => 'rest_validate_request_arg',
-		);
-		$params['orders_count_max']        = array(
+		];
+		$params['orders_count_max']        = [
 			'description'       => __( 'Limit response to objects with an order count less than or equal to given integer.', 'woocommerce' ),
 			'type'              => 'integer',
 			'sanitize_callback' => 'absint',
 			'validate_callback' => 'rest_validate_request_arg',
-		);
-		$params['orders_count_between']    = array(
+		];
+		$params['orders_count_between']    = [
 			'description'       => __( 'Limit response to objects with an order count between two given integers.', 'woocommerce' ),
 			'type'              => 'array',
-			'validate_callback' => array( '\Automattic\WooCommerce\Admin\API\Reports\TimeInterval', 'rest_validate_between_numeric_arg' ),
-			'items'             => array(
+			'validate_callback' => [ '\Automattic\WooCommerce\Admin\API\Reports\TimeInterval', 'rest_validate_between_numeric_arg' ],
+			'items'             => [
 				'type' => 'integer',
-			),
-		);
-		$params['total_spend_min']         = array(
+			],
+		];
+		$params['total_spend_min']         = [
 			'description'       => __( 'Limit response to objects with a total order spend greater than or equal to given number.', 'woocommerce' ),
 			'type'              => 'number',
 			'validate_callback' => 'rest_validate_request_arg',
-		);
-		$params['total_spend_max']         = array(
+		];
+		$params['total_spend_max']         = [
 			'description'       => __( 'Limit response to objects with a total order spend less than or equal to given number.', 'woocommerce' ),
 			'type'              => 'number',
 			'validate_callback' => 'rest_validate_request_arg',
-		);
-		$params['total_spend_between']     = array(
+		];
+		$params['total_spend_between']     = [
 			'description'       => __( 'Limit response to objects with a total order spend between two given numbers.', 'woocommerce' ),
 			'type'              => 'array',
-			'validate_callback' => array( '\Automattic\WooCommerce\Admin\API\Reports\TimeInterval', 'rest_validate_between_numeric_arg' ),
-			'items'             => array(
+			'validate_callback' => [ '\Automattic\WooCommerce\Admin\API\Reports\TimeInterval', 'rest_validate_between_numeric_arg' ],
+			'items'             => [
 				'type' => 'integer',
-			),
-		);
-		$params['avg_order_value_min']     = array(
+			],
+		];
+		$params['avg_order_value_min']     = [
 			'description'       => __( 'Limit response to objects with an average order spend greater than or equal to given number.', 'woocommerce' ),
 			'type'              => 'number',
 			'validate_callback' => 'rest_validate_request_arg',
-		);
-		$params['avg_order_value_max']     = array(
+		];
+		$params['avg_order_value_max']     = [
 			'description'       => __( 'Limit response to objects with an average order spend less than or equal to given number.', 'woocommerce' ),
 			'type'              => 'number',
 			'validate_callback' => 'rest_validate_request_arg',
-		);
-		$params['avg_order_value_between'] = array(
+		];
+		$params['avg_order_value_between'] = [
 			'description'       => __( 'Limit response to objects with an average order spend between two given numbers.', 'woocommerce' ),
 			'type'              => 'array',
-			'validate_callback' => array( '\Automattic\WooCommerce\Admin\API\Reports\TimeInterval', 'rest_validate_between_numeric_arg' ),
-			'items'             => array(
+			'validate_callback' => [ '\Automattic\WooCommerce\Admin\API\Reports\TimeInterval', 'rest_validate_between_numeric_arg' ],
+			'items'             => [
 				'type' => 'integer',
-			),
-		);
-		$params['last_order_before']       = array(
+			],
+		];
+		$params['last_order_before']       = [
 			'description'       => __( 'Limit response to objects with last order before (or at) a given ISO8601 compliant datetime.', 'woocommerce' ),
 			'type'              => 'string',
 			'format'            => 'date-time',
 			'validate_callback' => 'rest_validate_request_arg',
-		);
-		$params['last_order_after']        = array(
+		];
+		$params['last_order_after']        = [
 			'description'       => __( 'Limit response to objects with last order after (or at) a given ISO8601 compliant datetime.', 'woocommerce' ),
 			'type'              => 'string',
 			'format'            => 'date-time',
 			'validate_callback' => 'rest_validate_request_arg',
-		);
-		$params['customers']               = array(
+		];
+		$params['customers']               = [
 			'description'       => __( 'Limit result to items with specified customer ids.', 'woocommerce' ),
 			'type'              => 'array',
 			'sanitize_callback' => 'wp_parse_id_list',
 			'validate_callback' => 'rest_validate_request_arg',
-			'items'             => array(
+			'items'             => [
 				'type' => 'integer',
-			),
-		);
-		$params['fields']                  = array(
+			],
+		];
+		$params['fields']                  = [
 			'description'       => __( 'Limit stats fields to the specified items.', 'woocommerce' ),
 			'type'              => 'array',
 			'sanitize_callback' => 'wp_parse_slug_list',
 			'validate_callback' => 'rest_validate_request_arg',
-			'items'             => array(
+			'items'             => [
 				'type' => 'string',
-			),
-		);
-		$params['force_cache_refresh'] = array(
+			],
+		];
+		$params['force_cache_refresh'] = [
 			'description'       => __( 'Force retrieval of fresh data instead of from the cache.', 'woocommerce' ),
 			'type'              => 'boolean',
 			'sanitize_callback' => 'wp_validate_boolean',
 			'validate_callback' => 'rest_validate_request_arg',
-		);
+		];
 
 		return $params;
 	}

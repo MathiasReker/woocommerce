@@ -22,7 +22,7 @@ class WC_WCCOM_Site_Installer_Requirements_Check {
 	 * @return bool|WP_Error Does the site met the requirements?
 	 */
 	public static function met_requirements() {
-		$errs = array();
+		$errs = [];
 
 		if ( ! self::met_wp_cron_requirement() ) {
 			$errs[] = 'wp-cron';
@@ -34,7 +34,7 @@ class WC_WCCOM_Site_Installer_Requirements_Check {
 
 		if ( ! empty( $errs ) ) {
 			// translators: %s: Requirements unmet.
-			return new WP_Error( 'requirements_not_met', sprintf( __( 'Server requirements not met, missing requirement(s): %s.', 'woocommerce' ), implode( ', ', $errs ) ), array( 'status' => 400 ) );
+			return new WP_Error( 'requirements_not_met', sprintf( __( 'Server requirements not met, missing requirement(s): %s.', 'woocommerce' ), implode( ', ', $errs ) ), [ 'status' => 400 ] );
 		}
 
 		return true;

@@ -30,9 +30,9 @@ class WC_Admin_Tests_API_Reports_Orders_Stats extends WC_REST_Unit_Test_Case {
 		parent::setUp();
 
 		$this->user = $this->factory->user->create(
-			array(
+			[
 				'role' => 'administrator',
-			)
+			]
 		);
 	}
 
@@ -166,7 +166,7 @@ class WC_Admin_Tests_API_Reports_Orders_Stats extends WC_REST_Unit_Test_Case {
 		WC_Helper_Queue::run_all_pending();
 
 		$request = new WP_REST_Request( 'GET', $this->endpoint );
-		$request->set_query_params( array( 'per_page' => 15 ) );
+		$request->set_query_params( [ 'per_page' => 15 ] );
 		$response        = $this->server->dispatch( $request );
 		$response_orders = $response->get_data();
 
@@ -179,11 +179,11 @@ class WC_Admin_Tests_API_Reports_Orders_Stats extends WC_REST_Unit_Test_Case {
 		$small_term   = get_term_by( 'slug', 'large', 'pa_size' );
 		$request      = new WP_REST_Request( 'GET', $this->endpoint );
 		$request->set_query_params(
-			array(
-				'attribute_is' => array(
-					array( $size_attr_id, $small_term->term_id ),
-				),
-			)
+			[
+				'attribute_is' => [
+					[ $size_attr_id, $small_term->term_id ],
+				],
+			]
 		);
 		$response        = $this->server->dispatch( $request );
 		$response_orders = $response->get_data();
@@ -197,11 +197,11 @@ class WC_Admin_Tests_API_Reports_Orders_Stats extends WC_REST_Unit_Test_Case {
 		$small_term   = get_term_by( 'slug', 'large', 'pa_size' );
 		$request      = new WP_REST_Request( 'GET', $this->endpoint );
 		$request->set_query_params(
-			array(
-				'attribute_is_not' => array(
-					array( $size_attr_id, $small_term->term_id ),
-				),
-			)
+			[
+				'attribute_is_not' => [
+					[ $size_attr_id, $small_term->term_id ],
+				],
+			]
 		);
 		$response        = $this->server->dispatch( $request );
 		$response_orders = $response->get_data();

@@ -33,7 +33,7 @@ class WC_Admin_Tests_RemoteInboxNotifications_TransformerService extends WC_Unit
 	 * @expectedExceptionMessage Missing required config value: use
 	 */
 	public function test_it_throw_exception_when_transformer_config_is_missing_use() {
-		TransformerService::apply( array( 'value' ), array( new stdClass() ), null );
+		TransformerService::apply( [ 'value' ], [ new stdClass() ], null );
 	}
 
 	/**
@@ -42,7 +42,7 @@ class WC_Admin_Tests_RemoteInboxNotifications_TransformerService extends WC_Unit
 	 */
 	public function test_it_throws_exception_when_transformer_is_not_found() {
 		$transformer = $this->transformer_config( 'i_do_not_exist' );
-		TransformerService::apply( array( 'value' ), array( $transformer ), null );
+		TransformerService::apply( [ 'value' ], [ $transformer ], null );
 	}
 
 	/**
@@ -51,12 +51,12 @@ class WC_Admin_Tests_RemoteInboxNotifications_TransformerService extends WC_Unit
 	 * Then the value transformed by the first transformer should be returned.
 	 */
 	public function test_it_returns_previously_transformed_value_when_transformer_returns_null() {
-		$dot_notation = $this->transformer_config( 'dot_notation', array( 'path' => 'industries' ) );
-		$array_search = $this->transformer_config( 'array_search', array( 'value' => 'i_do_not_exist' ) );
-		$items        = array(
-			'industries' => array( 'item1', 'item2' ),
-		);
-		$result       = TransformerService::apply( $items, array( $dot_notation, $array_search ), null );
+		$dot_notation = $this->transformer_config( 'dot_notation', [ 'path' => 'industries' ] );
+		$array_search = $this->transformer_config( 'array_search', [ 'value' => 'i_do_not_exist' ] );
+		$items        = [
+			'industries' => [ 'item1', 'item2' ],
+		];
+		$result       = TransformerService::apply( $items, [ $dot_notation, $array_search ], null );
 		$this->assertEquals( $result, $items['industries'] );
 	}
 
@@ -70,30 +70,30 @@ class WC_Admin_Tests_RemoteInboxNotifications_TransformerService extends WC_Unit
 	 */
 	public function test_it_returns_transformed_value() {
 		// Given.
-		$items = array(
-			'teams' => array(
-				array(
+		$items = [
+			'teams' => [
+				[
 					'name'    => 'mothra',
-					'members' => array( 'mothra-member' ),
-				),
-				array(
+					'members' => [ 'mothra-member' ],
+				],
+				[
 					'name'    => 'gezora',
-					'members' => array( 'gezora-member' ),
-				),
-				array(
+					'members' => [ 'gezora-member' ],
+				],
+				[
 					'name'    => 'ghidorah',
-					'members' => array( 'ghidorah-member' ),
-				),
-			),
-		);
+					'members' => [ 'ghidorah-member' ],
+				],
+			],
+		];
 
 		// When.
-		$dot_notation  = $this->transformer_config( 'dot_notation', array( 'path' => 'teams' ) );
-		$array_column  = $this->transformer_config( 'array_column', array( 'key' => 'members' ) );
+		$dot_notation  = $this->transformer_config( 'dot_notation', [ 'path' => 'teams' ] );
+		$array_column  = $this->transformer_config( 'array_column', [ 'key' => 'members' ] );
 		$array_flatten = $this->transformer_config( 'array_flatten' );
-		$array_search  = $this->transformer_config( 'array_search', array( 'value' => 'mothra-member' ) );
+		$array_search  = $this->transformer_config( 'array_search', [ 'value' => 'mothra-member' ] );
 
-		$result = TransformerService::apply( $items, array( $dot_notation, $array_column, $array_flatten, $array_search ), null );
+		$result = TransformerService::apply( $items, [ $dot_notation, $array_column, $array_flatten, $array_search ], null );
 
 		// Then.
 		$this->assertEquals( 'mothra-member', $result );
@@ -107,7 +107,7 @@ class WC_Admin_Tests_RemoteInboxNotifications_TransformerService extends WC_Unit
 	 *
 	 * @return stdClass
 	 */
-	private function transformer_config( $name, array $arguments = array() ) {
+	private function transformer_config( $name, array $arguments = [] ) {
 		$transformer            = new stdClass();
 		$transformer->use       = $name;
 		$transformer->arguments = (object) $arguments;

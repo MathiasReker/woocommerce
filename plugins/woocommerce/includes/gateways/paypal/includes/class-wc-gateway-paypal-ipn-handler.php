@@ -31,8 +31,8 @@ class WC_Gateway_Paypal_IPN_Handler extends WC_Gateway_Paypal_Response {
 	 * @param string $receiver_email Email to receive IPN from.
 	 */
 	public function __construct( $sandbox = false, $receiver_email = '' ) {
-		add_action( 'woocommerce_api_wc_gateway_paypal', array( $this, 'check_response' ) );
-		add_action( 'valid-paypal-standard-ipn-request', array( $this, 'valid_response' ) );
+		add_action( 'woocommerce_api_wc_gateway_paypal', [ $this, 'check_response' ] );
+		add_action( 'valid-paypal-standard-ipn-request', [ $this, 'valid_response' ] );
 
 		$this->receiver_email = $receiver_email;
 		$this->sandbox        = $sandbox;
@@ -50,7 +50,7 @@ class WC_Gateway_Paypal_IPN_Handler extends WC_Gateway_Paypal_Response {
 			exit;
 		}
 
-		wp_die( 'PayPal IPN Request Failure', 'PayPal IPN', array( 'response' => 500 ) );
+		wp_die( 'PayPal IPN Request Failure', 'PayPal IPN', [ 'response' => 500 ] );
 	}
 
 	/**
@@ -70,7 +70,7 @@ class WC_Gateway_Paypal_IPN_Handler extends WC_Gateway_Paypal_Response {
 			WC_Gateway_Paypal::log( 'Payment status: ' . $posted['payment_status'] );
 
 			if ( method_exists( $this, 'payment_status_' . $posted['payment_status'] ) ) {
-				call_user_func( array( $this, 'payment_status_' . $posted['payment_status'] ), $order, $posted );
+				call_user_func( [ $this, 'payment_status_' . $posted['payment_status'] ], $order, $posted );
 			}
 		}
 	}
@@ -86,14 +86,14 @@ class WC_Gateway_Paypal_IPN_Handler extends WC_Gateway_Paypal_Response {
 		$validate_ipn['cmd'] = '_notify-validate';
 
 		// Send back post vars to paypal.
-		$params = array(
+		$params = [
 			'body'        => $validate_ipn,
 			'timeout'     => 60,
 			'httpversion' => '1.1',
 			'compress'    => false,
 			'decompress'  => false,
 			'user-agent'  => 'WooCommerce/' . WC()->version,
-		);
+		];
 
 		// Post back to get a response.
 		$response = wp_safe_remote_post( $this->sandbox ? 'https://www.sandbox.paypal.com/cgi-bin/webscr' : 'https://www.paypal.com/cgi-bin/webscr', $params );
@@ -121,7 +121,7 @@ class WC_Gateway_Paypal_IPN_Handler extends WC_Gateway_Paypal_Response {
 	 * @param string $txn_type Transaction type.
 	 */
 	protected function validate_transaction_type( $txn_type ) {
-		$accepted_types = array( 'cart', 'instant', 'express_checkout', 'web_accept', 'masspay', 'send_money', 'paypal_here' );
+		$accepted_types = [ 'cart', 'instant', 'express_checkout', 'web_accept', 'masspay', 'send_money', 'paypal_here' ];
 
 		if ( ! in_array( strtolower( $txn_type ), $accepted_types, true ) ) {
 			WC_Gateway_Paypal::log( 'Aborting, Invalid type:' . $txn_type );
@@ -362,7 +362,7 @@ class WC_Gateway_Paypal_IPN_Handler extends WC_Gateway_Paypal_Response {
 	 * @param string $message Email message.
 	 */
 	protected function send_ipn_email_notification( $subject, $message ) {
-		$new_order_settings = get_option( 'woocommerce_new_order_settings', array() );
+		$new_order_settings = get_option( 'woocommerce_new_order_settings', [] );
 		$mailer             = WC()->mailer();
 		$message            = $mailer->wrap_message( $subject, $message );
 

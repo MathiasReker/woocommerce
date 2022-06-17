@@ -66,14 +66,14 @@ class ShippingLabelBannerDisplayRules {
 	 *
 	 * @var array
 	 */
-	private $supported_countries = array( 'US', 'AS', 'PR', 'VI', 'GU', 'MP', 'UM', 'FM', 'MH' );
+	private $supported_countries = [ 'US', 'AS', 'PR', 'VI', 'GU', 'MP', 'UM', 'FM', 'MH' ];
 
 	/**
 	 * Array of supported currency codes.
 	 *
 	 * @var array
 	 */
-	private $supported_currencies = array( 'USD' );
+	private $supported_currencies = [ 'USD' ];
 
 
 	/**

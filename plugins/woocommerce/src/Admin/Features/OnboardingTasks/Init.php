@@ -49,7 +49,7 @@ class Init {
 	 * @return array
 	 */
 	public static function get_settings() {
-		$settings            = array();
+		$settings            = [];
 		$wc_pay_is_connected = false;
 		if ( class_exists( '\WC_Payments' ) ) {
 			$wc_payments_gateway = \WC_Payments::get_gateway();

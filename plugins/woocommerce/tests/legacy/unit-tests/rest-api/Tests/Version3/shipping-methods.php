@@ -15,9 +15,9 @@ class Shipping_Methods extends WC_REST_Unit_Test_Case {
 		parent::setUp();
 		$this->endpoint = new WC_REST_Shipping_Methods_Controller();
 		$this->user     = $this->factory->user->create(
-			array(
+			[
 				'role' => 'administrator',
-			)
+			]
 		);
 	}
 
@@ -45,23 +45,23 @@ class Shipping_Methods extends WC_REST_Unit_Test_Case {
 
 		$this->assertEquals( 200, $response->get_status() );
 		$this->assertContains(
-			array(
+			[
 				'id'          => 'free_shipping',
 				'title'       => 'Free shipping',
 				'description' => 'Free shipping is a special method which can be triggered with coupons and minimum spends.',
-				'_links'      => array(
-					'self'       => array(
-						array(
+				'_links'      => [
+					'self'       => [
+						[
 							'href' => rest_url( '/wc/v3/shipping_methods/free_shipping' ),
-						),
-					),
-					'collection' => array(
-						array(
+						],
+					],
+					'collection' => [
+						[
 							'href' => rest_url( '/wc/v3/shipping_methods' ),
-						),
-					),
-				),
-			),
+						],
+					],
+				],
+			],
 			$methods
 		);
 	}
@@ -90,11 +90,11 @@ class Shipping_Methods extends WC_REST_Unit_Test_Case {
 
 		$this->assertEquals( 200, $response->get_status() );
 		$this->assertEquals(
-			array(
+			[
 				'id'          => 'local_pickup',
 				'title'       => 'Local pickup',
 				'description' => 'Allow customers to pick up orders themselves. By default, when using local pickup store base taxes will apply regardless of customer address.',
-			),
+			],
 			$method
 		);
 	}

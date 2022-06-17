@@ -50,14 +50,14 @@ class WC_REST_Legacy_Orders_Controller extends WC_REST_CRUD_Controller {
 
 		if ( ! empty( $request['customer'] ) ) {
 			if ( ! empty( $args['meta_query'] ) ) {
-				$args['meta_query'] = array();
+				$args['meta_query'] = [];
 			}
 
-			$args['meta_query'][] = array(
+			$args['meta_query'][] = [
 				'key'   => '_customer_user',
 				'value' => $request['customer'],
 				'type'  => 'NUMERIC',
-			);
+			];
 		}
 
 		// Search by product.
@@ -70,7 +70,7 @@ class WC_REST_Legacy_Orders_Controller extends WC_REST_CRUD_Controller {
 			 ", $request['product'] ) );
 
 			// Force WP_Query return empty if don't found any order.
-			$order_ids = ! empty( $order_ids ) ? $order_ids : array( 0 );
+			$order_ids = ! empty( $order_ids ) ? $order_ids : [ 0 ];
 
 			$args['post__in'] = $order_ids;
 		}
@@ -81,7 +81,7 @@ class WC_REST_Legacy_Orders_Controller extends WC_REST_CRUD_Controller {
 
 			if ( ! empty( $order_ids ) ) {
 				unset( $args['s'] );
-				$args['post__in'] = array_merge( $order_ids, array( 0 ) );
+				$args['post__in'] = array_merge( $order_ids, [ 0 ] );
 			}
 		}
 
@@ -102,10 +102,10 @@ class WC_REST_Legacy_Orders_Controller extends WC_REST_CRUD_Controller {
 		$this->request['dp'] = is_null( $this->request['dp'] ) ? wc_get_price_decimals() : absint( $this->request['dp'] );
 		$statuses            = wc_get_order_statuses();
 		$order               = wc_get_order( $post );
-		$data                = array_merge( array( 'id' => $order->get_id() ), $order->get_data() );
-		$format_decimal      = array( 'discount_total', 'discount_tax', 'shipping_total', 'shipping_tax', 'shipping_total', 'shipping_tax', 'cart_tax', 'total', 'total_tax' );
-		$format_date         = array( 'date_created', 'date_modified', 'date_completed', 'date_paid' );
-		$format_line_items   = array( 'line_items', 'tax_lines', 'shipping_lines', 'fee_lines', 'coupon_lines' );
+		$data                = array_merge( [ 'id' => $order->get_id() ], $order->get_data() );
+		$format_decimal      = [ 'discount_total', 'discount_tax', 'shipping_total', 'shipping_tax', 'shipping_total', 'shipping_tax', 'cart_tax', 'total', 'total_tax' ];
+		$format_date         = [ 'date_created', 'date_modified', 'date_completed', 'date_paid' ];
+		$format_line_items   = [ 'line_items', 'tax_lines', 'shipping_lines', 'fee_lines', 'coupon_lines' ];
 
 		// Format decimal values.
 		foreach ( $format_decimal as $key ) {
@@ -122,17 +122,17 @@ class WC_REST_Legacy_Orders_Controller extends WC_REST_CRUD_Controller {
 
 		// Format line items.
 		foreach ( $format_line_items as $key ) {
-			$data[ $key ] = array_values( array_map( array( $this, 'get_order_item_data' ), $data[ $key ] ) );
+			$data[ $key ] = array_values( array_map( [ $this, 'get_order_item_data' ], $data[ $key ] ) );
 		}
 
 		// Refunds.
-		$data['refunds'] = array();
+		$data['refunds'] = [];
 		foreach ( $order->get_refunds() as $refund ) {
-			$data['refunds'][] = array(
+			$data['refunds'][] = [
 				'id'     => $refund->get_id(),
 				'refund' => $refund->get_reason() ? $refund->get_reason() : '',
 				'total'  => '-' . wc_format_decimal( $refund->get_amount(), $this->request['dp'] ),
-			);
+			];
 		}
 
 		$context  = ! empty( $request['context'] ) ? $request['context'] : 'view';
@@ -166,7 +166,7 @@ class WC_REST_Legacy_Orders_Controller extends WC_REST_CRUD_Controller {
 		$id        = isset( $request['id'] ) ? absint( $request['id'] ) : 0;
 		$order     = new WC_Order( $id );
 		$schema    = $this->get_item_schema();
-		$data_keys = array_keys( array_filter( $schema['properties'], array( $this, 'filter_writable_props' ) ) );
+		$data_keys = array_keys( array_filter( $schema['properties'], [ $this, 'filter_writable_props' ] ) );
 
 		// Handle all writable props
 		foreach ( $data_keys as $key ) {
@@ -202,7 +202,7 @@ class WC_REST_Legacy_Orders_Controller extends WC_REST_CRUD_Controller {
 						}
 						break;
 					default :
-						if ( is_callable( array( $order, "set_{$key}" ) ) ) {
+						if ( is_callable( [ $order, "set_{$key}" ] ) ) {
 							$order->{"set_{$key}"}( $value );
 						}
 						break;
@@ -269,7 +269,7 @@ class WC_REST_Legacy_Orders_Controller extends WC_REST_CRUD_Controller {
 		} catch ( WC_Data_Exception $e ) {
 			return new WP_Error( $e->getErrorCode(), $e->getMessage(), $e->getErrorData() );
 		} catch ( WC_REST_Exception $e ) {
-			return new WP_Error( $e->getErrorCode(), $e->getMessage(), array( 'status' => $e->getCode() ) );
+			return new WP_Error( $e->getErrorCode(), $e->getMessage(), [ 'status' => $e->getCode() ] );
 		}
 	}
 
@@ -300,7 +300,7 @@ class WC_REST_Legacy_Orders_Controller extends WC_REST_CRUD_Controller {
 		} catch ( WC_Data_Exception $e ) {
 			return new WP_Error( $e->getErrorCode(), $e->getMessage(), $e->getErrorData() );
 		} catch ( WC_REST_Exception $e ) {
-			return new WP_Error( $e->getErrorCode(), $e->getMessage(), array( 'status' => $e->getCode() ) );
+			return new WP_Error( $e->getErrorCode(), $e->getMessage(), [ 'status' => $e->getCode() ] );
 		}
 	}
 }

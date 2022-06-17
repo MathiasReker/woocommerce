@@ -16,7 +16,7 @@ class WC_Tests_Logger extends WC_Unit_Test_Case {
 		$time    = time();
 		$handler = $this
 			->getMockBuilder( 'WC_Log_Handler_Interface' )
-			->setMethods( array( 'handle' ) )
+			->setMethods( [ 'handle' ] )
 			->getMock();
 		$handler
 			->expects( $this->once() )
@@ -26,13 +26,13 @@ class WC_Tests_Logger extends WC_Unit_Test_Case {
 				$this->equalTo( 'notice' ),
 				$this->equalTo( 'this is a message' ),
 				$this->equalTo(
-					array(
+					[
 						'source'  => 'unit-tests',
 						'_legacy' => true,
-					)
+					]
 				)
 			);
-		$log = new WC_Logger( array( $handler ), 'debug' );
+		$log = new WC_Logger( [ $handler ], 'debug' );
 
 		$log->add( 'unit-tests', 'this is a message' );
 	}
@@ -68,7 +68,7 @@ class WC_Tests_Logger extends WC_Unit_Test_Case {
 	 */
 	public function test_log() {
 		$handler = $this->create_mock_handler();
-		$log     = new WC_Logger( array( $handler ), 'debug' );
+		$log     = new WC_Logger( [ $handler ], 'debug' );
 		$log->log( 'debug', 'debug message' );
 		$log->log( 'info', 'info message' );
 		$log->log( 'notice', 'notice message' );
@@ -87,23 +87,23 @@ class WC_Tests_Logger extends WC_Unit_Test_Case {
 	public function test_log_handlers() {
 		$false_handler = $this
 			->getMockBuilder( 'WC_Log_Handler_Interface' )
-			->setMethods( array( 'handle' ) )
+			->setMethods( [ 'handle' ] )
 			->getMock();
 		$false_handler->expects( $this->exactly( 8 ) )->method( 'handle' )->will( $this->returnValue( false ) );
 
 		$true_handler = $this
 			->getMockBuilder( 'WC_Log_Handler_Interface' )
-			->setMethods( array( 'handle' ) )
+			->setMethods( [ 'handle' ] )
 			->getMock();
 		$false_handler->expects( $this->exactly( 8 ) )->method( 'handle' )->will( $this->returnValue( true ) );
 
 		$final_handler = $this
 			->getMockBuilder( 'WC_Log_Handler_Interface' )
-			->setMethods( array( 'handle' ) )
+			->setMethods( [ 'handle' ] )
 			->getMock();
 		$final_handler->expects( $this->exactly( 8 ) )->method( 'handle' );
 
-		$log = new WC_Logger( array( $false_handler, $true_handler, $final_handler ), 'debug' );
+		$log = new WC_Logger( [ $false_handler, $true_handler, $final_handler ], 'debug' );
 
 		$log->debug( 'debug' );
 		$log->info( 'info' );
@@ -122,7 +122,7 @@ class WC_Tests_Logger extends WC_Unit_Test_Case {
 	 */
 	public function test_level_methods() {
 		$handler = $this->create_mock_handler();
-		$log     = new WC_Logger( array( $handler ), 'debug' );
+		$log     = new WC_Logger( [ $handler ], 'debug' );
 		$log->debug( 'debug message' );
 		$log->info( 'info message' );
 		$log->notice( 'notice message' );
@@ -139,7 +139,7 @@ class WC_Tests_Logger extends WC_Unit_Test_Case {
 	 * @since 3.0.0
 	 */
 	public function test_woocommerce_register_log_handlers_filter() {
-		add_filter( 'woocommerce_register_log_handlers', array( $this, 'return_assertion_handlers' ) );
+		add_filter( 'woocommerce_register_log_handlers', [ $this, 'return_assertion_handlers' ] );
 		$log = new WC_Logger( null, 'debug' );
 		$log->debug( 'debug' );
 		$log->info( 'info' );
@@ -149,7 +149,7 @@ class WC_Tests_Logger extends WC_Unit_Test_Case {
 		$log->critical( 'critical' );
 		$log->alert( 'alert' );
 		$log->emergency( 'emergency' );
-		remove_filter( 'woocommerce_register_log_handlers', array( $this, 'return_assertion_handlers' ) );
+		remove_filter( 'woocommerce_register_log_handlers', [ $this, 'return_assertion_handlers' ] );
 	}
 
 	/**
@@ -164,7 +164,7 @@ class WC_Tests_Logger extends WC_Unit_Test_Case {
 		delete_option( 'woocommerce_log_threshold' );
 		$handler = $this
 			->getMockBuilder( 'WC_Log_Handler_Interface' )
-			->setMethods( array( 'handle' ) )
+			->setMethods( [ 'handle' ] )
 			->getMock();
 		$handler
 			->expects( $this->at( 0 ) )
@@ -173,7 +173,7 @@ class WC_Tests_Logger extends WC_Unit_Test_Case {
 				$this->greaterThanOrEqual( $time ),
 				$this->equalTo( 'bad-level' ),
 				$this->equalTo( 'bad-level message' ),
-				$this->equalTo( array() )
+				$this->equalTo( [] )
 			);
 		$handler
 			->expects( $this->at( 1 ) )
@@ -182,10 +182,10 @@ class WC_Tests_Logger extends WC_Unit_Test_Case {
 				$this->greaterThanOrEqual( $time ),
 				$this->equalTo( 'debug' ),
 				$this->equalTo( 'debug message' ),
-				$this->equalTo( array() )
+				$this->equalTo( [] )
 			);
 
-		$log = new WC_Logger( array( $handler ) );
+		$log = new WC_Logger( [ $handler ] );
 
 		// An invalid level has the minimum severity, but should not be filtered.
 		$log->log( 'bad-level', 'bad-level message' );
@@ -207,10 +207,10 @@ class WC_Tests_Logger extends WC_Unit_Test_Case {
 	public function test_validate_handler_interface() {
 		$handler = $this
 			->getMockBuilder( 'stdClass' )
-			->setMethods( array( 'handle' ) )
+			->setMethods( [ 'handle' ] )
 			->getMock();
 		$handler->expects( $this->never() )->method( 'handle' );
-		new WC_Logger( array( $handler ) );
+		new WC_Logger( [ $handler ] );
 		$this->setExpectedIncorrectUsage( 'WC_Logger::__construct' );
 	}
 
@@ -227,11 +227,11 @@ class WC_Tests_Logger extends WC_Unit_Test_Case {
 	public function return_assertion_handlers() {
 		$handler = $this
 			->getMockBuilder( 'WC_Log_Handler_Interface' )
-			->setMethods( array( 'handle' ) )
+			->setMethods( [ 'handle' ] )
 			->getMock();
 		$handler->expects( $this->exactly( 8 ) )->method( 'handle' );
 
-		return array( $handler );
+		return [ $handler ];
 	}
 
 	/**
@@ -247,7 +247,7 @@ class WC_Tests_Logger extends WC_Unit_Test_Case {
 		$time    = time();
 		$handler = $this
 			->getMockBuilder( 'WC_Log_Handler_Interface' )
-			->setMethods( array( 'handle' ) )
+			->setMethods( [ 'handle' ] )
 			->getMock();
 
 		$handler
@@ -257,7 +257,7 @@ class WC_Tests_Logger extends WC_Unit_Test_Case {
 				$this->greaterThanOrEqual( $time ),
 				$this->equalTo( 'debug' ),
 				$this->equalTo( 'debug message' ),
-				$this->equalTo( array() )
+				$this->equalTo( [] )
 			);
 		$handler
 			->expects( $this->at( 1 ) )
@@ -266,7 +266,7 @@ class WC_Tests_Logger extends WC_Unit_Test_Case {
 				$this->greaterThanOrEqual( $time ),
 				$this->equalTo( 'info' ),
 				$this->equalTo( 'info message' ),
-				$this->equalTo( array() )
+				$this->equalTo( [] )
 			);
 		$handler
 			->expects( $this->at( 2 ) )
@@ -275,7 +275,7 @@ class WC_Tests_Logger extends WC_Unit_Test_Case {
 				$this->greaterThanOrEqual( $time ),
 				$this->equalTo( 'notice' ),
 				$this->equalTo( 'notice message' ),
-				$this->equalTo( array() )
+				$this->equalTo( [] )
 			);
 		$handler
 			->expects( $this->at( 3 ) )
@@ -284,7 +284,7 @@ class WC_Tests_Logger extends WC_Unit_Test_Case {
 				$this->greaterThanOrEqual( $time ),
 				$this->equalTo( 'warning' ),
 				$this->equalTo( 'warning message' ),
-				$this->equalTo( array() )
+				$this->equalTo( [] )
 			);
 		$handler
 			->expects( $this->at( 4 ) )
@@ -293,7 +293,7 @@ class WC_Tests_Logger extends WC_Unit_Test_Case {
 				$this->greaterThanOrEqual( $time ),
 				$this->equalTo( 'error' ),
 				$this->equalTo( 'error message' ),
-				$this->equalTo( array() )
+				$this->equalTo( [] )
 			);
 		$handler
 			->expects( $this->at( 5 ) )
@@ -302,7 +302,7 @@ class WC_Tests_Logger extends WC_Unit_Test_Case {
 				$this->greaterThanOrEqual( $time ),
 				$this->equalTo( 'critical' ),
 				$this->equalTo( 'critical message' ),
-				$this->equalTo( array() )
+				$this->equalTo( [] )
 			);
 		$handler
 			->expects( $this->at( 6 ) )
@@ -311,7 +311,7 @@ class WC_Tests_Logger extends WC_Unit_Test_Case {
 				$this->greaterThanOrEqual( $time ),
 				$this->equalTo( 'alert' ),
 				$this->equalTo( 'alert message' ),
-				$this->equalTo( array() )
+				$this->equalTo( [] )
 			);
 		$handler
 			->expects( $this->at( 7 ) )
@@ -320,7 +320,7 @@ class WC_Tests_Logger extends WC_Unit_Test_Case {
 				$this->greaterThanOrEqual( $time ),
 				$this->equalTo( 'emergency' ),
 				$this->equalTo( 'emergency message' ),
-				$this->equalTo( array() )
+				$this->equalTo( [] )
 			);
 
 		return $handler;

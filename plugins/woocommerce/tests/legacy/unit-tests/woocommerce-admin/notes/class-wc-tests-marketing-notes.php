@@ -31,9 +31,9 @@ class WC_Admin_Tests_Marketing_Notes extends WC_Unit_Test_Case {
 
 		// Load all marketing notes and check that the note was successfully saved.
 		$notes = $data_store->get_notes(
-			array(
-				'type' => array( Note::E_WC_ADMIN_NOTE_MARKETING ),
-			)
+			[
+				'type' => [ Note::E_WC_ADMIN_NOTE_MARKETING ],
+			]
 		);
 
 		$this->assertEquals( 1, count( $notes ) );
@@ -43,9 +43,9 @@ class WC_Admin_Tests_Marketing_Notes extends WC_Unit_Test_Case {
 
 		// Reload all marketing notes to verify they have been removed.
 		$notes = $data_store->get_notes(
-			array(
-				'type' => array( Note::E_WC_ADMIN_NOTE_MARKETING ),
-			)
+			[
+				'type' => [ Note::E_WC_ADMIN_NOTE_MARKETING ],
+			]
 		);
 
 		$this->assertEquals( 0, count( $notes ) );
@@ -66,9 +66,9 @@ class WC_Admin_Tests_Marketing_Notes extends WC_Unit_Test_Case {
 		// Load all marketing notes and check that the note was not added.
 		$data_store = Notes::load_data_store();
 		$notes      = $data_store->get_notes(
-			array(
-				'type' => array( Note::E_WC_ADMIN_NOTE_MARKETING ),
-			)
+			[
+				'type' => [ Note::E_WC_ADMIN_NOTE_MARKETING ],
+			]
 		);
 
 		$this->assertEquals( 0, count( $notes ) );

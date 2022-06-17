@@ -23,11 +23,11 @@ class WC_Admin_Log_Table_List extends WP_List_Table {
 	 */
 	public function __construct() {
 		parent::__construct(
-			array(
+			[
 				'singular' => 'log',
 				'plural'   => 'logs',
 				'ajax'     => false,
-			)
+			]
 		);
 	}
 
@@ -38,40 +38,40 @@ class WC_Admin_Log_Table_List extends WP_List_Table {
 	 */
 	public function level_dropdown() {
 
-		$levels = array(
-			array(
+		$levels = [
+			[
 				'value' => WC_Log_Levels::EMERGENCY,
 				'label' => __( 'Emergency', 'woocommerce' ),
-			),
-			array(
+			],
+			[
 				'value' => WC_Log_Levels::ALERT,
 				'label' => __( 'Alert', 'woocommerce' ),
-			),
-			array(
+			],
+			[
 				'value' => WC_Log_Levels::CRITICAL,
 				'label' => __( 'Critical', 'woocommerce' ),
-			),
-			array(
+			],
+			[
 				'value' => WC_Log_Levels::ERROR,
 				'label' => __( 'Error', 'woocommerce' ),
-			),
-			array(
+			],
+			[
 				'value' => WC_Log_Levels::WARNING,
 				'label' => __( 'Warning', 'woocommerce' ),
-			),
-			array(
+			],
+			[
 				'value' => WC_Log_Levels::NOTICE,
 				'label' => __( 'Notice', 'woocommerce' ),
-			),
-			array(
+			],
+			[
 				'value' => WC_Log_Levels::INFO,
 				'label' => __( 'Info', 'woocommerce' ),
-			),
-			array(
+			],
+			[
 				'value' => WC_Log_Levels::DEBUG,
 				'label' => __( 'Debug', 'woocommerce' ),
-			),
-		);
+			],
+		];
 
 		$selected_level = isset( $_REQUEST['level'] ) ? $_REQUEST['level'] : '';
 		?>
@@ -98,13 +98,13 @@ class WC_Admin_Log_Table_List extends WP_List_Table {
 	 * @return array
 	 */
 	public function get_columns() {
-		return array(
+		return [
 			'cb'        => '<input type="checkbox" />',
 			'timestamp' => __( 'Timestamp', 'woocommerce' ),
 			'level'     => __( 'Level', 'woocommerce' ),
 			'message'   => __( 'Message', 'woocommerce' ),
 			'source'    => __( 'Source', 'woocommerce' ),
-		);
+		];
 	}
 
 	/**
@@ -140,7 +140,7 @@ class WC_Admin_Log_Table_List extends WP_List_Table {
 	 */
 	public function column_level( $log ) {
 		$level_key = WC_Log_Levels::get_severity_level( $log['level'] );
-		$levels    = array(
+		$levels    = [
 			'emergency' => __( 'Emergency', 'woocommerce' ),
 			'alert'     => __( 'Alert', 'woocommerce' ),
 			'critical'  => __( 'Critical', 'woocommerce' ),
@@ -149,7 +149,7 @@ class WC_Admin_Log_Table_List extends WP_List_Table {
 			'notice'    => __( 'Notice', 'woocommerce' ),
 			'info'      => __( 'Info', 'woocommerce' ),
 			'debug'     => __( 'Debug', 'woocommerce' ),
-		);
+		];
 
 		if ( ! isset( $levels[ $level_key ] ) ) {
 			return '';
@@ -186,9 +186,9 @@ class WC_Admin_Log_Table_List extends WP_List_Table {
 	 * @return array
 	 */
 	protected function get_bulk_actions() {
-		return array(
+		return [
 			'delete' => __( 'Delete', 'woocommerce' ),
-		);
+		];
 	}
 
 	/**
@@ -212,11 +212,11 @@ class WC_Admin_Log_Table_List extends WP_List_Table {
 	 * @return array
 	 */
 	protected function get_sortable_columns() {
-		return array(
-			'timestamp' => array( 'timestamp', true ),
-			'level'     => array( 'level', true ),
-			'source'    => array( 'source', true ),
-		);
+		return [
+			'timestamp' => [ 'timestamp', true ],
+			'level'     => [ 'level', true ],
+			'source'    => [ 'source', true ],
+		];
 	}
 
 	/**
@@ -284,11 +284,11 @@ class WC_Admin_Log_Table_List extends WP_List_Table {
 		$total_items = $wpdb->get_var( $query_count );
 
 		$this->set_pagination_args(
-			array(
+			[
 				'total_items' => $total_items,
 				'per_page'    => $per_page,
 				'total_pages' => ceil( $total_items / $per_page ),
-			)
+			]
 		);
 	}
 
@@ -333,7 +333,7 @@ class WC_Admin_Log_Table_List extends WP_List_Table {
 	 * @return string Prepared ORDER BY clause for items query.
 	 */
 	protected function get_items_query_order() {
-		$valid_orders = array( 'level', 'source', 'timestamp' );
+		$valid_orders = [ 'level', 'source', 'timestamp' ];
 		if ( ! empty( $_REQUEST['orderby'] ) && in_array( $_REQUEST['orderby'], $valid_orders ) ) {
 			$by = wc_clean( $_REQUEST['orderby'] );
 		} else {
@@ -360,8 +360,8 @@ class WC_Admin_Log_Table_List extends WP_List_Table {
 	protected function get_items_query_where() {
 		global $wpdb;
 
-		$where_conditions = array();
-		$where_values     = array();
+		$where_conditions = [];
+		$where_values     = [];
 		if ( ! empty( $_REQUEST['level'] ) && WC_Log_Levels::is_valid_level( $_REQUEST['level'] ) ) {
 			$where_conditions[] = 'level >= %d';
 			$where_values[]     = WC_Log_Levels::get_level_severity( $_REQUEST['level'] );
@@ -386,10 +386,10 @@ class WC_Admin_Log_Table_List extends WP_List_Table {
 	 * Set _column_headers property for table list
 	 */
 	protected function prepare_column_headers() {
-		$this->_column_headers = array(
+		$this->_column_headers = [
 			$this->get_columns(),
-			array(),
+			[],
 			$this->get_sortable_columns(),
-		);
+		];
 	}
 }

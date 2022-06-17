@@ -25,7 +25,7 @@ class WC_Admin_Permalink_Settings {
 	 *
 	 * @var array
 	 */
-	private $permalinks = array();
+	private $permalinks = [];
 
 	/**
 	 * Hook in tabs.
@@ -39,26 +39,26 @@ class WC_Admin_Permalink_Settings {
 	 * Init our settings.
 	 */
 	public function settings_init() {
-		add_settings_section( 'woocommerce-permalink', __( 'Product permalinks', 'woocommerce' ), array( $this, 'settings' ), 'permalink' );
+		add_settings_section( 'woocommerce-permalink', __( 'Product permalinks', 'woocommerce' ), [ $this, 'settings' ], 'permalink' );
 
 		add_settings_field(
 			'woocommerce_product_category_slug',
 			__( 'Product category base', 'woocommerce' ),
-			array( $this, 'product_category_slug_input' ),
+			[ $this, 'product_category_slug_input' ],
 			'permalink',
 			'optional'
 		);
 		add_settings_field(
 			'woocommerce_product_tag_slug',
 			__( 'Product tag base', 'woocommerce' ),
-			array( $this, 'product_tag_slug_input' ),
+			[ $this, 'product_tag_slug_input' ],
 			'permalink',
 			'optional'
 		);
 		add_settings_field(
 			'woocommerce_product_attribute_slug',
 			__( 'Product attribute base', 'woocommerce' ),
-			array( $this, 'product_attribute_slug_input' ),
+			[ $this, 'product_attribute_slug_input' ],
 			'permalink',
 			'optional'
 		);
@@ -104,11 +104,11 @@ class WC_Admin_Permalink_Settings {
 		$base_slug    = urldecode( ( $shop_page_id > 0 && get_post( $shop_page_id ) ) ? get_page_uri( $shop_page_id ) : _x( 'shop', 'default-slug', 'woocommerce' ) );
 		$product_base = _x( 'product', 'default-slug', 'woocommerce' );
 
-		$structures = array(
+		$structures = [
 			0 => '',
 			1 => '/' . trailingslashit( $base_slug ),
 			2 => '/' . trailingslashit( $base_slug ) . trailingslashit( '%product_cat%' ),
-		);
+		];
 		?>
 		<table class="form-table wc-permalink-structure">
 			<tbody>
@@ -173,7 +173,7 @@ class WC_Admin_Permalink_Settings {
 		if ( isset( $_POST['permalink_structure'], $_POST['wc-permalinks-nonce'], $_POST['woocommerce_product_category_slug'], $_POST['woocommerce_product_tag_slug'], $_POST['woocommerce_product_attribute_slug'] ) && wp_verify_nonce( wp_unslash( $_POST['wc-permalinks-nonce'] ), 'wc-permalinks' ) ) { // WPCS: input var ok, sanitization ok.
 			wc_switch_to_site_locale();
 
-			$permalinks                   = (array) get_option( 'woocommerce_permalinks', array() );
+			$permalinks                   = (array) get_option( 'woocommerce_permalinks', [] );
 			$permalinks['category_base']  = wc_sanitize_permalink( wp_unslash( $_POST['woocommerce_product_category_slug'] ) ); // WPCS: input var ok, sanitization ok.
 			$permalinks['tag_base']       = wc_sanitize_permalink( wp_unslash( $_POST['woocommerce_product_tag_slug'] ) ); // WPCS: input var ok, sanitization ok.
 			$permalinks['attribute_base'] = wc_sanitize_permalink( wp_unslash( $_POST['woocommerce_product_attribute_slug'] ) ); // WPCS: input var ok, sanitization ok.

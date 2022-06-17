@@ -33,15 +33,15 @@ class WC_Tests_Product_CSV_Importer extends WC_Unit_Test_Case {
 		require_once $bootstrap->plugin_dir . '/includes/admin/importers/class-wc-product-csv-importer-controller.php';
 
 		// Callback used by WP_HTTP_TestCase to decide whether to perform HTTP requests or to provide a mocked response.
-		$this->http_responder = array( $this, 'mock_http_responses' );
+		$this->http_responder = [ $this, 'mock_http_responses' ];
 		$this->csv_file = dirname( __FILE__ ) . '/sample.csv';
 		$this->sut = new WC_Product_CSV_Importer(
 			$this->csv_file,
-			array(
+			[
 				'mapping'          => $this->get_csv_mapped_items(),
 				'parse'            => true,
 				'prevent_timeouts' => false,
-			)
+			]
 		);
 	}
 
@@ -52,7 +52,7 @@ class WC_Tests_Product_CSV_Importer extends WC_Unit_Test_Case {
 	 * @return array
 	 */
 	private function get_csv_mapped_items() {
-		return array(
+		return [
 			'Type'                    => 'type',
 			'SKU'                     => 'sku',
 			'Name'                    => 'name',
@@ -99,7 +99,7 @@ class WC_Tests_Product_CSV_Importer extends WC_Unit_Test_Case {
 			'Download 1 ID'           => 'downloads:id1',
 			'Download 1 name'         => 'downloads:name1',
 			'Download 1 URL'          => 'downloads:url1',
-		);
+		];
 	}
 
 	/**
@@ -107,7 +107,7 @@ class WC_Tests_Product_CSV_Importer extends WC_Unit_Test_Case {
 	 */
 	public function test_import_for_admin_users() {
 		// In most cases, an admin user will run the import.
-		wp_set_current_user( self::factory()->user->create( array( 'role' => 'administrator' ) ) );
+		wp_set_current_user( self::factory()->user->create( [ 'role' => 'administrator' ] ) );
 		$results  = $this->sut->import();
 
 		$this->assertEquals( 0, count( $results['failed'] ) );
@@ -125,7 +125,7 @@ class WC_Tests_Product_CSV_Importer extends WC_Unit_Test_Case {
 	 */
 	public function test_import_for_shop_managers() {
 		// In some cases, a shop manager may run the import.
-		wp_set_current_user( self::factory()->user->create( array( 'role' => 'shop_manager' ) ) );
+		wp_set_current_user( self::factory()->user->create( [ 'role' => 'shop_manager' ] ) );
 		$results  = $this->sut->import();
 
 		$this->assertEquals( 0, count( $results['updated'] ) );
@@ -148,11 +148,11 @@ class WC_Tests_Product_CSV_Importer extends WC_Unit_Test_Case {
 		$product->set_sku( 'wp-pennant' );
 		$product->save();
 
-		$args = array(
+		$args = [
 			'mapping'         => $this->get_csv_mapped_items(),
 			'parse'           => true,
 			'update_existing' => true,
-		);
+		];
 
 		$csv_file = dirname( __FILE__ ) . '/sample_update_product.csv';
 
@@ -185,7 +185,7 @@ class WC_Tests_Product_CSV_Importer extends WC_Unit_Test_Case {
 	 * @since 3.1.0
 	 */
 	public function test_get_raw_keys() {
-		$importer = new WC_Product_CSV_Importer( $this->csv_file, array( 'lines' => 1 ) );
+		$importer = new WC_Product_CSV_Importer( $this->csv_file, [ 'lines' => 1 ] );
 		$raw_keys = array_keys( $this->get_csv_mapped_items() );
 
 		$this->assertEquals( $raw_keys, $importer->get_raw_keys() );
@@ -196,10 +196,10 @@ class WC_Tests_Product_CSV_Importer extends WC_Unit_Test_Case {
 	 * @since 3.1.0
 	 */
 	public function test_get_mapped_keys() {
-		$args = array(
+		$args = [
 			'mapping' => $this->get_csv_mapped_items(),
 			'lines'   => 1,
-		);
+		];
 
 		$importer = new WC_Product_CSV_Importer( $this->csv_file, $args );
 
@@ -213,13 +213,13 @@ class WC_Tests_Product_CSV_Importer extends WC_Unit_Test_Case {
 	public function test_get_raw_data() {
 		$importer = new WC_Product_CSV_Importer(
 			$this->csv_file,
-			array(
+			[
 				'parse' => false,
 				'lines' => 2,
-			)
+			]
 		);
-		$items    = array(
-			array(
+		$items    = [
+			[
 				'simple',
 				'WOOLOGO',
 				'Woo Logo',
@@ -266,8 +266,8 @@ class WC_Tests_Product_CSV_Importer extends WC_Unit_Test_Case {
 				'',
 				'',
 				'',
-			),
-			array(
+			],
+			[
 				'simple, downloadable, virtual',
 				'WOOALBUM',
 				'Woo Album #1',
@@ -314,8 +314,8 @@ class WC_Tests_Product_CSV_Importer extends WC_Unit_Test_Case {
 				'4ff604c2-97bd-4869-938b-7798ba6648ab',
 				'Album flac',
 				'http://woo.dev/albums/album.flac',
-			),
-		);
+			],
+		];
 
 		$this->assertEquals( $items, $importer->get_raw_data() );
 	}
@@ -325,14 +325,14 @@ class WC_Tests_Product_CSV_Importer extends WC_Unit_Test_Case {
 	 * @since 3.1.0
 	 */
 	public function test_get_parsed_data() {
-		$args = array(
+		$args = [
 			'mapping' => $this->get_csv_mapped_items(),
 			'parse'   => true,
-		);
+		];
 
 		$importer = new WC_Product_CSV_Importer( $this->csv_file, $args );
-		$items    = array(
-			array(
+		$items    = [
+			[
 				'type'                  => 'simple',
 				'sku'                   => 'WOOLOGO',
 				'name'                  => 'Woo Logo',
@@ -363,20 +363,20 @@ class WC_Tests_Product_CSV_Importer extends WC_Unit_Test_Case {
 				'button_text'           => '',
 				'status'                => 'publish',
 				'raw_image_id'          => 'http://demo.woothemes.com/woocommerce/wp-content/uploads/sites/56/2013/06/T_1_front.jpg',
-				'raw_gallery_image_ids' => array( 'http://demo.woothemes.com/woocommerce/wp-content/uploads/sites/56/2013/06/T_1_back.jpg' ),
+				'raw_gallery_image_ids' => [ 'http://demo.woothemes.com/woocommerce/wp-content/uploads/sites/56/2013/06/T_1_back.jpg' ],
 				'virtual'               => '',
 				'downloadable'          => '',
 				'manage_stock'          => true,
 				'virtual'               => false,
 				'downloadable'          => false,
-				'raw_attributes'        => array(
-					array(
+				'raw_attributes'        => [
+					[
 						'name' => 'Color',
-					),
-				),
+					],
+				],
 				'menu_order'            => 0,
-			),
-			array(
+			],
+			[
 				'type'                  => 'simple',
 				'sku'                   => 'WOOALBUM',
 				'name'                  => 'Woo Album #1',
@@ -407,29 +407,29 @@ class WC_Tests_Product_CSV_Importer extends WC_Unit_Test_Case {
 				'button_text'           => '',
 				'status'                => 'publish',
 				'raw_image_id'          => 'http://demo.woothemes.com/woocommerce/wp-content/uploads/sites/56/2013/06/cd_1_angle.jpg',
-				'raw_gallery_image_ids' => array( 'http://demo.woothemes.com/woocommerce/wp-content/uploads/sites/56/2013/06/cd_1_flat.jpg' ),
+				'raw_gallery_image_ids' => [ 'http://demo.woothemes.com/woocommerce/wp-content/uploads/sites/56/2013/06/cd_1_flat.jpg' ],
 				'virtual'               => true,
 				'downloadable'          => true,
 				'manage_stock'          => false,
-				'raw_attributes'        => array(
-					array(
+				'raw_attributes'        => [
+					[
 						'name' => 'Label',
-					),
-					array(
-						'value' => array( '180-Gram' ),
+					],
+					[
+						'value' => [ '180-Gram' ],
 						'name'  => 'Vinyl',
-					),
-				),
-				'downloads'             => array(
-					array(
+					],
+				],
+				'downloads'             => [
+					[
 						'name'        => 'Album flac',
 						'file'        => 'http://woo.dev/albums/album.flac',
 						'download_id' => '4ff604c2-97bd-4869-938b-7798ba6648ab',
-					),
-				),
+					],
+				],
 				'menu_order'            => 1,
-			),
-			array(
+			],
+			[
 				'type'               => 'external',
 				'sku'                => '',
 				'name'               => 'WooCommerce Product CSV Suite',
@@ -464,8 +464,8 @@ class WC_Tests_Product_CSV_Importer extends WC_Unit_Test_Case {
 				'downloadable'       => false,
 				'manage_stock'       => false,
 				'menu_order'         => 2,
-			),
-			array(
+			],
+			[
 				'type'                  => 'variable',
 				'sku'                   => 'WOOIDEA',
 				'name'                  => 'Ship Your Idea',
@@ -496,28 +496,28 @@ class WC_Tests_Product_CSV_Importer extends WC_Unit_Test_Case {
 				'button_text'           => '',
 				'status'                => 'publish',
 				'raw_image_id'          => 'http://demo.woothemes.com/woocommerce/wp-content/uploads/sites/56/2013/06/T_4_front.jpg',
-				'raw_gallery_image_ids' => array(
+				'raw_gallery_image_ids' => [
 					'http://demo.woothemes.com/woocommerce/wp-content/uploads/sites/56/2013/06/T_4_back.jpg',
 					'http://demo.woothemes.com/woocommerce/wp-content/uploads/sites/56/2013/06/T_3_front.jpg',
 					'http://demo.woothemes.com/woocommerce/wp-content/uploads/sites/56/2013/06/T_3_back.jpg',
-				),
+				],
 				'virtual'               => false,
 				'downloadable'          => false,
 				'manage_stock'          => false,
-				'raw_attributes'        => array(
-					array(
+				'raw_attributes'        => [
+					[
 						'name'    => 'Color',
 						'default' => 'Green',
-					),
-					array(
-						'value'   => array( 'M', 'L' ),
+					],
+					[
+						'value'   => [ 'M', 'L' ],
 						'name'    => 'Size',
 						'default' => 'L',
-					),
-				),
+					],
+				],
 				'menu_order'            => 3,
-			),
-			array(
+			],
+			[
 				'type'               => 'variation',
 				'sku'                => '',
 				'name'               => '',
@@ -551,18 +551,18 @@ class WC_Tests_Product_CSV_Importer extends WC_Unit_Test_Case {
 				'virtual'            => false,
 				'downloadable'       => false,
 				'manage_stock'       => true,
-				'raw_attributes'     => array(
-					array(
+				'raw_attributes'     => [
+					[
 						'name' => 'Color',
-					),
-					array(
-						'value' => array( 'M' ),
+					],
+					[
+						'value' => [ 'M' ],
 						'name'  => 'Size',
-					),
-				),
+					],
+				],
 				'menu_order'         => 1,
-			),
-			array(
+			],
+			[
 				'type'               => 'variation',
 				'sku'                => '',
 				'name'               => '',
@@ -596,18 +596,18 @@ class WC_Tests_Product_CSV_Importer extends WC_Unit_Test_Case {
 				'virtual'            => false,
 				'downloadable'       => false,
 				'manage_stock'       => true,
-				'raw_attributes'     => array(
-					array(
+				'raw_attributes'     => [
+					[
 						'name' => 'Color',
-					),
-					array(
-						'value' => array( 'L' ),
+					],
+					[
+						'value' => [ 'L' ],
 						'name'  => 'Size',
-					),
-				),
+					],
+				],
 				'menu_order'         => 2,
-			),
-			array(
+			],
+			[
 				'type'                  => 'grouped',
 				'sku'                   => '',
 				'name'                  => 'Best Woo Products',
@@ -638,13 +638,13 @@ class WC_Tests_Product_CSV_Importer extends WC_Unit_Test_Case {
 				'button_text'           => '',
 				'status'                => 'publish',
 				'raw_image_id'          => 'http://demo.woothemes.com/woocommerce/wp-content/uploads/sites/56/2013/06/T_1_front.jpg',
-				'raw_gallery_image_ids' => array( 'http://demo.woothemes.com/woocommerce/wp-content/uploads/sites/56/2013/06/cd_1_angle.jpg' ),
+				'raw_gallery_image_ids' => [ 'http://demo.woothemes.com/woocommerce/wp-content/uploads/sites/56/2013/06/cd_1_angle.jpg' ],
 				'virtual'               => false,
 				'downloadable'          => false,
 				'manage_stock'          => false,
 				'menu_order'            => 4,
-			),
-		);
+			],
+		];
 
 		$parsed_data = $importer->get_parsed_data();
 
@@ -677,10 +677,10 @@ class WC_Tests_Product_CSV_Importer extends WC_Unit_Test_Case {
 				self::file_copy( WC_Unit_Tests_Bootstrap::instance()->tests_dir . '/data/Dr1Bczxq4q.png', $request['filename'] );
 			}
 
-			$mocked_response = array(
+			$mocked_response = [
 				'body'     => 'Mocked response',
-				'response' => array( 'code' => 200 ),
-			);
+				'response' => [ 'code' => 200 ],
+			];
 		}
 
 		return $mocked_response;

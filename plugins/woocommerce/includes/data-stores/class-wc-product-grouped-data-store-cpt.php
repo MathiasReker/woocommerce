@@ -24,9 +24,9 @@ class WC_Product_Grouped_Data_Store_CPT extends WC_Product_Data_Store_CPT implem
 	 * @since 3.0.0
 	 */
 	protected function update_post_meta( &$product, $force = false ) {
-		$meta_key_to_props = array(
+		$meta_key_to_props = [
 			'_children' => 'children',
-		);
+		];
 
 		$props_to_update = $force ? $meta_key_to_props : $this->get_props_to_update( $product, $meta_key_to_props );
 
@@ -70,7 +70,7 @@ class WC_Product_Grouped_Data_Store_CPT extends WC_Product_Data_Store_CPT implem
 	 * @param WC_Product $product Product object.
 	 */
 	protected function update_prices_from_children( &$product ) {
-		$child_prices = array();
+		$child_prices = [];
 		foreach ( $product->get_children( 'edit' ) as $child_id ) {
 			$child = wc_get_product( $child_id );
 			if ( $child ) {

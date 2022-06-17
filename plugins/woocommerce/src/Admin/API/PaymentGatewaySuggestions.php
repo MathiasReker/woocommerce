@@ -40,27 +40,27 @@ class PaymentGatewaySuggestions extends \WC_REST_Data_Controller {
 		register_rest_route(
 			$this->namespace,
 			'/' . $this->rest_base,
-			array(
-				array(
+			[
+				[
 					'methods'             => \WP_REST_Server::READABLE,
-					'callback'            => array( $this, 'get_suggestions' ),
-					'permission_callback' => array( $this, 'get_permission_check' ),
-				),
-				'schema' => array( $this, 'get_item_schema' ),
-			)
+					'callback'            => [ $this, 'get_suggestions' ],
+					'permission_callback' => [ $this, 'get_permission_check' ],
+				],
+				'schema' => [ $this, 'get_item_schema' ],
+			]
 		);
 
 		register_rest_route(
 			$this->namespace,
 			'/' . $this->rest_base . '/dismiss',
-			array(
-				array(
+			[
+				[
 					'methods'             => \WP_REST_Server::CREATABLE,
-					'callback'            => array( $this, 'dismiss_payment_gateway_suggestion' ),
-					'permission_callback' => array( $this, 'get_permission_check' ),
-				),
-				'schema' => array( $this, 'get_item_schema' ),
-			)
+					'callback'            => [ $this, 'dismiss_payment_gateway_suggestion' ],
+					'permission_callback' => [ $this, 'get_permission_check' ],
+				],
+				'schema' => [ $this, 'get_item_schema' ],
+			]
 		);
 
 	}
@@ -73,7 +73,7 @@ class PaymentGatewaySuggestions extends \WC_REST_Data_Controller {
 	 */
 	public function get_permission_check( $request ) {
 		if ( ! current_user_can( 'install_plugins' ) ) {
-			return new \WP_Error( 'woocommerce_rest_cannot_update', __( 'Sorry, you cannot manage plugins.', 'woocommerce' ), array( 'status' => rest_authorization_required_code() ) );
+			return new \WP_Error( 'woocommerce_rest_cannot_update', __( 'Sorry, you cannot manage plugins.', 'woocommerce' ), [ 'status' => rest_authorization_required_code() ] );
 		}
 		return true;
 	}
@@ -89,7 +89,7 @@ class PaymentGatewaySuggestions extends \WC_REST_Data_Controller {
 			return Suggestions::get_suggestions();
 		}
 
-		return rest_ensure_response( array() );
+		return rest_ensure_response( [] );
 	}
 
 	/**
@@ -108,55 +108,55 @@ class PaymentGatewaySuggestions extends \WC_REST_Data_Controller {
 	 * @return array
 	 */
 	public function get_item_schema() {
-		$schema = array(
+		$schema = [
 			'$schema'    => 'http://json-schema.org/draft-04/schema#',
 			'title'      => 'payment-gateway-suggestions',
 			'type'       => 'array',
-			'properties' => array(
-				'content'                 => array(
+			'properties' => [
+				'content'                 => [
 					'description' => __( 'Suggestion description.', 'woocommerce' ),
 					'type'        => 'string',
-					'context'     => array( 'view', 'edit' ),
+					'context'     => [ 'view', 'edit' ],
 					'readonly'    => true,
-				),
-				'id'                      => array(
+				],
+				'id'                      => [
 					'description' => __( 'Suggestion ID.', 'woocommerce' ),
 					'type'        => 'string',
-					'context'     => array( 'view', 'edit' ),
+					'context'     => [ 'view', 'edit' ],
 					'readonly'    => true,
-				),
-				'image'                   => array(
+				],
+				'image'                   => [
 					'description' => __( 'Gateway image.', 'woocommerce' ),
 					'type'        => 'string',
-					'context'     => array( 'view', 'edit' ),
+					'context'     => [ 'view', 'edit' ],
 					'readonly'    => true,
-				),
-				'is_visible'              => array(
+				],
+				'is_visible'              => [
 					'description' => __( 'Suggestion visibility.', 'woocommerce' ),
 					'type'        => 'boolean',
-					'context'     => array( 'view', 'edit' ),
+					'context'     => [ 'view', 'edit' ],
 					'readonly'    => true,
-				),
-				'plugins'                 => array(
+				],
+				'plugins'                 => [
 					'description' => __( 'Array of plugin slugs.', 'woocommerce' ),
 					'type'        => 'array',
-					'context'     => array( 'view', 'edit' ),
+					'context'     => [ 'view', 'edit' ],
 					'readonly'    => true,
-				),
-				'recommendation_priority' => array(
+				],
+				'recommendation_priority' => [
 					'description' => __( 'Priority of recommendation.', 'woocommerce' ),
 					'type'        => 'integer',
-					'context'     => array( 'view', 'edit' ),
+					'context'     => [ 'view', 'edit' ],
 					'readonly'    => true,
-				),
-				'title'                   => array(
+				],
+				'title'                   => [
 					'description' => __( 'Gateway title.', 'woocommerce' ),
 					'type'        => 'string',
-					'context'     => array( 'view', 'edit' ),
+					'context'     => [ 'view', 'edit' ],
 					'readonly'    => true,
-				),
-			),
-		);
+				],
+			],
+		];
 
 		return $this->add_additional_fields_schema( $schema );
 	}

@@ -23,8 +23,8 @@ class OnboardingProfile {
 	 * Add onboarding actions.
 	 */
 	public static function init() {
-		add_action( 'woocommerce_updated', array( __CLASS__, 'maybe_mark_complete' ) );
-		add_action( 'update_option_' . self::DATA_OPTION, array( __CLASS__, 'trigger_complete' ), 10, 2 );
+		add_action( 'woocommerce_updated', [ __CLASS__, 'maybe_mark_complete' ] );
+		add_action( 'update_option_' . self::DATA_OPTION, [ __CLASS__, 'trigger_complete' ], 10, 2 );
 	}
 
 	/**
@@ -57,7 +57,7 @@ class OnboardingProfile {
 	 * @return bool
 	 */
 	public static function needs_completion() {
-		$onboarding_data = get_option( self::DATA_OPTION, array() );
+		$onboarding_data = get_option( self::DATA_OPTION, [] );
 
 		$is_completed = isset( $onboarding_data['completed'] ) && true === $onboarding_data['completed'];
 		$is_skipped   = isset( $onboarding_data['skipped'] ) && true === $onboarding_data['skipped'];
@@ -79,7 +79,7 @@ class OnboardingProfile {
 			return;
 		}
 
-		$onboarding_data = get_option( self::DATA_OPTION, array() );
+		$onboarding_data = get_option( self::DATA_OPTION, [] );
 		// Don't make updates if the profiler is completed or skipped, but task list is potentially incomplete.
 		if (
 			( isset( $onboarding_data['completed'] ) && $onboarding_data['completed'] ) ||

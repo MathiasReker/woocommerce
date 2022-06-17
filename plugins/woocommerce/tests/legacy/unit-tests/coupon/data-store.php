@@ -12,7 +12,7 @@ class WC_Tests_Coupon_Data_Store extends WC_Unit_Test_Case {
 	 */
 	public function test_coupon_store_loads() {
 		$store = new WC_Data_Store( 'coupon' );
-		$this->assertTrue( is_callable( array( $store, 'read' ) ) );
+		$this->assertTrue( is_callable( [ $store, 'read' ] ) );
 		$this->assertEquals( 'WC_Coupon_Data_Store_CPT', $store->get_current_class_name() );
 	}
 
@@ -152,7 +152,7 @@ class WC_Tests_Coupon_Data_Store extends WC_Unit_Test_Case {
 		$coupon->increase_usage_count( 'woo@woo.local' );
 
 		$this->assertEquals( 1, $coupon->get_usage_count() );
-		$this->assertEquals( array( 'woo@woo.local' ), $coupon->get_used_by() );
+		$this->assertEquals( [ 'woo@woo.local' ], $coupon->get_used_by() );
 
 		$coupon->increase_usage_count( $user_id );
 		$coupon->increase_usage_count( $user_id );
@@ -163,7 +163,7 @@ class WC_Tests_Coupon_Data_Store extends WC_Unit_Test_Case {
 		$coupon->decrease_usage_count( 'woo@woo.local' );
 		$coupon->decrease_usage_count( $user_id );
 		$this->assertEquals( 1, $coupon->get_usage_count() );
-		$this->assertEquals( array( 1 ), $coupon->get_used_by() );
+		$this->assertEquals( [ 1 ], $coupon->get_used_by() );
 	}
 
 }

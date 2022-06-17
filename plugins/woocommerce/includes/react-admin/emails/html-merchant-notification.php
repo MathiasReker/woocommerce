@@ -22,15 +22,15 @@ do_action( 'woocommerce_email_header', $email_heading, $email );
 <?php
 echo wp_kses(
 	$email_content,
-	array(
-		'a'      => array(
-			'href'  => array(),
-			'title' => array(),
-		),
-		'br'     => array(),
-		'em'     => array(),
-		'strong' => array(),
-	)
+	[
+		'a'      => [
+			'href'  => [],
+			'title' => [],
+		],
+		'br'     => [],
+		'em'     => [],
+		'strong' => [],
+	]
 );
 
 $base_color       = get_option( 'woocommerce_email_base_color' );

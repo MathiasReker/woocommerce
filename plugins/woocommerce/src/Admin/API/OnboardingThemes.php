@@ -39,27 +39,27 @@ class OnboardingThemes extends \WC_REST_Data_Controller {
 		register_rest_route(
 			$this->namespace,
 			'/' . $this->rest_base . '/install',
-			array(
-				array(
+			[
+				[
 					'methods'             => \WP_REST_Server::EDITABLE,
-					'callback'            => array( $this, 'install_theme' ),
-					'permission_callback' => array( $this, 'update_item_permissions_check' ),
-				),
-				'schema' => array( $this, 'get_item_schema' ),
-			)
+					'callback'            => [ $this, 'install_theme' ],
+					'permission_callback' => [ $this, 'update_item_permissions_check' ],
+				],
+				'schema' => [ $this, 'get_item_schema' ],
+			]
 		);
 
 		register_rest_route(
 			$this->namespace,
 			'/' . $this->rest_base . '/activate',
-			array(
-				array(
+			[
+				[
 					'methods'             => \WP_REST_Server::EDITABLE,
-					'callback'            => array( $this, 'activate_theme' ),
-					'permission_callback' => array( $this, 'update_item_permissions_check' ),
-				),
-				'schema' => array( $this, 'get_item_schema' ),
-			)
+					'callback'            => [ $this, 'activate_theme' ],
+					'permission_callback' => [ $this, 'update_item_permissions_check' ],
+				],
+				'schema' => [ $this, 'get_item_schema' ],
+			]
 		);
 	}
 
@@ -71,7 +71,7 @@ class OnboardingThemes extends \WC_REST_Data_Controller {
 	 */
 	public function update_item_permissions_check( $request ) {
 		if ( ! current_user_can( 'switch_themes' ) ) {
-			return new \WP_Error( 'woocommerce_rest_cannot_update', __( 'Sorry, you cannot manage themes.', 'woocommerce' ), array( 'status' => rest_authorization_required_code() ) );
+			return new \WP_Error( 'woocommerce_rest_cannot_update', __( 'Sorry, you cannot manage themes.', 'woocommerce' ), [ 'status' => rest_authorization_required_code() ] );
 		}
 		return true;
 	}
@@ -93,11 +93,11 @@ class OnboardingThemes extends \WC_REST_Data_Controller {
 		$installed_themes = wp_get_themes();
 
 		if ( in_array( $theme, array_keys( $installed_themes ), true ) ) {
-			return( array(
+			return( [
 				'slug'   => $theme,
 				'name'   => $installed_themes[ $theme ]->get( 'Name' ),
 				'status' => 'success',
-			) );
+			] );
 		}
 
 		include_once ABSPATH . '/wp-admin/includes/admin.php';
@@ -108,12 +108,12 @@ class OnboardingThemes extends \WC_REST_Data_Controller {
 
 		$api = themes_api(
 			'theme_information',
-			array(
+			[
 				'slug'   => $theme,
-				'fields' => array(
+				'fields' => [
 					'sections' => false,
-				),
-			)
+				],
+			]
 		);
 
 		if ( is_wp_error( $api ) ) {
@@ -143,11 +143,11 @@ class OnboardingThemes extends \WC_REST_Data_Controller {
 			);
 		}
 
-		return array(
+		return [
 			'slug'   => $theme,
 			'name'   => $api->name,
 			'status' => 'success',
-		);
+		];
 	}
 
 	/**
@@ -177,11 +177,11 @@ class OnboardingThemes extends \WC_REST_Data_Controller {
 			return new \WP_Error( 'woocommerce_rest_invalid_theme', sprintf( __( 'The requested theme could not be activated.', 'woocommerce' ), $theme ), 500 );
 		}
 
-		return( array(
+		return( [
 			'slug'   => $theme,
 			'name'   => $installed_themes[ $theme ]->get( 'Name' ),
 			'status' => 'success',
-		) );
+		] );
 	}
 
 	/**
@@ -190,31 +190,31 @@ class OnboardingThemes extends \WC_REST_Data_Controller {
 	 * @return array
 	 */
 	public function get_item_schema() {
-		$schema = array(
+		$schema = [
 			'$schema'    => 'http://json-schema.org/draft-04/schema#',
 			'title'      => 'onboarding_theme',
 			'type'       => 'object',
-			'properties' => array(
-				'slug'   => array(
+			'properties' => [
+				'slug'   => [
 					'description' => __( 'Theme slug.', 'woocommerce' ),
 					'type'        => 'string',
-					'context'     => array( 'view', 'edit' ),
+					'context'     => [ 'view', 'edit' ],
 					'readonly'    => true,
-				),
-				'name'   => array(
+				],
+				'name'   => [
 					'description' => __( 'Theme name.', 'woocommerce' ),
 					'type'        => 'string',
-					'context'     => array( 'view', 'edit' ),
+					'context'     => [ 'view', 'edit' ],
 					'readonly'    => true,
-				),
-				'status' => array(
+				],
+				'status' => [
 					'description' => __( 'Theme status.', 'woocommerce' ),
 					'type'        => 'string',
-					'context'     => array( 'view', 'edit' ),
+					'context'     => [ 'view', 'edit' ],
 					'readonly'    => true,
-				),
-			),
-		);
+				],
+			],
+		];
 
 		return $this->add_additional_fields_schema( $schema );
 	}

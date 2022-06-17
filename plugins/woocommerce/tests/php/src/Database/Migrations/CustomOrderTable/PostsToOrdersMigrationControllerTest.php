@@ -351,10 +351,10 @@ WHERE order_id = {$order_id} AND meta_key = 'non_unique_key_1' AND meta_value in
 		);
 		$this->assertEquals( 2, count( $non_unique_rows ) );
 		$this->assertEquals(
-			array(
+			[
 				'non_unique_value_1',
 				'non_unique_value_2',
-			),
+			],
 			array_column( $non_unique_rows, 'meta_value' )
 		);
 	}
@@ -380,7 +380,7 @@ WHERE order_id = {$order_id} AND meta_key = 'non_unique_key_1' AND meta_value in
 		$fake_logger = $this->use_fake_logger();
 
 		$wpdb_mock = new DynamicDecorator( $wpdb );
-		$this->register_legacy_proxy_global_mocks( array( 'wpdb' => $wpdb_mock ) );
+		$this->register_legacy_proxy_global_mocks( [ 'wpdb' => $wpdb_mock ] );
 
 		$wpdb_mock->register_method_replacement(
 			'get_results',
@@ -405,7 +405,7 @@ WHERE order_id = {$order_id} AND meta_key = 'non_unique_key_1' AND meta_value in
 			}
 		);
 
-		$this->sut->migrate_orders( array( 1, 2, 3 ) );
+		$this->sut->migrate_orders( [ 1, 2, 3 ] );
 
 		$actual_errors = $fake_logger->errors;
 		usort(
@@ -416,7 +416,7 @@ WHERE order_id = {$order_id} AND meta_key = 'non_unique_key_1' AND meta_value in
 		);
 
 		$this->assertEquals( 'PostMetaToOrderMetaMigrator: when processing ids 1-3: Something failed!', $actual_errors[0]['message'] );
-		$this->assertEquals( array( 1, 2, 3 ), $actual_errors[0]['data']['ids'] );
+		$this->assertEquals( [ 1, 2, 3 ], $actual_errors[0]['data']['ids'] );
 		$this->assertEquals( PostsToOrdersMigrationController::LOGS_SOURCE_NAME, $actual_errors[0]['data']['source'] );
 	}
 
@@ -431,7 +431,7 @@ WHERE order_id = {$order_id} AND meta_key = 'non_unique_key_1' AND meta_value in
 		$fake_logger = $this->use_fake_logger();
 
 		$wpdb_mock = new DynamicDecorator( $wpdb );
-		$this->register_legacy_proxy_global_mocks( array( 'wpdb' => $wpdb_mock ) );
+		$this->register_legacy_proxy_global_mocks( [ 'wpdb' => $wpdb_mock ] );
 
 		$wpdb_mock->register_method_replacement(
 			'get_results',
@@ -444,7 +444,7 @@ WHERE order_id = {$order_id} AND meta_key = 'non_unique_key_1' AND meta_value in
 			}
 		);
 
-		$this->sut->migrate_orders( array( 1, 2, 3 ) );
+		$this->sut->migrate_orders( [ 1, 2, 3 ] );
 
 		$actual_errors = $fake_logger->errors;
 		usort(
@@ -467,23 +467,23 @@ WHERE order_id = {$order_id} AND meta_key = 'non_unique_key_1' AND meta_value in
 	private function use_fake_logger() {
 		// phpcs:disable Squiz.Commenting
 		$fake_logger = new class() {
-			public $errors = array();
+			public $errors = [];
 
 			public function error( $message, $data ) {
-				$this->errors[] = array(
+				$this->errors[] = [
 					'message' => $message,
 					'data'    => $data,
-				);
+				];
 			}
 		};
 		// phpcs:enable Squiz.Commenting
 
 		$this->register_legacy_proxy_function_mocks(
-			array(
+			[
 				'wc_get_logger' => function() use ( $fake_logger ) {
 					return $fake_logger;
 				},
-			)
+			]
 		);
 
 		return $fake_logger;
@@ -553,11 +553,11 @@ WHERE order_id = {$order_id} AND meta_key = 'non_unique_key_1' AND meta_value in
 
 		$this->create_and_migrate_order();
 
-		$expected = array(
+		$expected = [
 			'SET TRANSACTION ISOLATION LEVEL SERIALIZABLE',
 			'START TRANSACTION',
 			'COMMIT',
-		);
+		];
 
 		$this->assertEquals( $expected, $this->executed_transaction_statements );
 	}
@@ -597,11 +597,11 @@ WHERE order_id = {$order_id} AND meta_key = 'non_unique_key_1' AND meta_value in
 
 		$this->create_and_migrate_order();
 
-		$expected = array(
+		$expected = [
 			'SET TRANSACTION ISOLATION LEVEL SERIALIZABLE',
 			'START TRANSACTION',
 			'ROLLBACK',
-		);
+		];
 
 		$this->assertEquals( $expected, $this->executed_transaction_statements );
 	}
@@ -623,11 +623,11 @@ WHERE order_id = {$order_id} AND meta_key = 'non_unique_key_1' AND meta_value in
 
 		$this->create_and_migrate_order();
 
-		$expected = array(
+		$expected = [
 			'SET TRANSACTION ISOLATION LEVEL SERIALIZABLE',
 			'START TRANSACTION',
 			'ROLLBACK',
-		);
+		];
 
 		$this->assertEquals( $expected, $this->executed_transaction_statements );
 	}
@@ -692,10 +692,10 @@ WHERE order_id = {$order_id} AND meta_key = 'non_unique_key_1' AND meta_value in
 	private function use_wpdb_mock( $transaction_fails = false ) {
 		global $wpdb;
 
-		$this->executed_transaction_statements = array();
+		$this->executed_transaction_statements = [];
 
 		$wpdb_mock = new DynamicDecorator( $wpdb );
-		$this->register_legacy_proxy_global_mocks( array( 'wpdb' => $wpdb_mock ) );
+		$this->register_legacy_proxy_global_mocks( [ 'wpdb' => $wpdb_mock ] );
 
 		$wpdb_mock->register_method_replacement(
 			'query',

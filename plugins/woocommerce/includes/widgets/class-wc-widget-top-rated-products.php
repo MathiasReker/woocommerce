@@ -22,21 +22,21 @@ class WC_Widget_Top_Rated_Products extends WC_Widget {
 		$this->widget_description = __( "A list of your store's top-rated products.", 'woocommerce' );
 		$this->widget_id          = 'woocommerce_top_rated_products';
 		$this->widget_name        = __( 'Products by Rating list', 'woocommerce' );
-		$this->settings           = array(
-			'title'  => array(
+		$this->settings           = [
+			'title'  => [
 				'type'  => 'text',
 				'std'   => __( 'Top rated products', 'woocommerce' ),
 				'label' => __( 'Title', 'woocommerce' ),
-			),
-			'number' => array(
+			],
+			'number' => [
 				'type'  => 'number',
 				'step'  => 1,
 				'min'   => 1,
 				'max'   => '',
 				'std'   => 5,
 				'label' => __( 'Number of products to show', 'woocommerce' ),
-			),
-		);
+			],
+		];
 
 		parent::__construct();
 	}
@@ -60,7 +60,7 @@ class WC_Widget_Top_Rated_Products extends WC_Widget {
 
 		$query_args = apply_filters(
 			'woocommerce_top_rated_products_widget_args',
-			array(
+			[
 				'posts_per_page' => $number,
 				'no_found_rows'  => 1,
 				'post_status'    => 'publish',
@@ -70,7 +70,7 @@ class WC_Widget_Top_Rated_Products extends WC_Widget {
 				'order'          => 'DESC',
 				'meta_query'     => WC()->query->get_meta_query(),
 				'tax_query'      => WC()->query->get_tax_query(),
-			)
+			]
 		); // WPCS: slow query ok.
 
 		$r = new WP_Query( $query_args );
@@ -81,10 +81,10 @@ class WC_Widget_Top_Rated_Products extends WC_Widget {
 
 			echo wp_kses_post( apply_filters( 'woocommerce_before_widget_product_list', '<ul class="product_list_widget">' ) );
 
-			$template_args = array(
+			$template_args = [
 				'widget_id'   => isset( $args['widget_id'] ) ? $args['widget_id'] : $this->widget_id,
 				'show_rating' => true,
-			);
+			];
 
 			while ( $r->have_posts() ) {
 				$r->the_post();

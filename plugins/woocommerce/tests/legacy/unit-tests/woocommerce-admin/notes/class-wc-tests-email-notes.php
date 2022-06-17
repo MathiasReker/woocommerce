@@ -24,9 +24,9 @@ class WC_Admin_Tests_Email_Notes extends WC_Unit_Test_Case {
 		parent::setUp();
 
 		$this->user = $this->factory->user->create(
-			array(
+			[
 				'role' => 'administrator',
-			)
+			]
 		);
 
 		WC_Helper_Admin_Notes::reset_notes_dbs();
@@ -47,9 +47,9 @@ class WC_Admin_Tests_Email_Notes extends WC_Unit_Test_Case {
 		$note->set_is_snoozable( false );
 		$note->set_layout( 'plain' );
 		$note->set_image( '' );
-		$content_data = array(
+		$content_data = [
 			'role' => 'administrator',
-		);
+		];
 		$note->set_content_data( (object) $content_data );
 		$note->add_action(
 			'PHPUNIT_TEST_EMAIL_ACTION_SLUG',
@@ -72,16 +72,16 @@ class WC_Admin_Tests_Email_Notes extends WC_Unit_Test_Case {
 	public function test_create_notification_email() {
 		$data_store   = WC_Data_Store::load( 'admin-note' );
 		$note_data    = $data_store->get_notes(
-			array(
-				'type'   => array( Note::E_WC_ADMIN_NOTE_EMAIL ),
-				'status' => array( 'unactioned' ),
-			)
+			[
+				'type'   => [ Note::E_WC_ADMIN_NOTE_EMAIL ],
+				'status' => [ 'unactioned' ],
+			]
 		);
 		$note         = Notes::get_note( $note_data[0]->note_id );
-		$content_data = array(
+		$content_data = [
 			'heading' => 'PHPUNIT_TEST_EMAIL_HEADING',
 			'role'    => 'administrator',
-		);
+		];
 		$note->set_content_data( (object) $content_data );
 		$note->save();
 		$note->set_image( '' );
@@ -112,15 +112,15 @@ class WC_Admin_Tests_Email_Notes extends WC_Unit_Test_Case {
 	public function test_create_invalid_notification_email() {
 		$data_store   = WC_Data_Store::load( 'admin-note' );
 		$note_data    = $data_store->get_notes(
-			array(
-				'type'   => array( Note::E_WC_ADMIN_NOTE_EMAIL ),
-				'status' => array( 'unactioned' ),
-			)
+			[
+				'type'   => [ Note::E_WC_ADMIN_NOTE_EMAIL ],
+				'status' => [ 'unactioned' ],
+			]
 		);
 		$note         = Notes::get_note( $note_data[0]->note_id );
-		$content_data = array(
+		$content_data = [
 			'role' => 'invalid_role',
-		);
+		];
 		$note->set_content_data( (object) $content_data );
 		$notification_email = new EmailNotification( $note );
 

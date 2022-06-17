@@ -25,9 +25,9 @@ class WC_Admin_Tests_PaymentGatewaySuggestions_PaymentGatewaysController extends
 		parent::setUp();
 
 		$this->user = $this->factory->user->create(
-			array(
+			[
 				'role' => 'administrator',
-			)
+			]
 		);
 		wp_set_current_user( $this->user );
 
@@ -63,14 +63,14 @@ class WC_Admin_Tests_PaymentGatewaySuggestions_PaymentGatewaysController extends
 		$data     = $response->get_data();
 
 		$this->assertArrayHasKey( 'needs_setup', $data );
-		$this->assertEquals( array(), $data['post_install_scripts'] );
+		$this->assertEquals( [], $data['post_install_scripts'] );
 		$this->assertEquals(
 			admin_url( 'admin.php?page=wc-settings&tab=checkout&section=mock' ),
 			$data['settings_url']
 		);
 		$this->assertEquals( null, $data['connection_url'] );
 		$this->assertEquals( null, $data['setup_help_text'] );
-		$this->assertEquals( array(), $data['required_settings_keys'] );
+		$this->assertEquals( [], $data['required_settings_keys'] );
 	}
 
 	/**

@@ -16,7 +16,7 @@ class WC_Cart_Totals_Tests extends WC_Unit_Test_Case {
 
 		WC()->cart->empty_cart();
 
-		$tax_rate = array(
+		$tax_rate = [
 			'tax_rate_country'  => '',
 			'tax_rate_state'    => '',
 			'tax_rate'          => '27.0000',
@@ -25,15 +25,15 @@ class WC_Cart_Totals_Tests extends WC_Unit_Test_Case {
 			'tax_rate_compound' => '0',
 			'tax_rate_shipping' => '0',
 			'tax_rate_order'    => '1',
-		);
+		];
 
 		WC_Tax::_insert_tax_rate( $tax_rate );
-		$product_240  = WC_Helper_Product::create_simple_product( true, array( 'regular_price' => 240 ) );
-		$product_1250 = WC_Helper_Product::create_simple_product( true, array( 'regular_price' => 1250 ) );
-		$product_1990 = WC_Helper_Product::create_simple_product( true, array( 'regular_price' => 1990 ) );
-		$product_3390 = WC_Helper_Product::create_simple_product( true, array( 'regular_price' => 3390 ) );
-		$product_6200 = WC_Helper_Product::create_simple_product( true, array( 'regular_price' => 6200 ) );
-		$coupon = WC_Helper_Coupon::create_coupon( 'flat2000', array( 'coupon_amount' => 2000 ) );
+		$product_240  = WC_Helper_Product::create_simple_product( true, [ 'regular_price' => 240 ] );
+		$product_1250 = WC_Helper_Product::create_simple_product( true, [ 'regular_price' => 1250 ] );
+		$product_1990 = WC_Helper_Product::create_simple_product( true, [ 'regular_price' => 1990 ] );
+		$product_3390 = WC_Helper_Product::create_simple_product( true, [ 'regular_price' => 3390 ] );
+		$product_6200 = WC_Helper_Product::create_simple_product( true, [ 'regular_price' => 6200 ] );
+		$coupon = WC_Helper_Coupon::create_coupon( 'flat2000', [ 'coupon_amount' => 2000 ] );
 
 		WC()->cart->add_to_cart( $product_240->get_id(), 1 );
 		WC()->cart->add_to_cart( $product_1250->get_id(), 1 );
@@ -92,7 +92,7 @@ class WC_Cart_Totals_Tests extends WC_Unit_Test_Case {
 
 		WC()->cart->empty_cart();
 
-		$tax_rate = array(
+		$tax_rate = [
 			'tax_rate_country'  => '',
 			'tax_rate_state'    => '',
 			'tax_rate'          => '23.0000',
@@ -101,10 +101,10 @@ class WC_Cart_Totals_Tests extends WC_Unit_Test_Case {
 			'tax_rate_compound' => '0',
 			'tax_rate_shipping' => '0',
 			'tax_rate_order'    => '1',
-		);
+		];
 
 		WC_Tax::_insert_tax_rate( $tax_rate );
-		$product_301_90909 = WC_Helper_Product::create_simple_product( true, array( 'regular_price' => 301.90909 ) );
+		$product_301_90909 = WC_Helper_Product::create_simple_product( true, [ 'regular_price' => 301.90909 ] );
 
 		WC()->cart->add_to_cart( $product_301_90909->get_id() );
 		WC()->cart->calculate_totals();
@@ -129,7 +129,7 @@ class WC_Cart_Totals_Tests extends WC_Unit_Test_Case {
 
 		WC()->cart->empty_cart();
 
-		$tax_rate = array(
+		$tax_rate = [
 			'tax_rate_country'  => '',
 			'tax_rate_state'    => '',
 			'tax_rate'          => '20.0000',
@@ -138,9 +138,9 @@ class WC_Cart_Totals_Tests extends WC_Unit_Test_Case {
 			'tax_rate_compound' => '0',
 			'tax_rate_shipping' => '0',
 			'tax_rate_order'    => '1',
-		);
+		];
 		WC_Tax::_insert_tax_rate( $tax_rate );
-		$product_30_82500 = WC_Helper_Product::create_simple_product( true, array( 'regular_price' => 30.82500 ) );
+		$product_30_82500 = WC_Helper_Product::create_simple_product( true, [ 'regular_price' => 30.82500 ] );
 
 		WC()->cart->add_to_cart( $product_30_82500->get_id() );
 

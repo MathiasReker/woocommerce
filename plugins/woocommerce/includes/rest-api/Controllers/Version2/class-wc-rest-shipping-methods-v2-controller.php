@@ -37,34 +37,34 @@ class WC_REST_Shipping_Methods_V2_Controller extends WC_REST_Controller {
 	 */
 	public function register_routes() {
 		register_rest_route(
-			$this->namespace, '/' . $this->rest_base, array(
-				array(
+			$this->namespace, '/' . $this->rest_base, [
+				[
 					'methods'             => WP_REST_Server::READABLE,
-					'callback'            => array( $this, 'get_items' ),
-					'permission_callback' => array( $this, 'get_items_permissions_check' ),
+					'callback'            => [ $this, 'get_items' ],
+					'permission_callback' => [ $this, 'get_items_permissions_check' ],
 					'args'                => $this->get_collection_params(),
-				),
-				'schema' => array( $this, 'get_public_item_schema' ),
-			)
+				],
+				'schema' => [ $this, 'get_public_item_schema' ],
+			]
 		);
 		register_rest_route(
-			$this->namespace, '/' . $this->rest_base . '/(?P<id>[\w-]+)', array(
-				'args'   => array(
-					'id' => array(
+			$this->namespace, '/' . $this->rest_base . '/(?P<id>[\w-]+)', [
+				'args'   => [
+					'id' => [
 						'description' => __( 'Unique identifier for the resource.', 'woocommerce' ),
 						'type'        => 'string',
-					),
-				),
-				array(
+					],
+				],
+				[
 					'methods'             => WP_REST_Server::READABLE,
-					'callback'            => array( $this, 'get_item' ),
-					'permission_callback' => array( $this, 'get_item_permissions_check' ),
-					'args'                => array(
-						'context' => $this->get_context_param( array( 'default' => 'view' ) ),
-					),
-				),
-				'schema' => array( $this, 'get_public_item_schema' ),
-			)
+					'callback'            => [ $this, 'get_item' ],
+					'permission_callback' => [ $this, 'get_item_permissions_check' ],
+					'args'                => [
+						'context' => $this->get_context_param( [ 'default' => 'view' ] ),
+					],
+				],
+				'schema' => [ $this, 'get_public_item_schema' ],
+			]
 		);
 	}
 
@@ -76,7 +76,7 @@ class WC_REST_Shipping_Methods_V2_Controller extends WC_REST_Controller {
 	 */
 	public function get_items_permissions_check( $request ) {
 		if ( ! wc_rest_check_manager_permissions( 'shipping_methods', 'read' ) ) {
-			return new WP_Error( 'woocommerce_rest_cannot_view', __( 'Sorry, you cannot list resources.', 'woocommerce' ), array( 'status' => rest_authorization_required_code() ) );
+			return new WP_Error( 'woocommerce_rest_cannot_view', __( 'Sorry, you cannot list resources.', 'woocommerce' ), [ 'status' => rest_authorization_required_code() ] );
 		}
 		return true;
 	}
@@ -89,7 +89,7 @@ class WC_REST_Shipping_Methods_V2_Controller extends WC_REST_Controller {
 	 */
 	public function get_item_permissions_check( $request ) {
 		if ( ! wc_rest_check_manager_permissions( 'shipping_methods', 'read' ) ) {
-			return new WP_Error( 'woocommerce_rest_cannot_view', __( 'Sorry, you cannot view this resource.', 'woocommerce' ), array( 'status' => rest_authorization_required_code() ) );
+			return new WP_Error( 'woocommerce_rest_cannot_view', __( 'Sorry, you cannot view this resource.', 'woocommerce' ), [ 'status' => rest_authorization_required_code() ] );
 		}
 		return true;
 	}
@@ -102,7 +102,7 @@ class WC_REST_Shipping_Methods_V2_Controller extends WC_REST_Controller {
 	 */
 	public function get_items( $request ) {
 		$wc_shipping = WC_Shipping::instance();
-		$response    = array();
+		$response    = [];
 		foreach ( $wc_shipping->get_shipping_methods() as $id => $shipping_method ) {
 			$method     = $this->prepare_item_for_response( $shipping_method, $request );
 			$method     = $this->prepare_response_for_collection( $method );
@@ -121,7 +121,7 @@ class WC_REST_Shipping_Methods_V2_Controller extends WC_REST_Controller {
 		$wc_shipping = WC_Shipping::instance();
 		$methods     = $wc_shipping->get_shipping_methods();
 		if ( empty( $methods[ $request['id'] ] ) ) {
-			return new WP_Error( 'woocommerce_rest_shipping_method_invalid', __( 'Resource does not exist.', 'woocommerce' ), array( 'status' => 404 ) );
+			return new WP_Error( 'woocommerce_rest_shipping_method_invalid', __( 'Resource does not exist.', 'woocommerce' ), [ 'status' => 404 ] );
 		}
 
 		$method   = $methods[ $request['id'] ];
@@ -138,11 +138,11 @@ class WC_REST_Shipping_Methods_V2_Controller extends WC_REST_Controller {
 	 * @return WP_REST_Response   $response Response data.
 	 */
 	public function prepare_item_for_response( $method, $request ) {
-		$data = array(
+		$data = [
 			'id'          => $method->id,
 			'title'       => $method->method_title,
 			'description' => $method->method_description,
-		);
+		];
 
 		$context = ! empty( $request['context'] ) ? $request['context'] : 'view';
 		$data    = $this->add_additional_fields_to_object( $data, $request );
@@ -171,14 +171,14 @@ class WC_REST_Shipping_Methods_V2_Controller extends WC_REST_Controller {
 	 * @return array
 	 */
 	protected function prepare_links( $method, $request ) {
-		$links = array(
-			'self'       => array(
+		$links = [
+			'self'       => [
 				'href' => rest_url( sprintf( '/%s/%s/%s', $this->namespace, $this->rest_base, $method->id ) ),
-			),
-			'collection' => array(
+			],
+			'collection' => [
 				'href' => rest_url( sprintf( '/%s/%s', $this->namespace, $this->rest_base ) ),
-			),
-		);
+			],
+		];
 
 		return $links;
 	}
@@ -189,31 +189,31 @@ class WC_REST_Shipping_Methods_V2_Controller extends WC_REST_Controller {
 	 * @return array
 	 */
 	public function get_item_schema() {
-		$schema = array(
+		$schema = [
 			'$schema'    => 'http://json-schema.org/draft-04/schema#',
 			'title'      => 'shipping_method',
 			'type'       => 'object',
-			'properties' => array(
-				'id'          => array(
+			'properties' => [
+				'id'          => [
 					'description' => __( 'Method ID.', 'woocommerce' ),
 					'type'        => 'string',
-					'context'     => array( 'view' ),
+					'context'     => [ 'view' ],
 					'readonly'    => true,
-				),
-				'title'       => array(
+				],
+				'title'       => [
 					'description' => __( 'Shipping method title.', 'woocommerce' ),
 					'type'        => 'string',
-					'context'     => array( 'view' ),
+					'context'     => [ 'view' ],
 					'readonly'    => true,
-				),
-				'description' => array(
+				],
+				'description' => [
 					'description' => __( 'Shipping method description.', 'woocommerce' ),
 					'type'        => 'string',
-					'context'     => array( 'view' ),
+					'context'     => [ 'view' ],
 					'readonly'    => true,
-				),
-			),
-		);
+				],
+			],
+		];
 
 		return $this->add_additional_fields_schema( $schema );
 	}
@@ -224,8 +224,8 @@ class WC_REST_Shipping_Methods_V2_Controller extends WC_REST_Controller {
 	 * @return array
 	 */
 	public function get_collection_params() {
-		return array(
-			'context' => $this->get_context_param( array( 'default' => 'view' ) ),
-		);
+		return [
+			'context' => $this->get_context_param( [ 'default' => 'view' ] ),
+		];
 	}
 }

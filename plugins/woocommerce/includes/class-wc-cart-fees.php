@@ -24,7 +24,7 @@ final class WC_Cart_Fees {
 	 *
 	 * @var object[]
 	 */
-	private $fees = array();
+	private $fees = [];
 
 	/**
 	 * Reference to cart object.
@@ -39,14 +39,14 @@ final class WC_Cart_Fees {
 	 *
 	 * @var array
 	 */
-	private $default_fee_props = array(
+	private $default_fee_props = [
 		'id'        => '',
 		'name'      => '',
 		'tax_class' => '',
 		'taxable'   => false,
 		'amount'    => 0,
 		'total'     => 0,
-	);
+	];
 
 	/**
 	 * Constructor. Reference to the cart.
@@ -75,7 +75,7 @@ final class WC_Cart_Fees {
 	 * @param array $args Array of fee properties.
 	 * @return object Either a fee object if added, or a WP_Error if it failed.
 	 */
-	public function add_fee( $args = array() ) {
+	public function add_fee( $args = [] ) {
 		$fee_props            = (object) wp_parse_args( $args, $this->default_fee_props );
 		$fee_props->name      = $fee_props->name ? $fee_props->name : __( 'Fee', 'woocommerce' );
 		$fee_props->tax_class = in_array( $fee_props->tax_class, array_merge( WC_Tax::get_tax_classes(), WC_Tax::get_tax_class_slugs() ), true ) ? $fee_props->tax_class : '';
@@ -101,7 +101,7 @@ final class WC_Cart_Fees {
 	 * @return array
 	 */
 	public function get_fees() {
-		uasort( $this->fees, array( $this, 'sort_fees_callback' ) );
+		uasort( $this->fees, [ $this, 'sort_fees_callback' ] );
 
 		return $this->fees;
 	}
@@ -111,8 +111,8 @@ final class WC_Cart_Fees {
 	 *
 	 * @param object[] $raw_fees Array of fees.
 	 */
-	public function set_fees( $raw_fees = array() ) {
-		$this->fees = array();
+	public function set_fees( $raw_fees = [] ) {
+		$this->fees = [];
 
 		foreach ( $raw_fees as $raw_fee ) {
 			$this->add_fee( $raw_fee );

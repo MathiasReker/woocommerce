@@ -21,18 +21,18 @@ trait CustomAttributeTraits {
 	 * @return WP_Error|object The matching attribute object or WP_Error if not found.
 	 */
 	public function get_custom_attribute_by_slug( $slug ) {
-		$matching_attributes = $this->get_custom_attributes( array( 'slug' => $slug ) );
+		$matching_attributes = $this->get_custom_attributes( [ 'slug' => $slug ] );
 
 		if ( empty( $matching_attributes ) ) {
 			return new \WP_Error(
 				'woocommerce_rest_product_attribute_not_found',
 				__( 'No product attribute with that slug was found.', 'woocommerce' ),
-				array( 'status' => 404 )
+				[ 'status' => 404 ]
 			);
 		}
 
 		foreach ( $matching_attributes as $attribute_key => $attribute_value ) {
-			return array( $attribute_key => $attribute_value );
+			return [ $attribute_key => $attribute_value ];
 		}
 	}
 
@@ -47,14 +47,14 @@ trait CustomAttributeTraits {
 
 		$args = wp_parse_args(
 			$args,
-			array(
+			[
 				'name' => '',
 				'slug' => '',
-			)
+			]
 		);
 
 		if ( empty( $args['name'] ) && empty( $args['slug'] ) ) {
-			return array();
+			return [];
 		}
 
 		$mode = $args['name'] ? 'name' : 'slug';
@@ -82,7 +82,7 @@ trait CustomAttributeTraits {
 			ARRAY_A
 		);
 
-		$custom_attributes = array();
+		$custom_attributes = [];
 
 		foreach ( $query_results as $raw_product_attributes ) {
 
@@ -94,10 +94,10 @@ trait CustomAttributeTraits {
 
 			foreach ( $meta_attributes as $meta_attribute_key => $meta_attribute_value ) {
 				$meta_value = array_merge(
-					array(
+					[
 						'name'        => '',
 						'is_taxonomy' => 0,
-					),
+					],
 					(array) $meta_attribute_value
 				);
 

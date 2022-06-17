@@ -17,14 +17,14 @@ class WC_Admin_Tests_WCAdminAssets extends WP_UnitTestCase {
 	 * Setup
 	 */
 	public function setUp(): void {
-		add_filter( 'woocommerce_admin_features', array( $this, 'turn_on_unminified_js_feature' ), 20, 1 );
+		add_filter( 'woocommerce_admin_features', [ $this, 'turn_on_unminified_js_feature' ], 20, 1 );
 	}
 
 	/**
 	 * Tear Down
 	 */
 	public function tearDown(): void {
-		remove_filter( 'woocommerce_admin_features', array( $this, 'turn_on_unminified_js_feature' ), 20 );
+		remove_filter( 'woocommerce_admin_features', [ $this, 'turn_on_unminified_js_feature' ], 20 );
 	}
 
 	/**
@@ -33,7 +33,7 @@ class WC_Admin_Tests_WCAdminAssets extends WP_UnitTestCase {
 	 * @param  array $features Array of active features.
 	 */
 	public static function turn_on_unminified_js_feature( $features ) {
-		return array_merge( $features, array( 'unminified-js' ) );
+		return array_merge( $features, [ 'unminified-js' ] );
 	}
 
 	/**

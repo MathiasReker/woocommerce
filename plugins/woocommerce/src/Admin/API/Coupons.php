@@ -31,11 +31,11 @@ class Coupons extends \WC_REST_Coupons_Controller {
 	 */
 	public function get_collection_params() {
 		$params           = parent::get_collection_params();
-		$params['search'] = array(
+		$params['search'] = [
 			'description'       => __( 'Limit results to coupons with codes matching a given string.', 'woocommerce' ),
 			'type'              => 'string',
 			'validate_callback' => 'rest_validate_request_arg',
-		);
+		];
 		return $params;
 	}
 
@@ -64,9 +64,9 @@ class Coupons extends \WC_REST_Coupons_Controller {
 	 * @return WP_Error|WP_REST_Response
 	 */
 	public function get_items( $request ) {
-		add_filter( 'posts_where', array( __CLASS__, 'add_wp_query_search_code_filter' ), 10, 2 );
+		add_filter( 'posts_where', [ __CLASS__, 'add_wp_query_search_code_filter' ], 10, 2 );
 		$response = parent::get_items( $request );
-		remove_filter( 'posts_where', array( __CLASS__, 'add_wp_query_search_code_filter' ), 10 );
+		remove_filter( 'posts_where', [ __CLASS__, 'add_wp_query_search_code_filter' ], 10 );
 		return $response;
 	}
 

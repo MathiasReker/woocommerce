@@ -41,42 +41,42 @@ class Marketing extends \WC_REST_Data_Controller {
 		register_rest_route(
 			$this->namespace,
 			'/' . $this->rest_base . '/recommended',
-			array(
-				array(
+			[
+				[
 					'methods'             => \WP_REST_Server::READABLE,
-					'callback'            => array( $this, 'get_recommended_plugins' ),
-					'permission_callback' => array( $this, 'get_recommended_plugins_permissions_check' ),
-					'args'                => array(
+					'callback'            => [ $this, 'get_recommended_plugins' ],
+					'permission_callback' => [ $this, 'get_recommended_plugins_permissions_check' ],
+					'args'                => [
 						'per_page' => $this->get_collection_params()['per_page'],
-						'category' => array(
+						'category' => [
 							'type'              => 'string',
 							'validate_callback' => 'rest_validate_request_arg',
 							'sanitize_callback' => 'sanitize_title_with_dashes',
-						),
-					),
-				),
-				'schema' => array( $this, 'get_public_item_schema' ),
-			)
+						],
+					],
+				],
+				'schema' => [ $this, 'get_public_item_schema' ],
+			]
 		);
 
 		register_rest_route(
 			$this->namespace,
 			'/' . $this->rest_base . '/knowledge-base',
-			array(
-				array(
+			[
+				[
 					'methods'             => \WP_REST_Server::READABLE,
-					'callback'            => array( $this, 'get_knowledge_base_posts' ),
-					'permission_callback' => array( $this, 'get_items_permissions_check' ),
-					'args'                => array(
-						'category' => array(
+					'callback'            => [ $this, 'get_knowledge_base_posts' ],
+					'permission_callback' => [ $this, 'get_items_permissions_check' ],
+					'args'                => [
+						'category' => [
 							'type'              => 'string',
 							'validate_callback' => 'rest_validate_request_arg',
 							'sanitize_callback' => 'sanitize_title_with_dashes',
-						),
-					),
-				),
-				'schema' => array( $this, 'get_public_item_schema' ),
-			)
+						],
+					],
+				],
+				'schema' => [ $this, 'get_public_item_schema' ],
+			]
 		);
 	}
 
@@ -88,7 +88,7 @@ class Marketing extends \WC_REST_Data_Controller {
 	 */
 	public function get_recommended_plugins_permissions_check( $request ) {
 		if ( ! current_user_can( 'install_plugins' ) ) {
-			return new \WP_Error( 'woocommerce_rest_cannot_update', __( 'Sorry, you cannot manage plugins.', 'woocommerce' ), array( 'status' => rest_authorization_required_code() ) );
+			return new \WP_Error( 'woocommerce_rest_cannot_update', __( 'Sorry, you cannot manage plugins.', 'woocommerce' ), [ 'status' => rest_authorization_required_code() ] );
 		}
 
 		return true;

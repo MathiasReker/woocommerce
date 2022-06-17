@@ -31,7 +31,7 @@ abstract class Abstract_WC_Order_Data_Store_CPT extends WC_Data_Store_WP impleme
 	 * @since 3.0.0
 	 * @var array
 	 */
-	protected $internal_meta_keys = array(
+	protected $internal_meta_keys = [
 		'_order_currency',
 		'_cart_discount',
 		'_cart_discount_tax',
@@ -42,7 +42,7 @@ abstract class Abstract_WC_Order_Data_Store_CPT extends WC_Data_Store_WP impleme
 		'_order_version',
 		'_prices_include_tax',
 		'_payment_tokens',
-	);
+	];
 
 	/*
 	|--------------------------------------------------------------------------
@@ -65,7 +65,7 @@ abstract class Abstract_WC_Order_Data_Store_CPT extends WC_Data_Store_WP impleme
 		$id = wp_insert_post(
 			apply_filters(
 				'woocommerce_new_order_data',
-				array(
+				[
 					'post_date'     => gmdate( 'Y-m-d H:i:s', $order->get_date_created( 'edit' )->getOffsetTimestamp() ),
 					'post_date_gmt' => gmdate( 'Y-m-d H:i:s', $order->get_date_created( 'edit' )->getTimestamp() ),
 					'post_type'     => $order->get_type( 'edit' ),
@@ -76,7 +76,7 @@ abstract class Abstract_WC_Order_Data_Store_CPT extends WC_Data_Store_WP impleme
 					'post_password' => $this->get_order_key( $order ),
 					'post_parent'   => $order->get_parent_id( 'edit' ),
 					'post_excerpt'  => $this->get_post_excerpt( $order ),
-				)
+				]
 			),
 			true
 		);
@@ -105,12 +105,12 @@ abstract class Abstract_WC_Order_Data_Store_CPT extends WC_Data_Store_WP impleme
 		}
 
 		$order->set_props(
-			array(
+			[
 				'parent_id'     => $post_object->post_parent,
 				'date_created'  => $this->string_to_timestamp( $post_object->post_date_gmt ),
 				'date_modified' => $this->string_to_timestamp( $post_object->post_modified_gmt ),
 				'status'        => $post_object->post_status,
-			)
+			]
 		);
 
 		$this->read_order_data( $order, $post_object );
@@ -143,8 +143,8 @@ abstract class Abstract_WC_Order_Data_Store_CPT extends WC_Data_Store_WP impleme
 		$changes = $order->get_changes();
 
 		// Only update the post when the post data changes.
-		if ( array_intersect( array( 'date_created', 'date_modified', 'status', 'parent_id', 'post_excerpt' ), array_keys( $changes ) ) ) {
-			$post_data = array(
+		if ( array_intersect( [ 'date_created', 'date_modified', 'status', 'parent_id', 'post_excerpt' ], array_keys( $changes ) ) ) {
+			$post_data = [
 				'post_date'         => gmdate( 'Y-m-d H:i:s', $order->get_date_created( 'edit' )->getOffsetTimestamp() ),
 				'post_date_gmt'     => gmdate( 'Y-m-d H:i:s', $order->get_date_created( 'edit' )->getTimestamp() ),
 				'post_status'       => $this->get_post_status( $order ),
@@ -152,7 +152,7 @@ abstract class Abstract_WC_Order_Data_Store_CPT extends WC_Data_Store_WP impleme
 				'post_excerpt'      => $this->get_post_excerpt( $order ),
 				'post_modified'     => isset( $changes['date_modified'] ) ? gmdate( 'Y-m-d H:i:s', $order->get_date_modified( 'edit' )->getOffsetTimestamp() ) : current_time( 'mysql' ),
 				'post_modified_gmt' => isset( $changes['date_modified'] ) ? gmdate( 'Y-m-d H:i:s', $order->get_date_modified( 'edit' )->getTimestamp() ) : current_time( 'mysql', 1 ),
-			);
+			];
 
 			/**
 			 * When updating this object, to prevent infinite loops, use $wpdb
@@ -163,10 +163,10 @@ abstract class Abstract_WC_Order_Data_Store_CPT extends WC_Data_Store_WP impleme
 			 * or an update purely from CRUD.
 			 */
 			if ( doing_action( 'save_post' ) ) {
-				$GLOBALS['wpdb']->update( $GLOBALS['wpdb']->posts, $post_data, array( 'ID' => $order->get_id() ) );
+				$GLOBALS['wpdb']->update( $GLOBALS['wpdb']->posts, $post_data, [ 'ID' => $order->get_id() ] );
 				clean_post_cache( $order->get_id() );
 			} else {
-				wp_update_post( array_merge( array( 'ID' => $order->get_id() ), $post_data ) );
+				wp_update_post( array_merge( [ 'ID' => $order->get_id() ], $post_data ) );
 			}
 			$order->read_meta_data( true ); // Refresh internal meta data, in case things were hooked into `save_post` or another WP hook.
 		}
@@ -183,13 +183,13 @@ abstract class Abstract_WC_Order_Data_Store_CPT extends WC_Data_Store_WP impleme
 	 *
 	 * @return void
 	 */
-	public function delete( &$order, $args = array() ) {
+	public function delete( &$order, $args = [] ) {
 		$id   = $order->get_id();
 		$args = wp_parse_args(
 			$args,
-			array(
+			[
 				'force_delete' => false,
-			)
+			]
 		);
 
 		if ( ! $id ) {
@@ -236,7 +236,7 @@ abstract class Abstract_WC_Order_Data_Store_CPT extends WC_Data_Store_WP impleme
 		// @todo In the future this should only happen based on `wc_is_order_status`, but in order to
 		// preserve back-compatibility this happens to all statuses except a select few. A doing_it_wrong
 		// Notice will be needed here, followed by future removal.
-		if ( ! in_array( $post_status, array( 'auto-draft', 'draft', 'trash' ), true ) && in_array( 'wc-' . $post_status, $valid_statuses, true ) ) {
+		if ( ! in_array( $post_status, [ 'auto-draft', 'draft', 'trash' ], true ) && in_array( 'wc-' . $post_status, $valid_statuses, true ) ) {
 			$post_status = 'wc-' . $post_status;
 		}
 
@@ -287,7 +287,7 @@ abstract class Abstract_WC_Order_Data_Store_CPT extends WC_Data_Store_WP impleme
 		$id = $order->get_id();
 
 		$order->set_props(
-			array(
+			[
 				'currency'           => get_post_meta( $id, '_order_currency', true ),
 				'discount_total'     => get_post_meta( $id, '_cart_discount', true ),
 				'discount_tax'       => get_post_meta( $id, '_cart_discount_tax', true ),
@@ -297,13 +297,13 @@ abstract class Abstract_WC_Order_Data_Store_CPT extends WC_Data_Store_WP impleme
 				'total'              => get_post_meta( $id, '_order_total', true ),
 				'version'            => get_post_meta( $id, '_order_version', true ),
 				'prices_include_tax' => metadata_exists( 'post', $id, '_prices_include_tax' ) ? 'yes' === get_post_meta( $id, '_prices_include_tax', true ) : 'yes' === get_option( 'woocommerce_prices_include_tax' ),
-			)
+			]
 		);
 
 		// Gets extra data associated with the order if needed.
 		foreach ( $order->get_extra_data_keys() as $key ) {
 			$function = 'set_' . $key;
-			if ( is_callable( array( $order, $function ) ) ) {
+			if ( is_callable( [ $order, $function ] ) ) {
 				$order->{$function}( get_post_meta( $order->get_id(), '_' . $key, true ) );
 			}
 		}
@@ -316,8 +316,8 @@ abstract class Abstract_WC_Order_Data_Store_CPT extends WC_Data_Store_WP impleme
 	 * @since 3.0.0
 	 */
 	protected function update_post_meta( &$order ) {
-		$updated_props     = array();
-		$meta_key_to_props = array(
+		$updated_props     = [];
+		$meta_key_to_props = [
 			'_order_currency'     => 'currency',
 			'_cart_discount'      => 'discount_total',
 			'_cart_discount_tax'  => 'discount_tax',
@@ -327,7 +327,7 @@ abstract class Abstract_WC_Order_Data_Store_CPT extends WC_Data_Store_WP impleme
 			'_order_total'        => 'total',
 			'_order_version'      => 'version',
 			'_prices_include_tax' => 'prices_include_tax',
-		);
+		];
 
 		$props_to_update = $this->get_props_to_update( $order, $meta_key_to_props );
 
@@ -386,12 +386,12 @@ abstract class Abstract_WC_Order_Data_Store_CPT extends WC_Data_Store_WP impleme
 			}
 		}
 
-		$items = wp_list_filter( $items, array( 'order_item_type' => $type ) );
+		$items = wp_list_filter( $items, [ 'order_item_type' => $type ] );
 
 		if ( ! empty( $items ) ) {
-			$items = array_map( array( 'WC_Order_Factory', 'get_order_item' ), array_combine( wp_list_pluck( $items, 'order_item_id' ), $items ) );
+			$items = array_map( [ 'WC_Order_Factory', 'get_order_item' ], array_combine( wp_list_pluck( $items, 'order_item_id' ), $items ) );
 		} else {
-			$items = array();
+			$items = [];
 		}
 
 		return $items;

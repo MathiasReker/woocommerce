@@ -102,7 +102,7 @@ abstract class AbstractServiceProvider extends BaseServiceProvider {
 					return null;
 				}
 
-				$missing_modifiers = array();
+				$missing_modifiers = [];
 				if ( ! $method->isFinal() ) {
 					$missing_modifiers[] = 'final';
 				}

@@ -20,11 +20,11 @@ class WC_Order_Item_Coupon extends WC_Order_Item {
 	 * @since 3.0.0
 	 * @var array
 	 */
-	protected $extra_data = array(
+	protected $extra_data = [
 		'code'         => '',
 		'discount'     => 0,
 		'discount_tax' => 0,
-	);
+	];
 
 	/*
 	|--------------------------------------------------------------------------
@@ -177,7 +177,7 @@ class WC_Order_Item_Coupon extends WC_Order_Item {
 	 */
 	#[\ReturnTypeWillChange]
 	public function offsetExists( $offset ) {
-		if ( in_array( $offset, array( 'discount_amount', 'discount_amount_tax' ), true ) ) {
+		if ( in_array( $offset, [ 'discount_amount', 'discount_amount_tax' ], true ) ) {
 			return true;
 		}
 		return parent::offsetExists( $offset );

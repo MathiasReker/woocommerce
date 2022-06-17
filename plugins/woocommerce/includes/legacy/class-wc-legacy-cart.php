@@ -25,23 +25,23 @@ abstract class WC_Legacy_Cart {
 	 *
 	 * @deprecated 3.2.0
 	 */
-	public $cart_session_data = array(
+	public $cart_session_data = [
 		'cart_contents_total'         => 0,
 		'total'                       => 0,
 		'subtotal'                    => 0,
 		'subtotal_ex_tax'             => 0,
 		'tax_total'                   => 0,
-		'taxes'                       => array(),
-		'shipping_taxes'              => array(),
+		'taxes'                       => [],
+		'shipping_taxes'              => [],
 		'discount_cart'               => 0,
 		'discount_cart_tax'           => 0,
 		'shipping_total'              => 0,
 		'shipping_tax_total'          => 0,
-		'coupon_discount_amounts'     => array(),
-		'coupon_discount_tax_amounts' => array(),
+		'coupon_discount_amounts'     => [],
+		'coupon_discount_tax_amounts' => [],
 		'fee_total'                   => 0,
-		'fees'                        => array(),
-	);
+		'fees'                        => [],
+	];
 
 	/**
 	 * Contains an array of coupon usage counts after they have been applied.
@@ -49,7 +49,7 @@ abstract class WC_Legacy_Cart {
 	 * @deprecated 3.2.0
 	 * @var array
 	 */
-	public $coupon_applied_count = array();
+	public $coupon_applied_count = [];
 
 	/**
 	 * Map legacy variables.
@@ -59,7 +59,7 @@ abstract class WC_Legacy_Cart {
 	 */
 	public function __isset( $name ) {
 		$legacy_keys = array_merge(
-			array(
+			[
 				'dp',
 				'prices_include_tax',
 				'round_at_subtotal',
@@ -86,8 +86,8 @@ abstract class WC_Legacy_Cart {
 				'tax',
 				'discount_total',
 				'tax_display_cart',
-			),
-			is_array( $this->cart_session_data ) ? array_keys( $this->cart_session_data ) : array()
+			],
+			is_array( $this->cart_session_data ) ? array_keys( $this->cart_session_data ) : []
 		);
 
 		if ( in_array( $name, $legacy_keys, true ) ) {

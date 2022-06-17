@@ -87,70 +87,70 @@ class WC_Shipping_Legacy_Free_Shipping extends WC_Shipping_Method {
 		$this->requires     = $this->get_option( 'requires' );
 
 		// Actions.
-		add_action( 'woocommerce_update_options_shipping_' . $this->id, array( $this, 'process_admin_options' ) );
+		add_action( 'woocommerce_update_options_shipping_' . $this->id, [ $this, 'process_admin_options' ] );
 	}
 
 	/**
 	 * Initialise Gateway Settings Form Fields.
 	 */
 	public function init_form_fields() {
-		$this->form_fields = array(
-			'enabled'      => array(
+		$this->form_fields = [
+			'enabled'      => [
 				'title'   => __( 'Enable/Disable', 'woocommerce' ),
 				'type'    => 'checkbox',
 				'label'   => __( 'Once disabled, this legacy method will no longer be available.', 'woocommerce' ),
 				'default' => 'no',
-			),
-			'title'        => array(
+			],
+			'title'        => [
 				'title'       => __( 'Method title', 'woocommerce' ),
 				'type'        => 'text',
 				'description' => __( 'This controls the title which the user sees during checkout.', 'woocommerce' ),
 				'default'     => __( 'Free Shipping', 'woocommerce' ),
 				'desc_tip'    => true,
-			),
-			'availability' => array(
+			],
+			'availability' => [
 				'title'   => __( 'Method availability', 'woocommerce' ),
 				'type'    => 'select',
 				'default' => 'all',
 				'class'   => 'availability wc-enhanced-select',
-				'options' => array(
+				'options' => [
 					'all'      => __( 'All allowed countries', 'woocommerce' ),
 					'specific' => __( 'Specific Countries', 'woocommerce' ),
-				),
-			),
-			'countries'    => array(
+				],
+			],
+			'countries'    => [
 				'title'             => __( 'Specific countries', 'woocommerce' ),
 				'type'              => 'multiselect',
 				'class'             => 'wc-enhanced-select',
 				'css'               => 'width: 400px;',
 				'default'           => '',
 				'options'           => WC()->countries->get_shipping_countries(),
-				'custom_attributes' => array(
+				'custom_attributes' => [
 					'data-placeholder' => __( 'Select some countries', 'woocommerce' ),
-				),
-			),
-			'requires'     => array(
+				],
+			],
+			'requires'     => [
 				'title'   => __( 'Free shipping requires...', 'woocommerce' ),
 				'type'    => 'select',
 				'class'   => 'wc-enhanced-select',
 				'default' => '',
-				'options' => array(
+				'options' => [
 					''           => __( 'N/A', 'woocommerce' ),
 					'coupon'     => __( 'A valid free shipping coupon', 'woocommerce' ),
 					'min_amount' => __( 'A minimum order amount', 'woocommerce' ),
 					'either'     => __( 'A minimum order amount OR a coupon', 'woocommerce' ),
 					'both'       => __( 'A minimum order amount AND a coupon', 'woocommerce' ),
-				),
-			),
-			'min_amount'   => array(
+				],
+			],
+			'min_amount'   => [
 				'title'       => __( 'Minimum order amount', 'woocommerce' ),
 				'type'        => 'price',
 				'placeholder' => wc_format_localized_price( 0 ),
 				'description' => __( 'Users will need to spend this amount to get free shipping (if enabled above).', 'woocommerce' ),
 				'default'     => '0',
 				'desc_tip'    => true,
-			),
-		);
+			],
+		];
 	}
 
 	/**
@@ -179,7 +179,7 @@ class WC_Shipping_Legacy_Free_Shipping extends WC_Shipping_Method {
 		$has_coupon         = false;
 		$has_met_min_amount = false;
 
-		if ( in_array( $this->requires, array( 'coupon', 'either', 'both' ), true ) ) {
+		if ( in_array( $this->requires, [ 'coupon', 'either', 'both' ], true ) ) {
 			$coupons = WC()->cart->get_coupons();
 
 			if ( $coupons ) {
@@ -191,7 +191,7 @@ class WC_Shipping_Legacy_Free_Shipping extends WC_Shipping_Method {
 			}
 		}
 
-		if ( in_array( $this->requires, array( 'min_amount', 'either', 'both' ), true ) ) {
+		if ( in_array( $this->requires, [ 'min_amount', 'either', 'both' ], true ) ) {
 			$total = WC()->cart->get_displayed_subtotal();
 
 			if ( WC()->cart->display_prices_including_tax() ) {
@@ -239,14 +239,14 @@ class WC_Shipping_Legacy_Free_Shipping extends WC_Shipping_Method {
 	 *
 	 * @param array $package Package information.
 	 */
-	public function calculate_shipping( $package = array() ) {
-		$args = array(
+	public function calculate_shipping( $package = [] ) {
+		$args = [
 			'id'      => $this->id,
 			'label'   => $this->title,
 			'cost'    => 0,
 			'taxes'   => false,
 			'package' => $package,
-		);
+		];
 		$this->add_rate( $args );
 	}
 }

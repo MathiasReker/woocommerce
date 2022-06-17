@@ -40,9 +40,9 @@ class WC_Payment_Gateway_ECheck extends WC_Payment_Gateway {
 	 * @since 2.6.0
 	 */
 	public function form() {
-		$fields = array();
+		$fields = [];
 
-		$default_fields = array(
+		$default_fields = [
 			'routing-number' => '<p class="form-row form-row-first">
 				<label for="' . esc_attr( $this->id ) . '-routing-number">' . esc_html__( 'Routing number', 'woocommerce' ) . '&nbsp;<span class="required">*</span></label>
 				<input id="' . esc_attr( $this->id ) . '-routing-number" class="input-text wc-echeck-form-routing-number" type="text" maxlength="9" autocomplete="off" placeholder="&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;" name="' . esc_attr( $this->id ) . '-routing-number" />
@@ -51,7 +51,7 @@ class WC_Payment_Gateway_ECheck extends WC_Payment_Gateway {
 				<label for="' . esc_attr( $this->id ) . '-account-number">' . esc_html__( 'Account number', 'woocommerce' ) . '&nbsp;<span class="required">*</span></label>
 				<input id="' . esc_attr( $this->id ) . '-account-number" class="input-text wc-echeck-form-account-number" type="text" autocomplete="off" name="' . esc_attr( $this->id ) . '-account-number" maxlength="17" />
 			</p>',
-		);
+		];
 
 		$fields = wp_parse_args( $fields, apply_filters( 'woocommerce_echeck_form_fields', $default_fields, $this->id ) );
 		?>

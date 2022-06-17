@@ -8,7 +8,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<?php
 		if ( wc_product_weight_enabled() ) {
 			woocommerce_wp_text_input(
-				array(
+				[
 					'id'          => '_weight',
 					'value'       => $product_object->get_weight( 'edit' ),
 					'label'       => __( 'Weight', 'woocommerce' ) . ' (' . get_option( 'woocommerce_weight_unit' ) . ')',
@@ -17,7 +17,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 					'description' => __( 'Weight in decimal form', 'woocommerce' ),
 					'type'        => 'text',
 					'data_type'   => 'decimal',
-				)
+				]
 			);
 		}
 
@@ -42,7 +42,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 	<div class="options_group">
 		<?php
-		$args = array(
+		$args = [
 			'taxonomy'         => 'product_shipping_class',
 			'hide_empty'       => 0,
 			'show_option_none' => __( 'No shipping class', 'woocommerce' ),
@@ -51,7 +51,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 			'selected'         => $product_object->get_shipping_class_id( 'edit' ),
 			'class'            => 'select short',
 			'orderby'          => 'name',
-		);
+		];
 		?>
 		<p class="form-field shipping_class_field">
 			<label for="product_shipping_class"><?php esc_html_e( 'Shipping class', 'woocommerce' ); ?></label>

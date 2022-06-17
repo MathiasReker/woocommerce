@@ -39,14 +39,14 @@ class WC_REST_Settings_V2_Controller extends WC_REST_Controller {
 	 */
 	public function register_routes() {
 		register_rest_route(
-			$this->namespace, '/' . $this->rest_base, array(
-				array(
+			$this->namespace, '/' . $this->rest_base, [
+				[
 					'methods'             => WP_REST_Server::READABLE,
-					'callback'            => array( $this, 'get_items' ),
-					'permission_callback' => array( $this, 'get_items_permissions_check' ),
-				),
-				'schema' => array( $this, 'get_public_item_schema' ),
-			)
+					'callback'            => [ $this, 'get_items' ],
+					'permission_callback' => [ $this, 'get_items_permissions_check' ],
+				],
+				'schema' => [ $this, 'get_public_item_schema' ],
+			]
 		);
 	}
 
@@ -58,15 +58,15 @@ class WC_REST_Settings_V2_Controller extends WC_REST_Controller {
 	 * @return WP_Error|WP_REST_Response
 	 */
 	public function get_items( $request ) {
-		$groups = apply_filters( 'woocommerce_settings_groups', array() );
+		$groups = apply_filters( 'woocommerce_settings_groups', [] );
 		if ( empty( $groups ) ) {
-			return new WP_Error( 'rest_setting_groups_empty', __( 'No setting groups have been registered.', 'woocommerce' ), array( 'status' => 500 ) );
+			return new WP_Error( 'rest_setting_groups_empty', __( 'No setting groups have been registered.', 'woocommerce' ), [ 'status' => 500 ] );
 		}
 
 		$defaults        = $this->group_defaults();
-		$filtered_groups = array();
+		$filtered_groups = [];
 		foreach ( $groups as $group ) {
-			$sub_groups = array();
+			$sub_groups = [];
 			foreach ( $groups as $_group ) {
 				if ( ! empty( $_group['parent_id'] ) && $group['id'] === $_group['parent_id'] ) {
 					$sub_groups[] = $_group['id'];
@@ -96,11 +96,11 @@ class WC_REST_Settings_V2_Controller extends WC_REST_Controller {
 	 */
 	protected function prepare_links( $group_id ) {
 		$base  = '/' . $this->namespace . '/' . $this->rest_base;
-		$links = array(
-			'options' => array(
+		$links = [
+			'options' => [
 				'href' => rest_url( trailingslashit( $base ) . $group_id ),
-			),
-		);
+			],
+		];
 
 		return $links;
 	}
@@ -136,7 +136,7 @@ class WC_REST_Settings_V2_Controller extends WC_REST_Controller {
 	public function filter_group( $group ) {
 		return array_intersect_key(
 			$group,
-			array_flip( array_filter( array_keys( $group ), array( $this, 'allowed_group_keys' ) ) )
+			array_flip( array_filter( array_keys( $group ), [ $this, 'allowed_group_keys' ] ) )
 		);
 	}
 
@@ -148,7 +148,7 @@ class WC_REST_Settings_V2_Controller extends WC_REST_Controller {
 	 * @return boolean
 	 */
 	public function allowed_group_keys( $key ) {
-		return in_array( $key, array( 'id', 'label', 'description', 'parent_id', 'sub_groups' ) );
+		return in_array( $key, [ 'id', 'label', 'description', 'parent_id', 'sub_groups' ] );
 	}
 
 	/**
@@ -158,13 +158,13 @@ class WC_REST_Settings_V2_Controller extends WC_REST_Controller {
 	 * @return array
 	 */
 	protected function group_defaults() {
-		return array(
+		return [
 			'id'          => null,
 			'label'       => null,
 			'description' => '',
 			'parent_id'   => '',
-			'sub_groups'  => array(),
-		);
+			'sub_groups'  => [],
+		];
 	}
 
 	/**
@@ -176,7 +176,7 @@ class WC_REST_Settings_V2_Controller extends WC_REST_Controller {
 	 */
 	public function get_items_permissions_check( $request ) {
 		if ( ! wc_rest_check_manager_permissions( 'settings', 'read' ) ) {
-			return new WP_Error( 'woocommerce_rest_cannot_view', __( 'Sorry, you cannot list resources.', 'woocommerce' ), array( 'status' => rest_authorization_required_code() ) );
+			return new WP_Error( 'woocommerce_rest_cannot_view', __( 'Sorry, you cannot list resources.', 'woocommerce' ), [ 'status' => rest_authorization_required_code() ] );
 		}
 
 		return true;
@@ -189,43 +189,43 @@ class WC_REST_Settings_V2_Controller extends WC_REST_Controller {
 	 * @return array
 	 */
 	public function get_item_schema() {
-		$schema = array(
+		$schema = [
 			'$schema'    => 'http://json-schema.org/draft-04/schema#',
 			'title'      => 'setting_group',
 			'type'       => 'object',
-			'properties' => array(
-				'id'          => array(
+			'properties' => [
+				'id'          => [
 					'description' => __( 'A unique identifier that can be used to link settings together.', 'woocommerce' ),
 					'type'        => 'string',
-					'context'     => array( 'view' ),
+					'context'     => [ 'view' ],
 					'readonly'    => true,
-				),
-				'label'       => array(
+				],
+				'label'       => [
 					'description' => __( 'A human readable label for the setting used in interfaces.', 'woocommerce' ),
 					'type'        => 'string',
-					'context'     => array( 'view' ),
+					'context'     => [ 'view' ],
 					'readonly'    => true,
-				),
-				'description' => array(
+				],
+				'description' => [
 					'description' => __( 'A human readable description for the setting used in interfaces.', 'woocommerce' ),
 					'type'        => 'string',
-					'context'     => array( 'view' ),
+					'context'     => [ 'view' ],
 					'readonly'    => true,
-				),
-				'parent_id'   => array(
+				],
+				'parent_id'   => [
 					'description' => __( 'ID of parent grouping.', 'woocommerce' ),
 					'type'        => 'string',
-					'context'     => array( 'view' ),
+					'context'     => [ 'view' ],
 					'readonly'    => true,
-				),
-				'sub_groups'  => array(
+				],
+				'sub_groups'  => [
 					'description' => __( 'IDs for settings sub groups.', 'woocommerce' ),
 					'type'        => 'string',
-					'context'     => array( 'view' ),
+					'context'     => [ 'view' ],
 					'readonly'    => true,
-				),
-			),
-		);
+				],
+			],
+		];
 
 		return $this->add_additional_fields_schema( $schema );
 	}

@@ -23,8 +23,8 @@ class WC_Beta_Tester_Version_Picker {
 	 * Constructor
 	 */
 	public function __construct() {
-		add_action( 'admin_menu', array( $this, 'add_to_menus' ) );
-		add_action( 'admin_init', array( $this, 'handle_version_switch' ) );
+		add_action( 'admin_menu', [ $this, 'add_to_menus' ] );
+		add_action( 'admin_init', [ $this, 'handle_version_switch' ] );
 	}
 
 	/**
@@ -52,14 +52,14 @@ class WC_Beta_Tester_Version_Picker {
 
 			$plugin_name = 'woocommerce';
 			$plugin      = 'woocommerce/woocommerce.php';
-			$skin_args   = array(
+			$skin_args   = [
 				'type'    => 'web',
 				'url'     => 'plugins.php?page=wc-beta-tester-version-picker',
 				'title'   => 'Version switch result',
 				'plugin'  => $plugin_name,
 				'version' => $version,
 				'nonce'   => wp_unslash( $_GET['_wpnonce'] ), // WPCS: Input var ok, sanitization ok.
-			);
+			];
 
 			$skin     = new Automatic_Upgrader_Skin( $skin_args );
 			$upgrader = new WC_Beta_Tester_Plugin_Upgrader( $skin );
@@ -107,7 +107,7 @@ class WC_Beta_Tester_Version_Picker {
 			__( 'WooCommerce Version Switch', 'woocommerce-beta-tester' ),
 			'install_plugins',
 			'wc-beta-tester-version-picker',
-			array( $this, 'select_versions_form_html' )
+			[ $this, 'select_versions_form_html' ]
 		);
 	}
 

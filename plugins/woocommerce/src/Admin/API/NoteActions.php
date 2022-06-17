@@ -27,25 +27,25 @@ class NoteActions extends Notes {
 		register_rest_route(
 			$this->namespace,
 			'/' . $this->rest_base . '/(?P<note_id>[\d-]+)/action/(?P<action_id>[\d-]+)',
-			array(
-				'args'   => array(
-					'note_id'   => array(
+			[
+				'args'   => [
+					'note_id'   => [
 						'description' => __( 'Unique ID for the Note.', 'woocommerce' ),
 						'type'        => 'integer',
-					),
-					'action_id' => array(
+					],
+					'action_id' => [
 						'description' => __( 'Unique ID for the Note Action.', 'woocommerce' ),
 						'type'        => 'integer',
-					),
-				),
-				array(
+					],
+				],
+				[
 					'methods'             => \WP_REST_Server::EDITABLE,
-					'callback'            => array( $this, 'trigger_note_action' ),
+					'callback'            => [ $this, 'trigger_note_action' ],
 					// @todo - double check these permissions for taking note actions.
-					'permission_callback' => array( $this, 'get_item_permissions_check' ),
-				),
-				'schema' => array( $this, 'get_public_item_schema' ),
-			)
+					'permission_callback' => [ $this, 'get_item_permissions_check' ],
+				],
+				'schema' => [ $this, 'get_public_item_schema' ],
+			]
 		);
 	}
 
@@ -62,7 +62,7 @@ class NoteActions extends Notes {
 			return new \WP_Error(
 				'woocommerce_note_invalid_id',
 				__( 'Sorry, there is no resource with that ID.', 'woocommerce' ),
-				array( 'status' => 404 )
+				[ 'status' => 404 ]
 			);
 		}
 
@@ -75,7 +75,7 @@ class NoteActions extends Notes {
 			return new \WP_Error(
 				'woocommerce_note_action_invalid_id',
 				__( 'Sorry, there is no resource with that ID.', 'woocommerce' ),
-				array( 'status' => 404 )
+				[ 'status' => 404 ]
 			);
 		}
 

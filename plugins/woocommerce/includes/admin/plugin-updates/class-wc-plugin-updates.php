@@ -43,7 +43,7 @@ class WC_Plugin_Updates {
 	 *
 	 * @var array
 	 */
-	protected $major_untested_plugins = array();
+	protected $major_untested_plugins = [];
 
 	/**
 	 * Common JS for initializing and managing thickbox-based modals.
@@ -156,11 +156,11 @@ class WC_Plugin_Updates {
 	public function get_untested_plugins( $new_version, $release ) {
 		// Since 5.0 all versions are backwards compatible.
 		if ( 'none' === $release ) {
-			return array();
+			return [];
 		}
 
 		$extensions        = array_merge( $this->get_plugins_with_header( self::VERSION_TESTED_HEADER ), $this->get_plugins_for_woocommerce() );
-		$untested          = array();
+		$untested          = [];
 		$new_version_parts = explode( '.', $new_version );
 		$version           = $new_version_parts[0];
 
@@ -205,7 +205,7 @@ class WC_Plugin_Updates {
 	 */
 	protected function get_plugins_with_header( $header ) {
 		$plugins = get_plugins();
-		$matches = array();
+		$matches = [];
 
 		foreach ( $plugins as $file => $plugin ) {
 			if ( ! empty( $plugin[ $header ] ) ) {
@@ -223,7 +223,7 @@ class WC_Plugin_Updates {
 	 */
 	protected function get_plugins_for_woocommerce() {
 		$plugins = get_plugins();
-		$matches = array();
+		$matches = [];
 
 		foreach ( $plugins as $file => $plugin ) {
 			if ( 'WooCommerce' !== $plugin['Name'] && ( stristr( $plugin['Name'], 'woocommerce' ) || stristr( $plugin['Description'], 'woocommerce' ) ) ) {

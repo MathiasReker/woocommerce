@@ -27,7 +27,7 @@ class ShippingLabelBanner {
 		if ( ! is_admin() ) {
 			return;
 		}
-		add_action( 'add_meta_boxes', array( $this, 'add_meta_boxes' ), 6, 2 );
+		add_action( 'add_meta_boxes', [ $this, 'add_meta_boxes' ], 6, 2 );
 	}
 
 	/**
@@ -88,17 +88,17 @@ class ShippingLabelBanner {
 			add_meta_box(
 				'woocommerce-admin-print-label',
 				__( 'Shipping Label', 'woocommerce' ),
-				array( $this, 'meta_box' ),
+				[ $this, 'meta_box' ],
 				null,
 				'normal',
 				'high',
-				array(
+				[
 					'context' => 'shipping_label',
 					'order'   => $post->ID,
 					'items'   => $this->count_shippable_items( $order ),
-				)
+				]
 			);
-			add_action( 'admin_enqueue_scripts', array( $this, 'add_print_shipping_label_script' ) );
+			add_action( 'admin_enqueue_scripts', [ $this, 'add_print_shipping_label_script' ] );
 		}
 	}
 
@@ -130,7 +130,7 @@ class ShippingLabelBanner {
 		wp_enqueue_style(
 			'print-shipping-label-banner-style',
 			WCAdminAssets::get_url( "print-shipping-label-banner/style{$rtl}", 'css' ),
-			array( 'wp-components' ),
+			[ 'wp-components' ],
 			WCAdminAssets::get_file_version( 'css' )
 		);
 
@@ -140,16 +140,16 @@ class ShippingLabelBanner {
 		wp_enqueue_script(
 			'print-shipping-label-banner',
 			WCAdminAssets::get_url( 'wp-admin-scripts/print-shipping-label-banner', 'js' ),
-			array_merge( array( WC_ADMIN_APP ), $script_assets ['dependencies'] ),
+			array_merge( [ WC_ADMIN_APP ], $script_assets ['dependencies'] ),
 			WCAdminAssets::get_file_version( 'js' ),
 			true
 		);
 
-		$payload = array(
+		$payload = [
 			'nonce'                 => wp_create_nonce( 'wp_rest' ),
 			'baseURL'               => get_rest_url(),
 			'wcs_server_connection' => true,
-		);
+		];
 
 		wp_localize_script( 'print-shipping-label-banner', 'wcConnectData', $payload );
 	}

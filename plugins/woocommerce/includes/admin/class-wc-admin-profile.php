@@ -23,11 +23,11 @@ if ( ! class_exists( 'WC_Admin_Profile', false ) ) :
 		 * Hook in tabs.
 		 */
 		public function __construct() {
-			add_action( 'show_user_profile', array( $this, 'add_customer_meta_fields' ) );
-			add_action( 'edit_user_profile', array( $this, 'add_customer_meta_fields' ) );
+			add_action( 'show_user_profile', [ $this, 'add_customer_meta_fields' ] );
+			add_action( 'edit_user_profile', [ $this, 'add_customer_meta_fields' ] );
 
-			add_action( 'personal_options_update', array( $this, 'save_customer_meta_fields' ) );
-			add_action( 'edit_user_profile_update', array( $this, 'save_customer_meta_fields' ) );
+			add_action( 'personal_options_update', [ $this, 'save_customer_meta_fields' ] );
+			add_action( 'edit_user_profile_update', [ $this, 'save_customer_meta_fields' ] );
 		}
 
 		/**
@@ -38,117 +38,117 @@ if ( ! class_exists( 'WC_Admin_Profile', false ) ) :
 		public function get_customer_meta_fields() {
 			$show_fields = apply_filters(
 				'woocommerce_customer_meta_fields',
-				array(
-					'billing'  => array(
+				[
+					'billing'  => [
 						'title'  => __( 'Customer billing address', 'woocommerce' ),
-						'fields' => array(
-							'billing_first_name' => array(
+						'fields' => [
+							'billing_first_name' => [
 								'label'       => __( 'First name', 'woocommerce' ),
 								'description' => '',
-							),
-							'billing_last_name'  => array(
+							],
+							'billing_last_name'  => [
 								'label'       => __( 'Last name', 'woocommerce' ),
 								'description' => '',
-							),
-							'billing_company'    => array(
+							],
+							'billing_company'    => [
 								'label'       => __( 'Company', 'woocommerce' ),
 								'description' => '',
-							),
-							'billing_address_1'  => array(
+							],
+							'billing_address_1'  => [
 								'label'       => __( 'Address line 1', 'woocommerce' ),
 								'description' => '',
-							),
-							'billing_address_2'  => array(
+							],
+							'billing_address_2'  => [
 								'label'       => __( 'Address line 2', 'woocommerce' ),
 								'description' => '',
-							),
-							'billing_city'       => array(
+							],
+							'billing_city'       => [
 								'label'       => __( 'City', 'woocommerce' ),
 								'description' => '',
-							),
-							'billing_postcode'   => array(
+							],
+							'billing_postcode'   => [
 								'label'       => __( 'Postcode / ZIP', 'woocommerce' ),
 								'description' => '',
-							),
-							'billing_country'    => array(
+							],
+							'billing_country'    => [
 								'label'       => __( 'Country / Region', 'woocommerce' ),
 								'description' => '',
 								'class'       => 'js_field-country',
 								'type'        => 'select',
-								'options'     => array( '' => __( 'Select a country / region&hellip;', 'woocommerce' ) ) + WC()->countries->get_allowed_countries(),
-							),
-							'billing_state'      => array(
+								'options'     => [ '' => __( 'Select a country / region&hellip;', 'woocommerce' ) ] + WC()->countries->get_allowed_countries(),
+							],
+							'billing_state'      => [
 								'label'       => __( 'State / County', 'woocommerce' ),
 								'description' => __( 'State / County or state code', 'woocommerce' ),
 								'class'       => 'js_field-state',
-							),
-							'billing_phone'      => array(
+							],
+							'billing_phone'      => [
 								'label'       => __( 'Phone', 'woocommerce' ),
 								'description' => '',
-							),
-							'billing_email'      => array(
+							],
+							'billing_email'      => [
 								'label'       => __( 'Email address', 'woocommerce' ),
 								'description' => '',
-							),
-						),
-					),
-					'shipping' => array(
+							],
+						],
+					],
+					'shipping' => [
 						'title'  => __( 'Customer shipping address', 'woocommerce' ),
-						'fields' => array(
-							'copy_billing'        => array(
+						'fields' => [
+							'copy_billing'        => [
 								'label'       => __( 'Copy from billing address', 'woocommerce' ),
 								'description' => '',
 								'class'       => 'js_copy-billing',
 								'type'        => 'button',
 								'text'        => __( 'Copy', 'woocommerce' ),
-							),
-							'shipping_first_name' => array(
+							],
+							'shipping_first_name' => [
 								'label'       => __( 'First name', 'woocommerce' ),
 								'description' => '',
-							),
-							'shipping_last_name'  => array(
+							],
+							'shipping_last_name'  => [
 								'label'       => __( 'Last name', 'woocommerce' ),
 								'description' => '',
-							),
-							'shipping_company'    => array(
+							],
+							'shipping_company'    => [
 								'label'       => __( 'Company', 'woocommerce' ),
 								'description' => '',
-							),
-							'shipping_address_1'  => array(
+							],
+							'shipping_address_1'  => [
 								'label'       => __( 'Address line 1', 'woocommerce' ),
 								'description' => '',
-							),
-							'shipping_address_2'  => array(
+							],
+							'shipping_address_2'  => [
 								'label'       => __( 'Address line 2', 'woocommerce' ),
 								'description' => '',
-							),
-							'shipping_city'       => array(
+							],
+							'shipping_city'       => [
 								'label'       => __( 'City', 'woocommerce' ),
 								'description' => '',
-							),
-							'shipping_postcode'   => array(
+							],
+							'shipping_postcode'   => [
 								'label'       => __( 'Postcode / ZIP', 'woocommerce' ),
 								'description' => '',
-							),
-							'shipping_country'    => array(
+							],
+							'shipping_country'    => [
 								'label'       => __( 'Country / Region', 'woocommerce' ),
 								'description' => '',
 								'class'       => 'js_field-country',
 								'type'        => 'select',
-								'options'     => array( '' => __( 'Select a country / region&hellip;', 'woocommerce' ) ) + WC()->countries->get_allowed_countries(),
-							),
-							'shipping_state'      => array(
+								'options'     => [ '' => __( 'Select a country / region&hellip;', 'woocommerce' ) ] + WC()->countries->get_allowed_countries(),
+							],
+							'shipping_state'      => [
 								'label'       => __( 'State / County', 'woocommerce' ),
 								'description' => __( 'State / County or state code', 'woocommerce' ),
 								'class'       => 'js_field-state',
-							),
-							'shipping_phone'      => array(
+							],
+							'shipping_phone'      => [
 								'label'       => __( 'Phone', 'woocommerce' ),
 								'description' => '',
-							),
-						),
-					),
-				)
+							],
+						],
+					],
+				]
 			);
 			return $show_fields;
 		}
@@ -235,7 +235,7 @@ if ( ! class_exists( 'WC_Admin_Profile', false ) ) :
 		 */
 		protected function get_user_meta( $user_id, $key ) {
 			$value           = get_user_meta( $user_id, $key, true );
-			$existing_fields = array( 'billing_first_name', 'billing_last_name' );
+			$existing_fields = [ 'billing_first_name', 'billing_last_name' ];
 			if ( ! $value && in_array( $key, $existing_fields ) ) {
 				$value = get_user_meta( $user_id, str_replace( 'billing_', '', $key ), true );
 			} elseif ( ! $value && ( 'billing_email' === $key ) ) {

@@ -15,14 +15,14 @@ class WC_Test_Privacy_Export extends WC_Unit_Test_Case {
 	 *
 	 * @var array
 	 */
-	protected $orders = array();
+	protected $orders = [];
 
 	/**
 	 * Customer tracking for cleanup.
 	 *
 	 * @var array
 	 */
-	protected $customers = array();
+	protected $customers = [];
 
 	/**
 	 * Load up the importer classes since they aren't loaded by default.
@@ -63,74 +63,74 @@ class WC_Test_Privacy_Export extends WC_Unit_Test_Case {
 	public function test_customer_data_exporter() {
 		// Test a non existing user.
 		$response = WC_Privacy_Exporters::customer_data_exporter( 'doesnotexist@test.com' );
-		$this->assertEquals( array(), $response['data'] );
+		$this->assertEquals( [], $response['data'] );
 
 		// Do a test export and check response.
 		$response = WC_Privacy_Exporters::customer_data_exporter( 'test1@test.com' );
 		$this->assertTrue( $response['done'] );
 		$this->assertEquals(
-			array(
-				array(
+			[
+				[
 					'group_id'          => 'woocommerce_customer',
 					'group_label'       => 'Customer Data',
 					'group_description' => 'User&#8217;s WooCommerce customer data.',
 					'item_id'           => 'user',
-					'data'              => array(
-						array(
+					'data'              => [
+						[
 							'name'  => 'Billing Address 1',
 							'value' => '123 South Street',
-						),
-						array(
+						],
+						[
 							'name'  => 'Billing Address 2',
 							'value' => 'Apt 1',
-						),
-						array(
+						],
+						[
 							'name'  => 'Billing City',
 							'value' => 'San Francisco',
-						),
-						array(
+						],
+						[
 							'name'  => 'Billing Postal/Zip Code',
 							'value' => '94110',
-						),
-						array(
+						],
+						[
 							'name'  => 'Billing State',
 							'value' => 'CA',
-						),
-						array(
+						],
+						[
 							'name'  => 'Billing Country / Region',
 							'value' => 'US',
-						),
-						array(
+						],
+						[
 							'name'  => 'Email Address',
 							'value' => 'customer1@test.com',
-						),
-						array(
+						],
+						[
 							'name'  => 'Shipping Address 1',
 							'value' => '123 South Street',
-						),
-						array(
+						],
+						[
 							'name'  => 'Shipping Address 2',
 							'value' => 'Apt 1',
-						),
-						array(
+						],
+						[
 							'name'  => 'Shipping City',
 							'value' => 'San Francisco',
-						),
-						array(
+						],
+						[
 							'name'  => 'Shipping Postal/Zip Code',
 							'value' => '94110',
-						),
-						array(
+						],
+						[
 							'name'  => 'Shipping State',
 							'value' => 'CA',
-						),
-						array(
+						],
+						[
 							'name'  => 'Shipping Country / Region',
 							'value' => 'US',
-						),
-					),
-				),
-			),
+						],
+					],
+				],
+			],
 			$response['data']
 		);
 	}

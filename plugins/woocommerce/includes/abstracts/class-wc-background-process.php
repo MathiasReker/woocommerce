@@ -166,11 +166,11 @@ abstract class WC_Background_Process extends WP_Background_Process {
 		}
 
 		// Adds every 5 minutes to the existing schedules.
-		$schedules[ $this->identifier . '_cron_interval' ] = array(
+		$schedules[ $this->identifier . '_cron_interval' ] = [
 			'interval' => MINUTE_IN_SECONDS * $interval,
 			/* translators: %d: interval */
 			'display'  => sprintf( __( 'Every %d minutes', 'woocommerce' ), $interval ),
-		);
+		];
 
 		return $schedules;
 	}

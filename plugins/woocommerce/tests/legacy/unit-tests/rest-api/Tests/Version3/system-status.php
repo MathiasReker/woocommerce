@@ -27,9 +27,9 @@ class WC_Tests_REST_System_Status extends WC_REST_Unit_Test_Case {
 	 */
 	public static function wpSetUpBeforeClass( $factory ) {
 		self::$user = $factory->user->create(
-			array(
+			[
 				'role' => 'administrator',
-			)
+			]
 		);
 	}
 
@@ -44,7 +44,7 @@ class WC_Tests_REST_System_Status extends WC_REST_Unit_Test_Case {
 		$this->endpoint = new WC_REST_System_Status_Controller();
 
 		// Callback used by WP_HTTP_TestCase to decide whether to perform HTTP requests or to provide a mocked response.
-		$this->http_responder = array( $this, 'mock_http_responses' );
+		$this->http_responder = [ $this, 'mock_http_responses' ];
 	}
 
 	/**
@@ -115,14 +115,14 @@ class WC_Tests_REST_System_Status extends WC_REST_Unit_Test_Case {
 			$this->markTestSkipped( 'Skipping because nested property support was introduced in 5.3.' );
 			return;
 		}
-		$expected_data = array(
-			'environment' => array(
+		$expected_data = [
+			'environment' => [
 				'version' => WC()->version
-			)
-		);
+			]
+		];
 
 		$request = new WP_REST_Request( 'GET', '/wc/v3/system_status' );
-		$request->set_query_params( array( '_fields' => 'environment.version' ) );
+		$request->set_query_params( [ '_fields' => 'environment.version' ] );
 
 		$response = $this->server->dispatch( $request );
 		$data     = $response->get_data();
@@ -153,10 +153,10 @@ class WC_Tests_REST_System_Status extends WC_REST_Unit_Test_Case {
 	 * @since 3.5.0
 	 */
 	public function test_get_system_status_info_active_plugins() {
-		$actual_plugins = array( 'hello.php' );
+		$actual_plugins = [ 'hello.php' ];
 		update_option( 'active_plugins', $actual_plugins );
 		$response = $this->server->dispatch( new WP_REST_Request( 'GET', '/wc/v3/system_status' ) );
-		update_option( 'active_plugins', array() );
+		update_option( 'active_plugins', [] );
 
 		$data    = $response->get_data();
 		$plugins = (array) $data['active_plugins'];
@@ -187,8 +187,8 @@ class WC_Tests_REST_System_Status extends WC_REST_Unit_Test_Case {
 	 * @since 3.5.0
 	 */
 	public function test_get_system_status_info_settings() {
-		$term_response = array();
-		$terms         = get_terms( 'product_type', array( 'hide_empty' => 0 ) );
+		$term_response = [];
+		$terms         = get_terms( 'product_type', [ 'hide_empty' => 0 ] );
 		foreach ( $terms as $term ) {
 			$term_response[ $term->slug ] = strtolower( $term->name );
 		}
@@ -265,26 +265,26 @@ class WC_Tests_REST_System_Status extends WC_REST_Unit_Test_Case {
 		$this->assertEquals( 200, $response->get_status() );
 		$this->assertEquals( count( $raw_tools ), count( $data ) );
 		$this->assertContains(
-			array(
+			[
 				'id'          => 'regenerate_thumbnails',
 				'name'        => 'Regenerate shop thumbnails',
 				'action'      => 'Regenerate',
 				'description' => 'This will regenerate all shop thumbnails to match your theme and/or image settings.',
-				'_links'      => array(
-					'item' => array(
-						array(
+				'_links'      => [
+					'item' => [
+						[
 							'href'       => rest_url( '/wc/v3/system_status/tools/regenerate_thumbnails' ),
 							'embeddable' => 1,
-						),
-					),
-				),
-			),
+						],
+					],
+				],
+			],
 			$data
 		);
 
-		$query_params = array(
+		$query_params = [
 			'_fields' => 'id,name,nonexisting',
-		);
+		];
 		$request      = new WP_REST_Request( 'GET', '/wc/v3/system_status/tools' );
 		$request->set_query_params( $query_params );
 		$response = $this->server->dispatch( $request );
@@ -293,10 +293,10 @@ class WC_Tests_REST_System_Status extends WC_REST_Unit_Test_Case {
 		$this->assertEquals( 200, $response->get_status() );
 		$this->assertEquals( count( $raw_tools ), count( $data ) );
 		$this->assertContains(
-			array(
+			[
 				'id'   => 'regenerate_thumbnails',
 				'name' => 'Regenerate shop thumbnails',
-			),
+			],
 			$data
 		);
 		foreach ( $data as $item ) {
@@ -346,9 +346,9 @@ class WC_Tests_REST_System_Status extends WC_REST_Unit_Test_Case {
 		$this->assertEquals( 'This tool will recount product terms - useful when changing your settings in a way which hides products from the catalog.', $data['description'] );
 
 		// Test for _fields query parameter.
-		$query_params = array(
+		$query_params = [
 			'_fields' => 'id,name,nonexisting',
-		);
+		];
 		$request      = new WP_REST_Request( 'GET', '/wc/v3/system_status/tools/recount_terms' );
 		$request->set_query_params( $query_params );
 		$response = $this->server->dispatch( $request );
@@ -403,9 +403,9 @@ class WC_Tests_REST_System_Status extends WC_REST_Unit_Test_Case {
 		$this->assertEquals( 404, $response->get_status() );
 
 		// Test _fields for execute system tool request.
-		$query_params = array(
+		$query_params = [
 			'_fields' => 'id,success,nonexisting',
-		);
+		];
 		$request      = new WP_REST_Request( 'PUT', '/wc/v3/system_status/tools/recount_terms' );
 		$request->set_query_params( $query_params );
 		$response = $this->server->dispatch( $request );
@@ -475,15 +475,15 @@ class WC_Tests_REST_System_Status extends WC_REST_Unit_Test_Case {
 	protected function mock_http_responses( $request, $url ) {
 		$mocked_response = false;
 
-		if ( in_array( $url, array( 'https://www.paypal.com/cgi-bin/webscr', 'https://woocommerce.com/wc-api/product-key-api?request=ping&network=0' ), true ) ) {
-			$mocked_response = array(
-				'response' => array( 'code' => 200 ),
-			);
+		if ( in_array( $url, [ 'https://www.paypal.com/cgi-bin/webscr', 'https://woocommerce.com/wc-api/product-key-api?request=ping&network=0' ], true ) ) {
+			$mocked_response = [
+				'response' => [ 'code' => 200 ],
+			];
 		} elseif ( 'https://api.wordpress.org/themes/info/1.0/' === $url ) {
-			$mocked_response = array(
+			$mocked_response = [
 				'body'     => 'O:8:"stdClass":12:{s:4:"name";s:7:"Default";s:4:"slug";s:7:"default";s:7:"version";s:5:"1.7.2";s:11:"preview_url";s:29:"https://wp-themes.com/default";s:6:"author";s:15:"wordpressdotorg";s:14:"screenshot_url";s:61:"//ts.w.org/wp-content/themes/default/screenshot.png?ver=1.7.2";s:6:"rating";d:100;s:11:"num_ratings";s:1:"3";s:10:"downloaded";i:296618;s:12:"last_updated";s:10:"2010-06-14";s:8:"homepage";s:37:"https://wordpress.org/themes/default/";s:13:"download_link";s:55:"https://downloads.wordpress.org/theme/default.1.7.2.zip";}',
-				'response' => array( 'code' => 200 ),
-			);
+				'response' => [ 'code' => 200 ],
+			];
 		}
 
 		return $mocked_response;

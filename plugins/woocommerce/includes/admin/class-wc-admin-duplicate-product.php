@@ -23,9 +23,9 @@ class WC_Admin_Duplicate_Product {
 	 * Constructor.
 	 */
 	public function __construct() {
-		add_action( 'admin_action_duplicate_product', array( $this, 'duplicate_product_action' ) );
-		add_filter( 'post_row_actions', array( $this, 'dupe_link' ), 10, 2 );
-		add_action( 'post_submitbox_start', array( $this, 'dupe_button' ) );
+		add_action( 'admin_action_duplicate_product', [ $this, 'duplicate_product_action' ] );
+		add_filter( 'post_row_actions', [ $this, 'dupe_link' ], 10, 2 );
+		add_action( 'post_submitbox_start', [ $this, 'dupe_button' ] );
 	}
 
 	/**
@@ -114,7 +114,7 @@ class WC_Admin_Duplicate_Product {
 
 		// Hook rename to match other woocommerce_product_* hooks, and to move away from depending on a response from the wp_posts table.
 		do_action( 'woocommerce_product_duplicate', $duplicate, $product );
-		wc_do_deprecated_action( 'woocommerce_duplicate_product', array( $duplicate->get_id(), $this->get_product_to_duplicate( $product_id ) ), '3.0', 'Use woocommerce_product_duplicate action instead.' );
+		wc_do_deprecated_action( 'woocommerce_duplicate_product', [ $duplicate->get_id(), $this->get_product_to_duplicate( $product_id ) ], '3.0', 'Use woocommerce_product_duplicate action instead.' );
 
 		// Redirect to the edit screen for the new draft page.
 		wp_redirect( admin_url( 'post.php?action=edit&post=' . $duplicate->get_id() ) );
@@ -138,7 +138,7 @@ class WC_Admin_Duplicate_Product {
 		$meta_to_exclude = array_filter(
 			apply_filters(
 				'woocommerce_duplicate_product_exclude_meta',
-				array(),
+				[],
 				array_map(
 					function ( $datum ) {
 						return $datum->key;

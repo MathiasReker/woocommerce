@@ -38,18 +38,18 @@ class Homescreen {
 	 * Hook into WooCommerce.
 	 */
 	public function __construct() {
-		add_filter( 'woocommerce_admin_get_user_data_fields', array( $this, 'add_user_data_fields' ) );
-		add_action( 'admin_menu', array( $this, 'register_page' ) );
+		add_filter( 'woocommerce_admin_get_user_data_fields', [ $this, 'add_user_data_fields' ] );
+		add_action( 'admin_menu', [ $this, 'register_page' ] );
 		// In WC Core 5.1 $submenu manipulation occurs in admin_menu, not admin_head. See https://github.com/woocommerce/woocommerce/pull/29088.
 		if ( version_compare( WC_VERSION, '5.1', '>=' ) ) {
 			// priority is 20 to run after admin_menu hook for woocommerce runs, so that submenu is populated.
-			add_action( 'admin_menu', array( $this, 'possibly_remove_woocommerce_menu' ) );
-			add_action( 'admin_menu', array( $this, 'update_link_structure' ), 20 );
+			add_action( 'admin_menu', [ $this, 'possibly_remove_woocommerce_menu' ] );
+			add_action( 'admin_menu', [ $this, 'update_link_structure' ], 20 );
 		} else {
 			// priority is 20 to run after https://github.com/woocommerce/woocommerce/blob/a55ae325306fc2179149ba9b97e66f32f84fdd9c/includes/admin/class-wc-admin-menus.php#L165.
-			add_action( 'admin_head', array( $this, 'update_link_structure' ), 20 );
+			add_action( 'admin_head', [ $this, 'update_link_structure' ], 20 );
 		}
-		add_filter( 'woocommerce_admin_preload_options', array( $this, 'preload_options' ) );
+		add_filter( 'woocommerce_admin_preload_options', [ $this, 'preload_options' ] );
 	}
 
 	/**
@@ -61,12 +61,12 @@ class Homescreen {
 	public function add_user_data_fields( $user_data_fields ) {
 		return array_merge(
 			$user_data_fields,
-			array(
+			[
 				'homepage_layout',
 				'homepage_stats',
 				'task_list_tracked_started_tasks',
 				'help_panel_highlight_shown',
-			)
+			]
 		);
 	}
 
@@ -77,25 +77,25 @@ class Homescreen {
 		// Register a top-level item for users who cannot view the core WooCommerce menu.
 		if ( ! self::is_admin_user() ) {
 			wc_admin_register_page(
-				array(
+				[
 					'id'         => 'woocommerce-home',
 					'title'      => __( 'WooCommerce', 'woocommerce' ),
 					'path'       => self::MENU_SLUG,
 					'capability' => 'read',
-				)
+				]
 			);
 			return;
 		}
 
 		wc_admin_register_page(
-			array(
+			[
 				'id'         => 'woocommerce-home',
 				'title'      => __( 'Home', 'woocommerce' ),
 				'parent'     => 'woocommerce',
 				'path'       => self::MENU_SLUG,
 				'order'      => 0,
 				'capability' => 'read',
-			)
+			]
 		);
 	}
 

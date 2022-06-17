@@ -39,35 +39,35 @@ class PostToOrderAddressTableMigrator extends MetaToCustomTableMigrator {
 	protected function get_schema_config(): array {
 		global $wpdb;
 		// TODO: Remove hardcoding.
-		$this->table_names = array(
+		$this->table_names = [
 			'orders'    => $wpdb->prefix . 'wc_orders',
 			'addresses' => $wpdb->prefix . 'wc_order_addresses',
 			'op_data'   => $wpdb->prefix . 'wc_order_operational_data',
 			'meta'      => $wpdb->prefix . 'wc_orders_meta',
-		);
+		];
 
-		return array(
-			'source'      => array(
-				'entity' => array(
+		return [
+			'source'      => [
+				'entity' => [
 					'table_name'             => $this->table_names['orders'],
 					'meta_rel_column'        => 'id',
 					'destination_rel_column' => 'id',
 					'primary_key'            => 'id',
-				),
-				'meta'   => array(
+				],
+				'meta'   => [
 					'table_name'        => $wpdb->postmeta,
 					'meta_key_column'   => 'meta_key',
 					'meta_value_column' => 'meta_value',
 					'entity_id_column'  => 'post_id',
-				),
-			),
-			'destination' => array(
+				],
+			],
+			'destination' => [
 				'table_name'        => $this->table_names['addresses'],
 				'source_rel_column' => 'order_id',
 				'primary_key'       => 'id',
 				'primary_key_type'  => 'int',
-			),
-		);
+			],
+		];
 	}
 
 	/**
@@ -78,17 +78,17 @@ class PostToOrderAddressTableMigrator extends MetaToCustomTableMigrator {
 	protected function get_core_column_mapping(): array {
 		$type = $this->type;
 
-		return array(
-			'id'   => array(
+		return [
+			'id'   => [
 				'type'        => 'int',
 				'destination' => 'order_id',
-			),
-			'type' => array(
+			],
+			'type' => [
 				'type'          => 'string',
 				'destination'   => 'address_type',
 				'select_clause' => "'$type'",
-			),
-		);
+			],
+		];
 	}
 
 	/**
@@ -99,52 +99,52 @@ class PostToOrderAddressTableMigrator extends MetaToCustomTableMigrator {
 	public function get_meta_column_config(): array {
 		$type = $this->type;
 
-		return array(
-			"_{$type}_first_name" => array(
+		return [
+			"_{$type}_first_name" => [
 				'type'        => 'string',
 				'destination' => 'first_name',
-			),
-			"_{$type}_last_name"  => array(
+			],
+			"_{$type}_last_name"  => [
 				'type'        => 'string',
 				'destination' => 'last_name',
-			),
-			"_{$type}_company"    => array(
+			],
+			"_{$type}_company"    => [
 				'type'        => 'string',
 				'destination' => 'company',
-			),
-			"_{$type}_address_1"  => array(
+			],
+			"_{$type}_address_1"  => [
 				'type'        => 'string',
 				'destination' => 'address_1',
-			),
-			"_{$type}_address_2"  => array(
+			],
+			"_{$type}_address_2"  => [
 				'type'        => 'string',
 				'destination' => 'address_2',
-			),
-			"_{$type}_city"       => array(
+			],
+			"_{$type}_city"       => [
 				'type'        => 'string',
 				'destination' => 'city',
-			),
-			"_{$type}_state"      => array(
+			],
+			"_{$type}_state"      => [
 				'type'        => 'string',
 				'destination' => 'state',
-			),
-			"_{$type}_postcode"   => array(
+			],
+			"_{$type}_postcode"   => [
 				'type'        => 'string',
 				'destination' => 'postcode',
-			),
-			"_{$type}_country"    => array(
+			],
+			"_{$type}_country"    => [
 				'type'        => 'string',
 				'destination' => 'country',
-			),
-			"_{$type}_email"      => array(
+			],
+			"_{$type}_email"      => [
 				'type'        => 'string',
 				'destination' => 'email',
-			),
-			"_{$type}_phone"      => array(
+			],
+			"_{$type}_phone"      => [
 				'type'        => 'string',
 				'destination' => 'phone',
-			),
-		);
+			],
+		];
 	}
 
 	/**

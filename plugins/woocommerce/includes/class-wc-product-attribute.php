@@ -23,14 +23,14 @@ class WC_Product_Attribute implements ArrayAccess {
 	 * @since 3.0.0
 	 * @var array
 	 */
-	protected $data = array(
+	protected $data = [
 		'id'        => 0,
 		'name'      => '',
-		'options'   => array(),
+		'options'   => [],
 		'position'  => 0,
 		'visible'   => false,
 		'variation' => false,
-	);
+	];
 
 	/**
 	 * Return if this attribute is a taxonomy.
@@ -69,7 +69,7 @@ class WC_Product_Attribute implements ArrayAccess {
 		if ( ! $this->is_taxonomy() || ! taxonomy_exists( $this->get_name() ) ) {
 			return null;
 		}
-		$terms = array();
+		$terms = [];
 		foreach ( $this->get_options() as $option ) {
 			if ( is_int( $option ) ) {
 				$term = get_term_by( 'id', $option, $this->get_name() );
@@ -98,7 +98,7 @@ class WC_Product_Attribute implements ArrayAccess {
 		if ( ! $this->is_taxonomy() || ! taxonomy_exists( $this->get_name() ) ) {
 			return $this->get_options();
 		}
-		$terms = array();
+		$terms = [];
 		foreach ( $this->get_options() as $option ) {
 			if ( is_int( $option ) ) {
 				$term = get_term_by( 'id', $option, $this->get_name() );
@@ -125,12 +125,12 @@ class WC_Product_Attribute implements ArrayAccess {
 	public function get_data() {
 		return array_merge(
 			$this->data,
-			array(
+			[
 				'is_visible'   => $this->get_visible() ? 1 : 0,
 				'is_variation' => $this->get_variation() ? 1 : 0,
 				'is_taxonomy'  => $this->is_taxonomy() ? 1 : 0,
 				'value'        => $this->is_taxonomy() ? '' : wc_implode_text_attributes( $this->get_options() ),
-			)
+			]
 		);
 	}
 
@@ -278,7 +278,7 @@ class WC_Product_Attribute implements ArrayAccess {
 			case 'value':
 				return $this->is_taxonomy() ? '' : wc_implode_text_attributes( $this->get_options() );
 			default:
-				if ( is_callable( array( $this, "get_$offset" ) ) ) {
+				if ( is_callable( [ $this, "get_$offset" ] ) ) {
 					return $this->{"get_$offset"}();
 				}
 				break;
@@ -305,7 +305,7 @@ class WC_Product_Attribute implements ArrayAccess {
 				$this->set_options( $value );
 				break;
 			default:
-				if ( is_callable( array( $this, "set_$offset" ) ) ) {
+				if ( is_callable( [ $this, "set_$offset" ] ) ) {
 					$this->{"set_$offset"}( $value );
 				}
 				break;
@@ -328,6 +328,6 @@ class WC_Product_Attribute implements ArrayAccess {
 	 */
 	#[\ReturnTypeWillChange]
 	public function offsetExists( $offset ) {
-		return in_array( $offset, array_merge( array( 'is_variation', 'is_visible', 'is_taxonomy', 'value' ), array_keys( $this->data ) ), true );
+		return in_array( $offset, array_merge( [ 'is_variation', 'is_visible', 'is_taxonomy', 'value' ], array_keys( $this->data ) ), true );
 	}
 }

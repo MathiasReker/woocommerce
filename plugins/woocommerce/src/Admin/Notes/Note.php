@@ -51,7 +51,7 @@ class Note extends \WC_Data {
 	 */
 	public function __construct( $data = '' ) {
 		// Set default data here to allow `content_data` to be an object.
-		$this->data = array(
+		$this->data = [
 			'name'          => '-',
 			'type'          => self::E_WC_ADMIN_NOTE_INFORMATIONAL,
 			'locale'        => 'en_US',
@@ -63,12 +63,12 @@ class Note extends \WC_Data {
 			'date_created'  => '0000-00-00 00:00:00',
 			'date_reminder' => '',
 			'is_snoozable'  => false,
-			'actions'       => array(),
+			'actions'       => [],
 			'layout'        => 'plain',
 			'image'         => '',
 			'is_deleted'    => false,
 			'is_read'       => false,
-		);
+		];
 
 		parent::__construct( $data );
 
@@ -105,7 +105,7 @@ class Note extends \WC_Data {
 			$this->data['actions'] = $this->changes['actions'];
 		}
 
-		$this->changes = array();
+		$this->changes = [];
 	}
 
 	/*
@@ -123,7 +123,7 @@ class Note extends \WC_Data {
 	 * @return array
 	 */
 	public static function get_allowed_types() {
-		$allowed_types = array(
+		$allowed_types = [
 			self::E_WC_ADMIN_NOTE_ERROR,
 			self::E_WC_ADMIN_NOTE_WARNING,
 			self::E_WC_ADMIN_NOTE_UPDATE,
@@ -131,7 +131,7 @@ class Note extends \WC_Data {
 			self::E_WC_ADMIN_NOTE_MARKETING,
 			self::E_WC_ADMIN_NOTE_SURVEY,
 			self::E_WC_ADMIN_NOTE_EMAIL,
-		);
+		];
 
 		return apply_filters( 'woocommerce_note_types', $allowed_types );
 	}
@@ -142,13 +142,13 @@ class Note extends \WC_Data {
 	 * @return array
 	 */
 	public static function get_allowed_statuses() {
-		$allowed_statuses = array(
+		$allowed_statuses = [
 			self::E_WC_ADMIN_NOTE_PENDING,
 			self::E_WC_ADMIN_NOTE_ACTIONED,
 			self::E_WC_ADMIN_NOTE_UNACTIONED,
 			self::E_WC_ADMIN_NOTE_SNOOZED,
 			self::E_WC_ADMIN_NOTE_SENT,
-		);
+		];
 
 		return apply_filters( 'woocommerce_note_statuses', $allowed_statuses );
 	}
@@ -172,7 +172,7 @@ class Note extends \WC_Data {
 	 * @return array
 	 */
 	public function get_data() {
-		return array_merge( array( 'id' => $this->get_id() ), $this->data );
+		return array_merge( [ 'id' => $this->get_id() ], $this->data );
 	}
 
 	/**
@@ -445,21 +445,21 @@ class Note extends \WC_Data {
 	 * @param string $content Note content.
 	 */
 	public function set_content( $content ) {
-		$allowed_html = array(
-			'br'     => array(),
-			'em'     => array(),
-			'strong' => array(),
-			'a'      => array(
+		$allowed_html = [
+			'br'     => [],
+			'em'     => [],
+			'strong' => [],
+			'a'      => [
 				'href'     => true,
 				'rel'      => true,
 				'name'     => true,
 				'target'   => true,
-				'download' => array(
+				'download' => [
 					'valueless' => 'y',
-				),
-			),
-			'p'      => array(),
-		);
+				],
+			],
+			'p'      => [],
+		];
 
 		$content = wp_kses( $content, $allowed_html );
 
@@ -565,7 +565,7 @@ class Note extends \WC_Data {
 	 * Clear actions from a note.
 	 */
 	public function clear_actions() {
-		$this->set_prop( 'actions', array() );
+		$this->set_prop( 'actions', [] );
 	}
 
 	/**
@@ -578,7 +578,7 @@ class Note extends \WC_Data {
 		if ( empty( $layout ) ) {
 			$layout = 'plain';
 		}
-		$valid_layouts = array( 'banner', 'plain', 'thumbnail' );
+		$valid_layouts = [ 'banner', 'plain', 'thumbnail' ];
 		if ( in_array( $layout, $valid_layouts, true ) ) {
 			$this->set_prop( 'layout', $layout );
 		} else {
@@ -645,7 +645,7 @@ class Note extends \WC_Data {
 			$this->error( 'admin_note_invalid_data', __( 'The admin note action label prop cannot be empty.', 'woocommerce' ) );
 		}
 
-		$action = array(
+		$action = [
 			'name'          => $name,
 			'label'         => $label,
 			'query'         => $query,
@@ -653,7 +653,7 @@ class Note extends \WC_Data {
 			'actioned_text' => $actioned_text,
 			'nonce_name'    => null,
 			'nonce_action'  => null,
-		);
+		];
 
 		$note_actions   = $this->get_prop( 'actions', 'edit' );
 		$note_actions[] = (object) $action;

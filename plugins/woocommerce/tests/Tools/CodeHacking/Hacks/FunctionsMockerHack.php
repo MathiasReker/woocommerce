@@ -40,14 +40,14 @@ final class FunctionsMockerHack extends CodeHack {
 	 *
 	 * @var array
 	 */
-	private static $non_global_function_tokens = array(
+	private static $non_global_function_tokens = [
 		T_PAAMAYIM_NEKUDOTAYIM,
 		T_DOUBLE_COLON,
 		T_OBJECT_OPERATOR,
 		T_FUNCTION,
 		T_CLASS,
 		T_EXTENDS,
-	);
+	];
 
 	/**
 	 * @var FunctionsMockerHack Holds the only existing instance of the class.
@@ -109,7 +109,7 @@ final class FunctionsMockerHack extends CodeHack {
 	/**
 	 * @var array Functions that can be mocked, associative array of function name => callback.
 	 */
-	private $function_mocks = array();
+	private $function_mocks = [];
 
 	/**
 	 * Register function mocks.
@@ -150,7 +150,7 @@ final class FunctionsMockerHack extends CodeHack {
 	 * Unregister all the registered function mocks.
 	 */
 	public function reset() {
-		$this->function_mocks = array();
+		$this->function_mocks = [];
 	}
 
 	/**

@@ -17,10 +17,10 @@ class WC_Discounts_Tests extends WC_Unit_Test_Case {
 		update_option( 'woocommerce_hold_stock_minutes', 60 );
 		return WC_Helper_Coupon::create_coupon(
 			'coupon4one' . microtime( true ) . wp_generate_password( 6, false, false ),
-			array(
+			[
 				'usage_limit'          => 1,
 				'usage_limit_per_user' => 1,
-			)
+			]
 		);
 	}
 
@@ -61,10 +61,10 @@ class WC_Discounts_Tests extends WC_Unit_Test_Case {
 		$customer   = $this->create_customer();
 		$data_store = WC_Data_Store::load( 'coupon' );
 		$order      = wc_create_order(
-			array(
+			[
 				'status'      => 'pending',
 				'customer_id' => $customer->get_id(),
-			)
+			]
 		);
 		$order->save();
 
@@ -85,7 +85,7 @@ class WC_Discounts_Tests extends WC_Unit_Test_Case {
 		$data_store = WC_Data_Store::load( 'coupon' );
 		$customer   = $this->create_customer();
 
-		$result = $data_store->check_and_hold_coupon_for_user( $coupon, array( $customer->get_id() ), $customer->get_id() );
+		$result = $data_store->check_and_hold_coupon_for_user( $coupon, [ $customer->get_id() ], $customer->get_id() );
 		$this->assertNotNull( $result );
 
 		wp_set_current_user( $customer->get_id() );

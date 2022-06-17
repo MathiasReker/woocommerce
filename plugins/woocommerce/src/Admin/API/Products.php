@@ -29,7 +29,7 @@ class Products extends \WC_REST_Products_Controller {
 	 *
 	 * @var array
 	 */
-	protected $last_order_dates = array();
+	protected $last_order_dates = [];
 
 	/**
 	 * Adds properties that can be embed via ?_embed=1.
@@ -39,7 +39,7 @@ class Products extends \WC_REST_Products_Controller {
 	public function get_item_schema() {
 		$schema = parent::get_item_schema();
 
-		$properties_to_embed = array(
+		$properties_to_embed = [
 			'id',
 			'name',
 			'slug',
@@ -47,18 +47,18 @@ class Products extends \WC_REST_Products_Controller {
 			'images',
 			'description',
 			'short_description',
-		);
+		];
 
 		foreach ( $properties_to_embed as $property ) {
 			$schema['properties'][ $property ]['context'][] = 'embed';
 		}
 
-		$schema['properties']['last_order_date'] = array(
+		$schema['properties']['last_order_date'] = [
 			'description' => __( "The date the last order for this product was placed, in the site's timezone.", 'woocommerce' ),
 			'type'        => 'date-time',
-			'context'     => array( 'view', 'edit' ),
+			'context'     => [ 'view', 'edit' ],
 			'readonly'    => true,
-		);
+		];
 
 		return $schema;
 	}
@@ -70,17 +70,17 @@ class Products extends \WC_REST_Products_Controller {
 	 */
 	public function get_collection_params() {
 		$params                 = parent::get_collection_params();
-		$params['low_in_stock'] = array(
+		$params['low_in_stock'] = [
 			'description'       => __( 'Limit result set to products that are low or out of stock. (Deprecated)', 'woocommerce' ),
 			'type'              => 'boolean',
 			'default'           => false,
 			'sanitize_callback' => 'wc_string_to_bool',
-		);
-		$params['search']       = array(
+		];
+		$params['search']       = [
 			'description'       => __( 'Search by similar product name or sku.', 'woocommerce' ),
 			'type'              => 'string',
 			'validate_callback' => 'rest_validate_request_arg',
-		);
+		];
 		return $params;
 	}
 
@@ -100,7 +100,7 @@ class Products extends \WC_REST_Products_Controller {
 		}
 		if ( ! empty( $request['low_in_stock'] ) ) {
 			$args['low_in_stock'] = $request['low_in_stock'];
-			$args['post_type']    = array( 'product', 'product_variation' );
+			$args['post_type']    = [ 'product', 'product_variation' ];
 		}
 
 		return $args;
@@ -113,15 +113,15 @@ class Products extends \WC_REST_Products_Controller {
 	 * @return WP_Error|WP_REST_Response
 	 */
 	public function get_items( $request ) {
-		add_filter( 'posts_fields', array( __CLASS__, 'add_wp_query_fields' ), 10, 2 );
-		add_filter( 'posts_where', array( __CLASS__, 'add_wp_query_filter' ), 10, 2 );
-		add_filter( 'posts_join', array( __CLASS__, 'add_wp_query_join' ), 10, 2 );
-		add_filter( 'posts_groupby', array( __CLASS__, 'add_wp_query_group_by' ), 10, 2 );
+		add_filter( 'posts_fields', [ __CLASS__, 'add_wp_query_fields' ], 10, 2 );
+		add_filter( 'posts_where', [ __CLASS__, 'add_wp_query_filter' ], 10, 2 );
+		add_filter( 'posts_join', [ __CLASS__, 'add_wp_query_join' ], 10, 2 );
+		add_filter( 'posts_groupby', [ __CLASS__, 'add_wp_query_group_by' ], 10, 2 );
 		$response = parent::get_items( $request );
-		remove_filter( 'posts_fields', array( __CLASS__, 'add_wp_query_fields' ), 10 );
-		remove_filter( 'posts_where', array( __CLASS__, 'add_wp_query_filter' ), 10 );
-		remove_filter( 'posts_join', array( __CLASS__, 'add_wp_query_join' ), 10 );
-		remove_filter( 'posts_groupby', array( __CLASS__, 'add_wp_query_group_by' ), 10 );
+		remove_filter( 'posts_fields', [ __CLASS__, 'add_wp_query_fields' ], 10 );
+		remove_filter( 'posts_where', [ __CLASS__, 'add_wp_query_filter' ], 10 );
+		remove_filter( 'posts_join', [ __CLASS__, 'add_wp_query_join' ], 10 );
+		remove_filter( 'posts_groupby', [ __CLASS__, 'add_wp_query_group_by' ], 10 );
 
 		/**
 		 * The low stock query caused performance issues in WooCommerce 5.5.1
@@ -215,10 +215,10 @@ class Products extends \WC_REST_Products_Controller {
 	 */
 	public static function add_wp_query_fields( $select, $wp_query ) {
 		if ( $wp_query->get( 'low_in_stock' ) ) {
-			$fields  = array(
+			$fields  = [
 				'low_stock_amount_meta.meta_value AS low_stock_amount',
 				'MAX( product_lookup.date_created ) AS last_order_date',
-			);
+			];
 			$select .= ', ' . implode( ', ', $fields );
 		}
 

@@ -144,11 +144,11 @@ class DataSynchronizer {
 	 * @return array
 	 */
 	public function get_sync_status() {
-		return array(
+		return [
 			'initial_pending_count' => (int) get_option( self::INITIAL_ORDERS_PENDING_SYNC_COUNT_OPTION, 0 ),
 			'current_pending_count' => $this->get_current_orders_pending_sync_count(),
 			'sync_in_progress'      => $this->pending_data_sync_is_in_progress(),
-		);
+		];
 	}
 
 	/**
@@ -308,7 +308,7 @@ WHERE
 		$queue->schedule_single(
 			WC()->call_function( 'time' ) + self::SECONDS_BETWEEN_BATCH_SYNCS,
 			self::ORDERS_SYNC_SCHEDULED_ACTION_CALLBACK,
-			array(),
+			[],
 			'woocommerce-db-updates'
 		);
 	}

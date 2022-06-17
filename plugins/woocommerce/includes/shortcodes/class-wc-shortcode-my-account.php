@@ -23,7 +23,7 @@ class WC_Shortcode_My_Account {
 	 * @return string
 	 */
 	public static function get( $atts ) {
-		return WC_Shortcodes::shortcode_wrapper( array( __CLASS__, 'output' ), $atts );
+		return WC_Shortcodes::shortcode_wrapper( [ __CLASS__, 'output' ], $atts );
 	}
 
 	/**
@@ -109,19 +109,19 @@ class WC_Shortcode_My_Account {
 	 */
 	private static function my_account( $atts ) {
 		$args = shortcode_atts(
-			array(
+			[
 				'order_count' => 15, // @deprecated 2.6.0. Keep for backward compatibility.
-			),
+			],
 			$atts,
 			'woocommerce_my_account'
 		);
 
 		wc_get_template(
 			'myaccount/my-account.php',
-			array(
+			[
 				'current_user' => get_user_by( 'id', get_current_user_id() ),
 				'order_count'  => 'all' === $args['order_count'] ? -1 : $args['order_count'],
-			)
+			]
 		);
 	}
 
@@ -145,11 +145,11 @@ class WC_Shortcode_My_Account {
 
 		wc_get_template(
 			'myaccount/view-order.php',
-			array(
+			[
 				'status'   => $status, // @deprecated 2.2.
 				'order'    => $order,
 				'order_id' => $order->get_id(),
-			)
+			]
 		);
 	}
 
@@ -157,7 +157,7 @@ class WC_Shortcode_My_Account {
 	 * Edit account details page.
 	 */
 	public static function edit_account() {
-		wc_get_template( 'myaccount/form-edit-account.php', array( 'user' => get_user_by( 'id', get_current_user_id() ) ) );
+		wc_get_template( 'myaccount/form-edit-account.php', [ 'user' => get_user_by( 'id', get_current_user_id() ) ] );
 	}
 
 	/**
@@ -215,10 +215,10 @@ class WC_Shortcode_My_Account {
 
 		wc_get_template(
 			'myaccount/form-edit-address.php',
-			array(
+			[
 				'load_address' => $load_address,
 				'address'      => apply_filters( 'woocommerce_address_to_edit', $address, $load_address ),
-			)
+			]
 		);
 	}
 
@@ -246,10 +246,10 @@ class WC_Shortcode_My_Account {
 				if ( is_object( $user ) ) {
 					return wc_get_template(
 						'myaccount/form-reset-password.php',
-						array(
+						[
 							'key'   => $rp_key,
 							'login' => $rp_login,
-						)
+						]
 					);
 				}
 			}
@@ -258,9 +258,9 @@ class WC_Shortcode_My_Account {
 		// Show lost password form by default.
 		wc_get_template(
 			'myaccount/form-lost-password.php',
-			array(
+			[
 				'form' => 'lost_password',
-			)
+			]
 		);
 	}
 

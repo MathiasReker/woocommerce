@@ -31,14 +31,14 @@ class WC_Admin_Tests_Reports_Orders extends WC_Unit_Test_Case {
 		$attribute->set_options( explode( WC_DELIMITER, 'green | red' ) );
 		$attribute->set_visible( false );
 		$attribute->set_variation( true );
-		$parent_product->set_attributes( array( $attribute ) );
+		$parent_product->set_attributes( [ $attribute ] );
 		$parent_product->save();
 
 		$variation = new WC_Product_Variation();
 		$variation->set_name( 'Test Variation' );
 		$variation->set_parent_id( $parent_product->get_id() );
 		$variation->set_regular_price( 10 );
-		$variation->set_attributes( array( 'pa_color' => 'green' ) );
+		$variation->set_attributes( [ 'pa_color' => 'green' ] );
 		$variation->set_manage_stock( true );
 		$variation->set_stock_quantity( 25 );
 		$variation->save();
@@ -52,12 +52,12 @@ class WC_Admin_Tests_Reports_Orders extends WC_Unit_Test_Case {
 		// Add simple product.
 		$item = new WC_Order_Item_Product();
 		$item->set_props(
-			array(
+			[
 				'product'  => $simple_product,
 				'quantity' => 1,
-				'subtotal' => wc_get_price_excluding_tax( $simple_product, array( 'qty' => 1 ) ),
-				'total'    => wc_get_price_excluding_tax( $simple_product, array( 'qty' => 1 ) ),
-			)
+				'subtotal' => wc_get_price_excluding_tax( $simple_product, [ 'qty' => 1 ] ),
+				'total'    => wc_get_price_excluding_tax( $simple_product, [ 'qty' => 1 ] ),
+			]
 		);
 		$item->save();
 		$order->add_item( $item );
@@ -71,19 +71,19 @@ class WC_Admin_Tests_Reports_Orders extends WC_Unit_Test_Case {
 		$data_store = new OrdersDataStore();
 		$start_time = gmdate( 'Y-m-d H:00:00', $order->get_date_created()->getOffsetTimestamp() );
 		$end_time   = gmdate( 'Y-m-d H:59:59', $order->get_date_created()->getOffsetTimestamp() );
-		$args       = array(
+		$args       = [
 			'after'         => $start_time,
 			'before'        => $end_time,
 			'extended_info' => 1,
-		);
+		];
 		// Test retrieving the stats through the data store.
 		$data     = $data_store->get_data( $args );
-		$expected = (object) array(
+		$expected = (object) [
 			'total'   => 1,
 			'pages'   => 1,
 			'page_no' => 1,
-			'data'    => array(
-				0 => array(
+			'data'    => [
+				0 => [
 					'order_id'         => $order->get_id(),
 					'parent_id'        => 0,
 					'status'           => 'completed',
@@ -94,25 +94,25 @@ class WC_Admin_Tests_Reports_Orders extends WC_Unit_Test_Case {
 					'customer_type'    => 'new',
 					'date_created'     => $data->data[0]['date_created'], // Not under test.
 					'date_created_gmt' => $data->data[0]['date_created_gmt'], // Not under test.
-					'extended_info'    => array(
-						'products' => array(
-							array(
+					'extended_info'    => [
+						'products' => [
+							[
 								'id'       => $variation->get_id(),
 								'name'     => $variation->get_name(),
 								'quantity' => 4,
-							),
-							array(
+							],
+							[
 								'id'       => $simple_product->get_id(),
 								'name'     => $simple_product->get_name(),
 								'quantity' => 1,
-							),
-						),
-						'coupons'  => array(),
+							],
+						],
+						'coupons'  => [],
 						'customer' => $data->data[0]['extended_info']['customer'], // Not under test.
-					),
-				),
-			),
-		);
+					],
+				],
+			],
+		];
 		$this->assertEquals( $expected, $data );
 	}
 
@@ -135,10 +135,10 @@ class WC_Admin_Tests_Reports_Orders extends WC_Unit_Test_Case {
 		$order->save();
 
 		wc_create_refund(
-			array(
+			[
 				'amount'   => 25,
 				'order_id' => $order->get_id(),
-			)
+			]
 		);
 
 		WC_Helper_Queue::run_all_pending();
@@ -146,30 +146,30 @@ class WC_Admin_Tests_Reports_Orders extends WC_Unit_Test_Case {
 		$data_store = new OrdersDataStore();
 		$start_time = gmdate( 'Y-m-d H:00:00', $order->get_date_created()->getOffsetTimestamp() );
 		$end_time   = gmdate( 'Y-m-d H:59:59', $order->get_date_created()->getOffsetTimestamp() );
-		$args       = array(
+		$args       = [
 			'after'         => $start_time,
 			'before'        => $end_time,
 			'extended_info' => 1,
-		);
+		];
 		// Retrieving orders with products through the data store.
 		$data     = $data_store->get_data( $args );
-		$expected = array(
-			array(
+		$expected = [
+			[
 				'id'       => $simple_product->get_id(),
 				'name'     => $simple_product->get_name(),
 				'quantity' => '4',
-			),
-		);
+			],
+		];
 		$this->assertEquals( $expected, $data->data[0]['extended_info']['products'] );
 
-		$args = array(
+		$args = [
 			'after'         => $start_time,
 			'before'        => $end_time,
 			'extended_info' => 1,
-			'status_is'     => array(
+			'status_is'     => [
 				'refunded',
-			),
-		);
+			],
+		];
 		// Retrieving an order with products (when receiving a single refunded order).
 		$data_2 = $data_store->get_data( $args );
 		$this->assertEquals( $expected, $data_2->data[0]['extended_info']['products'] );
@@ -212,11 +212,11 @@ class WC_Admin_Tests_Reports_Orders extends WC_Unit_Test_Case {
 
 		$data_store = new OrdersDataStore();
 		$data       = $data_store->get_data(
-			array(
+			[
 				'after'           => $start_time,
 				'before'          => $end_time,
-				'coupon_excludes' => array( $coupon->get_id() ),
-			)
+				'coupon_excludes' => [ $coupon->get_id() ],
+			]
 		);
 
 		$this->assertEquals( 1, $data->total );

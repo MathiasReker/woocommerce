@@ -22,7 +22,7 @@ class WC_Shortcode_Checkout {
 	 * @return string
 	 */
 	public static function get( $atts ) {
-		return WC_Shortcodes::shortcode_wrapper( array( __CLASS__, 'output' ), $atts );
+		return WC_Shortcodes::shortcode_wrapper( [ __CLASS__, 'output' ], $atts );
 	}
 
 	/**
@@ -96,9 +96,9 @@ class WC_Shortcode_Checkout {
 				if ( ! current_user_can( 'pay_for_order', $order_id ) && ! is_user_logged_in() ) {
 					echo '<div class="woocommerce-info">' . esc_html__( 'Please log in to your account below to continue to the payment form.', 'woocommerce' ) . '</div>';
 					woocommerce_login_form(
-						array(
+						[
 							'redirect' => $order->get_checkout_payment_url(),
-						)
+						]
 					);
 					return;
 				}
@@ -124,10 +124,10 @@ class WC_Shortcode_Checkout {
 
 				// Ensure order items are still stocked if paying for a failed order. Pending orders do not need this check because stock is held.
 				if ( ! $order->has_status( wc_get_is_pending_statuses() ) ) {
-					$quantities = array();
+					$quantities = [];
 
 					foreach ( $order->get_items() as $item_key => $item ) {
-						if ( $item && is_callable( array( $item, 'get_product' ) ) ) {
+						if ( $item && is_callable( [ $item, 'get_product' ] ) ) {
 							$product = $item->get_product();
 
 							if ( ! $product ) {
@@ -139,7 +139,7 @@ class WC_Shortcode_Checkout {
 					}
 
 					foreach ( $order->get_items() as $item_key => $item ) {
-						if ( $item && is_callable( array( $item, 'get_product' ) ) ) {
+						if ( $item && is_callable( [ $item, 'get_product' ] ) ) {
 							$product = $item->get_product();
 
 							if ( ! $product ) {
@@ -169,11 +169,11 @@ class WC_Shortcode_Checkout {
 				}
 
 				WC()->customer->set_props(
-					array(
+					[
 						'billing_country'  => $order->get_billing_country() ? $order->get_billing_country() : null,
 						'billing_state'    => $order->get_billing_state() ? $order->get_billing_state() : null,
 						'billing_postcode' => $order->get_billing_postcode() ? $order->get_billing_postcode() : null,
-					)
+					]
 				);
 				WC()->customer->save();
 
@@ -205,11 +205,11 @@ class WC_Shortcode_Checkout {
 
 				wc_get_template(
 					'checkout/form-pay.php',
-					array(
+					[
 						'order'              => $order,
 						'available_gateways' => $available_gateways,
 						'order_button_text'  => $order_button_text,
-					)
+					]
 				);
 
 			} catch ( Exception $e ) {
@@ -225,7 +225,7 @@ class WC_Shortcode_Checkout {
 
 				if ( $order->needs_payment() ) {
 
-					wc_get_template( 'checkout/order-receipt.php', array( 'order' => $order ) );
+					wc_get_template( 'checkout/order-receipt.php', [ 'order' => $order ] );
 
 				} else {
 					/* translators: %s: order status */
@@ -273,7 +273,7 @@ class WC_Shortcode_Checkout {
 		// Empty current cart.
 		wc_empty_cart();
 
-		wc_get_template( 'checkout/thankyou.php', array( 'order' => $order ) );
+		wc_get_template( 'checkout/thankyou.php', [ 'order' => $order ] );
 	}
 
 	/**
@@ -299,7 +299,7 @@ class WC_Shortcode_Checkout {
 
 		if ( empty( $_POST ) && wc_notice_count( 'error' ) > 0 ) { // WPCS: input var ok, CSRF ok.
 
-			wc_get_template( 'checkout/cart-errors.php', array( 'checkout' => $checkout ) );
+			wc_get_template( 'checkout/cart-errors.php', [ 'checkout' => $checkout ] );
 			wc_clear_notices();
 
 		} else {
@@ -310,7 +310,7 @@ class WC_Shortcode_Checkout {
 				wc_add_notice( __( 'The order totals have been updated. Please confirm your order by pressing the "Place order" button at the bottom of the page.', 'woocommerce' ) );
 			}
 
-			wc_get_template( 'checkout/form-checkout.php', array( 'checkout' => $checkout ) );
+			wc_get_template( 'checkout/form-checkout.php', [ 'checkout' => $checkout ] );
 
 		}
 	}

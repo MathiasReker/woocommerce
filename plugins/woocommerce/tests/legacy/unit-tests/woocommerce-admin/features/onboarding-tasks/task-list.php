@@ -29,9 +29,9 @@ class WC_Admin_Tests_OnboardingTasks_TaskList extends WC_Unit_Test_Case {
 		parent::setUp();
 
 		$this->list = new TaskList(
-			array(
+			[
 				'id' => 'setup',
-			)
+			]
 		);
 	}
 
@@ -40,10 +40,10 @@ class WC_Admin_Tests_OnboardingTasks_TaskList extends WC_Unit_Test_Case {
 	 */
 	public function test_setup_event_prefixing() {
 		$list = new TaskList(
-			array(
+			[
 				'id'           => 'setup',
 				'event_prefix' => 'tasklist_',
-			)
+			]
 		);
 
 		$this->assertEquals( 'tasklist_event', $list->prefix_event( 'event' ) );
@@ -54,9 +54,9 @@ class WC_Admin_Tests_OnboardingTasks_TaskList extends WC_Unit_Test_Case {
 	 */
 	public function test_event_prefixing() {
 		$list = new TaskList(
-			array(
+			[
 				'id' => 'extended',
-			)
+			]
 		);
 
 		$this->assertEquals( 'extended_tasklist_event', $list->prefix_event( 'event' ) );
@@ -94,7 +94,7 @@ class WC_Admin_Tests_OnboardingTasks_TaskList extends WC_Unit_Test_Case {
 		$this->list->add_task(
 			new TestTask(
 				new TaskList(),
-				array( 'id' => 'my-task' )
+				[ 'id' => 'my-task' ]
 			)
 		);
 		$this->assertTrue( $this->list->is_visible() );
@@ -115,7 +115,7 @@ class WC_Admin_Tests_OnboardingTasks_TaskList extends WC_Unit_Test_Case {
 		$this->list->add_task(
 			new TestTask(
 				new TaskList(),
-				array( 'id' => 'my-task' )
+				[ 'id' => 'my-task' ]
 			)
 		);
 		$this->assertEquals( 'my-task', $this->list->tasks[0]->id );
@@ -128,19 +128,19 @@ class WC_Admin_Tests_OnboardingTasks_TaskList extends WC_Unit_Test_Case {
 		$this->list->add_task(
 			new TestTask(
 				new TaskList(),
-				array(
+				[
 					'id'       => 'viewable-task',
 					'can_view' => true,
-				)
+				]
 			)
 		);
 		$this->list->add_task(
 			new TestTask(
 				new TaskList(),
-				array(
+				[
 					'id'       => 'not-viewable-task',
 					'can_view' => false,
-				)
+				]
 			)
 		);
 		$viewable_tasks = $this->list->get_viewable_tasks();
@@ -156,19 +156,19 @@ class WC_Admin_Tests_OnboardingTasks_TaskList extends WC_Unit_Test_Case {
 		$this->list->add_task(
 			new TestTask(
 				new TaskList(),
-				array(
+				[
 					'id'          => 'complete-task',
 					'is_complete' => true,
-				)
+				]
 			)
 		);
 		$this->list->add_task(
 			new TestTask(
 				new TaskList(),
-				array(
+				[
 					'id'          => 'incomplete-task',
 					'is_complete' => false,
-				)
+				]
 			)
 		);
 		$this->assertFalse( $this->list->is_complete() );
@@ -181,19 +181,19 @@ class WC_Admin_Tests_OnboardingTasks_TaskList extends WC_Unit_Test_Case {
 		$this->list->add_task(
 			new TestTask(
 				new TaskList(),
-				array(
+				[
 					'id'          => 'complete-task1',
 					'is_complete' => true,
-				)
+				]
 			)
 		);
 		$this->list->add_task(
 			new TestTask(
 				new TaskList(),
-				array(
+				[
 					'id'          => 'complete-task-2',
 					'is_complete' => true,
-				)
+				]
 			)
 		);
 		$this->assertTrue( $this->list->is_complete() );
@@ -206,19 +206,19 @@ class WC_Admin_Tests_OnboardingTasks_TaskList extends WC_Unit_Test_Case {
 		$this->list->add_task(
 			new TestTask(
 				new TaskList(),
-				array(
+				[
 					'id'          => 'complete-task1',
 					'is_complete' => true,
-				)
+				]
 			)
 		);
 		$this->list->add_task(
 			new TestTask(
 				new TaskList(),
-				array(
+				[
 					'id'          => 'complete-task2',
 					'is_complete' => true,
-				)
+				]
 			)
 		);
 		$this->assertFalse( $this->list->has_previously_completed() );
@@ -233,10 +233,10 @@ class WC_Admin_Tests_OnboardingTasks_TaskList extends WC_Unit_Test_Case {
 		$this->list->add_task(
 			new TestTask(
 				new TaskList(),
-				array(
+				[
 					'id'          => 'my-task',
 					'is_complete' => true,
-				)
+				]
 			)
 		);
 		$json = $this->list->get_json();
@@ -258,44 +258,44 @@ class WC_Admin_Tests_OnboardingTasks_TaskList extends WC_Unit_Test_Case {
 		$list->add_task(
 			new TestTask(
 				new TaskList(),
-				array(
+				[
 					'id'          => 'task-1',
 					'can_view'    => true,
 					'level'       => 1,
 					'is_complete' => true,
-				)
+				]
 			)
 		);
 		$list->add_task(
 			new TestTask(
 				new TaskList(),
-				array(
+				[
 					'id'          => 'task-2',
 					'can_view'    => true,
 					'is_complete' => false,
-				)
+				]
 			)
 		);
 		$list->add_task(
 			new TestTask(
 				new TaskList(),
-				array(
+				[
 					'id'          => 'task-3',
 					'can_view'    => true,
 					'level'       => 2,
 					'is_complete' => false,
-				)
+				]
 			)
 		);
 		$list->add_task(
 			new TestTask(
 				new TaskList(),
-				array(
+				[
 					'id'          => 'task-4',
 					'can_view'    => true,
 					'level'       => 1,
 					'is_complete' => false,
-				)
+				]
 			)
 		);
 	}
@@ -307,7 +307,7 @@ class WC_Admin_Tests_OnboardingTasks_TaskList extends WC_Unit_Test_Case {
 		$this->add_test_tasks( $this->list );
 		$this->list->sort_tasks();
 		$json = $this->list->get_json();
-		$this->assertEquals( array_column( $json['tasks'], 'id' ), array( 'task-1', 'task-2', 'task-3', 'task-4' ) );
+		$this->assertEquals( array_column( $json['tasks'], 'id' ), [ 'task-1', 'task-2', 'task-3', 'task-4' ] );
 	}
 
 	/**
@@ -315,15 +315,15 @@ class WC_Admin_Tests_OnboardingTasks_TaskList extends WC_Unit_Test_Case {
 	 */
 	public function test_sort_tasks_with_sort_by() {
 		$list = new TaskList(
-			array(
+			[
 				'id'      => 'setup',
-				'sort_by' => array(
-					array(
+				'sort_by' => [
+					[
 						'key'   => 'is_complete',
 						'order' => 'asc',
-					),
-				),
-			)
+					],
+				],
+			]
 		);
 		$this->add_test_tasks( $list );
 		$list->sort_tasks();
@@ -336,24 +336,24 @@ class WC_Admin_Tests_OnboardingTasks_TaskList extends WC_Unit_Test_Case {
 	 */
 	public function test_sort_tasks_with_sort_by_multiple_items() {
 		$list = new TaskList(
-			array(
+			[
 				'id'      => 'setup',
-				'sort_by' => array(
-					array(
+				'sort_by' => [
+					[
 						'key'   => 'is_complete',
 						'order' => 'asc',
-					),
-					array(
+					],
+					[
 						'key'   => 'level',
 						'order' => 'asc',
-					),
-				),
-			)
+					],
+				],
+			]
 		);
 		$this->add_test_tasks( $list );
 		$list->sort_tasks();
 		$json = $list->get_json();
-		$this->assertEquals( array_column( $json['tasks'], 'id' ), array( 'task-4', 'task-3', 'task-2', 'task-1' ) );
+		$this->assertEquals( array_column( $json['tasks'], 'id' ), [ 'task-4', 'task-3', 'task-2', 'task-1' ] );
 	}
 
 	/**
@@ -361,31 +361,31 @@ class WC_Admin_Tests_OnboardingTasks_TaskList extends WC_Unit_Test_Case {
 	 */
 	public function test_sort_tasks_with_passed_in_sort_by_config() {
 		$list = new TaskList(
-			array(
+			[
 				'id'      => 'setup',
-				'sort_by' => array(
-					array(
+				'sort_by' => [
+					[
 						'key'   => 'is_complete',
 						'order' => 'asc',
-					),
-					array(
+					],
+					[
 						'key'   => 'level',
 						'order' => 'asc',
-					),
-				),
-			)
+					],
+				],
+			]
 		);
 		$this->add_test_tasks( $list );
 		$list->sort_tasks(
-			array(
-				array(
+			[
+				[
 					'key'   => 'level',
 					'order' => 'desc',
-				),
-			)
+				],
+			]
 		);
 		$json = $list->get_json();
-		$this->assertEquals( array_column( $json['tasks'], 'id' ), array( 'task-2', 'task-3', 'task-1', 'task-4' ) );
+		$this->assertEquals( array_column( $json['tasks'], 'id' ), [ 'task-2', 'task-3', 'task-1', 'task-4' ] );
 	}
 
 	/**

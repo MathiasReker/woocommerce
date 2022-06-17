@@ -5,10 +5,10 @@ use Behat\Gherkin\Node\PyStringNode,
     WP_CLI\Process;
 
 function invoke_proc( $proc, $mode ) {
-	$map = array(
+	$map = [
 		'run' => 'run_check',
 		'try' => 'run'
-	);
+	];
 	$method = $map[ $mode ];
 
 	return $proc->$method();
@@ -30,7 +30,7 @@ $steps->When( '/^I (run|try) `([^`]+)`$/',
 $steps->When( "/^I (run|try) `([^`]+)` from '([^\s]+)'$/",
 	function ( $world, $mode, $cmd, $subdir ) {
 		$cmd = $world->replace_variables( $cmd );
-		$world->result = invoke_proc( $world->proc( $cmd, array(), $subdir ), $mode );
+		$world->result = invoke_proc( $world->proc( $cmd, [], $subdir ), $mode );
 	}
 );
 

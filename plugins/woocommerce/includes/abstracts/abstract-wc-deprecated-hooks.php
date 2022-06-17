@@ -25,21 +25,21 @@ abstract class WC_Deprecated_Hooks {
 	 *
 	 * @var array
 	 */
-	protected $deprecated_hooks = array();
+	protected $deprecated_hooks = [];
 
 	/**
 	 * Array of versions on each hook has been deprecated.
 	 *
 	 * @var array
 	 */
-	protected $deprecated_version = array();
+	protected $deprecated_version = [];
 
 	/**
 	 * Constructor.
 	 */
 	public function __construct() {
 		$new_hooks = array_keys( $this->deprecated_hooks );
-		array_walk( $new_hooks, array( $this, 'hook_in' ) );
+		array_walk( $new_hooks, [ $this, 'hook_in' ] );
 	}
 
 	/**
@@ -56,8 +56,8 @@ abstract class WC_Deprecated_Hooks {
 	 * @return array
 	 */
 	public function get_old_hooks( $new_hook ) {
-		$old_hooks = isset( $this->deprecated_hooks[ $new_hook ] ) ? $this->deprecated_hooks[ $new_hook ] : array();
-		$old_hooks = is_array( $old_hooks ) ? $old_hooks : array( $old_hooks );
+		$old_hooks = isset( $this->deprecated_hooks[ $new_hook ] ) ? $this->deprecated_hooks[ $new_hook ] : [];
+		$old_hooks = is_array( $old_hooks ) ? $old_hooks : [ $old_hooks ];
 
 		return $old_hooks;
 	}

@@ -61,9 +61,9 @@ abstract class AbstractRestApiTest extends WC_REST_Unit_Test_Case {
 	 */
 	public static function wpSetUpBeforeClass( $factory ) {
 		self::$user = $factory->user->create(
-			array(
+			[
 				'role' => 'administrator',
-			)
+			]
 		);
 	}
 
@@ -141,11 +141,11 @@ abstract class AbstractRestApiTest extends WC_REST_Unit_Test_Case {
 		'GET' === $type ? $request->set_query_params( $params ) : $request->set_body_params( $params );
 		$response = $this->server->dispatch( $request );
 
-		return (object) array(
+		return (object) [
 			'status' => $response->get_status(),
 			'data'   => json_decode( wp_json_encode( $response->get_data() ), true ),
 			'raw'    => $response->get_data(),
-		);
+		];
 	}
 
 	/**
@@ -155,7 +155,7 @@ abstract class AbstractRestApiTest extends WC_REST_Unit_Test_Case {
 	 * @param int   $status_code Expected status code.
 	 * @param array $data Array of expected data.
 	 */
-	protected function assertExpectedResponse( $response, $status_code = 200, $data = array() ) {
+	protected function assertExpectedResponse( $response, $status_code = 200, $data = [] ) {
 		$this->assertObjectHasAttribute( 'status', $response );
 		$this->assertObjectHasAttribute( 'data', $response );
 		$this->assertEquals( $status_code, $response->status, print_r( $response->data, true ) );

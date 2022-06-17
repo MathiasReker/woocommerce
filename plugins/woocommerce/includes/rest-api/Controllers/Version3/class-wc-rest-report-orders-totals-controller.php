@@ -40,18 +40,18 @@ class WC_REST_Report_Orders_Totals_Controller extends WC_REST_Reports_Controller
 	 */
 	protected function get_reports() {
 		$totals = wp_count_posts( 'shop_order' );
-		$data   = array();
+		$data   = [];
 
 		foreach ( wc_get_order_statuses() as $slug => $name ) {
 			if ( ! isset( $totals->$slug ) ) {
 				continue;
 			}
 
-			$data[] = array(
+			$data[] = [
 				'slug'  => str_replace( 'wc-', '', $slug ),
 				'name'  => $name,
 				'total' => (int) $totals->$slug,
-			);
+			];
 		}
 
 		return $data;
@@ -65,11 +65,11 @@ class WC_REST_Report_Orders_Totals_Controller extends WC_REST_Reports_Controller
 	 * @return WP_REST_Response $response Response data.
 	 */
 	public function prepare_item_for_response( $report, $request ) {
-		$data = array(
+		$data = [
 			'slug'  => $report->slug,
 			'name'  => $report->name,
 			'total' => $report->total,
-		);
+		];
 
 		$context = ! empty( $request['context'] ) ? $request['context'] : 'view';
 		$data    = $this->add_additional_fields_to_object( $data, $request );
@@ -96,31 +96,31 @@ class WC_REST_Report_Orders_Totals_Controller extends WC_REST_Reports_Controller
 	 * @return array
 	 */
 	public function get_item_schema() {
-		$schema = array(
+		$schema = [
 			'$schema'    => 'http://json-schema.org/draft-04/schema#',
 			'title'      => 'report_order_total',
 			'type'       => 'object',
-			'properties' => array(
-				'slug'  => array(
+			'properties' => [
+				'slug'  => [
 					'description' => __( 'An alphanumeric identifier for the resource.', 'woocommerce' ),
 					'type'        => 'string',
-					'context'     => array( 'view' ),
+					'context'     => [ 'view' ],
 					'readonly'    => true,
-				),
-				'name'  => array(
+				],
+				'name'  => [
 					'description' => __( 'Order status name.', 'woocommerce' ),
 					'type'        => 'string',
-					'context'     => array( 'view' ),
+					'context'     => [ 'view' ],
 					'readonly'    => true,
-				),
-				'total' => array(
+				],
+				'total' => [
 					'description' => __( 'Amount of orders.', 'woocommerce' ),
 					'type'        => 'string',
-					'context'     => array( 'view' ),
+					'context'     => [ 'view' ],
 					'readonly'    => true,
-				),
-			),
-		);
+				],
+			],
+		];
 
 		return $this->add_additional_fields_schema( $schema );
 	}

@@ -23,7 +23,7 @@ class WC_Tracks {
 	 * @param array  $properties Custom properties to send with the event.
 	 * @return bool|WP_Error True for success or WP_Error if the event pixel could not be fired.
 	 */
-	public static function record_event( $event_name, $properties = array() ) {
+	public static function record_event( $event_name, $properties = [] ) {
 		/**
 		 * Don't track users who don't have tracking enabled.
 		 */

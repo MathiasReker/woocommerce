@@ -40,29 +40,29 @@ class WC_REST_WCCOM_Site_Installer_Controller extends WC_REST_Controller {
 		register_rest_route(
 			$this->namespace,
 			'/' . $this->rest_base,
-			array(
-				array(
+			[
+				[
 					'methods'             => WP_REST_Server::READABLE,
-					'callback'            => array( $this, 'get_install_state' ),
-					'permission_callback' => array( $this, 'check_permission' ),
-				),
-				array(
+					'callback'            => [ $this, 'get_install_state' ],
+					'permission_callback' => [ $this, 'check_permission' ],
+				],
+				[
 					'methods'             => WP_REST_Server::CREATABLE,
-					'callback'            => array( $this, 'install' ),
-					'permission_callback' => array( $this, 'check_permission' ),
-					'args'                => array(
-						'products' => array(
+					'callback'            => [ $this, 'install' ],
+					'permission_callback' => [ $this, 'check_permission' ],
+					'args'                => [
+						'products' => [
 							'required' => true,
 							'type'     => 'object',
-						),
-					),
-				),
-				array(
+						],
+					],
+				],
+				[
 					'methods'             => WP_REST_Server::DELETABLE,
-					'callback'            => array( $this, 'reset_install' ),
-					'permission_callback' => array( $this, 'check_permission' ),
-				),
-			)
+					'callback'            => [ $this, 'reset_install' ],
+					'permission_callback' => [ $this, 'check_permission' ],
+				],
+			]
 		);
 	}
 
@@ -82,7 +82,7 @@ class WC_REST_WCCOM_Site_Installer_Controller extends WC_REST_Controller {
 				new WP_Error(
 					WC_REST_WCCOM_Site_Installer_Errors::NOT_AUTHENTICATED_CODE,
 					WC_REST_WCCOM_Site_Installer_Errors::NOT_AUTHENTICATED_MESSAGE,
-					array( 'status' => WC_REST_WCCOM_Site_Installer_Errors::NOT_AUTHENTICATED_HTTP_CODE )
+					[ 'status' => WC_REST_WCCOM_Site_Installer_Errors::NOT_AUTHENTICATED_HTTP_CODE ]
 				)
 			);
 		}
@@ -91,7 +91,7 @@ class WC_REST_WCCOM_Site_Installer_Controller extends WC_REST_Controller {
 			return new WP_Error(
 				WC_REST_WCCOM_Site_Installer_Errors::NO_PERMISSION_CODE,
 				WC_REST_WCCOM_Site_Installer_Errors::NO_PERMISSION_MESSAGE,
-				array( 'status' => WC_REST_WCCOM_Site_Installer_Errors::NO_PERMISSION_HTTP_CODE )
+				[ 'status' => WC_REST_WCCOM_Site_Installer_Errors::NO_PERMISSION_HTTP_CODE ]
 			);
 		}
 
@@ -128,7 +128,7 @@ class WC_REST_WCCOM_Site_Installer_Controller extends WC_REST_Controller {
 		}
 
 		if ( empty( $request['products'] ) ) {
-			return new WP_Error( 'missing_products', __( 'Missing products in request body.', 'woocommerce' ), array( 'status' => 400 ) );
+			return new WP_Error( 'missing_products', __( 'Missing products in request body.', 'woocommerce' ), [ 'status' => 400 ] );
 		}
 
 		$validation_result = $this->validate_products( $request['products'] );
@@ -162,7 +162,7 @@ class WC_REST_WCCOM_Site_Installer_Controller extends WC_REST_Controller {
 	 * @return bool|WP_Error
 	 */
 	protected function validate_products( $products ) {
-		$err = new WP_Error( 'invalid_products', __( 'Invalid products in request body.', 'woocommerce' ), array( 'status' => 400 ) );
+		$err = new WP_Error( 'invalid_products', __( 'Invalid products in request body.', 'woocommerce' ), [ 'status' => 400 ] );
 
 		if ( ! is_array( $products ) ) {
 			return $err;

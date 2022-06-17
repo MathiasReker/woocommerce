@@ -19,14 +19,14 @@ class WC_Marketplace_Updater {
 	 * Setup.
 	 */
 	public static function load() {
-		add_action( 'init', array( __CLASS__, 'init' ) );
+		add_action( 'init', [ __CLASS__, 'init' ] );
 	}
 
 	/**
 	 * Schedule events and hook appropriate actions.
 	 */
 	public static function init() {
-		add_action( 'woocommerce_update_marketplace_suggestions', array( __CLASS__, 'update_marketplace_suggestions' ) );
+		add_action( 'woocommerce_update_marketplace_suggestions', [ __CLASS__, 'update_marketplace_suggestions' ] );
 	}
 
 	/**
@@ -35,10 +35,10 @@ class WC_Marketplace_Updater {
 	public static function update_marketplace_suggestions() {
 		$data = get_option(
 			'woocommerce_marketplace_suggestions',
-			array(
-				'suggestions' => array(),
+			[
+				'suggestions' => [],
 				'updated'     => time(),
-			)
+			]
 		);
 
 		$data['updated'] = time();

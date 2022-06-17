@@ -34,16 +34,16 @@ if ( ! class_exists( 'WC_Email_Customer_Processing_Order', false ) ) :
 			$this->description    = __( 'This is an order notification sent to customers containing order details after payment.', 'woocommerce' );
 			$this->template_html  = 'emails/customer-processing-order.php';
 			$this->template_plain = 'emails/plain/customer-processing-order.php';
-			$this->placeholders   = array(
+			$this->placeholders   = [
 				'{order_date}'   => '',
 				'{order_number}' => '',
-			);
+			];
 
 			// Triggers for this email.
-			add_action( 'woocommerce_order_status_cancelled_to_processing_notification', array( $this, 'trigger' ), 10, 2 );
-			add_action( 'woocommerce_order_status_failed_to_processing_notification', array( $this, 'trigger' ), 10, 2 );
-			add_action( 'woocommerce_order_status_on-hold_to_processing_notification', array( $this, 'trigger' ), 10, 2 );
-			add_action( 'woocommerce_order_status_pending_to_processing_notification', array( $this, 'trigger' ), 10, 2 );
+			add_action( 'woocommerce_order_status_cancelled_to_processing_notification', [ $this, 'trigger' ], 10, 2 );
+			add_action( 'woocommerce_order_status_failed_to_processing_notification', [ $this, 'trigger' ], 10, 2 );
+			add_action( 'woocommerce_order_status_on-hold_to_processing_notification', [ $this, 'trigger' ], 10, 2 );
+			add_action( 'woocommerce_order_status_pending_to_processing_notification', [ $this, 'trigger' ], 10, 2 );
 
 			// Call parent constructor.
 			parent::__construct();
@@ -104,14 +104,14 @@ if ( ! class_exists( 'WC_Email_Customer_Processing_Order', false ) ) :
 		public function get_content_html() {
 			return wc_get_template_html(
 				$this->template_html,
-				array(
+				[
 					'order'              => $this->object,
 					'email_heading'      => $this->get_heading(),
 					'additional_content' => $this->get_additional_content(),
 					'sent_to_admin'      => false,
 					'plain_text'         => false,
 					'email'              => $this,
-				)
+				]
 			);
 		}
 
@@ -123,14 +123,14 @@ if ( ! class_exists( 'WC_Email_Customer_Processing_Order', false ) ) :
 		public function get_content_plain() {
 			return wc_get_template_html(
 				$this->template_plain,
-				array(
+				[
 					'order'              => $this->object,
 					'email_heading'      => $this->get_heading(),
 					'additional_content' => $this->get_additional_content(),
 					'sent_to_admin'      => false,
 					'plain_text'         => true,
 					'email'              => $this,
-				)
+				]
 			);
 		}
 

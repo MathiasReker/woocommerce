@@ -31,7 +31,7 @@ class WC_Admin_Tests_API_Init extends WC_REST_Unit_Test_Case {
 		parent::tearDown();
 		CustomersScheduler::set_queue( null );
 		OrdersScheduler::set_queue( null );
-		$this->queue->actions = array();
+		$this->queue->actions = [];
 	}
 
 	/**
@@ -47,7 +47,7 @@ class WC_Admin_Tests_API_Init extends WC_REST_Unit_Test_Case {
 			0 === strpos( $query, 'REPLACE INTO' ) &&
 			false !== strpos( $query, OrdersStatsDataStore::get_db_table_name() )
 		) {
-			remove_filter( 'query', array( $this, 'filter_order_query' ) );
+			remove_filter( 'query', [ $this, 'filter_order_query' ] );
 			return "DESCRIBE $wpdb->posts"; // Execute any random query.
 		}
 
@@ -72,21 +72,21 @@ class WC_Admin_Tests_API_Init extends WC_REST_Unit_Test_Case {
 		$order->save();
 
 		// Clear the existing action queue (the above save adds an action).
-		$this->queue->actions = array();
+		$this->queue->actions = [];
 
 		// Force a failure by sabotaging the query run after retreiving order coupons.
-		add_filter( 'query', array( $this, 'filter_order_query' ) );
+		add_filter( 'query', [ $this, 'filter_order_query' ] );
 
 		// Initiate sync.
-		OrdersScheduler::schedule_action( 'import', array( $order->get_id() ) );
+		OrdersScheduler::schedule_action( 'import', [ $order->get_id() ] );
 
 		// Verify that a retry job was scheduled.
 		$this->assertCount( 1, $this->queue->actions );
 		$this->assertArraySubset(
-			array(
+			[
 				'hook' => OrdersScheduler::get_action( 'import' ),
-				'args' => array( $order->get_id() ),
-			),
+				'args' => [ $order->get_id() ],
+			],
 			$this->queue->actions[0]
 		);
 	}
@@ -116,10 +116,10 @@ class WC_Admin_Tests_API_Init extends WC_REST_Unit_Test_Case {
 
 		$this->assertCount( 1, $this->queue->actions );
 		$this->assertArraySubset(
-			array(
+			[
 				'hook' => CustomersScheduler::get_action( 'import' ),
-				'args' => array( 1 ),
-			),
+				'args' => [ 1 ],
+			],
 			$this->queue->actions[0]
 		);
 	}

@@ -33,7 +33,7 @@ class LaunchChecklist {
 	 */
 	public static function get_note() {
 		// Only add this note if completing the task list or completed 3 tasks in 10 days.
-		$completed_tasks     = get_option( 'woocommerce_task_list_tracked_completed_tasks', array() );
+		$completed_tasks     = get_option( 'woocommerce_task_list_tracked_completed_tasks', [] );
 		$ten_days_in_seconds = 10 * DAY_IN_SECONDS;
 		if (
 			! get_option( 'woocommerce_task_list_complete' ) &&
@@ -50,7 +50,7 @@ class LaunchChecklist {
 		$note = new Note();
 		$note->set_title( __( 'Ready to launch your store?', 'woocommerce' ) );
 		$note->set_content( $content );
-		$note->set_content_data( (object) array() );
+		$note->set_content_data( (object) [] );
 		$note->set_type( Note::E_WC_ADMIN_NOTE_INFORMATIONAL );
 		$note->set_name( self::NOTE_NAME );
 		$note->set_source( 'woocommerce-admin' );

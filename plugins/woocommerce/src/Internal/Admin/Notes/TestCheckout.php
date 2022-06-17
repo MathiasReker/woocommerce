@@ -37,7 +37,7 @@ class TestCheckout {
 	 * Constructor.
 	 */
 	public function __construct() {
-		add_action( 'update_option_' . self::TASK_LIST_TRACKED_TASKS, array( $this, 'possibly_add_note' ) );
+		add_action( 'update_option_' . self::TASK_LIST_TRACKED_TASKS, [ $this, 'possibly_add_note' ] );
 	}
 
 	/**
@@ -46,7 +46,7 @@ class TestCheckout {
 	 * @return Note|null
 	 */
 	public static function get_note() {
-		$onboarding_profile = get_option( 'woocommerce_onboarding_profile', array() );
+		$onboarding_profile = get_option( 'woocommerce_onboarding_profile', [] );
 
 		// Confirm that $onboarding_profile is set.
 		if ( empty( $onboarding_profile ) ) {
@@ -63,19 +63,19 @@ class TestCheckout {
 		}
 
 		// Make sure payments task was completed.
-		$completed_tasks = get_option( self::TASK_LIST_TRACKED_TASKS, array() );
+		$completed_tasks = get_option( self::TASK_LIST_TRACKED_TASKS, [] );
 		if ( ! in_array( 'payments', $completed_tasks, true ) ) {
 			return;
 		}
 
 		// Make sure that products were added within the previous 1/2 hour.
 		$query = new \WC_Product_Query(
-			array(
+			[
 				'limit'   => 1,
 				'status'  => 'publish',
 				'orderby' => 'date',
 				'order'   => 'ASC',
-			)
+			]
 		);
 
 		$products = $query->get_products();
@@ -94,7 +94,7 @@ class TestCheckout {
 		$note = new Note();
 		$note->set_title( __( 'Don\'t forget to test your checkout', 'woocommerce' ) );
 		$note->set_content( $content );
-		$note->set_content_data( (object) array() );
+		$note->set_content_data( (object) [] );
 		$note->set_type( Note::E_WC_ADMIN_NOTE_INFORMATIONAL );
 		$note->set_name( self::NOTE_NAME );
 		$note->set_source( 'woocommerce-admin' );

@@ -29,7 +29,7 @@ class MobileAppBanner {
 	 * Hook into WooCommerce.
 	 */
 	public function __construct() {
-		add_filter( 'woocommerce_admin_get_user_data_fields', array( $this, 'add_user_data_fields' ) );
+		add_filter( 'woocommerce_admin_get_user_data_fields', [ $this, 'add_user_data_fields' ] );
 	}
 
 	/**
@@ -41,9 +41,9 @@ class MobileAppBanner {
 	public function add_user_data_fields( $user_data_fields ) {
 		return array_merge(
 			$user_data_fields,
-			array(
+			[
 				'android_app_banner_dismissed',
-			)
+			]
 		);
 	}
 }

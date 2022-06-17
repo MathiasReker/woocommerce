@@ -70,12 +70,12 @@ class WC_Session_Handler extends WC_Session {
 	public function init() {
 		$this->init_session_cookie();
 
-		add_action( 'woocommerce_set_cart_cookies', array( $this, 'set_customer_session_cookie' ), 10 );
-		add_action( 'shutdown', array( $this, 'save_data' ), 20 );
-		add_action( 'wp_logout', array( $this, 'destroy_session' ) );
+		add_action( 'woocommerce_set_cart_cookies', [ $this, 'set_customer_session_cookie' ], 10 );
+		add_action( 'shutdown', [ $this, 'save_data' ], 20 );
+		add_action( 'wp_logout', [ $this, 'destroy_session' ] );
 
 		if ( ! is_user_logged_in() ) {
-			add_filter( 'nonce_user_logged_out', array( $this, 'maybe_update_nonce_user_logged_out' ), 10, 2 );
+			add_filter( 'nonce_user_logged_out', [ $this, 'maybe_update_nonce_user_logged_out' ], 10, 2 );
 		}
 	}
 
@@ -306,7 +306,7 @@ class WC_Session_Handler extends WC_Session {
 			return false;
 		}
 
-		return array( $customer_id, $session_expiration, $session_expiring, $cookie_hash );
+		return [ $customer_id, $session_expiration, $session_expiring, $cookie_hash ];
 	}
 
 	/**
@@ -315,7 +315,7 @@ class WC_Session_Handler extends WC_Session {
 	 * @return array
 	 */
 	public function get_session_data() {
-		return $this->has_session() ? (array) $this->get_session( $this->_customer_id, array() ) : array();
+		return $this->has_session() ? (array) $this->get_session( $this->_customer_id, [] ) : [];
 	}
 
 	/**
@@ -371,7 +371,7 @@ class WC_Session_Handler extends WC_Session {
 
 		wc_empty_cart();
 
-		$this->_data        = array();
+		$this->_data        = [];
 		$this->_dirty       = false;
 		$this->_customer_id = $this->generate_customer_id();
 	}
@@ -464,9 +464,9 @@ class WC_Session_Handler extends WC_Session {
 
 		$wpdb->delete(
 			$this->_table,
-			array(
+			[
 				'session_key' => $customer_id,
-			)
+			]
 		);
 	}
 
@@ -481,15 +481,15 @@ class WC_Session_Handler extends WC_Session {
 
 		$wpdb->update(
 			$this->_table,
-			array(
+			[
 				'session_expiry' => $timestamp,
-			),
-			array(
+			],
+			[
 				'session_key' => $customer_id,
-			),
-			array(
+			],
+			[
 				'%d',
-			)
+			]
 		);
 	}
 }

@@ -34,11 +34,11 @@ class InstallJPAndWCSPlugins {
 	 * Constructor.
 	 */
 	public function __construct() {
-		add_action( 'woocommerce_note_action_install-jp-and-wcs-plugins', array( $this, 'install_jp_and_wcs_plugins' ) );
-		add_action( 'activated_plugin', array( $this, 'action_note' ) );
-		add_action( 'woocommerce_plugins_install_api_error', array( $this, 'on_install_error' ) );
-		add_action( 'woocommerce_plugins_install_error', array( $this, 'on_install_error' ) );
-		add_action( 'woocommerce_plugins_activate_error', array( $this, 'on_install_error' ) );
+		add_action( 'woocommerce_note_action_install-jp-and-wcs-plugins', [ $this, 'install_jp_and_wcs_plugins' ] );
+		add_action( 'activated_plugin', [ $this, 'action_note' ] );
+		add_action( 'woocommerce_plugins_install_api_error', [ $this, 'on_install_error' ] );
+		add_action( 'woocommerce_plugins_install_error', [ $this, 'on_install_error' ] );
+		add_action( 'woocommerce_plugins_activate_error', [ $this, 'on_install_error' ] );
 	}
 
 	/**
@@ -52,7 +52,7 @@ class InstallJPAndWCSPlugins {
 		$note = new Note();
 		$note->set_title( __( 'Uh oh... There was a problem during the Jetpack and WooCommerce Shipping & Tax install. Please try again.', 'woocommerce' ) );
 		$note->set_content( $content );
-		$note->set_content_data( (object) array() );
+		$note->set_content_data( (object) [] );
 		$note->set_type( Note::E_WC_ADMIN_NOTE_INFORMATIONAL );
 		$note->set_name( self::NOTE_NAME );
 		$note->set_source( 'woocommerce-admin' );
@@ -115,7 +115,7 @@ class InstallJPAndWCSPlugins {
 	 * @param string $plugin The plugin slug.
 	 */
 	private function install_and_activate_plugin( $plugin ) {
-		$install_request = array( 'plugin' => $plugin );
+		$install_request = [ 'plugin' => $plugin ];
 		$installer       = new \Automattic\WooCommerce\Admin\API\OnboardingPlugins();
 		$result          = $installer->install_plugin( $install_request );
 
@@ -124,7 +124,7 @@ class InstallJPAndWCSPlugins {
 			return;
 		}
 
-		$activate_request = array( 'plugins' => $plugin );
+		$activate_request = [ 'plugins' => $plugin ];
 
 		$installer->activate_plugins( $activate_request );
 	}

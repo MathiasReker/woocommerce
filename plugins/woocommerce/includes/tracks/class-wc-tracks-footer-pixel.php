@@ -23,7 +23,7 @@ class WC_Tracks_Footer_Pixel {
 	 *
 	 * @var array
 	 */
-	protected $events = array();
+	protected $events = [];
 
 	/**
 	 * Instantiate the singleton.
@@ -42,8 +42,8 @@ class WC_Tracks_Footer_Pixel {
 	 * Constructor - attach hooks to the singleton instance.
 	 */
 	public function __construct() {
-		add_action( 'admin_footer', array( $this, 'render_tracking_pixels' ) );
-		add_action( 'shutdown', array( $this, 'send_tracks_requests' ) );
+		add_action( 'admin_footer', [ $this, 'render_tracking_pixels' ] );
+		add_action( 'shutdown', [ $this, 'send_tracks_requests' ] );
 	}
 
 	/**
@@ -93,7 +93,7 @@ class WC_Tracks_Footer_Pixel {
 			echo '<img style="position: fixed;" src="', esc_url( $pixel ), '" />';
 		}
 
-		$this->events = array();
+		$this->events = [];
 	}
 
 	/**

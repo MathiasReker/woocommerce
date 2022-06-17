@@ -165,12 +165,12 @@ abstract class MetaToCustomTableMigrator extends TableMigrator {
 	 * @return array[] Schema for primary ID column.
 	 */
 	private function get_destination_table_primary_id_schema(): array {
-		return array(
-			'destination_primary_key' => array(
+		return [
+			'destination_primary_key' => [
 				'destination' => $this->schema_config['destination']['primary_key'],
 				'type'        => $this->schema_config['destination']['primary_key_type'],
-			),
-		);
+			],
+		];
 	}
 
 	/**
@@ -184,8 +184,8 @@ abstract class MetaToCustomTableMigrator extends TableMigrator {
 	private function generate_column_clauses( array $columns_schema, array $batch ): array {
 		global $wpdb;
 
-		$columns      = array();
-		$placeholders = array();
+		$columns      = [];
+		$placeholders = [];
 		foreach ( $columns_schema as $prev_column => $schema ) {
 			if ( in_array( $schema['destination'], $columns, true ) ) {
 				continue;
@@ -195,9 +195,9 @@ abstract class MetaToCustomTableMigrator extends TableMigrator {
 		}
 		$placeholders = "'" . implode( "', '", $placeholders ) . "'";
 
-		$values = array();
+		$values = [];
 		foreach ( array_values( $batch ) as $row ) {
-			$query_params = array();
+			$query_params = [];
 			foreach ( $columns as $column ) {
 				$query_params[] = $row[ $column ] ?? null;
 			}
@@ -210,7 +210,7 @@ abstract class MetaToCustomTableMigrator extends TableMigrator {
 
 		$column_sql = implode( '`, `', $columns );
 
-		return array( $value_sql, $column_sql, $columns );
+		return [ $value_sql, $column_sql, $columns ];
 	}
 
 	/**
@@ -301,20 +301,20 @@ abstract class MetaToCustomTableMigrator extends TableMigrator {
 	 */
 	private function fetch_data_for_migration_for_ids( array $entity_ids ): array {
 		if ( empty( $entity_ids ) ) {
-			return array(
-				'data'   => array(),
-				'errors' => array(),
-			);
+			return [
+				'data'   => [],
+				'errors' => [],
+			];
 		}
 
 		$entity_table_query = $this->build_entity_table_query( $entity_ids );
 		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Output of $this->build_entity_table_query is already prepared.
 		$entity_data = $this->db_get_results( $entity_table_query );
 		if ( empty( $entity_data ) ) {
-			return array(
-				'data'   => array(),
-				'errors' => array(),
-			);
+			return [
+				'data'   => [],
+				'errors' => [],
+			];
 		}
 		$entity_meta_rel_ids = array_column( $entity_data, 'entity_meta_rel_id' );
 
@@ -355,7 +355,7 @@ abstract class MetaToCustomTableMigrator extends TableMigrator {
 
 		// Additional SQL to check if the row needs update according to the column mapping.
 		// The IFNULL and CHAR(0) "hack" is needed because NULLs can't be directly compared in SQL.
-		$modified_selector   = array();
+		$modified_selector   = [];
 		$core_column_mapping = array_filter(
 			$this->core_column_mapping,
 			function( $mapping ) {
@@ -422,7 +422,7 @@ WHERE source.`$source_primary_key_column` IN ( $entity_id_placeholder ) $additio
 		$source_primary_key_column = "`$source_entity_table`.`{$this->schema_config['source']['entity']['primary_key']}`";
 
 		$where_clause = "$source_primary_key_column IN (" . implode( ',', array_fill( 0, count( $entity_ids ), '%d' ) ) . ')';
-		$entity_keys  = array();
+		$entity_keys  = [];
 		foreach ( $this->core_column_mapping as $column_name => $column_schema ) {
 			if ( isset( $column_schema['select_clause'] ) ) {
 				$select_clause = $column_schema['select_clause'];
@@ -498,15 +498,15 @@ WHERE
 	 * @return array[] Validated and combined data with errors.
 	 */
 	private function process_and_sanitize_data( array $entity_data, array $meta_data ): array {
-		$sanitized_entity_data = array();
-		$error_records         = array();
+		$sanitized_entity_data = [];
+		$error_records         = [];
 		$this->process_and_sanitize_entity_data( $sanitized_entity_data, $error_records, $entity_data );
 		$this->processs_and_sanitize_meta_data( $sanitized_entity_data, $error_records, $meta_data );
 
-		return array(
+		return [
 			'data'   => $sanitized_entity_data,
 			'errors' => $error_records,
-		);
+		];
 	}
 
 	/**
@@ -518,7 +518,7 @@ WHERE
 	 */
 	private function process_and_sanitize_entity_data( array &$sanitized_entity_data, array &$error_records, array $entity_data ): void {
 		foreach ( $entity_data as $entity ) {
-			$row_data = array();
+			$row_data = [];
 			foreach ( $this->core_column_mapping as $column_name => $schema ) {
 				$custom_table_column_name = $schema['destination'] ?? $column_name;
 				$value                    = $entity->$column_name;
@@ -634,10 +634,10 @@ WHERE
 
 		$source_destination_join_clause = "$destination_table ON $destination_table.$destination_source_rel_column = $source_table.$source_destination_rel_column";
 
-		$meta_select_clauses        = array();
-		$meta_join_clauses          = array();
-		$source_select_clauses      = array();
-		$destination_select_clauses = array();
+		$meta_select_clauses        = [];
+		$meta_join_clauses          = [];
+		$source_select_clauses      = [];
+		$destination_select_clauses = [];
 
 		foreach ( $this->core_column_mapping as $column_name => $schema ) {
 			$source_select_column         = isset( $schema['select_clause'] ) ? $schema['select_clause'] : "$source_table.$column_name";
@@ -699,7 +699,7 @@ WHERE $where_clause
 	 * @return array Array of failed IDs if any, along with columns/meta_key names.
 	 */
 	protected function verify_data( $collected_data ) {
-		$failed_ids = array();
+		$failed_ids = [];
 		foreach ( $collected_data as $row ) {
 			$failed_ids = $this->verify_entity_columns( $row, $failed_ids );
 			$failed_ids = $this->verify_meta_columns( $row, $failed_ids );
@@ -724,13 +724,13 @@ WHERE $where_clause
 			$row               = $this->pre_process_row( $row, $schema, $source_alias, $destination_alias );
 			if ( $row[ $source_alias ] !== $row[ $destination_alias ] ) {
 				if ( ! isset( $failed_ids[ $row[ $primary_key_column ] ] ) ) {
-					$failed_ids[ $row[ $primary_key_column ] ] = array();
+					$failed_ids[ $row[ $primary_key_column ] ] = [];
 				}
-				$failed_ids[ $row[ $primary_key_column ] ][] = array(
+				$failed_ids[ $row[ $primary_key_column ] ][] = [
 					'column'         => $column_name,
 					'original_value' => $row[ $source_alias ],
 					'new_value'      => $row[ $destination_alias ],
-				);
+				];
 			}
 		}
 
@@ -753,13 +753,13 @@ WHERE $where_clause
 			$row               = $this->pre_process_row( $row, $schema, $meta_alias, $destination_alias );
 			if ( $row[ $meta_alias ] !== $row[ $destination_alias ] ) {
 				if ( ! isset( $failed_ids[ $row[ $primary_key_column ] ] ) ) {
-					$failed_ids[ $row[ $primary_key_column ] ] = array();
+					$failed_ids[ $row[ $primary_key_column ] ] = [];
 				}
-				$failed_ids[ $row[ $primary_key_column ] ][] = array(
+				$failed_ids[ $row[ $primary_key_column ] ][] = [
 					'column'         => $meta_key,
 					'original_value' => $row[ $meta_alias ],
 					'new_value'      => $row[ $destination_alias ],
-				);
+				];
 			}
 		}
 
@@ -777,7 +777,7 @@ WHERE $where_clause
 	 * @return array Processed row.
 	 */
 	private function pre_process_row( $row, $schema, $alias, $destination_alias ) {
-		if ( in_array( $schema['type'], array( 'int', 'decimal' ), true ) ) {
+		if ( in_array( $schema['type'], [ 'int', 'decimal' ], true ) ) {
 			$row[ $alias ]             = wc_format_decimal( $row[ $alias ], false, true );
 			$row[ $destination_alias ] = wc_format_decimal( $row[ $destination_alias ], false, true );
 		}

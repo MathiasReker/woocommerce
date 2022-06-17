@@ -23,13 +23,13 @@ do_action( 'woocommerce_email_before_order_table', $order, $sent_to_admin, $plai
 echo wp_kses_post( wc_strtoupper( sprintf( esc_html__( '[Order #%1$s] (%2$s)', 'woocommerce' ), $order->get_order_number(), wc_format_datetime( $order->get_date_created() ) ) ) ) . "\n";
 echo "\n" . wc_get_email_order_items( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	$order,
-	array(
+	[
 		'show_sku'      => $sent_to_admin,
 		'show_image'    => false,
-		'image_size'    => array( 32, 32 ),
+		'image_size'    => [ 32, 32 ],
 		'plain_text'    => true,
 		'sent_to_admin' => $sent_to_admin,
-	)
+	]
 );
 
 echo "==========\n\n";

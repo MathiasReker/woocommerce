@@ -19,7 +19,7 @@ class WC_Admin_Importers {
 	 *
 	 * @var string[]
 	 */
-	protected $importers = array();
+	protected $importers = [];
 
 	/**
 	 * Constructor.
@@ -29,19 +29,19 @@ class WC_Admin_Importers {
 			return;
 		}
 
-		add_action( 'admin_menu', array( $this, 'add_to_menus' ) );
-		add_action( 'admin_init', array( $this, 'register_importers' ) );
-		add_action( 'admin_head', array( $this, 'hide_from_menus' ) );
-		add_action( 'admin_enqueue_scripts', array( $this, 'admin_scripts' ) );
-		add_action( 'wp_ajax_woocommerce_do_ajax_product_import', array( $this, 'do_ajax_product_import' ) );
+		add_action( 'admin_menu', [ $this, 'add_to_menus' ] );
+		add_action( 'admin_init', [ $this, 'register_importers' ] );
+		add_action( 'admin_head', [ $this, 'hide_from_menus' ] );
+		add_action( 'admin_enqueue_scripts', [ $this, 'admin_scripts' ] );
+		add_action( 'wp_ajax_woocommerce_do_ajax_product_import', [ $this, 'do_ajax_product_import' ] );
 
 		// Register WooCommerce importers.
-		$this->importers['product_importer'] = array(
+		$this->importers['product_importer'] = [
 			'menu'       => 'edit.php?post_type=product',
 			'name'       => __( 'Product Import', 'woocommerce' ),
 			'capability' => 'import',
-			'callback'   => array( $this, 'product_importer' ),
-		);
+			'callback'   => [ $this, 'product_importer' ],
+		];
 	}
 
 	/**
@@ -85,7 +85,7 @@ class WC_Admin_Importers {
 	public function admin_scripts() {
 		$suffix  = Constants::is_true( 'SCRIPT_DEBUG' ) ? '' : '.min';
 		$version = Constants::get_constant( 'WC_VERSION' );
-		wp_register_script( 'wc-product-import', WC()->plugin_url() . '/assets/js/admin/wc-product-import' . $suffix . '.js', array( 'jquery' ), $version, true );
+		wp_register_script( 'wc-product-import', WC()->plugin_url() . '/assets/js/admin/wc-product-import' . $suffix . '.js', [ 'jquery' ], $version, true );
 	}
 
 	/**
@@ -112,9 +112,9 @@ class WC_Admin_Importers {
 	 */
 	public function register_importers() {
 		if ( Constants::is_defined( 'WP_LOAD_IMPORTERS' ) ) {
-			add_action( 'import_start', array( $this, 'post_importer_compatibility' ) );
-			register_importer( 'woocommerce_product_csv', __( 'WooCommerce products (CSV)', 'woocommerce' ), __( 'Import <strong>products</strong> to your store via a csv file.', 'woocommerce' ), array( $this, 'product_importer' ) );
-			register_importer( 'woocommerce_tax_rate_csv', __( 'WooCommerce tax rates (CSV)', 'woocommerce' ), __( 'Import <strong>tax rates</strong> to your store via a csv file.', 'woocommerce' ), array( $this, 'tax_rates_importer' ) );
+			add_action( 'import_start', [ $this, 'post_importer_compatibility' ] );
+			register_importer( 'woocommerce_product_csv', __( 'WooCommerce products (CSV)', 'woocommerce' ), __( 'Import <strong>products</strong> to your store via a csv file.', 'woocommerce' ), [ $this, 'product_importer' ] );
+			register_importer( 'woocommerce_tax_rate_csv', __( 'WooCommerce tax rates (CSV)', 'woocommerce' ), __( 'Import <strong>tax rates</strong> to your store via a csv file.', 'woocommerce' ), [ $this, 'tax_rates_importer' ] );
 		}
 	}
 
@@ -167,28 +167,28 @@ class WC_Admin_Importers {
 								// Create the taxonomy.
 								if ( ! in_array( $attribute_name, wc_get_attribute_taxonomies(), true ) ) {
 									wc_create_attribute(
-										array(
+										[
 											'name'         => $attribute_name,
 											'slug'         => $attribute_name,
 											'type'         => 'select',
 											'order_by'     => 'menu_order',
 											'has_archives' => false,
-										)
+										]
 									);
 								}
 
 								// Register the taxonomy now so that the import works!
 								register_taxonomy(
 									$term['domain'],
-									apply_filters( 'woocommerce_taxonomy_objects_' . $term['domain'], array( 'product' ) ),
+									apply_filters( 'woocommerce_taxonomy_objects_' . $term['domain'], [ 'product' ] ),
 									apply_filters(
 										'woocommerce_taxonomy_args_' . $term['domain'],
-										array(
+										[
 											'hierarchical' => true,
 											'show_ui'      => false,
 											'query_var'    => true,
 											'rewrite'      => false,
-										)
+										]
 									)
 								);
 							}
@@ -208,27 +208,27 @@ class WC_Admin_Importers {
 		check_ajax_referer( 'wc-product-import', 'security' );
 
 		if ( ! $this->import_allowed() || ! isset( $_POST['file'] ) ) { // PHPCS: input var ok.
-			wp_send_json_error( array( 'message' => __( 'Insufficient privileges to import products.', 'woocommerce' ) ) );
+			wp_send_json_error( [ 'message' => __( 'Insufficient privileges to import products.', 'woocommerce' ) ] );
 		}
 
 		include_once WC_ABSPATH . 'includes/admin/importers/class-wc-product-csv-importer-controller.php';
 		include_once WC_ABSPATH . 'includes/import/class-wc-product-csv-importer.php';
 
 		$file   = wc_clean( wp_unslash( $_POST['file'] ) ); // PHPCS: input var ok.
-		$params = array(
+		$params = [
 			'delimiter'       => ! empty( $_POST['delimiter'] ) ? wc_clean( wp_unslash( $_POST['delimiter'] ) ) : ',', // PHPCS: input var ok.
 			'start_pos'       => isset( $_POST['position'] ) ? absint( $_POST['position'] ) : 0, // PHPCS: input var ok.
-			'mapping'         => isset( $_POST['mapping'] ) ? (array) wc_clean( wp_unslash( $_POST['mapping'] ) ) : array(), // PHPCS: input var ok.
+			'mapping'         => isset( $_POST['mapping'] ) ? (array) wc_clean( wp_unslash( $_POST['mapping'] ) ) : [], // PHPCS: input var ok.
 			'update_existing' => isset( $_POST['update_existing'] ) ? (bool) $_POST['update_existing'] : false, // PHPCS: input var ok.
 			'lines'           => apply_filters( 'woocommerce_product_import_batch_size', 30 ),
 			'parse'           => true,
-		);
+		];
 
 		// Log failures.
 		if ( 0 !== $params['start_pos'] ) {
 			$error_log = array_filter( (array) get_user_option( 'product_import_error_log' ) );
 		} else {
-			$error_log = array();
+			$error_log = [];
 		}
 
 		$importer         = WC_Product_CSV_Importer_Controller::get_importer( $file, $params );
@@ -240,15 +240,15 @@ class WC_Admin_Importers {
 
 		if ( 100 === $percent_complete ) {
 			// @codingStandardsIgnoreStart.
-			$wpdb->delete( $wpdb->postmeta, array( 'meta_key' => '_original_id' ) );
-			$wpdb->delete( $wpdb->posts, array(
+			$wpdb->delete( $wpdb->postmeta, [ 'meta_key' => '_original_id' ] );
+			$wpdb->delete( $wpdb->posts, [
 				'post_type'   => 'product',
 				'post_status' => 'importing',
-			) );
-			$wpdb->delete( $wpdb->posts, array(
+			] );
+			$wpdb->delete( $wpdb->posts, [
 				'post_type'   => 'product_variation',
 				'post_status' => 'importing',
-			) );
+			] );
 			// @codingStandardsIgnoreEnd.
 
 			// Clean up orphaned data.
@@ -278,26 +278,26 @@ class WC_Admin_Importers {
 
 			// Send success.
 			wp_send_json_success(
-				array(
+				[
 					'position'   => 'done',
 					'percentage' => 100,
-					'url'        => add_query_arg( array( '_wpnonce' => wp_create_nonce( 'woocommerce-csv-importer' ) ), admin_url( 'edit.php?post_type=product&page=product_importer&step=done' ) ),
+					'url'        => add_query_arg( [ '_wpnonce' => wp_create_nonce( 'woocommerce-csv-importer' ) ], admin_url( 'edit.php?post_type=product&page=product_importer&step=done' ) ),
 					'imported'   => count( $results['imported'] ),
 					'failed'     => count( $results['failed'] ),
 					'updated'    => count( $results['updated'] ),
 					'skipped'    => count( $results['skipped'] ),
-				)
+				]
 			);
 		} else {
 			wp_send_json_success(
-				array(
+				[
 					'position'   => $importer->get_file_position(),
 					'percentage' => $percent_complete,
 					'imported'   => count( $results['imported'] ),
 					'failed'     => count( $results['failed'] ),
 					'updated'    => count( $results['updated'] ),
 					'skipped'    => count( $results['skipped'] ),
-				)
+				]
 			);
 		}
 	}

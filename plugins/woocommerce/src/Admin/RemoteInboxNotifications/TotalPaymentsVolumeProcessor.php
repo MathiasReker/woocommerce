@@ -25,12 +25,12 @@ class TotalPaymentsVolumeProcessor implements RuleProcessorInterface {
 	public function process( $rule, $stored_state ) {
 		$dates      = TimeInterval::get_timeframe_dates( $rule->timeframe );
 		$reports_revenue = new RevenueQuery(
-			array(
+			[
 				'before' => $dates['end'],
 				'after'  => $dates['start'],
 				'interval' => 'year',
-				'fields' => array( 'total_sales' ),
-			)
+				'fields' => [ 'total_sales' ],
+			]
 		);
 		$report_data    = $reports_revenue->get_data();
 		$value          = $report_data->totals->total_sales;
@@ -50,13 +50,13 @@ class TotalPaymentsVolumeProcessor implements RuleProcessorInterface {
 	 * @return bool Pass/fail.
 	 */
 	public function validate( $rule ) {
-		$allowed_timeframes = array(
+		$allowed_timeframes = [
 			'last_week',
 			'last_month',
 			'last_quarter',
 			'last_6_months',
 			'last_year',
-		);
+		];
 
 		if ( ! isset( $rule->timeframe ) || ! in_array( $rule->timeframe, $allowed_timeframes, true ) ) {
 			return false;

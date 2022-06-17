@@ -23,37 +23,37 @@ class MockableLegacyProxy extends \Automattic\WooCommerce\Proxies\LegacyProxy {
 	 *
 	 * @var array
 	 */
-	private $mocked_classes = array();
+	private $mocked_classes = [];
 
 	/**
 	 * The currently registered mocks for functions.
 	 *
 	 * @var array
 	 */
-	private $mocked_functions = array();
+	private $mocked_functions = [];
 
 	/**
 	 * The currently registered mocks for static methods.
 	 *
 	 * @var array
 	 */
-	private $mocked_statics = array();
+	private $mocked_statics = [];
 
 	/**
 	 * The currently registered mocks for globals.
 	 *
 	 * @var array
 	 */
-	private $mocked_globals = array();
+	private $mocked_globals = [];
 
 	/**
 	 * Reset the instance to its initial state by removing all the mocks.
 	 */
 	public function reset() {
-		$this->mocked_classes   = array();
-		$this->mocked_functions = array();
-		$this->mocked_statics   = array();
-		$this->mocked_globals   = array();
+		$this->mocked_classes   = [];
+		$this->mocked_functions = [];
+		$this->mocked_statics   = [];
+		$this->mocked_globals   = [];
 	}
 
 	/**

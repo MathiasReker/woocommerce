@@ -33,9 +33,9 @@ class WC_Admin_Tests_API_Reports_Customers extends WC_REST_Unit_Test_Case {
 		parent::setUp();
 
 		$this->user = $this->factory->user->create(
-			array(
+			[
 				'role' => 'administrator',
-			)
+			]
 		);
 	}
 
@@ -119,16 +119,16 @@ class WC_Admin_Tests_API_Reports_Customers extends WC_REST_Unit_Test_Case {
 	public function test_user_creation() {
 		wp_set_current_user( $this->user );
 		$admin_id = wp_insert_user(
-			array(
+			[
 				'user_login' => 'testadmin',
 				'user_pass'  => null,
 				'role'       => 'administrator',
-			)
+			]
 		);
 
 		// Admin user without orders should not be shown.
 		$request = new WP_REST_Request( 'GET', $this->endpoint );
-		$request->set_query_params( array( 'per_page' => 10 ) );
+		$request->set_query_params( [ 'per_page' => 10 ] );
 		$response = $this->server->dispatch( $request );
 		$reports  = $response->get_data();
 		$headers  = $response->get_headers();
@@ -150,7 +150,7 @@ class WC_Admin_Tests_API_Reports_Customers extends WC_REST_Unit_Test_Case {
 		WC_Helper_Queue::run_all_pending();
 
 		$request = new WP_REST_Request( 'GET', $this->endpoint );
-		$request->set_query_params( array( 'per_page' => 10 ) );
+		$request->set_query_params( [ 'per_page' => 10 ] );
 		$response = $this->server->dispatch( $request );
 		$reports  = $response->get_data();
 		$headers  = $response->get_headers();
@@ -166,11 +166,11 @@ class WC_Admin_Tests_API_Reports_Customers extends WC_REST_Unit_Test_Case {
 
 		$request = new WP_REST_Request( 'GET', $this->endpoint );
 		$request->set_query_params(
-			array(
+			[
 				'per_page' => 10,
 				'order'    => 'asc',
 				'orderby'  => 'username',
-			)
+			]
 		);
 		$response = $this->server->dispatch( $request );
 		$reports  = $response->get_data();
@@ -193,9 +193,9 @@ class WC_Admin_Tests_API_Reports_Customers extends WC_REST_Unit_Test_Case {
 		wp_set_current_user( $this->user );
 		WC_Helper_Reports::reset_stats_dbs();
 
-		$test_customers = array();
+		$test_customers = [];
 
-		$customer_names = array( 'Alice', 'Betty', 'Catherine', 'Dan', 'Eric', 'Fred', 'Greg', 'Henry', 'Ivan', 'Justin' );
+		$customer_names = [ 'Alice', 'Betty', 'Catherine', 'Dan', 'Eric', 'Fred', 'Greg', 'Henry', 'Ivan', 'Justin' ];
 
 		// Create 10 test customers.
 		for ( $i = 1; $i <= 10; $i++ ) {
@@ -223,11 +223,11 @@ class WC_Admin_Tests_API_Reports_Customers extends WC_REST_Unit_Test_Case {
 
 		$request = new WP_REST_Request( 'GET', $this->endpoint );
 		$request->set_query_params(
-			array(
+			[
 				'per_page' => 5,
 				'order'    => 'asc',
 				'orderby'  => 'username',
-			)
+			]
 		);
 
 		$response = $this->server->dispatch( $request );
@@ -247,9 +247,9 @@ class WC_Admin_Tests_API_Reports_Customers extends WC_REST_Unit_Test_Case {
 
 		// Test name parameter (case with no matches).
 		$request->set_query_params(
-			array(
+			[
 				'search' => 'Nota Customername',
-			)
+			]
 		);
 		$response = $this->server->dispatch( $request );
 		$reports  = $response->get_data();
@@ -259,9 +259,9 @@ class WC_Admin_Tests_API_Reports_Customers extends WC_REST_Unit_Test_Case {
 
 		// Test name parameter (partial match).
 		$request->set_query_params(
-			array(
+			[
 				'search' => 're',
-			)
+			]
 		);
 		$response = $this->server->dispatch( $request );
 		$reports  = $response->get_data();
@@ -271,10 +271,10 @@ class WC_Admin_Tests_API_Reports_Customers extends WC_REST_Unit_Test_Case {
 
 		// Test email search.
 		$request->set_query_params(
-			array(
+			[
 				'search'   => 'customer+justin',
 				'searchby' => 'email',
-			)
+			]
 		);
 		$response = $this->server->dispatch( $request );
 		$reports  = $response->get_data();
@@ -284,10 +284,10 @@ class WC_Admin_Tests_API_Reports_Customers extends WC_REST_Unit_Test_Case {
 
 		// Test username search.
 		$request->set_query_params(
-			array(
+			[
 				'search'   => 'customer1',
 				'searchby' => 'username',
-			)
+			]
 		);
 		$response = $this->server->dispatch( $request );
 		$reports  = $response->get_data();
@@ -298,10 +298,10 @@ class WC_Admin_Tests_API_Reports_Customers extends WC_REST_Unit_Test_Case {
 
 		// Test name and last_order parameters.
 		$request->set_query_params(
-			array(
+			[
 				'search'           => 'Alice',
 				'last_order_after' => gmdate( 'Y-m-d' ) . 'T00:00:00Z',
-			)
+			]
 		);
 		$response = $this->server->dispatch( $request );
 		$reports  = $response->get_data();
@@ -322,9 +322,9 @@ class WC_Admin_Tests_API_Reports_Customers extends WC_REST_Unit_Test_Case {
 
 		// Test customers param.
 		$request->set_query_params(
-			array(
+			[
 				'customers' => $customer_id,
-			)
+			]
 		);
 
 		$response = $this->server->dispatch( $request );
@@ -341,13 +341,13 @@ class WC_Admin_Tests_API_Reports_Customers extends WC_REST_Unit_Test_Case {
 		wp_set_current_user( $this->user );
 
 		$customer = wp_insert_user(
-			array(
+			[
 				'first_name' => 'Tyrion',
 				'last_name'  => 'Lanister',
 				'user_login' => 'daenerys',
 				'user_pass'  => null,
 				'role'       => 'customer',
-			)
+			]
 		);
 
 		$order = WC_Helper_Order::create_order( $customer );
@@ -447,9 +447,9 @@ class WC_Admin_Tests_API_Reports_Customers extends WC_REST_Unit_Test_Case {
 
 		$request = new WP_REST_Request( 'GET', $this->endpoint );
 		$request->set_query_params(
-			array(
+			[
 				'per_page' => 1,
-			)
+			]
 		);
 		$response  = $this->server->dispatch( $request );
 		$customers = $response->get_data();
@@ -466,10 +466,10 @@ class WC_Admin_Tests_API_Reports_Customers extends WC_REST_Unit_Test_Case {
 		// Verify they are gone.
 		$request = new WP_REST_Request( 'GET', $this->endpoint );
 		$request->set_query_params(
-			array(
+			[
 				'per_page'  => 1,
-				'customers' => array( $customer->get_id() ),
-			)
+				'customers' => [ $customer->get_id() ],
+			]
 		);
 		$response  = $this->server->dispatch( $request );
 		$customers = $response->get_data();

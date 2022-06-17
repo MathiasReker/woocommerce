@@ -18,9 +18,9 @@ class OptionSanitizerServiceProvider extends AbstractServiceProvider {
 	 *
 	 * @var array
 	 */
-	protected $provides = array(
+	protected $provides = [
 		OptionSanitizer::class,
-	);
+	];
 
 	/**
 	 * Register the classes.

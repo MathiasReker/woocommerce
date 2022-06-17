@@ -19,10 +19,10 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 function wc_importer_shopify_mappings( $mappings, $raw_headers ) {
 	// Only map if this is looks like a Shopify export.
-	if ( 0 !== count( array_diff( array( 'Title', 'Body (HTML)', 'Type', 'Variant SKU' ), $raw_headers ) ) ) {
+	if ( 0 !== count( array_diff( [ 'Title', 'Body (HTML)', 'Type', 'Variant SKU' ], $raw_headers ) ) ) {
 		return $mappings;
 	}
-	$shopify_mappings = array(
+	$shopify_mappings = [
 		'Variant SKU'               => 'sku',
 		'Title'                     => 'name',
 		'Body (HTML)'               => 'description',
@@ -38,7 +38,7 @@ function wc_importer_shopify_mappings( $mappings, $raw_headers ) {
 		'Variant Grams'             => 'weight',
 		'Variant Requires Shipping' => 'meta:shopify_requires_shipping',
 		'Variant Taxable'           => 'tax_status',
-	);
+	];
 	return array_merge( $mappings, $shopify_mappings );
 }
 add_filter( 'woocommerce_csv_product_import_mapping_default_columns', 'wc_importer_shopify_mappings', 10, 2 );
@@ -53,13 +53,13 @@ add_filter( 'woocommerce_csv_product_import_mapping_default_columns', 'wc_import
  */
 function wc_importer_shopify_special_mappings( $mappings, $raw_headers ) {
 	// Only map if this is looks like a Shopify export.
-	if ( 0 !== count( array_diff( array( 'Title', 'Body (HTML)', 'Type', 'Variant SKU' ), $raw_headers ) ) ) {
+	if ( 0 !== count( array_diff( [ 'Title', 'Body (HTML)', 'Type', 'Variant SKU' ], $raw_headers ) ) ) {
 		return $mappings;
 	}
-	$shopify_mappings = array(
+	$shopify_mappings = [
 		'Option%d Name'  => 'attributes:name',
 		'Option%d Value' => 'attributes:value',
-	);
+	];
 	return array_merge( $mappings, $shopify_mappings );
 }
 add_filter( 'woocommerce_csv_product_import_mapping_special_columns', 'wc_importer_shopify_special_mappings', 10, 2 );
@@ -79,7 +79,7 @@ function wc_importer_shopify_expand_data( $data ) {
 			if ( isset( $data['type'] ) ) {
 				$data['type'][] = 'virtual';
 			} else {
-				$data['type'] = array( 'virtual' );
+				$data['type'] = [ 'virtual' ];
 			}
 		}
 

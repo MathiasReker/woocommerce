@@ -33,9 +33,9 @@ class WC_Payment_Token_ECheck extends WC_Payment_Token {
 	 *
 	 * @var array
 	 */
-	protected $extra_data = array(
+	protected $extra_data = [
 		'last4' => '',
-	);
+	];
 
 	/**
 	 * Get type to display to user.

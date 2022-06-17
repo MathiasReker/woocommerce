@@ -29,9 +29,9 @@ class WC_Admin_Tests_API_Onboarding_Profiles extends WC_REST_Unit_Test_Case {
 		parent::setUp();
 
 		$this->user = $this->factory->user->create(
-			array(
+			[
 				'role' => 'administrator',
-			)
+			]
 		);
 	}
 
@@ -61,13 +61,13 @@ class WC_Admin_Tests_API_Onboarding_Profiles extends WC_REST_Unit_Test_Case {
 
 		// Test updating 2 fields separately.
 		$request = new WP_REST_Request( 'POST', $this->endpoint );
-		$request->set_headers( array( 'content-type' => 'application/json' ) );
-		$industry = array(
-			array(
+		$request->set_headers( [ 'content-type' => 'application/json' ] );
+		$industry = [
+			[
 				'slug' => 'health-beauty',
-			),
-		);
-		$request->set_body( wp_json_encode( array( 'industry' => $industry ) ) );
+			],
+		];
+		$request->set_body( wp_json_encode( [ 'industry' => $industry ] ) );
 		$response = $this->server->dispatch( $request );
 		$data     = $response->get_data();
 
@@ -76,8 +76,8 @@ class WC_Admin_Tests_API_Onboarding_Profiles extends WC_REST_Unit_Test_Case {
 
 		// Test that the update works.
 		$request = new WP_REST_Request( 'POST', $this->endpoint );
-		$request->set_headers( array( 'content-type' => 'application/json' ) );
-		$request->set_body( wp_json_encode( array( 'theme' => 'Storefront' ) ) );
+		$request->set_headers( [ 'content-type' => 'application/json' ] );
+		$request->set_body( wp_json_encode( [ 'theme' => 'Storefront' ] ) );
 		$response = $this->server->dispatch( $request );
 		$data     = $response->get_data();
 
@@ -135,20 +135,20 @@ class WC_Admin_Tests_API_Onboarding_Profiles extends WC_REST_Unit_Test_Case {
 		add_filter(
 			'woocommerce_rest_onboarding_profile_properties',
 			function( $properties ) {
-				$properties['test_profile_datum'] = array(
+				$properties['test_profile_datum'] = [
 					'type'        => 'array',
 					'description' => __( 'Test onboarding profile extensibility.', 'woocommerce-admin' ),
-					'context'     => array( 'view' ),
+					'context'     => [ 'view' ],
 					'readonly'    => true,
-				);
+				];
 				return $properties;
 			}
 		);
 
 		// Test that the update works.
 		$request = new WP_REST_Request( 'POST', $this->endpoint );
-		$request->set_headers( array( 'content-type' => 'application/json' ) );
-		$request->set_body( wp_json_encode( array( 'test_profile_datum' => 'woo' ) ) );
+		$request->set_headers( [ 'content-type' => 'application/json' ] );
+		$request->set_body( wp_json_encode( [ 'test_profile_datum' => 'woo' ] ) );
 		$response = $this->server->dispatch( $request );
 		$data     = $response->get_data();
 
@@ -168,10 +168,10 @@ class WC_Admin_Tests_API_Onboarding_Profiles extends WC_REST_Unit_Test_Case {
 	 * Ensure that every REST controller works with their defaults.
 	 */
 	public function test_default_params() {
-		$endpoints = array(
+		$endpoints = [
 			'/wc-admin/onboarding/profile',
 			'/wc-admin/plugins',
-		);
+		];
 
 		foreach ( $endpoints as $endpoint ) {
 			$request  = new WP_REST_Request( 'GET', $endpoint );
@@ -194,12 +194,12 @@ class WC_Admin_Tests_API_Onboarding_Profiles extends WC_REST_Unit_Test_Case {
 	public function test_it_deletes_the_option_when_a_different_email_gets_updated() {
 		wp_set_current_user( $this->user );
 
-		update_option( Profile::DATA_OPTION, array( 'store_email' => 'first@test.com' ) );
+		update_option( Profile::DATA_OPTION, [ 'store_email' => 'first@test.com' ] );
 		update_option( MailchimpScheduler::SUBSCRIBED_OPTION_NAME, 'yes' );
 
 		$request = new WP_REST_Request( 'POST', '/wc-admin/onboarding/profile' );
-		$request->set_headers( array( 'content-type' => 'application/json' ) );
-		$request->set_body( wp_json_encode( array( 'store_email' => 'second@test.com' ) ) );
+		$request->set_headers( [ 'content-type' => 'application/json' ] );
+		$request->set_body( wp_json_encode( [ 'store_email' => 'second@test.com' ] ) );
 
 		$this->server->dispatch( $request );
 

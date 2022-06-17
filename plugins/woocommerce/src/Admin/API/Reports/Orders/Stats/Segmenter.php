@@ -24,7 +24,7 @@ class Segmenter extends ReportsSegmenter {
 	 * @return array Column => SELECT query mapping.
 	 */
 	protected function get_segment_selections_product_level( $products_table ) {
-		$columns_mapping = array(
+		$columns_mapping = [
 			'num_items_sold' => "SUM($products_table.product_qty) as num_items_sold",
 			'total_sales'    => "SUM($products_table.product_gross_revenue) AS total_sales",
 			'coupons'        => 'SUM( coupon_lookup_left_join.discount_amount ) AS coupons',
@@ -33,7 +33,7 @@ class Segmenter extends ReportsSegmenter {
 			'taxes'          => "SUM($products_table.tax_amount) AS taxes",
 			'shipping'       => "SUM($products_table.shipping_amount) AS shipping",
 			'net_revenue'    => "SUM($products_table.product_net_revenue) AS net_revenue",
-		);
+		];
 
 		return $columns_mapping;
 	}
@@ -47,12 +47,12 @@ class Segmenter extends ReportsSegmenter {
 	 * @return array Column => SELECT query mapping.
 	 */
 	protected function get_segment_selections_order_level( $unique_orders_table ) {
-		$columns_mapping = array(
+		$columns_mapping = [
 			'orders_count'        => "COUNT($unique_orders_table.order_id) AS orders_count",
 			'avg_items_per_order' => "AVG($unique_orders_table.num_items_sold) AS avg_items_per_order",
 			'avg_order_value'     => "SUM($unique_orders_table.net_total) / COUNT($unique_orders_table.order_id) AS avg_order_value",
 			'total_customers'     => "COUNT( DISTINCT( $unique_orders_table.customer_id ) ) AS total_customers",
-		);
+		];
 
 		return $columns_mapping;
 	}
@@ -66,8 +66,8 @@ class Segmenter extends ReportsSegmenter {
 	 *
 	 * @return array Column => SELECT query mapping.
 	 */
-	protected function segment_selections_orders( $order_stats_table, $overrides = array() ) {
-		$columns_mapping = array(
+	protected function segment_selections_orders( $order_stats_table, $overrides = [] ) {
+		$columns_mapping = [
 			'num_items_sold'      => "SUM($order_stats_table.num_items_sold) as num_items_sold",
 			'total_sales'         => "SUM($order_stats_table.total_sales) AS total_sales",
 			'coupons'             => "SUM($order_stats_table.discount_amount) AS coupons",
@@ -80,7 +80,7 @@ class Segmenter extends ReportsSegmenter {
 			'avg_items_per_order' => "AVG($order_stats_table.num_items_sold) AS avg_items_per_order",
 			'avg_order_value'     => "SUM($order_stats_table.net_total) / COUNT($order_stats_table.order_id) AS avg_order_value",
 			'total_customers'     => "COUNT( DISTINCT( $order_stats_table.customer_id ) ) AS total_customers",
-		);
+		];
 
 		if ( $overrides ) {
 			$columns_mapping = array_merge( $columns_mapping, $overrides );
@@ -348,7 +348,7 @@ class Segmenter extends ReportsSegmenter {
 	protected function get_segments( $type, $query_params, $table_name ) {
 		global $wpdb;
 		if ( ! isset( $this->query_args['segmentby'] ) || '' === $this->query_args['segmentby'] ) {
-			return array();
+			return [];
 		}
 
 		$product_segmenting_table = $wpdb->prefix . 'wc_order_product_lookup';
@@ -363,10 +363,10 @@ class Segmenter extends ReportsSegmenter {
 			// @todo How to handle shipping taxes when grouped by product?
 			$product_level_columns     = $this->get_segment_selections_product_level( $product_segmenting_table );
 			$order_level_columns       = $this->get_segment_selections_order_level( $unique_orders_table );
-			$segmenting_selections     = array(
+			$segmenting_selections     = [
 				'product_level' => $this->prepare_selections( $product_level_columns ),
 				'order_level'   => $this->prepare_selections( $order_level_columns ),
-			);
+			];
 			$this->report_columns      = array_merge( $product_level_columns, $order_level_columns );
 			$segmenting_from          .= "INNER JOIN $product_segmenting_table ON ($table_name.order_id = $product_segmenting_table.order_id)";
 			$segmenting_groupby        = $product_segmenting_table . '.product_id';
@@ -380,10 +380,10 @@ class Segmenter extends ReportsSegmenter {
 
 			$product_level_columns     = $this->get_segment_selections_product_level( $product_segmenting_table );
 			$order_level_columns       = $this->get_segment_selections_order_level( $unique_orders_table );
-			$segmenting_selections     = array(
+			$segmenting_selections     = [
 				'product_level' => $this->prepare_selections( $product_level_columns ),
 				'order_level'   => $this->prepare_selections( $order_level_columns ),
-			);
+			];
 			$this->report_columns      = array_merge( $product_level_columns, $order_level_columns );
 			$segmenting_from          .= "INNER JOIN $product_segmenting_table ON ($table_name.order_id = $product_segmenting_table.order_id)";
 			$segmenting_where          = "AND $product_segmenting_table.product_id = {$this->query_args['product_includes'][0]}";
@@ -394,10 +394,10 @@ class Segmenter extends ReportsSegmenter {
 		} elseif ( 'category' === $this->query_args['segmentby'] ) {
 			$product_level_columns     = $this->get_segment_selections_product_level( $product_segmenting_table );
 			$order_level_columns       = $this->get_segment_selections_order_level( $unique_orders_table );
-			$segmenting_selections     = array(
+			$segmenting_selections     = [
 				'product_level' => $this->prepare_selections( $product_level_columns ),
 				'order_level'   => $this->prepare_selections( $order_level_columns ),
-			);
+			];
 			$this->report_columns      = array_merge( $product_level_columns, $order_level_columns );
 			$segmenting_from          .= "
 			INNER JOIN $product_segmenting_table ON ($table_name.order_id = $product_segmenting_table.order_id)
@@ -412,9 +412,9 @@ class Segmenter extends ReportsSegmenter {
 			$segments = $this->get_product_related_segments( $type, $segmenting_selections, $segmenting_from, $segmenting_where, $segmenting_groupby, $segmenting_dimension_name, $table_name, $query_params, $unique_orders_table );
 		} elseif ( 'coupon' === $this->query_args['segmentby'] ) {
 			// As there can be 2 or more coupons applied per one order, coupon amount needs to be split.
-			$coupon_override       = array(
+			$coupon_override       = [
 				'coupons' => 'SUM(coupon_lookup.discount_amount) AS coupons',
-			);
+			];
 			$coupon_level_columns  = $this->segment_selections_orders( $table_name, $coupon_override );
 			$segmenting_selections = $this->prepare_selections( $coupon_level_columns );
 			$this->report_columns  = $coupon_level_columns;

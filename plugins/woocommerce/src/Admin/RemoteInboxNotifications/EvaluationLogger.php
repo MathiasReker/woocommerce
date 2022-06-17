@@ -20,7 +20,7 @@ class EvaluationLogger {
 	 *
 	 * @var array
 	 */
-	private $results = array();
+	private $results = [];
 
 	/**
 	 * Logger class to use.
@@ -65,10 +65,10 @@ class EvaluationLogger {
 	public function add_result( $rule_type, $result ) {
 		array_push(
 			$this->results,
-			array(
+			[
 				'rule'   => $rule_type,
 				'result' => $result ? 'passed' : 'failed',
-			)
+			]
 		);
 	}
 
@@ -83,7 +83,7 @@ class EvaluationLogger {
 		foreach ( $this->results as $result ) {
 			$this->logger->debug(
 				"[{$this->slug}] {$result['rule']}: {$result['result']}",
-				array( 'source' => $this->source )
+				[ 'source' => $this->source ]
 			);
 		}
 	}

@@ -18,7 +18,7 @@ class Purchase extends Task {
 	 */
 	public function __construct( $task_list ) {
 		parent::__construct( $task_list );
-		add_action( 'update_option_woocommerce_onboarding_profile', array( $this, 'clear_dismissal' ), 10, 2 );
+		add_action( 'update_option_woocommerce_onboarding_profile', [ $this, 'clear_dismissal' ], 10, 2 );
 	}
 
 	/**
@@ -28,8 +28,8 @@ class Purchase extends Task {
 	 * @param array $new_value New value.
 	 */
 	public function clear_dismissal( $old_value, $new_value ) {
-		$product_types          = isset( $new_value['product_types'] ) ? (array) $new_value['product_types'] : array();
-		$previous_product_types = isset( $old_value['product_types'] ) ? (array) $old_value['product_types'] : array();
+		$product_types          = isset( $new_value['product_types'] ) ? (array) $new_value['product_types'] : [];
+		$previous_product_types = isset( $old_value['product_types'] ) ? (array) $old_value['product_types'] : [];
 
 		if ( empty( array_diff( $product_types, $previous_product_types ) ) ) {
 			return;
@@ -187,7 +187,7 @@ class Purchase extends Task {
 	public static function get_paid_products_and_themes() {
 		$relevant_products = OnboardingProducts::get_relevant_products();
 
-		$profiler_data = get_option( OnboardingProfile::DATA_OPTION, array() );
+		$profiler_data = get_option( OnboardingProfile::DATA_OPTION, [] );
 		$theme         = isset( $profiler_data['theme'] ) ? $profiler_data['theme'] : null;
 		$paid_theme    = $theme ? OnboardingThemes::get_paid_theme_by_slug( $theme ) : null;
 		if ( $paid_theme ) {

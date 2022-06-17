@@ -14,9 +14,9 @@ class WC_Tests_API_Product_Reviews_V2 extends WC_REST_Unit_Test_Case {
 	public function setUp(): void {
 		parent::setUp();
 		$this->user = $this->factory->user->create(
-			array(
+			[
 				'role' => 'administrator',
-			)
+			]
 		);
 	}
 
@@ -51,7 +51,7 @@ class WC_Tests_API_Product_Reviews_V2 extends WC_REST_Unit_Test_Case {
 		$this->assertEquals( 200, $response->get_status() );
 		$this->assertEquals( 10, count( $product_reviews ) );
 		$this->assertContains(
-			array(
+			[
 				'id'                   => $review_id,
 				'date_created'         => $product_reviews[0]['date_created'],
 				'date_created_gmt'     => $product_reviews[0]['date_created_gmt'],
@@ -65,24 +65,24 @@ class WC_Tests_API_Product_Reviews_V2 extends WC_REST_Unit_Test_Case {
 				'rating'               => 0,
 				'verified'             => false,
 				'reviewer_avatar_urls' => $product_reviews[0]['reviewer_avatar_urls'],
-				'_links'               => array(
-					'self'       => array(
-						array(
+				'_links'               => [
+					'self'       => [
+						[
 							'href' => rest_url( '/wc/v3/products/reviews/' . $review_id ),
-						),
-					),
-					'collection' => array(
-						array(
+						],
+					],
+					'collection' => [
+						[
 							'href' => rest_url( '/wc/v3/products/reviews' ),
-						),
-					),
-					'up'         => array(
-						array(
+						],
+					],
+					'up'         => [
+						[
 							'href' => rest_url( '/wc/v3/products/' . $product->get_id() ),
-						),
-					),
-				),
-			),
+						],
+					],
+				],
+			],
 			$product_reviews
 		);
 	}
@@ -125,7 +125,7 @@ class WC_Tests_API_Product_Reviews_V2 extends WC_REST_Unit_Test_Case {
 
 		$this->assertEquals( 200, $response->get_status() );
 		$this->assertEquals(
-			array(
+			[
 				'id'                   => $product_review_id,
 				'date_created'         => $data['date_created'],
 				'date_created_gmt'     => $data['date_created_gmt'],
@@ -139,7 +139,7 @@ class WC_Tests_API_Product_Reviews_V2 extends WC_REST_Unit_Test_Case {
 				'rating'               => 0,
 				'verified'             => false,
 				'reviewer_avatar_urls' => $data['reviewer_avatar_urls'],
-			),
+			],
 			$data
 		);
 	}
@@ -179,20 +179,20 @@ class WC_Tests_API_Product_Reviews_V2 extends WC_REST_Unit_Test_Case {
 		$product = \Automattic\WooCommerce\RestApi\UnitTests\Helpers\ProductHelper::create_simple_product();
 		$request = new WP_REST_Request( 'POST', '/wc/v3/products/reviews' );
 		$request->set_body_params(
-			array(
+			[
 				'review'         => 'Hello world.',
 				'reviewer'       => 'Admin',
 				'reviewer_email' => 'woo@woo.local',
 				'rating'         => '5',
 				'product_id'     => $product->get_id(),
-			)
+			]
 		);
 		$response = $this->server->dispatch( $request );
 		$data     = $response->get_data();
 
 		$this->assertEquals( 201, $response->get_status() );
 		$this->assertEquals(
-			array(
+			[
 				'id'                   => $data['id'],
 				'date_created'         => $data['date_created'],
 				'date_created_gmt'     => $data['date_created_gmt'],
@@ -206,7 +206,7 @@ class WC_Tests_API_Product_Reviews_V2 extends WC_REST_Unit_Test_Case {
 				'rating'               => 5,
 				'verified'             => false,
 				'reviewer_avatar_urls' => $data['reviewer_avatar_urls'],
-			),
+			],
 			$data
 		);
 	}
@@ -223,10 +223,10 @@ class WC_Tests_API_Product_Reviews_V2 extends WC_REST_Unit_Test_Case {
 		// missing review
 		$request = new WP_REST_Request( 'POST', '/wc/v3/products/reviews' );
 		$request->set_body_params(
-			array(
+			[
 				'reviewer'       => 'Admin',
 				'reviewer_email' => 'woo@woo.local',
-			)
+			]
 		);
 		$response = $this->server->dispatch( $request );
 		$data     = $response->get_data();
@@ -236,10 +236,10 @@ class WC_Tests_API_Product_Reviews_V2 extends WC_REST_Unit_Test_Case {
 		// Missing reviewer.
 		$request = new WP_REST_Request( 'POST', '/wc/v3/products/reviews' );
 		$request->set_body_params(
-			array(
+			[
 				'review'         => 'Hello world.',
 				'reviewer_email' => 'woo@woo.local',
-			)
+			]
 		);
 		$response = $this->server->dispatch( $request );
 		$data     = $response->get_data();
@@ -249,10 +249,10 @@ class WC_Tests_API_Product_Reviews_V2 extends WC_REST_Unit_Test_Case {
 		// missing reviewer_email
 		$request = new WP_REST_Request( 'POST', '/wc/v3/products/reviews' );
 		$request->set_body_params(
-			array(
+			[
 				'review'   => 'Hello world.',
 				'reviewer' => 'Admin',
-			)
+			]
 		);
 		$response = $this->server->dispatch( $request );
 		$data     = $response->get_data();
@@ -279,12 +279,12 @@ class WC_Tests_API_Product_Reviews_V2 extends WC_REST_Unit_Test_Case {
 
 		$request = new WP_REST_Request( 'PUT', '/wc/v3/products/reviews/' . $product_review_id );
 		$request->set_body_params(
-			array(
+			[
 				'review'         => 'Hello world - updated.',
 				'reviewer'       => 'Justin',
 				'reviewer_email' => 'woo2@woo.local',
 				'rating'         => 3,
-			)
+			]
 		);
 		$response = $this->server->dispatch( $request );
 		$data     = $response->get_data();
@@ -306,11 +306,11 @@ class WC_Tests_API_Product_Reviews_V2 extends WC_REST_Unit_Test_Case {
 
 		$request = new WP_REST_Request( 'PUT', '/wc/v3/products/reviews/' . $product_review_id );
 		$request->set_body_params(
-			array(
+			[
 				'review'         => 'Hello world.',
 				'reviewer'       => 'Admin',
 				'reviewer_email' => 'woo@woo.dev',
-			)
+			]
 		);
 		$response = $this->server->dispatch( $request );
 		$data     = $response->get_data();
@@ -329,11 +329,11 @@ class WC_Tests_API_Product_Reviews_V2 extends WC_REST_Unit_Test_Case {
 
 		$request = new WP_REST_Request( 'PUT', '/wc/v3/products/reviews/0' );
 		$request->set_body_params(
-			array(
+			[
 				'review'         => 'Hello world.',
 				'reviewer'       => 'Admin',
 				'reviewer_email' => 'woo@woo.dev',
-			)
+			]
 		);
 		$response = $this->server->dispatch( $request );
 		$data     = $response->get_data();
@@ -404,26 +404,26 @@ class WC_Tests_API_Product_Reviews_V2 extends WC_REST_Unit_Test_Case {
 
 		$request = new WP_REST_Request( 'POST', '/wc/v3/products/reviews/batch' );
 		$request->set_body_params(
-			array(
-				'update' => array(
-					array(
+			[
+				'update' => [
+					[
 						'id'     => $review_1_id,
 						'review' => 'Updated review.',
-					),
-				),
-				'delete' => array(
+					],
+				],
+				'delete' => [
 					$review_2_id,
 					$review_3_id,
-				),
-				'create' => array(
-					array(
+				],
+				'create' => [
+					[
 						'review'         => 'New review.',
 						'reviewer'       => 'Justin',
 						'reviewer_email' => 'woo3@woo.local',
 						'product_id'     => $product->get_id(),
-					),
-				),
-			)
+					],
+				],
+			]
 		);
 		$response = $this->server->dispatch( $request );
 		$data     = $response->get_data();

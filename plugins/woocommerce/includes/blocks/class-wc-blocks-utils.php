@@ -26,12 +26,12 @@ class WC_Blocks_Utils {
 
 		$page = get_post( $page_id );
 		if ( ! $page ) {
-			return array();
+			return [];
 		}
 
 		$blocks = parse_blocks( $page->post_content );
 		if ( ! $blocks ) {
-			return array();
+			return [];
 		}
 
 		return $blocks;

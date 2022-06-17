@@ -38,10 +38,10 @@ class WCAdminAssets {
 	 */
 	public function __construct() {
 		Features::get_instance();
-		add_action( 'admin_enqueue_scripts', array( $this, 'register_scripts' ) );
+		add_action( 'admin_enqueue_scripts', [ $this, 'register_scripts' ] );
 
-		add_action( 'admin_enqueue_scripts', array( $this, 'inject_wc_settings_dependencies' ), 14 );
-		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_assets' ), 15 );
+		add_action( 'admin_enqueue_scripts', [ $this, 'inject_wc_settings_dependencies' ], 14 );
+		add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_assets' ], 15 );
 	}
 
 	/**
@@ -139,7 +139,7 @@ class WCAdminAssets {
 	 * @param string        $type Dependency type - 'script' or 'style'.
 	 * @param array         $allowlist Optional. List of allowed dependency handles.
 	 */
-	private function maybe_output_preload_link_tag( $dependency, $type, $allowlist = array() ) {
+	private function maybe_output_preload_link_tag( $dependency, $type, $allowlist = [] ) {
 		if (
 			(
 				! empty( $allowlist ) &&
@@ -167,7 +167,7 @@ class WCAdminAssets {
 	 * @param string $type Dependency type - 'script' or 'style'.
 	 * @param array  $allowlist Optional. List of allowed dependency handles.
 	 */
-	private function output_header_preload_tags_for_type( $type, $allowlist = array() ) {
+	private function output_header_preload_tags_for_type( $type, $allowlist = [] ) {
 		if ( 'script' === $type ) {
 			$dependencies_of_type = wp_scripts();
 		} elseif ( 'style' === $type ) {
@@ -202,16 +202,16 @@ class WCAdminAssets {
 	 * See: https://macarthur.me/posts/preloading-javascript-in-wordpress
 	 */
 	private function output_header_preload_tags() {
-		$wc_admin_scripts = array(
+		$wc_admin_scripts = [
 			WC_ADMIN_APP,
 			'wc-components',
-		);
+		];
 
-		$wc_admin_styles = array(
+		$wc_admin_styles = [
 			WC_ADMIN_APP,
 			'wc-components',
 			'wc-material-icons',
-		);
+		];
 
 		// Preload styles.
 		$this->output_header_preload_tags_for_type( 'style', $wc_admin_styles );
@@ -248,7 +248,7 @@ class WCAdminAssets {
 		$js_file_version  = self::get_file_version( 'js' );
 		$css_file_version = self::get_file_version( 'css' );
 
-		$scripts = array(
+		$scripts = [
 			'wc-explat',
 			'wc-experimental',
 			'wc-customer-effort-score',
@@ -263,21 +263,21 @@ class WCAdminAssets {
 			'wc-store-data',
 			'wc-currency',
 			'wc-navigation',
-		);
+		];
 
-		$scripts_map = array(
+		$scripts_map = [
 			WC_ADMIN_APP    => 'app',
 			'wc-csv'        => 'csv-export',
 			'wc-store-data' => 'data',
-		);
+		];
 
-		$translated_scripts = array(
+		$translated_scripts = [
 			'wc-currency',
 			'wc-date',
 			'wc-components',
 			'wc-customer-effort-score',
 			WC_ADMIN_APP,
-		);
+		];
 
 		foreach ( $scripts as $script ) {
 			$script_path_name = isset( $scripts_map[ $script ] ) ? $scripts_map[ $script ] : str_replace( 'wc-', '', $script );
@@ -306,7 +306,7 @@ class WCAdminAssets {
 		wp_register_style(
 			'wc-components',
 			self::get_url( 'components/style', 'css' ),
-			array(),
+			[],
 			$css_file_version
 		);
 		wp_style_add_data( 'wc-components', 'rtl', 'replace' );
@@ -314,7 +314,7 @@ class WCAdminAssets {
 		wp_register_style(
 			'wc-customer-effort-score',
 			self::get_url( 'customer-effort-score/style', 'css' ),
-			array(),
+			[],
 			$css_file_version
 		);
 		wp_style_add_data( 'wc-customer-effort-score', 'rtl', 'replace' );
@@ -322,7 +322,7 @@ class WCAdminAssets {
 		wp_register_style(
 			'wc-experimental',
 			self::get_url( 'experimental/style', 'css' ),
-			array(),
+			[],
 			$css_file_version
 		);
 		wp_style_add_data( 'wc-experimental', 'rtl', 'replace' );
@@ -330,16 +330,16 @@ class WCAdminAssets {
 		wp_localize_script(
 			WC_ADMIN_APP,
 			'wcAdminAssets',
-			array(
+			[
 				'path'    => plugins_url( self::get_path( 'js' ), WC_ADMIN_PLUGIN_FILE ),
 				'version' => $js_file_version,
-			)
+			]
 		);
 
 		wp_register_style(
 			WC_ADMIN_APP,
 			self::get_url( 'app/style', 'css' ),
-			array( 'wc-components', 'wc-customer-effort-score', 'wp-components', 'wc-experimental' ),
+			[ 'wc-components', 'wc-customer-effort-score', 'wp-components', 'wc-experimental' ],
 			$css_file_version
 		);
 		wp_style_add_data( WC_ADMIN_APP, 'rtl', 'replace' );
@@ -347,7 +347,7 @@ class WCAdminAssets {
 		wp_register_style(
 			'wc-onboarding',
 			self::get_url( 'onboarding/style', 'css' ),
-			array(),
+			[],
 			$css_file_version
 		);
 		wp_style_add_data( 'wc-onboarding', 'rtl', 'replace' );

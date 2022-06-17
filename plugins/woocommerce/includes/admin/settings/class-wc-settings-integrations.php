@@ -37,7 +37,7 @@ if ( ! class_exists( 'WC_Settings_Integrations', false ) ) :
 		protected function get_own_sections() {
 			global $current_section;
 
-			$sections = array();
+			$sections = [];
 
 			if ( ! $this->wc_is_installing() ) {
 				$integrations = $this->get_integrations();

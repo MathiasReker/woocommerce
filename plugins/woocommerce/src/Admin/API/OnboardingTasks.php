@@ -41,11 +41,11 @@ class OnboardingTasks extends \WC_REST_Data_Controller {
 	 *
 	 * @var string
 	 */
-	protected $duration_to_ms = array(
+	protected $duration_to_ms = [
 		'day'  => DAY_IN_SECONDS * 1000,
 		'hour' => HOUR_IN_SECONDS * 1000,
 		'week' => WEEK_IN_SECONDS * 1000,
-	);
+	];
 
 	/**
 	 * Register routes.
@@ -54,185 +54,185 @@ class OnboardingTasks extends \WC_REST_Data_Controller {
 		register_rest_route(
 			$this->namespace,
 			'/' . $this->rest_base . '/import_sample_products',
-			array(
-				array(
+			[
+				[
 					'methods'             => \WP_REST_Server::CREATABLE,
-					'callback'            => array( $this, 'import_sample_products' ),
-					'permission_callback' => array( $this, 'create_products_permission_check' ),
-				),
-				'schema' => array( $this, 'get_public_item_schema' ),
-			)
+					'callback'            => [ $this, 'import_sample_products' ],
+					'permission_callback' => [ $this, 'create_products_permission_check' ],
+				],
+				'schema' => [ $this, 'get_public_item_schema' ],
+			]
 		);
 
 		register_rest_route(
 			$this->namespace,
 			'/' . $this->rest_base . '/create_homepage',
-			array(
-				array(
+			[
+				[
 					'methods'             => \WP_REST_Server::CREATABLE,
-					'callback'            => array( $this, 'create_homepage' ),
-					'permission_callback' => array( $this, 'create_pages_permission_check' ),
-				),
-				'schema' => array( $this, 'get_public_item_schema' ),
-			)
+					'callback'            => [ $this, 'create_homepage' ],
+					'permission_callback' => [ $this, 'create_pages_permission_check' ],
+				],
+				'schema' => [ $this, 'get_public_item_schema' ],
+			]
 		);
 
 		register_rest_route(
 			$this->namespace,
 			'/' . $this->rest_base . '/create_product_from_template',
-			array(
-				array(
+			[
+				[
 					'methods'             => \WP_REST_Server::CREATABLE,
-					'callback'            => array( $this, 'create_product_from_template' ),
-					'permission_callback' => array( $this, 'create_products_permission_check' ),
+					'callback'            => [ $this, 'create_product_from_template' ],
+					'permission_callback' => [ $this, 'create_products_permission_check' ],
 					'args'                => array_merge(
 						$this->get_endpoint_args_for_item_schema( \WP_REST_Server::CREATABLE ),
-						array(
-							'template_name' => array(
+						[
+							'template_name' => [
 								'required'    => true,
 								'type'        => 'string',
 								'description' => __( 'Product template name.', 'woocommerce' ),
-							),
-						)
+							],
+						]
 					),
-				),
-				'schema' => array( $this, 'get_public_item_schema' ),
-			)
+				],
+				'schema' => [ $this, 'get_public_item_schema' ],
+			]
 		);
 
 		register_rest_route(
 			$this->namespace,
 			'/' . $this->rest_base,
-			array(
-				array(
+			[
+				[
 					'methods'             => \WP_REST_Server::READABLE,
-					'callback'            => array( $this, 'get_tasks' ),
-					'permission_callback' => array( $this, 'get_tasks_permission_check' ),
-					'args'                => array(
-						'ids' => array(
+					'callback'            => [ $this, 'get_tasks' ],
+					'permission_callback' => [ $this, 'get_tasks_permission_check' ],
+					'args'                => [
+						'ids' => [
 							'description'       => __( 'Optional parameter to get only specific task lists by id.', 'woocommerce' ),
 							'type'              => 'array',
 							'sanitize_callback' => 'wp_parse_slug_list',
 							'validate_callback' => 'rest_validate_request_arg',
-							'items'             => array(
+							'items'             => [
 								'enum' => TaskLists::get_list_ids(),
 								'type' => 'string',
-							),
-						),
-					),
-				),
-				array(
+							],
+						],
+					],
+				],
+				[
 					'methods'             => \WP_REST_Server::CREATABLE,
-					'callback'            => array( $this, 'get_tasks' ),
-					'permission_callback' => array( $this, 'get_tasks_permission_check' ),
+					'callback'            => [ $this, 'get_tasks' ],
+					'permission_callback' => [ $this, 'get_tasks_permission_check' ],
 					'args'                => $this->get_task_list_params(),
-				),
-				'schema' => array( $this, 'get_public_item_schema' ),
-			)
+				],
+				'schema' => [ $this, 'get_public_item_schema' ],
+			]
 		);
 
 		register_rest_route(
 			$this->namespace,
 			'/' . $this->rest_base . '/(?P<id>[a-z0-9_\-]+)/hide',
-			array(
-				array(
+			[
+				[
 					'methods'             => \WP_REST_Server::EDITABLE,
-					'callback'            => array( $this, 'hide_task_list' ),
-					'permission_callback' => array( $this, 'hide_task_list_permission_check' ),
-				),
-				'schema' => array( $this, 'get_public_item_schema' ),
-			)
+					'callback'            => [ $this, 'hide_task_list' ],
+					'permission_callback' => [ $this, 'hide_task_list_permission_check' ],
+				],
+				'schema' => [ $this, 'get_public_item_schema' ],
+			]
 		);
 
 		register_rest_route(
 			$this->namespace,
 			'/' . $this->rest_base . '/(?P<id>[a-z0-9_\-]+)/unhide',
-			array(
-				array(
+			[
+				[
 					'methods'             => \WP_REST_Server::EDITABLE,
-					'callback'            => array( $this, 'unhide_task_list' ),
-					'permission_callback' => array( $this, 'hide_task_list_permission_check' ),
-				),
-				'schema' => array( $this, 'get_public_item_schema' ),
-			)
+					'callback'            => [ $this, 'unhide_task_list' ],
+					'permission_callback' => [ $this, 'hide_task_list_permission_check' ],
+				],
+				'schema' => [ $this, 'get_public_item_schema' ],
+			]
 		);
 
 		register_rest_route(
 			$this->namespace,
 			'/' . $this->rest_base . '/(?P<id>[a-z0-9_\-]+)/dismiss',
-			array(
-				array(
+			[
+				[
 					'methods'             => \WP_REST_Server::EDITABLE,
-					'callback'            => array( $this, 'dismiss_task' ),
-					'permission_callback' => array( $this, 'get_tasks_permission_check' ),
-				),
-				'schema' => array( $this, 'get_public_item_schema' ),
-			)
+					'callback'            => [ $this, 'dismiss_task' ],
+					'permission_callback' => [ $this, 'get_tasks_permission_check' ],
+				],
+				'schema' => [ $this, 'get_public_item_schema' ],
+			]
 		);
 
 		register_rest_route(
 			$this->namespace,
 			'/' . $this->rest_base . '/(?P<id>[a-z0-9_\-]+)/undo_dismiss',
-			array(
-				array(
+			[
+				[
 					'methods'             => \WP_REST_Server::EDITABLE,
-					'callback'            => array( $this, 'undo_dismiss_task' ),
-					'permission_callback' => array( $this, 'get_tasks_permission_check' ),
-				),
-				'schema' => array( $this, 'get_public_item_schema' ),
-			)
+					'callback'            => [ $this, 'undo_dismiss_task' ],
+					'permission_callback' => [ $this, 'get_tasks_permission_check' ],
+				],
+				'schema' => [ $this, 'get_public_item_schema' ],
+			]
 		);
 
 		register_rest_route(
 			$this->namespace,
 			'/' . $this->rest_base . '/(?P<id>[a-z0-9_-]+)/snooze',
-			array(
-				'args'   => array(
-					'duration'     => array(
+			[
+				'args'   => [
+					'duration'     => [
 						'description'       => __( 'Time period to snooze the task.', 'woocommerce' ),
 						'type'              => 'string',
 						'validate_callback' => function( $param, $request, $key ) {
 							return in_array( $param, array_keys( $this->duration_to_ms ), true );
 						},
-					),
-					'task_list_id' => array(
+					],
+					'task_list_id' => [
 						'description' => __( 'Optional parameter to query specific task list.', 'woocommerce' ),
 						'type'        => 'string',
-					),
-				),
-				array(
+					],
+				],
+				[
 					'methods'             => \WP_REST_Server::CREATABLE,
-					'callback'            => array( $this, 'snooze_task' ),
-					'permission_callback' => array( $this, 'snooze_task_permissions_check' ),
-				),
-				'schema' => array( $this, 'get_public_item_schema' ),
-			)
+					'callback'            => [ $this, 'snooze_task' ],
+					'permission_callback' => [ $this, 'snooze_task_permissions_check' ],
+				],
+				'schema' => [ $this, 'get_public_item_schema' ],
+			]
 		);
 
 		register_rest_route(
 			$this->namespace,
 			'/' . $this->rest_base . '/(?P<id>[a-z0-9_\-]+)/action',
-			array(
-				array(
+			[
+				[
 					'methods'             => \WP_REST_Server::EDITABLE,
-					'callback'            => array( $this, 'action_task' ),
-					'permission_callback' => array( $this, 'get_tasks_permission_check' ),
-				),
-				'schema' => array( $this, 'get_public_item_schema' ),
-			)
+					'callback'            => [ $this, 'action_task' ],
+					'permission_callback' => [ $this, 'get_tasks_permission_check' ],
+				],
+				'schema' => [ $this, 'get_public_item_schema' ],
+			]
 		);
 
 		register_rest_route(
 			$this->namespace,
 			'/' . $this->rest_base . '/(?P<id>[a-z0-9_\-]+)/undo_snooze',
-			array(
-				array(
+			[
+				[
 					'methods'             => \WP_REST_Server::EDITABLE,
-					'callback'            => array( $this, 'undo_snooze_task' ),
-					'permission_callback' => array( $this, 'snooze_task_permissions_check' ),
-				),
-				'schema' => array( $this, 'get_public_item_schema' ),
-			)
+					'callback'            => [ $this, 'undo_snooze_task' ],
+					'permission_callback' => [ $this, 'snooze_task_permissions_check' ],
+				],
+				'schema' => [ $this, 'get_public_item_schema' ],
+			]
 		);
 	}
 
@@ -244,7 +244,7 @@ class OnboardingTasks extends \WC_REST_Data_Controller {
 	 */
 	public function create_products_permission_check( $request ) {
 		if ( ! wc_rest_check_post_permissions( 'product', 'create' ) ) {
-			return new \WP_Error( 'woocommerce_rest_cannot_create', __( 'Sorry, you are not allowed to create resources.', 'woocommerce' ), array( 'status' => rest_authorization_required_code() ) );
+			return new \WP_Error( 'woocommerce_rest_cannot_create', __( 'Sorry, you are not allowed to create resources.', 'woocommerce' ), [ 'status' => rest_authorization_required_code() ] );
 		}
 
 		return true;
@@ -258,7 +258,7 @@ class OnboardingTasks extends \WC_REST_Data_Controller {
 	 */
 	public function create_pages_permission_check( $request ) {
 		if ( ! wc_rest_check_post_permissions( 'page', 'create' ) || ! current_user_can( 'manage_options' ) ) {
-			return new \WP_Error( 'woocommerce_rest_cannot_create', __( 'Sorry, you are not allowed to create new pages.', 'woocommerce' ), array( 'status' => rest_authorization_required_code() ) );
+			return new \WP_Error( 'woocommerce_rest_cannot_create', __( 'Sorry, you are not allowed to create new pages.', 'woocommerce' ), [ 'status' => rest_authorization_required_code() ] );
 		}
 
 		return true;
@@ -272,7 +272,7 @@ class OnboardingTasks extends \WC_REST_Data_Controller {
 	 */
 	public function get_tasks_permission_check( $request ) {
 		if ( ! current_user_can( 'manage_woocommerce' ) ) {
-			return new \WP_Error( 'woocommerce_rest_cannot_create', __( 'Sorry, you are not allowed to retrieve onboarding tasks.', 'woocommerce' ), array( 'status' => rest_authorization_required_code() ) );
+			return new \WP_Error( 'woocommerce_rest_cannot_create', __( 'Sorry, you are not allowed to retrieve onboarding tasks.', 'woocommerce' ), [ 'status' => rest_authorization_required_code() ] );
 		}
 
 		return true;
@@ -286,7 +286,7 @@ class OnboardingTasks extends \WC_REST_Data_Controller {
 	 */
 	public function hide_task_list_permission_check( $request ) {
 		if ( ! current_user_can( 'manage_woocommerce' ) ) {
-			return new \WP_Error( 'woocommerce_rest_cannot_update', __( 'Sorry, you are not allowed to hide task lists.', 'woocommerce' ), array( 'status' => rest_authorization_required_code() ) );
+			return new \WP_Error( 'woocommerce_rest_cannot_update', __( 'Sorry, you are not allowed to hide task lists.', 'woocommerce' ), [ 'status' => rest_authorization_required_code() ] );
 		}
 
 		return true;
@@ -300,7 +300,7 @@ class OnboardingTasks extends \WC_REST_Data_Controller {
 	 */
 	public function snooze_task_permissions_check( $request ) {
 		if ( ! current_user_can( 'manage_woocommerce' ) ) {
-			return new \WP_Error( 'woocommerce_rest_cannot_create', __( 'Sorry, you are not allowed to snooze onboarding tasks.', 'woocommerce' ), array( 'status' => rest_authorization_required_code() ) );
+			return new \WP_Error( 'woocommerce_rest_cannot_create', __( 'Sorry, you are not allowed to snooze onboarding tasks.', 'woocommerce' ), [ 'status' => rest_authorization_required_code() ] );
 		}
 
 		return true;
@@ -319,10 +319,10 @@ class OnboardingTasks extends \WC_REST_Data_Controller {
 			// Override locale so we can return mappings from WooCommerce in English language stores.
 			add_filter( 'locale', '__return_false', 9999 );
 			$importer_class = apply_filters( 'woocommerce_product_csv_importer_class', 'WC_Product_CSV_Importer' );
-			$args           = array(
+			$args           = [
 				'parse'   => true,
 				'mapping' => self::get_header_mappings( $csv_file ),
-			);
+			];
 			$args           = apply_filters( 'woocommerce_product_csv_importer_args', $args, $importer_class );
 
 			$importer = new $importer_class( $csv_file, $args );
@@ -391,7 +391,7 @@ class OnboardingTasks extends \WC_REST_Data_Controller {
 				'woocommerce_rest_product_creation_error',
 				/* translators: %s is template name */
 				__( 'Sorry, creating the product with template failed.', 'woocommerce' ),
-				array( 'status' => 500 )
+				[ 'status' => 500 ]
 			);
 		}
 		$product = wc_get_product( $import['imported'][0] );
@@ -399,9 +399,9 @@ class OnboardingTasks extends \WC_REST_Data_Controller {
 		$product->save();
 
 		return rest_ensure_response(
-			array(
+			[
 				'id' => $product->get_id(),
-			)
+			]
 		);
 	}
 
@@ -417,12 +417,12 @@ class OnboardingTasks extends \WC_REST_Data_Controller {
 		include_once WC_ABSPATH . 'includes/admin/importers/mappings/mappings.php';
 
 		$importer_class  = apply_filters( 'woocommerce_product_csv_importer_class', 'WC_Product_CSV_Importer' );
-		$importer        = new $importer_class( $file, array() );
+		$importer        = new $importer_class( $file, [] );
 		$raw_headers     = $importer->get_raw_keys();
-		$default_columns = wc_importer_default_english_mappings( array() );
-		$special_columns = wc_importer_default_special_english_mappings( array() );
+		$default_columns = wc_importer_default_english_mappings( [] );
+		$special_columns = wc_importer_default_special_english_mappings( [] );
 
-		$headers = array();
+		$headers = [];
 		foreach ( $raw_headers as $key => $field ) {
 			$index             = $field;
 			$headers[ $index ] = $field;
@@ -450,7 +450,7 @@ class OnboardingTasks extends \WC_REST_Data_Controller {
 	 * @return string
 	 */
 	public static function sanitize_special_column_name_regex( $value ) {
-		return '/' . str_replace( array( '%d', '%s' ), '(.*)', trim( quotemeta( $value ) ) ) . '/';
+		return '/' . str_replace( [ '%d', '%s' ], '(.*)', trim( quotemeta( $value ) ) ) . '/';
 	}
 
 	/**
@@ -593,7 +593,7 @@ class OnboardingTasks extends \WC_REST_Data_Controller {
 	 * @return array An array of images by industry.
 	 */
 	private static function get_available_homepage_images() {
-		$industry_images = array();
+		$industry_images = [];
 		$industries      = OnboardingIndustries::get_allowed_industries();
 		foreach ( $industries as $industry_slug => $label ) {
 			$industry_images[ $industry_slug ] = apply_filters( 'woocommerce_admin_onboarding_industry_image', WC_ADMIN_IMAGES_FOLDER_URL . '/onboarding/other-small.jpg', $industry_slug );
@@ -610,8 +610,8 @@ class OnboardingTasks extends \WC_REST_Data_Controller {
 	 * @return array An array of images that have been attached to the post.
 	 */
 	private static function sideload_homepage_images( $post_id, $number_of_images ) {
-		$profile            = get_option( OnboardingProfile::DATA_OPTION, array() );
-		$images_to_sideload = array();
+		$profile            = get_option( OnboardingProfile::DATA_OPTION, [] );
+		$images_to_sideload = [];
 		$available_images   = self::get_available_homepage_images();
 
 		require_once ABSPATH . 'wp-admin/includes/image.php';
@@ -642,8 +642,8 @@ class OnboardingTasks extends \WC_REST_Data_Controller {
 			}
 		}
 
-		$already_sideloaded = array();
-		$images_for_post    = array();
+		$already_sideloaded = [];
+		$images_for_post    = [];
 		foreach ( $images_to_sideload as $image ) {
 			// Avoid uploading two of the same image, if an image is repeated.
 			if ( ! empty( $already_sideloaded[ $image ] ) ) {
@@ -654,10 +654,10 @@ class OnboardingTasks extends \WC_REST_Data_Controller {
 			$sideload_id = \media_sideload_image( $image, $post_id, null, 'id' );
 			if ( ! is_wp_error( $sideload_id ) ) {
 				$sideload_url                 = wp_get_attachment_url( $sideload_id );
-				$already_sideloaded[ $image ] = array(
+				$already_sideloaded[ $image ] = [
 					'id'  => $sideload_id,
 					'url' => $sideload_url,
-				);
+				];
 				$images_for_post[]            = $already_sideloaded[ $image ];
 			}
 		}
@@ -672,22 +672,22 @@ class OnboardingTasks extends \WC_REST_Data_Controller {
 	 */
 	public static function create_homepage() {
 		$post_id = wp_insert_post(
-			array(
+			[
 				'post_title'   => __( 'Homepage', 'woocommerce' ),
 				'post_type'    => 'page',
 				'post_status'  => 'publish',
 				'post_content' => '', // Template content is updated below, so images can be attached to the post.
-			)
+			]
 		);
 
 		if ( ! is_wp_error( $post_id ) && 0 < $post_id ) {
 
 			$template = self::get_homepage_template( $post_id );
 			wp_update_post(
-				array(
+				[
 					'ID'           => $post_id,
 					'post_content' => $template,
-				)
+				]
 			);
 
 			update_option( 'show_on_front', 'page' );
@@ -699,12 +699,12 @@ class OnboardingTasks extends \WC_REST_Data_Controller {
 				update_post_meta( $post_id, '_wp_page_template', 'template-fullwidth.php' );
 			}
 
-			return array(
+			return [
 				'status'         => 'success',
 				'message'        => __( 'Homepage created', 'woocommerce' ),
 				'post_id'        => $post_id,
 				'edit_post_link' => htmlspecialchars_decode( get_edit_post_link( $post_id ) ),
-			);
+			];
 		} else {
 			return $post_id;
 		}
@@ -716,18 +716,18 @@ class OnboardingTasks extends \WC_REST_Data_Controller {
 	 * @return array
 	 */
 	public function get_task_list_params() {
-		$params                   = array();
-		$params['ids']            = array(
+		$params                   = [];
+		$params['ids']            = [
 			'description'       => __( 'Optional parameter to get only specific task lists by id.', 'woocommerce' ),
 			'type'              => 'array',
 			'sanitize_callback' => 'wp_parse_slug_list',
 			'validate_callback' => 'rest_validate_request_arg',
-			'items'             => array(
+			'items'             => [
 				'enum' => TaskLists::get_list_ids(),
 				'type' => 'string',
-			),
-		);
-		$params['extended_tasks'] = array(
+			],
+		];
+		$params['extended_tasks'] = [
 			'description'       => __( 'List of extended deprecated tasks from the client side filter.', 'woocommerce' ),
 			'type'              => 'array',
 			'validate_callback' => function( $param, $request, $key ) {
@@ -739,7 +739,7 @@ class OnboardingTasks extends \WC_REST_Data_Controller {
 				}
 				return $has_valid_keys;
 			},
-		);
+		];
 		return $params;
 	}
 
@@ -779,10 +779,10 @@ class OnboardingTasks extends \WC_REST_Data_Controller {
 
 		if ( ! $task && $id ) {
 			$task = new DeprecatedExtendedTask(
-				array(
+				[
 					'id'             => $id,
 					'is_dismissable' => true,
-				)
+				]
 			);
 		}
 
@@ -790,9 +790,9 @@ class OnboardingTasks extends \WC_REST_Data_Controller {
 			return new \WP_Error(
 				'woocommerce_rest_invalid_task',
 				__( 'Sorry, no dismissable task with that ID was found.', 'woocommerce' ),
-				array(
+				[
 					'status' => 404,
-				)
+				]
 			);
 		}
 
@@ -812,10 +812,10 @@ class OnboardingTasks extends \WC_REST_Data_Controller {
 
 		if ( ! $task && $id ) {
 			$task = new DeprecatedExtendedTask(
-				array(
+				[
 					'id'             => $id,
 					'is_dismissable' => true,
-				)
+				]
 			);
 		}
 
@@ -823,9 +823,9 @@ class OnboardingTasks extends \WC_REST_Data_Controller {
 			return new \WP_Error(
 				'woocommerce_rest_invalid_task',
 				__( 'Sorry, no dismissable task with that ID was found.', 'woocommerce' ),
-				array(
+				[
 					'status' => 404,
-				)
+				]
 			);
 		}
 
@@ -850,10 +850,10 @@ class OnboardingTasks extends \WC_REST_Data_Controller {
 
 		if ( ! $task && $task_id ) {
 			$task = new DeprecatedExtendedTask(
-				array(
+				[
 					'id'            => $task_id,
 					'is_snoozeable' => true,
-				)
+				]
 			);
 		}
 
@@ -861,9 +861,9 @@ class OnboardingTasks extends \WC_REST_Data_Controller {
 			return new \WP_Error(
 				'woocommerce_rest_invalid_task',
 				__( 'Sorry, no snoozeable task with that ID was found.', 'woocommerce' ),
-				array(
+				[
 					'status' => 404,
-				)
+				]
 			);
 		}
 
@@ -883,10 +883,10 @@ class OnboardingTasks extends \WC_REST_Data_Controller {
 
 		if ( ! $task && $id ) {
 			$task = new DeprecatedExtendedTask(
-				array(
+				[
 					'id'            => $id,
 					'is_snoozeable' => true,
-				)
+				]
 			);
 		}
 
@@ -894,9 +894,9 @@ class OnboardingTasks extends \WC_REST_Data_Controller {
 			return new \WP_Error(
 				'woocommerce_rest_invalid_task',
 				__( 'Sorry, no snoozeable task with that ID was found.', 'woocommerce' ),
-				array(
+				[
 					'status' => 404,
-				)
+				]
 			);
 		}
 
@@ -919,9 +919,9 @@ class OnboardingTasks extends \WC_REST_Data_Controller {
 			return new \WP_Error(
 				'woocommerce_rest_invalid_task_list',
 				__( 'Sorry, that task list was not found', 'woocommerce' ),
-				array(
+				[
 					'status' => 404,
-				)
+				]
 			);
 		}
 
@@ -946,9 +946,9 @@ class OnboardingTasks extends \WC_REST_Data_Controller {
 			return new \WP_Error(
 				'woocommerce_tasks_invalid_task_list',
 				__( 'Sorry, that task list was not found', 'woocommerce' ),
-				array(
+				[
 					'status' => 404,
-				)
+				]
 			);
 		}
 
@@ -970,9 +970,9 @@ class OnboardingTasks extends \WC_REST_Data_Controller {
 
 		if ( ! $task && $id ) {
 			$task = new DeprecatedExtendedTask(
-				array(
+				[
 					'id' => $id,
-				)
+				]
 			);
 		}
 
@@ -980,9 +980,9 @@ class OnboardingTasks extends \WC_REST_Data_Controller {
 			return new \WP_Error(
 				'woocommerce_rest_invalid_task',
 				__( 'Sorry, no task with that ID was found.', 'woocommerce' ),
-				array(
+				[
 					'status' => 404,
-				)
+				]
 			);
 		}
 

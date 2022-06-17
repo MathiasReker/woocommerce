@@ -66,7 +66,7 @@ if ( ! class_exists( 'WC_Email_Customer_Reset_Password', false ) ) :
 			$this->template_plain = 'emails/plain/customer-reset-password.php';
 
 			// Trigger.
-			add_action( 'woocommerce_reset_password_notification', array( $this, 'trigger' ), 10, 2 );
+			add_action( 'woocommerce_reset_password_notification', [ $this, 'trigger' ], 10, 2 );
 
 			// Call parent constructor.
 			parent::__construct();
@@ -125,7 +125,7 @@ if ( ! class_exists( 'WC_Email_Customer_Reset_Password', false ) ) :
 		public function get_content_html() {
 			return wc_get_template_html(
 				$this->template_html,
-				array(
+				[
 					'email_heading'      => $this->get_heading(),
 					'user_id'            => $this->user_id,
 					'user_login'         => $this->user_login,
@@ -135,7 +135,7 @@ if ( ! class_exists( 'WC_Email_Customer_Reset_Password', false ) ) :
 					'sent_to_admin'      => false,
 					'plain_text'         => false,
 					'email'              => $this,
-				)
+				]
 			);
 		}
 
@@ -147,7 +147,7 @@ if ( ! class_exists( 'WC_Email_Customer_Reset_Password', false ) ) :
 		public function get_content_plain() {
 			return wc_get_template_html(
 				$this->template_plain,
-				array(
+				[
 					'email_heading'      => $this->get_heading(),
 					'user_id'            => $this->user_id,
 					'user_login'         => $this->user_login,
@@ -157,7 +157,7 @@ if ( ! class_exists( 'WC_Email_Customer_Reset_Password', false ) ) :
 					'sent_to_admin'      => false,
 					'plain_text'         => true,
 					'email'              => $this,
-				)
+				]
 			);
 		}
 

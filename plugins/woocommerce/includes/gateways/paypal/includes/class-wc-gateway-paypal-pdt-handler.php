@@ -39,7 +39,7 @@ class WC_Gateway_Paypal_PDT_Handler extends WC_Gateway_Paypal_Response {
 	 * @param string $identity_token Identity token for PDT support.
 	 */
 	public function __construct( $sandbox = false, $identity_token = '' ) {
-		add_action( 'woocommerce_thankyou_paypal', array( $this, 'check_response_for_order' ) );
+		add_action( 'woocommerce_thankyou_paypal', [ $this, 'check_response_for_order' ] );
 		$this->identity_token = $identity_token;
 		$this->sandbox        = $sandbox;
 	}
@@ -60,16 +60,16 @@ class WC_Gateway_Paypal_PDT_Handler extends WC_Gateway_Paypal_Response {
 	 * @return bool|array False or result array if successful and valid.
 	 */
 	protected function validate_transaction( $transaction ) {
-		$pdt = array(
-			'body'        => array(
+		$pdt = [
+			'body'        => [
 				'cmd' => '_notify-synch',
 				'tx'  => $transaction,
 				'at'  => $this->identity_token,
-			),
+			],
 			'timeout'     => 60,
 			'httpversion' => '1.1',
 			'user-agent'  => 'WooCommerce/' . Constants::get_constant( 'WC_VERSION' ),
-		);
+		];
 
 		// Post back to get a response.
 		$response = wp_safe_remote_post( $this->sandbox ? 'https://www.sandbox.paypal.com/cgi-bin/webscr' : 'https://www.paypal.com/cgi-bin/webscr', $pdt );
@@ -80,7 +80,7 @@ class WC_Gateway_Paypal_PDT_Handler extends WC_Gateway_Paypal_Response {
 
 		// Parse transaction result data.
 		$transaction_result  = array_map( 'wc_clean', array_map( 'urldecode', explode( "\n", $response['body'] ) ) );
-		$transaction_results = array();
+		$transaction_results = [];
 
 		foreach ( $transaction_result as $line ) {
 			$line                            = explode( '=', $line );

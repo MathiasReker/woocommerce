@@ -24,9 +24,9 @@ class WC_Admin_Tests_API_Variations extends WC_REST_Unit_Test_Case {
 		parent::setUp();
 
 		$this->user = $this->factory->user->create(
-			array(
+			[
 				'role' => 'administrator',
-			)
+			]
 		);
 	}
 
@@ -47,12 +47,12 @@ class WC_Admin_Tests_API_Variations extends WC_REST_Unit_Test_Case {
 		// NOTE: WC_Helper_Product::create_product_variation_object() is only available for WC 4.4+.
 		$variation_2 = new WC_Product_Variation();
 		$variation_2->set_props(
-			array(
+			[
 				'parent_id'     => $product->get_id(),
 				'regular_price' => 23,
-			)
+			]
 		);
-		$variation_2->set_attributes( array( 'flavor' => 'banana' ) );
+		$variation_2->set_attributes( [ 'flavor' => 'banana' ] );
 		$variation_2->save();
 
 		// Test searching for the "global" size attribute.

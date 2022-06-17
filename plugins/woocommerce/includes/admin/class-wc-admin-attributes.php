@@ -71,13 +71,13 @@ class WC_Admin_Attributes {
 	 * @return array
 	 */
 	private static function get_posted_attribute() {
-		$attribute = array(
+		$attribute = [
 			'attribute_label'   => isset( $_POST['attribute_label'] ) ? wc_clean( wp_unslash( $_POST['attribute_label'] ) ) : '', // WPCS: input var ok, CSRF ok.
 			'attribute_name'    => isset( $_POST['attribute_name'] ) ? wc_sanitize_taxonomy_name( wp_unslash( $_POST['attribute_name'] ) ) : '', // WPCS: input var ok, CSRF ok, sanitization ok.
 			'attribute_type'    => isset( $_POST['attribute_type'] ) ? wc_clean( wp_unslash( $_POST['attribute_type'] ) ) : 'select', // WPCS: input var ok, CSRF ok.
 			'attribute_orderby' => isset( $_POST['attribute_orderby'] ) ? wc_clean( wp_unslash( $_POST['attribute_orderby'] ) ) : '', // WPCS: input var ok, CSRF ok.
 			'attribute_public'  => isset( $_POST['attribute_public'] ) ? 1 : 0, // WPCS: input var ok, CSRF ok.
-		);
+		];
 
 		if ( empty( $attribute['attribute_type'] ) ) {
 			$attribute['attribute_type'] = 'select';
@@ -101,13 +101,13 @@ class WC_Admin_Attributes {
 		check_admin_referer( 'woocommerce-add-new_attribute' );
 
 		$attribute = self::get_posted_attribute();
-		$args      = array(
+		$args      = [
 			'name'         => $attribute['attribute_label'],
 			'slug'         => $attribute['attribute_name'],
 			'type'         => $attribute['attribute_type'],
 			'order_by'     => $attribute['attribute_orderby'],
 			'has_archives' => $attribute['attribute_public'],
-		);
+		];
 
 		$id = wc_create_attribute( $args );
 
@@ -128,13 +128,13 @@ class WC_Admin_Attributes {
 		check_admin_referer( 'woocommerce-save-attribute_' . $attribute_id );
 
 		$attribute = self::get_posted_attribute();
-		$args      = array(
+		$args      = [
 			'name'         => $attribute['attribute_label'],
 			'slug'         => $attribute['attribute_name'],
 			'type'         => $attribute['attribute_type'],
 			'order_by'     => $attribute['attribute_orderby'],
 			'has_archives' => $attribute['attribute_public'],
-		);
+		];
 
 		$id = wc_update_attribute( $attribute_id, $args );
 

@@ -25,22 +25,22 @@ class Features {
 	 *
 	 * @var array
 	 */
-	protected static $optional_features = array(
-		'navigation'                 => array( 'default' => 'no' ),
-		'settings'                   => array( 'default' => 'no' ),
-		'analytics'                  => array( 'default' => 'yes' ),
-		'remote-inbox-notifications' => array( 'default' => 'yes' ),
-	);
+	protected static $optional_features = [
+		'navigation'                 => [ 'default' => 'no' ],
+		'settings'                   => [ 'default' => 'no' ],
+		'analytics'                  => [ 'default' => 'yes' ],
+		'remote-inbox-notifications' => [ 'default' => 'yes' ],
+	];
 
 	/**
 	 * Beta features
 	 *
 	 * @var array
 	 */
-	protected static $beta_features = array(
+	protected static $beta_features = [
 		'navigation',
 		'settings',
-	);
+	];
 
 	/**
 	 * Get class instance.
@@ -58,13 +58,13 @@ class Features {
 	public function __construct() {
 		$this->register_internal_class_aliases();
 		// Load feature before WooCommerce update hooks.
-		add_action( 'init', array( __CLASS__, 'load_features' ), 4 );
-		add_filter( 'woocommerce_get_sections_advanced', array( __CLASS__, 'add_features_section' ) );
-		add_filter( 'woocommerce_get_settings_advanced', array( __CLASS__, 'add_features_settings' ), 10, 2 );
-		add_action( 'admin_enqueue_scripts', array( __CLASS__, 'maybe_load_beta_features_modal' ) );
-		add_action( 'admin_enqueue_scripts', array( __CLASS__, 'load_scripts' ), 15 );
-		add_filter( 'admin_body_class', array( __CLASS__, 'add_admin_body_classes' ) );
-		add_filter( 'update_option_woocommerce_allow_tracking', array( __CLASS__, 'maybe_disable_features' ), 10, 2 );
+		add_action( 'init', [ __CLASS__, 'load_features' ], 4 );
+		add_filter( 'woocommerce_get_sections_advanced', [ __CLASS__, 'add_features_section' ] );
+		add_filter( 'woocommerce_get_settings_advanced', [ __CLASS__, 'add_features_settings' ], 10, 2 );
+		add_action( 'admin_enqueue_scripts', [ __CLASS__, 'maybe_load_beta_features_modal' ] );
+		add_action( 'admin_enqueue_scripts', [ __CLASS__, 'load_scripts' ], 15 );
+		add_filter( 'admin_body_class', [ __CLASS__, 'add_admin_body_classes' ] );
+		add_filter( 'update_option_woocommerce_allow_tracking', [ __CLASS__, 'maybe_disable_features' ], 10, 2 );
 	}
 
 	/**
@@ -73,7 +73,7 @@ class Features {
 	 * @return array Enabled Woocommerce Admin features/sections.
 	 */
 	public static function get_features() {
-		return apply_filters( 'woocommerce_admin_features', array() );
+		return apply_filters( 'woocommerce_admin_features', [] );
 	}
 
 	/**
@@ -254,7 +254,7 @@ class Features {
 	public static function add_features_section( $sections ) {
 		$features = apply_filters(
 			'woocommerce_settings_features',
-			array()
+			[]
 		);
 
 		if ( empty( $features ) ) {
@@ -279,7 +279,7 @@ class Features {
 
 		$features = apply_filters(
 			'woocommerce_settings_features',
-			array()
+			[]
 		);
 
 		$features_disabled = apply_filters( 'woocommerce_admin_disabled', false );
@@ -296,21 +296,21 @@ class Features {
 		}
 
 		return array_merge(
-			array(
-				array(
+			[
+				[
 					'title' => __( 'Features', 'woocommerce' ),
 					'type'  => 'title',
 					'desc'  => $features_disabled ? $disabled_desc : $desc,
 					'id'    => 'features_options',
-				),
-			),
-			$features_disabled ? array() : $features,
-			array(
-				array(
+				],
+			],
+			$features_disabled ? [] : $features,
+			[
+				[
 					'type' => 'sectionend',
 					'id'   => 'features_options',
-				),
-			)
+				],
+			]
 		);
 	}
 
@@ -342,14 +342,14 @@ class Features {
 		wp_enqueue_style(
 			'wc-admin-beta-features-tracking-modal',
 			WCAdminAssets::get_url( "beta-features-tracking-modal/style{$rtl}", 'css' ),
-			array( 'wp-components' ),
+			[ 'wp-components' ],
 			WCAdminAssets::get_file_version( 'css' )
 		);
 
 		wp_enqueue_script(
 			'wc-admin-beta-features-tracking-modal',
 			WCAdminAssets::get_url( 'wp-admin-scripts/beta-features-tracking-modal', 'js' ),
-			array( 'wp-i18n', 'wp-element', WC_ADMIN_APP ),
+			[ 'wp-i18n', 'wp-element', WC_ADMIN_APP ],
 			WCAdminAssets::get_file_version( 'js' ),
 			true
 		);
@@ -364,7 +364,7 @@ class Features {
 		}
 
 		$features         = self::get_features();
-		$enabled_features = array();
+		$enabled_features = [];
 		foreach ( $features as $key ) {
 			$enabled_features[ $key ] = self::is_enabled( $key );
 		}
@@ -400,7 +400,7 @@ class Features {
 	 * See https://wp.me/p90Yrv-2HY for details.
 	 */
 	private function register_internal_class_aliases() {
-		$aliases = array(
+		$aliases = [
 			// new class => original class (this will be aliased).
 			'Automattic\WooCommerce\Internal\Admin\WCPayPromotion\Init' => 'Automattic\WooCommerce\Admin\Features\WcPayPromotion\Init',
 			'Automattic\WooCommerce\Internal\Admin\RemoteFreeExtensions\Init' => 'Automattic\WooCommerce\Admin\Features\RemoteFreeExtensions\Init',
@@ -418,7 +418,7 @@ class Features {
 			'Automattic\WooCommerce\Internal\Admin\ShippingLabelBannerDisplayRules' => 'Automattic\WooCommerce\Admin\Features\ShippingLabelBannerDisplayRules',
 			'Automattic\WooCommerce\Internal\Admin\WcPayWelcomePage' => 'Automattic\WooCommerce\Admin\Features\WcPayWelcomePage',
 			'Automattic\WooCommerce\Internal\Admin\WcPaySubscriptionsPage' => 'Automattic\WooCommerce\Admin\Features\WcPaySubscriptionsPage',
-		);
+		];
 		foreach ( $aliases as $new_class => $orig_class ) {
 			class_alias( $new_class, $orig_class );
 		}

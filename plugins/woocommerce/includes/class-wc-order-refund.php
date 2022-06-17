@@ -33,12 +33,12 @@ class WC_Order_Refund extends WC_Abstract_Order {
 	 *
 	 * @var array
 	 */
-	protected $extra_data = array(
+	protected $extra_data = [
 		'amount'           => '',
 		'reason'           => '',
 		'refunded_by'      => 0,
 		'refunded_payment' => false,
-	);
+	];
 
 	/**
 	 * Get internal type (post type.)
@@ -118,7 +118,7 @@ class WC_Order_Refund extends WC_Abstract_Order {
 	 * @return string
 	 */
 	public function get_formatted_refund_amount() {
-		return apply_filters( 'woocommerce_formatted_refund_amount', wc_price( $this->get_amount(), array( 'currency' => $this->get_currency() ) ), $this );
+		return apply_filters( 'woocommerce_formatted_refund_amount', wc_price( $this->get_amount(), [ 'currency' => $this->get_currency() ] ), $this );
 	}
 
 	/**

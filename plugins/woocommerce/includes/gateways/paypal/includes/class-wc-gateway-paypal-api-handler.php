@@ -53,7 +53,7 @@ class WC_Gateway_Paypal_API_Handler {
 	 * @return array
 	 */
 	public static function get_capture_request( $order, $amount = null ) {
-		$request = array(
+		$request = [
 			'VERSION'         => '84.0',
 			'SIGNATURE'       => self::$api_signature,
 			'USER'            => self::$api_username,
@@ -63,7 +63,7 @@ class WC_Gateway_Paypal_API_Handler {
 			'AMT'             => number_format( is_null( $amount ) ? $order->get_total() : $amount, 2, '.', '' ),
 			'CURRENCYCODE'    => $order->get_currency(),
 			'COMPLETETYPE'    => 'Complete',
-		);
+		];
 		return apply_filters( 'woocommerce_paypal_capture_request', $request, $order, $amount );
 	}
 
@@ -76,7 +76,7 @@ class WC_Gateway_Paypal_API_Handler {
 	 * @return array
 	 */
 	public static function get_refund_request( $order, $amount = null, $reason = '' ) {
-		$request = array(
+		$request = [
 			'VERSION'       => '84.0',
 			'SIGNATURE'     => self::$api_signature,
 			'USER'          => self::$api_username,
@@ -85,7 +85,7 @@ class WC_Gateway_Paypal_API_Handler {
 			'TRANSACTIONID' => $order->get_transaction_id(),
 			'NOTE'          => html_entity_decode( wc_trim_string( $reason, 255 ), ENT_NOQUOTES, 'UTF-8' ),
 			'REFUNDTYPE'    => 'Full',
-		);
+		];
 		if ( ! is_null( $amount ) ) {
 			$request['AMT']          = number_format( $amount, 2, '.', '' );
 			$request['CURRENCYCODE'] = $order->get_currency();
@@ -104,13 +104,13 @@ class WC_Gateway_Paypal_API_Handler {
 	public static function do_capture( $order, $amount = null ) {
 		$raw_response = wp_safe_remote_post(
 			self::$sandbox ? 'https://api-3t.sandbox.paypal.com/nvp' : 'https://api-3t.paypal.com/nvp',
-			array(
+			[
 				'method'      => 'POST',
 				'body'        => self::get_capture_request( $order, $amount ),
 				'timeout'     => 70,
 				'user-agent'  => 'WooCommerce/' . WC()->version,
 				'httpversion' => '1.1',
-			)
+			]
 		);
 
 		WC_Gateway_Paypal::log( 'DoCapture Response: ' . wc_print_r( $raw_response, true ) );
@@ -137,13 +137,13 @@ class WC_Gateway_Paypal_API_Handler {
 	public static function refund_transaction( $order, $amount = null, $reason = '' ) {
 		$raw_response = wp_safe_remote_post(
 			self::$sandbox ? 'https://api-3t.sandbox.paypal.com/nvp' : 'https://api-3t.paypal.com/nvp',
-			array(
+			[
 				'method'      => 'POST',
 				'body'        => self::get_refund_request( $order, $amount, $reason ),
 				'timeout'     => 70,
 				'user-agent'  => 'WooCommerce/' . WC()->version,
 				'httpversion' => '1.1',
-			)
+			]
 		);
 
 		WC_Gateway_Paypal::log( 'Refund Response: ' . wc_print_r( $raw_response, true ) );

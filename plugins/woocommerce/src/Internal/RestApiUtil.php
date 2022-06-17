@@ -73,7 +73,7 @@ class RestApiUtil {
 		}
 
 		if ( empty( $request['line_items'] ) ) {
-			$request['line_items'] = array();
+			$request['line_items'] = [];
 		} else {
 			$request['line_items'] = self::adjust_line_items_for_create_refund_request( $request['line_items'] );
 		}
@@ -141,7 +141,7 @@ class RestApiUtil {
 			return $line_items;
 		}
 
-		$new_array = array();
+		$new_array = [];
 		foreach ( $line_items as $item ) {
 			if ( ! isset( $item['id'] ) ) {
 				return $line_items;
@@ -176,7 +176,7 @@ class RestApiUtil {
 			return $taxes_array;
 		}
 
-		$new_array = array();
+		$new_array = [];
 		foreach ( $taxes_array as $item ) {
 			if ( ! isset( $item['id'] ) || ! isset( $item['refund_total'] ) ) {
 				return $taxes_array;

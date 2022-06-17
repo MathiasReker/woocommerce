@@ -45,7 +45,7 @@ class Controller extends \WC_REST_Reports_Controller implements ExportableInterf
 	 * @return array
 	 */
 	protected function prepare_reports_query( $request ) {
-		$args                        = array();
+		$args                        = [];
 		$args['before']              = $request['before'];
 		$args['after']               = $request['after'];
 		$args['page']                = $request['page'];
@@ -69,7 +69,7 @@ class Controller extends \WC_REST_Reports_Controller implements ExportableInterf
 		$taxes_query = new Query( $query_args );
 		$report_data = $taxes_query->get_data();
 
-		$data = array();
+		$data = [];
 
 		foreach ( $report_data->data as $tax_data ) {
 			$item   = $this->prepare_item_for_response( (object) $tax_data, $request );
@@ -135,11 +135,11 @@ class Controller extends \WC_REST_Reports_Controller implements ExportableInterf
 	 * @return array
 	 */
 	protected function prepare_links( $object ) {
-		$links = array(
-			'tax' => array(
+		$links = [
+			'tax' => [
 				'href' => rest_url( sprintf( '/%s/taxes/%d', $this->namespace, $object->tax_rate_id ) ),
-			),
-		);
+			],
+		];
 
 		return $links;
 	}
@@ -150,73 +150,73 @@ class Controller extends \WC_REST_Reports_Controller implements ExportableInterf
 	 * @return array
 	 */
 	public function get_item_schema() {
-		$schema = array(
+		$schema = [
 			'$schema'    => 'http://json-schema.org/draft-04/schema#',
 			'title'      => 'report_taxes',
 			'type'       => 'object',
-			'properties' => array(
-				'tax_rate_id'  => array(
+			'properties' => [
+				'tax_rate_id'  => [
 					'description' => __( 'Tax rate ID.', 'woocommerce' ),
 					'type'        => 'integer',
-					'context'     => array( 'view', 'edit' ),
+					'context'     => [ 'view', 'edit' ],
 					'readonly'    => true,
-				),
-				'name'         => array(
+				],
+				'name'         => [
 					'description' => __( 'Tax rate name.', 'woocommerce' ),
 					'type'        => 'string',
-					'context'     => array( 'view', 'edit' ),
+					'context'     => [ 'view', 'edit' ],
 					'readonly'    => true,
-				),
-				'tax_rate'     => array(
+				],
+				'tax_rate'     => [
 					'description' => __( 'Tax rate.', 'woocommerce' ),
 					'type'        => 'number',
-					'context'     => array( 'view', 'edit' ),
+					'context'     => [ 'view', 'edit' ],
 					'readonly'    => true,
-				),
-				'country'      => array(
+				],
+				'country'      => [
 					'description' => __( 'Country / Region.', 'woocommerce' ),
 					'type'        => 'string',
-					'context'     => array( 'view', 'edit' ),
+					'context'     => [ 'view', 'edit' ],
 					'readonly'    => true,
-				),
-				'state'        => array(
+				],
+				'state'        => [
 					'description' => __( 'State.', 'woocommerce' ),
 					'type'        => 'string',
-					'context'     => array( 'view', 'edit' ),
+					'context'     => [ 'view', 'edit' ],
 					'readonly'    => true,
-				),
-				'priority'     => array(
+				],
+				'priority'     => [
 					'description' => __( 'Priority.', 'woocommerce' ),
 					'type'        => 'integer',
-					'context'     => array( 'view', 'edit' ),
+					'context'     => [ 'view', 'edit' ],
 					'readonly'    => true,
-				),
-				'total_tax'    => array(
+				],
+				'total_tax'    => [
 					'description' => __( 'Total tax.', 'woocommerce' ),
 					'type'        => 'number',
-					'context'     => array( 'view', 'edit' ),
+					'context'     => [ 'view', 'edit' ],
 					'readonly'    => true,
-				),
-				'order_tax'    => array(
+				],
+				'order_tax'    => [
 					'description' => __( 'Order tax.', 'woocommerce' ),
 					'type'        => 'number',
-					'context'     => array( 'view', 'edit' ),
+					'context'     => [ 'view', 'edit' ],
 					'readonly'    => true,
-				),
-				'shipping_tax' => array(
+				],
+				'shipping_tax' => [
 					'description' => __( 'Shipping tax.', 'woocommerce' ),
 					'type'        => 'number',
-					'context'     => array( 'view', 'edit' ),
+					'context'     => [ 'view', 'edit' ],
 					'readonly'    => true,
-				),
-				'orders_count' => array(
+				],
+				'orders_count' => [
 					'description' => __( 'Number of orders.', 'woocommerce' ),
 					'type'        => 'integer',
-					'context'     => array( 'view', 'edit' ),
+					'context'     => [ 'view', 'edit' ],
 					'readonly'    => true,
-				),
-			),
-		);
+				],
+			],
+		];
 
 		return $this->add_additional_fields_schema( $schema );
 	}
@@ -227,17 +227,17 @@ class Controller extends \WC_REST_Reports_Controller implements ExportableInterf
 	 * @return array
 	 */
 	public function get_collection_params() {
-		$params             = array();
-		$params['context']  = $this->get_context_param( array( 'default' => 'view' ) );
-		$params['page']     = array(
+		$params             = [];
+		$params['context']  = $this->get_context_param( [ 'default' => 'view' ] );
+		$params['page']     = [
 			'description'       => __( 'Current page of the collection.', 'woocommerce' ),
 			'type'              => 'integer',
 			'default'           => 1,
 			'sanitize_callback' => 'absint',
 			'validate_callback' => 'rest_validate_request_arg',
 			'minimum'           => 1,
-		);
-		$params['per_page'] = array(
+		];
+		$params['per_page'] = [
 			'description'       => __( 'Maximum number of items to be returned in result set.', 'woocommerce' ),
 			'type'              => 'integer',
 			'default'           => 10,
@@ -245,31 +245,31 @@ class Controller extends \WC_REST_Reports_Controller implements ExportableInterf
 			'maximum'           => 100,
 			'sanitize_callback' => 'absint',
 			'validate_callback' => 'rest_validate_request_arg',
-		);
-		$params['after']    = array(
+		];
+		$params['after']    = [
 			'description'       => __( 'Limit response to resources published after a given ISO8601 compliant date.', 'woocommerce' ),
 			'type'              => 'string',
 			'format'            => 'date-time',
 			'validate_callback' => 'rest_validate_request_arg',
-		);
-		$params['before']   = array(
+		];
+		$params['before']   = [
 			'description'       => __( 'Limit response to resources published before a given ISO8601 compliant date.', 'woocommerce' ),
 			'type'              => 'string',
 			'format'            => 'date-time',
 			'validate_callback' => 'rest_validate_request_arg',
-		);
-		$params['order']    = array(
+		];
+		$params['order']    = [
 			'description'       => __( 'Order sort attribute ascending or descending.', 'woocommerce' ),
 			'type'              => 'string',
 			'default'           => 'desc',
-			'enum'              => array( 'asc', 'desc' ),
+			'enum'              => [ 'asc', 'desc' ],
 			'validate_callback' => 'rest_validate_request_arg',
-		);
-		$params['orderby']  = array(
+		];
+		$params['orderby']  = [
 			'description'       => __( 'Sort collection by object attribute.', 'woocommerce' ),
 			'type'              => 'string',
 			'default'           => 'tax_rate_id',
-			'enum'              => array(
+			'enum'              => [
 				'name',
 				'tax_rate_id',
 				'tax_code',
@@ -278,24 +278,24 @@ class Controller extends \WC_REST_Reports_Controller implements ExportableInterf
 				'total_tax',
 				'shipping_tax',
 				'orders_count',
-			),
+			],
 			'validate_callback' => 'rest_validate_request_arg',
-		);
-		$params['taxes']    = array(
+		];
+		$params['taxes']    = [
 			'description'       => __( 'Limit result set to items assigned one or more tax rates.', 'woocommerce' ),
 			'type'              => 'array',
 			'sanitize_callback' => 'wp_parse_id_list',
 			'validate_callback' => 'rest_validate_request_arg',
-			'items'             => array(
+			'items'             => [
 				'type' => 'string',
-			),
-		);
-		$params['force_cache_refresh'] = array(
+			],
+		];
+		$params['force_cache_refresh'] = [
 			'description'       => __( 'Force retrieval of fresh data instead of from the cache.', 'woocommerce' ),
 			'type'              => 'boolean',
 			'sanitize_callback' => 'wp_validate_boolean',
 			'validate_callback' => 'rest_validate_request_arg',
-		);
+		];
 
 		return $params;
 	}
@@ -306,14 +306,14 @@ class Controller extends \WC_REST_Reports_Controller implements ExportableInterf
 	 * @return array Key value pair of Column ID => Label.
 	 */
 	public function get_export_columns() {
-		return array(
+		return [
 			'tax_code'     => __( 'Tax code', 'woocommerce' ),
 			'rate'         => __( 'Rate', 'woocommerce' ),
 			'total_tax'    => __( 'Total tax', 'woocommerce' ),
 			'order_tax'    => __( 'Order tax', 'woocommerce' ),
 			'shipping_tax' => __( 'Shipping tax', 'woocommerce' ),
 			'orders_count' => __( 'Orders', 'woocommerce' ),
-		);
+		];
 	}
 
 	/**
@@ -323,13 +323,13 @@ class Controller extends \WC_REST_Reports_Controller implements ExportableInterf
 	 * @return array Key value pair of Column ID => Row Value.
 	 */
 	public function prepare_item_for_export( $item ) {
-		return array(
+		return [
 			'tax_code'     => \WC_Tax::get_rate_code( $item['tax_rate_id'] ),
 			'rate'         => $item['tax_rate'],
 			'total_tax'    => self::csv_number_format( $item['total_tax'] ),
 			'order_tax'    => self::csv_number_format( $item['order_tax'] ),
 			'shipping_tax' => self::csv_number_format( $item['shipping_tax'] ),
 			'orders_count' => $item['orders_count'],
-		);
+		];
 	}
 }

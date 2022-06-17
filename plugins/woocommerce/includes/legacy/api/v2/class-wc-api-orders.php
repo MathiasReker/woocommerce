@@ -37,58 +37,58 @@ class WC_API_Orders extends WC_API_Resource {
 	public function register_routes( $routes ) {
 
 		# GET|POST /orders
-		$routes[ $this->base ] = array(
-			array( array( $this, 'get_orders' ),     WC_API_Server::READABLE ),
-			array( array( $this, 'create_order' ),   WC_API_Server::CREATABLE | WC_API_Server::ACCEPT_DATA ),
-		);
+		$routes[ $this->base ] = [
+			[ [ $this, 'get_orders' ],     WC_API_Server::READABLE ],
+			[ [ $this, 'create_order' ],   WC_API_Server::CREATABLE | WC_API_Server::ACCEPT_DATA ],
+		];
 
 		# GET /orders/count
-		$routes[ $this->base . '/count' ] = array(
-			array( array( $this, 'get_orders_count' ), WC_API_Server::READABLE ),
-		);
+		$routes[ $this->base . '/count' ] = [
+			[ [ $this, 'get_orders_count' ], WC_API_Server::READABLE ],
+		];
 
 		# GET /orders/statuses
-		$routes[ $this->base . '/statuses' ] = array(
-			array( array( $this, 'get_order_statuses' ), WC_API_Server::READABLE ),
-		);
+		$routes[ $this->base . '/statuses' ] = [
+			[ [ $this, 'get_order_statuses' ], WC_API_Server::READABLE ],
+		];
 
 		# GET|PUT|DELETE /orders/<id>
-		$routes[ $this->base . '/(?P<id>\d+)' ] = array(
-			array( array( $this, 'get_order' ),  WC_API_Server::READABLE ),
-			array( array( $this, 'edit_order' ), WC_API_Server::EDITABLE | WC_API_Server::ACCEPT_DATA ),
-			array( array( $this, 'delete_order' ), WC_API_Server::DELETABLE ),
-		);
+		$routes[ $this->base . '/(?P<id>\d+)' ] = [
+			[ [ $this, 'get_order' ],  WC_API_Server::READABLE ],
+			[ [ $this, 'edit_order' ], WC_API_Server::EDITABLE | WC_API_Server::ACCEPT_DATA ],
+			[ [ $this, 'delete_order' ], WC_API_Server::DELETABLE ],
+		];
 
 		# GET|POST /orders/<id>/notes
-		$routes[ $this->base . '/(?P<order_id>\d+)/notes' ] = array(
-			array( array( $this, 'get_order_notes' ), WC_API_Server::READABLE ),
-			array( array( $this, 'create_order_note' ), WC_API_SERVER::CREATABLE | WC_API_Server::ACCEPT_DATA ),
-		);
+		$routes[ $this->base . '/(?P<order_id>\d+)/notes' ] = [
+			[ [ $this, 'get_order_notes' ], WC_API_Server::READABLE ],
+			[ [ $this, 'create_order_note' ], WC_API_SERVER::CREATABLE | WC_API_Server::ACCEPT_DATA ],
+		];
 
 		# GET|PUT|DELETE /orders/<order_id>/notes/<id>
-		$routes[ $this->base . '/(?P<order_id>\d+)/notes/(?P<id>\d+)' ] = array(
-			array( array( $this, 'get_order_note' ), WC_API_Server::READABLE ),
-			array( array( $this, 'edit_order_note' ), WC_API_SERVER::EDITABLE | WC_API_Server::ACCEPT_DATA ),
-			array( array( $this, 'delete_order_note' ), WC_API_SERVER::DELETABLE ),
-		);
+		$routes[ $this->base . '/(?P<order_id>\d+)/notes/(?P<id>\d+)' ] = [
+			[ [ $this, 'get_order_note' ], WC_API_Server::READABLE ],
+			[ [ $this, 'edit_order_note' ], WC_API_SERVER::EDITABLE | WC_API_Server::ACCEPT_DATA ],
+			[ [ $this, 'delete_order_note' ], WC_API_SERVER::DELETABLE ],
+		];
 
 		# GET|POST /orders/<order_id>/refunds
-		$routes[ $this->base . '/(?P<order_id>\d+)/refunds' ] = array(
-			array( array( $this, 'get_order_refunds' ), WC_API_Server::READABLE ),
-			array( array( $this, 'create_order_refund' ), WC_API_SERVER::CREATABLE | WC_API_Server::ACCEPT_DATA ),
-		);
+		$routes[ $this->base . '/(?P<order_id>\d+)/refunds' ] = [
+			[ [ $this, 'get_order_refunds' ], WC_API_Server::READABLE ],
+			[ [ $this, 'create_order_refund' ], WC_API_SERVER::CREATABLE | WC_API_Server::ACCEPT_DATA ],
+		];
 
 		# GET|PUT|DELETE /orders/<order_id>/refunds/<id>
-		$routes[ $this->base . '/(?P<order_id>\d+)/refunds/(?P<id>\d+)' ] = array(
-			array( array( $this, 'get_order_refund' ), WC_API_Server::READABLE ),
-			array( array( $this, 'edit_order_refund' ), WC_API_SERVER::EDITABLE | WC_API_Server::ACCEPT_DATA ),
-			array( array( $this, 'delete_order_refund' ), WC_API_SERVER::DELETABLE ),
-		);
+		$routes[ $this->base . '/(?P<order_id>\d+)/refunds/(?P<id>\d+)' ] = [
+			[ [ $this, 'get_order_refund' ], WC_API_Server::READABLE ],
+			[ [ $this, 'edit_order_refund' ], WC_API_SERVER::EDITABLE | WC_API_Server::ACCEPT_DATA ],
+			[ [ $this, 'delete_order_refund' ], WC_API_SERVER::DELETABLE ],
+		];
 
 		# POST|PUT /orders/bulk
-		$routes[ $this->base . '/bulk' ] = array(
-			array( array( $this, 'bulk' ), WC_API_Server::EDITABLE | WC_API_Server::ACCEPT_DATA ),
-		);
+		$routes[ $this->base . '/bulk' ] = [
+			[ [ $this, 'bulk' ], WC_API_Server::EDITABLE | WC_API_Server::ACCEPT_DATA ],
+		];
 
 		return $routes;
 	}
@@ -103,7 +103,7 @@ class WC_API_Orders extends WC_API_Resource {
 	 * @param int $page
 	 * @return array
 	 */
-	public function get_orders( $fields = null, $filter = array(), $status = null, $page = 1 ) {
+	public function get_orders( $fields = null, $filter = [], $status = null, $page = 1 ) {
 
 		if ( ! empty( $status ) ) {
 			$filter['status'] = $status;
@@ -113,7 +113,7 @@ class WC_API_Orders extends WC_API_Resource {
 
 		$query = $this->query_orders( $filter );
 
-		$orders = array();
+		$orders = [];
 
 		foreach ( $query->posts as $order_id ) {
 
@@ -126,7 +126,7 @@ class WC_API_Orders extends WC_API_Resource {
 
 		$this->server->add_pagination_headers( $query );
 
-		return array( 'orders' => $orders );
+		return [ 'orders' => $orders ];
 	}
 
 
@@ -139,7 +139,7 @@ class WC_API_Orders extends WC_API_Resource {
 	 * @param array $filter
 	 * @return array|WP_Error
 	 */
-	public function get_order( $id, $fields = null, $filter = array() ) {
+	public function get_order( $id, $fields = null, $filter = [] ) {
 
 		// ensure order ID is valid & user has permission to read
 		$id = $this->validate_request( $id, $this->post_type, 'read' );
@@ -151,7 +151,7 @@ class WC_API_Orders extends WC_API_Resource {
 		// Get the decimal precession
 		$dp         = ( isset( $filter['dp'] ) ? intval( $filter['dp'] ) : 2 );
 		$order      = wc_get_order( $id );
-		$order_data = array(
+		$order_data = [
 			'id'                        => $order->get_id(),
 			'order_number'              => $order->get_order_number(),
 			'created_at'                => $this->server->format_datetime( $order->get_date_created() ? $order->get_date_created()->getTimestamp() : 0, false, false ), // API gives UTC times.
@@ -168,12 +168,12 @@ class WC_API_Orders extends WC_API_Resource {
 			'shipping_tax'              => wc_format_decimal( $order->get_shipping_tax(), $dp ),
 			'total_discount'            => wc_format_decimal( $order->get_total_discount(), $dp ),
 			'shipping_methods'          => $order->get_shipping_method(),
-			'payment_details' => array(
+			'payment_details' => [
 				'method_id'    => $order->get_payment_method(),
 				'method_title' => $order->get_payment_method_title(),
 				'paid'         => ! is_null( $order->get_date_paid() ),
-			),
-			'billing_address' => array(
+			],
+			'billing_address' => [
 				'first_name' => $order->get_billing_first_name(),
 				'last_name'  => $order->get_billing_last_name(),
 				'company'    => $order->get_billing_company(),
@@ -185,8 +185,8 @@ class WC_API_Orders extends WC_API_Resource {
 				'country'    => $order->get_billing_country(),
 				'email'      => $order->get_billing_email(),
 				'phone'      => $order->get_billing_phone(),
-			),
-			'shipping_address' => array(
+			],
+			'shipping_address' => [
 				'first_name' => $order->get_shipping_first_name(),
 				'last_name'  => $order->get_shipping_last_name(),
 				'company'    => $order->get_shipping_company(),
@@ -196,18 +196,18 @@ class WC_API_Orders extends WC_API_Resource {
 				'state'      => $order->get_shipping_state(),
 				'postcode'   => $order->get_shipping_postcode(),
 				'country'    => $order->get_shipping_country(),
-			),
+			],
 			'note'                      => $order->get_customer_note(),
 			'customer_ip'               => $order->get_customer_ip_address(),
 			'customer_user_agent'       => $order->get_customer_user_agent(),
 			'customer_id'               => $order->get_user_id(),
 			'view_order_url'            => $order->get_view_order_url(),
-			'line_items'                => array(),
-			'shipping_lines'            => array(),
-			'tax_lines'                 => array(),
-			'fee_lines'                 => array(),
-			'coupon_lines'              => array(),
-		);
+			'line_items'                => [],
+			'shipping_lines'            => [],
+			'tax_lines'                 => [],
+			'fee_lines'                 => [],
+			'coupon_lines'              => [],
+		];
 
 		// add line items
 		foreach ( $order->get_items() as $item_id => $item ) {
@@ -221,7 +221,7 @@ class WC_API_Orders extends WC_API_Resource {
 				unset( $item_meta[ $key ]->display_value );
 			}
 
-			$order_data['line_items'][] = array(
+			$order_data['line_items'][] = [
 				'id'           => $item_id,
 				'subtotal'     => wc_format_decimal( $order->get_line_subtotal( $item, false, false ), $dp ),
 				'subtotal_tax' => wc_format_decimal( $item->get_subtotal_tax(), $dp ),
@@ -234,52 +234,52 @@ class WC_API_Orders extends WC_API_Resource {
 				'product_id'   => $item->get_variation_id() ? $item->get_variation_id() : $item->get_product_id(),
 				'sku'          => is_object( $product ) ? $product->get_sku() : null,
 				'meta'         => array_values( $item_meta ),
-			);
+			];
 		}
 
 		// add shipping
 		foreach ( $order->get_shipping_methods() as $shipping_item_id => $shipping_item ) {
-			$order_data['shipping_lines'][] = array(
+			$order_data['shipping_lines'][] = [
 				'id'           => $shipping_item_id,
 				'method_id'    => $shipping_item->get_method_id(),
 				'method_title' => $shipping_item->get_name(),
 				'total'        => wc_format_decimal( $shipping_item->get_total(), $dp ),
-			);
+			];
 		}
 
 		// add taxes
 		foreach ( $order->get_tax_totals() as $tax_code => $tax ) {
-			$order_data['tax_lines'][] = array(
+			$order_data['tax_lines'][] = [
 				'id'       => $tax->id,
 				'rate_id'  => $tax->rate_id,
 				'code'     => $tax_code,
 				'title'    => $tax->label,
 				'total'    => wc_format_decimal( $tax->amount, $dp ),
 				'compound' => (bool) $tax->is_compound,
-			);
+			];
 		}
 
 		// add fees
 		foreach ( $order->get_fees() as $fee_item_id => $fee_item ) {
-			$order_data['fee_lines'][] = array(
+			$order_data['fee_lines'][] = [
 				'id'        => $fee_item_id,
 				'title'     => $fee_item->get_name(),
 				'tax_class' => $fee_item->get_tax_class(),
 				'total'     => wc_format_decimal( $order->get_line_total( $fee_item ), $dp ),
 				'total_tax' => wc_format_decimal( $order->get_line_tax( $fee_item ), $dp ),
-			);
+			];
 		}
 
 		// add coupons
 		foreach ( $order->get_items( 'coupon' ) as $coupon_item_id => $coupon_item ) {
-			$order_data['coupon_lines'][] = array(
+			$order_data['coupon_lines'][] = [
 				'id'     => $coupon_item_id,
 				'code'   => $coupon_item->get_code(),
 				'amount' => wc_format_decimal( $coupon_item->get_discount(), $dp ),
-			);
+			];
 		}
 
-		return array( 'order' => apply_filters( 'woocommerce_api_order_response', $order_data, $order, $fields, $this->server ) );
+		return [ 'order' => apply_filters( 'woocommerce_api_order_response', $order_data, $order, $fields, $this->server ) ];
 	}
 
 	/**
@@ -292,7 +292,7 @@ class WC_API_Orders extends WC_API_Resource {
 	 *
 	 * @return array|WP_Error
 	 */
-	public function get_orders_count( $status = null, $filter = array() ) {
+	public function get_orders_count( $status = null, $filter = [] ) {
 
 		try {
 			if ( ! current_user_can( 'read_private_shop_orders' ) ) {
@@ -303,7 +303,7 @@ class WC_API_Orders extends WC_API_Resource {
 
 				if ( 'any' === $status ) {
 
-					$order_statuses = array();
+					$order_statuses = [];
 
 					foreach ( wc_get_order_statuses() as $slug => $name ) {
 						$filter['status'] = str_replace( 'wc-', '', $slug );
@@ -311,7 +311,7 @@ class WC_API_Orders extends WC_API_Resource {
 						$order_statuses[ str_replace( 'wc-', '', $slug ) ] = (int) $query->found_posts;
 					}
 
-					return array( 'count' => $order_statuses );
+					return [ 'count' => $order_statuses ];
 
 				} else {
 					$filter['status'] = $status;
@@ -320,10 +320,10 @@ class WC_API_Orders extends WC_API_Resource {
 
 			$query = $this->query_orders( $filter );
 
-			return array( 'count' => (int) $query->found_posts );
+			return [ 'count' => (int) $query->found_posts ];
 
 		} catch ( WC_API_Exception $e ) {
-			return new WP_Error( $e->getErrorCode(), $e->getMessage(), array( 'status' => $e->getCode() ) );
+			return new WP_Error( $e->getErrorCode(), $e->getMessage(), [ 'status' => $e->getCode() ] );
 		}
 	}
 
@@ -339,13 +339,13 @@ class WC_API_Orders extends WC_API_Resource {
 	 */
 	public function get_order_statuses() {
 
-		$order_statuses = array();
+		$order_statuses = [];
 
 		foreach ( wc_get_order_statuses() as $slug => $name ) {
 			$order_statuses[ str_replace( 'wc-', '', $slug ) ] = $name;
 		}
 
-		return array( 'order_statuses' => apply_filters( 'woocommerce_api_order_statuses_response', $order_statuses, $this ) );
+		return [ 'order_statuses' => apply_filters( 'woocommerce_api_order_statuses_response', $order_statuses, $this ) ];
 	}
 
 	/**
@@ -375,10 +375,10 @@ class WC_API_Orders extends WC_API_Resource {
 			$data = apply_filters( 'woocommerce_api_create_order_data', $data, $this );
 
 			// default order args, note that status is checked for validity in wc_create_order()
-			$default_order_args = array(
+			$default_order_args = [
 				'status'        => isset( $data['status'] ) ? $data['status'] : '',
 				'customer_note' => isset( $data['note'] ) ? $data['note'] : null,
-			);
+			];
 
 			// if creating order for existing customer
 			if ( ! empty( $data['customer_id'] ) ) {
@@ -401,12 +401,12 @@ class WC_API_Orders extends WC_API_Resource {
 			// billing/shipping addresses
 			$this->set_order_addresses( $order, $data );
 
-			$lines = array(
+			$lines = [
 				'line_item' => 'line_items',
 				'shipping'  => 'shipping_lines',
 				'fee'       => 'fee_lines',
 				'coupon'    => 'coupon_lines',
-			);
+			];
 
 			foreach ( $lines as $line_type => $line ) {
 
@@ -466,9 +466,9 @@ class WC_API_Orders extends WC_API_Resource {
 
 			return $this->get_order( $order->get_id() );
 		} catch ( WC_Data_Exception $e ) {
-			return new WP_Error( $e->getErrorCode(), $e->getMessage(), array( 'status' => 400 ) );
+			return new WP_Error( $e->getErrorCode(), $e->getMessage(), [ 'status' => 400 ] );
 		} catch ( WC_API_Exception $e ) {
-			return new WP_Error( $e->getErrorCode(), $e->getMessage(), array( 'status' => $e->getCode() ) );
+			return new WP_Error( $e->getErrorCode(), $e->getMessage(), [ 'status' => $e->getCode() ] );
 		}
 	}
 
@@ -521,7 +521,7 @@ class WC_API_Orders extends WC_API_Resource {
 				throw new WC_API_Exception( 'woocommerce_api_invalid_order_id', __( 'Order ID is invalid', 'woocommerce' ), 400 );
 			}
 
-			$order_args = array( 'order_id' => $order->get_id() );
+			$order_args = [ 'order_id' => $order->get_id() ];
 
 			// Customer note.
 			if ( isset( $data['note'] ) ) {
@@ -541,12 +541,12 @@ class WC_API_Orders extends WC_API_Resource {
 			// Billing/shipping address.
 			$this->set_order_addresses( $order, $data );
 
-			$lines = array(
+			$lines = [
 				'line_item' => 'line_items',
 				'shipping'  => 'shipping_lines',
 				'fee'       => 'fee_lines',
 				'coupon'    => 'coupon_lines',
-			);
+			];
 
 			foreach ( $lines as $line_type => $line ) {
 
@@ -631,9 +631,9 @@ class WC_API_Orders extends WC_API_Resource {
 			return $this->get_order( $id );
 
 		} catch ( WC_Data_Exception $e ) {
-			return new WP_Error( $e->getErrorCode(), $e->getMessage(), array( 'status' => 400 ) );
+			return new WP_Error( $e->getErrorCode(), $e->getMessage(), [ 'status' => 400 ] );
 		} catch ( WC_API_Exception $e ) {
-			return new WP_Error( $e->getErrorCode(), $e->getMessage(), array( 'status' => $e->getCode() ) );
+			return new WP_Error( $e->getErrorCode(), $e->getMessage(), [ 'status' => $e->getCode() ] );
 		}
 	}
 
@@ -669,11 +669,11 @@ class WC_API_Orders extends WC_API_Resource {
 	protected function query_orders( $args ) {
 
 		// set base query arguments
-		$query_args = array(
+		$query_args = [
 			'fields'      => 'ids',
 			'post_type'   => $this->post_type,
 			'post_status' => array_keys( wc_get_order_statuses() ),
-		);
+		];
 
 		// add status argument
 		if ( ! empty( $args['status'] ) ) {
@@ -701,7 +701,7 @@ class WC_API_Orders extends WC_API_Resource {
 	 */
 	protected function set_order_addresses( $order, $data ) {
 
-		$address_fields = array(
+		$address_fields = [
 			'first_name',
 			'last_name',
 			'company',
@@ -713,9 +713,9 @@ class WC_API_Orders extends WC_API_Resource {
 			'state',
 			'postcode',
 			'country',
-		);
+		];
 
-		$billing_address = $shipping_address = array();
+		$billing_address = $shipping_address = [];
 
 		// billing address
 		if ( isset( $data['billing_address'] ) && is_array( $data['billing_address'] ) ) {
@@ -765,7 +765,7 @@ class WC_API_Orders extends WC_API_Resource {
 	 */
 	protected function update_address( $order, $posted, $type = 'billing' ) {
 		foreach ( $posted as $key => $value ) {
-			if ( is_callable( array( $order, "set_{$type}_{$key}" ) ) ) {
+			if ( is_callable( [ $order, "set_{$type}_{$key}" ] ) ) {
 				$order->{"set_{$type}_{$key}"}( $value );
 			}
 		}
@@ -802,7 +802,7 @@ class WC_API_Orders extends WC_API_Resource {
 	 */
 	protected function item_is_null( $item ) {
 
-		$keys = array( 'product_id', 'method_id', 'title', 'code' );
+		$keys = [ 'product_id', 'method_id', 'title', 'code' ];
 
 		foreach ( $keys as $key ) {
 			if ( array_key_exists( $key, $item ) && is_null( $item[ $key ] ) ) {
@@ -925,7 +925,7 @@ class WC_API_Orders extends WC_API_Resource {
 		if ( isset( $item['total'] ) ) {
 			$line_item->set_total( floatval( $item['total'] ) );
 		} elseif ( $creating ) {
-			$total = wc_get_price_excluding_tax( $product, array( 'qty' => $line_item->get_quantity() ) );
+			$total = wc_get_price_excluding_tax( $product, [ 'qty' => $line_item->get_quantity() ] );
 			$line_item->set_total( $total );
 			$line_item->set_subtotal( $total );
 		}
@@ -965,9 +965,9 @@ class WC_API_Orders extends WC_API_Resource {
 	 *
 	 * @return int returns an ID if a valid variation was found for this product
 	 */
-	function get_variation_id( $product, $variations = array() ) {
+	function get_variation_id( $product, $variations = [] ) {
 		$variation_id = null;
-		$variations_normalized = array();
+		$variations_normalized = [];
 
 		if ( $product->is_type( 'variable' ) && $product->has_child() ) {
 			if ( isset( $variations ) && is_array( $variations ) ) {
@@ -978,7 +978,7 @@ class WC_API_Orders extends WC_API_Resource {
 				}
 				// now search through each product child and see if our passed variations match anything
 				foreach ( $product->get_children() as $variation ) {
-					$meta = array();
+					$meta = [];
 					foreach ( get_post_meta( $variation ) as $key => $value ) {
 						$value = $value[0];
 						$key = str_replace( 'attribute_', '', wc_attribute_taxonomy_slug( $key ) );
@@ -1036,7 +1036,7 @@ class WC_API_Orders extends WC_API_Resource {
 				throw new WC_API_Exception( 'woocommerce_invalid_shipping_item', __( 'Shipping method ID is required.', 'woocommerce' ), 400 );
 			}
 
-			$rate = new WC_Shipping_Rate( $shipping['method_id'], isset( $shipping['method_title'] ) ? $shipping['method_title'] : '', isset( $shipping['total'] ) ? floatval( $shipping['total'] ) : 0, array(), $shipping['method_id'] );
+			$rate = new WC_Shipping_Rate( $shipping['method_id'], isset( $shipping['method_title'] ) ? $shipping['method_title'] : '', isset( $shipping['total'] ) ? floatval( $shipping['total'] ) : 0, [], $shipping['method_id'] );
 			$item = new WC_Order_Item_Shipping();
 			$item->set_order_id( $order->get_id() );
 			$item->set_shipping_rate( $rate );
@@ -1160,12 +1160,12 @@ class WC_API_Orders extends WC_API_Resource {
 			}
 
 			$item = new WC_Order_Item_Coupon();
-			$item->set_props( array(
+			$item->set_props( [
 				'code'         => $coupon['code'],
 				'discount'     => isset( $coupon['amount'] ) ? floatval( $coupon['amount'] ) : 0,
 				'discount_tax' => 0,
 				'order_id'     => $order->get_id(),
-			) );
+			] );
 			$order->add_item( $item );
 		} else {
 
@@ -1204,26 +1204,26 @@ class WC_API_Orders extends WC_API_Resource {
 			return $order_id;
 		}
 
-		$args = array(
+		$args = [
 			'post_id' => $order_id,
 			'approve' => 'approve',
 			'type'    => 'order_note',
-		);
+		];
 
-		remove_filter( 'comments_clauses', array( 'WC_Comments', 'exclude_order_comments' ), 10, 1 );
+		remove_filter( 'comments_clauses', [ 'WC_Comments', 'exclude_order_comments' ], 10, 1 );
 
 		$notes = get_comments( $args );
 
-		add_filter( 'comments_clauses', array( 'WC_Comments', 'exclude_order_comments' ), 10, 1 );
+		add_filter( 'comments_clauses', [ 'WC_Comments', 'exclude_order_comments' ], 10, 1 );
 
-		$order_notes = array();
+		$order_notes = [];
 
 		foreach ( $notes as $note ) {
 
 			$order_notes[] = current( $this->get_order_note( $order_id, $note->comment_ID, $fields ) );
 		}
 
-		return array( 'order_notes' => apply_filters( 'woocommerce_api_order_notes_response', $order_notes, $order_id, $fields, $notes, $this->server ) );
+		return [ 'order_notes' => apply_filters( 'woocommerce_api_order_notes_response', $order_notes, $order_id, $fields, $notes, $this->server ) ];
 	}
 
 	/**
@@ -1258,16 +1258,16 @@ class WC_API_Orders extends WC_API_Resource {
 				throw new WC_API_Exception( 'woocommerce_api_invalid_order_note_id', __( 'An order note with the provided ID could not be found', 'woocommerce' ), 404 );
 			}
 
-			$order_note = array(
+			$order_note = [
 				'id'            => $note->comment_ID,
 				'created_at'    => $this->server->format_datetime( $note->comment_date_gmt ),
 				'note'          => $note->comment_content,
 				'customer_note' => (bool) get_comment_meta( $note->comment_ID, 'is_customer_note', true ),
-			);
+			];
 
-			return array( 'order_note' => apply_filters( 'woocommerce_api_order_note_response', $order_note, $id, $fields, $note, $order_id, $this ) );
+			return [ 'order_note' => apply_filters( 'woocommerce_api_order_note_response', $order_note, $id, $fields, $note, $order_id, $this ) ];
 		} catch ( WC_API_Exception $e ) {
-			return new WP_Error( $e->getErrorCode(), $e->getMessage(), array( 'status' => $e->getCode() ) );
+			return new WP_Error( $e->getErrorCode(), $e->getMessage(), [ 'status' => $e->getCode() ] );
 		}
 	}
 
@@ -1323,9 +1323,9 @@ class WC_API_Orders extends WC_API_Resource {
 
 			return $this->get_order_note( $order->get_id(), $note_id );
 		} catch ( WC_Data_Exception $e ) {
-			return new WP_Error( $e->getErrorCode(), $e->getMessage(), array( 'status' => 400 ) );
+			return new WP_Error( $e->getErrorCode(), $e->getMessage(), [ 'status' => 400 ] );
 		} catch ( WC_API_Exception $e ) {
-			return new WP_Error( $e->getErrorCode(), $e->getMessage(), array( 'status' => $e->getCode() ) );
+			return new WP_Error( $e->getErrorCode(), $e->getMessage(), [ 'status' => $e->getCode() ] );
 		}
 	}
 
@@ -1380,10 +1380,10 @@ class WC_API_Orders extends WC_API_Resource {
 			if ( isset( $data['note'] ) ) {
 
 				wp_update_comment(
-					array(
+					[
 						'comment_ID'      => $note->comment_ID,
 						'comment_content' => $data['note'],
-					)
+					]
 				);
 			}
 
@@ -1397,9 +1397,9 @@ class WC_API_Orders extends WC_API_Resource {
 
 			return $this->get_order_note( $order->get_id(), $note->comment_ID );
 		} catch ( WC_Data_Exception $e ) {
-			return new WP_Error( $e->getErrorCode(), $e->getMessage(), array( 'status' => 400 ) );
+			return new WP_Error( $e->getErrorCode(), $e->getMessage(), [ 'status' => 400 ] );
 		} catch ( WC_API_Exception $e ) {
-			return new WP_Error( $e->getErrorCode(), $e->getMessage(), array( 'status' => $e->getCode() ) );
+			return new WP_Error( $e->getErrorCode(), $e->getMessage(), [ 'status' => $e->getCode() ] );
 		}
 	}
 
@@ -1447,9 +1447,9 @@ class WC_API_Orders extends WC_API_Resource {
 
 			do_action( 'woocommerce_api_delete_order_note', $note->comment_ID, $order_id, $this );
 
-			return array( 'message' => __( 'Permanently deleted order note', 'woocommerce' ) );
+			return [ 'message' => __( 'Permanently deleted order note', 'woocommerce' ) ];
 		} catch ( WC_API_Exception $e ) {
-			return new WP_Error( $e->getErrorCode(), $e->getMessage(), array( 'status' => $e->getCode() ) );
+			return new WP_Error( $e->getErrorCode(), $e->getMessage(), [ 'status' => $e->getCode() ] );
 		}
 	}
 
@@ -1470,19 +1470,19 @@ class WC_API_Orders extends WC_API_Resource {
 			return $order_id;
 		}
 
-		$refund_items = wc_get_orders( array(
+		$refund_items = wc_get_orders( [
 			'type'   => 'shop_order_refund',
 			'parent' => $order_id,
 			'limit'  => -1,
 			'return' => 'ids',
-		) );
-		$order_refunds = array();
+		] );
+		$order_refunds = [];
 
 		foreach ( $refund_items as $refund_id ) {
 			$order_refunds[] = current( $this->get_order_refund( $order_id, $refund_id, $fields ) );
 		}
 
-		return array( 'order_refunds' => apply_filters( 'woocommerce_api_order_refunds_response', $order_refunds, $order_id, $fields, $refund_items, $this ) );
+		return [ 'order_refunds' => apply_filters( 'woocommerce_api_order_refunds_response', $order_refunds, $order_id, $fields, $refund_items, $this ) ];
 	}
 
 	/**
@@ -1497,7 +1497,7 @@ class WC_API_Orders extends WC_API_Resource {
 	 *
 	 * @return array|WP_Error
 	 */
-	public function get_order_refund( $order_id, $id, $fields = null, $filter = array() ) {
+	public function get_order_refund( $order_id, $id, $fields = null, $filter = [] ) {
 		try {
 			// Validate order ID
 			$order_id = $this->validate_request( $order_id, $this->post_type, 'read' );
@@ -1519,7 +1519,7 @@ class WC_API_Orders extends WC_API_Resource {
 				throw new WC_API_Exception( 'woocommerce_api_invalid_order_refund_id', __( 'An order refund with the provided ID could not be found.', 'woocommerce' ), 404 );
 			}
 
-			$line_items = array();
+			$line_items = [];
 
 			// Add line items
 			foreach ( $refund->get_items( 'line_item' ) as $item_id => $item ) {
@@ -1533,7 +1533,7 @@ class WC_API_Orders extends WC_API_Resource {
 					unset( $item_meta[ $key ]->display_value );
 				}
 
-				$line_items[] = array(
+				$line_items[] = [
 					'id'               => $item_id,
 					'subtotal'         => wc_format_decimal( $order->get_line_subtotal( $item ), 2 ),
 					'subtotal_tax'     => wc_format_decimal( $item->get_subtotal_tax(), 2 ),
@@ -1547,20 +1547,20 @@ class WC_API_Orders extends WC_API_Resource {
 					'sku'              => is_object( $product ) ? $product->get_sku() : null,
 					'meta'             => array_values( $item_meta ),
 					'refunded_item_id' => (int) $item->get_meta( 'refunded_item_id' ),
-				);
+				];
 			}
 
-			$order_refund = array(
+			$order_refund = [
 				'id'         => $refund->get_id(),
 				'created_at' => $this->server->format_datetime( $refund->get_date_created() ? $refund->get_date_created()->getTimestamp() : 0, false, false ),
 				'amount'     => wc_format_decimal( $refund->get_amount(), 2 ),
 				'reason'     => $refund->get_reason(),
 				'line_items' => $line_items,
-			);
+			];
 
-			return array( 'order_refund' => apply_filters( 'woocommerce_api_order_refund_response', $order_refund, $id, $fields, $refund, $order_id, $this ) );
+			return [ 'order_refund' => apply_filters( 'woocommerce_api_order_refund_response', $order_refund, $id, $fields, $refund, $order_id, $this ) ];
 		} catch ( WC_API_Exception $e ) {
-			return new WP_Error( $e->getErrorCode(), $e->getMessage(), array( 'status' => $e->getCode() ) );
+			return new WP_Error( $e->getErrorCode(), $e->getMessage(), [ 'status' => $e->getCode() ] );
 		}
 	}
 
@@ -1637,9 +1637,9 @@ class WC_API_Orders extends WC_API_Resource {
 
 			return $this->get_order_refund( $order_id, $refund->get_id() );
 		} catch ( WC_Data_Exception $e ) {
-			return new WP_Error( $e->getErrorCode(), $e->getMessage(), array( 'status' => 400 ) );
+			return new WP_Error( $e->getErrorCode(), $e->getMessage(), [ 'status' => 400 ] );
 		} catch ( WC_API_Exception $e ) {
-			return new WP_Error( $e->getErrorCode(), $e->getMessage(), array( 'status' => $e->getCode() ) );
+			return new WP_Error( $e->getErrorCode(), $e->getMessage(), [ 'status' => $e->getCode() ] );
 		}
 	}
 
@@ -1690,7 +1690,7 @@ class WC_API_Orders extends WC_API_Resource {
 
 			// Update reason
 			if ( isset( $data['reason'] ) ) {
-				$updated_refund = wp_update_post( array( 'ID' => $refund->ID, 'post_excerpt' => $data['reason'] ) );
+				$updated_refund = wp_update_post( [ 'ID' => $refund->ID, 'post_excerpt' => $data['reason'] ] );
 
 				if ( is_wp_error( $updated_refund ) ) {
 					return $updated_refund;
@@ -1706,9 +1706,9 @@ class WC_API_Orders extends WC_API_Resource {
 
 			return $this->get_order_refund( $order_id, $refund->ID );
 		} catch ( WC_Data_Exception $e ) {
-			return new WP_Error( $e->getErrorCode(), $e->getMessage(), array( 'status' => 400 ) );
+			return new WP_Error( $e->getErrorCode(), $e->getMessage(), [ 'status' => 400 ] );
 		} catch ( WC_API_Exception $e ) {
-			return new WP_Error( $e->getErrorCode(), $e->getMessage(), array( 'status' => $e->getCode() ) );
+			return new WP_Error( $e->getErrorCode(), $e->getMessage(), [ 'status' => $e->getCode() ] );
 		}
 	}
 
@@ -1753,7 +1753,7 @@ class WC_API_Orders extends WC_API_Resource {
 
 			return $this->delete( $refund->ID, 'refund', true );
 		} catch ( WC_API_Exception $e ) {
-			return new WP_Error( $e->getErrorCode(), $e->getMessage(), array( 'status' => $e->getCode() ) );
+			return new WP_Error( $e->getErrorCode(), $e->getMessage(), [ 'status' => $e->getCode() ] );
 		}
 	}
 
@@ -1783,7 +1783,7 @@ class WC_API_Orders extends WC_API_Resource {
 				throw new WC_API_Exception( 'woocommerce_api_orders_request_entity_too_large', sprintf( __( 'Unable to accept more than %s items for this request.', 'woocommerce' ), $limit ), 413 );
 			}
 
-			$orders = array();
+			$orders = [];
 
 			foreach ( $data as $_order ) {
 				$order_id = 0;
@@ -1795,36 +1795,36 @@ class WC_API_Orders extends WC_API_Resource {
 
 				// Order exists / edit order
 				if ( $order_id ) {
-					$edit = $this->edit_order( $order_id, array( 'order' => $_order ) );
+					$edit = $this->edit_order( $order_id, [ 'order' => $_order ] );
 
 					if ( is_wp_error( $edit ) ) {
-						$orders[] = array(
+						$orders[] = [
 							'id'    => $order_id,
-							'error' => array( 'code' => $edit->get_error_code(), 'message' => $edit->get_error_message() ),
-						);
+							'error' => [ 'code' => $edit->get_error_code(), 'message' => $edit->get_error_message() ],
+						];
 					} else {
 						$orders[] = $edit['order'];
 					}
 				} else {
 					// Order don't exists / create order
-					$new = $this->create_order( array( 'order' => $_order ) );
+					$new = $this->create_order( [ 'order' => $_order ] );
 
 					if ( is_wp_error( $new ) ) {
-						$orders[] = array(
+						$orders[] = [
 							'id'    => $order_id,
-							'error' => array( 'code' => $new->get_error_code(), 'message' => $new->get_error_message() ),
-						);
+							'error' => [ 'code' => $new->get_error_code(), 'message' => $new->get_error_message() ],
+						];
 					} else {
 						$orders[] = $new['order'];
 					}
 				}
 			}
 
-			return array( 'orders' => apply_filters( 'woocommerce_api_orders_bulk_response', $orders, $this ) );
+			return [ 'orders' => apply_filters( 'woocommerce_api_orders_bulk_response', $orders, $this ) ];
 		} catch ( WC_Data_Exception $e ) {
-			return new WP_Error( $e->getErrorCode(), $e->getMessage(), array( 'status' => 400 ) );
+			return new WP_Error( $e->getErrorCode(), $e->getMessage(), [ 'status' => 400 ] );
 		} catch ( WC_API_Exception $e ) {
-			return new WP_Error( $e->getErrorCode(), $e->getMessage(), array( 'status' => $e->getCode() ) );
+			return new WP_Error( $e->getErrorCode(), $e->getMessage(), [ 'status' => $e->getCode() ] );
 		}
 	}
 }

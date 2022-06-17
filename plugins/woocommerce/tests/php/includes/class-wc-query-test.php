@@ -22,10 +22,10 @@ class WC_Query_Test extends \WC_Unit_Test_Case {
 
 		$sut = new WC_Query();
 
-		$args = array(
+		$args = [
 			'join'  => '(JOIN CLAUSE)',
 			'where' => '(WHERE CLAUSE)',
-		);
+		];
 
 		$args     = $sut->price_filter_post_clauses( $args, $wp_query );
 		$expected = '(WHERE CLAUSE) AND NOT (200.000000<wc_product_meta_lookup.min_price OR 100.000000>wc_product_meta_lookup.max_price ) ';

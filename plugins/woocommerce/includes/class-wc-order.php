@@ -28,7 +28,7 @@ class WC_Order extends WC_Abstract_Order {
 	 * @since 3.0.0
 	 * @var array
 	 */
-	protected $data = array(
+	protected $data = [
 		// Abstract order props.
 		'parent_id'            => 0,
 		'status'               => '',
@@ -48,7 +48,7 @@ class WC_Order extends WC_Abstract_Order {
 		// Order props.
 		'customer_id'          => 0,
 		'order_key'            => '',
-		'billing'              => array(
+		'billing'              => [
 			'first_name' => '',
 			'last_name'  => '',
 			'company'    => '',
@@ -60,8 +60,8 @@ class WC_Order extends WC_Abstract_Order {
 			'country'    => '',
 			'email'      => '',
 			'phone'      => '',
-		),
-		'shipping'             => array(
+		],
+		'shipping'             => [
 			'first_name' => '',
 			'last_name'  => '',
 			'company'    => '',
@@ -72,7 +72,7 @@ class WC_Order extends WC_Abstract_Order {
 			'postcode'   => '',
 			'country'    => '',
 			'phone'      => '',
-		),
+		],
 		'payment_method'       => '',
 		'payment_method_title' => '',
 		'transaction_id'       => '',
@@ -83,7 +83,7 @@ class WC_Order extends WC_Abstract_Order {
 		'date_completed'       => null,
 		'date_paid'            => null,
 		'cart_hash'            => '',
-	);
+	];
 
 	/**
 	 * When a payment is complete this function is called.
@@ -109,7 +109,7 @@ class WC_Order extends WC_Abstract_Order {
 				WC()->session->set( 'order_awaiting_payment', false );
 			}
 
-			if ( $this->has_status( apply_filters( 'woocommerce_valid_order_statuses_for_payment_complete', array( 'on-hold', 'pending', 'failed', 'cancelled' ), $this ) ) ) {
+			if ( $this->has_status( apply_filters( 'woocommerce_valid_order_statuses_for_payment_complete', [ 'on-hold', 'pending', 'failed', 'cancelled' ], $this ) ) ) {
 				if ( ! empty( $transaction_id ) ) {
 					$this->set_transaction_id( $transaction_id );
 				}
@@ -133,10 +133,10 @@ class WC_Order extends WC_Abstract_Order {
 					'Error completing payment for order #%d',
 					$this->get_id()
 				),
-				array(
+				[
 					'order' => $this,
 					'error' => $e,
-				)
+				]
 			);
 			$this->add_order_note( __( 'Payment complete event failed.', 'woocommerce' ) . ' ' . $e->getMessage() );
 			return false;
@@ -153,24 +153,24 @@ class WC_Order extends WC_Abstract_Order {
 	 * @return string
 	 */
 	public function get_formatted_order_total( $tax_display = '', $display_refunded = true ) {
-		$formatted_total = wc_price( $this->get_total(), array( 'currency' => $this->get_currency() ) );
+		$formatted_total = wc_price( $this->get_total(), [ 'currency' => $this->get_currency() ] );
 		$order_total     = $this->get_total();
 		$total_refunded  = $this->get_total_refunded();
 		$tax_string      = '';
 
 		// Tax for inclusive prices.
 		if ( wc_tax_enabled() && 'incl' === $tax_display ) {
-			$tax_string_array = array();
+			$tax_string_array = [];
 			$tax_totals       = $this->get_tax_totals();
 
 			if ( 'itemized' === get_option( 'woocommerce_tax_total_display' ) ) {
 				foreach ( $tax_totals as $code => $tax ) {
-					$tax_amount         = ( $total_refunded && $display_refunded ) ? wc_price( WC_Tax::round( $tax->amount - $this->get_total_tax_refunded_by_rate_id( $tax->rate_id ) ), array( 'currency' => $this->get_currency() ) ) : $tax->formatted_amount;
+					$tax_amount         = ( $total_refunded && $display_refunded ) ? wc_price( WC_Tax::round( $tax->amount - $this->get_total_tax_refunded_by_rate_id( $tax->rate_id ) ), [ 'currency' => $this->get_currency() ] ) : $tax->formatted_amount;
 					$tax_string_array[] = sprintf( '%s %s', $tax_amount, $tax->label );
 				}
 			} elseif ( ! empty( $tax_totals ) ) {
 				$tax_amount         = ( $total_refunded && $display_refunded ) ? $this->get_total_tax() - $this->get_total_tax_refunded() : $this->get_total_tax();
-				$tax_string_array[] = sprintf( '%s %s', wc_price( $tax_amount, array( 'currency' => $this->get_currency() ) ), WC()->countries->tax_or_vat() );
+				$tax_string_array[] = sprintf( '%s %s', wc_price( $tax_amount, [ 'currency' => $this->get_currency() ] ), WC()->countries->tax_or_vat() );
 			}
 
 			if ( ! empty( $tax_string_array ) ) {
@@ -180,7 +180,7 @@ class WC_Order extends WC_Abstract_Order {
 		}
 
 		if ( $total_refunded && $display_refunded ) {
-			$formatted_total = '<del aria-hidden="true">' . wp_strip_all_tags( $formatted_total ) . '</del> <ins>' . wc_price( $order_total - $total_refunded, array( 'currency' => $this->get_currency() ) ) . $tax_string . '</ins>';
+			$formatted_total = '<del aria-hidden="true">' . wp_strip_all_tags( $formatted_total ) . '</del> <ins>' . wc_price( $order_total - $total_refunded, [ 'currency' => $this->get_currency() ] ) . $tax_string . '</ins>';
 		} else {
 			$formatted_total .= $tax_string;
 		}
@@ -234,10 +234,10 @@ class WC_Order extends WC_Abstract_Order {
 	protected function handle_exception( $e, $message = 'Error' ) {
 		wc_get_logger()->error(
 			$message,
-			array(
+			[
 				'order' => $this,
 				'error' => $e,
-			)
+			]
 		);
 		$this->add_order_note( $message . ' ' . $e->getMessage() );
 	}
@@ -255,12 +255,12 @@ class WC_Order extends WC_Abstract_Order {
 		$result = parent::set_status( $new_status );
 
 		if ( true === $this->object_read && ! empty( $result['from'] ) && $result['from'] !== $result['to'] ) {
-			$this->status_transition = array(
+			$this->status_transition = [
 				'from'   => ! empty( $this->status_transition['from'] ) ? $this->status_transition['from'] : $result['from'],
 				'to'     => $result['to'],
 				'note'   => $note,
 				'manual' => (bool) $manual_update,
-			);
+			];
 
 			if ( $manual_update ) {
 				do_action( 'woocommerce_order_edit_status', $this->get_id(), $result['to'] );
@@ -339,10 +339,10 @@ class WC_Order extends WC_Abstract_Order {
 					'Error updating status for order #%d',
 					$this->get_id()
 				),
-				array(
+				[
 					'order' => $this,
 					'error' => $e,
-				)
+				]
 			);
 			$this->add_order_note( __( 'Update status event failed.', 'woocommerce' ) . ' ' . $e->getMessage() );
 			return false;
@@ -375,7 +375,7 @@ class WC_Order extends WC_Abstract_Order {
 
 					// Work out if this was for a payment, and trigger a payment_status hook instead.
 					if (
-						in_array( $status_transition['from'], apply_filters( 'woocommerce_valid_order_statuses_for_payment', array( 'pending', 'failed' ), $this ), true )
+						in_array( $status_transition['from'], apply_filters( 'woocommerce_valid_order_statuses_for_payment', [ 'pending', 'failed' ], $this ), true )
 						&& in_array( $status_transition['to'], wc_get_is_paid_statuses(), true )
 					) {
 						/**
@@ -401,10 +401,10 @@ class WC_Order extends WC_Abstract_Order {
 						'Status transition of order #%d errored!',
 						$this->get_id()
 					),
-					array(
+					[
 						'order' => $this,
 						'error' => $e,
-					)
+					]
 				);
 				$this->add_order_note( __( 'Error during status transition.', 'woocommerce' ) . ' ' . $e->getMessage() );
 			}
@@ -427,9 +427,9 @@ class WC_Order extends WC_Abstract_Order {
 	 */
 	public function get_base_data() {
 		return array_merge(
-			array( 'id' => $this->get_id() ),
+			[ 'id' => $this->get_id() ],
 			$this->data,
-			array( 'number' => $this->get_order_number() )
+			[ 'number' => $this->get_order_number() ]
 		);
 	}
 
@@ -442,14 +442,14 @@ class WC_Order extends WC_Abstract_Order {
 	public function get_data() {
 		return array_merge(
 			$this->get_base_data(),
-			array(
+			[
 				'meta_data'      => $this->get_meta_data(),
 				'line_items'     => $this->get_items( 'line_item' ),
 				'tax_lines'      => $this->get_items( 'tax' ),
 				'shipping_lines' => $this->get_items( 'shipping' ),
 				'fee_lines'      => $this->get_items( 'fee' ),
 				'coupon_lines'   => $this->get_items( 'coupon' ),
-			)
+			]
 		);
 	}
 
@@ -458,7 +458,7 @@ class WC_Order extends WC_Abstract_Order {
 	 */
 	public function get_changes() {
 		$changed_props = parent::get_changes();
-		$subs          = array( 'shipping', 'billing' );
+		$subs          = [ 'shipping', 'billing' ];
 		foreach ( $subs as $sub ) {
 			if ( ! empty( $changed_props[ $sub ] ) ) {
 				foreach ( $changed_props[ $sub ] as $sub_prop => $value ) {
@@ -1398,7 +1398,7 @@ class WC_Order extends WC_Abstract_Order {
 	 * @return bool
 	 */
 	public function is_editable() {
-		return apply_filters( 'wc_order_is_editable', in_array( $this->get_status(), array( 'pending', 'on-hold', 'auto-draft' ), true ), $this );
+		return apply_filters( 'wc_order_is_editable', in_array( $this->get_status(), [ 'pending', 'on-hold', 'auto-draft' ], true ), $this );
 	}
 
 	/**
@@ -1430,7 +1430,7 @@ class WC_Order extends WC_Abstract_Order {
 			return false;
 		}
 
-		$hide          = apply_filters( 'woocommerce_order_hide_shipping_address', array( 'local_pickup' ), $this );
+		$hide          = apply_filters( 'woocommerce_order_hide_shipping_address', [ 'local_pickup' ], $this );
 		$needs_address = false;
 
 		foreach ( $this->get_shipping_methods() as $shipping_method ) {
@@ -1470,7 +1470,7 @@ class WC_Order extends WC_Abstract_Order {
 	 * @return array
 	 */
 	public function get_downloadable_items() {
-		$downloads = array();
+		$downloads = [];
 
 		foreach ( $this->get_items() as $item ) {
 			if ( ! is_object( $item ) ) {
@@ -1488,7 +1488,7 @@ class WC_Order extends WC_Abstract_Order {
 				$product        = $item->get_product();
 				if ( $product && $item_downloads ) {
 					foreach ( $item_downloads as $file ) {
-						$downloads[] = array(
+						$downloads[] = [
 							'download_url'        => $file['download_url'],
 							'download_id'         => $file['id'],
 							'product_id'          => $product->get_id(),
@@ -1499,11 +1499,11 @@ class WC_Order extends WC_Abstract_Order {
 							'order_key'           => $this->get_order_key(),
 							'downloads_remaining' => $file['downloads_remaining'],
 							'access_expires'      => $file['access_expires'],
-							'file'                => array(
+							'file'                => [
 								'name' => $file['name'],
 								'file' => $file['file'],
-							),
-						);
+							],
+						];
 					}
 				}
 			}
@@ -1518,7 +1518,7 @@ class WC_Order extends WC_Abstract_Order {
 	 * @return bool
 	 */
 	public function needs_payment() {
-		$valid_order_statuses = apply_filters( 'woocommerce_valid_order_statuses_for_payment', array( 'pending', 'failed' ), $this );
+		$valid_order_statuses = apply_filters( 'woocommerce_valid_order_statuses_for_payment', [ 'pending', 'failed' ], $this );
 		return apply_filters( 'woocommerce_order_needs_payment', ( $this->has_status( $valid_order_statuses ) && $this->get_total() > 0 ), $this, $valid_order_statuses );
 	}
 
@@ -1585,10 +1585,10 @@ class WC_Order extends WC_Abstract_Order {
 			$pay_url = add_query_arg( 'key', $this->get_order_key(), $pay_url );
 		} else {
 			$pay_url = add_query_arg(
-				array(
+				[
 					'pay_for_order' => 'true',
 					'key'           => $this->get_order_key(),
-				),
+				],
 				$pay_url
 			);
 		}
@@ -1619,12 +1619,12 @@ class WC_Order extends WC_Abstract_Order {
 			'woocommerce_get_cancel_order_url',
 			wp_nonce_url(
 				add_query_arg(
-					array(
+					[
 						'cancel_order' => 'true',
 						'order'        => $this->get_order_key(),
 						'order_id'     => $this->get_id(),
 						'redirect'     => $redirect,
-					),
+					],
 					$this->get_cancel_endpoint()
 				),
 				'woocommerce-cancel_order'
@@ -1642,13 +1642,13 @@ class WC_Order extends WC_Abstract_Order {
 		return apply_filters(
 			'woocommerce_get_cancel_order_url_raw',
 			add_query_arg(
-				array(
+				[
 					'cancel_order' => 'true',
 					'order'        => $this->get_order_key(),
 					'order_id'     => $this->get_id(),
 					'redirect'     => $redirect,
 					'_wpnonce'     => wp_create_nonce( 'woocommerce-cancel_order' ),
-				),
+				],
 				$this->get_cancel_endpoint()
 			)
 		);
@@ -1722,7 +1722,7 @@ class WC_Order extends WC_Abstract_Order {
 		}
 		$commentdata = apply_filters(
 			'woocommerce_new_order_note_data',
-			array(
+			[
 				'comment_post_ID'      => $this->get_id(),
 				'comment_author'       => $comment_author,
 				'comment_author_email' => $comment_author_email,
@@ -1732,11 +1732,11 @@ class WC_Order extends WC_Abstract_Order {
 				'comment_type'         => 'order_note',
 				'comment_parent'       => 0,
 				'comment_approved'     => 1,
-			),
-			array(
+			],
+			[
 				'order_id'         => $this->get_id(),
 				'is_customer_note' => $is_customer_note,
-			)
+			]
 		);
 
 		$comment_id = wp_insert_comment( $commentdata );
@@ -1746,10 +1746,10 @@ class WC_Order extends WC_Abstract_Order {
 
 			do_action(
 				'woocommerce_new_customer_note',
-				array(
+				[
 					'order_id'      => $this->get_id(),
 					'customer_note' => $commentdata['comment_content'],
-				)
+				]
 			);
 		}
 
@@ -1785,14 +1785,14 @@ class WC_Order extends WC_Abstract_Order {
 	 * @return array
 	 */
 	public function get_customer_order_notes() {
-		$notes = array();
-		$args  = array(
+		$notes = [];
+		$args  = [
 			'post_id' => $this->get_id(),
 			'approve' => 'approve',
 			'type'    => '',
-		);
+		];
 
-		remove_filter( 'comments_clauses', array( 'WC_Comments', 'exclude_order_comments' ) );
+		remove_filter( 'comments_clauses', [ 'WC_Comments', 'exclude_order_comments' ] );
 
 		$comments = get_comments( $args );
 
@@ -1804,7 +1804,7 @@ class WC_Order extends WC_Abstract_Order {
 			$notes[]                  = $comment;
 		}
 
-		add_filter( 'comments_clauses', array( 'WC_Comments', 'exclude_order_comments' ) );
+		add_filter( 'comments_clauses', [ 'WC_Comments', 'exclude_order_comments' ] );
 
 		return $notes;
 	}
@@ -1830,11 +1830,11 @@ class WC_Order extends WC_Abstract_Order {
 		}
 
 		$this->refunds = wc_get_orders(
-			array(
+			[
 				'type'   => 'shop_order_refund',
 				'parent' => $this->get_id(),
 				'limit'  => -1,
-			)
+			]
 		);
 
 		wp_cache_set( $cache_key, $this->refunds, $this->cache_group );
@@ -1914,10 +1914,10 @@ class WC_Order extends WC_Abstract_Order {
 	 */
 	public function get_item_count_refunded( $item_type = '' ) {
 		if ( empty( $item_type ) ) {
-			$item_type = array( 'line_item' );
+			$item_type = [ 'line_item' ];
 		}
 		if ( ! is_array( $item_type ) ) {
-			$item_type = array( $item_type );
+			$item_type = [ $item_type ];
 		}
 		$count = 0;
 
@@ -2054,10 +2054,10 @@ class WC_Order extends WC_Abstract_Order {
 	 */
 	protected function add_order_item_totals_payment_method_row( &$total_rows, $tax_display ) {
 		if ( $this->get_total() > 0 && $this->get_payment_method_title() && 'other' !== $this->get_payment_method_title() ) {
-			$total_rows['payment_method'] = array(
+			$total_rows['payment_method'] = [
 				'label' => __( 'Payment method:', 'woocommerce' ),
 				'value' => $this->get_payment_method_title(),
-			);
+			];
 		}
 	}
 
@@ -2071,10 +2071,10 @@ class WC_Order extends WC_Abstract_Order {
 		$refunds = $this->get_refunds();
 		if ( $refunds ) {
 			foreach ( $refunds as $id => $refund ) {
-				$total_rows[ 'refund_' . $id ] = array(
+				$total_rows[ 'refund_' . $id ] = [
 					'label' => $refund->get_reason() ? $refund->get_reason() : __( 'Refund', 'woocommerce' ) . ':',
-					'value' => wc_price( '-' . $refund->get_amount(), array( 'currency' => $this->get_currency() ) ),
-				);
+					'value' => wc_price( '-' . $refund->get_amount(), [ 'currency' => $this->get_currency() ] ),
+				];
 			}
 		}
 	}
@@ -2087,7 +2087,7 @@ class WC_Order extends WC_Abstract_Order {
 	 */
 	public function get_order_item_totals( $tax_display = '' ) {
 		$tax_display = $tax_display ? $tax_display : get_option( 'woocommerce_tax_display_cart' );
-		$total_rows  = array();
+		$total_rows  = [];
 
 		$this->add_order_item_totals_subtotal_row( $total_rows, $tax_display );
 		$this->add_order_item_totals_discount_row( $total_rows, $tax_display );

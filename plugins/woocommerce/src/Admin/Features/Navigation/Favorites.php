@@ -99,7 +99,7 @@ class Favorites {
 	public static function get_all( $user_id ) {
 		$response = WCAdminUser::get_user_data_field( $user_id, self::META_NAME );
 
-		return $response ? json_decode( $response, true ) : array();
+		return $response ? json_decode( $response, true ) : [];
 	}
 
 }

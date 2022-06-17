@@ -97,12 +97,12 @@ class MailchimpScheduler {
 
 		return wp_remote_post(
 			$subscribe_endpoint,
-			array(
+			[
 				'method' => 'POST',
-				'body'   => array(
+				'body'   => [
 					'email' => $store_email,
-				),
-			)
+				],
+			]
 		);
 	}
 
@@ -126,7 +126,7 @@ class MailchimpScheduler {
 		// phpcs:ignore
 		$msg = isset( $extra_msg ) ? 'Incorrect response from Mailchimp API with: ' . print_r( $extra_msg, true ) : 'Error getting a response from Mailchimp API.';
 
-		$this->logger->error( $msg, array( 'source' => self::LOGGER_CONTEXT ) );
+		$this->logger->error( $msg, [ 'source' => self::LOGGER_CONTEXT ] );
 
 		$accumulated_error_count = intval( get_option( self::SUBSCRIBED_ERROR_COUNT_OPTION_NAME, 0 ) ) + 1;
 		update_option( self::SUBSCRIBED_ERROR_COUNT_OPTION_NAME, $accumulated_error_count );

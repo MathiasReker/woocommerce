@@ -40,7 +40,7 @@ interface WC_Customer_Download_Data_Store_Interface {
 	 * @param  array $args Arguments.
 	 * @return array of WC_Customer_Download
 	 */
-	public function get_downloads( $args = array() );
+	public function get_downloads( $args = [] );
 
 	/**
 	 * Update download ids if the hash changes.

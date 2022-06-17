@@ -87,7 +87,7 @@ class WooCommercePayments extends Task {
 	 * @return bool
 	 */
 	public function can_view() {
-		$has_task_list_previously_completed = ( new TaskList( array( 'id' => 'setup' ) ) )->has_previously_completed();
+		$has_task_list_previously_completed = ( new TaskList( [ 'id' => 'setup' ] ) )->has_previously_completed();
 
 		return ! $has_task_list_previously_completed && // Do not re-display the task if the task list has already been completed.
 			self::is_installed() &&
@@ -101,9 +101,9 @@ class WooCommercePayments extends Task {
 	 * @return bool
 	 */
 	public static function is_requested() {
-		$profiler_data       = get_option( OnboardingProfile::DATA_OPTION, array() );
-		$product_types       = isset( $profiler_data['product_types'] ) ? $profiler_data['product_types'] : array();
-		$business_extensions = isset( $profiler_data['business_extensions'] ) ? $profiler_data['business_extensions'] : array();
+		$profiler_data       = get_option( OnboardingProfile::DATA_OPTION, [] );
+		$product_types       = isset( $profiler_data['product_types'] ) ? $profiler_data['product_types'] : [];
+		$business_extensions = isset( $profiler_data['business_extensions'] ) ? $profiler_data['business_extensions'] : [];
 
 		$subscriptions_and_us = in_array( 'subscriptions', $product_types, true ) && 'US' === WC()->countries->get_base_country();
 		return in_array( 'woocommerce-payments', $business_extensions, true ) || $subscriptions_and_us;

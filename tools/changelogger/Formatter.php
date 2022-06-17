@@ -107,8 +107,8 @@ class Formatter extends KeepAChangelogParser {
 		$ret = new Changelog();
 
 		// Fix newlines and expand tabs.
-		$changelog = strtr( $changelog, array( "\r\n" => "\n" ) );
-		$changelog = strtr( $changelog, array( "\r" => "\n" ) );
+		$changelog = strtr( $changelog, [ "\r\n" => "\n" ] );
+		$changelog = strtr( $changelog, [ "\r" => "\n" ] );
 		while ( strpos( $changelog, "\t" ) !== false ) {
 			$changelog = preg_replace_callback(
 				'/^([^\t\n]*)\t/m',
@@ -120,7 +120,7 @@ class Formatter extends KeepAChangelogParser {
 		}
 
 		// Entries make up the rest of the document.
-		$entries       = array();
+		$entries       = [];
 		$entry_pattern = $this->entry_pattern;
 		preg_match_all( $entry_pattern, $changelog, $matches );
 
@@ -170,9 +170,9 @@ class Formatter extends KeepAChangelogParser {
 
 			$entry = $this->newChangelogEntry(
 				$version,
-				array(
+				[
 					'timestamp' => $timestamp,
-				)
+				]
 			);
 
 			$entries[] = $entry;
@@ -184,7 +184,7 @@ class Formatter extends KeepAChangelogParser {
 
 			// Now parse all the subheadings and changes.
 			while ( '' !== $content ) {
-				$changes = array();
+				$changes = [];
 				$rows    = explode( "\n", $content );
 				foreach ( $rows as $row ) {
 					$row          = trim( $row );
@@ -193,21 +193,21 @@ class Formatter extends KeepAChangelogParser {
 
 					array_push(
 						$changes,
-						array(
+						[
 							'subheading' => $is_subentry ? '' : trim( $row_segments[0] ),
 							'content'    => $is_subentry ? trim( $row ) : trim( $row_segments[1] ),
-						)
+						]
 					);
 				}
 
 				foreach ( $changes as $change ) {
 					$entry->appendChange(
 						$this->newChangeEntry(
-							array(
+							[
 								'subheading' => $change['subheading'],
 								'content'    => $change['content'],
 								'timestamp'  => $entry_timestamp,
-							)
+							]
 						)
 					);
 				}

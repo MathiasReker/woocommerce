@@ -37,7 +37,7 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 	 *
 	 * @var array
 	 */
-	protected $column_types = array(
+	protected $column_types = [
 		'date_start'       => 'strval',
 		'date_end'         => 'strval',
 		'product_id'       => 'intval',
@@ -55,14 +55,14 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 		'category_ids'     => 'array_values',
 		'variations'       => 'array_values',
 		'sku'              => 'strval',
-	);
+	];
 
 	/**
 	 * Extended product attributes to include in the data.
 	 *
 	 * @var array
 	 */
-	protected $extended_attributes = array(
+	protected $extended_attributes = [
 		'name',
 		'price',
 		'image',
@@ -74,7 +74,7 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 		'category_ids',
 		'variations',
 		'sku',
-	);
+	];
 
 	/**
 	 * Data store context used to pass to filters.
@@ -88,19 +88,19 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 	 */
 	protected function assign_report_columns() {
 		$table_name           = self::get_db_table_name();
-		$this->report_columns = array(
+		$this->report_columns = [
 			'product_id'   => 'product_id',
 			'items_sold'   => 'SUM(product_qty) as items_sold',
 			'net_revenue'  => 'SUM(product_net_revenue) AS net_revenue',
 			'orders_count' => "COUNT( DISTINCT ( CASE WHEN product_gross_revenue >= 0 THEN {$table_name}.order_id END ) ) as orders_count",
-		);
+		];
 	}
 
 	/**
 	 * Set up all the hooks for maintaining and populating table data.
 	 */
 	public static function init() {
-		add_action( 'woocommerce_analytics_delete_order_stats', array( __CLASS__, 'sync_on_order_delete' ), 10 );
+		add_action( 'woocommerce_analytics_delete_order_stats', [ __CLASS__, 'sync_on_order_delete' ], 10 );
 	}
 
 	/**
@@ -199,7 +199,7 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 	 */
 	protected function include_extended_info( &$products_data, $query_args ) {
 		global $wpdb;
-		$product_names = array();
+		$product_names = [];
 
 		foreach ( $products_data as $key => $product_data ) {
 			$extended_info = new \ArrayObject();
@@ -238,7 +238,7 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 					} else {
 						$function = 'get_' . $extended_attribute;
 					}
-					if ( is_callable( array( $product, $function ) ) ) {
+					if ( is_callable( [ $product, $function ] ) ) {
 						$value                                = $product->{$function}();
 						$extended_info[ $extended_attribute ] = $value;
 					}
@@ -265,7 +265,7 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 		$table_name = self::get_db_table_name();
 
 		// These defaults are only partially applied when used via REST API, as that has its own defaults.
-		$defaults   = array(
+		$defaults   = [
 			'per_page'          => get_option( 'posts_per_page' ),
 			'page'              => 1,
 			'order'             => 'DESC',
@@ -273,10 +273,10 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 			'before'            => TimeInterval::default_before(),
 			'after'             => TimeInterval::default_after(),
 			'fields'            => '*',
-			'category_includes' => array(),
-			'product_includes'  => array(),
+			'category_includes' => [],
+			'product_includes'  => [],
 			'extended_info'     => false,
-		);
+		];
 		$query_args = wp_parse_args( $query_args, $defaults );
 		$this->normalize_timezones( $query_args, $defaults );
 
@@ -290,12 +290,12 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 		if ( false === $data ) {
 			$this->initialize_queries();
 
-			$data = (object) array(
-				'data'    => array(),
+			$data = (object) [
+				'data'    => [],
 				'total'   => 0,
 				'pages'   => 0,
 				'page_no' => 0,
-			);
+			];
 
 			$selections        = $this->selected_columns( $query_args );
 			$included_products = $this->get_included_products_array( $query_args );
@@ -303,7 +303,7 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 			$this->add_sql_query_params( $query_args );
 
 			if ( count( $included_products ) > 0 ) {
-				$filtered_products = array_diff( $included_products, array( '-1' ) );
+				$filtered_products = array_diff( $included_products, [ '-1' ] );
 				$total_results     = count( $filtered_products );
 				$total_pages       = (int) ceil( $total_results / $params['per_page'] );
 
@@ -312,7 +312,7 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 				}
 
 				$fields          = $this->get_fields( $query_args );
-				$join_selections = $this->format_join_selections( $fields, array( 'product_id' ) );
+				$join_selections = $this->format_join_selections( $fields, [ 'product_id' ] );
 				$ids_table       = $this->get_ids_table( $included_products, 'product_id' );
 
 				$this->subquery->clear_sql_clause( 'select' );
@@ -360,13 +360,13 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 				return $data;
 			}
 
-			$product_data = array_map( array( $this, 'cast_numbers' ), $product_data );
-			$data         = (object) array(
+			$product_data = array_map( [ $this, 'cast_numbers' ], $product_data );
+			$data         = (object) [
 				'data'    => $product_data,
 				'total'   => $total_results,
 				'pages'   => $total_pages,
 				'page_no' => (int) $query_args['page'],
-			);
+			];
 
 			$this->set_cached_data( $cache_key, $data );
 		}
@@ -435,7 +435,7 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 
 			$result = $wpdb->replace(
 				self::get_db_table_name(),
-				array(
+				[
 					'order_item_id'         => $order_item_id,
 					'order_id'              => $order->get_id(),
 					'product_id'            => wc_get_order_item_meta( $order_item_id, '_product_id' ),
@@ -450,8 +450,8 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 					'shipping_tax_amount'   => $shipping_tax_amount,
 					// @todo Can this be incorrect if modified by filters?
 					'product_gross_revenue' => $net_revenue + $tax_amount + $shipping_amount + $shipping_tax_amount,
-				),
-				array(
+				],
+				[
 					'%d', // order_item_id.
 					'%d', // order_id.
 					'%d', // product_id.
@@ -465,7 +465,7 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 					'%f', // shipping_amount.
 					'%f', // shipping_tax_amount.
 					'%f', // product_gross_revenue.
-				)
+				]
 			); // WPCS: cache ok, DB call ok, unprepared SQL ok.
 
 			/**
@@ -505,7 +505,7 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 	public static function sync_on_order_delete( $order_id ) {
 		global $wpdb;
 
-		$wpdb->delete( self::get_db_table_name(), array( 'order_id' => $order_id ) );
+		$wpdb->delete( self::get_db_table_name(), [ 'order_id' => $order_id ] );
 
 		/**
 		 * Fires when product's reports are removed from database.

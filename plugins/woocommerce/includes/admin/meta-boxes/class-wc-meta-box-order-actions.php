@@ -103,7 +103,7 @@ class WC_Meta_Box_Order_Actions {
 				do_action( 'woocommerce_after_resend_order_email', $order, 'customer_invoice' );
 
 				// Change the post saved message.
-				add_filter( 'redirect_post_location', array( __CLASS__, 'set_email_sent_message' ) );
+				add_filter( 'redirect_post_location', [ __CLASS__, 'set_email_sent_message' ] );
 
 			} elseif ( 'send_order_details_admin' === $action ) {
 
@@ -118,7 +118,7 @@ class WC_Meta_Box_Order_Actions {
 				do_action( 'woocommerce_after_resend_order_email', $order, 'new_order' );
 
 				// Change the post saved message.
-				add_filter( 'redirect_post_location', array( __CLASS__, 'set_email_sent_message' ) );
+				add_filter( 'redirect_post_location', [ __CLASS__, 'set_email_sent_message' ] );
 
 			} elseif ( 'regenerate_download_permissions' === $action ) {
 
@@ -157,11 +157,11 @@ class WC_Meta_Box_Order_Actions {
 	 * @return array
 	 */
 	private static function get_available_order_actions_for_order( $order ) {
-		$actions = array(
+		$actions = [
 			'send_order_details'              => __( 'Email invoice / order details to customer', 'woocommerce' ),
 			'send_order_details_admin'        => __( 'Resend new order notification', 'woocommerce' ),
 			'regenerate_download_permissions' => __( 'Regenerate download permissions', 'woocommerce' ),
-		);
+		];
 
 		/**
 		 * Filter: woocommerce_order_actions

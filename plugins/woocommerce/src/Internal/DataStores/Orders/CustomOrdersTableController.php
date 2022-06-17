@@ -222,7 +222,7 @@ class CustomOrdersTableController {
 		}
 
 		if ( $this->data_synchronizer->check_orders_table_exists() ) {
-			$tools_array['delete_custom_orders_table'] = array(
+			$tools_array['delete_custom_orders_table'] = [
 				'name'             => __( 'Delete the custom orders tables', 'woocommerce' ),
 				'desc'             => sprintf(
 					'<strong class="red">%1$s</strong> %2$s',
@@ -236,9 +236,9 @@ class CustomOrdersTableController {
 				},
 				'button'           => __( 'Delete', 'woocommerce' ),
 				'disabled'         => $this->custom_orders_table_usage_is_enabled(),
-			);
+			];
 		} else {
-			$tools_array['create_custom_orders_table'] = array(
+			$tools_array['create_custom_orders_table'] = [
 				'name'             => __( 'Create the custom orders tables', 'woocommerce' ),
 				'desc'             => __( 'This tool will create the custom orders tables. Once created you can go to WooCommerce > Settings > Advanced > Custom data stores and configure the usage of the tables.', 'woocommerce' ),
 				'requires_refresh' => true,
@@ -247,7 +247,7 @@ class CustomOrdersTableController {
 					return __( 'Custom orders tables have been created. You can now go to WooCommerce > Settings > Advanced > Custom data stores.', 'woocommerce' );
 				},
 				'button'           => __( 'Create', 'woocommerce' ),
-			);
+			];
 		}
 
 		return $tools_array;
@@ -316,7 +316,7 @@ class CustomOrdersTableController {
 		}
 
 		if ( $this->data_synchronizer->check_orders_table_exists() ) {
-			$settings[] = array(
+			$settings[] = [
 				'title' => __( 'Custom orders tables', 'woocommerce' ),
 				'type'  => 'title',
 				'id'    => 'cot-title',
@@ -326,23 +326,23 @@ class CustomOrdersTableController {
 					'<strong>',
 					'</strong>'
 				),
-			);
+			];
 
 			$sync_status     = $this->data_synchronizer->get_sync_status();
 			$sync_is_pending = 0 !== $sync_status['current_pending_count'];
 
-			$settings[] = array(
+			$settings[] = [
 				'title'         => __( 'Data store for orders', 'woocommerce' ),
 				'id'            => self::CUSTOM_ORDERS_TABLE_USAGE_ENABLED_OPTION,
 				'default'       => 'no',
 				'type'          => 'radio',
-				'options'       => array(
+				'options'       => [
 					'yes' => __( 'Use the WooCommerce orders tables', 'woocommerce' ),
 					'no'  => __( 'Use the WordPress posts table', 'woocommerce' ),
-				),
+				],
 				'checkboxgroup' => 'start',
-				'disabled'      => $sync_is_pending ? array( 'yes', 'no' ) : array(),
-			);
+				'disabled'      => $sync_is_pending ? [ 'yes', 'no' ] : [],
+			];
 
 			if ( $sync_is_pending ) {
 				$initial_pending_count = $sync_status['initial_pending_count'];
@@ -367,49 +367,49 @@ class CustomOrdersTableController {
 					$text .= __( "<br/>The authoritative table can't be changed until these orders are synchronized.", 'woocommerce' );
 				}
 
-				$settings[] = array(
+				$settings[] = [
 					'type' => 'info',
 					'id'   => 'cot-out-of-sync-warning',
 					'css'  => 'color: #C00000',
 					'text' => $text,
-				);
+				];
 			}
 
-			$settings[] = array(
+			$settings[] = [
 				'desc' => __( 'Keep the posts table and the orders tables synchronized', 'woocommerce' ),
 				'id'   => DataSynchronizer::ORDERS_DATA_SYNC_ENABLED_OPTION,
 				'type' => 'checkbox',
-			);
+			];
 
 			if ( $sync_is_pending ) {
 				if ( $this->data_synchronizer->data_sync_is_enabled() ) {
 					$message    = $this->custom_orders_table_usage_is_enabled() ?
 						__( 'Switch to using the posts table as the authoritative data store for orders when sync finishes', 'woocommerce' ) :
 						__( 'Switch to using the orders table as the authoritative data store for orders when sync finishes', 'woocommerce' );
-					$settings[] = array(
+					$settings[] = [
 						'desc' => $message,
 						'id'   => self::AUTO_FLIP_AUTHORITATIVE_TABLE_ROLES_OPTION,
 						'type' => 'checkbox',
-					);
+					];
 				}
 			}
 
-			$settings[] = array(
+			$settings[] = [
 				'desc' => __( 'Use database transactions for the orders data synchronization', 'woocommerce' ),
 				'id'   => self::USE_DB_TRANSACTIONS_OPTION,
 				'type' => 'checkbox',
-			);
+			];
 
 			$isolation_level_names = self::get_valid_transaction_isolation_levels();
-			$settings[]            = array(
+			$settings[]            = [
 				'desc'    => __( 'Database transaction isolation level to use', 'woocommerce' ),
 				'id'      => self::DB_TRANSACTIONS_ISOLATION_LEVEL_OPTION,
 				'type'    => 'select',
 				'options' => array_combine( $isolation_level_names, $isolation_level_names ),
 				'default' => self::DEFAULT_DB_TRANSACTIONS_ISOLATION_LEVEL,
-			);
+			];
 		} else {
-			$settings[] = array(
+			$settings[] = [
 				'title' => __( 'Custom orders tables', 'woocommerce' ),
 				'type'  => 'title',
 				'desc'  => sprintf(
@@ -418,10 +418,10 @@ class CustomOrdersTableController {
 					'<em>',
 					'</em>'
 				),
-			);
+			];
 		}
 
-		$settings[] = array( 'type' => 'sectionend' );
+		$settings[] = [ 'type' => 'sectionend' ];
 
 		return $settings;
 	}
@@ -432,12 +432,12 @@ class CustomOrdersTableController {
 	 * @return string[]
 	 */
 	public static function get_valid_transaction_isolation_levels() {
-		return array(
+		return [
 			'REPEATABLE READ',
 			'READ COMMITTED',
 			'READ UNCOMMITTED',
 			'SERIALIZABLE',
-		);
+		];
 	}
 
 	/**
@@ -534,7 +534,7 @@ class CustomOrdersTableController {
 	private function register_post_type_for_order_placeholders(): void {
 		wc_register_order_type(
 			DataSynchronizer::PLACEHOLDER_ORDER_POST_TYPE,
-			array(
+			[
 				'public'                           => false,
 				'exclude_from_search'              => true,
 				'publicly_queryable'               => false,
@@ -546,13 +546,13 @@ class CustomOrdersTableController {
 				'rewrite'                          => false,
 				'query_var'                        => false,
 				'can_export'                       => false,
-				'supports'                         => array(),
-				'capabilities'                     => array(),
+				'supports'                         => [],
+				'capabilities'                     => [],
 				'exclude_from_order_count'         => true,
 				'exclude_from_order_views'         => true,
 				'exclude_from_order_reports'       => true,
 				'exclude_from_order_sales_reports' => true,
-			)
+			]
 		);
 	}
 }

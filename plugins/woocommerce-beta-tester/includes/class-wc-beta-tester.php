@@ -50,11 +50,11 @@ class WC_Beta_Tester {
 	 */
 	public static function get_settings() {
 		$settings = (object) wp_parse_args(
-			get_option( 'wc_beta_tester_options', array() ),
-			array(
+			get_option( 'wc_beta_tester_options', [] ),
+			[
 				'channel'     => 'beta',
 				'auto_update' => false,
-			)
+			]
 		);
 
 		$settings->channel     = $settings->channel;
@@ -77,21 +77,21 @@ class WC_Beta_Tester {
 	 */
 	public function __construct() {
 		$this->plugin_name   = plugin_basename( WC_BETA_TESTER_FILE );
-		$this->plugin_config = array(
+		$this->plugin_config = [
 			'plugin_file'        => 'woocommerce/woocommerce.php',
 			'slug'               => 'woocommerce',
 			'proper_folder_name' => 'woocommerce',
 			'api_url'            => 'https://api.wordpress.org/plugins/info/1.0/woocommerce.json',
 			'repo_url'           => 'https://wordpress.org/plugins/woocommerce/',
-		);
+		];
 
-		add_filter( "plugin_action_links_{$this->plugin_name}", array( $this, 'plugin_action_links' ), 10, 1 );
-		add_filter( 'auto_update_plugin', array( $this, 'auto_update_woocommerce' ), 100, 2 );
+		add_filter( "plugin_action_links_{$this->plugin_name}", [ $this, 'plugin_action_links' ], 10, 1 );
+		add_filter( 'auto_update_plugin', [ $this, 'auto_update_woocommerce' ], 100, 2 );
 
 		if ( 'stable' !== $this->get_settings()->channel ) {
-			add_filter( 'pre_set_site_transient_update_plugins', array( $this, 'api_check' ) );
-			add_filter( 'plugins_api_result', array( $this, 'plugins_api_result' ), 10, 3 );
-			add_filter( 'upgrader_source_selection', array( $this, 'upgrader_source_selection' ), 10, 3 );
+			add_filter( 'pre_set_site_transient_update_plugins', [ $this, 'api_check' ] );
+			add_filter( 'plugins_api_result', [ $this, 'plugins_api_result' ], 10, 3 );
+			add_filter( 'upgrader_source_selection', [ $this, 'upgrader_source_selection' ], 10, 3 );
 		}
 
 		$this->includes();
@@ -433,11 +433,11 @@ class WC_Beta_Tester {
 		}
 
 		if ( 'beta' === $channel ) {
-			$releases = array_filter( $releases, array( __CLASS__, 'is_in_beta_channel' ) );
+			$releases = array_filter( $releases, [ __CLASS__, 'is_in_beta_channel' ] );
 		} elseif ( 'rc' === $channel ) {
-			$releases = array_filter( $releases, array( __CLASS__, 'is_in_rc_channel' ) );
+			$releases = array_filter( $releases, [ __CLASS__, 'is_in_rc_channel' ] );
 		} elseif ( 'stable' === $channel ) {
-			$releases = array_filter( $releases, array( __CLASS__, 'is_in_stable_channel' ) );
+			$releases = array_filter( $releases, [ __CLASS__, 'is_in_stable_channel' ] );
 		}
 
 		return $releases;
@@ -450,7 +450,7 @@ class WC_Beta_Tester {
 	 * @return  array
 	 */
 	public function plugin_action_links( $links ) {
-		$action_links = array(
+		$action_links = [
 			'switch-version' => sprintf(
 				'<a href="%s">%s</a>',
 				esc_url( admin_url( 'plugins.php?page=wc-beta-tester-version-picker' ) ),
@@ -461,7 +461,7 @@ class WC_Beta_Tester {
 				esc_url( admin_url( 'plugins.php?page=wc-beta-tester' ) ),
 				esc_html__( 'Settings', 'woocommerce-beta-tester' )
 			),
-		);
+		];
 
 		return array_merge( $action_links, $links );
 	}

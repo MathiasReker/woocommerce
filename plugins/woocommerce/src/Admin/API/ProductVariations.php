@@ -33,15 +33,15 @@ class ProductVariations extends \WC_REST_Product_Variations_Controller {
 		register_rest_route(
 			$this->namespace,
 			'/variations',
-			array(
-				array(
+			[
+				[
 					'methods'             => \WP_REST_Server::READABLE,
-					'callback'            => array( $this, 'get_items' ),
-					'permission_callback' => array( $this, 'get_items_permissions_check' ),
+					'callback'            => [ $this, 'get_items' ],
+					'permission_callback' => [ $this, 'get_items_permissions_check' ],
 					'args'                => $this->get_collection_params(),
-				),
-				'schema' => array( $this, 'get_public_item_schema' ),
-			)
+				],
+				'schema' => [ $this, 'get_public_item_schema' ],
+			]
 		);
 	}
 
@@ -52,11 +52,11 @@ class ProductVariations extends \WC_REST_Product_Variations_Controller {
 	 */
 	public function get_collection_params() {
 		$params           = parent::get_collection_params();
-		$params['search'] = array(
+		$params['search'] = [
 			'description'       => __( 'Search by similar product name, sku, or attribute value.', 'woocommerce' ),
 			'type'              => 'string',
 			'validate_callback' => 'rest_validate_request_arg',
-		);
+		];
 		return $params;
 	}
 
@@ -74,10 +74,10 @@ class ProductVariations extends \WC_REST_Product_Variations_Controller {
 		$search = $wp_query->get( 'search' );
 		if ( $search ) {
 			$like       = '%' . $wpdb->esc_like( $search ) . '%';
-			$conditions = array(
+			$conditions = [
 				$wpdb->prepare( "{$wpdb->posts}.post_title LIKE %s", $like ), // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 				$wpdb->prepare( 'attr_search_meta.meta_value LIKE %s', $like ), // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-			);
+			];
 
 			if ( wc_product_sku_enabled() ) {
 				$conditions[] = $wpdb->prepare( 'wc_product_meta_lookup.sku LIKE %s', $like );
@@ -144,13 +144,13 @@ class ProductVariations extends \WC_REST_Product_Variations_Controller {
 	 * @return WP_Error|WP_REST_Response
 	 */
 	public function get_items( $request ) {
-		add_filter( 'posts_where', array( __CLASS__, 'add_wp_query_filter' ), 10, 2 );
-		add_filter( 'posts_join', array( __CLASS__, 'add_wp_query_join' ), 10, 2 );
-		add_filter( 'posts_groupby', array( 'Automattic\WooCommerce\Admin\API\Products', 'add_wp_query_group_by' ), 10, 2 );
+		add_filter( 'posts_where', [ __CLASS__, 'add_wp_query_filter' ], 10, 2 );
+		add_filter( 'posts_join', [ __CLASS__, 'add_wp_query_join' ], 10, 2 );
+		add_filter( 'posts_groupby', [ 'Automattic\WooCommerce\Admin\API\Products', 'add_wp_query_group_by' ], 10, 2 );
 		$response = parent::get_items( $request );
-		remove_filter( 'posts_where', array( __CLASS__, 'add_wp_query_filter' ), 10 );
-		remove_filter( 'posts_join', array( __CLASS__, 'add_wp_query_join' ), 10 );
-		remove_filter( 'posts_groupby', array( 'Automattic\WooCommerce\Admin\API\Products', 'add_wp_query_group_by' ), 10 );
+		remove_filter( 'posts_where', [ __CLASS__, 'add_wp_query_filter' ], 10 );
+		remove_filter( 'posts_join', [ __CLASS__, 'add_wp_query_join' ], 10 );
+		remove_filter( 'posts_groupby', [ 'Automattic\WooCommerce\Admin\API\Products', 'add_wp_query_group_by' ], 10 );
 		return $response;
 	}
 
@@ -162,23 +162,23 @@ class ProductVariations extends \WC_REST_Product_Variations_Controller {
 	public function get_item_schema() {
 		$schema = parent::get_item_schema();
 
-		$schema['properties']['name']      = array(
+		$schema['properties']['name']      = [
 			'description' => __( 'Product parent name.', 'woocommerce' ),
 			'type'        => 'string',
-			'context'     => array( 'view', 'edit' ),
-		);
-		$schema['properties']['type']      = array(
+			'context'     => [ 'view', 'edit' ],
+		];
+		$schema['properties']['type']      = [
 			'description' => __( 'Product type.', 'woocommerce' ),
 			'type'        => 'string',
 			'default'     => 'variation',
-			'enum'        => array( 'variation' ),
-			'context'     => array( 'view', 'edit' ),
-		);
-		$schema['properties']['parent_id'] = array(
+			'enum'        => [ 'variation' ],
+			'context'     => [ 'view', 'edit' ],
+		];
+		$schema['properties']['parent_id'] = [
 			'description' => __( 'Product parent ID.', 'woocommerce' ),
 			'type'        => 'integer',
-			'context'     => array( 'view', 'edit' ),
-		);
+			'context'     => [ 'view', 'edit' ],
+		];
 
 		return $schema;
 	}

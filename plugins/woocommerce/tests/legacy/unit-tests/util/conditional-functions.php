@@ -46,20 +46,20 @@ class WC_Tests_Conditional_Functions extends WC_Unit_Test_Case {
 	 * @since 2.4
 	 */
 	public function data_provider_test_wc_is_valid_url() {
-		return array(
+		return [
 			// Test some invalid URLs.
-			array( false, wc_is_valid_url( 'google.com' ) ),
-			array( false, wc_is_valid_url( 'ftp://google.com' ) ),
-			array( false, wc_is_valid_url( 'sftp://google.com' ) ),
-			array( false, wc_is_valid_url( 'https://google.com/test invalid' ) ),
+			[ false, wc_is_valid_url( 'google.com' ) ],
+			[ false, wc_is_valid_url( 'ftp://google.com' ) ],
+			[ false, wc_is_valid_url( 'sftp://google.com' ) ],
+			[ false, wc_is_valid_url( 'https://google.com/test invalid' ) ],
 
 			// Test some valid URLs.
-			array( true, wc_is_valid_url( 'http://google.com' ) ),
-			array( true, wc_is_valid_url( 'https://google.com' ) ),
-			array( true, wc_is_valid_url( 'https://google.com/test%20valid' ) ),
-			array( true, wc_is_valid_url( 'https://google.com/test-valid/?query=test' ) ),
-			array( true, wc_is_valid_url( 'https://google.com/test-valid/#hash' ) ),
-		);
+			[ true, wc_is_valid_url( 'http://google.com' ) ],
+			[ true, wc_is_valid_url( 'https://google.com' ) ],
+			[ true, wc_is_valid_url( 'https://google.com/test%20valid' ) ],
+			[ true, wc_is_valid_url( 'https://google.com/test-valid/?query=test' ) ],
+			[ true, wc_is_valid_url( 'https://google.com/test-valid/#hash' ) ],
+		];
 	}
 
 	/**
@@ -68,7 +68,7 @@ class WC_Tests_Conditional_Functions extends WC_Unit_Test_Case {
 	public function test_wc_site_is_https() {
 		$this->assertFalse( wc_site_is_https() );
 
-		add_filter( 'pre_option_home', array( $this, '_https_url' ) );
+		add_filter( 'pre_option_home', [ $this, '_https_url' ] );
 
 		$this->assertTrue( wc_site_is_https() );
 	}

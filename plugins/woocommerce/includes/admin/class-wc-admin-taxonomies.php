@@ -50,7 +50,7 @@ class WC_Admin_Taxonomies {
 		$this->default_cat_id = get_option( 'default_product_cat', 0 );
 
 		// Category/term ordering.
-		add_action( 'create_term', array( $this, 'create_term' ), 5, 3 );
+		add_action( 'create_term', [ $this, 'create_term' ], 5, 3 );
 		add_action(
 			'delete_product_cat',
 			function() {
@@ -59,36 +59,36 @@ class WC_Admin_Taxonomies {
 		);
 
 		// Add form.
-		add_action( 'product_cat_add_form_fields', array( $this, 'add_category_fields' ) );
-		add_action( 'product_cat_edit_form_fields', array( $this, 'edit_category_fields' ), 10 );
-		add_action( 'created_term', array( $this, 'save_category_fields' ), 10, 3 );
-		add_action( 'edit_term', array( $this, 'save_category_fields' ), 10, 3 );
+		add_action( 'product_cat_add_form_fields', [ $this, 'add_category_fields' ] );
+		add_action( 'product_cat_edit_form_fields', [ $this, 'edit_category_fields' ], 10 );
+		add_action( 'created_term', [ $this, 'save_category_fields' ], 10, 3 );
+		add_action( 'edit_term', [ $this, 'save_category_fields' ], 10, 3 );
 
 		// Add columns.
-		add_filter( 'manage_edit-product_cat_columns', array( $this, 'product_cat_columns' ) );
-		add_filter( 'manage_product_cat_custom_column', array( $this, 'product_cat_column' ), 10, 3 );
+		add_filter( 'manage_edit-product_cat_columns', [ $this, 'product_cat_columns' ] );
+		add_filter( 'manage_product_cat_custom_column', [ $this, 'product_cat_column' ], 10, 3 );
 
 		// Add row actions.
-		add_filter( 'product_cat_row_actions', array( $this, 'product_cat_row_actions' ), 10, 2 );
-		add_filter( 'admin_init', array( $this, 'handle_product_cat_row_actions' ) );
+		add_filter( 'product_cat_row_actions', [ $this, 'product_cat_row_actions' ], 10, 2 );
+		add_filter( 'admin_init', [ $this, 'handle_product_cat_row_actions' ] );
 
 		// Taxonomy page descriptions.
-		add_action( 'product_cat_pre_add_form', array( $this, 'product_cat_description' ) );
-		add_action( 'after-product_cat-table', array( $this, 'product_cat_notes' ) );
+		add_action( 'product_cat_pre_add_form', [ $this, 'product_cat_description' ] );
+		add_action( 'after-product_cat-table', [ $this, 'product_cat_notes' ] );
 
 		$attribute_taxonomies = wc_get_attribute_taxonomies();
 
 		if ( ! empty( $attribute_taxonomies ) ) {
 			foreach ( $attribute_taxonomies as $attribute ) {
-				add_action( 'pa_' . $attribute->attribute_name . '_pre_add_form', array( $this, 'product_attribute_description' ) );
+				add_action( 'pa_' . $attribute->attribute_name . '_pre_add_form', [ $this, 'product_attribute_description' ] );
 			}
 		}
 
 		// Maintain hierarchy of terms.
-		add_filter( 'wp_terms_checklist_args', array( $this, 'disable_checked_ontop' ) );
+		add_filter( 'wp_terms_checklist_args', [ $this, 'disable_checked_ontop' ] );
 
 		// Admin footer scripts for this product categories admin screen.
-		add_action( 'admin_footer', array( $this, 'scripts_at_product_cat_screen_footer' ) );
+		add_action( 'admin_footer', [ $this, 'scripts_at_product_cat_screen_footer' ] );
 	}
 
 	/**
@@ -329,7 +329,7 @@ class WC_Admin_Taxonomies {
 	public function product_cat_description() {
 		echo wp_kses(
 			wpautop( __( 'Product categories for your store can be managed here. To change the order of categories on the front-end you can drag and drop to sort them. To see more categories listed click the "screen options" link at the top-right of this page.', 'woocommerce' ) ),
-			array( 'p' => array() )
+			[ 'p' => [] ]
 		);
 	}
 
@@ -362,7 +362,7 @@ class WC_Admin_Taxonomies {
 	public function product_attribute_description() {
 		echo wp_kses(
 			wpautop( __( 'Attribute terms can be assigned to products and variations.<br/><br/><b>Note</b>: Deleting a term will remove it from all products and variations to which it has been assigned. Recreating a term will not automatically assign it back to products.', 'woocommerce' ) ),
-			array( 'p' => array() )
+			[ 'p' => [] ]
 		);
 	}
 
@@ -373,7 +373,7 @@ class WC_Admin_Taxonomies {
 	 * @return array
 	 */
 	public function product_cat_columns( $columns ) {
-		$new_columns = array();
+		$new_columns = [];
 
 		if ( isset( $columns['cb'] ) ) {
 			$new_columns['cb'] = $columns['cb'];

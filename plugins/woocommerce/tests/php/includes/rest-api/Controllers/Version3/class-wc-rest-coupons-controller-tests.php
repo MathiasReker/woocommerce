@@ -13,9 +13,9 @@ class WC_REST_Coupons_Controller_Tests extends WC_REST_Unit_Test_Case {
 		parent::setUp();
 		$this->endpoint = new WC_REST_Coupons_Controller();
 		$this->user     = $this->factory->user->create(
-			array(
+			[
 				'role' => 'administrator',
-			)
+			]
 		);
 	}
 
@@ -23,7 +23,7 @@ class WC_REST_Coupons_Controller_Tests extends WC_REST_Unit_Test_Case {
 	 * Get all expected fields.
 	 */
 	public function get_expected_response_fields() {
-		return array(
+		return [
 			'id',
 			'code',
 			'amount',
@@ -52,7 +52,7 @@ class WC_REST_Coupons_Controller_Tests extends WC_REST_Unit_Test_Case {
 			'email_restrictions',
 			'used_by',
 			'meta_data',
-		);
+		];
 	}
 
 	/**
@@ -106,9 +106,9 @@ class WC_REST_Coupons_Controller_Tests extends WC_REST_Unit_Test_Case {
 
 		$request = new WP_REST_Request( 'GET', '/wc/v3/coupons' );
 		$request->set_query_params(
-			array(
+			[
 				'status'    => 'publish'
-			)
+			]
 		);
 		$response = $this->server->dispatch( $request );
 		$coupons  = $response->get_data();

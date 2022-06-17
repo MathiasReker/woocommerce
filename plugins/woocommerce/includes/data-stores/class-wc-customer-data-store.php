@@ -22,7 +22,7 @@ class WC_Customer_Data_Store extends WC_Data_Store_WP implements WC_Customer_Dat
 	 * @since 3.0.0
 	 * @var array
 	 */
-	protected $internal_meta_keys = array(
+	protected $internal_meta_keys = [
 		'locale',
 		'billing_postcode',
 		'billing_city',
@@ -67,7 +67,7 @@ class WC_Customer_Data_Store extends WC_Data_Store_WP implements WC_Customer_Dat
 		'_money_spent',
 		'_last_order',
 		'_woocommerce_tracks_anon_id',
-	);
+	];
 
 	/**
 	 * Internal meta type used to store user data.
@@ -121,11 +121,11 @@ class WC_Customer_Data_Store extends WC_Data_Store_WP implements WC_Customer_Dat
 		wp_update_user(
 			apply_filters(
 				'woocommerce_update_customer_args',
-				array(
+				[
 					'ID'           => $customer->get_id(),
 					'role'         => $customer->get_role(),
 					'display_name' => $customer->get_display_name(),
-				),
+				],
 				$customer
 			)
 		);
@@ -157,13 +157,13 @@ class WC_Customer_Data_Store extends WC_Data_Store_WP implements WC_Customer_Dat
 		// Load meta but exclude deprecated props and parent keys.
 		$user_meta = array_diff_key(
 			array_change_key_case( array_map( 'wc_flatten_meta_callback', get_user_meta( $customer_id ) ) ),
-			array_flip( array( 'country', 'state', 'postcode', 'city', 'address', 'address_2', 'default', 'location' ) ),
+			array_flip( [ 'country', 'state', 'postcode', 'city', 'address', 'address_2', 'default', 'location' ] ),
 			array_change_key_case( (array) $user_object->data )
 		);
 
 		$customer->set_props( $user_meta );
 		$customer->set_props(
-			array(
+			[
 				'is_paying_customer' => get_user_meta( $customer_id, 'paying_customer', true ),
 				'email'              => $user_object->user_email,
 				'username'           => $user_object->user_login,
@@ -171,7 +171,7 @@ class WC_Customer_Data_Store extends WC_Data_Store_WP implements WC_Customer_Dat
 				'date_created'       => $user_object->user_registered, // Mysql string in local format.
 				'date_modified'      => get_user_meta( $customer_id, 'last_update', true ),
 				'role'               => ! empty( $user_object->roles[0] ) ? $user_object->roles[0] : 'customer',
-			)
+			]
 		);
 		$customer->read_meta_data();
 		$customer->set_object_read( true );
@@ -188,11 +188,11 @@ class WC_Customer_Data_Store extends WC_Data_Store_WP implements WC_Customer_Dat
 		wp_update_user(
 			apply_filters(
 				'woocommerce_update_customer_args',
-				array(
+				[
 					'ID'           => $customer->get_id(),
 					'user_email'   => $customer->get_email(),
 					'display_name' => $customer->get_display_name(),
-				),
+				],
 				$customer
 			)
 		);
@@ -200,10 +200,10 @@ class WC_Customer_Data_Store extends WC_Data_Store_WP implements WC_Customer_Dat
 		// Only update password if a new one was set with set_password.
 		if ( $customer->get_password() ) {
 			wp_update_user(
-				array(
+				[
 					'ID'        => $customer->get_id(),
 					'user_pass' => $customer->get_password(),
-				)
+				]
 			);
 			$customer->set_password( '' );
 		}
@@ -222,16 +222,16 @@ class WC_Customer_Data_Store extends WC_Data_Store_WP implements WC_Customer_Dat
 	 * @param WC_Customer $customer Customer object.
 	 * @param array       $args Array of args to pass to the delete method.
 	 */
-	public function delete( &$customer, $args = array() ) {
+	public function delete( &$customer, $args = [] ) {
 		if ( ! $customer->get_id() ) {
 			return;
 		}
 
 		$args = wp_parse_args(
 			$args,
-			array(
+			[
 				'reassign' => 0,
-			)
+			]
 		);
 
 		$id = $customer->get_id();
@@ -247,14 +247,14 @@ class WC_Customer_Data_Store extends WC_Data_Store_WP implements WC_Customer_Dat
 	 * @param WC_Customer $customer Customer object.
 	 */
 	private function update_user_meta( $customer ) {
-		$updated_props = array();
+		$updated_props = [];
 		$changed_props = $customer->get_changes();
 
-		$meta_key_to_props = array(
+		$meta_key_to_props = [
 			'paying_customer' => 'is_paying_customer',
 			'first_name'      => 'first_name',
 			'last_name'       => 'last_name',
-		);
+		];
 
 		foreach ( $meta_key_to_props as $meta_key => $prop ) {
 			if ( ! array_key_exists( $prop, $changed_props ) ) {
@@ -266,7 +266,7 @@ class WC_Customer_Data_Store extends WC_Data_Store_WP implements WC_Customer_Dat
 			}
 		}
 
-		$billing_address_props = array(
+		$billing_address_props = [
 			'billing_first_name' => 'billing_first_name',
 			'billing_last_name'  => 'billing_last_name',
 			'billing_company'    => 'billing_company',
@@ -278,7 +278,7 @@ class WC_Customer_Data_Store extends WC_Data_Store_WP implements WC_Customer_Dat
 			'billing_country'    => 'billing_country',
 			'billing_email'      => 'billing_email',
 			'billing_phone'      => 'billing_phone',
-		);
+		];
 
 		foreach ( $billing_address_props as $meta_key => $prop ) {
 			$prop_key = substr( $prop, 8 );
@@ -292,7 +292,7 @@ class WC_Customer_Data_Store extends WC_Data_Store_WP implements WC_Customer_Dat
 			}
 		}
 
-		$shipping_address_props = array(
+		$shipping_address_props = [
 			'shipping_first_name' => 'shipping_first_name',
 			'shipping_last_name'  => 'shipping_last_name',
 			'shipping_company'    => 'shipping_company',
@@ -303,7 +303,7 @@ class WC_Customer_Data_Store extends WC_Data_Store_WP implements WC_Customer_Dat
 			'shipping_postcode'   => 'shipping_postcode',
 			'shipping_country'    => 'shipping_country',
 			'shipping_phone'      => 'shipping_phone',
-		);
+		];
 
 		foreach ( $shipping_address_props as $meta_key => $prop ) {
 			$prop_key = substr( $prop, 9 );
@@ -456,12 +456,12 @@ class WC_Customer_Data_Store extends WC_Data_Store_WP implements WC_Customer_Dat
 		$query = new WP_User_Query(
 			apply_filters(
 				'woocommerce_customer_search_customers',
-				array(
+				[
 					'search'         => '*' . esc_attr( $term ) . '*',
-					'search_columns' => array( 'user_login', 'user_url', 'user_email', 'user_nicename', 'display_name' ),
+					'search_columns' => [ 'user_login', 'user_url', 'user_email', 'user_nicename', 'display_name' ],
 					'fields'         => 'ID',
 					'number'         => $limit,
-				),
+				],
 				$term,
 				$limit,
 				'main_query'
@@ -471,23 +471,23 @@ class WC_Customer_Data_Store extends WC_Data_Store_WP implements WC_Customer_Dat
 		$query2 = new WP_User_Query(
 			apply_filters(
 				'woocommerce_customer_search_customers',
-				array(
+				[
 					'fields'     => 'ID',
 					'number'     => $limit,
-					'meta_query' => array(
+					'meta_query' => [
 						'relation' => 'OR',
-						array(
+						[
 							'key'     => 'first_name',
 							'value'   => $term,
 							'compare' => 'LIKE',
-						),
-						array(
+						],
+						[
 							'key'     => 'last_name',
 							'value'   => $term,
 							'compare' => 'LIKE',
-						),
-					),
-				),
+						],
+					],
+				],
 				$term,
 				$limit,
 				'meta_query'
@@ -513,16 +513,16 @@ class WC_Customer_Data_Store extends WC_Data_Store_WP implements WC_Customer_Dat
 	public function get_user_ids_for_billing_email( $emails ) {
 		$emails = array_unique( array_map( 'strtolower', array_map( 'sanitize_email', $emails ) ) );
 		$users_query = new WP_User_Query(
-			array(
+			[
 				'fields'     => 'ID',
-				'meta_query' => array(
-					array(
+				'meta_query' => [
+					[
 						'key'     => 'billing_email',
 						'value'   => $emails,
 						'compare' => 'IN',
-					),
-				),
-			)
+					],
+				],
+			]
 		);
 		return array_unique( $users_query->get_results() );
 	}

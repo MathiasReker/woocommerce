@@ -37,7 +37,7 @@ class WC_Tracks_Client {
 	 */
 	public static function init() {
 		// Use wp hook for setting the identity cookie to avoid headers already sent warnings.
-		add_action( 'admin_init', array( __CLASS__, 'maybe_set_identity_cookie' ) );
+		add_action( 'admin_init', [ __CLASS__, 'maybe_set_identity_cookie' ] );
 	}
 
 	/**
@@ -113,12 +113,12 @@ class WC_Tracks_Client {
 
 		wp_safe_remote_get(
 			$pixel,
-			array(
+			[
 				'blocking'    => false,
 				'redirection' => 2,
 				'httpversion' => '1.1',
 				'timeout'     => 1,
-			)
+			]
 		);
 
 		return true;
@@ -173,10 +173,10 @@ class WC_Tracks_Client {
 			update_user_meta( $user_id, '_woocommerce_tracks_anon_id', $anon_id );
 		}
 
-		return array(
+		return [
 			'_ut' => 'anon',
 			'_ui' => $anon_id,
-		);
+		];
 	}
 
 	/**

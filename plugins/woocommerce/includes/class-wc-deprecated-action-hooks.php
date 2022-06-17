@@ -19,8 +19,8 @@ class WC_Deprecated_Action_Hooks extends WC_Deprecated_Hooks {
 	 *
 	 * @var array
 	 */
-	protected $deprecated_hooks = array(
-		'woocommerce_new_order_item'        => array(
+	protected $deprecated_hooks = [
+		'woocommerce_new_order_item'        => [
 			'woocommerce_order_add_shipping',
 			'woocommerce_order_add_coupon',
 			'woocommerce_order_add_tax',
@@ -28,38 +28,38 @@ class WC_Deprecated_Action_Hooks extends WC_Deprecated_Hooks {
 			'woocommerce_add_shipping_order_item',
 			'woocommerce_add_order_item_meta',
 			'woocommerce_add_order_fee_meta',
-		),
-		'woocommerce_update_order_item'     => array(
+		],
+		'woocommerce_update_order_item'     => [
 			'woocommerce_order_edit_product',
 			'woocommerce_order_update_coupon',
 			'woocommerce_order_update_shipping',
 			'woocommerce_order_update_fee',
 			'woocommerce_order_update_tax',
-		),
+		],
 		'woocommerce_new_payment_token'     => 'woocommerce_payment_token_created',
 		'woocommerce_new_product_variation' => 'woocommerce_create_product_variation',
 		'woocommerce_order_details_after_order_table_items' => 'woocommerce_order_items_table',
 
-		'woocommerce_settings_advanced_page_options' => array(
+		'woocommerce_settings_advanced_page_options' => [
 			'woocommerce_settings_checkout_page_options',
 			'woocommerce_settings_account_page_options',
-		),
-		'woocommerce_settings_advanced_page_options_end' => array(
+		],
+		'woocommerce_settings_advanced_page_options_end' => [
 			'woocommerce_settings_checkout_page_options_end',
 			'woocommerce_settings_account_page_options_end',
-		),
-		'woocommerce_settings_advanced_page_options_after' => array(
+		],
+		'woocommerce_settings_advanced_page_options_after' => [
 			'woocommerce_settings_checkout_page_options_after',
 			'woocommerce_settings_account_page_options_after',
-		),
-	);
+		],
+	];
 
 	/**
 	 * Array of versions on each hook has been deprecated.
 	 *
 	 * @var array
 	 */
-	protected $deprecated_version = array(
+	protected $deprecated_version = [
 		'woocommerce_order_add_shipping'                   => '3.0.0',
 		'woocommerce_order_add_coupon'                     => '3.0.0',
 		'woocommerce_order_add_tax'                        => '3.0.0',
@@ -81,7 +81,7 @@ class WC_Deprecated_Action_Hooks extends WC_Deprecated_Hooks {
 		'woocommerce_settings_account_page_options_end'    => '3.4.0',
 		'woocommerce_settings_checkout_page_options_after' => '3.4.0',
 		'woocommerce_settings_account_page_options_after'  => '3.4.0',
-	);
+	];
 
 	/**
 	 * Hook into the new hook so we can handle deprecated hooks once fired.
@@ -89,7 +89,7 @@ class WC_Deprecated_Action_Hooks extends WC_Deprecated_Hooks {
 	 * @param string $hook_name Hook name.
 	 */
 	public function hook_in( $hook_name ) {
-		add_action( $hook_name, array( $this, 'maybe_handle_deprecated_hook' ), -1000, 8 );
+		add_action( $hook_name, [ $this, 'maybe_handle_deprecated_hook' ], -1000, 8 );
 	}
 
 	/**

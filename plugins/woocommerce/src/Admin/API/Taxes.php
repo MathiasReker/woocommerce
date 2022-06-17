@@ -31,20 +31,20 @@ class Taxes extends \WC_REST_Taxes_Controller {
 	 */
 	public function get_collection_params() {
 		$params            = parent::get_collection_params();
-		$params['search']  = array(
+		$params['search']  = [
 			'description'       => __( 'Search by similar tax code.', 'woocommerce' ),
 			'type'              => 'string',
 			'validate_callback' => 'rest_validate_request_arg',
-		);
-		$params['include'] = array(
+		];
+		$params['include'] = [
 			'description'       => __( 'Limit result set to items that have the specified rate ID(s) assigned.', 'woocommerce' ),
 			'type'              => 'array',
-			'items'             => array(
+			'items'             => [
 				'type' => 'integer',
-			),
-			'default'           => array(),
+			],
+			'default'           => [],
 			'validate_callback' => 'rest_validate_request_arg',
-		);
+		];
 		return $params;
 	}
 
@@ -57,7 +57,7 @@ class Taxes extends \WC_REST_Taxes_Controller {
 	public function get_items( $request ) {
 		global $wpdb;
 
-		$prepared_args           = array();
+		$prepared_args           = [];
 		$prepared_args['order']  = $request['order'];
 		$prepared_args['number'] = $request['per_page'];
 		if ( ! empty( $request['offset'] ) ) {
@@ -65,10 +65,10 @@ class Taxes extends \WC_REST_Taxes_Controller {
 		} else {
 			$prepared_args['offset'] = ( $request['page'] - 1 ) * $prepared_args['number'];
 		}
-		$orderby_possibles        = array(
+		$orderby_possibles        = [
 			'id'    => 'tax_rate_id',
 			'order' => 'tax_rate_order',
-		);
+		];
 		$prepared_args['orderby'] = $orderby_possibles[ $request['orderby'] ];
 		$prepared_args['class']   = $request['class'];
 		$prepared_args['search']  = $request['search'];
@@ -117,7 +117,7 @@ class Taxes extends \WC_REST_Taxes_Controller {
 		// Query taxes.
 		$results = $wpdb->get_results( $query . $order_by . $pagination ); // @codingStandardsIgnoreLine.
 
-		$taxes = array();
+		$taxes = [];
 		foreach ( $results as $tax ) {
 			$data    = $this->prepare_item_for_response( $tax, $request );
 			$taxes[] = $this->prepare_response_for_collection( $data );

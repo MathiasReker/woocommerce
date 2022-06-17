@@ -15,7 +15,7 @@ class URL {
 	 *
 	 * @var string|null[]
 	 */
-	private $components = array(
+	private $components = [
 		'drive'    => null,
 		'fragment' => null,
 		'host'     => null,
@@ -25,7 +25,7 @@ class URL {
 		'query'    => null,
 		'scheme'   => null,
 		'user'     => null,
-	);
+	];
 
 	/**
 	 * If the URL (or filepath) is absolute.
@@ -60,7 +60,7 @@ class URL {
 	 *
 	 * @var array
 	 */
-	private $path_parts = array();
+	private $path_parts = [];
 
 	/**
 	 * The URL.
@@ -191,7 +191,7 @@ class URL {
 
 		// Protect against empty relative paths.
 		if ( count( $this->path_parts ) === 0 && ! $this->is_absolute ) {
-			$this->path_parts = array( '.' );
+			$this->path_parts = [ '.' ];
 			$this->is_non_root_directory = true;
 		}
 
@@ -216,7 +216,7 @@ class URL {
 	 */
 	public function get_all_parent_urls(): array {
 		$max_parent = count( $this->path_parts );
-		$parents    = array();
+		$parents    = [];
 
 		/*
 		 * If we are looking at a relative path that begins with at least one traversal (example: "../../foo")
@@ -306,11 +306,11 @@ class URL {
 
 		// Form the parent URL (ditching the query and fragment, if set).
 		$parent_url = $this->get_url(
-			array(
+			[
 				'path'     => $parent_path,
 				'query'    => null,
 				'fragment' => null,
-			)
+			]
 		);
 
 		// We process the parent URL through a fresh instance of this class, for consistency.
@@ -326,7 +326,7 @@ class URL {
 	 *
 	 * @return string
 	 */
-	public function get_url( array $component_overrides = array() ): string {
+	public function get_url( array $component_overrides = [] ): string {
 		$components = array_merge( $this->components, $component_overrides );
 
 		$scheme = null !== $components['scheme'] ? $components['scheme'] . '://' : '//';

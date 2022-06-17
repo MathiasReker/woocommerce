@@ -31,7 +31,7 @@ class Definition extends BaseDefinition {
 		// Constructor injection causes backwards compatibility problems
 		// so we will rely on method injection via an internal method.
 		if ( method_exists( $concrete, static::INJECTION_METHOD ) ) {
-			call_user_func_array( array( $concrete, static::INJECTION_METHOD ), $resolved );
+			call_user_func_array( [ $concrete, static::INJECTION_METHOD ], $resolved );
 		}
 
 		return $concrete;

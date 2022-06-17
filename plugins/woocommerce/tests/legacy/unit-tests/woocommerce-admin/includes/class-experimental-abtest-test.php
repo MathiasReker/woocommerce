@@ -25,12 +25,12 @@ class Experimental_Abtest_Test extends WC_Unit_Test_Case {
 			'pre_http_request',
 			function( $arg1, $arg2, $url ) {
 				$this->assertTrue( false !== strpos( $url, 'test=test' ) );
-				return array(
+				return [
 					'response'    => 200,
 					'status_code' => 200,
 					'success'     => 1,
 					'body'        => '{}',
-				);
+				];
 			},
 			10,
 			3
@@ -69,7 +69,7 @@ class Experimental_Abtest_Test extends WC_Unit_Test_Case {
 		add_filter(
 			'pre_http_request',
 			function( $preempt, $parsed_args, $url ) {
-				return array(
+				return [
 					'response'    => 200,
 					'status_code' => 200,
 					'success'     => 1,
@@ -78,7 +78,7 @@ class Experimental_Abtest_Test extends WC_Unit_Test_Case {
 							"test_experiment_name": "treatment"
 						}
 					}',
-				);
+				];
 			},
 			10,
 			3

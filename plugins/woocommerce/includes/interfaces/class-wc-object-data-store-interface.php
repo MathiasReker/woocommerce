@@ -40,7 +40,7 @@ interface WC_Object_Data_Store_Interface {
 	 * @param  array   $args Array of args to pass to the delete method.
 	 * @return bool result
 	 */
-	public function delete( &$data, $args = array() );
+	public function delete( &$data, $args = [] );
 
 	/**
 	 * Returns an array of meta for an object.

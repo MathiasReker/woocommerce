@@ -23,13 +23,13 @@ class WC_Widget_Product_Tag_Cloud extends WC_Widget {
 		$this->widget_description = __( 'A cloud of your most used product tags.', 'woocommerce' );
 		$this->widget_id          = 'woocommerce_product_tag_cloud';
 		$this->widget_name        = __( 'Product Tag Cloud', 'woocommerce' );
-		$this->settings           = array(
-			'title' => array(
+		$this->settings           = [
+			'title' => [
 				'type'  => 'text',
 				'std'   => __( 'Product tags', 'woocommerce' ),
 				'label' => __( 'Title', 'woocommerce' ),
-			),
-		);
+			],
+		];
 
 		parent::__construct();
 	}
@@ -57,10 +57,10 @@ class WC_Widget_Product_Tag_Cloud extends WC_Widget {
 		wp_tag_cloud(
 			apply_filters(
 				'woocommerce_product_tag_cloud_widget_args',
-				array(
+				[
 					'taxonomy'                  => $current_taxonomy,
-					'topic_count_text_callback' => array( $this, 'topic_count_text' ),
-				)
+					'topic_count_text_callback' => [ $this, 'topic_count_text' ],
+				]
 			)
 		);
 

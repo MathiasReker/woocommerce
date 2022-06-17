@@ -41,7 +41,7 @@ class Controller extends ReportsController implements ExportableInterface {
 	 * @return array
 	 */
 	protected function prepare_reports_query( $request ) {
-		$args                        = array();
+		$args                        = [];
 		$args['before']              = $request['before'];
 		$args['after']               = $request['after'];
 		$args['page']                = $request['page'];
@@ -82,7 +82,7 @@ class Controller extends ReportsController implements ExportableInterface {
 		$orders_query = new Query( $query_args );
 		$report_data  = $orders_query->get_data();
 
-		$data = array();
+		$data = [];
 
 		foreach ( $report_data->data as $orders_data ) {
 			$orders_data['order_number']    = $this->get_order_number( $orders_data['order_id'] );
@@ -152,11 +152,11 @@ class Controller extends ReportsController implements ExportableInterface {
 	 * @return array
 	 */
 	protected function prepare_links( $object ) {
-		$links = array(
-			'order' => array(
+		$links = [
+			'order' => [
 				'href' => rest_url( sprintf( '/%s/orders/%d', $this->namespace, $object['order_id'] ) ),
-			),
-		);
+			],
+		];
 
 		return $links;
 	}
@@ -167,93 +167,93 @@ class Controller extends ReportsController implements ExportableInterface {
 	 * @return array
 	 */
 	public function get_item_schema() {
-		$schema = array(
+		$schema = [
 			'$schema'    => 'http://json-schema.org/draft-04/schema#',
 			'title'      => 'report_orders',
 			'type'       => 'object',
-			'properties' => array(
-				'order_id'         => array(
+			'properties' => [
+				'order_id'         => [
 					'description' => __( 'Order ID.', 'woocommerce' ),
 					'type'        => 'integer',
-					'context'     => array( 'view', 'edit' ),
+					'context'     => [ 'view', 'edit' ],
 					'readonly'    => true,
-				),
-				'order_number'     => array(
+				],
+				'order_number'     => [
 					'description' => __( 'Order Number.', 'woocommerce' ),
 					'type'        => 'string',
-					'context'     => array( 'view', 'edit' ),
+					'context'     => [ 'view', 'edit' ],
 					'readonly'    => true,
-				),
-				'date_created'     => array(
+				],
+				'date_created'     => [
 					'description' => __( "Date the order was created, in the site's timezone.", 'woocommerce' ),
 					'type'        => 'date-time',
-					'context'     => array( 'view', 'edit' ),
+					'context'     => [ 'view', 'edit' ],
 					'readonly'    => true,
-				),
-				'date_created_gmt' => array(
+				],
+				'date_created_gmt' => [
 					'description' => __( 'Date the order was created, as GMT.', 'woocommerce' ),
 					'type'        => 'date-time',
-					'context'     => array( 'view', 'edit' ),
+					'context'     => [ 'view', 'edit' ],
 					'readonly'    => true,
-				),
-				'status'           => array(
+				],
+				'status'           => [
 					'description' => __( 'Order status.', 'woocommerce' ),
 					'type'        => 'string',
-					'context'     => array( 'view', 'edit' ),
+					'context'     => [ 'view', 'edit' ],
 					'readonly'    => true,
-				),
-				'customer_id'      => array(
+				],
+				'customer_id'      => [
 					'description' => __( 'Customer ID.', 'woocommerce' ),
 					'type'        => 'integer',
-					'context'     => array( 'view', 'edit' ),
+					'context'     => [ 'view', 'edit' ],
 					'readonly'    => true,
-				),
-				'num_items_sold'   => array(
+				],
+				'num_items_sold'   => [
 					'description' => __( 'Number of items sold.', 'woocommerce' ),
 					'type'        => 'integer',
-					'context'     => array( 'view', 'edit' ),
+					'context'     => [ 'view', 'edit' ],
 					'readonly'    => true,
-				),
-				'net_total'        => array(
+				],
+				'net_total'        => [
 					'description' => __( 'Net total revenue.', 'woocommerce' ),
 					'type'        => 'float',
-					'context'     => array( 'view', 'edit' ),
+					'context'     => [ 'view', 'edit' ],
 					'readonly'    => true,
-				),
-				'total_formatted'  => array(
+				],
+				'total_formatted'  => [
 					'description' => __( 'Net total revenue (formatted).', 'woocommerce' ),
 					'type'        => 'string',
-					'context'     => array( 'view', 'edit' ),
+					'context'     => [ 'view', 'edit' ],
 					'readonly'    => true,
-				),
-				'customer_type'    => array(
+				],
+				'customer_type'    => [
 					'description' => __( 'Returning or new customer.', 'woocommerce' ),
 					'type'        => 'string',
-					'context'     => array( 'view', 'edit' ),
+					'context'     => [ 'view', 'edit' ],
 					'readonly'    => true,
-				),
-				'extended_info'    => array(
-					'products' => array(
+				],
+				'extended_info'    => [
+					'products' => [
 						'type'        => 'array',
 						'readonly'    => true,
-						'context'     => array( 'view', 'edit' ),
+						'context'     => [ 'view', 'edit' ],
 						'description' => __( 'List of order product IDs, names, quantities.', 'woocommerce' ),
-					),
-					'coupons'  => array(
+					],
+					'coupons'  => [
 						'type'        => 'array',
 						'readonly'    => true,
-						'context'     => array( 'view', 'edit' ),
+						'context'     => [ 'view', 'edit' ],
 						'description' => __( 'List of order coupons.', 'woocommerce' ),
-					),
-					'customer' => array(
+					],
+					'customer' => [
 						'type'        => 'object',
 						'readonly'    => true,
-						'context'     => array( 'view', 'edit' ),
+						'context'     => [ 'view', 'edit' ],
 						'description' => __( 'Order customer information.', 'woocommerce' ),
-					),
-				),
-			),
-		);
+					],
+				],
+			],
+		];
 
 		return $this->add_additional_fields_schema( $schema );
 	}
@@ -264,17 +264,17 @@ class Controller extends ReportsController implements ExportableInterface {
 	 * @return array
 	 */
 	public function get_collection_params() {
-		$params                       = array();
-		$params['context']            = $this->get_context_param( array( 'default' => 'view' ) );
-		$params['page']               = array(
+		$params                       = [];
+		$params['context']            = $this->get_context_param( [ 'default' => 'view' ] );
+		$params['page']               = [
 			'description'       => __( 'Current page of the collection.', 'woocommerce' ),
 			'type'              => 'integer',
 			'default'           => 1,
 			'sanitize_callback' => 'absint',
 			'validate_callback' => 'rest_validate_request_arg',
 			'minimum'           => 1,
-		);
-		$params['per_page']           = array(
+		];
+		$params['per_page']           = [
 			'description'       => __( 'Maximum number of items to be returned in result set.', 'woocommerce' ),
 			'type'              => 'integer',
 			'default'           => 10,
@@ -282,210 +282,210 @@ class Controller extends ReportsController implements ExportableInterface {
 			'maximum'           => 100,
 			'sanitize_callback' => 'absint',
 			'validate_callback' => 'rest_validate_request_arg',
-		);
-		$params['after']              = array(
+		];
+		$params['after']              = [
 			'description'       => __( 'Limit response to resources published after a given ISO8601 compliant date.', 'woocommerce' ),
 			'type'              => 'string',
 			'format'            => 'date-time',
 			'validate_callback' => 'rest_validate_request_arg',
-		);
-		$params['before']             = array(
+		];
+		$params['before']             = [
 			'description'       => __( 'Limit response to resources published before a given ISO8601 compliant date.', 'woocommerce' ),
 			'type'              => 'string',
 			'format'            => 'date-time',
 			'validate_callback' => 'rest_validate_request_arg',
-		);
-		$params['order']              = array(
+		];
+		$params['order']              = [
 			'description'       => __( 'Order sort attribute ascending or descending.', 'woocommerce' ),
 			'type'              => 'string',
 			'default'           => 'desc',
-			'enum'              => array( 'asc', 'desc' ),
+			'enum'              => [ 'asc', 'desc' ],
 			'validate_callback' => 'rest_validate_request_arg',
-		);
-		$params['orderby']            = array(
+		];
+		$params['orderby']            = [
 			'description'       => __( 'Sort collection by object attribute.', 'woocommerce' ),
 			'type'              => 'string',
 			'default'           => 'date',
-			'enum'              => array(
+			'enum'              => [
 				'date',
 				'num_items_sold',
 				'net_total',
-			),
+			],
 			'validate_callback' => 'rest_validate_request_arg',
-		);
-		$params['product_includes']   = array(
+		];
+		$params['product_includes']   = [
 			'description'       => __( 'Limit result set to items that have the specified product(s) assigned.', 'woocommerce' ),
 			'type'              => 'array',
-			'items'             => array(
+			'items'             => [
 				'type' => 'integer',
-			),
-			'default'           => array(),
+			],
+			'default'           => [],
 			'sanitize_callback' => 'wp_parse_id_list',
 			'validate_callback' => 'rest_validate_request_arg',
-		);
-		$params['product_excludes']   = array(
+		];
+		$params['product_excludes']   = [
 			'description'       => __( 'Limit result set to items that don\'t have the specified product(s) assigned.', 'woocommerce' ),
 			'type'              => 'array',
-			'items'             => array(
+			'items'             => [
 				'type' => 'integer',
-			),
-			'default'           => array(),
+			],
+			'default'           => [],
 			'validate_callback' => 'rest_validate_request_arg',
 			'sanitize_callback' => 'wp_parse_id_list',
-		);
-		$params['variation_includes'] = array(
+		];
+		$params['variation_includes'] = [
 			'description'       => __( 'Limit result set to items that have the specified variation(s) assigned.', 'woocommerce' ),
 			'type'              => 'array',
-			'items'             => array(
+			'items'             => [
 				'type' => 'integer',
-			),
-			'default'           => array(),
+			],
+			'default'           => [],
 			'sanitize_callback' => 'wp_parse_id_list',
 			'validate_callback' => 'rest_validate_request_arg',
-		);
-		$params['variation_excludes'] = array(
+		];
+		$params['variation_excludes'] = [
 			'description'       => __( 'Limit result set to items that don\'t have the specified variation(s) assigned.', 'woocommerce' ),
 			'type'              => 'array',
-			'items'             => array(
+			'items'             => [
 				'type' => 'integer',
-			),
-			'default'           => array(),
+			],
+			'default'           => [],
 			'validate_callback' => 'rest_validate_request_arg',
 			'sanitize_callback' => 'wp_parse_id_list',
-		);
-		$params['coupon_includes']    = array(
+		];
+		$params['coupon_includes']    = [
 			'description'       => __( 'Limit result set to items that have the specified coupon(s) assigned.', 'woocommerce' ),
 			'type'              => 'array',
-			'items'             => array(
+			'items'             => [
 				'type' => 'integer',
-			),
-			'default'           => array(),
+			],
+			'default'           => [],
 			'sanitize_callback' => 'wp_parse_id_list',
 			'validate_callback' => 'rest_validate_request_arg',
-		);
-		$params['coupon_excludes']    = array(
+		];
+		$params['coupon_excludes']    = [
 			'description'       => __( 'Limit result set to items that don\'t have the specified coupon(s) assigned.', 'woocommerce' ),
 			'type'              => 'array',
-			'items'             => array(
+			'items'             => [
 				'type' => 'integer',
-			),
-			'default'           => array(),
+			],
+			'default'           => [],
 			'validate_callback' => 'rest_validate_request_arg',
 			'sanitize_callback' => 'wp_parse_id_list',
-		);
-		$params['tax_rate_includes']  = array(
+		];
+		$params['tax_rate_includes']  = [
 			'description'       => __( 'Limit result set to items that have the specified tax rate(s) assigned.', 'woocommerce' ),
 			'type'              => 'array',
-			'items'             => array(
+			'items'             => [
 				'type' => 'integer',
-			),
-			'default'           => array(),
+			],
+			'default'           => [],
 			'sanitize_callback' => 'wp_parse_id_list',
 			'validate_callback' => 'rest_validate_request_arg',
-		);
-		$params['tax_rate_excludes']  = array(
+		];
+		$params['tax_rate_excludes']  = [
 			'description'       => __( 'Limit result set to items that don\'t have the specified tax rate(s) assigned.', 'woocommerce' ),
 			'type'              => 'array',
-			'items'             => array(
+			'items'             => [
 				'type' => 'integer',
-			),
-			'default'           => array(),
+			],
+			'default'           => [],
 			'validate_callback' => 'rest_validate_request_arg',
 			'sanitize_callback' => 'wp_parse_id_list',
-		);
-		$params['status_is']          = array(
+		];
+		$params['status_is']          = [
 			'description'       => __( 'Limit result set to items that have the specified order status.', 'woocommerce' ),
 			'type'              => 'array',
 			'sanitize_callback' => 'wp_parse_slug_list',
 			'validate_callback' => 'rest_validate_request_arg',
-			'items'             => array(
+			'items'             => [
 				'enum' => self::get_order_statuses(),
 				'type' => 'string',
-			),
-		);
-		$params['status_is_not']      = array(
+			],
+		];
+		$params['status_is_not']      = [
 			'description'       => __( 'Limit result set to items that don\'t have the specified order status.', 'woocommerce' ),
 			'type'              => 'array',
 			'sanitize_callback' => 'wp_parse_slug_list',
 			'validate_callback' => 'rest_validate_request_arg',
-			'items'             => array(
+			'items'             => [
 				'enum' => self::get_order_statuses(),
 				'type' => 'string',
-			),
-		);
-		$params['customer_type']      = array(
+			],
+		];
+		$params['customer_type']      = [
 			'description'       => __( 'Limit result set to returning or new customers.', 'woocommerce' ),
 			'type'              => 'string',
 			'default'           => '',
-			'enum'              => array(
+			'enum'              => [
 				'',
 				'returning',
 				'new',
-			),
+			],
 			'validate_callback' => 'rest_validate_request_arg',
-		);
-		$params['refunds']            = array(
+		];
+		$params['refunds']            = [
 			'description'       => __( 'Limit result set to specific types of refunds.', 'woocommerce' ),
 			'type'              => 'string',
 			'default'           => '',
-			'enum'              => array(
+			'enum'              => [
 				'',
 				'all',
 				'partial',
 				'full',
 				'none',
-			),
+			],
 			'validate_callback' => 'rest_validate_request_arg',
-		);
-		$params['extended_info']      = array(
+		];
+		$params['extended_info']      = [
 			'description'       => __( 'Add additional piece of info about each coupon to the report.', 'woocommerce' ),
 			'type'              => 'boolean',
 			'default'           => false,
 			'sanitize_callback' => 'wc_string_to_bool',
 			'validate_callback' => 'rest_validate_request_arg',
-		);
-		$params['order_includes']     = array(
+		];
+		$params['order_includes']     = [
 			'description'       => __( 'Limit result set to items that have the specified order ids.', 'woocommerce' ),
 			'type'              => 'array',
 			'sanitize_callback' => 'wp_parse_id_list',
 			'validate_callback' => 'rest_validate_request_arg',
-			'items'             => array(
+			'items'             => [
 				'type' => 'integer',
-			),
-		);
-		$params['order_excludes']     = array(
+			],
+		];
+		$params['order_excludes']     = [
 			'description'       => __( 'Limit result set to items that don\'t have the specified order ids.', 'woocommerce' ),
 			'type'              => 'array',
 			'sanitize_callback' => 'wp_parse_id_list',
 			'validate_callback' => 'rest_validate_request_arg',
-			'items'             => array(
+			'items'             => [
 				'type' => 'integer',
-			),
-		);
-		$params['attribute_is']       = array(
+			],
+		];
+		$params['attribute_is']       = [
 			'description'       => __( 'Limit result set to orders that include products with the specified attributes.', 'woocommerce' ),
 			'type'              => 'array',
-			'items'             => array(
+			'items'             => [
 				'type' => 'array',
-			),
-			'default'           => array(),
+			],
+			'default'           => [],
 			'validate_callback' => 'rest_validate_request_arg',
-		);
-		$params['attribute_is_not']   = array(
+		];
+		$params['attribute_is_not']   = [
 			'description'       => __( 'Limit result set to orders that don\'t include products with the specified attributes.', 'woocommerce' ),
 			'type'              => 'array',
-			'items'             => array(
+			'items'             => [
 				'type' => 'array',
-			),
-			'default'           => array(),
+			],
+			'default'           => [],
 			'validate_callback' => 'rest_validate_request_arg',
-		);
-		$params['force_cache_refresh'] = array(
+		];
+		$params['force_cache_refresh'] = [
 			'description'       => __( 'Force retrieval of fresh data instead of from the cache.', 'woocommerce' ),
 			'type'              => 'boolean',
 			'sanitize_callback' => 'wp_validate_boolean',
 			'validate_callback' => 'rest_validate_request_arg',
-		);
+		];
 
 		return $params;
 	}
@@ -507,7 +507,7 @@ class Controller extends ReportsController implements ExportableInterface {
 	 * @return string
 	 */
 	protected function get_products( $products ) {
-		$products_list = array();
+		$products_list = [];
 
 		foreach ( $products as $product ) {
 			$products_list[] = sprintf(
@@ -537,7 +537,7 @@ class Controller extends ReportsController implements ExportableInterface {
 	 * @return array Key value pair of Column ID => Label.
 	 */
 	public function get_export_columns() {
-		$export_columns = array(
+		$export_columns = [
 			'date_created'    => __( 'Date', 'woocommerce' ),
 			'order_number'    => __( 'Order #', 'woocommerce' ),
 			'total_formatted' => __( 'N. Revenue (formatted)', 'woocommerce' ),
@@ -548,7 +548,7 @@ class Controller extends ReportsController implements ExportableInterface {
 			'num_items_sold'  => __( 'Items sold', 'woocommerce' ),
 			'coupons'         => __( 'Coupon(s)', 'woocommerce' ),
 			'net_total'       => __( 'N. Revenue', 'woocommerce' ),
-		);
+		];
 
 		/**
 		 * Filter to add or remove column names from the orders report for
@@ -569,7 +569,7 @@ class Controller extends ReportsController implements ExportableInterface {
 	 * @return array Key value pair of Column ID => Row Value.
 	 */
 	public function prepare_item_for_export( $item ) {
-		$export_item = array(
+		$export_item = [
 			'date_created'    => $item['date_created'],
 			'order_number'    => $item['order_number'],
 			'total_formatted' => $item['total_formatted'],
@@ -580,7 +580,7 @@ class Controller extends ReportsController implements ExportableInterface {
 			'num_items_sold'  => $item['num_items_sold'],
 			'coupons'         => isset( $item['extended_info']['coupons'] ) ? $this->get_coupons( $item['extended_info']['coupons'] ) : null,
 			'net_total'       => $item['net_total'],
-		);
+		];
 
 		/**
 		 * Filter to prepare extra columns in the export item for the orders

@@ -46,10 +46,10 @@ class ReportExporter {
 	 * @return array
 	 */
 	public static function get_scheduler_actions() {
-		return array(
+		return [
 			'export_report'              => 'woocommerce_admin_report_export',
 			'email_report_download_link' => 'woocommerce_admin_email_report_download_link',
-		);
+		];
 	}
 
 	/**
@@ -58,9 +58,9 @@ class ReportExporter {
 	 * @return array
 	 */
 	public static function get_dependencies() {
-		return array(
+		return [
 			'email_report_download_link' => self::get_action( 'export_report' ),
-		);
+		];
 	}
 
 	/**
@@ -71,7 +71,7 @@ class ReportExporter {
 		self::scheduler_init();
 
 		// Report download handler.
-		add_action( 'admin_init', array( __CLASS__, 'download_export_file' ) );
+		add_action( 'admin_init', [ __CLASS__, 'download_export_file' ] );
 	}
 
 	/**
@@ -83,7 +83,7 @@ class ReportExporter {
 	 * @param bool   $send_email Optional. Send an email when the export is complete.
 	 * @return int Number of items to export.
 	 */
-	public static function queue_report_export( $export_id, $report_type, $report_args = array(), $send_email = false ) {
+	public static function queue_report_export( $export_id, $report_type, $report_args = [], $send_email = false ) {
 		$exporter = new ReportCSVExporter( $report_type, $report_args );
 		$exporter->prepare_data_to_export();
 
@@ -92,13 +92,13 @@ class ReportExporter {
 		$num_batches = (int) ceil( $total_rows / $batch_size );
 
 		// Create batches, like initial import.
-		$report_batch_args = array( $export_id, $report_type, $report_args );
+		$report_batch_args = [ $export_id, $report_type, $report_args ];
 
 		if ( 0 < $num_batches ) {
 			self::queue_batches( 1, $num_batches, 'export_report', $report_batch_args );
 
 			if ( $send_email ) {
-				$email_action_args = array( get_current_user_id(), $export_id, $report_type );
+				$email_action_args = [ get_current_user_id(), $export_id, $report_type ];
 				self::schedule_action( 'email_report_download_link', $email_action_args );
 			}
 		}
@@ -145,7 +145,7 @@ class ReportExporter {
 	 * @return void
 	 */
 	public static function update_export_percentage_complete( $report_type, $export_id, $percentage ) {
-		$exports_status = get_option( self::EXPORT_STATUS_OPTION, array() );
+		$exports_status = get_option( self::EXPORT_STATUS_OPTION, [] );
 		$status_key     = self::get_status_key( $report_type, $export_id );
 
 		$exports_status[ $status_key ] = $percentage;
@@ -161,7 +161,7 @@ class ReportExporter {
 	 * @return bool|int Completion percentage, or false if export not found.
 	 */
 	public static function get_export_percentage_complete( $report_type, $export_id ) {
-		$exports_status = get_option( self::EXPORT_STATUS_OPTION, array() );
+		$exports_status = get_option( self::EXPORT_STATUS_OPTION, [] );
 		$status_key     = self::get_status_key( $report_type, $export_id );
 
 		if ( isset( $exports_status[ $status_key ] ) ) {
@@ -200,10 +200,10 @@ class ReportExporter {
 		$percent_complete = self::get_export_percentage_complete( $report_type, $export_id );
 
 		if ( 100 === $percent_complete ) {
-			$query_args   = array(
+			$query_args   = [
 				'action'   => self::DOWNLOAD_EXPORT_ACTION,
 				'filename' => "wc-{$report_type}-report-export-{$export_id}",
-			);
+			];
 			$download_url = add_query_arg( $query_args, admin_url() );
 
 			\WC_Emails::instance();

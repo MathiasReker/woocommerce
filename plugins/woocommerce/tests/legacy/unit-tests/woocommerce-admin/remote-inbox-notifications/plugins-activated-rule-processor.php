@@ -19,7 +19,7 @@ class WC_Admin_Tests_RemoteInboxNotifications_PluginsActivatedRuleProcessor exte
 	 * @group fast
 	 */
 	public function test_spec_does_not_pass_with_no_plugins_to_verify() {
-		$mock_plugins_provider = new MockPluginsProvider( array() );
+		$mock_plugins_provider = new MockPluginsProvider( [] );
 		$processor             = new PluginsActivatedRuleProcessor( $mock_plugins_provider );
 		$rule                  = json_decode(
 			'{
@@ -41,7 +41,7 @@ class WC_Admin_Tests_RemoteInboxNotifications_PluginsActivatedRuleProcessor exte
 	 * @group fast
 	 */
 	public function test_spec_does_not_pass_with_no_active_plugins() {
-		$mock_plugins_provider = new MockPluginsProvider( array() );
+		$mock_plugins_provider = new MockPluginsProvider( [] );
 		$processor             = new PluginsActivatedRuleProcessor( $mock_plugins_provider );
 		$rule                  = json_decode(
 			'{
@@ -65,9 +65,9 @@ class WC_Admin_Tests_RemoteInboxNotifications_PluginsActivatedRuleProcessor exte
 	 */
 	public function test_spec_does_not_pass_with_no_matching_plugins() {
 		$mock_plugins_provider = new MockPluginsProvider(
-			array(
+			[
 				'non-matching-slug',
-			)
+			]
 		);
 		$processor             = new PluginsActivatedRuleProcessor( $mock_plugins_provider );
 		$rule                  = json_decode(
@@ -92,10 +92,10 @@ class WC_Admin_Tests_RemoteInboxNotifications_PluginsActivatedRuleProcessor exte
 	 */
 	public function test_spec_does_not_pass_with_only_one_matching_plugin() {
 		$mock_plugins_provider = new MockPluginsProvider(
-			array(
+			[
 				'plugin-slug-1',
 				'plugin-slug-2',
-			)
+			]
 		);
 		$processor             = new PluginsActivatedRuleProcessor( $mock_plugins_provider );
 		$rule                  = json_decode(
@@ -121,10 +121,10 @@ class WC_Admin_Tests_RemoteInboxNotifications_PluginsActivatedRuleProcessor exte
 	 */
 	public function test_spec_does_pass_with_both_matching_plugins() {
 		$mock_plugins_provider = new MockPluginsProvider(
-			array(
+			[
 				'plugin-slug-1',
 				'plugin-slug-2',
-			)
+			]
 		);
 		$processor             = new PluginsActivatedRuleProcessor( $mock_plugins_provider );
 		$rule                  = json_decode(

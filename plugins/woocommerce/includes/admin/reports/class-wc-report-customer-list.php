@@ -27,11 +27,11 @@ class WC_Report_Customer_List extends WP_List_Table {
 	public function __construct() {
 
 		parent::__construct(
-			array(
+			[
 				'singular' => 'customer',
 				'plural'   => 'customers',
 				'ajax'     => false,
-			)
+			]
 		);
 	}
 
@@ -128,11 +128,11 @@ class WC_Report_Customer_List extends WP_List_Table {
 
 			case 'last_order':
 				$orders = wc_get_orders(
-					array(
+					[
 						'limit'    => 1,
 						'status'   => array_map( 'wc_get_order_status_name', wc_get_is_paid_statuses() ),
 						'customer' => $user->ID,
-					)
+					]
 				);
 
 				if ( ! empty( $orders ) ) {
@@ -150,40 +150,40 @@ class WC_Report_Customer_List extends WP_List_Table {
 					<?php
 					do_action( 'woocommerce_admin_user_actions_start', $user );
 
-					$actions = array();
+					$actions = [];
 
-					$actions['refresh'] = array(
+					$actions['refresh'] = [
 						'url'    => wp_nonce_url( add_query_arg( 'refresh', $user->ID ), 'refresh' ),
 						'name'   => __( 'Refresh stats', 'woocommerce' ),
 						'action' => 'refresh',
-					);
+					];
 
-					$actions['edit'] = array(
+					$actions['edit'] = [
 						'url'    => admin_url( 'user-edit.php?user_id=' . $user->ID ),
 						'name'   => __( 'Edit', 'woocommerce' ),
 						'action' => 'edit',
-					);
+					];
 
-					$actions['view'] = array(
+					$actions['view'] = [
 						'url'    => admin_url( 'edit.php?post_type=shop_order&_customer_user=' . $user->ID ),
 						'name'   => __( 'View orders', 'woocommerce' ),
 						'action' => 'view',
-					);
+					];
 
 					$orders = wc_get_orders(
-						array(
+						[
 							'limit'    => 1,
 							'status'   => array_map( 'wc_get_order_status_name', wc_get_is_paid_statuses() ),
-							'customer' => array( array( 0, $user->user_email ) ),
-						)
+							'customer' => [ [ 0, $user->user_email ] ],
+						]
 					);
 
 					if ( $orders ) {
-						$actions['link'] = array(
+						$actions['link'] = [
 							'url'    => wp_nonce_url( add_query_arg( 'link_orders', $user->ID ), 'link_orders' ),
 							'name'   => __( 'Link previous orders', 'woocommerce' ),
 							'action' => 'link',
-						);
+						];
 					}
 
 					$actions = apply_filters( 'woocommerce_admin_user_actions', $actions, $user );
@@ -211,7 +211,7 @@ class WC_Report_Customer_List extends WP_List_Table {
 	 * @return array
 	 */
 	public function get_columns() {
-		$columns = array(
+		$columns = [
 			'customer_name' => __( 'Name (Last, First)', 'woocommerce' ),
 			'username'      => __( 'Username', 'woocommerce' ),
 			'email'         => __( 'Email', 'woocommerce' ),
@@ -220,7 +220,7 @@ class WC_Report_Customer_List extends WP_List_Table {
 			'spent'         => __( 'Money spent', 'woocommerce' ),
 			'last_order'    => __( 'Last order', 'woocommerce' ),
 			'wc_actions'    => __( 'Actions', 'woocommerce' ),
-		);
+		];
 
 		return $columns;
 	}
@@ -259,51 +259,51 @@ class WC_Report_Customer_List extends WP_List_Table {
 		/**
 		 * Init column headers.
 		 */
-		$this->_column_headers = array( $this->get_columns(), array(), $this->get_sortable_columns() );
+		$this->_column_headers = [ $this->get_columns(), [], $this->get_sortable_columns() ];
 
-		add_action( 'pre_user_query', array( $this, 'order_by_last_name' ) );
+		add_action( 'pre_user_query', [ $this, 'order_by_last_name' ] );
 
 		/**
 		 * Get users.
 		 */
 		$admin_users = new WP_User_Query(
-			array(
+			[
 				'role'   => 'administrator',
 				'fields' => 'ID',
-			)
+			]
 		);
 
 		$manager_users = new WP_User_Query(
-			array(
+			[
 				'role'   => 'shop_manager',
 				'fields' => 'ID',
-			)
+			]
 		);
 
 		$query = new WP_User_Query(
 			apply_filters(
 				'woocommerce_admin_report_customer_list_user_query_args',
-				array(
+				[
 					'exclude' => array_merge( $admin_users->get_results(), $manager_users->get_results() ),
 					'number'  => $per_page,
 					'offset'  => ( $current_page - 1 ) * $per_page,
-				)
+				]
 			)
 		);
 
 		$this->items = $query->get_results();
 
-		remove_action( 'pre_user_query', array( $this, 'order_by_last_name' ) );
+		remove_action( 'pre_user_query', [ $this, 'order_by_last_name' ] );
 
 		/**
 		 * Pagination.
 		 */
 		$this->set_pagination_args(
-			array(
+			[
 				'total_items' => $query->total_users,
 				'per_page'    => $per_page,
 				'total_pages' => ceil( $query->total_users / $per_page ),
-			)
+			]
 		);
 	}
 }

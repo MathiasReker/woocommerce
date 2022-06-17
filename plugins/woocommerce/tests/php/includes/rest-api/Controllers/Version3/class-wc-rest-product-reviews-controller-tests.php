@@ -37,9 +37,9 @@ class WC_REST_Product_Reviews_Controller_Tests extends WC_REST_Unit_Test_Case {
 		parent::setUp();
 
 		$this->sut             = new WC_REST_Product_Reviews_Controller();
-		$this->shop_manager_id = self::factory()->user->create( array( 'role' => 'administrator' ) );
-		$this->editor_id       = self::factory()->user->create( array( 'role' => 'editor' ) );
-		$this->customer_id     = self::factory()->user->create( array( 'role' => 'customer' ) );
+		$this->shop_manager_id = self::factory()->user->create( [ 'role' => 'administrator' ] );
+		$this->editor_id       = self::factory()->user->create( [ 'role' => 'editor' ] );
+		$this->customer_id     = self::factory()->user->create( [ 'role' => 'customer' ] );
 		$this->review_id       = ProductHelper::create_product_review(
 			ProductHelper::create_simple_product()->get_id(),
 			'Pretty good, but not suitable for deep-sea engineering.'
@@ -184,11 +184,11 @@ class WC_REST_Product_Reviews_Controller_Tests extends WC_REST_Unit_Test_Case {
 		);
 
 		$comment_id = wp_insert_comment(
-			array(
+			[
 				'comment_post_ID' => ProductHelper::create_simple_product()->get_id(),
 				'comment_type'    => 'comment',
 				'comment_content' => 'I am a regular comment (typically left by an admin/shop manager as a response to product reviews.'
-			)
+			]
 		);
 
 		$request = new WP_REST_Request( 'DELETE', '/wc/v3/products/reviews/' . $comment_id );

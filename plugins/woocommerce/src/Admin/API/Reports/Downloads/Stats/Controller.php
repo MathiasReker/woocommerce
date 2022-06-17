@@ -38,7 +38,7 @@ class Controller extends \WC_REST_Reports_Controller {
 	 * @return array
 	 */
 	protected function prepare_reports_query( $request ) {
-		$args                        = array();
+		$args                        = [];
 		$args['before']              = $request['before'];
 		$args['after']               = $request['after'];
 		$args['interval']            = $request['interval'];
@@ -72,10 +72,10 @@ class Controller extends \WC_REST_Reports_Controller {
 		$downloads_query = new Query( $query_args );
 		$report_data     = $downloads_query->get_data();
 
-		$out_data = array(
+		$out_data = [
 			'totals'    => get_object_vars( $report_data->totals ),
-			'intervals' => array(),
-		);
+			'intervals' => [],
+		];
 
 		foreach ( $report_data->intervals as $interval_data ) {
 			$item                    = $this->prepare_item_for_response( $interval_data, $request );
@@ -141,80 +141,80 @@ class Controller extends \WC_REST_Reports_Controller {
 	 * @return array
 	 */
 	public function get_item_schema() {
-		$totals = array(
-			'download_count' => array(
+		$totals = [
+			'download_count' => [
 				'title'       => __( 'Downloads', 'woocommerce' ),
 				'description' => __( 'Number of downloads.', 'woocommerce' ),
 				'type'        => 'number',
-				'context'     => array( 'view', 'edit' ),
+				'context'     => [ 'view', 'edit' ],
 				'readonly'    => true,
 				'indicator'   => true,
-			),
-		);
+			],
+		];
 
-		$schema = array(
+		$schema = [
 			'$schema'    => 'http://json-schema.org/draft-04/schema#',
 			'title'      => 'report_orders_stats',
 			'type'       => 'object',
-			'properties' => array(
-				'totals'    => array(
+			'properties' => [
+				'totals'    => [
 					'description' => __( 'Totals data.', 'woocommerce' ),
 					'type'        => 'object',
-					'context'     => array( 'view', 'edit' ),
+					'context'     => [ 'view', 'edit' ],
 					'readonly'    => true,
 					'properties'  => $totals,
-				),
-				'intervals' => array(
+				],
+				'intervals' => [
 					'description' => __( 'Reports data grouped by intervals.', 'woocommerce' ),
 					'type'        => 'array',
-					'context'     => array( 'view', 'edit' ),
+					'context'     => [ 'view', 'edit' ],
 					'readonly'    => true,
-					'items'       => array(
+					'items'       => [
 						'type'       => 'object',
-						'properties' => array(
-							'interval'       => array(
+						'properties' => [
+							'interval'       => [
 								'description' => __( 'Type of interval.', 'woocommerce' ),
 								'type'        => 'string',
-								'context'     => array( 'view', 'edit' ),
+								'context'     => [ 'view', 'edit' ],
 								'readonly'    => true,
-								'enum'        => array( 'day', 'week', 'month', 'year' ),
-							),
-							'date_start'     => array(
+								'enum'        => [ 'day', 'week', 'month', 'year' ],
+							],
+							'date_start'     => [
 								'description' => __( "The date the report start, in the site's timezone.", 'woocommerce' ),
 								'type'        => 'date-time',
-								'context'     => array( 'view', 'edit' ),
+								'context'     => [ 'view', 'edit' ],
 								'readonly'    => true,
-							),
-							'date_start_gmt' => array(
+							],
+							'date_start_gmt' => [
 								'description' => __( 'The date the report start, as GMT.', 'woocommerce' ),
 								'type'        => 'date-time',
-								'context'     => array( 'view', 'edit' ),
+								'context'     => [ 'view', 'edit' ],
 								'readonly'    => true,
-							),
-							'date_end'       => array(
+							],
+							'date_end'       => [
 								'description' => __( "The date the report end, in the site's timezone.", 'woocommerce' ),
 								'type'        => 'date-time',
-								'context'     => array( 'view', 'edit' ),
+								'context'     => [ 'view', 'edit' ],
 								'readonly'    => true,
-							),
-							'date_end_gmt'   => array(
+							],
+							'date_end_gmt'   => [
 								'description' => __( 'The date the report end, as GMT.', 'woocommerce' ),
 								'type'        => 'date-time',
-								'context'     => array( 'view', 'edit' ),
+								'context'     => [ 'view', 'edit' ],
 								'readonly'    => true,
-							),
-							'subtotals'      => array(
+							],
+							'subtotals'      => [
 								'description' => __( 'Interval subtotals.', 'woocommerce' ),
 								'type'        => 'object',
-								'context'     => array( 'view', 'edit' ),
+								'context'     => [ 'view', 'edit' ],
 								'readonly'    => true,
 								'properties'  => $totals,
-							),
-						),
-					),
-				),
-			),
-		);
+							],
+						],
+					],
+				],
+			],
+		];
 
 		return $this->add_additional_fields_schema( $schema );
 	}
@@ -225,17 +225,17 @@ class Controller extends \WC_REST_Reports_Controller {
 	 * @return array
 	 */
 	public function get_collection_params() {
-		$params                     = array();
-		$params['context']          = $this->get_context_param( array( 'default' => 'view' ) );
-		$params['page']             = array(
+		$params                     = [];
+		$params['context']          = $this->get_context_param( [ 'default' => 'view' ] );
+		$params['page']             = [
 			'description'       => __( 'Current page of the collection.', 'woocommerce' ),
 			'type'              => 'integer',
 			'default'           => 1,
 			'sanitize_callback' => 'absint',
 			'validate_callback' => 'rest_validate_request_arg',
 			'minimum'           => 1,
-		);
-		$params['per_page']         = array(
+		];
+		$params['per_page']         = [
 			'description'       => __( 'Maximum number of items to be returned in result set.', 'woocommerce' ),
 			'type'              => 'integer',
 			'default'           => 10,
@@ -243,147 +243,147 @@ class Controller extends \WC_REST_Reports_Controller {
 			'maximum'           => 100,
 			'sanitize_callback' => 'absint',
 			'validate_callback' => 'rest_validate_request_arg',
-		);
-		$params['after']            = array(
+		];
+		$params['after']            = [
 			'description'       => __( 'Limit response to resources published after a given ISO8601 compliant date.', 'woocommerce' ),
 			'type'              => 'string',
 			'format'            => 'date-time',
 			'validate_callback' => 'rest_validate_request_arg',
-		);
-		$params['before']           = array(
+		];
+		$params['before']           = [
 			'description'       => __( 'Limit response to resources published before a given ISO8601 compliant date.', 'woocommerce' ),
 			'type'              => 'string',
 			'format'            => 'date-time',
 			'validate_callback' => 'rest_validate_request_arg',
-		);
-		$params['order']            = array(
+		];
+		$params['order']            = [
 			'description'       => __( 'Order sort attribute ascending or descending.', 'woocommerce' ),
 			'type'              => 'string',
 			'default'           => 'desc',
-			'enum'              => array( 'asc', 'desc' ),
+			'enum'              => [ 'asc', 'desc' ],
 			'validate_callback' => 'rest_validate_request_arg',
-		);
-		$params['orderby']          = array(
+		];
+		$params['orderby']          = [
 			'description'       => __( 'Sort collection by object attribute.', 'woocommerce' ),
 			'type'              => 'string',
 			'default'           => 'date',
-			'enum'              => array(
+			'enum'              => [
 				'date',
 				'download_count',
-			),
+			],
 			'validate_callback' => 'rest_validate_request_arg',
-		);
-		$params['interval']         = array(
+		];
+		$params['interval']         = [
 			'description'       => __( 'Time interval to use for buckets in the returned data.', 'woocommerce' ),
 			'type'              => 'string',
 			'default'           => 'week',
-			'enum'              => array(
+			'enum'              => [
 				'hour',
 				'day',
 				'week',
 				'month',
 				'quarter',
 				'year',
-			),
+			],
 			'validate_callback' => 'rest_validate_request_arg',
-		);
-		$params['match']            = array(
+		];
+		$params['match']            = [
 			'description'       => __( 'Indicates whether all the conditions should be true for the resulting set, or if any one of them is sufficient. Match affects the following parameters: status_is, status_is_not, product_includes, product_excludes, coupon_includes, coupon_excludes, customer, categories', 'woocommerce' ),
 			'type'              => 'string',
 			'default'           => 'all',
-			'enum'              => array(
+			'enum'              => [
 				'all',
 				'any',
-			),
+			],
 			'validate_callback' => 'rest_validate_request_arg',
-		);
-		$params['product_includes'] = array(
+		];
+		$params['product_includes'] = [
 			'description'       => __( 'Limit result set to items that have the specified product(s) assigned.', 'woocommerce' ),
 			'type'              => 'array',
-			'items'             => array(
+			'items'             => [
 				'type' => 'integer',
-			),
-			'default'           => array(),
+			],
+			'default'           => [],
 			'sanitize_callback' => 'wp_parse_id_list',
 
-		);
-		$params['product_excludes']    = array(
+		];
+		$params['product_excludes']    = [
 			'description'       => __( 'Limit result set to items that don\'t have the specified product(s) assigned.', 'woocommerce' ),
 			'type'              => 'array',
-			'items'             => array(
+			'items'             => [
 				'type' => 'integer',
-			),
-			'default'           => array(),
+			],
+			'default'           => [],
 			'sanitize_callback' => 'wp_parse_id_list',
-		);
-		$params['order_includes']      = array(
+		];
+		$params['order_includes']      = [
 			'description'       => __( 'Limit result set to items that have the specified order ids.', 'woocommerce' ),
 			'type'              => 'array',
 			'sanitize_callback' => 'wp_parse_id_list',
 			'validate_callback' => 'rest_validate_request_arg',
-			'items'             => array(
+			'items'             => [
 				'type' => 'integer',
-			),
-		);
-		$params['order_excludes']      = array(
+			],
+		];
+		$params['order_excludes']      = [
 			'description'       => __( 'Limit result set to items that don\'t have the specified order ids.', 'woocommerce' ),
 			'type'              => 'array',
 			'sanitize_callback' => 'wp_parse_id_list',
 			'validate_callback' => 'rest_validate_request_arg',
-			'items'             => array(
+			'items'             => [
 				'type' => 'integer',
-			),
-		);
-		$params['customer_includes']   = array(
+			],
+		];
+		$params['customer_includes']   = [
 			'description'       => __( 'Limit response to objects that have the specified customer ids.', 'woocommerce' ),
 			'type'              => 'array',
 			'sanitize_callback' => 'wp_parse_id_list',
 			'validate_callback' => 'rest_validate_request_arg',
-			'items'             => array(
+			'items'             => [
 				'type' => 'integer',
-			),
-		);
-		$params['customer_excludes']   = array(
+			],
+		];
+		$params['customer_excludes']   = [
 			'description'       => __( 'Limit response to objects that don\'t have the specified customer ids.', 'woocommerce' ),
 			'type'              => 'array',
 			'sanitize_callback' => 'wp_parse_id_list',
 			'validate_callback' => 'rest_validate_request_arg',
-			'items'             => array(
+			'items'             => [
 				'type' => 'integer',
-			),
-		);
-		$params['ip_address_includes'] = array(
+			],
+		];
+		$params['ip_address_includes'] = [
 			'description'       => __( 'Limit response to objects that have a specified ip address.', 'woocommerce' ),
 			'type'              => 'array',
 			'validate_callback' => 'rest_validate_request_arg',
-			'items'             => array(
+			'items'             => [
 				'type' => 'string',
-			),
-		);
+			],
+		];
 
-		$params['ip_address_excludes'] = array(
+		$params['ip_address_excludes'] = [
 			'description'       => __( 'Limit response to objects that don\'t have a specified ip address.', 'woocommerce' ),
 			'type'              => 'array',
 			'validate_callback' => 'rest_validate_request_arg',
-			'items'             => array(
+			'items'             => [
 				'type' => 'string',
-			),
-		);
-		$params['fields']              = array(
+			],
+		];
+		$params['fields']              = [
 			'description'       => __( 'Limit stats fields to the specified items.', 'woocommerce' ),
 			'type'              => 'array',
 			'sanitize_callback' => 'wp_parse_slug_list',
 			'validate_callback' => 'rest_validate_request_arg',
-			'items'             => array(
+			'items'             => [
 				'type' => 'string',
-			),
-		);
-		$params['force_cache_refresh'] = array(
+			],
+		];
+		$params['force_cache_refresh'] = [
 			'description'       => __( 'Force retrieval of fresh data instead of from the cache.', 'woocommerce' ),
 			'type'              => 'boolean',
 			'sanitize_callback' => 'wp_validate_boolean',
 			'validate_callback' => 'rest_validate_request_arg',
-		);
+		];
 
 		return $params;
 	}

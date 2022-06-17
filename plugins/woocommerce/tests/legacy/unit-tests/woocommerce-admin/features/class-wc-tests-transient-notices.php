@@ -17,20 +17,20 @@ class WC_Admin_Tests_Transient_Notices extends WC_Unit_Test_Case {
 	 */
 	public function test_add_notices() {
 		TransientNotices::add(
-			array(
+			[
 				'id'      => 'test-notice-1',
 				'content' => 'Test notice 1',
-			)
+			]
 		);
 
 		$notices = get_option( TransientNotices::QUEUE_OPTION );
 		$this->assertCount( 1, $notices );
 
 		TransientNotices::add(
-			array(
+			[
 				'id'      => 'test-notice-2',
 				'content' => 'Test notice 2',
-			)
+			]
 		);
 
 		$notices = get_option( TransientNotices::QUEUE_OPTION );
@@ -45,10 +45,10 @@ class WC_Admin_Tests_Transient_Notices extends WC_Unit_Test_Case {
 	 */
 	public function test_remove_notices() {
 		TransientNotices::add(
-			array(
+			[
 				'id'      => 'test-notice-to-remove',
 				'content' => 'This notice should be removed',
-			)
+			]
 		);
 
 		TransientNotices::remove( 'test-notice-to-remove' );

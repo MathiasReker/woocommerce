@@ -43,7 +43,7 @@ function wc_update_200_file_paths() {
 
 			if ( ! empty( $old_file_path ) ) {
 				// phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.serialize_serialize
-				$file_paths = serialize( array( md5( $old_file_path ) => $old_file_path ) );
+				$file_paths = serialize( [ md5( $old_file_path ) => $old_file_path ] );
 
 				$wpdb->query( $wpdb->prepare( "UPDATE {$wpdb->postmeta} SET meta_key = '_file_paths', meta_value = %s WHERE meta_id = %d", $file_paths, $existing_file_path->meta_id ) );
 
@@ -87,12 +87,12 @@ function wc_update_200_permalinks() {
 			$product_base .= trailingslashit( '%product_cat%' );
 		}
 
-		$permalinks = array(
+		$permalinks = [
 			'product_base'   => untrailingslashit( $product_base ),
 			'category_base'  => untrailingslashit( $category_base . $category_slug ),
 			'attribute_base' => untrailingslashit( $category_base ),
 			'tag_base'       => untrailingslashit( $category_base . $tag_slug ),
-		);
+		];
 
 		update_option( 'woocommerce_permalinks', $permalinks );
 	}
@@ -149,7 +149,7 @@ function wc_update_200_taxrates() {
 
 					$wpdb->insert(
 						$wpdb->prefix . 'woocommerce_tax_rates',
-						array(
+						[
 							'tax_rate_country'  => $country,
 							'tax_rate_state'    => $state,
 							'tax_rate'          => $tax_rate['rate'],
@@ -159,7 +159,7 @@ function wc_update_200_taxrates() {
 							'tax_rate_shipping' => ( 'yes' === $tax_rate['shipping'] ) ? 1 : 0,
 							'tax_rate_order'    => $loop,
 							'tax_rate_class'    => $tax_rate['class'],
-						)
+						]
 					);
 
 					$loop++;
@@ -181,7 +181,7 @@ function wc_update_200_taxrates() {
 
 			$wpdb->insert(
 				$wpdb->prefix . 'woocommerce_tax_rates',
-				array(
+				[
 					'tax_rate_country'  => $tax_rate['country'],
 					'tax_rate_state'    => $tax_rate['state'],
 					'tax_rate'          => $tax_rate['rate'],
@@ -191,7 +191,7 @@ function wc_update_200_taxrates() {
 					'tax_rate_shipping' => ( 'yes' === $tax_rate['shipping'] ) ? 1 : 0,
 					'tax_rate_order'    => $loop,
 					'tax_rate_class'    => $tax_rate['class'],
-				)
+				]
 			);
 
 			$tax_rate_id = $wpdb->insert_id;
@@ -201,11 +201,11 @@ function wc_update_200_taxrates() {
 
 					$wpdb->insert(
 						$wpdb->prefix . 'woocommerce_tax_rate_locations',
-						array(
+						[
 							'location_code' => $location,
 							'tax_rate_id'   => $tax_rate_id,
 							'location_type' => $location_type,
-						)
+						]
 					);
 
 				}
@@ -255,10 +255,10 @@ function wc_update_200_line_items() {
 
 			$item_id = wc_add_order_item(
 				$order_item_row->post_id,
-				array(
+				[
 					'order_item_name' => $order_item['name'],
 					'order_item_type' => 'line_item',
-				)
+				]
 			);
 
 			// Add line item meta.
@@ -272,7 +272,7 @@ function wc_update_200_line_items() {
 				wc_add_order_item_meta( $item_id, '_line_total', wc_format_decimal( $order_item['line_total'] ) );
 				wc_add_order_item_meta( $item_id, '_line_tax', wc_format_decimal( $order_item['line_tax'] ) );
 
-				$meta_rows = array();
+				$meta_rows = [];
 
 				// Insert meta.
 				if ( ! empty( $order_item['item_meta'] ) ) {
@@ -333,10 +333,10 @@ function wc_update_200_line_items() {
 
 				$item_id = wc_add_order_item(
 					$order_tax_row->post_id,
-					array(
+					[
 						'order_item_name' => $order_tax['label'],
 						'order_item_type' => 'tax',
-					)
+					]
 				);
 
 				// Add line item meta.
@@ -369,14 +369,14 @@ function wc_update_200_line_items() {
 function wc_update_200_images() {
 	// Grab the pre 2.0 Image options and use to populate the new image options settings,
 	// cleaning up afterwards like nice people do.
-	foreach ( array( 'catalog', 'single', 'thumbnail' ) as $value ) {
+	foreach ( [ 'catalog', 'single', 'thumbnail' ] as $value ) {
 
 		$old_settings = array_filter(
-			array(
+			[
 				'width'  => get_option( 'woocommerce_' . $value . '_image_width' ),
 				'height' => get_option( 'woocommerce_' . $value . '_image_height' ),
 				'crop'   => get_option( 'woocommerce_' . $value . '_image_crop' ),
-			)
+			]
 		);
 
 		if ( ! empty( $old_settings ) && update_option( 'shop_' . $value . '_image_size', $old_settings ) ) {
@@ -411,43 +411,43 @@ function wc_update_209_brazillian_state() {
 	// Update brazillian state codes.
 	$wpdb->update(
 		$wpdb->postmeta,
-		array(
+		[
 			'meta_value' => 'BA',
-		),
-		array(
+		],
+		[
 			'meta_key'   => '_billing_state',
 			'meta_value' => 'BH',
-		)
+		]
 	);
 	$wpdb->update(
 		$wpdb->postmeta,
-		array(
+		[
 			'meta_value' => 'BA',
-		),
-		array(
+		],
+		[
 			'meta_key'   => '_shipping_state',
 			'meta_value' => 'BH',
-		)
+		]
 	);
 	$wpdb->update(
 		$wpdb->usermeta,
-		array(
+		[
 			'meta_value' => 'BA',
-		),
-		array(
+		],
+		[
 			'meta_key'   => 'billing_state',
 			'meta_value' => 'BH',
-		)
+		]
 	);
 	$wpdb->update(
 		$wpdb->usermeta,
-		array(
+		[
 			'meta_value' => 'BA',
-		),
-		array(
+		],
+		[
 			'meta_key'   => 'shipping_state',
 			'meta_value' => 'BH',
-		)
+		]
 	);
 
 	// phpcs:enable WordPress.DB.SlowDBQuery
@@ -493,17 +493,17 @@ function wc_update_210_file_paths() {
 		foreach ( $existing_file_paths as $existing_file_path ) {
 
 			$needs_update = false;
-			$new_value    = array();
+			$new_value    = [];
 			$value        = maybe_unserialize( trim( $existing_file_path->meta_value ) );
 
 			if ( $value ) {
 				foreach ( $value as $key => $file ) {
 					if ( ! is_array( $file ) ) {
 						$needs_update      = true;
-						$new_value[ $key ] = array(
+						$new_value[ $key ] = [
 							'file' => $file,
 							'name' => wc_get_filename_from_url( $file ),
-						);
+						];
 					} else {
 						$new_value[ $key ] = $file;
 					}
@@ -673,19 +673,19 @@ function wc_update_220_attributes() {
 				// Update attribute.
 				$wpdb->update(
 					"{$wpdb->prefix}woocommerce_attribute_taxonomies",
-					array(
+					[
 						'attribute_name' => $sanitized_attribute_name,
-					),
-					array(
+					],
+					[
 						'attribute_id' => $attribute_taxonomy->attribute_id,
-					)
+					]
 				);
 
 				// Update terms.
 				$wpdb->update(
 					$wpdb->term_taxonomy,
-					array( 'taxonomy' => wc_attribute_taxonomy_name( $sanitized_attribute_name ) ),
-					array( 'taxonomy' => 'pa_' . $attribute_taxonomy->attribute_name )
+					[ 'taxonomy' => wc_attribute_taxonomy_name( $sanitized_attribute_name ) ],
+					[ 'taxonomy' => 'pa_' . $attribute_taxonomy->attribute_name ]
 				);
 			}
 		}
@@ -753,10 +753,10 @@ function wc_update_240_shipping_methods() {
 	 * Flat Rate Shipping.
 	 * Update legacy options to new math based options.
 	 */
-	$shipping_methods = array(
+	$shipping_methods = [
 		'woocommerce_flat_rates'                        => new WC_Shipping_Legacy_Flat_Rate(),
 		'woocommerce_international_delivery_flat_rates' => new WC_Shipping_Legacy_International_Delivery(),
-	);
+	];
 	foreach ( $shipping_methods as $flat_rate_option_key => $shipping_method ) {
 		// Stop this running more than once if routine is repeated.
 		if ( version_compare( $shipping_method->get_option( 'version', 0 ), '2.4.0', '<' ) ) {
@@ -764,10 +764,10 @@ function wc_update_240_shipping_methods() {
 			$has_classes       = count( $shipping_classes ) > 0;
 			$cost_key          = $has_classes ? 'no_class_cost' : 'cost';
 			$min_fee           = $shipping_method->get_option( 'minimum_fee' );
-			$math_cost_strings = array(
-				'cost'          => array(),
-				'no_class_cost' => array(),
-			);
+			$math_cost_strings = [
+				'cost'          => [],
+				'no_class_cost' => [],
+			];
 
 			$math_cost_strings[ $cost_key ][] = $shipping_method->get_option( 'cost' );
 			$fee                              = $shipping_method->get_option( 'fee' );
@@ -781,7 +781,7 @@ function wc_update_240_shipping_methods() {
 				$math_cost_strings[ $rate_key ] = $math_cost_strings['no_class_cost'];
 			}
 
-			$flat_rates = array_filter( (array) get_option( $flat_rate_option_key, array() ) );
+			$flat_rates = array_filter( (array) get_option( $flat_rate_option_key, [] ) );
 
 			if ( $flat_rates ) {
 				foreach ( $flat_rates as $shipping_class => $rate ) {
@@ -830,18 +830,18 @@ function wc_update_240_api_keys() {
 	 * Update the old user API keys to the new Apps keys.
 	 */
 	$api_users = $wpdb->get_results( "SELECT user_id FROM $wpdb->usermeta WHERE meta_key = 'woocommerce_api_consumer_key'" );
-	$apps_keys = array();
+	$apps_keys = [];
 
 	// Get user data.
 	foreach ( $api_users as $_user ) {
 		$user        = get_userdata( $_user->user_id );
-		$apps_keys[] = array(
+		$apps_keys[] = [
 			'user_id'         => $user->ID,
 			'permissions'     => $user->woocommerce_api_key_permissions,
 			'consumer_key'    => wc_api_hash( $user->woocommerce_api_consumer_key ),
 			'consumer_secret' => $user->woocommerce_api_consumer_secret,
 			'truncated_key'   => substr( $user->woocommerce_api_consumer_secret, -7 ),
-		);
+		];
 	}
 
 	if ( ! empty( $apps_keys ) ) {
@@ -850,13 +850,13 @@ function wc_update_240_api_keys() {
 			$wpdb->insert(
 				$wpdb->prefix . 'woocommerce_api_keys',
 				$app,
-				array(
+				[
 					'%d',
 					'%s',
 					'%s',
 					'%s',
 					'%s',
-				)
+				]
 			);
 		}
 
@@ -883,12 +883,12 @@ function wc_update_240_webhooks() {
 	 * Make sure order.update webhooks get the woocommerce_order_edit_status hook.
 	 */
 	$order_update_webhooks = get_posts(
-		array(
+		[
 			'posts_per_page' => -1,
 			'post_type'      => 'shop_webhook',
 			'meta_key'       => '_topic',
 			'meta_value'     => 'order.updated',
-		)
+		]
 	);
 	foreach ( $order_update_webhooks as $order_update_webhook ) {
 		$webhook = new WC_Webhook( $order_update_webhook->ID );
@@ -910,18 +910,18 @@ function wc_update_240_refunds() {
 	 * Update fully refunded orders to ensure they have a refund line item so reports add up.
 	 */
 	$refunded_orders = get_posts(
-		array(
+		[
 			'posts_per_page' => -1,
 			'post_type'      => 'shop_order',
-			'post_status'    => array( 'wc-refunded' ),
-		)
+			'post_status'    => [ 'wc-refunded' ],
+		]
 	);
 
 	// Ensure emails are disabled during this update routine.
 	remove_all_actions( 'woocommerce_order_status_refunded_notification' );
 	remove_all_actions( 'woocommerce_order_partially_refunded_notification' );
-	remove_action( 'woocommerce_order_status_refunded', array( 'WC_Emails', 'send_transactional_email' ) );
-	remove_action( 'woocommerce_order_partially_refunded', array( 'WC_Emails', 'send_transactional_email' ) );
+	remove_action( 'woocommerce_order_status_refunded', [ 'WC_Emails', 'send_transactional_email' ] );
+	remove_action( 'woocommerce_order_partially_refunded', [ 'WC_Emails', 'send_transactional_email' ] );
 
 	foreach ( $refunded_orders as $refunded_order ) {
 		$order_total    = get_post_meta( $refunded_order->ID, '_order_total', true );
@@ -938,13 +938,13 @@ function wc_update_240_refunds() {
 
 		if ( $order_total > $refunded_total ) {
 			wc_create_refund(
-				array(
+				[
 					'amount'     => $order_total - $refunded_total,
 					'reason'     => __( 'Order fully refunded', 'woocommerce' ),
 					'order_id'   => $refunded_order->ID,
-					'line_items' => array(),
+					'line_items' => [],
 					'date'       => $refunded_order->post_modified,
-				)
+				]
 			);
 		}
 	}
@@ -1021,13 +1021,13 @@ function wc_update_250_currency() {
 	// Update LAK currency code.
 	$wpdb->update(
 		$wpdb->postmeta,
-		array(
+		[
 			'meta_value' => 'LAK',
-		),
-		array(
+		],
+		[
 			'meta_key'   => '_order_currency',
 			'meta_value' => 'KIP',
-		)
+		]
 	);
 
 	// phpcs:enable WordPress.DB.SlowDBQuery
@@ -1114,17 +1114,17 @@ function wc_update_260_zone_methods() {
 			$wpdb->query( $wpdb->prepare( "ALTER TABLE {$wpdb->prefix}woocommerce_shipping_zone_methods AUTO_INCREMENT = %d;", max( $max_new_id, $max_old_id ) + 1 ) );
 
 			// Store changes.
-			$changes = array();
+			$changes = [];
 
 			// Move data.
 			foreach ( $old_methods as $old_method ) {
 				$wpdb->insert(
 					$wpdb->prefix . 'woocommerce_shipping_zone_methods',
-					array(
+					[
 						'zone_id'      => $old_method->zone_id,
 						'method_id'    => $old_method->shipping_method_type,
 						'method_order' => $old_method->shipping_method_order,
-					)
+					]
 				);
 
 				$new_instance_id = $wpdb->insert_id;
@@ -1143,22 +1143,22 @@ function wc_update_260_zone_methods() {
 					// Move rates.
 					$wpdb->update(
 						$wpdb->prefix . 'woocommerce_shipping_table_rates',
-						array(
+						[
 							'shipping_method_id' => $new_instance_id,
-						),
-						array(
+						],
+						[
 							'shipping_method_id' => $old_method->shipping_method_id,
-						)
+						]
 					);
 				} elseif ( 'flat_rate_boxes' === $old_method->shipping_method_type ) {
 					$wpdb->update(
 						$wpdb->prefix . 'woocommerce_shipping_flat_rate_boxes',
-						array(
+						[
 							'shipping_method_id' => $new_instance_id,
-						),
-						array(
+						],
+						[
 							'shipping_method_id' => $old_method->shipping_method_id,
-						)
+						]
 					);
 				}
 
@@ -1217,12 +1217,12 @@ function wc_update_300_webhooks() {
 	 * and woocommerce_product_bulk_edit_save hooks.
 	 */
 	$product_update_webhooks = get_posts(
-		array(
+		[
 			'posts_per_page' => -1,
 			'post_type'      => 'shop_webhook',
 			'meta_key'       => '_topic',
 			'meta_value'     => 'product.updated',
-		)
+		]
 	);
 	foreach ( $product_update_webhooks as $product_update_webhook ) {
 		$webhook = new WC_Webhook( $product_update_webhook->ID );
@@ -1260,24 +1260,24 @@ function wc_update_300_grouped_products() {
 		$parent = wc_get_product( $parent_id );
 		if ( $parent && $parent->is_type( 'grouped' ) ) {
 			$children_ids = get_posts(
-				array(
+				[
 					'post_parent'    => $parent_id,
 					'posts_per_page' => -1,
 					'post_type'      => 'product',
 					'fields'         => 'ids',
-				)
+				]
 			);
 			update_post_meta( $parent_id, '_children', $children_ids );
 
 			// Update children to remove the parent.
 			$wpdb->update(
 				$wpdb->posts,
-				array(
+				[
 					'post_parent' => 0,
-				),
-				array(
+				],
+				[
 					'post_parent' => $parent_id,
-				)
+				]
 			);
 		}
 	}
@@ -1417,7 +1417,7 @@ function wc_update_312_db_version() {
 function wc_update_320_mexican_states() {
 	global $wpdb;
 
-	$mx_states = array(
+	$mx_states = [
 		'Distrito Federal'    => 'CMX',
 		'Jalisco'             => 'JAL',
 		'Nuevo Leon'          => 'NLE',
@@ -1450,7 +1450,7 @@ function wc_update_320_mexican_states() {
 		'Veracruz'            => 'VER',
 		'Yucatan'             => 'YUC',
 		'Zacatecas'           => 'ZAC',
-	);
+	];
 
 	foreach ( $mx_states as $old => $new ) {
 		$wpdb->query(
@@ -1465,21 +1465,21 @@ function wc_update_320_mexican_states() {
 		);
 		$wpdb->update(
 			"{$wpdb->prefix}woocommerce_shipping_zone_locations",
-			array(
+			[
 				'location_code' => 'MX:' . $new,
-			),
-			array(
+			],
+			[
 				'location_code' => 'MX:' . $old,
-			)
+			]
 		);
 		$wpdb->update(
 			"{$wpdb->prefix}woocommerce_tax_rates",
-			array(
+			[
 				'tax_rate_state' => strtoupper( $new ),
-			),
-			array(
+			],
+			[
 				'tax_rate_state' => strtoupper( $old ),
-			)
+			]
 		);
 	}
 }
@@ -1495,8 +1495,8 @@ function wc_update_320_db_version() {
  * Update image settings to use new aspect ratios and widths.
  */
 function wc_update_330_image_options() {
-	$old_thumbnail_size = get_option( 'shop_catalog_image_size', array() );
-	$old_single_size    = get_option( 'shop_single_image_size', array() );
+	$old_thumbnail_size = get_option( 'shop_catalog_image_size', [] );
+	$old_single_size    = get_option( 'shop_single_image_size', [] );
 
 	if ( ! empty( $old_thumbnail_size['width'] ) ) {
 		$width     = absint( $old_thumbnail_size['width'] );
@@ -1543,18 +1543,18 @@ function wc_update_330_webhooks() {
 	register_post_type( 'shop_webhook' );
 
 	// Map statuses from post_type to Webhooks CRUD.
-	$statuses = array(
+	$statuses = [
 		'publish' => 'active',
 		'draft'   => 'paused',
 		'pending' => 'disabled',
-	);
+	];
 
 	$posts = get_posts(
-		array(
+		[
 			'posts_per_page' => -1,
 			'post_type'      => 'shop_webhook',
 			'post_status'    => 'any',
-		)
+		]
 	);
 
 	foreach ( $posts as $post ) {
@@ -1646,7 +1646,7 @@ function wc_update_330_set_paypal_sandbox_credentials() {
 	$paypal_settings = get_option( 'woocommerce_paypal_settings' );
 
 	if ( isset( $paypal_settings['testmode'] ) && 'yes' === $paypal_settings['testmode'] ) {
-		foreach ( array( 'api_username', 'api_password', 'api_signature' ) as $credential ) {
+		foreach ( [ 'api_username', 'api_password', 'api_signature' ] as $credential ) {
 			if ( ! empty( $paypal_settings[ $credential ] ) ) {
 				$paypal_settings[ 'sandbox_' . $credential ] = $paypal_settings[ $credential ];
 			}
@@ -1667,14 +1667,14 @@ function wc_update_330_db_version() {
  * Update state codes for Ireland and BD.
  */
 function wc_update_340_states() {
-	$country_states = array(
-		'IE' => array(
+	$country_states = [
+		'IE' => [
 			'CK' => 'CO',
 			'DN' => 'D',
 			'GY' => 'G',
 			'TY' => 'TA',
-		),
-		'BD' => array(
+		],
+		'BD' => [
 			'BAG'  => 'BD-05',
 			'BAN'  => 'BD-01',
 			'BAR'  => 'BD-02',
@@ -1738,8 +1738,8 @@ function wc_update_340_states() {
 			'SYL'  => 'BD-60',
 			'TAN'  => 'BD-63',
 			'THA'  => 'BD-64',
-		),
-	);
+		],
+	];
 
 	update_option( 'woocommerce_update_340_states', $country_states );
 }
@@ -1752,7 +1752,7 @@ function wc_update_340_states() {
 function wc_update_340_state() {
 	global $wpdb;
 
-	$country_states = array_filter( (array) get_option( 'woocommerce_update_340_states', array() ) );
+	$country_states = array_filter( (array) get_option( 'woocommerce_update_340_states', [] ) );
 
 	if ( empty( $country_states ) ) {
 		return false;
@@ -1772,21 +1772,21 @@ function wc_update_340_state() {
 			);
 			$wpdb->update(
 				"{$wpdb->prefix}woocommerce_shipping_zone_locations",
-				array(
+				[
 					'location_code' => $country . ':' . $new,
-				),
-				array(
+				],
+				[
 					'location_code' => $country . ':' . $old,
-				)
+				]
 			);
 			$wpdb->update(
 				"{$wpdb->prefix}woocommerce_tax_rates",
-				array(
+				[
 					'tax_rate_state' => strtoupper( $new ),
-				),
-				array(
+				],
+				[
 					'tax_rate_state' => strtoupper( $old ),
-				)
+				]
 			);
 			unset( $country_states[ $country ][ $old ] );
 
@@ -2031,25 +2031,25 @@ function wc_update_370_mro_std_currency() {
 	// Update MRU currency code.
 	$wpdb->update(
 		$wpdb->postmeta,
-		array(
+		[
 			'meta_value' => 'MRU', // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_value
-		),
-		array(
+		],
+		[
 			'meta_key'   => '_order_currency', // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
 			'meta_value' => 'MRO', // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_value
-		)
+		]
 	);
 
 	// Update STN currency code.
 	$wpdb->update(
 		$wpdb->postmeta,
-		array(
+		[
 			'meta_value' => 'STN', // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_value
-		),
-		array(
+		],
+		[
 			'meta_key'   => '_order_currency', // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
 			'meta_value' => 'STD', // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_value
-		)
+		]
 	);
 }
 
@@ -2070,7 +2070,7 @@ function wc_update_390_move_maxmind_database() {
 
 	// Generate a prefix for the old file and store it in the integration as it would expect it.
 	$prefix = wp_generate_password( 32, false );
-	update_option( 'woocommerce_maxmind_geolocation_settings', array( 'database_prefix' => $prefix ) );
+	update_option( 'woocommerce_maxmind_geolocation_settings', [ 'database_prefix' => $prefix ] );
 
 	// Generate the new path in the same way that the integration will.
 	$uploads_dir = wp_upload_dir();
@@ -2184,18 +2184,18 @@ function wc_update_450_sanitize_coupons_code() {
 		if ( ! empty( $code ) && $data['post_title'] !== $code ) {
 			$wpdb->update(
 				$wpdb->posts,
-				array(
+				[
 					'post_title' => $code,
-				),
-				array(
+				],
+				[
 					'ID' => $coupon_id,
-				),
-				array(
+				],
+				[
 					'%s',
-				),
-				array(
+				],
+				[
 					'%d',
-				)
+				]
 			);
 
 			// Clean cache.
@@ -2289,7 +2289,7 @@ function wc_update_560_create_refund_returns_page() {
 	 * @param array $pages The default WC pages.
 	 */
 	function filter_created_pages( $pages ) {
-		$page_to_create = array( 'refund_returns' );
+		$page_to_create = [ 'refund_returns' ];
 
 		return array_intersect_key( $pages, array_flip( $page_to_create ) );
 	}

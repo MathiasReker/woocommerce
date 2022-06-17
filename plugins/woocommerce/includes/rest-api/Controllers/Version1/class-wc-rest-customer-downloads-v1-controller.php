@@ -40,21 +40,21 @@ class WC_REST_Customer_Downloads_V1_Controller extends WC_REST_Controller {
 	 * Register the routes for customers.
 	 */
 	public function register_routes() {
-		register_rest_route( $this->namespace, '/' . $this->rest_base, array(
-			'args' => array(
-				'customer_id' => array(
+		register_rest_route( $this->namespace, '/' . $this->rest_base, [
+			'args' => [
+				'customer_id' => [
 					'description' => __( 'Unique identifier for the resource.', 'woocommerce' ),
 					'type'        => 'integer',
-				),
-			),
-			array(
+				],
+			],
+			[
 				'methods'             => WP_REST_Server::READABLE,
-				'callback'            => array( $this, 'get_items' ),
-				'permission_callback' => array( $this, 'get_items_permissions_check' ),
+				'callback'            => [ $this, 'get_items' ],
+				'permission_callback' => [ $this, 'get_items_permissions_check' ],
 				'args'                => $this->get_collection_params(),
-			),
-			'schema' => array( $this, 'get_public_item_schema' ),
-		) );
+			],
+			'schema' => [ $this, 'get_public_item_schema' ],
+		] );
 	}
 
 	/**
@@ -67,11 +67,11 @@ class WC_REST_Customer_Downloads_V1_Controller extends WC_REST_Controller {
 		$customer = get_user_by( 'id', (int) $request['customer_id'] );
 
 		if ( ! $customer ) {
-			return new WP_Error( 'woocommerce_rest_customer_invalid', __( 'Resource does not exist.', 'woocommerce' ), array( 'status' => 404 ) );
+			return new WP_Error( 'woocommerce_rest_customer_invalid', __( 'Resource does not exist.', 'woocommerce' ), [ 'status' => 404 ] );
 		}
 
 		if ( ! wc_rest_check_user_permissions( 'read', $customer->get_id() ) ) {
-			return new WP_Error( 'woocommerce_rest_cannot_view', __( 'Sorry, you cannot list resources.', 'woocommerce' ), array( 'status' => rest_authorization_required_code() ) );
+			return new WP_Error( 'woocommerce_rest_cannot_view', __( 'Sorry, you cannot list resources.', 'woocommerce' ), [ 'status' => rest_authorization_required_code() ] );
 		}
 
 		return true;
@@ -86,7 +86,7 @@ class WC_REST_Customer_Downloads_V1_Controller extends WC_REST_Controller {
 	public function get_items( $request ) {
 		$downloads = wc_get_customer_available_downloads( (int) $request['customer_id'] );
 
-		$data = array();
+		$data = [];
 		foreach ( $downloads as $download_data ) {
 			$download = $this->prepare_item_for_response( (object) $download_data, $request );
 			$download = $this->prepare_response_for_collection( $download );
@@ -139,17 +139,17 @@ class WC_REST_Customer_Downloads_V1_Controller extends WC_REST_Controller {
 	 */
 	protected function prepare_links( $download, $request ) {
 		$base  = str_replace( '(?P<customer_id>[\d]+)', $request['customer_id'], $this->rest_base );
-		$links = array(
-			'collection' => array(
+		$links = [
+			'collection' => [
 				'href' => rest_url( sprintf( '/%s/%s', $this->namespace, $base ) ),
-			),
-			'product' => array(
+			],
+			'product' => [
 				'href' => rest_url( sprintf( '/%s/products/%d', $this->namespace, $download->product_id ) ),
-			),
-			'order' => array(
+			],
+			'order' => [
 				'href' => rest_url( sprintf( '/%s/orders/%d', $this->namespace, $download->order_id ) ),
-			),
-		);
+			],
+		];
 
 		return $links;
 	}
@@ -160,81 +160,81 @@ class WC_REST_Customer_Downloads_V1_Controller extends WC_REST_Controller {
 	 * @return array
 	 */
 	public function get_item_schema() {
-		$schema = array(
+		$schema = [
 			'$schema'    => 'http://json-schema.org/draft-04/schema#',
 			'title'      => 'customer_download',
 			'type'       => 'object',
-			'properties' => array(
-				'download_url' => array(
+			'properties' => [
+				'download_url' => [
 					'description' => __( 'Download file URL.', 'woocommerce' ),
 					'type'        => 'string',
-					'context'     => array( 'view' ),
+					'context'     => [ 'view' ],
 					'readonly'    => true,
-				),
-				'download_id' => array(
+				],
+				'download_id' => [
 					'description' => __( 'Download ID (MD5).', 'woocommerce' ),
 					'type'        => 'string',
-					'context'     => array( 'view' ),
+					'context'     => [ 'view' ],
 					'readonly'    => true,
-				),
-				'product_id' => array(
+				],
+				'product_id' => [
 					'description' => __( 'Downloadable product ID.', 'woocommerce' ),
 					'type'        => 'integer',
-					'context'     => array( 'view' ),
+					'context'     => [ 'view' ],
 					'readonly'    => true,
-				),
-				'download_name' => array(
+				],
+				'download_name' => [
 					'description' => __( 'Downloadable file name.', 'woocommerce' ),
 					'type'        => 'string',
-					'context'     => array( 'view' ),
+					'context'     => [ 'view' ],
 					'readonly'    => true,
-				),
-				'order_id' => array(
+				],
+				'order_id' => [
 					'description' => __( 'Order ID.', 'woocommerce' ),
 					'type'        => 'integer',
-					'context'     => array( 'view' ),
+					'context'     => [ 'view' ],
 					'readonly'    => true,
-				),
-				'order_key' => array(
+				],
+				'order_key' => [
 					'description' => __( 'Order key.', 'woocommerce' ),
 					'type'        => 'string',
-					'context'     => array( 'view' ),
+					'context'     => [ 'view' ],
 					'readonly'    => true,
-				),
-				'downloads_remaining' => array(
+				],
+				'downloads_remaining' => [
 					'description' => __( 'Number of downloads remaining.', 'woocommerce' ),
 					'type'        => 'string',
-					'context'     => array( 'view' ),
+					'context'     => [ 'view' ],
 					'readonly'    => true,
-				),
-				'access_expires' => array(
+				],
+				'access_expires' => [
 					'description' => __( "The date when download access expires, in the site's timezone.", 'woocommerce' ),
 					'type'        => 'string',
-					'context'     => array( 'view' ),
+					'context'     => [ 'view' ],
 					'readonly'    => true,
-				),
-				'file' => array(
+				],
+				'file' => [
 					'description' => __( 'File details.', 'woocommerce' ),
 					'type'        => 'object',
-					'context'     => array( 'view' ),
+					'context'     => [ 'view' ],
 					'readonly'    => true,
-					'properties' => array(
-						'name' => array(
+					'properties' => [
+						'name' => [
 							'description' => __( 'File name.', 'woocommerce' ),
 							'type'        => 'string',
-							'context'     => array( 'view' ),
+							'context'     => [ 'view' ],
 							'readonly'    => true,
-						),
-						'file' => array(
+						],
+						'file' => [
 							'description' => __( 'File URL.', 'woocommerce' ),
 							'type'        => 'string',
-							'context'     => array( 'view' ),
+							'context'     => [ 'view' ],
 							'readonly'    => true,
-						),
-					),
-				),
-			),
-		);
+						],
+					],
+				],
+			],
+		];
 
 		return $this->add_additional_fields_schema( $schema );
 	}
@@ -245,8 +245,8 @@ class WC_REST_Customer_Downloads_V1_Controller extends WC_REST_Controller {
 	 * @return array
 	 */
 	public function get_collection_params() {
-		return array(
-			'context' => $this->get_context_param( array( 'default' => 'view' ) ),
-		);
+		return [
+			'context' => $this->get_context_param( [ 'default' => 'view' ] ),
+		];
 	}
 }

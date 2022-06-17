@@ -29,11 +29,11 @@ class WC_Product_Cat_List_Walker extends Walker {
 	 *
 	 * @var array
 	 */
-	public $db_fields = array(
+	public $db_fields = [
 		'parent' => 'parent',
 		'id'     => 'term_id',
 		'slug'   => 'slug',
-	);
+	];
 
 	/**
 	 * Starts the list before the elements are added.
@@ -45,7 +45,7 @@ class WC_Product_Cat_List_Walker extends Walker {
 	 * @param int    $depth Depth of category. Used for tab indentation.
 	 * @param array  $args Will only append content if style argument value is 'list'.
 	 */
-	public function start_lvl( &$output, $depth = 0, $args = array() ) {
+	public function start_lvl( &$output, $depth = 0, $args = [] ) {
 		if ( 'list' !== $args['style'] ) {
 			return;
 		}
@@ -64,7 +64,7 @@ class WC_Product_Cat_List_Walker extends Walker {
 	 * @param int    $depth Depth of category. Used for tab indentation.
 	 * @param array  $args Will only append content if style argument value is 'list'.
 	 */
-	public function end_lvl( &$output, $depth = 0, $args = array() ) {
+	public function end_lvl( &$output, $depth = 0, $args = [] ) {
 		if ( 'list' !== $args['style'] ) {
 			return;
 		}
@@ -85,7 +85,7 @@ class WC_Product_Cat_List_Walker extends Walker {
 	 * @param array   $args              Arguments.
 	 * @param integer $current_object_id Current object ID.
 	 */
-	public function start_el( &$output, $cat, $depth = 0, $args = array(), $current_object_id = 0 ) {
+	public function start_el( &$output, $cat, $depth = 0, $args = [], $current_object_id = 0 ) {
 		$cat_id = intval( $cat->term_id );
 
 		$output .= '<li class="cat-item cat-item-' . $cat_id;
@@ -120,7 +120,7 @@ class WC_Product_Cat_List_Walker extends Walker {
 	 * @param int    $depth  Depth of category. Not used.
 	 * @param array  $args   Only uses 'list' for whether should append to output.
 	 */
-	public function end_el( &$output, $cat, $depth = 0, $args = array() ) {
+	public function end_el( &$output, $cat, $depth = 0, $args = [] ) {
 		$output .= "</li>\n";
 	}
 

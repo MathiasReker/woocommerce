@@ -23,18 +23,18 @@ class WC_Widget_Cart extends WC_Widget {
 		$this->widget_description = __( 'Display the customer shopping cart.', 'woocommerce' );
 		$this->widget_id          = 'woocommerce_widget_cart';
 		$this->widget_name        = __( 'Cart', 'woocommerce' );
-		$this->settings           = array(
-			'title'         => array(
+		$this->settings           = [
+			'title'         => [
 				'type'  => 'text',
 				'std'   => __( 'Cart', 'woocommerce' ),
 				'label' => __( 'Title', 'woocommerce' ),
-			),
-			'hide_if_empty' => array(
+			],
+			'hide_if_empty' => [
 				'type'  => 'checkbox',
 				'std'   => 0,
 				'label' => __( 'Hide if cart is empty', 'woocommerce' ),
-			),
-		);
+			],
+		];
 
 		if ( is_customize_preview() ) {
 			wp_enqueue_script( 'wc-cart-fragments' );

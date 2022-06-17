@@ -31,9 +31,9 @@ class WC_Admin_Tests_API_Reports_Customers_Stats extends WC_REST_Unit_Test_Case 
 		parent::setUp();
 
 		$this->user = $this->factory->user->create(
-			array(
+			[
 				'role' => 'administrator',
-			)
+			]
 		);
 	}
 
@@ -90,7 +90,7 @@ class WC_Admin_Tests_API_Reports_Customers_Stats extends WC_REST_Unit_Test_Case 
 		wp_set_current_user( $this->user );
 		WC_Helper_Reports::reset_stats_dbs();
 
-		$test_customers = array();
+		$test_customers = [];
 
 		// Create 10 test customers.
 		for ( $i = 1; $i <= 10; $i++ ) {
@@ -142,9 +142,9 @@ class WC_Admin_Tests_API_Reports_Customers_Stats extends WC_REST_Unit_Test_Case 
 
 		// Test name parameter (case with no matches).
 		$request->set_query_params(
-			array(
+			[
 				'search' => 'Nota Customername',
-			)
+			]
 		);
 		$response = $this->server->dispatch( $request );
 		$reports  = $response->get_data();
@@ -157,10 +157,10 @@ class WC_Admin_Tests_API_Reports_Customers_Stats extends WC_REST_Unit_Test_Case 
 
 		// Test name and last_order parameters.
 		$request->set_query_params(
-			array(
+			[
 				'search'           => 'Jeff',
 				'last_order_after' => gmdate( 'Y-m-d' ) . 'T00:00:00Z',
-			)
+			]
 		);
 		$response = $this->server->dispatch( $request );
 		$reports  = $response->get_data();

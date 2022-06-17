@@ -95,7 +95,7 @@ class TimeInterval {
 		}
 
 		// Whenever this is changed, double check method time_interval_id to make sure they are in sync.
-		$mysql_date_format_mapping = array(
+		$mysql_date_format_mapping = [
 			'hour'    => "DATE_FORMAT({$table_name}.`{$date_column_name}`, '%Y-%m-%d %H')",
 			'day'     => "DATE_FORMAT({$table_name}.`{$date_column_name}`, '%Y-%m-%d')",
 			'week'    => $week_format,
@@ -103,7 +103,7 @@ class TimeInterval {
 			'quarter' => "CONCAT(YEAR({$table_name}.`{$date_column_name}`), '-', QUARTER({$table_name}.`{$date_column_name}`))",
 			'year'    => "YEAR({$table_name}.`{$date_column_name}`)",
 
-		);
+		];
 
 		return $mysql_date_format_mapping[ $time_interval ];
 	}
@@ -183,14 +183,14 @@ class TimeInterval {
 	 */
 	public static function time_interval_id( $time_interval, $datetime ) {
 		// Whenever this is changed, double check method db_datetime_format to make sure they are in sync.
-		$php_time_format_for = array(
+		$php_time_format_for = [
 			'hour'    => 'Y-m-d H',
 			'day'     => 'Y-m-d',
 			'week'    => 'o-W',
 			'month'   => 'Y-m',
 			'quarter' => 'Y-' . self::quarter( $datetime ),
 			'year'    => 'Y',
-		);
+		];
 
 		// If the week does not begin on Monday.
 		$first_day_of_week = absint( get_option( 'start_of_week' ) );
@@ -472,7 +472,7 @@ class TimeInterval {
 	 * @return DateTime
 	 */
 	public static function iterate( $datetime, $time_interval, $reversed = false ) {
-		return call_user_func( array( __CLASS__, "next_{$time_interval}_start" ), $datetime, $reversed );
+		return call_user_func( [ __CLASS__, "next_{$time_interval}_start" ], $datetime, $reversed );
 	}
 
 	/**
@@ -537,10 +537,10 @@ class TimeInterval {
 	 */
 	public static function normalize_between_params( $request, $param_names, $is_date ) {
 		if ( ! is_array( $param_names ) ) {
-			$param_names = array( $param_names );
+			$param_names = [ $param_names ];
 		}
 
-		$normalized = array();
+		$normalized = [];
 
 		foreach ( $param_names as $param_name ) {
 			if ( ! is_array( $request[ $param_name . '_between' ] ) ) {
@@ -647,62 +647,62 @@ class TimeInterval {
 		$current_month = $current_date->format( 'm' );
 
 		if ( 'last_week' === $timeframe ) {
-			return array(
+			return [
 				'start' => $current_date->modify( 'last week monday' )->format( 'Y-m-d 00:00:00' ),
 				'end'   => $current_date->modify( 'this sunday' )->format( 'Y-m-d 23:59:59' ),
-			);
+			];
 		}
 
 		if ( 'last_month' === $timeframe ) {
-			return array(
+			return [
 				'start' => $current_date->modify( 'first day of previous month' )->format( 'Y-m-d 00:00:00' ),
 				'end'   => $current_date->modify( 'last day of this month' )->format( 'Y-m-d 23:59:59' ),
-			);
+			];
 		}
 
 		if ( 'last_quarter' === $timeframe ) {
 			switch ( $current_month ) {
 				case $current_month >= 1 && $current_month <= 3:
-					return array(
+					return [
 						'start' => ( $current_year - 1 ) . '-10-01 00:00:00',
 						'end'   => ( $current_year - 1 ) . '-12-31 23:59:59',
-					);
+					];
 				case $current_month >= 4 && $current_month <= 6:
-					return array(
+					return [
 						'start' => $current_year . '-01-01 00:00:00',
 						'end'   => $current_year . '-03-31 23:59:59',
-					);
+					];
 				case $current_month >= 7 && $current_month <= 9:
-					return array(
+					return [
 						'start' => $current_year . '-04-01 00:00:00',
 						'end'   => $current_year . '-06-30 23:59:59',
-					);
+					];
 				case $current_month >= 10 && $current_month <= 12:
-					return array(
+					return [
 						'start' => $current_year . '-07-01 00:00:00',
 						'end'   => $current_year . '-09-31 23:59:59',
-					);
+					];
 			}
 		}
 
 		if ( 'last_6_months' === $timeframe ) {
 			if ( $current_month >= 1 && $current_month <= 6 ) {
-				return array(
+				return [
 					'start' => ( $current_year - 1 ) . '-07-01 00:00:00',
 					'end'   => ( $current_year - 1 ) . '-12-31 23:59:59',
-				);
+				];
 			}
-			return array(
+			return [
 				'start' => $current_year . '-01-01 00:00:00',
 				'end'   => $current_year . '-06-30 23:59:59',
-			);
+			];
 		}
 
 		if ( 'last_year' === $timeframe ) {
-			return array(
+			return [
 				'start' => ( $current_year - 1 ) . '-01-01 00:00:00',
 				'end'   => ( $current_year - 1 ) . '-12-31 23:59:59',
-			);
+			];
 		}
 
 		return false;

@@ -16,8 +16,8 @@ class WC_Beta_Tester_Settings {
 	 * Constructor
 	 */
 	public function __construct() {
-		add_action( 'admin_init', array( $this, 'settings_init' ) );
-		add_action( 'admin_menu', array( $this, 'add_to_menus' ) );
+		add_action( 'admin_init', [ $this, 'settings_init' ] );
+		add_action( 'admin_menu', [ $this, 'add_to_menus' ] );
 	}
 
 	/**
@@ -29,30 +29,30 @@ class WC_Beta_Tester_Settings {
 		add_settings_section(
 			'wc-beta-tester-update',
 			__( 'Settings', 'woocommerce-beta-tester' ),
-			array( $this, 'update_section_html' ),
+			[ $this, 'update_section_html' ],
 			'wc-beta-tester'
 		);
 
 		add_settings_field(
 			'wc-beta-tester-channel',
 			__( 'Release Channel', 'woocommerce-beta-tester' ),
-			array( $this, 'version_select_html' ),
+			[ $this, 'version_select_html' ],
 			'wc-beta-tester',
 			'wc-beta-tester-update',
-			array(
+			[
 				'label_for' => 'channel',
-			)
+			]
 		);
 
 		add_settings_field(
 			'wc-beta-tester-auto-update',
 			__( 'Automatic Updates', 'woocommerce-beta-tester' ),
-			array( $this, 'automatic_update_checkbox_html' ),
+			[ $this, 'automatic_update_checkbox_html' ],
 			'wc-beta-tester',
 			'wc-beta-tester-update',
-			array(
+			[
 				'label_for' => 'auto_update',
-			)
+			]
 		);
 	}
 
@@ -74,20 +74,20 @@ class WC_Beta_Tester_Settings {
 	 */
 	public function version_select_html( $args ) {
 		$settings = WC_Beta_Tester::get_settings();
-		$channels = array(
-			'beta'   => array(
+		$channels = [
+			'beta'   => [
 				'name'        => __( 'Beta Releases', 'woocommerce-beta-tester' ),
 				'description' => __( 'Beta releases contain experimental functionality for testing purposes only. This channel will also include RC and stable releases if more current.', 'woocommerce-beta-tester' ),
-			),
-			'rc'     => array(
+			],
+			'rc'     => [
 				'name'        => __( 'Release Candidates', 'woocommerce-beta-tester' ),
 				'description' => __( 'Release candidates are released to ensure any critical problems have not gone undetected. This channel will also include stable releases if more current.', 'woocommerce-beta-tester' ),
-			),
-			'stable' => array(
+			],
+			'stable' => [
 				'name'        => __( 'Stable Releases', 'woocommerce-beta-tester' ),
 				'description' => __( 'This is the default behavior in WordPress.', 'woocommerce-beta-tester' ),
-			),
-		);
+			],
+		];
 		echo '<fieldset><legend class="screen-reader-text"><span>' . esc_html__( 'Update Channel', 'woocommerce-beta-tester' ) . '</span></legend>';
 		foreach ( $channels as $channel_id => $channel ) {
 			?>
@@ -123,7 +123,7 @@ class WC_Beta_Tester_Settings {
 	 * Add options page to menu
 	 */
 	public function add_to_menus() {
-		add_submenu_page( 'plugins.php', __( 'WooCommerce Beta Tester', 'woocommerce-beta-tester' ), __( 'WC Beta Tester', 'woocommerce-beta-tester' ), 'install_plugins', 'wc-beta-tester', array( $this, 'settings_page_html' ) );
+		add_submenu_page( 'plugins.php', __( 'WooCommerce Beta Tester', 'woocommerce-beta-tester' ), __( 'WC Beta Tester', 'woocommerce-beta-tester' ), 'install_plugins', 'wc-beta-tester', [ $this, 'settings_page_html' ] );
 	}
 
 	/**

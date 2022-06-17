@@ -18,16 +18,16 @@ class WC_Products_Tracking {
 	 * Init tracking.
 	 */
 	public function init() {
-		add_action( 'load-edit.php', array( $this, 'track_products_view' ), 10 );
-		add_action( 'load-edit-tags.php', array( $this, 'track_categories_and_tags_view' ), 10, 2 );
-		add_action( 'edit_post', array( $this, 'track_product_updated' ), 10, 2 );
-		add_action( 'wp_after_insert_post', array( $this, 'track_product_published' ), 10, 4 );
-		add_action( 'created_product_cat', array( $this, 'track_product_category_created' ) );
-		add_action( 'edited_product_cat', array( $this, 'track_product_category_updated' ) );
-		add_action( 'add_meta_boxes_product', array( $this, 'track_product_updated_client_side' ), 10 );
-		add_action( 'admin_enqueue_scripts', array( $this, 'possibly_add_product_tracking_scripts' ) );
-		add_action( 'admin_enqueue_scripts', array( $this, 'possibly_add_attribute_tracking_scripts' ) );
-		add_action( 'admin_enqueue_scripts', array( $this, 'possibly_add_tag_tracking_scripts' ) );
+		add_action( 'load-edit.php', [ $this, 'track_products_view' ], 10 );
+		add_action( 'load-edit-tags.php', [ $this, 'track_categories_and_tags_view' ], 10, 2 );
+		add_action( 'edit_post', [ $this, 'track_product_updated' ], 10, 2 );
+		add_action( 'wp_after_insert_post', [ $this, 'track_product_published' ], 10, 4 );
+		add_action( 'created_product_cat', [ $this, 'track_product_category_created' ] );
+		add_action( 'edited_product_cat', [ $this, 'track_product_category_updated' ] );
+		add_action( 'add_meta_boxes_product', [ $this, 'track_product_updated_client_side' ], 10 );
+		add_action( 'admin_enqueue_scripts', [ $this, 'possibly_add_product_tracking_scripts' ] );
+		add_action( 'admin_enqueue_scripts', [ $this, 'possibly_add_attribute_tracking_scripts' ] );
+		add_action( 'admin_enqueue_scripts', [ $this, 'possibly_add_tag_tracking_scripts' ] );
 	}
 
 	/**
@@ -115,9 +115,9 @@ class WC_Products_Tracking {
 			return;
 		}
 
-		$properties = array(
+		$properties = [
 			'product_id' => $product_id,
-		);
+		];
 
 		WC_Tracks::record_event( 'product_edit', $properties );
 	}
@@ -194,7 +194,7 @@ class WC_Products_Tracking {
 
 		$product = wc_get_product( $post_id );
 
-		$properties = array(
+		$properties = [
 			'attributes'        => count( $product->get_attributes() ),
 			'categories'        => count( $product->get_category_ids() ),
 			'cross-sells'       => ! empty( $product->get_cross_sell_ids() ) ? 'yes' : 'no',
@@ -215,7 +215,7 @@ class WC_Products_Tracking {
 			'tags'              => count( $product->get_tag_ids() ),
 			'upsells'           => ! empty( $product->get_upsell_ids() ) ? 'yes' : 'no',
 			'weight'            => $product->get_weight() ? 'yes' : 'no',
-		);
+		];
 
 		WC_Tracks::record_event( 'product_add_publish', $properties );
 	}
@@ -250,14 +250,14 @@ class WC_Products_Tracking {
 				$parent_category = 'Uncategorized';
 			}
 		}
-		$properties = array(
+		$properties = [
 			'category_id'     => $category_id,
 			'parent_id'       => $category->parent,
 			'parent_category' => $parent_category,
 			'page'            => ( 'add-tag' === $_POST['action'] ) ? 'categories' : 'product',
 			'display_type'    => isset( $_POST['display_type'] ) ? wp_unslash( $_POST['display_type'] ) : '',
 			'image'           => isset( $_POST['product_cat_thumbnail_id'] ) && '' !== $_POST['product_cat_thumbnail_id'] ? 'Yes' : 'No',
-		);
+		];
 		// phpcs:enable
 
 		WC_Tracks::record_event( 'product_category_add', $properties );
@@ -335,7 +335,7 @@ class WC_Products_Tracking {
 		wp_enqueue_script(
 			'wc-admin-product-tracking',
 			WCAdminAssets::get_url( 'wp-admin-scripts/product-tracking', 'js' ),
-			array_merge( array( WC_ADMIN_APP ), $script_assets ['dependencies'] ),
+			array_merge( [ WC_ADMIN_APP ], $script_assets ['dependencies'] ),
 			WCAdminAssets::get_file_version( 'js' ),
 			true
 		);
@@ -343,9 +343,9 @@ class WC_Products_Tracking {
 		wp_localize_script(
 			'wc-admin-product-tracking',
 			'productScreen',
-			array(
+			[
 				'name' => $product_screen,
-			)
+			]
 		);
 	}
 
@@ -371,7 +371,7 @@ class WC_Products_Tracking {
 		wp_enqueue_script(
 			'wc-admin-attributes-tracking',
 			WCAdminAssets::get_url( 'wp-admin-scripts/attributes-tracking', 'js' ),
-			array_merge( array( WC_ADMIN_APP ), $script_assets ['dependencies'] ),
+			array_merge( [ WC_ADMIN_APP ], $script_assets ['dependencies'] ),
 			WCAdminAssets::get_file_version( 'js' ),
 			true
 		);
@@ -405,7 +405,7 @@ class WC_Products_Tracking {
 			wp_enqueue_script(
 				'wc-admin-tags-tracking',
 				WCAdminAssets::get_url( 'wp-admin-scripts/tags-tracking', 'js' ),
-				array_merge( array( WC_ADMIN_APP ), $tags_script_assets ['dependencies'] ),
+				array_merge( [ WC_ADMIN_APP ], $tags_script_assets ['dependencies'] ),
 				WCAdminAssets::get_file_version( 'js' ),
 				true
 			);
@@ -424,7 +424,7 @@ class WC_Products_Tracking {
 			wp_enqueue_script(
 				'wc-admin-category-tracking',
 				WCAdminAssets::get_url( 'wp-admin-scripts/category-tracking', 'js' ),
-				array_merge( array( WC_ADMIN_APP ), $category_script_assets ['dependencies'] ),
+				array_merge( [ WC_ADMIN_APP ], $category_script_assets ['dependencies'] ),
 				WCAdminAssets::get_file_version( 'js' ),
 				true
 			);
@@ -437,7 +437,7 @@ class WC_Products_Tracking {
 		wp_enqueue_script(
 			'wc-admin-add-term-tracking',
 			WCAdminAssets::get_url( 'wp-admin-scripts/add-term-tracking', 'js' ),
-			array_merge( array( WC_ADMIN_APP ), $script_assets ['dependencies'] ),
+			array_merge( [ WC_ADMIN_APP ], $script_assets ['dependencies'] ),
 			WCAdminAssets::get_file_version( 'js' ),
 			true
 		);

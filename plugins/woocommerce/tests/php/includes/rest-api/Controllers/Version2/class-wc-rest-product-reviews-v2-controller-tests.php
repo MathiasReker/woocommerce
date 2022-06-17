@@ -23,8 +23,8 @@ class WC_REST_Product_Reviews_V2_Controller_Test extends WC_REST_Unit_Test_case 
 		parent::setUp();
 
 		$this->sut             = new WC_REST_Product_Reviews_V2_Controller();
-		$this->shop_manager_id = self::factory()->user->create( array( 'role' => 'administrator' ) );
-		$this->editor_id       = self::factory()->user->create( array( 'role' => 'editor' ) );
+		$this->shop_manager_id = self::factory()->user->create( [ 'role' => 'administrator' ] );
+		$this->editor_id       = self::factory()->user->create( [ 'role' => 'editor' ] );
 	}
 
 	/**

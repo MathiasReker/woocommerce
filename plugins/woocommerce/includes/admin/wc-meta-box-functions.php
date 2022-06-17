@@ -53,7 +53,7 @@ function woocommerce_wp_text_input( $field ) {
 	}
 
 	// Custom attribute handling
-	$custom_attributes = array();
+	$custom_attributes = [];
 
 	if ( ! empty( $field['custom_attributes'] ) && is_array( $field['custom_attributes'] ) ) {
 
@@ -113,7 +113,7 @@ function woocommerce_wp_textarea_input( $field ) {
 	$field['cols']          = isset( $field['cols'] ) ? $field['cols'] : 20;
 
 	// Custom attribute handling
-	$custom_attributes = array();
+	$custom_attributes = [];
 
 	if ( ! empty( $field['custom_attributes'] ) && is_array( $field['custom_attributes'] ) ) {
 
@@ -156,7 +156,7 @@ function woocommerce_wp_checkbox( $field ) {
 	$field['desc_tip']      = isset( $field['desc_tip'] ) ? $field['desc_tip'] : false;
 
 	// Custom attribute handling
-	$custom_attributes = array();
+	$custom_attributes = [];
 
 	if ( ! empty( $field['custom_attributes'] ) && is_array( $field['custom_attributes'] ) ) {
 
@@ -191,24 +191,24 @@ function woocommerce_wp_select( $field ) {
 
 	$thepostid = empty( $thepostid ) ? $post->ID : $thepostid;
 	$field     = wp_parse_args(
-		$field, array(
+		$field, [
 			'class'             => 'select short',
 			'style'             => '',
 			'wrapper_class'     => '',
 			'value'             => get_post_meta( $thepostid, $field['id'], true ),
 			'name'              => $field['id'],
 			'desc_tip'          => false,
-			'custom_attributes' => array(),
-		)
+			'custom_attributes' => [],
+		]
 	);
 
-	$wrapper_attributes = array(
+	$wrapper_attributes = [
 		'class' => $field['wrapper_class'] . " form-field {$field['id']}_field",
-	);
+	];
 
-	$label_attributes = array(
+	$label_attributes = [
 		'for' => $field['id'],
-	);
+	];
 
 	$field_attributes          = (array) $field['custom_attributes'];
 	$field_attributes['style'] = $field['style'];

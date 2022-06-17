@@ -20,7 +20,7 @@ class Tax extends Task {
 	 */
 	public function __construct( $task_list ) {
 		parent::__construct( $task_list );
-		add_action( 'admin_enqueue_scripts', array( $this, 'possibly_add_return_notice_script' ) );
+		add_action( 'admin_enqueue_scripts', [ $this, 'possibly_add_return_notice_script' ] );
 	}
 
 	/**
@@ -44,7 +44,7 @@ class Tax extends Task {
 		wp_enqueue_script(
 			'onboarding-tax-notice',
 			WCAdminAssets::get_url( 'wp-admin-scripts/onboarding-tax-notice', 'js' ),
-			array_merge( array( WC_ADMIN_APP ), $script_assets ['dependencies'] ),
+			array_merge( [ WC_ADMIN_APP ], $script_assets ['dependencies'] ),
 			WC_VERSION,
 			true
 		);
@@ -124,7 +124,7 @@ class Tax extends Task {
 	 */
 	public function is_complete() {
 		return get_option( 'wc_connect_taxes_enabled' ) ||
-			count( TaxDataStore::get_taxes( array() ) ) > 0 ||
+			count( TaxDataStore::get_taxes( [] ) ) > 0 ||
 			false !== get_option( 'woocommerce_no_sales_tax' );
 	}
 
@@ -134,11 +134,11 @@ class Tax extends Task {
 	 * @return array
 	 */
 	public function get_additional_data() {
-		return array(
+		return [
 			'avalara_activated'         => PluginsHelper::is_plugin_active( 'woocommerce-avatax' ),
 			'tax_jar_activated'         => class_exists( 'WC_Taxjar' ),
 			'woocommerce_tax_countries' => self::get_automated_support_countries(),
-		);
+		];
 	}
 
 	/**
@@ -162,7 +162,7 @@ class Tax extends Task {
 	public static function get_automated_support_countries() {
 		// https://developers.taxjar.com/api/reference/#countries .
 		$tax_supported_countries = array_merge(
-			array( 'US', 'CA', 'AU', 'GB' ),
+			[ 'US', 'CA', 'AU', 'GB' ],
 			WC()->countries->get_european_union_countries()
 		);
 

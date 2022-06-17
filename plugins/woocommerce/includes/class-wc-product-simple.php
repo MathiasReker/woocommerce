@@ -42,9 +42,9 @@ class WC_Product_Simple extends WC_Product {
 		$url = $this->is_purchasable() && $this->is_in_stock() ? remove_query_arg(
 			'added-to-cart',
 			add_query_arg(
-				array(
+				[
 					'add-to-cart' => $this->get_id(),
-				),
+				],
 				( function_exists( 'is_feed' ) && is_feed() ) || ( function_exists( 'is_404' ) && is_404() ) ? $this->get_permalink() : ''
 			)
 		) : $this->get_permalink();

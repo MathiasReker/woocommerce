@@ -55,10 +55,10 @@ class Coupons {
 
 		( new CouponPageMoved() )->init();
 
-		add_action( 'admin_enqueue_scripts', array( $this, 'maybe_add_marketing_coupon_script' ) );
-		add_action( 'woocommerce_register_post_type_shop_coupon', array( $this, 'move_coupons' ) );
-		add_action( 'admin_head', array( $this, 'fix_coupon_menu_highlight' ), 99 );
-		add_action( 'admin_menu', array( $this, 'maybe_add_coupon_menu_redirect' ) );
+		add_action( 'admin_enqueue_scripts', [ $this, 'maybe_add_marketing_coupon_script' ] );
+		add_action( 'woocommerce_register_post_type_shop_coupon', [ $this, 'move_coupons' ] );
+		add_action( 'admin_head', [ $this, 'fix_coupon_menu_highlight' ], 99 );
+		add_action( 'admin_menu', [ $this, 'maybe_add_coupon_menu_redirect' ] );
 	}
 
 	/**
@@ -124,7 +124,7 @@ class Coupons {
 		wp_enqueue_style(
 			'wc-admin-marketing-coupons',
 			WCAdminAssets::get_url( "marketing-coupons/style{$rtl}", 'css' ),
-			array(),
+			[],
 			WCAdminAssets::get_file_version( 'css' )
 		);
 
@@ -134,7 +134,7 @@ class Coupons {
 		wp_enqueue_script(
 			'wc-admin-marketing-coupons',
 			WCAdminAssets::get_url( 'wp-admin-scripts/marketing-coupons', 'js' ),
-			array_merge( array( WC_ADMIN_APP ), $script_assets ['dependencies'] ),
+			array_merge( [ WC_ADMIN_APP ], $script_assets ['dependencies'] ),
 			WCAdminAssets::get_file_version( 'js' ),
 			true
 		);

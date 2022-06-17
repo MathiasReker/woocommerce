@@ -14,9 +14,9 @@ class WC_Tests_API_Reports_Reviews_Totals extends WC_REST_Unit_Test_Case {
 	public function setUp(): void {
 		parent::setUp();
 		$this->user = $this->factory->user->create(
-			array(
+			[
 				'role' => 'administrator',
-			)
+			]
 		);
 	}
 
@@ -41,24 +41,24 @@ class WC_Tests_API_Reports_Reviews_Totals extends WC_REST_Unit_Test_Case {
 
 		$response = $this->server->dispatch( new WP_REST_Request( 'GET', '/wc/v3/reports/reviews/totals' ) );
 		$report   = $response->get_data();
-		$data     = array();
+		$data     = [];
 
-		$query_data = array(
+		$query_data = [
 			'count'      => true,
 			'post_type'  => 'product',
 			'meta_key'   => 'rating', // WPCS: slow query ok.
 			'meta_value' => '', // WPCS: slow query ok.
-		);
+		];
 
 		for ( $i = 1; $i <= 5; $i++ ) {
 			$query_data['meta_value'] = $i;
 
-			$data[] = array(
+			$data[] = [
 				'slug'  => 'rated_' . $i . '_out_of_5',
 				/* translators: %s: average rating */
 				'name'  => sprintf( __( 'Rated %s out of 5', 'woocommerce' ), $i ),
 				'total' => (int) get_comments( $query_data ),
-			);
+			];
 		}
 
 		$this->assertEquals( 200, $response->get_status() );

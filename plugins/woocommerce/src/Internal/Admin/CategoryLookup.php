@@ -17,7 +17,7 @@ class CategoryLookup {
 	 *
 	 * @var array
 	 */
-	protected $edited_product_cats = array();
+	protected $edited_product_cats = [];
 
 	/**
 	 * The single instance of the class.
@@ -49,11 +49,11 @@ class CategoryLookup {
 	 * Init hooks.
 	 */
 	public function init() {
-		add_action( 'generate_category_lookup_table', array( $this, 'regenerate' ) );
-		add_action( 'edit_product_cat', array( $this, 'before_edit' ), 99 );
-		add_action( 'edited_product_cat', array( $this, 'on_edit' ), 99 );
-		add_action( 'created_product_cat', array( $this, 'on_create' ), 99 );
-		add_action( 'init', array( $this, 'define_category_lookup_tables_in_wpdb' ) );
+		add_action( 'generate_category_lookup_table', [ $this, 'regenerate' ] );
+		add_action( 'edit_product_cat', [ $this, 'before_edit' ], 99 );
+		add_action( 'edited_product_cat', [ $this, 'on_edit' ], 99 );
+		add_action( 'created_product_cat', [ $this, 'on_create' ], 99 );
+		add_action( 'init', [ $this, 'define_category_lookup_tables_in_wpdb' ] );
 	}
 
 	/**
@@ -66,14 +66,14 @@ class CategoryLookup {
 
 		$terms = get_terms(
 			'product_cat',
-			array(
+			[
 				'hide_empty' => false,
 				'fields'     => 'id=>parent',
-			)
+			]
 		);
 
-		$hierarchy = array();
-		$inserts   = array();
+		$hierarchy = [];
+		$inserts   = [];
 
 		$this->unflatten_terms( $hierarchy, $terms, 0 );
 		$this->get_term_insert_values( $inserts, $hierarchy );
@@ -179,7 +179,7 @@ class CategoryLookup {
 
 		$ancestors    = get_ancestors( $category_id, 'product_cat', 'taxonomy' );
 		$children     = get_term_children( $category_id, 'product_cat' );
-		$inserts      = array();
+		$inserts      = [];
 		$inserts[]    = $this->get_insert_sql( $category_id, $category_id );
 		$children_ids = array_map( 'intval', array_unique( array_filter( $children ) ) );
 
@@ -215,15 +215,15 @@ class CategoryLookup {
 	 * @param  array $terms   Terms to insert.
 	 * @param  array $parents Parent IDs the terms belong to.
 	 */
-	protected function get_term_insert_values( &$inserts, $terms, $parents = array() ) {
+	protected function get_term_insert_values( &$inserts, $terms, $parents = [] ) {
 		foreach ( $terms as $term ) {
-			$insert_parents = array_merge( array( $term['term_id'] ), $parents );
+			$insert_parents = array_merge( [ $term['term_id'] ], $parents );
 
 			foreach ( $insert_parents as $parent ) {
-				$inserts[] = array(
+				$inserts[] = [
 					$parent,
 					$term['term_id'],
-				);
+				];
 			}
 
 			$this->get_term_insert_values( $inserts, $term['descendants'], $insert_parents );
@@ -240,10 +240,10 @@ class CategoryLookup {
 	protected function unflatten_terms( &$hierarchy, &$terms, $parent = 0 ) {
 		foreach ( $terms as $term_id => $parent_id ) {
 			if ( (int) $parent_id === $parent ) {
-				$hierarchy[ $term_id ] = array(
+				$hierarchy[ $term_id ] = [
 					'term_id'     => $term_id,
-					'descendants' => array(),
-				);
+					'descendants' => [],
+				];
 				unset( $terms[ $term_id ] );
 			}
 		}
@@ -297,9 +297,9 @@ class CategoryLookup {
 		global $wpdb;
 
 		// List of tables without prefixes.
-		$tables = array(
+		$tables = [
 			'wc_category_lookup' => 'wc_category_lookup',
-		);
+		];
 
 		foreach ( $tables as $name => $table ) {
 			$wpdb->$name    = $wpdb->prefix . $table;

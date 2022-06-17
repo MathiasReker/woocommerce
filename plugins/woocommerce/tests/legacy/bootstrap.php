@@ -66,13 +66,13 @@ class WC_Unit_Tests_Bootstrap {
 		tests_add_filter( 'woocommerce_should_load_paypal_standard', '__return_true' );
 
 		// load WC.
-		tests_add_filter( 'muplugins_loaded', array( $this, 'load_wc' ) );
+		tests_add_filter( 'muplugins_loaded', [ $this, 'load_wc' ] );
 
 		// install WC.
-		tests_add_filter( 'setup_theme', array( $this, 'install_wc' ) );
+		tests_add_filter( 'setup_theme', [ $this, 'install_wc' ] );
 
 		// Set up WC-Admin config.
-		tests_add_filter( 'woocommerce_admin_get_feature_config', array( $this, 'add_development_features' ) );
+		tests_add_filter( 'woocommerce_admin_get_feature_config', [ $this, 'add_development_features' ] );
 
 		/*
 		* Load PHPUnit Polyfills for the WP testing suite.
@@ -119,7 +119,7 @@ class WC_Unit_Tests_Bootstrap {
 	 * @throws Exception Error when initializing one of the hacks.
 	 */
 	private function initialize_code_hacker() {
-		CodeHacker::initialize( array( __DIR__ . '/../../includes/' ) );
+		CodeHacker::initialize( [ __DIR__ . '/../../includes/' ] );
 
 		$replaceable_functions = include_once __DIR__ . '/mockable-functions.php';
 		if ( ! empty( $replaceable_functions ) ) {

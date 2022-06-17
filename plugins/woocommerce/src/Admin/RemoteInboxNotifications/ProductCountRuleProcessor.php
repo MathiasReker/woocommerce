@@ -21,12 +21,12 @@ class ProductCountRuleProcessor implements RuleProcessorInterface {
 	public function __construct( $product_query = null ) {
 		$this->product_query = null === $product_query
 			? new \WC_Product_Query(
-				array(
+				[
 					'limit'    => 1,
 					'paginate' => true,
 					'return'   => 'ids',
-					'status'   => array( 'publish' ),
-				)
+					'status'   => [ 'publish' ],
+				]
 			)
 			: $product_query;
 	}

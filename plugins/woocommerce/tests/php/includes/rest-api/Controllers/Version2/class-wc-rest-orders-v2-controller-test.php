@@ -13,9 +13,9 @@ class WC_REST_Order_V2_Controller_Test extends WC_REST_Unit_Test_case {
 		parent::setUp();
 		$this->endpoint = new WC_REST_Orders_V2_Controller();
 		$this->user     = $this->factory->user->create(
-			array(
+			[
 				'role' => 'administrator',
-			)
+			]
 		);
 	}
 
@@ -23,7 +23,7 @@ class WC_REST_Order_V2_Controller_Test extends WC_REST_Unit_Test_case {
 	 * Get all expected fields.
 	 */
 	public function get_expected_response_fields() {
-		return array(
+		return [
 			'id',
 			'parent_id',
 			'number',
@@ -70,7 +70,7 @@ class WC_REST_Order_V2_Controller_Test extends WC_REST_Unit_Test_case {
 			'is_editable',
 			'needs_payment',
 			'needs_processing',
-		);
+		];
 	}
 
 	/**

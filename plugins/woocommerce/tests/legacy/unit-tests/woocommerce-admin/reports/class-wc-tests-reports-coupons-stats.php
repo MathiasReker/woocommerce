@@ -62,42 +62,42 @@ class WC_Admin_Tests_Reports_Coupons_Stats extends WC_Unit_Test_Case {
 		$data_store = new CouponsStatsDataStore();
 		$start_time = gmdate( 'Y-m-d 00:00:00', $order->get_date_created()->getOffsetTimestamp() );
 		$end_time   = gmdate( 'Y-m-d 23:59:59', $order->get_date_created()->getOffsetTimestamp() );
-		$args       = array(
+		$args       = [
 			'after'    => $start_time,
 			'before'   => $end_time,
 			'interval' => 'day',
-		);
+		];
 
 		// Test retrieving the stats through the data store.
 		$start_datetime = new DateTime( $start_time );
 		$end_datetime   = new DateTime( $end_time );
 		$data           = $data_store->get_data( $args );
-		$expected_data  = (object) array(
+		$expected_data  = (object) [
 			'total'     => 1,
 			'pages'     => 1,
 			'page_no'   => 1,
-			'totals'    => (object) array(
+			'totals'    => (object) [
 				'amount'        => floatval( 2 * $coupon_1_amount + $coupon_2_amount ),
 				'coupons_count' => 2,
 				'orders_count'  => 2,
-				'segments'      => array(),
-			),
-			'intervals' => array(
-				array(
+				'segments'      => [],
+			],
+			'intervals' => [
+				[
 					'interval'       => $start_datetime->format( 'Y-m-d' ),
 					'date_start'     => $start_datetime->format( 'Y-m-d H:i:s' ),
 					'date_start_gmt' => $start_datetime->format( 'Y-m-d H:i:s' ),
 					'date_end'       => $end_datetime->format( 'Y-m-d H:i:s' ),
 					'date_end_gmt'   => $end_datetime->format( 'Y-m-d H:i:s' ),
-					'subtotals'      => (object) array(
+					'subtotals'      => (object) [
 						'amount'        => floatval( 2 * $coupon_1_amount + $coupon_2_amount ),
 						'coupons_count' => 2,
 						'orders_count'  => 2,
-						'segments'      => array(),
-					),
-				),
-			),
-		);
+						'segments'      => [],
+					],
+				],
+			],
+		];
 		$this->assertEquals( $expected_data, $data );
 
 		// Test retrieving the stats through the query class.
@@ -137,42 +137,42 @@ class WC_Admin_Tests_Reports_Coupons_Stats extends WC_Unit_Test_Case {
 
 		$start_time = gmdate( 'Y-m-d 00:00:00', $order->get_date_created()->getOffsetTimestamp() );
 		$end_time   = gmdate( 'Y-m-d 23:59:59', $order->get_date_created()->getOffsetTimestamp() );
-		$args       = array(
+		$args       = [
 			'after'    => $start_time,
 			'before'   => $end_time,
 			'interval' => 'day',
-		);
+		];
 
 		// Test retrieving the stats through the query class.
 		$query          = new CouponsStatsQuery( $args );
 		$start_datetime = new DateTime( $start_time );
 		$end_datetime   = new DateTime( $end_time );
-		$expected_data  = (object) array(
+		$expected_data  = (object) [
 			'total'     => 1,
 			'pages'     => 1,
 			'page_no'   => 1,
-			'totals'    => (object) array(
+			'totals'    => (object) [
 				'amount'        => floatval( $coupon_1_amount ),
 				'coupons_count' => 1,
 				'orders_count'  => 1,
-				'segments'      => array(),
-			),
-			'intervals' => array(
-				array(
+				'segments'      => [],
+			],
+			'intervals' => [
+				[
 					'interval'       => $start_datetime->format( 'Y-m-d' ),
 					'date_start'     => $start_datetime->format( 'Y-m-d H:i:s' ),
 					'date_start_gmt' => $start_datetime->format( 'Y-m-d H:i:s' ),
 					'date_end'       => $end_datetime->format( 'Y-m-d H:i:s' ),
 					'date_end_gmt'   => $end_datetime->format( 'Y-m-d H:i:s' ),
-					'subtotals'      => (object) array(
+					'subtotals'      => (object) [
 						'amount'        => floatval( $coupon_1_amount ),
 						'coupons_count' => 1,
 						'orders_count'  => 1,
-						'segments'      => array(),
-					),
-				),
-			),
-		);
+						'segments'      => [],
+					],
+				],
+			],
+		];
 		$this->assertEquals( $expected_data, $query->get_data() );
 	}
 }

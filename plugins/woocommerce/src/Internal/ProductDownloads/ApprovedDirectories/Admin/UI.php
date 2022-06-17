@@ -46,9 +46,9 @@ class UI {
 			return;
 		}
 
-		add_filter( 'woocommerce_get_sections_products', array( $this, 'add_section' ) );
-		add_action( 'load-woocommerce_page_wc-settings', array( $this, 'setup' ) );
-		add_action( 'woocommerce_settings_products', array( $this, 'render' ) );
+		add_filter( 'woocommerce_get_sections_products', [ $this, 'add_section' ] );
+		add_action( 'load-woocommerce_page_wc-settings', [ $this, 'setup' ] );
+		add_action( 'woocommerce_settings_products', [ $this, 'render' ] );
 	}
 
 	/**
@@ -120,7 +120,7 @@ class UI {
 	 */
 	private function process_actions() {
 		// phpcs:disable WordPress.Security.NonceVerification.Recommended
-		$ids = isset( $_REQUEST['url'] ) ? array_map( 'absint', (array) $_REQUEST['url'] ) : array();
+		$ids = isset( $_REQUEST['url'] ) ? array_map( 'absint', (array) $_REQUEST['url'] ) : [];
 
 		if ( empty( $ids ) || empty( $_REQUEST['action'] ) ) {
 			return;
@@ -173,10 +173,10 @@ class UI {
 
 		wp_safe_redirect(
 			add_query_arg(
-				array(
+				[
 					'paged' => absint( $_GET['paged'] ?? 1 ),
 					's'     => sanitize_text_field( wp_unslash( $_POST['s'] ) ),
-				),
+				],
 				$this->table->get_base_url()
 			)
 		);
@@ -213,10 +213,10 @@ class UI {
 			$redirect_url = add_query_arg( 'edit-status', 0 === $url_id ? 'added' : 'updated', $redirect_url );
 		} catch ( Exception $e ) {
 			$redirect_url = add_query_arg(
-				array(
+				[
 					'edit-status'   => 'failure',
 					'submitted-url' => $url,
-				),
+				],
 				$redirect_url
 			);
 		}

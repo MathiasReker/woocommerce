@@ -71,7 +71,7 @@ class DefaultFreeExtensions {
 	 * @return array
 	 */
 	public static function get_plugin( $slug ) {
-		$plugins = array(
+		$plugins = [
 			'google-listings-and-ads'           => [
 				'name'           => __( 'Google Listings & Ads', 'woocommerce' ),
 				'description'    => sprintf(
@@ -283,7 +283,7 @@ class DefaultFreeExtensions {
 									],
 									'option_name'  => 'woocommerce_onboarding_profile',
 									'value'        => 1,
-									'default'      => array(),
+									'default'      => [],
 									'operation'    => '!=',
 								],
 							],
@@ -652,7 +652,7 @@ class DefaultFreeExtensions {
 				],
 				'is_built_by_wc' => false,
 			],
-		);
+		];
 
 		$plugin        = $plugins[ $slug ];
 		$plugin['key'] = $slug;

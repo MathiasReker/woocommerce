@@ -37,11 +37,11 @@ class WC_Register_WP_Admin_Settings {
 		$this->object = $object;
 
 		if ( 'page' === $type ) {
-			add_filter( 'woocommerce_settings_groups', array( $this, 'register_page_group' ) );
-			add_filter( 'woocommerce_settings-' . $this->object->get_id(), array( $this, 'register_page_settings' ) );
+			add_filter( 'woocommerce_settings_groups', [ $this, 'register_page_group' ] );
+			add_filter( 'woocommerce_settings-' . $this->object->get_id(), [ $this, 'register_page_settings' ] );
 		} elseif ( 'email' === $type ) {
-			add_filter( 'woocommerce_settings_groups', array( $this, 'register_email_group' ) );
-			add_filter( 'woocommerce_settings-email_' . $this->object->id, array( $this, 'register_email_settings' ) );
+			add_filter( 'woocommerce_settings_groups', [ $this, 'register_email_group' ] );
+			add_filter( 'woocommerce_settings-email_' . $this->object->id, [ $this, 'register_email_settings' ] );
 		}
 	}
 
@@ -54,12 +54,12 @@ class WC_Register_WP_Admin_Settings {
 	 * @return array
 	 */
 	public function register_email_group( $groups ) {
-		$groups[] = array(
+		$groups[] = [
 			'id'          => 'email_' . $this->object->id,
 			'label'       => $this->object->title,
 			'description' => $this->object->description,
 			'parent_id'   => 'email',
-		);
+		];
 		return $groups;
 	}
 
@@ -73,7 +73,7 @@ class WC_Register_WP_Admin_Settings {
 	public function register_email_settings( $settings ) {
 		foreach ( $this->object->form_fields as $id => $setting ) {
 			$setting['id']         = $id;
-			$setting['option_key'] = array( $this->object->get_option_key(), $id );
+			$setting['option_key'] = [ $this->object->get_option_key(), $id ];
 			$new_setting           = $this->register_setting( $setting );
 			if ( $new_setting ) {
 				$settings[] = $new_setting;
@@ -90,10 +90,10 @@ class WC_Register_WP_Admin_Settings {
 	 * @return array
 	 */
 	public function register_page_group( $groups ) {
-		$groups[] = array(
+		$groups[] = [
 			'id'    => $this->object->get_id(),
 			'label' => $this->object->get_label(),
-		);
+		];
 		return $groups;
 	}
 
@@ -114,7 +114,7 @@ class WC_Register_WP_Admin_Settings {
 		$sections = $this->object->get_sections();
 		if ( empty( $sections ) ) {
 			// Default section is just an empty string, per admin page classes.
-			$sections = array( ''  => '' );
+			$sections = [ ''  => '' ];
 		}
 
 		/**
@@ -157,13 +157,13 @@ class WC_Register_WP_Admin_Settings {
 			$description = $setting['description'];
 		}
 
-		$new_setting = array(
+		$new_setting = [
 			'id'          => $setting['id'],
 			'label'       => ( ! empty( $setting['title'] ) ? $setting['title'] : '' ),
 			'description' => $description,
 			'type'        => $setting['type'],
 			'option_key'  => $setting['option_key'],
-		);
+		];
 
 		if ( isset( $setting['default'] ) ) {
 			$new_setting['default'] = $setting['default'];

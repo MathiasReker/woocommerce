@@ -93,12 +93,12 @@ class OrdersTableDataStore extends \Abstract_WC_Order_Data_Store_CPT implements 
 	 * @return string[]
 	 */
 	public function get_all_table_names() {
-		return array(
+		return [
 			$this->get_orders_table_name(),
 			$this->get_addresses_table_name(),
 			$this->get_operational_data_table_name(),
 			$this->get_meta_table_name(),
-		);
+		];
 	}
 
 	/**
@@ -106,249 +106,249 @@ class OrdersTableDataStore extends \Abstract_WC_Order_Data_Store_CPT implements 
 	 *
 	 * @var \string[][]
 	 */
-	protected $order_column_mapping = array(
-		'id'                   => array(
+	protected $order_column_mapping = [
+		'id'                   => [
 			'type' => 'int',
 			'name' => 'id',
-		),
-		'status'               => array(
+		],
+		'status'               => [
 			'type' => 'string',
 			'name' => 'status',
-		),
-		'currency'             => array(
+		],
+		'currency'             => [
 			'type' => 'string',
 			'name' => 'currency',
-		),
-		'tax_amount'           => array(
+		],
+		'tax_amount'           => [
 			'type' => 'decimal',
 			'name' => 'cart_tax',
-		),
-		'total_amount'         => array(
+		],
+		'total_amount'         => [
 			'type' => 'decimal',
 			'name' => 'total',
-		),
-		'customer_id'          => array(
+		],
+		'customer_id'          => [
 			'type' => 'int',
 			'name' => 'customer_id',
-		),
-		'billing_email'        => array(
+		],
+		'billing_email'        => [
 			'type' => 'string',
 			'name' => 'billing_email',
-		),
-		'date_created_gmt'     => array(
+		],
+		'date_created_gmt'     => [
 			'type' => 'date',
 			'name' => 'date_created',
-		),
-		'date_updated_gmt'     => array(
+		],
+		'date_updated_gmt'     => [
 			'type' => 'date',
 			'name' => 'date_modified',
-		),
-		'parent_order_id'      => array(
+		],
+		'parent_order_id'      => [
 			'type' => 'int',
 			'name' => 'parent_id',
-		),
-		'payment_method'       => array(
+		],
+		'payment_method'       => [
 			'type' => 'string',
 			'name' => 'payment_method',
-		),
-		'payment_method_title' => array(
+		],
+		'payment_method_title' => [
 			'type' => 'string',
 			'name' => 'payment_method_title',
-		),
-		'ip_address'           => array(
+		],
+		'ip_address'           => [
 			'type' => 'string',
 			'name' => 'customer_ip_address',
-		),
-		'transaction_id'       => array(
+		],
+		'transaction_id'       => [
 			'type' => 'string',
 			'name' => 'transaction_id',
-		),
-		'user_agent'           => array(
+		],
+		'user_agent'           => [
 			'type' => 'string',
 			'name' => 'customer_user_agent',
-		),
-	);
+		],
+	];
 
 	/**
 	 * Table column to WC_Order mapping for billing addresses in wc_address table.
 	 *
 	 * @var \string[][]
 	 */
-	protected $billing_address_column_mapping = array(
-		'id'           => array( 'type' => 'int' ),
-		'order_id'     => array( 'type' => 'int' ),
-		'address_type' => array( 'type' => 'string' ),
-		'first_name'   => array(
+	protected $billing_address_column_mapping = [
+		'id'           => [ 'type' => 'int' ],
+		'order_id'     => [ 'type' => 'int' ],
+		'address_type' => [ 'type' => 'string' ],
+		'first_name'   => [
 			'type' => 'string',
 			'name' => 'billing_first_name',
-		),
-		'last_name'    => array(
+		],
+		'last_name'    => [
 			'type' => 'string',
 			'name' => 'billing_last_name',
-		),
-		'company'      => array(
+		],
+		'company'      => [
 			'type' => 'string',
 			'name' => 'billing_company',
-		),
-		'address_1'    => array(
+		],
+		'address_1'    => [
 			'type' => 'string',
 			'name' => 'billing_address_1',
-		),
-		'address_2'    => array(
+		],
+		'address_2'    => [
 			'type' => 'string',
 			'name' => 'billing_address_2',
-		),
-		'city'         => array(
+		],
+		'city'         => [
 			'type' => 'string',
 			'name' => 'billing_city',
-		),
-		'state'        => array(
+		],
+		'state'        => [
 			'type' => 'string',
 			'name' => 'billing_state',
-		),
-		'postcode'     => array(
+		],
+		'postcode'     => [
 			'type' => 'string',
 			'name' => 'billing_postcode',
-		),
-		'country'      => array(
+		],
+		'country'      => [
 			'type' => 'string',
 			'name' => 'billing_country',
-		),
-		'email'        => array(
+		],
+		'email'        => [
 			'type' => 'string',
 			'name' => 'billing_email',
-		),
-		'phone'        => array(
+		],
+		'phone'        => [
 			'type' => 'string',
 			'name' => 'billing_phone',
-		),
-	);
+		],
+	];
 
 	/**
 	 * Table column to WC_Order mapping for shipping addresses in wc_address table.
 	 *
 	 * @var \string[][]
 	 */
-	protected $shipping_address_column_mapping = array(
-		'id'           => array( 'type' => 'int' ),
-		'order_id'     => array( 'type' => 'int' ),
-		'address_type' => array( 'type' => 'string' ),
-		'first_name'   => array(
+	protected $shipping_address_column_mapping = [
+		'id'           => [ 'type' => 'int' ],
+		'order_id'     => [ 'type' => 'int' ],
+		'address_type' => [ 'type' => 'string' ],
+		'first_name'   => [
 			'type' => 'string',
 			'name' => 'shipping_first_name',
-		),
-		'last_name'    => array(
+		],
+		'last_name'    => [
 			'type' => 'string',
 			'name' => 'shipping_last_name',
-		),
-		'company'      => array(
+		],
+		'company'      => [
 			'type' => 'string',
 			'name' => 'shipping_company',
-		),
-		'address_1'    => array(
+		],
+		'address_1'    => [
 			'type' => 'string',
 			'name' => 'shipping_address_1',
-		),
-		'address_2'    => array(
+		],
+		'address_2'    => [
 			'type' => 'string',
 			'name' => 'shipping_address_2',
-		),
-		'city'         => array(
+		],
+		'city'         => [
 			'type' => 'string',
 			'name' => 'shipping_city',
-		),
-		'state'        => array(
+		],
+		'state'        => [
 			'type' => 'string',
 			'name' => 'shipping_state',
-		),
-		'postcode'     => array(
+		],
+		'postcode'     => [
 			'type' => 'string',
 			'name' => 'shipping_postcode',
-		),
-		'country'      => array(
+		],
+		'country'      => [
 			'type' => 'string',
 			'name' => 'shipping_country',
-		),
-		'email'        => array( 'type' => 'string' ),
-		'phone'        => array(
+		],
+		'email'        => [ 'type' => 'string' ],
+		'phone'        => [
 			'type' => 'string',
 			'name' => 'shipping_phone',
-		),
-	);
+		],
+	];
 
 	/**
 	 * Table column to WC_Order mapping for wc_operational_data table.
 	 *
 	 * @var \string[][]
 	 */
-	protected $operational_data_column_mapping = array(
-		'id'                          => array( 'type' => 'int' ),
-		'order_id'                    => array( 'type' => 'int' ),
-		'created_via'                 => array(
+	protected $operational_data_column_mapping = [
+		'id'                          => [ 'type' => 'int' ],
+		'order_id'                    => [ 'type' => 'int' ],
+		'created_via'                 => [
 			'type' => 'string',
 			'name' => 'created_via',
-		),
-		'woocommerce_version'         => array(
+		],
+		'woocommerce_version'         => [
 			'type' => 'string',
 			'name' => 'version',
-		),
-		'prices_include_tax'          => array(
+		],
+		'prices_include_tax'          => [
 			'type' => 'bool',
 			'name' => 'prices_include_tax',
-		),
-		'coupon_usages_are_counted'   => array(
+		],
+		'coupon_usages_are_counted'   => [
 			'type' => 'bool',
 			'name' => 'recorded_coupon_usage_counts',
-		),
-		'download_permission_granted' => array(
+		],
+		'download_permission_granted' => [
 			'type' => 'bool',
 			'name' => 'download_permissions_granted',
-		),
-		'cart_hash'                   => array(
+		],
+		'cart_hash'                   => [
 			'type' => 'string',
 			'name' => 'cart_hash',
-		),
-		'new_order_email_sent'        => array(
+		],
+		'new_order_email_sent'        => [
 			'type' => 'bool',
 			'name' => 'new_order_email_sent',
-		),
-		'order_key'                   => array(
+		],
+		'order_key'                   => [
 			'type' => 'string',
 			'name' => 'order_key',
-		),
-		'order_stock_reduced'         => array(
+		],
+		'order_stock_reduced'         => [
 			'type' => 'bool',
 			'name' => 'stock_reduced',
-		),
-		'date_paid_gmt'               => array(
+		],
+		'date_paid_gmt'               => [
 			'type' => 'date',
 			'name' => 'date_paid',
-		),
-		'date_completed_gmt'          => array(
+		],
+		'date_completed_gmt'          => [
 			'type' => 'date',
 			'name' => 'date_completed',
-		),
-		'shipping_tax_amount'         => array(
+		],
+		'shipping_tax_amount'         => [
 			'type' => 'decimal',
 			'name' => 'shipping_tax',
-		),
-		'shipping_total_amount'       => array(
+		],
+		'shipping_total_amount'       => [
 			'type' => 'decimal',
 			'name' => 'shipping_total',
-		),
-		'discount_tax_amount'         => array(
+		],
+		'discount_tax_amount'         => [
 			'type' => 'decimal',
 			'name' => 'discount_tax',
-		),
-		'discount_total_amount'       => array(
+		],
+		'discount_total_amount'       => [
 			'type' => 'decimal',
 			'name' => 'discount_total',
-		),
-		'recorded_sales'              => array(
+		],
+		'recorded_sales'              => [
 			'type' => 'bool',
 			'name' => 'recorded_sales',
-		),
-	);
+		],
+	];
 
 	/**
 	 * Cache variable to store combined mapping.
@@ -364,12 +364,12 @@ class OrdersTableDataStore extends \Abstract_WC_Order_Data_Store_CPT implements 
 	 */
 	public function get_all_order_column_mappings() {
 		if ( ! isset( $this->all_order_column_mapping ) ) {
-			$this->all_order_column_mapping = array(
+			$this->all_order_column_mapping = [
 				'orders'           => $this->order_column_mapping,
 				'billing_address'  => $this->billing_address_column_mapping,
 				'shipping_address' => $this->shipping_address_column_mapping,
 				'operational_data' => $this->operational_data_column_mapping,
-			);
+			];
 		}
 
 		return $this->all_order_column_mapping;
@@ -385,18 +385,18 @@ class OrdersTableDataStore extends \Abstract_WC_Order_Data_Store_CPT implements 
 		$cpt_data_store->update_order_from_object( $order );
 		foreach ( $cpt_data_store->get_internal_data_store_key_getters() as $key => $getter_name ) {
 			if (
-				is_callable( array( $cpt_data_store, "set_$getter_name" ) ) &&
-				is_callable( array( $this, "get_$getter_name" ) )
+				is_callable( [ $cpt_data_store, "set_$getter_name" ] ) &&
+				is_callable( [ $this, "get_$getter_name" ] )
 			) {
 				call_user_func_array(
-					array(
+					[
 						$cpt_data_store,
 						"set_$getter_name",
-					),
-					array(
+					],
+					[
 						$order,
 						$this->{"get_$getter_name"}( $order ),
-					)
+					]
 				);
 			}
 		}
@@ -570,19 +570,19 @@ class OrdersTableDataStore extends \Abstract_WC_Order_Data_Store_CPT implements 
 		return 0;
 	}
 
-	public function get_orders( $args = array() ) {
+	public function get_orders( $args = [] ) {
 		// TODO: Implement get_orders() method.
-		return array();
+		return [];
 	}
 
 	public function get_unpaid_orders( $date ) {
 		// TODO: Implement get_unpaid_orders() method.
-		return array();
+		return [];
 	}
 
 	public function search_orders( $term ) {
 		// TODO: Implement search_orders() method.
-		return array();
+		return [];
 	}
 
 	public function get_order_type( $order_id ) {
@@ -618,9 +618,9 @@ class OrdersTableDataStore extends \Abstract_WC_Order_Data_Store_CPT implements 
 					continue;
 				}
 				$prop_setter_function_name = "set_{$prop_details['name']}";
-				if ( is_callable( array( $order, $prop_setter_function_name ) ) ) {
+				if ( is_callable( [ $order, $prop_setter_function_name ] ) ) {
 					$order->{$prop_setter_function_name}( $order_data->{$prop_details['name']} );
-				} elseif ( is_callable( array( $this, $prop_setter_function_name ) ) ) {
+				} elseif ( is_callable( [ $this, $prop_setter_function_name ] ) ) {
 					$this->{$prop_setter_function_name}( $order, $order_data->{$prop_details['name']}, false );
 				}
 			}
@@ -637,7 +637,7 @@ class OrdersTableDataStore extends \Abstract_WC_Order_Data_Store_CPT implements 
 	 * @return object|\WP_Error DB order object or WP_Error.
 	 */
 	private function get_order_data_for_id( $id ) {
-		$results = $this->get_order_data_for_ids( array( $id ) );
+		$results = $this->get_order_data_for_ids( [ $id ] );
 
 		return is_array( $results ) && count( $results ) > 0 ? $results[0] : $results;
 	}
@@ -734,10 +734,10 @@ LEFT JOIN {$operational_data_clauses['join']}
 		);
 
 		// phpcs:enable
-		return array(
+		return [
 			'select' => $clauses['select'],
 			'join'   => $clauses['join'],
-		);
+		];
 	}
 
 	/**
@@ -774,10 +774,10 @@ LEFT JOIN {$operational_data_clauses['join']}
 		$select_clause = $this->generate_select_clause_for_props( $table_alias, $column_props_map );
 		$join_clause   = "$table $table_alias ON $table_alias.order_id = $order_table_alias.id";
 
-		return array(
+		return [
 			'select' => $select_clause,
 			'join'   => $join_clause,
-		);
+		];
 	}
 
 	/**
@@ -789,7 +789,7 @@ LEFT JOIN {$operational_data_clauses['join']}
 	 * @return string Select clause.
 	 */
 	private function generate_select_clause_for_props( $table_alias, $props ) {
-		$select_clauses = array();
+		$select_clauses = [];
 		foreach ( $props as $column_name => $prop_details ) {
 			$select_clauses[] = isset( $prop_details['name'] ) ? "$table_alias.$column_name as {$prop_details['name']}" : "$table_alias.$column_name as {$table_alias}_$column_name";
 		}
@@ -808,20 +808,20 @@ LEFT JOIN {$operational_data_clauses['join']}
 		global $wpdb;
 
 		// XXX implement case $only_changes = false.
-		$changes = $only_changes ? $order->get_changes() : array();
+		$changes = $only_changes ? $order->get_changes() : [];
 
 		// Figure out what needs to be updated in the database.
-		$db_updates = array();
+		$db_updates = [];
 
 		// wc_orders.
 		$row = $this->get_db_row_from_order_changes( $changes, $this->order_column_mapping );
 		if ( $row ) {
 			$db_updates[] = array_merge(
-				array(
+				[
 					'table'        => self::get_orders_table_name(),
-					'where'        => array( 'id' => $order->get_id() ),
+					'where'        => [ 'id' => $order->get_id() ],
 					'where_format' => '%d',
-				),
+				],
 				$row
 			);
 		}
@@ -831,41 +831,41 @@ LEFT JOIN {$operational_data_clauses['join']}
 			array_merge(
 				$changes,
 				// XXX: manually persist some of the properties until the datastore/property design is finalized.
-				array(
+				[
 					'stock_reduced'                => $this->get_stock_reduced( $order ),
 					'download_permissions_granted' => $this->get_download_permissions_granted( $order ),
 					'new_order_email_sent'         => $this->get_email_sent( $order ),
 					'recorded_sales'               => $this->get_recorded_sales( $order ),
 					'recorded_coupon_usage_counts' => $this->get_recorded_coupon_usage_counts( $order ),
-				)
+				]
 			),
 			$this->operational_data_column_mapping
 		);
 		if ( $row ) {
 			$db_updates[] = array_merge(
-				array(
+				[
 					'table'        => self::get_operational_data_table_name(),
-					'where'        => array( 'order_id' => $order->get_id() ),
+					'where'        => [ 'order_id' => $order->get_id() ],
 					'where_format' => '%d',
-				),
+				],
 				$row
 			);
 		}
 
 		// wc_order_addresses.
-		foreach ( array( 'billing', 'shipping' ) as $address_type ) {
+		foreach ( [ 'billing', 'shipping' ] as $address_type ) {
 			$row = $this->get_db_row_from_order_changes( $changes, $this->{$address_type . '_address_column_mapping'} );
 
 			if ( $row ) {
 				$db_updates[] = array_merge(
-					array(
+					[
 						'table'        => self::get_addresses_table_name(),
-						'where'        => array(
+						'where'        => [
 							'order_id'     => $order->get_id(),
 							'address_type' => $address_type,
-						),
-						'where_format' => array( '%d', '%s' ),
-					),
+						],
+						'where_format' => [ '%d', '%s' ],
+					],
 					$row
 				);
 			}
@@ -893,8 +893,8 @@ LEFT JOIN {$operational_data_clauses['join']}
 	 * @return array
 	 */
 	private function get_db_row_from_order_changes( $changes, $column_mapping ) {
-		$row        = array();
-		$row_format = array();
+		$row        = [];
+		$row_format = [];
 
 		foreach ( $column_mapping as $column => $details ) {
 			if ( ! isset( $details['name'] ) || ! array_key_exists( $details['name'], $changes ) ) {
@@ -909,10 +909,10 @@ LEFT JOIN {$operational_data_clauses['join']}
 			return false;
 		}
 
-		return array(
+		return [
 			'row'    => $row,
 			'format' => $row_format,
-		);
+		];
 	}
 
 
@@ -952,7 +952,7 @@ LEFT JOIN {$operational_data_clauses['join']}
 		$changes = $order->get_changes();
 
 		// If address changed, store concatenated version to make searches faster.
-		foreach ( array( 'billing', 'shipping' ) as $address_type ) {
+		foreach ( [ 'billing', 'shipping' ] as $address_type ) {
 			if ( isset( $changes[ $address_type ] ) ) {
 				$order->update_meta_data( "_{$address_type}_address_index", implode( ' ', $order->get_address( $address_type ) ) );
 			}
@@ -986,11 +986,11 @@ LEFT JOIN {$operational_data_clauses['join']}
 	}
 
 	public function get_coupon_held_keys( $order, $coupon_id = null ) {
-		return array();
+		return [];
 	}
 
 	public function get_coupon_held_keys_for_users( $order, $coupon_id = null ) {
-		return array();
+		return [];
 	}
 
 	public function set_coupon_held_keys( $order, $held_keys, $held_keys_for_user ) {
@@ -1002,7 +1002,7 @@ LEFT JOIN {$operational_data_clauses['join']}
 	}
 
 	public function query( $query_vars ) {
-		return array();
+		return [];
 	}
 
 	public function get_order_item_type( $order, $order_item_id ) {
@@ -1148,7 +1148,7 @@ CREATE TABLE $meta_table (
 	 */
 	public function get_internal_meta_keys() {
 		// XXX: This is mostly just to trick `WC_Data_Store_WP` for the time being.
-		return array(
+		return [
 			'_customer_user',
 			'_order_key',
 			'_order_currency',
@@ -1200,7 +1200,7 @@ CREATE TABLE $meta_table (
 			'_recorded_coupon_usage_counts',
 			'_download_permissions_granted',
 			'_order_stock_reduced',
-		);
+		];
 	}
 
 }

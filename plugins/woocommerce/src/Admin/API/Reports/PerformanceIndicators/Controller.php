@@ -38,7 +38,7 @@ class Controller extends \WC_REST_Reports_Controller {
 	 *
 	 * @var array
 	 */
-	protected $endpoints = array();
+	protected $endpoints = [];
 
 	/**
 	 * Contains a list of active Jetpack module slugs.
@@ -52,34 +52,34 @@ class Controller extends \WC_REST_Reports_Controller {
 	 *
 	 * @var array
 	 */
-	protected $allowed_stats = array();
+	protected $allowed_stats = [];
 
 	/**
 	 * Contains a list of stat labels.
 	 *
 	 * @var array
 	 */
-	protected $labels = array();
+	protected $labels = [];
 
 	/**
 	 * Contains a list of endpoints by url.
 	 *
 	 * @var array
 	 */
-	protected $urls = array();
+	protected $urls = [];
 
 	/**
 	 * Contains a cache of retrieved stats data, grouped by report slug.
 	 *
 	 * @var array
 	 */
-	protected $stats_data = array();
+	protected $stats_data = [];
 
 	/**
 	 * Constructor.
 	 */
 	public function __construct() {
-		add_filter( 'woocommerce_rest_performance_indicators_data_value', array( $this, 'format_data_value' ), 10, 5 );
+		add_filter( 'woocommerce_rest_performance_indicators_data_value', [ $this, 'format_data_value' ], 10, 5 );
 	}
 
 	/**
@@ -89,29 +89,29 @@ class Controller extends \WC_REST_Reports_Controller {
 		register_rest_route(
 			$this->namespace,
 			'/' . $this->rest_base,
-			array(
-				array(
+			[
+				[
 					'methods'             => \WP_REST_Server::READABLE,
-					'callback'            => array( $this, 'get_items' ),
-					'permission_callback' => array( $this, 'get_items_permissions_check' ),
+					'callback'            => [ $this, 'get_items' ],
+					'permission_callback' => [ $this, 'get_items_permissions_check' ],
 					'args'                => $this->get_collection_params(),
-				),
-				'schema' => array( $this, 'get_public_item_schema' ),
-			)
+				],
+				'schema' => [ $this, 'get_public_item_schema' ],
+			]
 		);
 
 		register_rest_route(
 			$this->namespace,
 			'/' . $this->rest_base . '/allowed',
-			array(
-				array(
+			[
+				[
 					'methods'             => \WP_REST_Server::READABLE,
-					'callback'            => array( $this, 'get_allowed_items' ),
-					'permission_callback' => array( $this, 'get_items_permissions_check' ),
+					'callback'            => [ $this, 'get_allowed_items' ],
+					'permission_callback' => [ $this, 'get_items_permissions_check' ],
 					'args'                => $this->get_collection_params(),
-				),
-				'schema' => array( $this, 'get_public_allowed_item_schema' ),
-			)
+				],
+				'schema' => [ $this, 'get_public_allowed_item_schema' ],
+			]
 		);
 	}
 
@@ -122,7 +122,7 @@ class Controller extends \WC_REST_Reports_Controller {
 	 * @return array
 	 */
 	protected function prepare_reports_query( $request ) {
-		$args           = array();
+		$args           = [];
 		$args['before'] = $request['before'];
 		$args['after']  = $request['after'];
 		$args['stats']  = $request['stats'];
@@ -190,9 +190,9 @@ class Controller extends \WC_REST_Reports_Controller {
 		if ( is_null( $this->active_jetpack_modules ) ) {
 			if ( class_exists( '\Jetpack' ) && method_exists( '\Jetpack', 'get_active_modules' ) ) {
 				$active_modules               = \Jetpack::get_active_modules();
-				$this->active_jetpack_modules = is_array( $active_modules ) ? $active_modules : array();
+				$this->active_jetpack_modules = is_array( $active_modules ) ? $active_modules : [];
 			} else {
-				$this->active_jetpack_modules = array();
+				$this->active_jetpack_modules = [];
 			}
 		}
 
@@ -221,20 +221,20 @@ class Controller extends \WC_REST_Reports_Controller {
 
 		$items = apply_filters(
 			'woocommerce_rest_performance_indicators_jetpack_items',
-			array(
-				'stats/visitors' => array(
+			[
+				'stats/visitors' => [
 					'label'      => __( 'Visitors', 'woocommerce' ),
 					'permission' => 'view_stats',
 					'format'     => 'number',
 					'module'     => 'stats',
-				),
-				'stats/views'    => array(
+				],
+				'stats/views'    => [
 					'label'      => __( 'Views', 'woocommerce' ),
 					'permission' => 'view_stats',
 					'format'     => 'number',
 					'module'     => 'stats',
-				),
-			)
+				],
+			]
 		);
 
 		foreach ( $items as $item_key => $item ) {
@@ -286,21 +286,21 @@ class Controller extends \WC_REST_Reports_Controller {
 			return $indicator_data;
 		}
 
-		$data = array();
+		$data = [];
 		foreach ( $this->allowed_stats as $stat ) {
 			$pieces = $this->get_stats_parts( $stat );
 			$report = $pieces[0];
 			$chart  = $pieces[1];
-			$data[] = (object) array(
+			$data[] = (object) [
 				'stat'  => $stat,
 				'chart' => $chart,
 				'label' => $this->labels[ $stat ],
-			);
+			];
 		}
 
-		usort( $data, array( $this, 'sort' ) );
+		usort( $data, [ $this, 'sort' ] );
 
-		$objects = array();
+		$objects = [];
 		foreach ( $data as $item ) {
 			$prepared  = $this->prepare_item_for_response( $item, $request );
 			$objects[] = $this->prepare_response_for_collection( $prepared );
@@ -333,7 +333,7 @@ class Controller extends \WC_REST_Reports_Controller {
 		 */
 		$stat_order = apply_filters(
 			'woocommerce_rest_report_sort_performance_indicators',
-			array(
+			[
 				'revenue/total_sales',
 				'revenue/net_revenue',
 				'orders/orders_count',
@@ -347,7 +347,7 @@ class Controller extends \WC_REST_Reports_Controller {
 				'taxes/shipping_tax',
 				'revenue/shipping',
 				'downloads/download_count',
-			)
+			]
 		);
 
 		$a = array_search( $a->stat, $stat_order, true );
@@ -408,7 +408,7 @@ class Controller extends \WC_REST_Reports_Controller {
 			return new \WP_Error( 'woocommerce_analytics_performance_indicators_empty_query', __( 'A list of stats to query must be provided.', 'woocommerce' ), 400 );
 		}
 
-		$stats = array();
+		$stats = [];
 		foreach ( $query_args['stats'] as $stat ) {
 			$is_error = false;
 
@@ -431,28 +431,28 @@ class Controller extends \WC_REST_Reports_Controller {
 			$label  = $this->labels[ $stat ];
 
 			if ( 200 !== $response->get_status() ) {
-				$stats[] = (object) array(
+				$stats[] = (object) [
 					'stat'   => $stat,
 					'chart'  => $chart,
 					'label'  => $label,
 					'format' => $format,
 					'value'  => null,
-				);
+				];
 				continue;
 			}
 
-			$stats[] = (object) array(
+			$stats[] = (object) [
 				'stat'   => $stat,
 				'chart'  => $chart,
 				'label'  => $label,
 				'format' => $format,
 				'value'  => apply_filters( 'woocommerce_rest_performance_indicators_data_value', $data, $stat, $report, $chart, $query_args ),
-			);
+			];
 		}
 
-		usort( $stats, array( $this, 'sort' ) );
+		usort( $stats, [ $this, 'sort' ] );
 
-		$objects = array();
+		$objects = [];
 		foreach ( $stats as $stat ) {
 			$data      = $this->prepare_item_for_response( $stat, $request );
 			$objects[] = $this->prepare_response_for_collection( $data );
@@ -508,14 +508,14 @@ class Controller extends \WC_REST_Reports_Controller {
 		$stat     = $pieces[1];
 		$url      = isset( $this->urls[ $endpoint ] ) ? $this->urls[ $endpoint ] : '';
 
-		$links = array(
-			'api'    => array(
+		$links = [
+			'api'    => [
 				'href' => rest_url( $this->endpoints[ $endpoint ] ),
-			),
-			'report' => array(
+			],
+			'report' => [
 				'href' => $url,
-			),
-		);
+			],
+		];
 
 		return $links;
 	}
@@ -530,10 +530,10 @@ class Controller extends \WC_REST_Reports_Controller {
 	private function get_stats_parts( $full_stat ) {
 		$endpoint = substr( $full_stat, 0, strrpos( $full_stat, '/' ) );
 		$stat     = substr( $full_stat, ( strrpos( $full_stat, '/' ) + 1 ) );
-		return array(
+		return [
 			$endpoint,
 			$stat,
-		);
+		];
 	}
 
 	/**
@@ -583,50 +583,50 @@ class Controller extends \WC_REST_Reports_Controller {
 	public function get_item_schema() {
 		$indicator_data = $this->get_indicator_data();
 		if ( is_wp_error( $indicator_data ) ) {
-			$allowed_stats = array();
+			$allowed_stats = [];
 		} else {
 			$allowed_stats = $this->allowed_stats;
 		}
 
-		$schema = array(
+		$schema = [
 			'$schema'    => 'http://json-schema.org/draft-04/schema#',
 			'title'      => 'report_performance_indicator',
 			'type'       => 'object',
-			'properties' => array(
-				'stat'   => array(
+			'properties' => [
+				'stat'   => [
 					'description' => __( 'Unique identifier for the resource.', 'woocommerce' ),
 					'type'        => 'string',
-					'context'     => array( 'view', 'edit' ),
+					'context'     => [ 'view', 'edit' ],
 					'readonly'    => true,
 					'enum'        => $allowed_stats,
-				),
-				'chart'  => array(
+				],
+				'chart'  => [
 					'description' => __( 'The specific chart this stat referrers to.', 'woocommerce' ),
 					'type'        => 'string',
-					'context'     => array( 'view', 'edit' ),
+					'context'     => [ 'view', 'edit' ],
 					'readonly'    => true,
-				),
-				'label'  => array(
+				],
+				'label'  => [
 					'description' => __( 'Human readable label for the stat.', 'woocommerce' ),
 					'type'        => 'string',
-					'context'     => array( 'view', 'edit' ),
+					'context'     => [ 'view', 'edit' ],
 					'readonly'    => true,
-				),
-				'format' => array(
+				],
+				'format' => [
 					'description' => __( 'Format of the stat.', 'woocommerce' ),
 					'type'        => 'number',
-					'context'     => array( 'view', 'edit' ),
+					'context'     => [ 'view', 'edit' ],
 					'readonly'    => true,
-					'enum'        => array( 'number', 'currency' ),
-				),
-				'value'  => array(
+					'enum'        => [ 'number', 'currency' ],
+				],
+				'value'  => [
 					'description' => __( 'Value of the stat. Returns null if the stat does not exist or cannot be loaded.', 'woocommerce' ),
 					'type'        => 'number',
-					'context'     => array( 'view', 'edit' ),
+					'context'     => [ 'view', 'edit' ],
 					'readonly'    => true,
-				),
-			),
-		);
+				],
+			],
+		];
 
 		return $this->add_additional_fields_schema( $schema );
 	}
@@ -656,9 +656,9 @@ class Controller extends \WC_REST_Reports_Controller {
 			$allowed_stats = implode( ', ', $this->allowed_stats );
 		}
 
-		$params            = array();
-		$params['context'] = $this->get_context_param( array( 'default' => 'view' ) );
-		$params['stats']   = array(
+		$params            = [];
+		$params['context'] = $this->get_context_param( [ 'default' => 'view' ] );
+		$params['stats']   = [
 			'description'       => sprintf(
 				/* translators: Allowed values is a list of stat endpoints. */
 				__( 'Limit response to specific report stats. Allowed values: %s.', 'woocommerce' ),
@@ -666,24 +666,24 @@ class Controller extends \WC_REST_Reports_Controller {
 			),
 			'type'              => 'array',
 			'validate_callback' => 'rest_validate_request_arg',
-			'items'             => array(
+			'items'             => [
 				'type' => 'string',
 				'enum' => $this->allowed_stats,
-			),
+			],
 			'default'           => $this->allowed_stats,
-		);
-		$params['after']   = array(
+		];
+		$params['after']   = [
 			'description'       => __( 'Limit response to resources published after a given ISO8601 compliant date.', 'woocommerce' ),
 			'type'              => 'string',
 			'format'            => 'date-time',
 			'validate_callback' => 'rest_validate_request_arg',
-		);
-		$params['before']  = array(
+		];
+		$params['before']  = [
 			'description'       => __( 'Limit response to resources published before a given ISO8601 compliant date.', 'woocommerce' ),
 			'type'              => 'string',
 			'format'            => 'date-time',
 			'validate_callback' => 'rest_validate_request_arg',
-		);
+		];
 		return $params;
 	}
 }

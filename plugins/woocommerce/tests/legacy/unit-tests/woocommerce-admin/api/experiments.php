@@ -26,9 +26,9 @@ class WC_Admin_Tests_API_Experiments extends WC_REST_Unit_Test_Case {
 		parent::setUp();
 
 		$this->user = $this->factory->user->create(
-			array(
+			[
 				'role' => 'administrator',
-			)
+			]
 		);
 	}
 
@@ -39,7 +39,7 @@ class WC_Admin_Tests_API_Experiments extends WC_REST_Unit_Test_Case {
 		wp_set_current_user( 0 );
 
 		$request = new WP_REST_Request( 'GET', $this->endpoint . '/assignment' );
-		$request->set_query_params( array( 'experiment_name' => 'test' ) );
+		$request->set_query_params( [ 'experiment_name' => 'test' ] );
 		$response = $this->server->dispatch( $request );
 
 		$this->assertEquals( 401, $response->get_status() );

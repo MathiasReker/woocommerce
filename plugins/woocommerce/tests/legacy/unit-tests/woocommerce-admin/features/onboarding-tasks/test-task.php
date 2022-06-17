@@ -42,7 +42,7 @@ class TestTask extends Task {
 		parent::__construct( $task_list );
 		$task_args = wp_parse_args(
 			$args,
-			array(
+			[
 				'id'              => null,
 				'is_dismissable'  => false,
 				'is_snoozeable'   => false,
@@ -54,7 +54,7 @@ class TestTask extends Task {
 				'title'           => '',
 				'is_complete'     => false,
 				'time'            => null,
-			)
+			]
 		);
 
 		$this->id              = $task_args['id'];

@@ -40,15 +40,15 @@ class Themes extends \WC_REST_Data_Controller {
 		register_rest_route(
 			$this->namespace,
 			'/' . $this->rest_base,
-			array(
-				array(
+			[
+				[
 					'methods'             => \WP_REST_Server::EDITABLE,
-					'callback'            => array( $this, 'upload_theme' ),
-					'permission_callback' => array( $this, 'upload_theme_permissions_check' ),
+					'callback'            => [ $this, 'upload_theme' ],
+					'permission_callback' => [ $this, 'upload_theme_permissions_check' ],
 					'args'                => $this->get_collection_params(),
-				),
-				'schema' => array( $this, 'get_public_item_schema' ),
-			)
+				],
+				'schema' => [ $this, 'get_public_item_schema' ],
+			]
 		);
 	}
 
@@ -60,7 +60,7 @@ class Themes extends \WC_REST_Data_Controller {
 	 */
 	public function upload_theme_permissions_check( $request ) {
 		if ( ! current_user_can( 'upload_themes' ) ) {
-			return new \WP_Error( 'woocommerce_rest_cannot_view', __( 'Sorry, you are not allowed to install themes on this site.', 'woocommerce' ), array( 'status' => rest_authorization_required_code() ) );
+			return new \WP_Error( 'woocommerce_rest_cannot_view', __( 'Sorry, you are not allowed to install themes on this site.', 'woocommerce' ), [ 'status' => rest_authorization_required_code() ] );
 		}
 
 		return true;
@@ -96,11 +96,11 @@ class Themes extends \WC_REST_Data_Controller {
 
 		if ( ! is_wp_error( $install ) && isset( $install['destination_name'] ) ) {
 			$theme  = $install['destination_name'];
-			$result = array(
+			$result = [
 				'status'  => 'success',
 				'message' => $upgrader->strings['process_success'],
 				'theme'   => $theme,
-			);
+			];
 
 			/**
 			 * Fires when a theme is successfully installed.
@@ -115,10 +115,10 @@ class Themes extends \WC_REST_Data_Controller {
 				$error_message = $upgrader->strings['process_failed'];
 			}
 
-			$result = array(
+			$result = [
 				'status'  => 'error',
 				'message' => $error_message,
-			);
+			];
 		}
 
 		$response = $this->prepare_item_for_response( $result, $request );
@@ -157,31 +157,31 @@ class Themes extends \WC_REST_Data_Controller {
 	 * @return array
 	 */
 	public function get_item_schema() {
-		$schema = array(
+		$schema = [
 			'$schema'    => 'http://json-schema.org/draft-04/schema#',
 			'title'      => 'upload_theme',
 			'type'       => 'object',
-			'properties' => array(
-				'status'  => array(
+			'properties' => [
+				'status'  => [
 					'description' => __( 'Theme installation status.', 'woocommerce' ),
 					'type'        => 'string',
-					'context'     => array( 'view', 'edit' ),
+					'context'     => [ 'view', 'edit' ],
 					'readonly'    => true,
-				),
-				'message' => array(
+				],
+				'message' => [
 					'description' => __( 'Theme installation message.', 'woocommerce' ),
 					'type'        => 'string',
-					'context'     => array( 'view', 'edit' ),
+					'context'     => [ 'view', 'edit' ],
 					'readonly'    => true,
-				),
-				'theme'   => array(
+				],
+				'theme'   => [
 					'description' => __( 'Uploaded theme.', 'woocommerce' ),
 					'type'        => 'object',
-					'context'     => array( 'view', 'edit' ),
+					'context'     => [ 'view', 'edit' ],
 					'readonly'    => true,
-				),
-			),
-		);
+				],
+			],
+		];
 
 		return $this->add_additional_fields_schema( $schema );
 	}
@@ -192,12 +192,12 @@ class Themes extends \WC_REST_Data_Controller {
 	 * @return array
 	 */
 	public function get_collection_params() {
-		$params['context']   = $this->get_context_param( array( 'default' => 'view' ) );
-		$params['pluginzip'] = array(
+		$params['context']   = $this->get_context_param( [ 'default' => 'view' ] );
+		$params['pluginzip'] = [
 			'description'       => __( 'A zip file of the theme to be uploaded.', 'woocommerce' ),
 			'type'              => 'file',
 			'validate_callback' => 'rest_validate_request_arg',
-		);
+		];
 
 		return apply_filters( 'woocommerce_rest_themes_collection_params', $params );
 	}

@@ -46,16 +46,16 @@ class URLTest extends WC_Unit_Test_Case {
 	 * @return string[][]
 	 */
 	public function path_expectations(): array {
-		return array(
-			array( '/var/foo/bar/baz/../../foobar', '/var/foo/foobar' ),
-			array( '/var/foo/../../../../bazbar', '/bazbar' ),
-			array( '././././.', './' ),
-			array( 'empty/segments//are/stripped', 'empty/segments/are/stripped' ),
-			array( '///nonempty/  /whitespace/   /is//kept', '/nonempty/  /whitespace/   /is/kept' ),
-			array( 'relative/../../should/remain/relative', '../should/remain/relative' ),
-			array( 'relative/../../../should/remain/relative', '../../should/remain/relative' ),
-			array( 'c:\\Windows\Server\HTTP\dump.xml', 'c:/Windows/Server/HTTP/dump.xml' ),
-		);
+		return [
+			[ '/var/foo/bar/baz/../../foobar', '/var/foo/foobar' ],
+			[ '/var/foo/../../../../bazbar', '/bazbar' ],
+			[ '././././.', './' ],
+			[ 'empty/segments//are/stripped', 'empty/segments/are/stripped' ],
+			[ '///nonempty/  /whitespace/   /is//kept', '/nonempty/  /whitespace/   /is/kept' ],
+			[ 'relative/../../should/remain/relative', '../should/remain/relative' ],
+			[ 'relative/../../../should/remain/relative', '../../should/remain/relative' ],
+			[ 'c:\\Windows\Server\HTTP\dump.xml', 'c:/Windows/Server/HTTP/dump.xml' ],
+		];
 	}
 
 	/**
@@ -74,27 +74,27 @@ class URLTest extends WC_Unit_Test_Case {
 	 * @return string[][]
 	 */
 	public function url_expectations(): array {
-		return array(
-			array( '/../foo/bar/baz/bazooka/../../baz', 'file:///foo/bar/baz' ),
-			array( './a/b/c/./../././../b/c', 'file://a/b/c' ),
-			array( 'relative/path', 'file://relative/path' ),
-			array( '/absolute/path', 'file:///absolute/path' ),
-			array( '/var/www/network/%2econfig', 'file:///var/www/network/%2econfig' ),
-			array( '///foo', 'file:///foo' ),
-			array( '~/foo.txt', 'file://~/foo.txt' ),
-			array( 'baz///foo', 'file://baz/foo' ),
-			array( 'file:///etc/foo/bar', 'file:///etc/foo/bar' ),
-			array( 'foo://bar', 'foo://bar/' ),
-			array( 'foo://bar/baz-file', 'foo://bar/baz-file' ),
-			array( 'foo://bar/baz-dir/', 'foo://bar/baz-dir/' ),
-			array( 'https://foo.bar/parent/.%2e/asset.txt', 'https://foo.bar/asset.txt' ),
-			array( 'https://foo.bar/parent/%2E./asset.txt', 'https://foo.bar/asset.txt' ),
-			array( 'https://foo.bar/parent/%2E%2e/asset.txt', 'https://foo.bar/asset.txt' ),
-			array( 'https://foo.bar/parent/%2E.%2fasset.txt', 'https://foo.bar/parent/%2E.%2fasset.txt' ),
-			array( 'http://localhost?../../bar', 'http://localhost/?../../bar' ),
-			array( '//http.or.https/', '//http.or.https/' ),
-			array( '//schemaless/with-path', '//schemaless/with-path' ),
-		);
+		return [
+			[ '/../foo/bar/baz/bazooka/../../baz', 'file:///foo/bar/baz' ],
+			[ './a/b/c/./../././../b/c', 'file://a/b/c' ],
+			[ 'relative/path', 'file://relative/path' ],
+			[ '/absolute/path', 'file:///absolute/path' ],
+			[ '/var/www/network/%2econfig', 'file:///var/www/network/%2econfig' ],
+			[ '///foo', 'file:///foo' ],
+			[ '~/foo.txt', 'file://~/foo.txt' ],
+			[ 'baz///foo', 'file://baz/foo' ],
+			[ 'file:///etc/foo/bar', 'file:///etc/foo/bar' ],
+			[ 'foo://bar', 'foo://bar/' ],
+			[ 'foo://bar/baz-file', 'foo://bar/baz-file' ],
+			[ 'foo://bar/baz-dir/', 'foo://bar/baz-dir/' ],
+			[ 'https://foo.bar/parent/.%2e/asset.txt', 'https://foo.bar/asset.txt' ],
+			[ 'https://foo.bar/parent/%2E./asset.txt', 'https://foo.bar/asset.txt' ],
+			[ 'https://foo.bar/parent/%2E%2e/asset.txt', 'https://foo.bar/asset.txt' ],
+			[ 'https://foo.bar/parent/%2E.%2fasset.txt', 'https://foo.bar/parent/%2E.%2fasset.txt' ],
+			[ 'http://localhost?../../bar', 'http://localhost/?../../bar' ],
+			[ '//http.or.https/', '//http.or.https/' ],
+			[ '//schemaless/with-path', '//schemaless/with-path' ],
+		];
 	}
 
 	/**
@@ -114,26 +114,26 @@ class URLTest extends WC_Unit_Test_Case {
 	 * @return array[]
 	 */
 	public function parent_url_expectations(): array {
-		return array(
-			array( '/', 1, false ),
-			array( '/', 2, false ),
-			array( './', 1, 'file://../' ),
-			array( '../', 1, 'file://../../' ),
-			array( 'relative-file.png', 1, 'file://./' ),
-			array( 'relative-file.png', 2, 'file://../' ),
-			array( '/var/dev/', 1, 'file:///var/' ),
-			array( '/var/../dev/./../foo/bar', 1, 'file:///foo/' ),
-			array( 'https://example.com', 1, false ),
-			array( 'https://example.com/foo', 1, 'https://example.com/' ),
-			array( 'https://example.com/foo/bar/baz/../cat/', 2, 'https://example.com/foo/' ),
-			array( 'https://example.com/foo/bar/baz/%2E%2E/dog/', 2, 'https://example.com/foo/' ),
-			array( 'file://./', 1, 'file://../' ),
-			array( 'file://./', 2, 'file://../../' ),
-			array( 'file://../../foo', 1, 'file://../../' ),
-			array( 'file://../../foo', 2, 'file://../../../' ),
-			array( 'file://../../', 1, 'file://../../../' ),
-			array( 'file://./../', 2, 'file://../../../' ),
-		);
+		return [
+			[ '/', 1, false ],
+			[ '/', 2, false ],
+			[ './', 1, 'file://../' ],
+			[ '../', 1, 'file://../../' ],
+			[ 'relative-file.png', 1, 'file://./' ],
+			[ 'relative-file.png', 2, 'file://../' ],
+			[ '/var/dev/', 1, 'file:///var/' ],
+			[ '/var/../dev/./../foo/bar', 1, 'file:///foo/' ],
+			[ 'https://example.com', 1, false ],
+			[ 'https://example.com/foo', 1, 'https://example.com/' ],
+			[ 'https://example.com/foo/bar/baz/../cat/', 2, 'https://example.com/foo/' ],
+			[ 'https://example.com/foo/bar/baz/%2E%2E/dog/', 2, 'https://example.com/foo/' ],
+			[ 'file://./', 1, 'file://../' ],
+			[ 'file://./', 2, 'file://../../' ],
+			[ 'file://../../foo', 1, 'file://../../' ],
+			[ 'file://../../foo', 2, 'file://../../../' ],
+			[ 'file://../../', 1, 'file://../../../' ],
+			[ 'file://./../', 2, 'file://../../../' ],
+		];
 	}
 
 	/**
@@ -152,54 +152,54 @@ class URLTest extends WC_Unit_Test_Case {
 	 * @return array[]
 	 */
 	public function all_parent_urL_expectations(): array {
-		return array(
-			array(
+		return [
+			[
 				'https://local.web/wp-content/uploads/woocommerce_uploads/pdf_bucket/secret-sauce.pdf',
-				array(
+				[
 					'https://local.web/wp-content/uploads/woocommerce_uploads/pdf_bucket/',
 					'https://local.web/wp-content/uploads/woocommerce_uploads/',
 					'https://local.web/wp-content/uploads/',
 					'https://local.web/wp-content/',
 					'https://local.web/',
-				),
-			),
-			array(
+				],
+			],
+			[
 				'/srv/websites/my.wp.site/public/test-file.doc',
-				array(
+				[
 					'file:///srv/websites/my.wp.site/public/',
 					'file:///srv/websites/my.wp.site/',
 					'file:///srv/websites/',
 					'file:///srv/',
 					'file:///',
-				),
-			),
-			array(
+				],
+			],
+			[
 				'C:\\Documents\\Web\\TestSite\\BackgroundTrack.mp3',
-				array(
+				[
 					'file://C:/Documents/Web/TestSite/',
 					'file://C:/Documents/Web/',
 					'file://C:/Documents/',
 					'file://C:/',
-				),
-			),
-			array(
+				],
+			],
+			[
 				'file:///',
-				array(),
-			),
-			array(
+				[],
+			],
+			[
 				'relative/to/abspath',
-				array(
+				[
 					'file://relative/to/',
 					'file://relative/',
 					'file://./',
-				),
-			),
-			array(
+				],
+			],
+			[
 				'../../some.file',
-				array(
+				[
 					'file://../../',
-				),
-			),
-		);
+				],
+			],
+		];
 	}
 }

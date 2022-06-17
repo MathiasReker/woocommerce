@@ -30,9 +30,9 @@ class WC_Admin_Tests_API_Reports_Products extends WC_REST_Unit_Test_Case {
 		parent::setUp();
 
 		$this->user = $this->factory->user->create(
-			array(
+			[
 				'role' => 'administrator',
-			)
+			]
 		);
 	}
 
@@ -113,9 +113,9 @@ class WC_Admin_Tests_API_Reports_Products extends WC_REST_Unit_Test_Case {
 
 		$request = new WP_REST_Request( 'GET', $this->endpoint );
 		$request->set_query_params(
-			array(
+			[
 				'products' => $product->get_id() . ',' . $product_2->get_id(),
-			)
+			]
 		);
 		$response = $this->server->dispatch( $request );
 		$reports  = $response->get_data();

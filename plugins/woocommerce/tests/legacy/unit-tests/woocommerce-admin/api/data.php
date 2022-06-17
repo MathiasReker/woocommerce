@@ -24,9 +24,9 @@ class WC_Admin_Tests_API_Data extends WC_REST_Unit_Test_Case {
 		parent::setUp();
 
 		$this->user = $this->factory->user->create(
-			array(
+			[
 				'role' => 'administrator',
-			)
+			]
 		);
 	}
 
@@ -59,7 +59,7 @@ class WC_Admin_Tests_API_Data extends WC_REST_Unit_Test_Case {
 		$product = new WC_Product_Simple();
 		$product->set_name( 'Test Product' );
 		$product->set_downloadable( 'yes' );
-		$product->set_downloads( array( $prod_download ) );
+		$product->set_downloads( [ $prod_download ] );
 		$product->set_regular_price( 25 );
 		$product->save();
 
@@ -102,9 +102,9 @@ class WC_Admin_Tests_API_Data extends WC_REST_Unit_Test_Case {
 
 		$request = new WP_REST_Request( 'GET', $this->endpoint . '/download-ips' );
 		$request->set_query_params(
-			array(
+			[
 				'match' => '54',
-			)
+			]
 		);
 
 		$response  = $this->server->dispatch( $request );

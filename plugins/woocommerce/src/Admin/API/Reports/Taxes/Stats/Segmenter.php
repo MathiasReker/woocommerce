@@ -22,13 +22,13 @@ class Segmenter extends ReportsSegmenter {
 	 * @return array Column => SELECT query mapping.
 	 */
 	protected function get_segment_selections_order_level( $lookup_table ) {
-		$columns_mapping = array(
+		$columns_mapping = [
 			'tax_codes'    => "COUNT(DISTINCT $lookup_table.tax_rate_id) as tax_codes",
 			'total_tax'    => "SUM($lookup_table.total_tax) AS total_tax",
 			'order_tax'    => "SUM($lookup_table.order_tax) as order_tax",
 			'shipping_tax' => "SUM($lookup_table.shipping_tax) as shipping_tax",
 			'orders_count' => "COUNT(DISTINCT $lookup_table.order_id) as orders_count",
-		);
+		];
 
 		return $columns_mapping;
 	}
@@ -130,12 +130,12 @@ class Segmenter extends ReportsSegmenter {
 	 */
 	protected function get_segments( $type, $query_params, $table_name ) {
 		if ( ! isset( $this->query_args['segmentby'] ) || '' === $this->query_args['segmentby'] ) {
-			return array();
+			return [];
 		}
 
 		$segmenting_where = '';
 		$segmenting_from  = '';
-		$segments         = array();
+		$segments         = [];
 
 		if ( 'tax_rate_id' === $this->query_args['segmentby'] ) {
 			$tax_rate_level_columns = $this->get_segment_selections_order_level( $table_name );

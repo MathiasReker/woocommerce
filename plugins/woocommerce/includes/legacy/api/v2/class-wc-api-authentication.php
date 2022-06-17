@@ -23,7 +23,7 @@ class WC_API_Authentication {
 	public function __construct() {
 
 		// To disable authentication, hook into this filter at a later priority and return a valid WP_User
-		add_filter( 'woocommerce_api_check_authentication', array( $this, 'authenticate' ), 0 );
+		add_filter( 'woocommerce_api_check_authentication', [ $this, 'authenticate' ], 0 );
 	}
 
 	/**
@@ -56,7 +56,7 @@ class WC_API_Authentication {
 			$this->update_api_key_last_access( $keys['key_id'] );
 
 		} catch ( Exception $e ) {
-			$user = new WP_Error( 'woocommerce_api_authentication_error', $e->getMessage(), array( 'status' => $e->getCode() ) );
+			$user = new WP_Error( 'woocommerce_api_authentication_error', $e->getMessage(), [ 'status' => $e->getCode() ] );
 		}
 
 		return $user;
@@ -138,7 +138,7 @@ class WC_API_Authentication {
 
 		$params = WC()->api->server->params['GET'];
 
-		$param_names = array( 'oauth_consumer_key', 'oauth_timestamp', 'oauth_nonce', 'oauth_signature', 'oauth_signature_method' );
+		$param_names = [ 'oauth_consumer_key', 'oauth_timestamp', 'oauth_nonce', 'oauth_signature', 'oauth_signature_method' ];
 
 		// Check for required OAuth parameters
 		foreach ( $param_names as $param_name ) {
@@ -251,7 +251,7 @@ class WC_API_Authentication {
 		}
 
 		// Form query string
-		$query_params = array();
+		$query_params = [];
 		foreach ( $params as $param_key => $param_value ) {
 
 			$query_params[] = $param_key . '%3D' . $param_value; // join with equals sign
@@ -295,7 +295,7 @@ class WC_API_Authentication {
 	 */
 	private function normalize_parameters( $parameters ) {
 
-		$normalized_parameters = array();
+		$normalized_parameters = [];
 
 		foreach ( $parameters as $key => $value ) {
 
@@ -333,7 +333,7 @@ class WC_API_Authentication {
 		$used_nonces = maybe_unserialize( $keys['nonces'] );
 
 		if ( empty( $used_nonces ) ) {
-			$used_nonces = array();
+			$used_nonces = [];
 		}
 
 		if ( in_array( $nonce, $used_nonces ) ) {
@@ -353,10 +353,10 @@ class WC_API_Authentication {
 
 		$wpdb->update(
 			$wpdb->prefix . 'woocommerce_api_keys',
-			array( 'nonces' => $used_nonces ),
-			array( 'key_id' => $keys['key_id'] ),
-			array( '%s' ),
-			array( '%d' )
+			[ 'nonces' => $used_nonces ],
+			[ 'key_id' => $keys['key_id'] ],
+			[ '%s' ],
+			[ '%d' ]
 		);
 	}
 
@@ -399,10 +399,10 @@ class WC_API_Authentication {
 
 		$wpdb->update(
 			$wpdb->prefix . 'woocommerce_api_keys',
-			array( 'last_access' => current_time( 'mysql' ) ),
-			array( 'key_id' => $key_id ),
-			array( '%s' ),
-			array( '%d' )
+			[ 'last_access' => current_time( 'mysql' ) ],
+			[ 'key_id' => $key_id ],
+			[ '%s' ],
+			[ '%d' ]
 		);
 	}
 }

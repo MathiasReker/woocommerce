@@ -51,13 +51,13 @@ class WC_Admin_Tests_Reports_Revenue_Stats extends WC_Unit_Test_Case {
 		$start_time = gmdate( 'Y-m-d H:00:00', $order->get_date_created()->getOffsetTimestamp() );
 		$end_time   = gmdate( 'Y-m-d H:59:59', $order->get_date_created()->getOffsetTimestamp() );
 
-		$args           = array(
+		$args           = [
 			'interval' => 'hour',
 			'after'    => $start_time,
 			'before'   => $end_time,
-		);
-		$expected_stats = array(
-			'totals'    => array(
+		];
+		$expected_stats = [
+			'totals'    => [
 				'orders_count'        => 1,
 				'num_items_sold'      => 4,
 				'total_sales'         => 97,
@@ -72,16 +72,16 @@ class WC_Admin_Tests_Reports_Revenue_Stats extends WC_Unit_Test_Case {
 				'avg_order_value'     => 80,
 				'total_customers'     => 1,
 				'products'            => 1,
-				'segments'            => array(),
-			),
-			'intervals' => array(
-				array(
+				'segments'            => [],
+			],
+			'intervals' => [
+				[
 					'interval'       => gmdate( 'Y-m-d H', $order->get_date_created()->getTimestamp() ),
 					'date_start'     => $start_time,
 					'date_start_gmt' => $start_time,
 					'date_end'       => $end_time,
 					'date_end_gmt'   => $end_time,
-					'subtotals'      => array(
+					'subtotals'      => [
 						'orders_count'        => 1,
 						'num_items_sold'      => 4,
 						'total_sales'         => 97,
@@ -95,21 +95,21 @@ class WC_Admin_Tests_Reports_Revenue_Stats extends WC_Unit_Test_Case {
 						'avg_items_per_order' => 4,
 						'avg_order_value'     => 80,
 						'total_customers'     => 1,
-						'segments'            => array(),
-					),
-				),
-			),
+						'segments'            => [],
+					],
+				],
+			],
 			'total'     => 1,
 			'pages'     => 1,
 			'page_no'   => 1,
-		);
+		];
 
 		// Test retrieving the stats from the data store.
 		$this->assertEquals( $expected_stats, json_decode( wp_json_encode( $data_store->get_data( $args ) ), true ) );
 
 		// Test retrieving the stats through the query class.
-		$expected_stats = array(
-			'totals'    => array(
+		$expected_stats = [
+			'totals'    => [
 				'orders_count'   => 1,
 				'num_items_sold' => 4,
 				'total_sales'    => 97,
@@ -121,16 +121,16 @@ class WC_Admin_Tests_Reports_Revenue_Stats extends WC_Unit_Test_Case {
 				'shipping'       => 10,
 				'net_revenue'    => 80,
 				'products'       => '1',
-				'segments'       => array(),
-			),
-			'intervals' => array(
-				array(
+				'segments'       => [],
+			],
+			'intervals' => [
+				[
 					'interval'       => gmdate( 'Y-m-d H', $order->get_date_created()->getTimestamp() ),
 					'date_start'     => $start_time,
 					'date_start_gmt' => $start_time,
 					'date_end'       => $end_time,
 					'date_end_gmt'   => $end_time,
-					'subtotals'      => array(
+					'subtotals'      => [
 						'orders_count'   => 1,
 						'num_items_sold' => 4,
 						'total_sales'    => 97,
@@ -141,14 +141,14 @@ class WC_Admin_Tests_Reports_Revenue_Stats extends WC_Unit_Test_Case {
 						'taxes'          => 7,
 						'shipping'       => 10,
 						'net_revenue'    => 80,
-						'segments'       => array(),
-					),
-				),
-			),
+						'segments'       => [],
+					],
+				],
+			],
 			'total'     => 1,
 			'pages'     => 1,
 			'page_no'   => 1,
-		);
+		];
 		$query          = new RevenueQuery( $args );
 		$this->assertEquals( $expected_stats, json_decode( wp_json_encode( $query->get_data() ), true ) );
 	}

@@ -23,40 +23,40 @@ class WC_Tests_Shipping extends WC_Unit_Test_Case {
 
 		// Success for no country.
 		$result = $shipping->is_package_shippable(
-			array(
-				'destination' => array(
+			[
+				'destination' => [
 					'country'  => '',
 					'state'    => 'CA',
 					'postcode' => '99999',
 					'address'  => '',
-				),
-			)
+				],
+			]
 		);
 		$this->assertTrue( $result );
 
 		// Failure for disallowed country.
 		$result = $shipping->is_package_shippable(
-			array(
-				'destination' => array(
+			[
+				'destination' => [
 					'country'  => 'TEST',
 					'state'    => 'CA',
 					'postcode' => '99999',
 					'address'  => '',
-				),
-			)
+				],
+			]
 		);
 		$this->assertFalse( $result );
 
 		// Success for correct country.
 		$result = $shipping->is_package_shippable(
-			array(
-				'destination' => array(
+			[
+				'destination' => [
 					'country'  => 'US',
 					'state'    => '',
 					'postcode' => '',
 					'address'  => '',
-				),
-			)
+				],
+			]
 		);
 		$this->assertTrue( $result );
 	}

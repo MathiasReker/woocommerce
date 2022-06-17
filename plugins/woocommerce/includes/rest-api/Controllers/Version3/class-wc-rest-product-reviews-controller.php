@@ -37,94 +37,94 @@ class WC_REST_Product_Reviews_Controller extends WC_REST_Controller {
 	 */
 	public function register_routes() {
 		register_rest_route(
-			$this->namespace, '/' . $this->rest_base, array(
-				array(
+			$this->namespace, '/' . $this->rest_base, [
+				[
 					'methods'             => WP_REST_Server::READABLE,
-					'callback'            => array( $this, 'get_items' ),
-					'permission_callback' => array( $this, 'get_items_permissions_check' ),
+					'callback'            => [ $this, 'get_items' ],
+					'permission_callback' => [ $this, 'get_items_permissions_check' ],
 					'args'                => $this->get_collection_params(),
-				),
-				array(
+				],
+				[
 					'methods'             => WP_REST_Server::CREATABLE,
-					'callback'            => array( $this, 'create_item' ),
-					'permission_callback' => array( $this, 'create_item_permissions_check' ),
+					'callback'            => [ $this, 'create_item' ],
+					'permission_callback' => [ $this, 'create_item_permissions_check' ],
 					'args'                => array_merge(
-						$this->get_endpoint_args_for_item_schema( WP_REST_Server::CREATABLE ), array(
-							'product_id'     => array(
+						$this->get_endpoint_args_for_item_schema( WP_REST_Server::CREATABLE ), [
+							'product_id'     => [
 								'required'    => true,
 								'description' => __( 'Unique identifier for the product.', 'woocommerce' ),
 								'type'        => 'integer',
-							),
-							'review'         => array(
+							],
+							'review'         => [
 								'required'    => true,
 								'type'        => 'string',
 								'description' => __( 'Review content.', 'woocommerce' ),
-							),
-							'reviewer'       => array(
+							],
+							'reviewer'       => [
 								'required'    => true,
 								'type'        => 'string',
 								'description' => __( 'Name of the reviewer.', 'woocommerce' ),
-							),
-							'reviewer_email' => array(
+							],
+							'reviewer_email' => [
 								'required'    => true,
 								'type'        => 'string',
 								'description' => __( 'Email of the reviewer.', 'woocommerce' ),
-							),
-						)
+							],
+						]
 					),
-				),
-				'schema' => array( $this, 'get_public_item_schema' ),
-			)
+				],
+				'schema' => [ $this, 'get_public_item_schema' ],
+			]
 		);
 
 		register_rest_route(
-			$this->namespace, '/' . $this->rest_base . '/(?P<id>[\d]+)', array(
-				'args'   => array(
-					'id' => array(
+			$this->namespace, '/' . $this->rest_base . '/(?P<id>[\d]+)', [
+				'args'   => [
+					'id' => [
 						'description' => __( 'Unique identifier for the resource.', 'woocommerce' ),
 						'type'        => 'integer',
-					),
-				),
-				array(
+					],
+				],
+				[
 					'methods'             => WP_REST_Server::READABLE,
-					'callback'            => array( $this, 'get_item' ),
-					'permission_callback' => array( $this, 'get_item_permissions_check' ),
-					'args'                => array(
-						'context' => $this->get_context_param( array( 'default' => 'view' ) ),
-					),
-				),
-				array(
+					'callback'            => [ $this, 'get_item' ],
+					'permission_callback' => [ $this, 'get_item_permissions_check' ],
+					'args'                => [
+						'context' => $this->get_context_param( [ 'default' => 'view' ] ),
+					],
+				],
+				[
 					'methods'             => WP_REST_Server::EDITABLE,
-					'callback'            => array( $this, 'update_item' ),
-					'permission_callback' => array( $this, 'update_item_permissions_check' ),
+					'callback'            => [ $this, 'update_item' ],
+					'permission_callback' => [ $this, 'update_item_permissions_check' ],
 					'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::EDITABLE ),
-				),
-				array(
+				],
+				[
 					'methods'             => WP_REST_Server::DELETABLE,
-					'callback'            => array( $this, 'delete_item' ),
-					'permission_callback' => array( $this, 'delete_item_permissions_check' ),
-					'args'                => array(
-						'force' => array(
+					'callback'            => [ $this, 'delete_item' ],
+					'permission_callback' => [ $this, 'delete_item_permissions_check' ],
+					'args'                => [
+						'force' => [
 							'default'     => false,
 							'type'        => 'boolean',
 							'description' => __( 'Whether to bypass trash and force deletion.', 'woocommerce' ),
-						),
-					),
-				),
-				'schema' => array( $this, 'get_public_item_schema' ),
-			)
+						],
+					],
+				],
+				'schema' => [ $this, 'get_public_item_schema' ],
+			]
 		);
 
 		register_rest_route(
-			$this->namespace, '/' . $this->rest_base . '/batch', array(
-				array(
+			$this->namespace, '/' . $this->rest_base . '/batch', [
+				[
 					'methods'             => WP_REST_Server::EDITABLE,
-					'callback'            => array( $this, 'batch_items' ),
-					'permission_callback' => array( $this, 'batch_items_permissions_check' ),
+					'callback'            => [ $this, 'batch_items' ],
+					'permission_callback' => [ $this, 'batch_items_permissions_check' ],
 					'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::EDITABLE ),
-				),
-				'schema' => array( $this, 'get_public_batch_schema' ),
-			)
+				],
+				'schema' => [ $this, 'get_public_batch_schema' ],
+			]
 		);
 	}
 
@@ -136,7 +136,7 @@ class WC_REST_Product_Reviews_Controller extends WC_REST_Controller {
 	 */
 	public function get_items_permissions_check( $request ) {
 		if ( ! wc_rest_check_product_reviews_permissions( 'read' ) ) {
-			return new WP_Error( 'woocommerce_rest_cannot_view', __( 'Sorry, you cannot list resources.', 'woocommerce' ), array( 'status' => rest_authorization_required_code() ) );
+			return new WP_Error( 'woocommerce_rest_cannot_view', __( 'Sorry, you cannot list resources.', 'woocommerce' ), [ 'status' => rest_authorization_required_code() ] );
 		}
 
 		return true;
@@ -150,7 +150,7 @@ class WC_REST_Product_Reviews_Controller extends WC_REST_Controller {
 	 */
 	public function get_item_permissions_check( $request ) {
 		if ( ! wc_rest_check_product_reviews_permissions( 'read', (int) $request['id'] ) ) {
-			return new WP_Error( 'woocommerce_rest_cannot_view', __( 'Sorry, you cannot view this resource.', 'woocommerce' ), array( 'status' => rest_authorization_required_code() ) );
+			return new WP_Error( 'woocommerce_rest_cannot_view', __( 'Sorry, you cannot view this resource.', 'woocommerce' ), [ 'status' => rest_authorization_required_code() ] );
 		}
 
 		return true;
@@ -164,7 +164,7 @@ class WC_REST_Product_Reviews_Controller extends WC_REST_Controller {
 	 */
 	public function create_item_permissions_check( $request ) {
 		if ( ! wc_rest_check_product_reviews_permissions( 'create' ) ) {
-			return new WP_Error( 'woocommerce_rest_cannot_create', __( 'Sorry, you are not allowed to create resources.', 'woocommerce' ), array( 'status' => rest_authorization_required_code() ) );
+			return new WP_Error( 'woocommerce_rest_cannot_create', __( 'Sorry, you are not allowed to create resources.', 'woocommerce' ), [ 'status' => rest_authorization_required_code() ] );
 		}
 
 		return true;
@@ -178,7 +178,7 @@ class WC_REST_Product_Reviews_Controller extends WC_REST_Controller {
 	 */
 	public function update_item_permissions_check( $request ) {
 		if ( ! wc_rest_check_product_reviews_permissions( 'edit', (int) $request['id'] ) ) {
-			return new WP_Error( 'woocommerce_rest_cannot_edit', __( 'Sorry, you cannot edit this resource.', 'woocommerce' ), array( 'status' => rest_authorization_required_code() ) );
+			return new WP_Error( 'woocommerce_rest_cannot_edit', __( 'Sorry, you cannot edit this resource.', 'woocommerce' ), [ 'status' => rest_authorization_required_code() ] );
 		}
 
 		return true;
@@ -192,7 +192,7 @@ class WC_REST_Product_Reviews_Controller extends WC_REST_Controller {
 	 */
 	public function delete_item_permissions_check( $request ) {
 		if ( ! wc_rest_check_product_reviews_permissions( 'delete', (int) $request['id'] ) ) {
-			return new WP_Error( 'woocommerce_rest_cannot_delete', __( 'Sorry, you cannot delete this resource.', 'woocommerce' ), array( 'status' => rest_authorization_required_code() ) );
+			return new WP_Error( 'woocommerce_rest_cannot_delete', __( 'Sorry, you cannot delete this resource.', 'woocommerce' ), [ 'status' => rest_authorization_required_code() ] );
 		}
 
 		return true;
@@ -206,7 +206,7 @@ class WC_REST_Product_Reviews_Controller extends WC_REST_Controller {
 	 */
 	public function batch_items_permissions_check( $request ) {
 		if ( ! wc_rest_check_product_reviews_permissions( 'batch' ) ) {
-			return new WP_Error( 'woocommerce_rest_cannot_batch', __( 'Sorry, you are not allowed to batch manipulate this resource.', 'woocommerce' ), array( 'status' => rest_authorization_required_code() ) );
+			return new WP_Error( 'woocommerce_rest_cannot_batch', __( 'Sorry, you are not allowed to batch manipulate this resource.', 'woocommerce' ), [ 'status' => rest_authorization_required_code() ] );
 		}
 
 		return true;
@@ -228,7 +228,7 @@ class WC_REST_Product_Reviews_Controller extends WC_REST_Controller {
 		 * name equivalents (some are the same). Only values which are also
 		 * present in $registered will be set.
 		 */
-		$parameter_mappings = array(
+		$parameter_mappings = [
 			'reviewer'         => 'author__in',
 			'reviewer_email'   => 'author_email',
 			'reviewer_exclude' => 'author__not_in',
@@ -240,9 +240,9 @@ class WC_REST_Product_Reviews_Controller extends WC_REST_Controller {
 			'product'          => 'post__in',
 			'search'           => 'search',
 			'status'           => 'status',
-		);
+		];
 
-		$prepared_args = array();
+		$prepared_args = [];
 
 		/*
 		 * For each known parameter which is both registered and present in the request,
@@ -255,7 +255,7 @@ class WC_REST_Product_Reviews_Controller extends WC_REST_Controller {
 		}
 
 		// Ensure certain parameter values default to empty strings.
-		foreach ( array( 'author_email', 'search' ) as $param ) {
+		foreach ( [ 'author_email', 'search' ] as $param ) {
 			if ( ! isset( $prepared_args[ $param ] ) ) {
 				$prepared_args[ $param ] = '';
 			}
@@ -270,7 +270,7 @@ class WC_REST_Product_Reviews_Controller extends WC_REST_Controller {
 		}
 
 		$prepared_args['no_found_rows'] = false;
-		$prepared_args['date_query']    = array();
+		$prepared_args['date_query']    = [];
 
 		// Set before into date query. Date query must be specified as an array of an array.
 		if ( isset( $registered['before'], $request['before'] ) ) {
@@ -302,7 +302,7 @@ class WC_REST_Product_Reviews_Controller extends WC_REST_Controller {
 		// Query reviews.
 		$query        = new WP_Comment_Query();
 		$query_result = $query->query( $prepared_args );
-		$reviews      = array();
+		$reviews      = [];
 
 		foreach ( $query_result as $review ) {
 			if ( ! wc_rest_check_product_reviews_permissions( 'read', $review->comment_ID ) ) {
@@ -362,13 +362,13 @@ class WC_REST_Product_Reviews_Controller extends WC_REST_Controller {
 	 */
 	public function create_item( $request ) {
 		if ( ! empty( $request['id'] ) ) {
-			return new WP_Error( 'woocommerce_rest_review_exists', __( 'Cannot create existing product review.', 'woocommerce' ), array( 'status' => 400 ) );
+			return new WP_Error( 'woocommerce_rest_review_exists', __( 'Cannot create existing product review.', 'woocommerce' ), [ 'status' => 400 ] );
 		}
 
 		$product_id = (int) $request['product_id'];
 
 		if ( 'product' !== get_post_type( $product_id ) ) {
-			return new WP_Error( 'woocommerce_rest_product_invalid_id', __( 'Invalid product ID.', 'woocommerce' ), array( 'status' => 404 ) );
+			return new WP_Error( 'woocommerce_rest_product_invalid_id', __( 'Invalid product ID.', 'woocommerce' ), [ 'status' => 404 ] );
 		}
 
 		$prepared_review = $this->prepare_item_for_database( $request );
@@ -382,7 +382,7 @@ class WC_REST_Product_Reviews_Controller extends WC_REST_Controller {
 		 * Do not allow a comment to be created with missing or empty comment_content. See wp_handle_comment_submission().
 		 */
 		if ( empty( $prepared_review['comment_content'] ) ) {
-			return new WP_Error( 'woocommerce_rest_review_content_invalid', __( 'Invalid review content.', 'woocommerce' ), array( 'status' => 400 ) );
+			return new WP_Error( 'woocommerce_rest_review_content_invalid', __( 'Invalid review content.', 'woocommerce' ), [ 'status' => 400 ] );
 		}
 
 		// Setting remaining values before wp_insert_comment so we can use wp_allow_comment().
@@ -406,8 +406,8 @@ class WC_REST_Product_Reviews_Controller extends WC_REST_Controller {
 
 		$check_comment_lengths = wp_check_comment_data_max_lengths( $prepared_review );
 		if ( is_wp_error( $check_comment_lengths ) ) {
-			$error_code = str_replace( array( 'comment_author', 'comment_content' ), array( 'reviewer', 'review_content' ), $check_comment_lengths->get_error_code() );
-			return new WP_Error( 'woocommerce_rest_' . $error_code, __( 'Product review field exceeds maximum length allowed.', 'woocommerce' ), array( 'status' => 400 ) );
+			$error_code = str_replace( [ 'comment_author', 'comment_content' ], [ 'reviewer', 'review_content' ], $check_comment_lengths->get_error_code() );
+			return new WP_Error( 'woocommerce_rest_' . $error_code, __( 'Product review field exceeds maximum length allowed.', 'woocommerce' ), [ 'status' => 400 ] );
 		}
 
 		$prepared_review['comment_parent']     = 0;
@@ -419,11 +419,11 @@ class WC_REST_Product_Reviews_Controller extends WC_REST_Controller {
 			$error_message = $prepared_review['comment_approved']->get_error_message();
 
 			if ( 'comment_duplicate' === $error_code ) {
-				return new WP_Error( 'woocommerce_rest_' . $error_code, $error_message, array( 'status' => 409 ) );
+				return new WP_Error( 'woocommerce_rest_' . $error_code, $error_message, [ 'status' => 409 ] );
 			}
 
 			if ( 'comment_flood' === $error_code ) {
-				return new WP_Error( 'woocommerce_rest_' . $error_code, $error_message, array( 'status' => 400 ) );
+				return new WP_Error( 'woocommerce_rest_' . $error_code, $error_message, [ 'status' => 400 ] );
 			}
 
 			return $prepared_review['comment_approved'];
@@ -448,7 +448,7 @@ class WC_REST_Product_Reviews_Controller extends WC_REST_Controller {
 		$review_id = wp_insert_comment( wp_filter_comment( wp_slash( (array) $prepared_review ) ) );
 
 		if ( ! $review_id ) {
-			return new WP_Error( 'woocommerce_rest_review_failed_create', __( 'Creating product review failed.', 'woocommerce' ), array( 'status' => 500 ) );
+			return new WP_Error( 'woocommerce_rest_review_failed_create', __( 'Creating product review failed.', 'woocommerce' ), [ 'status' => 500 ] );
 		}
 
 		if ( isset( $request['status'] ) ) {
@@ -518,7 +518,7 @@ class WC_REST_Product_Reviews_Controller extends WC_REST_Controller {
 		$id = (int) $review->comment_ID;
 
 		if ( isset( $request['type'] ) && 'review' !== get_comment_type( $id ) ) {
-			return new WP_Error( 'woocommerce_rest_review_invalid_type', __( 'Sorry, you are not allowed to change the comment type.', 'woocommerce' ), array( 'status' => 404 ) );
+			return new WP_Error( 'woocommerce_rest_review_invalid_type', __( 'Sorry, you are not allowed to change the comment type.', 'woocommerce' ), [ 'status' => 404 ] );
 		}
 
 		$prepared_args = $this->prepare_item_for_database( $request );
@@ -528,7 +528,7 @@ class WC_REST_Product_Reviews_Controller extends WC_REST_Controller {
 
 		if ( ! empty( $prepared_args['comment_post_ID'] ) ) {
 			if ( 'product' !== get_post_type( (int) $prepared_args['comment_post_ID'] ) ) {
-				return new WP_Error( 'woocommerce_rest_product_invalid_id', __( 'Invalid product ID.', 'woocommerce' ), array( 'status' => 404 ) );
+				return new WP_Error( 'woocommerce_rest_product_invalid_id', __( 'Invalid product ID.', 'woocommerce' ), [ 'status' => 404 ] );
 			}
 		}
 
@@ -537,7 +537,7 @@ class WC_REST_Product_Reviews_Controller extends WC_REST_Controller {
 			$change = $this->handle_status_param( $request['status'], $id );
 
 			if ( ! $change ) {
-				return new WP_Error( 'woocommerce_rest_review_failed_edit', __( 'Updating review status failed.', 'woocommerce' ), array( 'status' => 500 ) );
+				return new WP_Error( 'woocommerce_rest_review_failed_edit', __( 'Updating review status failed.', 'woocommerce' ), [ 'status' => 500 ] );
 			}
 		} elseif ( ! empty( $prepared_args ) ) {
 			if ( is_wp_error( $prepared_args ) ) {
@@ -545,21 +545,21 @@ class WC_REST_Product_Reviews_Controller extends WC_REST_Controller {
 			}
 
 			if ( isset( $prepared_args['comment_content'] ) && empty( $prepared_args['comment_content'] ) ) {
-				return new WP_Error( 'woocommerce_rest_review_content_invalid', __( 'Invalid review content.', 'woocommerce' ), array( 'status' => 400 ) );
+				return new WP_Error( 'woocommerce_rest_review_content_invalid', __( 'Invalid review content.', 'woocommerce' ), [ 'status' => 400 ] );
 			}
 
 			$prepared_args['comment_ID'] = $id;
 
 			$check_comment_lengths = wp_check_comment_data_max_lengths( $prepared_args );
 			if ( is_wp_error( $check_comment_lengths ) ) {
-				$error_code = str_replace( array( 'comment_author', 'comment_content' ), array( 'reviewer', 'review_content' ), $check_comment_lengths->get_error_code() );
-				return new WP_Error( 'woocommerce_rest_' . $error_code, __( 'Product review field exceeds maximum length allowed.', 'woocommerce' ), array( 'status' => 400 ) );
+				$error_code = str_replace( [ 'comment_author', 'comment_content' ], [ 'reviewer', 'review_content' ], $check_comment_lengths->get_error_code() );
+				return new WP_Error( 'woocommerce_rest_' . $error_code, __( 'Product review field exceeds maximum length allowed.', 'woocommerce' ), [ 'status' => 400 ] );
 			}
 
 			$updated = wp_update_comment( wp_slash( (array) $prepared_args ) );
 
 			if ( false === $updated ) {
-				return new WP_Error( 'woocommerce_rest_comment_failed_edit', __( 'Updating review failed.', 'woocommerce' ), array( 'status' => 500 ) );
+				return new WP_Error( 'woocommerce_rest_comment_failed_edit', __( 'Updating review failed.', 'woocommerce' ), [ 'status' => 500 ] );
 			}
 
 			if ( isset( $request['status'] ) ) {
@@ -621,20 +621,20 @@ class WC_REST_Product_Reviews_Controller extends WC_REST_Controller {
 			$result   = wp_delete_comment( $review->comment_ID, true );
 			$response = new WP_REST_Response();
 			$response->set_data(
-				array(
+				[
 					'deleted'  => true,
 					'previous' => $previous->get_data(),
-				)
+				]
 			);
 		} else {
 			// If this type doesn't support trashing, error out.
 			if ( ! $supports_trash ) {
 				/* translators: %s: force=true */
-				return new WP_Error( 'woocommerce_rest_trash_not_supported', sprintf( __( "The object does not support trashing. Set '%s' to delete.", 'woocommerce' ), 'force=true' ), array( 'status' => 501 ) );
+				return new WP_Error( 'woocommerce_rest_trash_not_supported', sprintf( __( "The object does not support trashing. Set '%s' to delete.", 'woocommerce' ), 'force=true' ), [ 'status' => 501 ] );
 			}
 
 			if ( 'trash' === $review->comment_approved ) {
-				return new WP_Error( 'woocommerce_rest_already_trashed', __( 'The object has already been trashed.', 'woocommerce' ), array( 'status' => 410 ) );
+				return new WP_Error( 'woocommerce_rest_already_trashed', __( 'The object has already been trashed.', 'woocommerce' ), [ 'status' => 410 ] );
 			}
 
 			$result   = wp_trash_comment( $review->comment_ID );
@@ -643,7 +643,7 @@ class WC_REST_Product_Reviews_Controller extends WC_REST_Controller {
 		}
 
 		if ( ! $result ) {
-			return new WP_Error( 'woocommerce_rest_cannot_delete', __( 'The object cannot be deleted.', 'woocommerce' ), array( 'status' => 500 ) );
+			return new WP_Error( 'woocommerce_rest_cannot_delete', __( 'The object cannot be deleted.', 'woocommerce' ), [ 'status' => 500 ] );
 		}
 
 		/**
@@ -668,7 +668,7 @@ class WC_REST_Product_Reviews_Controller extends WC_REST_Controller {
 	public function prepare_item_for_response( $review, $request ) {
 		$context = ! empty( $request['context'] ) ? $request['context'] : 'view';
 		$fields  = $this->get_fields_for_response( $request );
-		$data    = array();
+		$data    = [];
 
 		if ( in_array( 'id', $fields, true ) ) {
 			$data['id'] = (int) $review->comment_ID;
@@ -788,26 +788,26 @@ class WC_REST_Product_Reviews_Controller extends WC_REST_Controller {
 	 * @return array Links for the given product review.
 	 */
 	protected function prepare_links( $review ) {
-		$links = array(
-			'self'       => array(
+		$links = [
+			'self'       => [
 				'href' => rest_url( sprintf( '/%s/%s/%d', $this->namespace, $this->rest_base, $review->comment_ID ) ),
-			),
-			'collection' => array(
+			],
+			'collection' => [
 				'href' => rest_url( sprintf( '/%s/%s', $this->namespace, $this->rest_base ) ),
-			),
-		);
+			],
+		];
 
 		if ( 0 !== (int) $review->comment_post_ID ) {
-			$links['up'] = array(
+			$links['up'] = [
 				'href' => rest_url( sprintf( '/%s/products/%d', $this->namespace, $review->comment_post_ID ) ),
-			);
+			];
 		}
 
 		if ( 0 !== (int) $review->user_id ) {
-			$links['reviewer'] = array(
+			$links['reviewer'] = [
 				'href'       => rest_url( 'wp/v2/users/' . $review->user_id ),
 				'embeddable' => true,
-			);
+			];
 		}
 
 		return $links;
@@ -819,106 +819,106 @@ class WC_REST_Product_Reviews_Controller extends WC_REST_Controller {
 	 * @return array
 	 */
 	public function get_item_schema() {
-		$schema = array(
+		$schema = [
 			'$schema'    => 'http://json-schema.org/draft-04/schema#',
 			'title'      => 'product_review',
 			'type'       => 'object',
-			'properties' => array(
-				'id'               => array(
+			'properties' => [
+				'id'               => [
 					'description' => __( 'Unique identifier for the resource.', 'woocommerce' ),
 					'type'        => 'integer',
-					'context'     => array( 'view', 'edit' ),
+					'context'     => [ 'view', 'edit' ],
 					'readonly'    => true,
-				),
-				'date_created'     => array(
+				],
+				'date_created'     => [
 					'description' => __( "The date the review was created, in the site's timezone.", 'woocommerce' ),
 					'type'        => 'date-time',
-					'context'     => array( 'view', 'edit' ),
+					'context'     => [ 'view', 'edit' ],
 					'readonly'    => true,
-				),
-				'date_created_gmt' => array(
+				],
+				'date_created_gmt' => [
 					'description' => __( 'The date the review was created, as GMT.', 'woocommerce' ),
 					'type'        => 'date-time',
-					'context'     => array( 'view', 'edit' ),
+					'context'     => [ 'view', 'edit' ],
 					'readonly'    => true,
-				),
-				'product_id'       => array(
+				],
+				'product_id'       => [
 					'description' => __( 'Unique identifier for the product that the review belongs to.', 'woocommerce' ),
 					'type'        => 'integer',
-					'context'     => array( 'view', 'edit' ),
-				),
-				'product_name'       => array(
+					'context'     => [ 'view', 'edit' ],
+				],
+				'product_name'       => [
 					'description' => __( 'Product name.', 'woocommerce' ),
 					'type'        => 'string',
-					'context'     => array( 'view', 'edit' ),
-				),
-				'product_permalink'       => array(
+					'context'     => [ 'view', 'edit' ],
+				],
+				'product_permalink'       => [
 					'description' => __( 'Product URL.', 'woocommerce' ),
 					'type'        => 'string',
 					'format'      => 'uri',
-					'context'     => array( 'view', 'edit' ),
+					'context'     => [ 'view', 'edit' ],
 					'readonly'    => true,
-				),
-				'status'           => array(
+				],
+				'status'           => [
 					'description' => __( 'Status of the review.', 'woocommerce' ),
 					'type'        => 'string',
 					'default'     => 'approved',
-					'enum'        => array( 'approved', 'hold', 'spam', 'unspam', 'trash', 'untrash' ),
-					'context'     => array( 'view', 'edit' ),
-				),
-				'reviewer'         => array(
+					'enum'        => [ 'approved', 'hold', 'spam', 'unspam', 'trash', 'untrash' ],
+					'context'     => [ 'view', 'edit' ],
+				],
+				'reviewer'         => [
 					'description' => __( 'Reviewer name.', 'woocommerce' ),
 					'type'        => 'string',
-					'context'     => array( 'view', 'edit' ),
-				),
-				'reviewer_email'   => array(
+					'context'     => [ 'view', 'edit' ],
+				],
+				'reviewer_email'   => [
 					'description' => __( 'Reviewer email.', 'woocommerce' ),
 					'type'        => 'string',
 					'format'      => 'email',
-					'context'     => array( 'view', 'edit' ),
-				),
-				'review'           => array(
+					'context'     => [ 'view', 'edit' ],
+				],
+				'review'           => [
 					'description' => __( 'The content of the review.', 'woocommerce' ),
 					'type'        => 'string',
-					'context'     => array( 'view', 'edit' ),
-					'arg_options' => array(
+					'context'     => [ 'view', 'edit' ],
+					'arg_options' => [
 						'sanitize_callback' => 'wp_filter_post_kses',
-					),
-				),
-				'rating'           => array(
+					],
+				],
+				'rating'           => [
 					'description' => __( 'Review rating (0 to 5).', 'woocommerce' ),
 					'type'        => 'integer',
-					'context'     => array( 'view', 'edit' ),
-				),
-				'verified'         => array(
+					'context'     => [ 'view', 'edit' ],
+				],
+				'verified'         => [
 					'description' => __( 'Shows if the reviewer bought the product or not.', 'woocommerce' ),
 					'type'        => 'boolean',
-					'context'     => array( 'view', 'edit' ),
+					'context'     => [ 'view', 'edit' ],
 					'readonly'    => true,
-				),
-			),
-		);
+				],
+			],
+		];
 
 		if ( get_option( 'show_avatars' ) ) {
-			$avatar_properties = array();
+			$avatar_properties = [];
 			$avatar_sizes      = rest_get_avatar_sizes();
 
 			foreach ( $avatar_sizes as $size ) {
-				$avatar_properties[ $size ] = array(
+				$avatar_properties[ $size ] = [
 					/* translators: %d: avatar image size in pixels */
 					'description' => sprintf( __( 'Avatar URL with image size of %d pixels.', 'woocommerce' ), $size ),
 					'type'        => 'string',
 					'format'      => 'uri',
-					'context'     => array( 'embed', 'view', 'edit' ),
-				);
+					'context'     => [ 'embed', 'view', 'edit' ],
+				];
 			}
-			$schema['properties']['reviewer_avatar_urls'] = array(
+			$schema['properties']['reviewer_avatar_urls'] = [
 				'description' => __( 'Avatar URLs for the object reviewer.', 'woocommerce' ),
 				'type'        => 'object',
-				'context'     => array( 'view', 'edit' ),
+				'context'     => [ 'view', 'edit' ],
 				'readonly'    => true,
 				'properties'  => $avatar_properties,
-			);
+			];
 		}
 
 		return $this->add_additional_fields_schema( $schema );
@@ -934,98 +934,98 @@ class WC_REST_Product_Reviews_Controller extends WC_REST_Controller {
 
 		$params['context']['default'] = 'view';
 
-		$params['after']            = array(
+		$params['after']            = [
 			'description' => __( 'Limit response to resources published after a given ISO8601 compliant date.', 'woocommerce' ),
 			'type'        => 'string',
 			'format'      => 'date-time',
-		);
-		$params['before']           = array(
+		];
+		$params['before']           = [
 			'description' => __( 'Limit response to reviews published before a given ISO8601 compliant date.', 'woocommerce' ),
 			'type'        => 'string',
 			'format'      => 'date-time',
-		);
-		$params['exclude']          = array(
+		];
+		$params['exclude']          = [
 			'description' => __( 'Ensure result set excludes specific IDs.', 'woocommerce' ),
 			'type'        => 'array',
-			'items'       => array(
+			'items'       => [
 				'type' => 'integer',
-			),
-			'default'     => array(),
-		);
-		$params['include']          = array(
+			],
+			'default'     => [],
+		];
+		$params['include']          = [
 			'description' => __( 'Limit result set to specific IDs.', 'woocommerce' ),
 			'type'        => 'array',
-			'items'       => array(
+			'items'       => [
 				'type' => 'integer',
-			),
-			'default'     => array(),
-		);
-		$params['offset']           = array(
+			],
+			'default'     => [],
+		];
+		$params['offset']           = [
 			'description' => __( 'Offset the result set by a specific number of items.', 'woocommerce' ),
 			'type'        => 'integer',
-		);
-		$params['order']            = array(
+		];
+		$params['order']            = [
 			'description' => __( 'Order sort attribute ascending or descending.', 'woocommerce' ),
 			'type'        => 'string',
 			'default'     => 'desc',
-			'enum'        => array(
+			'enum'        => [
 				'asc',
 				'desc',
-			),
-		);
-		$params['orderby']          = array(
+			],
+		];
+		$params['orderby']          = [
 			'description' => __( 'Sort collection by object attribute.', 'woocommerce' ),
 			'type'        => 'string',
 			'default'     => 'date_gmt',
-			'enum'        => array(
+			'enum'        => [
 				'date',
 				'date_gmt',
 				'id',
 				'include',
 				'product',
-			),
-		);
-		$params['reviewer']         = array(
+			],
+		];
+		$params['reviewer']         = [
 			'description' => __( 'Limit result set to reviews assigned to specific user IDs.', 'woocommerce' ),
 			'type'        => 'array',
-			'items'       => array(
+			'items'       => [
 				'type' => 'integer',
-			),
-		);
-		$params['reviewer_exclude'] = array(
+			],
+		];
+		$params['reviewer_exclude'] = [
 			'description' => __( 'Ensure result set excludes reviews assigned to specific user IDs.', 'woocommerce' ),
 			'type'        => 'array',
-			'items'       => array(
+			'items'       => [
 				'type' => 'integer',
-			),
-		);
-		$params['reviewer_email']   = array(
+			],
+		];
+		$params['reviewer_email']   = [
 			'default'     => null,
 			'description' => __( 'Limit result set to that from a specific author email.', 'woocommerce' ),
 			'format'      => 'email',
 			'type'        => 'string',
-		);
-		$params['product']          = array(
-			'default'     => array(),
+		];
+		$params['product']          = [
+			'default'     => [],
 			'description' => __( 'Limit result set to reviews assigned to specific product IDs.', 'woocommerce' ),
 			'type'        => 'array',
-			'items'       => array(
+			'items'       => [
 				'type' => 'integer',
-			),
-		);
-		$params['status']           = array(
+			],
+		];
+		$params['status']           = [
 			'default'           => 'approved',
 			'description'       => __( 'Limit result set to reviews assigned a specific status.', 'woocommerce' ),
 			'sanitize_callback' => 'sanitize_key',
 			'type'              => 'string',
-			'enum'              => array(
+			'enum'              => [
 				'all',
 				'hold',
 				'approved',
 				'spam',
 				'trash',
-			),
-		);
+			],
+		];
 
 		/**
 		 * Filter collection parameters for the reviews controller.
@@ -1049,7 +1049,7 @@ class WC_REST_Product_Reviews_Controller extends WC_REST_Controller {
 	 */
 	protected function get_review( $id ) {
 		$id    = (int) $id;
-		$error = new WP_Error( 'woocommerce_rest_review_invalid_id', __( 'Invalid review ID.', 'woocommerce' ), array( 'status' => 404 ) );
+		$error = new WP_Error( 'woocommerce_rest_review_invalid_id', __( 'Invalid review ID.', 'woocommerce' ), [ 'status' => 404 ] );
 
 		if ( 0 >= $id ) {
 			return $error;
@@ -1064,7 +1064,7 @@ class WC_REST_Product_Reviews_Controller extends WC_REST_Controller {
 			$post = get_post( (int) $review->comment_post_ID );
 
 			if ( 'product' !== get_post_type( (int) $review->comment_post_ID ) ) {
-				return new WP_Error( 'woocommerce_rest_product_invalid_id', __( 'Invalid product ID.', 'woocommerce' ), array( 'status' => 404 ) );
+				return new WP_Error( 'woocommerce_rest_product_invalid_id', __( 'Invalid product ID.', 'woocommerce' ), [ 'status' => 404 ] );
 			}
 		}
 

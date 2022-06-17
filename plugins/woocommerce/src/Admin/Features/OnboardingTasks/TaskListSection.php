@@ -43,7 +43,7 @@ class TaskListSection {
 	 *
 	 * @var array
 	 */
-	public $task_names = array();
+	public $task_names = [];
 
 	/**
 	 * Parent task list.
@@ -58,14 +58,14 @@ class TaskListSection {
 	 * @param array         $data Task list data.
 	 * @param TaskList|null $task_list Parent task list.
 	 */
-	public function __construct( $data = array(), $task_list = null ) {
-		$defaults = array(
+	public function __construct( $data = [], $task_list = null ) {
+		$defaults = [
 			'id'          => '',
 			'title'       => '',
 			'description' => '',
 			'image'       => '',
-			'tasks'       => array(),
-		);
+			'tasks'       => [],
+		];
 
 		$data = wp_parse_args( $data, $defaults );
 
@@ -102,7 +102,7 @@ class TaskListSection {
 	 * @return array
 	 */
 	public function get_json() {
-		return array(
+		return [
 			'id'          => $this->id,
 			'title'       => $this->title,
 			'description' => $this->description,
@@ -117,6 +117,6 @@ class TaskListSection {
 				$this->task_names
 			),
 			'isComplete'  => $this->is_complete(),
-		);
+		];
 	}
 }

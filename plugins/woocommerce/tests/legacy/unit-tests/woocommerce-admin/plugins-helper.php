@@ -21,9 +21,9 @@ class WC_Admin_Tests_Plugins_Helper extends WP_UnitTestCase {
 		parent::setUp();
 
 		$this->user = $this->factory->user->create(
-			array(
+			[
 				'role' => 'administrator',
-			)
+			]
 		);
 	}
 
@@ -54,7 +54,7 @@ class WC_Admin_Tests_Plugins_Helper extends WP_UnitTestCase {
 		$active_slugs = PluginsHelper::get_active_plugin_slugs();
 
 		// Phpunit test environment active plugins option is empty.
-		$this->assertEquals( array(), $active_slugs, 'Should not be any active slugs.' );
+		$this->assertEquals( [], $active_slugs, 'Should not be any active slugs.' );
 
 		// Get facebook plugin path.
 		$akismet_path = PluginsHelper::get_plugin_path_from_slug( 'akismet' );
@@ -66,7 +66,7 @@ class WC_Admin_Tests_Plugins_Helper extends WP_UnitTestCase {
 		$active_slugs = PluginsHelper::get_active_plugin_slugs();
 
 		// Phpunit test environment active plugins option is empty.
-		$this->assertEquals( array( 'akismet' ), $active_slugs, 'Akismet should be listed as active.' );
+		$this->assertEquals( [ 'akismet' ], $active_slugs, 'Akismet should be listed as active.' );
 	}
 
 	/**
@@ -110,7 +110,7 @@ class WC_Admin_Tests_Plugins_Helper extends WP_UnitTestCase {
 
 		$actual_data = PluginsHelper::get_plugin_data( 'akismet' );
 
-		$expected_keys = array(
+		$expected_keys = [
 			'WC requires at least',
 			'WC tested up to',
 			'Woo',
@@ -127,7 +127,7 @@ class WC_Admin_Tests_Plugins_Helper extends WP_UnitTestCase {
 			'RequiresPHP',
 			'Title',
 			'AuthorName',
-		);
+		];
 
 		foreach ( $expected_keys as $key ) {
 			$this->assertArrayHasKey( $key, $actual_data, 'Plugin data does not match expected data.' );

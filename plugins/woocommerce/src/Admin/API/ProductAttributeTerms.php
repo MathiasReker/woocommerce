@@ -35,21 +35,21 @@ class ProductAttributeTerms extends \WC_REST_Product_Attribute_Terms_Controller 
 		register_rest_route(
 			$this->namespace,
 			'products/attributes/(?P<slug>[a-z0-9_\-]+)/terms',
-			array(
-				'args'   => array(
-					'slug' => array(
+			[
+				'args'   => [
+					'slug' => [
 						'description' => __( 'Slug identifier for the resource.', 'woocommerce' ),
 						'type'        => 'string',
-					),
-				),
-				array(
+					],
+				],
+				[
 					'methods'             => \WP_REST_Server::READABLE,
-					'callback'            => array( $this, 'get_item_by_slug' ),
-					'permission_callback' => array( $this, 'get_custom_attribute_permissions_check' ),
+					'callback'            => [ $this, 'get_item_by_slug' ],
+					'permission_callback' => [ $this, 'get_custom_attribute_permissions_check' ],
 					'args'                => $this->get_collection_params(),
-				),
-				'schema' => array( $this, 'get_public_item_schema' ),
-			)
+				],
+				'schema' => [ $this, 'get_public_item_schema' ],
+			]
 		);
 	}
 
@@ -64,9 +64,9 @@ class ProductAttributeTerms extends \WC_REST_Product_Attribute_Terms_Controller 
 			return new WP_Error(
 				'woocommerce_rest_cannot_view',
 				__( 'Sorry, you cannot view this resource.', 'woocommerce' ),
-				array(
+				[
 					'status' => rest_authorization_required_code(),
-				)
+				]
 			);
 		}
 
@@ -81,7 +81,7 @@ class ProductAttributeTerms extends \WC_REST_Product_Attribute_Terms_Controller 
 	public function get_item_schema() {
 		$schema = parent::get_item_schema();
 		// Custom attributes substitute slugs for numeric IDs.
-		$schema['properties']['id']['type'] = array( 'integer', 'string' );
+		$schema['properties']['id']['type'] = [ 'integer', 'string' ];
 
 		return $schema;
 	}
@@ -96,10 +96,10 @@ class ProductAttributeTerms extends \WC_REST_Product_Attribute_Terms_Controller 
 		global $wpdb;
 
 		if ( empty( $slug ) ) {
-			return array();
+			return [];
 		}
 
-		$attribute_values = array();
+		$attribute_values = [];
 
 		// Get the attribute properties.
 		$attribute = $this->get_custom_attribute_by_slug( $slug );
@@ -129,32 +129,32 @@ class ProductAttributeTerms extends \WC_REST_Product_Attribute_Terms_Controller 
 				continue;
 			}
 
-			$query_results[ $defined_value ] = (object) array(
+			$query_results[ $defined_value ] = (object) [
 				'meta_value'    => $defined_value, // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_value
 				'product_count' => 0,
-			);
+			];
 		}
 
 		foreach ( $query_results as $term_value => $term ) {
 			// Mimic the structure of a taxonomy-backed attribute values for response.
-			$data = array(
+			$data = [
 				'id'          => $term_value,
 				'name'        => $term_value,
 				'slug'        => $term_value,
 				'description' => '',
 				'menu_order'  => 0,
 				'count'       => (int) $term->product_count,
-			);
+			];
 
 			$response = rest_ensure_response( $data );
 			$response->add_links(
-				array(
-					'collection' => array(
+				[
+					'collection' => [
 						'href' => rest_url(
 							$this->namespace . '/products/attributes/' . $slug . '/terms'
 						),
-					),
-				)
+					],
+				]
 			);
 			$response = $this->prepare_response_for_collection( $response );
 

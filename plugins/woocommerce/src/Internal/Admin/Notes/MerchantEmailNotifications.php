@@ -19,7 +19,7 @@ class MerchantEmailNotifications {
 	 * Initialize the merchant email notifications.
 	 */
 	public static function init() {
-		add_action( 'admin_init', array( __CLASS__, 'trigger_notification_action' ) );
+		add_action( 'admin_init', [ __CLASS__, 'trigger_notification_action' ] );
 	}
 
 	/**
@@ -71,10 +71,10 @@ class MerchantEmailNotifications {
 	public static function run() {
 		$data_store = Notes::load_data_store();
 		$notes      = $data_store->get_notes(
-			array(
-				'type'   => array( Note::E_WC_ADMIN_NOTE_EMAIL ),
-				'status' => array( 'unactioned' ),
-			)
+			[
+				'type'   => [ Note::E_WC_ADMIN_NOTE_EMAIL ],
+				'status' => [ 'unactioned' ],
+			]
 		);
 
 		foreach ( $notes as $note ) {
@@ -134,7 +134,7 @@ class MerchantEmailNotifications {
 		if ( isset( $content_data->role ) ) {
 			$role = $content_data->role;
 		}
-		$args = array( 'role' => $role );
+		$args = [ 'role' => $role ];
 		return get_users( $args );
 	}
 }

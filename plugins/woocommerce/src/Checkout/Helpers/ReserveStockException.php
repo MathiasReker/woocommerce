@@ -33,7 +33,7 @@ class ReserveStockException extends \Exception {
 	 * @param int    $http_status_code Proper HTTP status code to respond with, e.g. 400.
 	 * @param array  $data             Extra error data.
 	 */
-	public function __construct( $code, $message, $http_status_code = 400, $data = array() ) {
+	public function __construct( $code, $message, $http_status_code = 400, $data = [] ) {
 		$this->error_code = $code;
 		$this->error_data = $data;
 

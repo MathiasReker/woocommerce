@@ -21,11 +21,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
-$allowed_html = array(
-	'a' => array(
-		'href' => array(),
-	),
-);
+$allowed_html = [
+	'a' => [
+		'href' => [],
+	],
+];
 ?>
 
 <p>

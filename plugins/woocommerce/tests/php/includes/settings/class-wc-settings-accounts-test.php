@@ -47,8 +47,8 @@ class WC_Settings_Accounts_Test extends WC_Settings_Unit_Test_Case {
 		$settings               = $sut->get_settings_for_section( '' );
 		$settings_ids_and_types = $this->get_ids_and_types( $settings );
 
-		$expected = array(
-			'account_registration_options'                 => array( 'title', 'sectionend' ),
+		$expected = [
+			'account_registration_options'                 => [ 'title', 'sectionend' ],
 			'woocommerce_enable_guest_checkout'            => 'checkbox',
 			'woocommerce_enable_checkout_login_reminder'   => 'checkbox',
 			'woocommerce_enable_signup_and_login_from_checkout' => 'checkbox',
@@ -58,16 +58,16 @@ class WC_Settings_Accounts_Test extends WC_Settings_Unit_Test_Case {
 			'woocommerce_erasure_request_removes_order_data' => 'checkbox',
 			'woocommerce_erasure_request_removes_download_data' => 'checkbox',
 			'woocommerce_allow_bulk_remove_personal_data'  => 'checkbox',
-			'privacy_policy_options'                       => array( 'title', 'sectionend' ),
+			'privacy_policy_options'                       => [ 'title', 'sectionend' ],
 			'woocommerce_registration_privacy_policy_text' => 'textarea',
 			'woocommerce_checkout_privacy_policy_text'     => 'textarea',
-			'personal_data_retention'                      => array( 'title', 'sectionend' ),
+			'personal_data_retention'                      => [ 'title', 'sectionend' ],
 			'woocommerce_delete_inactive_accounts'         => 'relative_date_selector',
 			'woocommerce_trash_pending_orders'             => 'relative_date_selector',
 			'woocommerce_trash_failed_orders'              => 'relative_date_selector',
 			'woocommerce_trash_cancelled_orders'           => 'relative_date_selector',
 			'woocommerce_anonymize_completed_orders'       => 'relative_date_selector',
-		);
+		];
 
 		$this->assertEquals( $expected, $settings_ids_and_types );
 	}
@@ -78,26 +78,26 @@ class WC_Settings_Accounts_Test extends WC_Settings_Unit_Test_Case {
 	 * @return array[]
 	 */
 	public function data_provider_for_test_linked_text_for_erasure_request_settings() {
-		return array(
-			array(
+		return [
+			[
 				false,
 				null,
 				'When handling an account erasure request, should personal data within orders be retained or removed?',
 				'When handling an account erasure request, should access to downloadable files be revoked and download logs cleared?',
-			),
-			array(
+			],
+			[
 				true,
 				'5.2',
 				'When handling an <a href="http://example.org/wp-admin/tools.php?page=remove_personal_data">account erasure request</a>, should personal data within orders be retained or removed?',
 				'When handling an <a href="http://example.org/wp-admin/tools.php?page=remove_personal_data">account erasure request</a>, should access to downloadable files be revoked and download logs cleared?',
-			),
-			array(
+			],
+			[
 				true,
 				'5.3',
 				'When handling an <a href="http://example.org/wp-admin/erase-personal-data.php">account erasure request</a>, should personal data within orders be retained or removed?',
 				'When handling an <a href="http://example.org/wp-admin/erase-personal-data.php">account erasure request</a>, should access to downloadable files be revoked and download logs cleared?',
-			),
-		);
+			],
+		];
 	}
 
 	/**
@@ -112,7 +112,7 @@ class WC_Settings_Accounts_Test extends WC_Settings_Unit_Test_Case {
 	 */
 	public function test_linked_text_for_erasure_request_settings( $current_user_can_manage_privacy_options, $blog_version, $expected_order_erasure_text, $expected_downloads_erasure_text ) {
 		FunctionsMockerHack::add_function_mocks(
-			array(
+			[
 				'current_user_can' => function( $capability, ...$args ) use ( $current_user_can_manage_privacy_options ) {
 					return 'manage_privacy_options' === $capability ?
 						$current_user_can_manage_privacy_options :
@@ -123,7 +123,7 @@ class WC_Settings_Accounts_Test extends WC_Settings_Unit_Test_Case {
 						$blog_version :
 						get_bloginfo( $show, $filter );
 				},
-			)
+			]
 		);
 
 		$sut = new WC_Settings_Accounts();

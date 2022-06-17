@@ -24,9 +24,9 @@ class Segmenter extends ReportsSegmenter {
 	 * @return array Column => SELECT query mapping.
 	 */
 	protected function get_segment_selections_product_level( $products_table ) {
-		$columns_mapping = array(
+		$columns_mapping = [
 			'amount' => "SUM($products_table.coupon_amount) as amount",
-		);
+		];
 
 		return $columns_mapping;
 	}
@@ -40,10 +40,10 @@ class Segmenter extends ReportsSegmenter {
 	 * @return array Column => SELECT query mapping.
 	 */
 	protected function get_segment_selections_order_level( $coupons_lookup_table ) {
-		$columns_mapping = array(
+		$columns_mapping = [
 			'coupons_count' => "COUNT(DISTINCT $coupons_lookup_table.coupon_id) as coupons_count",
 			'orders_count'  => "COUNT(DISTINCT $coupons_lookup_table.order_id) as orders_count",
-		);
+		];
 
 		return $columns_mapping;
 	}
@@ -57,12 +57,12 @@ class Segmenter extends ReportsSegmenter {
 	 *
 	 * @return array Column => SELECT query mapping.
 	 */
-	protected function segment_selections_orders( $coupons_lookup_table, $overrides = array() ) {
-		$columns_mapping = array(
+	protected function segment_selections_orders( $coupons_lookup_table, $overrides = [] ) {
+		$columns_mapping = [
 			'amount'        => "SUM($coupons_lookup_table.discount_amount) as amount",
 			'coupons_count' => "COUNT(DISTINCT $coupons_lookup_table.coupon_id) as coupons_count",
 			'orders_count'  => "COUNT(DISTINCT $coupons_lookup_table.order_id) as orders_count",
-		);
+		];
 
 		if ( $overrides ) {
 			$columns_mapping = array_merge( $columns_mapping, $overrides );
@@ -108,7 +108,7 @@ class Segmenter extends ReportsSegmenter {
 			ARRAY_A
 		); // WPCS: cache ok, DB call ok, unprepared SQL ok.
 
-		$totals_segments = $this->merge_segment_totals_results( $segmenting_dimension_name, $segments_products, array() );
+		$totals_segments = $this->merge_segment_totals_results( $segmenting_dimension_name, $segments_products, [] );
 		return $totals_segments;
 	}
 
@@ -156,7 +156,7 @@ class Segmenter extends ReportsSegmenter {
 			ARRAY_A
 		); // WPCS: cache ok, DB call ok, unprepared SQL ok.
 
-		$intervals_segments = $this->merge_segment_intervals_results( $segmenting_dimension_name, $segments_products, array() );
+		$intervals_segments = $this->merge_segment_intervals_results( $segmenting_dimension_name, $segments_products, [] );
 		return $intervals_segments;
 	}
 
@@ -255,7 +255,7 @@ class Segmenter extends ReportsSegmenter {
 	protected function get_segments( $type, $query_params, $table_name ) {
 		global $wpdb;
 		if ( ! isset( $this->query_args['segmentby'] ) || '' === $this->query_args['segmentby'] ) {
-			return array();
+			return [];
 		}
 
 		$product_segmenting_table = $wpdb->prefix . 'wc_order_product_lookup';
@@ -268,10 +268,10 @@ class Segmenter extends ReportsSegmenter {
 		if ( 'product' === $this->query_args['segmentby'] ) {
 			$product_level_columns     = $this->get_segment_selections_product_level( $product_segmenting_table );
 			$order_level_columns       = $this->get_segment_selections_order_level( $table_name );
-			$segmenting_selections     = array(
+			$segmenting_selections     = [
 				'product_level' => $this->prepare_selections( $product_level_columns ),
 				'order_level'   => $this->prepare_selections( $order_level_columns ),
-			);
+			];
 			$this->report_columns      = array_merge( $product_level_columns, $order_level_columns );
 			$segmenting_from           = "INNER JOIN $product_segmenting_table ON ($table_name.order_id = $product_segmenting_table.order_id)";
 			$segmenting_groupby        = $product_segmenting_table . '.product_id';
@@ -285,10 +285,10 @@ class Segmenter extends ReportsSegmenter {
 
 			$product_level_columns     = $this->get_segment_selections_product_level( $product_segmenting_table );
 			$order_level_columns       = $this->get_segment_selections_order_level( $table_name );
-			$segmenting_selections     = array(
+			$segmenting_selections     = [
 				'product_level' => $this->prepare_selections( $product_level_columns ),
 				'order_level'   => $this->prepare_selections( $order_level_columns ),
-			);
+			];
 			$this->report_columns      = array_merge( $product_level_columns, $order_level_columns );
 			$segmenting_from           = "INNER JOIN $product_segmenting_table ON ($table_name.order_id = $product_segmenting_table.order_id)";
 			$segmenting_where          = "AND $product_segmenting_table.product_id = {$this->query_args['product_includes'][0]}";
@@ -299,10 +299,10 @@ class Segmenter extends ReportsSegmenter {
 		} elseif ( 'category' === $this->query_args['segmentby'] ) {
 			$product_level_columns     = $this->get_segment_selections_product_level( $product_segmenting_table );
 			$order_level_columns       = $this->get_segment_selections_order_level( $table_name );
-			$segmenting_selections     = array(
+			$segmenting_selections     = [
 				'product_level' => $this->prepare_selections( $product_level_columns ),
 				'order_level'   => $this->prepare_selections( $order_level_columns ),
-			);
+			];
 			$this->report_columns      = array_merge( $product_level_columns, $order_level_columns );
 			$segmenting_from           = "
 			INNER JOIN $product_segmenting_table ON ($table_name.order_id = $product_segmenting_table.order_id)

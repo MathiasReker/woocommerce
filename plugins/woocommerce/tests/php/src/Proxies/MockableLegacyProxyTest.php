@@ -44,10 +44,10 @@ class MockableLegacyProxyTest extends \WC_Unit_Test_Case {
 	 * @return array[]
 	 */
 	public function data_provider_for_test_register_class_mocks_throws_if_invalid_parameters_supplied() {
-		return array(
-			array( 1234, new \stdClass() ),
-			array( 'SomeClassName', 1234 ),
-		);
+		return [
+			[ 1234, new \stdClass() ],
+			[ 'SomeClassName', 1234 ],
+		];
 	}
 
 	/**
@@ -62,7 +62,7 @@ class MockableLegacyProxyTest extends \WC_Unit_Test_Case {
 		$this->expectException( \Exception::class );
 		$this->expectExceptionMessage( 'MockableLegacyProxy::register_class_mocks: $mocks must be an associative array of class_name => object or factory callback.' );
 
-		$this->sut->register_class_mocks( array( $class_name => $mock ) );
+		$this->sut->register_class_mocks( [ $class_name => $mock ] );
 	}
 
 	/**
@@ -70,7 +70,7 @@ class MockableLegacyProxyTest extends \WC_Unit_Test_Case {
 	 */
 	public function test_register_class_mocks_can_be_used_so_that_get_instance_of_returns_a_fixed_instance_mock() {
 		$mock = new \stdClass();
-		$this->sut->register_class_mocks( array( \WC_Query::class => $mock ) );
+		$this->sut->register_class_mocks( [ \WC_Query::class => $mock ] );
 		$this->assertSame( $mock, $this->sut->get_instance_of( \WC_Query::class ) );
 	}
 
@@ -78,10 +78,10 @@ class MockableLegacyProxyTest extends \WC_Unit_Test_Case {
 	 * @testdox 'register_class_mocks' can be used to return class mocks by passing mock factory callbacks.
 	 */
 	public function test_register_class_mocks_can_be_used_so_that_get_instance_of_uses_a_factory_function_to_return_the_instance() {
-		$mock_factory = function( $code, $message, $http_status_code = 400, $data = array() ) {
+		$mock_factory = function( $code, $message, $http_status_code = 400, $data = [] ) {
 			return "$code, $message, $http_status_code";
 		};
-		$this->sut->register_class_mocks( array( \WC_Data_Exception::class => $mock_factory ) );
+		$this->sut->register_class_mocks( [ \WC_Data_Exception::class => $mock_factory ] );
 		$this->assertEquals( '1234, Error!, 432', $this->sut->get_instance_of( \WC_Data_Exception::class, 1234, 'Error!', 432 ) );
 	}
 
@@ -99,10 +99,10 @@ class MockableLegacyProxyTest extends \WC_Unit_Test_Case {
 	 * @return array[]
 	 */
 	public function data_provider_for_test_register_function_mocks_throws_if_invalid_parameters_supplied() {
-		return array(
-			array( 1234, function() {} ),
-			array( 'SomeClassName', 1234 ),
-		);
+		return [
+			[ 1234, function() {} ],
+			[ 'SomeClassName', 1234 ],
+		];
 	}
 
 	/**
@@ -117,7 +117,7 @@ class MockableLegacyProxyTest extends \WC_Unit_Test_Case {
 		$this->expectException( \Exception::class );
 		$this->expectExceptionMessage( 'MockableLegacyProxy::register_function_mocks: The supplied mocks array must have function names as keys and function replacement callbacks as values.' );
 
-		$this->sut->register_function_mocks( array( $function_name => $mock ) );
+		$this->sut->register_function_mocks( [ $function_name => $mock ] );
 	}
 
 	/**
@@ -125,11 +125,11 @@ class MockableLegacyProxyTest extends \WC_Unit_Test_Case {
 	 */
 	public function test_register_function_mocks_can_be_used_so_that_call_function_calls_mock_functions() {
 		$this->sut->register_function_mocks(
-			array(
+			[
 				'substr' => function( $string, $start, $length ) {
 					return "I'm returning substr of '$string' from $start with length $length";
 				},
-			)
+			]
 		);
 
 		$expected = "I'm returning substr of 'foo bar fizz' from 4 with length 3";
@@ -151,12 +151,12 @@ class MockableLegacyProxyTest extends \WC_Unit_Test_Case {
 	 * @return array[]
 	 */
 	public function data_provider_for_test_register_static_mocks_throws_if_invalid_parameters_supplied() {
-		return array(
-			array( 1234, array( 'some_method' => function(){} ) ),
-			array( 'SomeClassName', 1234 ),
-			array( 'SomeClassName', array( 1234 => function(){} ) ),
-			array( 'SomeClassName', array( 'the_method' => 1234 ) ),
-		);
+		return [
+			[ 1234, [ 'some_method' => function(){} ] ],
+			[ 'SomeClassName', 1234 ],
+			[ 'SomeClassName', [ 1234 => function(){} ] ],
+			[ 'SomeClassName', [ 'the_method' => 1234 ] ],
+		];
 	}
 
 	/**
@@ -171,7 +171,7 @@ class MockableLegacyProxyTest extends \WC_Unit_Test_Case {
 		$this->expectException( \Exception::class );
 		$this->expectExceptionMessage( 'MockableLegacyProxy::register_static_mocks: $mocks must be an associative array of class name => associative array of method name => callable.' );
 
-		$this->sut->register_static_mocks( array( $class_name => $mocks ) );
+		$this->sut->register_static_mocks( [ $class_name => $mocks ] );
 	}
 
 	/**
@@ -179,13 +179,13 @@ class MockableLegacyProxyTest extends \WC_Unit_Test_Case {
 	 */
 	public function test_register_static_mocks_can_be_used_so_that_call_function_calls_mock_functions() {
 		$this->sut->register_static_mocks(
-			array(
-				DependencyClass::class => array(
+			[
+				DependencyClass::class => [
 					'concat' => function( ...$parts ) {
 						return "I'm returning concat of these parts: " . join( ' ', $parts );
 					},
-				),
-			)
+				],
+			]
 		);
 
 		$expected = "I'm returning concat of these parts: foo bar fizz";
@@ -209,7 +209,7 @@ class MockableLegacyProxyTest extends \WC_Unit_Test_Case {
 	public function test_register_global_mocks_can_be_used_to_replace_globals() {
 		$replacement_wpdb = new \stdClass();
 
-		$this->sut->register_global_mocks( array( 'wpdb' => $replacement_wpdb ) );
+		$this->sut->register_global_mocks( [ 'wpdb' => $replacement_wpdb ] );
 
 		$result = $this->sut->get_global( 'wpdb' );
 		$this->assertEquals( $replacement_wpdb, $result );
@@ -222,34 +222,34 @@ class MockableLegacyProxyTest extends \WC_Unit_Test_Case {
 		$this->expectException( \Exception::class );
 		$this->expectExceptionMessage( 'MockableLegacyProxy::register_global_mocks: $mocks must be an associative array of global_name => value.' );
 
-		$this->sut->register_global_mocks( array( 1234 => new \stdClass() ) );
+		$this->sut->register_global_mocks( [ 1234 => new \stdClass() ] );
 	}
 
 	/**
 	 * @testdox 'reset' can be used to revert the instance to its original state, in which nothing is mocked.
 	 */
 	public function test_reset_can_be_used_to_unregister_all_mocks() {
-		$this->sut->register_class_mocks( array( \WC_Query::class => new \stdClass() ) );
+		$this->sut->register_class_mocks( [ \WC_Query::class => new \stdClass() ] );
 
 		$this->sut->register_function_mocks(
-			array(
+			[
 				'substr' => function( $string, $start, $length ) {
 					return null;
 				},
-			)
+			]
 		);
 
 		$this->sut->register_static_mocks(
-			array(
-				DependencyClass::class => array(
+			[
+				DependencyClass::class => [
 					'concat' => function( ...$parts ) {
 						return null;
 					},
-				),
-			)
+				],
+			]
 		);
 
-		$this->sut->register_global_mocks( array( 'wpdb' => new \stdClass() ) );
+		$this->sut->register_global_mocks( [ 'wpdb' => new \stdClass() ] );
 
 		$this->sut->reset();
 

@@ -35,11 +35,11 @@ class WC_Shipping_Zone extends WC_Legacy_Shipping_Zone {
 	 *
 	 * @var array
 	 */
-	protected $data = array(
+	protected $data = [
 		'zone_name'      => '',
 		'zone_order'     => 0,
-		'zone_locations' => array(),
-	);
+		'zone_locations' => [],
+	];
 
 	/**
 	 * Constructor for zones.
@@ -107,15 +107,15 @@ class WC_Shipping_Zone extends WC_Legacy_Shipping_Zone {
 	 * @return string
 	 */
 	public function get_formatted_location( $max = 10, $context = 'view' ) {
-		$location_parts = array();
+		$location_parts = [];
 		$all_continents = WC()->countries->get_continents();
 		$all_countries  = WC()->countries->get_countries();
 		$all_states     = WC()->countries->get_states();
 		$locations      = $this->get_zone_locations( $context );
-		$continents     = array_filter( $locations, array( $this, 'location_is_continent' ) );
-		$countries      = array_filter( $locations, array( $this, 'location_is_country' ) );
-		$states         = array_filter( $locations, array( $this, 'location_is_state' ) );
-		$postcodes      = array_filter( $locations, array( $this, 'location_is_postcode' ) );
+		$continents     = array_filter( $locations, [ $this, 'location_is_continent' ] );
+		$countries      = array_filter( $locations, [ $this, 'location_is_country' ] );
+		$states         = array_filter( $locations, [ $this, 'location_is_state' ] );
+		$postcodes      = array_filter( $locations, [ $this, 'location_is_postcode' ] );
 
 		foreach ( $continents as $location ) {
 			$location_parts[] = $all_continents[ $location->code ]['name'];
@@ -158,13 +158,13 @@ class WC_Shipping_Zone extends WC_Legacy_Shipping_Zone {
 	 */
 	public function get_shipping_methods( $enabled_only = false, $context = 'admin' ) {
 		if ( null === $this->get_id() ) {
-			return array();
+			return [];
 		}
 
 		$raw_methods     = $this->data_store->get_methods( $this->get_id(), $enabled_only );
 		$wc_shipping     = WC_Shipping::instance();
 		$allowed_classes = $wc_shipping->get_shipping_method_class_names();
-		$methods         = array();
+		$methods         = [];
 
 		foreach ( $raw_methods as $raw_method ) {
 			if ( in_array( $raw_method->method_id, array_keys( $allowed_classes ), true ) ) {
@@ -351,7 +351,7 @@ class WC_Shipping_Zone extends WC_Legacy_Shipping_Zone {
 	 * @return boolean
 	 */
 	public function is_valid_location_type( $type ) {
-		return in_array( $type, apply_filters( 'woocommerce_valid_location_types', array( 'postcode', 'state', 'country', 'continent' ) ), true );
+		return in_array( $type, apply_filters( 'woocommerce_valid_location_types', [ 'postcode', 'state', 'country', 'continent' ] ), true );
 	}
 
 	/**
@@ -365,10 +365,10 @@ class WC_Shipping_Zone extends WC_Legacy_Shipping_Zone {
 			if ( 'postcode' === $type ) {
 				$code = trim( strtoupper( str_replace( chr( 226 ) . chr( 128 ) . chr( 166 ), '...', $code ) ) ); // No normalization - postcodes are matched against both normal and formatted versions to support wildcards.
 			}
-			$location         = array(
+			$location         = [
 				'code' => wc_clean( $code ),
 				'type' => wc_clean( $type ),
-			);
+			];
 			$zone_locations   = $this->get_prop( 'zone_locations', 'edit' );
 			$zone_locations[] = (object) $location;
 			$this->set_prop( 'zone_locations', $zone_locations );
@@ -381,9 +381,9 @@ class WC_Shipping_Zone extends WC_Legacy_Shipping_Zone {
 	 *
 	 * @param array|string $types of location to clear.
 	 */
-	public function clear_locations( $types = array( 'postcode', 'state', 'country', 'continent' ) ) {
+	public function clear_locations( $types = [ 'postcode', 'state', 'country', 'continent' ] ) {
 		if ( ! is_array( $types ) ) {
-			$types = array( $types );
+			$types = [ $types ];
 		}
 		$zone_locations = $this->get_prop( 'zone_locations', 'edit' );
 		foreach ( $zone_locations as $key => $values ) {
@@ -400,7 +400,7 @@ class WC_Shipping_Zone extends WC_Legacy_Shipping_Zone {
 	 *
 	 * @param array $locations Array of locations.
 	 */
-	public function set_locations( $locations = array() ) {
+	public function set_locations( $locations = [] ) {
 		$this->clear_locations();
 		foreach ( $locations as $location ) {
 			$this->add_location( $location['code'], $location['type'] );

@@ -19,7 +19,7 @@ interface WC_Customer_Download_Log_Data_Store_Interface {
 	 * @param  array $args Arguments.
 	 * @return array of WC_Customer_Download_Log
 	 */
-	public function get_download_logs( $args = array() );
+	public function get_download_logs( $args = [] );
 
 	/**
 	 * Get logs for a specific download permission.

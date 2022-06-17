@@ -70,9 +70,9 @@ class WC_Unit_Test_Case extends WP_HTTP_TestCase {
 		$this->factory = new WC_Unit_Test_Factory();
 
 		// Setup mock WC session handler.
-		add_filter( 'woocommerce_session_handler', array( $this, 'set_mock_session_handler' ) );
+		add_filter( 'woocommerce_session_handler', [ $this, 'set_mock_session_handler' ] );
 
-		$this->setOutputCallback( array( $this, 'filter_output' ) );
+		$this->setOutputCallback( [ $this, 'filter_output' ] );
 
 		// Register post types before each test.
 		WC_Post_types::register_post_types();
@@ -166,7 +166,7 @@ class WC_Unit_Test_Case extends WP_HTTP_TestCase {
 	 * @return int The id of the user created.
 	 */
 	public function login_as_role( $role ) {
-		$user_id = $this->factory->user->create( array( 'role' => $role ) );
+		$user_id = $this->factory->user->create( [ 'role' => $role ] );
 		wp_set_current_user( $user_id );
 		return $user_id;
 	}

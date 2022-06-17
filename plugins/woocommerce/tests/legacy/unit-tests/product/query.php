@@ -16,7 +16,7 @@ class WC_Tests_WC_Product_Query extends WC_Unit_Test_Case {
 		$this->assertEquals( '', $query->get( 'weight' ) );
 		$types = $query->get( 'type' );
 		sort( $types );
-		$this->assertEquals( array( 'external', 'grouped', 'simple', 'variable' ), $types );
+		$this->assertEquals( [ 'external', 'grouped', 'simple', 'variable' ], $types );
 	}
 
 	/**
@@ -101,18 +101,18 @@ class WC_Tests_WC_Product_Query extends WC_Unit_Test_Case {
 
 		// Check WC_DateTime support.
 		$query    = new WC_Product_Query(
-			array(
+			[
 				'date_on_sale_from' => $product->get_date_on_sale_from(),
-			)
+			]
 		);
 		$products = $query->get_products();
 		$this->assertEquals( 1, count( $products ) );
 
 		// Check date support.
 		$query = new WC_Product_Query(
-			array(
+			[
 				'date_on_sale_from' => $now_date,
-			)
+			]
 		);
 		$this->assertEquals( 1, count( $query->get_products() ) );
 		$query->set( 'date_on_sale_from', $past );
@@ -120,9 +120,9 @@ class WC_Tests_WC_Product_Query extends WC_Unit_Test_Case {
 
 		// Check timestamp support.
 		$query = new WC_Product_Query(
-			array(
+			[
 				'date_on_sale_from' => $product->get_date_on_sale_from()->getTimestamp(),
-			)
+			]
 		);
 		$this->assertEquals( 1, count( $query->get_products() ) );
 		$query->set( 'date_on_sale_from', $future_stamp );
@@ -130,9 +130,9 @@ class WC_Tests_WC_Product_Query extends WC_Unit_Test_Case {
 
 		// Check comparison support.
 		$query = new WC_Product_Query(
-			array(
+			[
 				'date_on_sale_from' => '>' . $past,
-			)
+			]
 		);
 		$this->assertEquals( 1, count( $query->get_products() ) );
 		$query->set( 'date_on_sale_from', '<' . $past );
@@ -142,9 +142,9 @@ class WC_Tests_WC_Product_Query extends WC_Unit_Test_Case {
 
 		// Check timestamp comparison support.
 		$query = new WC_Product_Query(
-			array(
+			[
 				'date_on_sale_from' => '<' . $future_stamp,
-			)
+			]
 		);
 		$this->assertEquals( 1, count( $query->get_products() ) );
 		$query->set( 'date_on_sale_from', '<' . $past_stamp );
@@ -153,9 +153,9 @@ class WC_Tests_WC_Product_Query extends WC_Unit_Test_Case {
 
 		// Check date range support.
 		$query = new WC_Product_Query(
-			array(
+			[
 				'date_on_sale_from' => $past . '...' . $future,
-			)
+			]
 		);
 		$this->assertEquals( 1, count( $query->get_products() ) );
 		$query->set( 'date_on_sale_from', $now_date . '...' . $future );
@@ -165,9 +165,9 @@ class WC_Tests_WC_Product_Query extends WC_Unit_Test_Case {
 
 		// Check timestamp range support.
 		$query = new WC_Product_Query(
-			array(
+			[
 				'date_on_sale_from' => $past_stamp . '...' . $future_stamp,
-			)
+			]
 		);
 		$this->assertEquals( 1, count( $query->get_products() ) );
 		$query->set( 'date_on_sale_from', $now_stamp . '...' . $future_stamp );

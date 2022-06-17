@@ -31,39 +31,39 @@ class FakeQueue implements \WC_Queue_Interface {
 	 *
 	 * @var array
 	 */
-	private $methods_called = array();
+	private $methods_called = [];
 
 	// phpcs:disable Squiz.Commenting.FunctionComment.Missing
 
-	public function add( $hook, $args = array(), $group = '' ) {
+	public function add( $hook, $args = [], $group = '' ) {
 		// TODO: Implement add() method.
 	}
 
-	public function schedule_single( $timestamp, $hook, $args = array(), $group = '' ) {
+	public function schedule_single( $timestamp, $hook, $args = [], $group = '' ) {
 		$this->add_to_methods_called(
 			'schedule_single',
 			$args,
 			$group,
-			array(
+			[
 				'timestamp' => $timestamp,
 				'hook'      => $hook,
-			)
+			]
 		);
 	}
 
-	public function schedule_recurring( $timestamp, $interval_in_seconds, $hook, $args = array(), $group = '' ) {
+	public function schedule_recurring( $timestamp, $interval_in_seconds, $hook, $args = [], $group = '' ) {
 		// TODO: Implement schedule_recurring() method.
 	}
 
-	public function schedule_cron( $timestamp, $cron_schedule, $hook, $args = array(), $group = '' ) {
+	public function schedule_cron( $timestamp, $cron_schedule, $hook, $args = [], $group = '' ) {
 		// TODO: Implement schedule_cron() method.
 	}
 
-	public function cancel( $hook, $args = array(), $group = '' ) {
+	public function cancel( $hook, $args = [], $group = '' ) {
 		// TODO: Implement cancel() method.
 	}
 
-	public function cancel_all( $hook, $args = array(), $group = '' ) {
+	public function cancel_all( $hook, $args = [], $group = '' ) {
 		// TODO: Implement cancel_all() method.
 	}
 
@@ -71,8 +71,8 @@ class FakeQueue implements \WC_Queue_Interface {
 		// TODO: Implement get_next() method.
 	}
 
-	public function search( $args = array(), $return_format = OBJECT ) {
-		$result = array();
+	public function search( $args = [], $return_format = OBJECT ) {
+		$result = [];
 		foreach ( $this->methods_called as $method_called ) {
 			if ( $method_called['args'] === $args['args'] && $method_called['hook'] === $args['hook'] ) {
 				$result[] = $method_called;
@@ -91,12 +91,12 @@ class FakeQueue implements \WC_Queue_Interface {
 	 * @param string $group Group name passed in '$group' to the method call.
 	 * @param array  $extra_args Any extra information to store about the method call.
 	 */
-	private function add_to_methods_called( $method, $args, $group, $extra_args = array() ) {
-		$value = array(
+	private function add_to_methods_called( $method, $args, $group, $extra_args = [] ) {
+		$value = [
 			'method' => $method,
 			'args'   => $args,
 			'group'  => $group,
-		);
+		];
 
 		$this->methods_called[] = array_merge( $value, $extra_args );
 	}
@@ -114,7 +114,7 @@ class FakeQueue implements \WC_Queue_Interface {
 	 * Clears the collection of the methods called so far.
 	 */
 	public function clear_methods_called() {
-		$this->methods_called = array();
+		$this->methods_called = [];
 	}
 
 }

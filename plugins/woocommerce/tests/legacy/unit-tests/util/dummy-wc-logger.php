@@ -25,7 +25,7 @@ class Dummy_WC_Logger implements WC_Logger_Interface {
 	 * @param string $message
 	 * @param array  $context
 	 */
-	public function log( $level, $message, $context = array() ) {
+	public function log( $level, $message, $context = [] ) {
 	}
 
 	/**
@@ -34,7 +34,7 @@ class Dummy_WC_Logger implements WC_Logger_Interface {
 	 * @param string $message
 	 * @param array  $context
 	 */
-	public function emergency( $message, $context = array() ) {
+	public function emergency( $message, $context = [] ) {
 	}
 
 	/**
@@ -43,7 +43,7 @@ class Dummy_WC_Logger implements WC_Logger_Interface {
 	 * @param string $message
 	 * @param array  $context
 	 */
-	public function alert( $message, $context = array() ) {
+	public function alert( $message, $context = [] ) {
 	}
 
 	/**
@@ -52,7 +52,7 @@ class Dummy_WC_Logger implements WC_Logger_Interface {
 	 * @param string $message
 	 * @param array  $context
 	 */
-	public function critical( $message, $context = array() ) {
+	public function critical( $message, $context = [] ) {
 	}
 
 	/**
@@ -61,7 +61,7 @@ class Dummy_WC_Logger implements WC_Logger_Interface {
 	 * @param string $message
 	 * @param array  $context
 	 */
-	public function error( $message, $context = array() ) {
+	public function error( $message, $context = [] ) {
 	}
 
 	/**
@@ -70,7 +70,7 @@ class Dummy_WC_Logger implements WC_Logger_Interface {
 	 * @param string $message
 	 * @param array  $context
 	 */
-	public function warning( $message, $context = array() ) {
+	public function warning( $message, $context = [] ) {
 	}
 
 	/**
@@ -79,7 +79,7 @@ class Dummy_WC_Logger implements WC_Logger_Interface {
 	 * @param string $message
 	 * @param array  $context
 	 */
-	public function notice( $message, $context = array() ) {
+	public function notice( $message, $context = [] ) {
 	}
 
 	/**
@@ -88,7 +88,7 @@ class Dummy_WC_Logger implements WC_Logger_Interface {
 	 * @param string $message
 	 * @param array  $context
 	 */
-	public function info( $message, $context = array() ) {
+	public function info( $message, $context = [] ) {
 	}
 
 	/**
@@ -97,7 +97,7 @@ class Dummy_WC_Logger implements WC_Logger_Interface {
 	 * @param string $message
 	 * @param array  $context
 	 */
-	public function debug( $message, $context = array() ) {
+	public function debug( $message, $context = [] ) {
 	}
 
 }

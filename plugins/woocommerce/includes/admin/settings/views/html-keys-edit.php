@@ -61,11 +61,11 @@ defined( 'ABSPATH' ) || exit;
 				<td class="forminp">
 					<select id="key_permissions" class="wc-enhanced-select">
 						<?php
-						$permissions = array(
+						$permissions = [
 							'read'       => __( 'Read', 'woocommerce' ),
 							'write'      => __( 'Write', 'woocommerce' ),
 							'read_write' => __( 'Read/Write', 'woocommerce' ),
-						);
+						];
 
 						foreach ( $permissions as $permission_id => $permission_name ) :
 							?>
@@ -116,7 +116,7 @@ defined( 'ABSPATH' ) || exit;
 		?>
 		<p class="submit">
 			<?php submit_button( __( 'Save changes', 'woocommerce' ), 'primary', 'update_api_key', false ); ?>
-			<a style="color: #a00; text-decoration: none; margin-left: 10px;" href="<?php echo esc_url( wp_nonce_url( add_query_arg( array( 'revoke-key' => $key_id ), admin_url( 'admin.php?page=wc-settings&tab=advanced&section=keys' ) ), 'revoke' ) ); ?>"><?php esc_html_e( 'Revoke key', 'woocommerce' ); ?></a>
+			<a style="color: #a00; text-decoration: none; margin-left: 10px;" href="<?php echo esc_url( wp_nonce_url( add_query_arg( [ 'revoke-key' => $key_id ], admin_url( 'admin.php?page=wc-settings&tab=advanced&section=keys' ) ), 'revoke' ) ); ?>"><?php esc_html_e( 'Revoke key', 'woocommerce' ); ?></a>
 		</p>
 		<?php
 	}

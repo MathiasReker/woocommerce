@@ -27,9 +27,9 @@ class WC_Admin_Tests_API_Reports_Taxes extends WC_REST_Unit_Test_Case {
 		parent::setUp();
 
 		$this->user = $this->factory->user->create(
-			array(
+			[
 				'role' => 'administrator',
-			)
+			]
 		);
 	}
 
@@ -62,7 +62,7 @@ class WC_Admin_Tests_API_Reports_Taxes extends WC_REST_Unit_Test_Case {
 
 		$wpdb->insert(
 			$wpdb->prefix . 'woocommerce_tax_rates',
-			array(
+			[
 				'tax_rate_id'       => 1,
 				'tax_rate'          => '7',
 				'tax_rate_country'  => 'US',
@@ -70,7 +70,7 @@ class WC_Admin_Tests_API_Reports_Taxes extends WC_REST_Unit_Test_Case {
 				'tax_rate_name'     => 'TestTax',
 				'tax_rate_priority' => 1,
 				'tax_rate_order'    => 1,
-			)
+			]
 		);
 
 		$order = WC_Helper_Order::create_order( 1, $product );
@@ -81,14 +81,14 @@ class WC_Admin_Tests_API_Reports_Taxes extends WC_REST_Unit_Test_Case {
 		// @todo Remove this once order data is synced to wc_order_tax_lookup
 		$wpdb->insert(
 			$wpdb->prefix . 'wc_order_tax_lookup',
-			array(
+			[
 				'order_id'     => $order->get_id(),
 				'tax_rate_id'  => 1,
 				'date_created' => gmdate( 'Y-m-d H:i:s' ),
 				'shipping_tax' => 2,
 				'order_tax'    => 5,
 				'total_tax'    => 7,
-			)
+			]
 		);
 
 		WC_Helper_Queue::run_all_pending();
@@ -130,7 +130,7 @@ class WC_Admin_Tests_API_Reports_Taxes extends WC_REST_Unit_Test_Case {
 
 		$wpdb->insert(
 			$wpdb->prefix . 'woocommerce_tax_rates',
-			array(
+			[
 				'tax_rate_id'       => 1,
 				'tax_rate'          => '7',
 				'tax_rate_country'  => 'US',
@@ -138,12 +138,12 @@ class WC_Admin_Tests_API_Reports_Taxes extends WC_REST_Unit_Test_Case {
 				'tax_rate_name'     => 'TestTax',
 				'tax_rate_priority' => 1,
 				'tax_rate_order'    => 1,
-			)
+			]
 		);
 
 		$wpdb->insert(
 			$wpdb->prefix . 'woocommerce_tax_rates',
-			array(
+			[
 				'tax_rate_id'       => 2,
 				'tax_rate'          => '8',
 				'tax_rate_country'  => 'CA',
@@ -151,7 +151,7 @@ class WC_Admin_Tests_API_Reports_Taxes extends WC_REST_Unit_Test_Case {
 				'tax_rate_name'     => 'TestTax 2',
 				'tax_rate_priority' => 1,
 				'tax_rate_order'    => 1,
-			)
+			]
 		);
 
 		$order = WC_Helper_Order::create_order( 1, $product );
@@ -162,14 +162,14 @@ class WC_Admin_Tests_API_Reports_Taxes extends WC_REST_Unit_Test_Case {
 		// @todo Remove this once order data is synced to wc_order_tax_lookup
 		$wpdb->insert(
 			$wpdb->prefix . 'wc_order_tax_lookup',
-			array(
+			[
 				'order_id'     => $order->get_id(),
 				'tax_rate_id'  => 1,
 				'date_created' => gmdate( 'Y-m-d H:i:s' ),
 				'shipping_tax' => 2,
 				'order_tax'    => 5,
 				'total_tax'    => 7,
-			)
+			]
 		);
 
 		WC_Helper_Queue::run_all_pending();
@@ -177,9 +177,9 @@ class WC_Admin_Tests_API_Reports_Taxes extends WC_REST_Unit_Test_Case {
 		$response = $this->server->dispatch( new WP_REST_Request( 'GET', $this->endpoint ) );
 		$request  = new WP_REST_Request( 'GET', $this->endpoint );
 		$request->set_query_params(
-			array(
+			[
 				'taxes' => '1,2',
-			)
+			]
 		);
 		$response = $this->server->dispatch( $request );
 		$reports  = $response->get_data();
@@ -224,7 +224,7 @@ class WC_Admin_Tests_API_Reports_Taxes extends WC_REST_Unit_Test_Case {
 
 		$wpdb->insert(
 			$wpdb->prefix . 'woocommerce_tax_rates',
-			array(
+			[
 				'tax_rate_id'       => 1,
 				'tax_rate'          => '7',
 				'tax_rate_country'  => 'US',
@@ -232,12 +232,12 @@ class WC_Admin_Tests_API_Reports_Taxes extends WC_REST_Unit_Test_Case {
 				'tax_rate_name'     => 'TestTax',
 				'tax_rate_priority' => 1,
 				'tax_rate_order'    => 1,
-			)
+			]
 		);
 
 		$wpdb->insert(
 			$wpdb->prefix . 'woocommerce_tax_rates',
-			array(
+			[
 				'tax_rate_id'       => 2,
 				'tax_rate'          => '10',
 				'tax_rate_country'  => 'CA',
@@ -245,16 +245,16 @@ class WC_Admin_Tests_API_Reports_Taxes extends WC_REST_Unit_Test_Case {
 				'tax_rate_name'     => 'TestTax 2',
 				'tax_rate_priority' => 1,
 				'tax_rate_order'    => 1,
-			)
+			]
 		);
 
 		$request = new WP_REST_Request( 'GET', $this->endpoint );
 		$request->set_query_params(
-			array(
+			[
 				'order'   => 'asc',
 				'orderby' => 'rate',
 				'taxes'   => '1,2',
-			)
+			]
 		);
 		$response = $this->server->dispatch( $request );
 		$reports  = $response->get_data();
@@ -281,7 +281,7 @@ class WC_Admin_Tests_API_Reports_Taxes extends WC_REST_Unit_Test_Case {
 
 		$wpdb->insert(
 			$wpdb->prefix . 'woocommerce_tax_rates',
-			array(
+			[
 				'tax_rate_id'       => 1,
 				'tax_rate'          => '7',
 				'tax_rate_country'  => 'US',
@@ -289,12 +289,12 @@ class WC_Admin_Tests_API_Reports_Taxes extends WC_REST_Unit_Test_Case {
 				'tax_rate_name'     => 'TestTax',
 				'tax_rate_priority' => 1,
 				'tax_rate_order'    => 1,
-			)
+			]
 		);
 
 		$wpdb->insert(
 			$wpdb->prefix . 'woocommerce_tax_rates',
-			array(
+			[
 				'tax_rate_id'       => 2,
 				'tax_rate'          => '10',
 				'tax_rate_country'  => 'CA',
@@ -302,16 +302,16 @@ class WC_Admin_Tests_API_Reports_Taxes extends WC_REST_Unit_Test_Case {
 				'tax_rate_name'     => 'TestTax 2',
 				'tax_rate_priority' => 1,
 				'tax_rate_order'    => 1,
-			)
+			]
 		);
 
 		$request = new WP_REST_Request( 'GET', $this->endpoint );
 		$request->set_query_params(
-			array(
+			[
 				'order'   => 'asc',
 				'orderby' => 'tax_code',
 				'taxes'   => '1,2',
-			)
+			]
 		);
 		$response = $this->server->dispatch( $request );
 		$reports  = $response->get_data();

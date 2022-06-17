@@ -21,12 +21,12 @@ class WC_Admin_Dashboard_Setup_Test extends WC_Unit_Test_Case {
 		update_option( 'woocommerce_default_country', 'JP' );
 		$password   = wp_generate_password( 8, false, false );
 		$this->admin = wp_insert_user(
-			array(
+			[
 				'user_login' => "test_admin$password",
 				'user_pass'  => $password,
 				'user_email' => "admin$password@example.com",
 				'role'       => 'administrator',
-			)
+			]
 		);
 		wp_set_current_user( $this->admin );
 
@@ -73,7 +73,7 @@ class WC_Admin_Dashboard_Setup_Test extends WC_Unit_Test_Case {
 		add_filter(
 			'woocommerce_available_payment_gateways',
 			function() {
-				return array();
+				return [];
 			}
 		);
 		global $wp_meta_boxes;
@@ -115,12 +115,12 @@ class WC_Admin_Dashboard_Setup_Test extends WC_Unit_Test_Case {
 	public function test_widget_does_not_display_when_missing_capabilities() {
 		$password  = wp_generate_password( 8, false, false );
 		$author    = wp_insert_user(
-			array(
+			[
 				'user_login' => "test_author$password",
 				'user_pass'  => $password,
 				'user_email' => "author$password@example.com",
 				'role'       => 'author',
-			)
+			]
 		);
 		wp_set_current_user( $author );
 
@@ -147,17 +147,17 @@ class WC_Admin_Dashboard_Setup_Test extends WC_Unit_Test_Case {
 		add_filter(
 			'woocommerce_available_payment_gateways',
 			function() {
-				return array();
+				return [];
 			}
 		);
 
 		$html = $this->get_widget_output();
 
-		$required_strings = array(
+		$required_strings = [
 			'Step \d+ of \d+',
 			'You&#039;re almost there! Once you complete store setup you can start receiving orders.',
 			'Start selling',
-		);
+		];
 
 		foreach ( $required_strings as $required_string ) {
 			$this->assertRegexp( "/${required_string}/", $html );
@@ -173,10 +173,10 @@ class WC_Admin_Dashboard_Setup_Test extends WC_Unit_Test_Case {
 		add_filter(
 			'woocommerce_available_payment_gateways',
 			function() {
-				return array(
+				return [
 					new class() extends WC_Payment_Gateway {
 					},
-				);
+				];
 			}
 		);
 

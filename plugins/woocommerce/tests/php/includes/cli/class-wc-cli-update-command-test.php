@@ -47,10 +47,10 @@ class WC_CLI_Update_Command_Test extends WC_Unit_Test_Case {
 
 		// Overwrite with some alternative update callbacks.
 		$this->db_updates_property->setValue(
-			array(
+			[
 				'5.0.0' => function () {},
 				'6.0.0' => function () {},
-			)
+			]
 		);
 
 		update_option( 'woocommerce_db_version', '4.0.0' );
@@ -71,7 +71,7 @@ class WC_CLI_Update_Command_Test extends WC_Unit_Test_Case {
 		$this->mock_wp_cli();
 
 		// Overwrite with some alternative update callbacks.
-		$this->db_updates_property->setValue( array() );
+		$this->db_updates_property->setValue( [] );
 
 		update_option( 'woocommerce_db_version', '4.0.0' );
 		$sut = new WC_CLI_Update_Command();
@@ -91,16 +91,16 @@ class WC_CLI_Update_Command_Test extends WC_Unit_Test_Case {
 		parent::set_up();
 
 		$this->register_legacy_proxy_static_mocks(
-			array(
-				WP_CLI::class => array(
+			[
+				WP_CLI::class => [
 					'log'     => function () {},
 					'success' => function () {},
-				),
-			)
+				],
+			]
 		);
 
 		$this->register_legacy_proxy_function_mocks(
-			array(
+			[
 				'WP_CLI\Utils\make_progress_bar' => function () {
 					return new class() {
 						/**
@@ -114,7 +114,7 @@ class WC_CLI_Update_Command_Test extends WC_Unit_Test_Case {
 						public function tick() {}
 					};
 				},
-			)
+			]
 		);
 	}
 }

@@ -50,11 +50,11 @@ defined( 'ABSPATH' ) || exit;
 				<span class="input-text-wrap">
 					<select class="tax_status" name="_tax_status">
 						<?php
-						$options = array(
+						$options = [
 							'taxable'  => __( 'Taxable', 'woocommerce' ),
 							'shipping' => __( 'Shipping only', 'woocommerce' ),
 							'none'     => _x( 'None', 'Tax status', 'woocommerce' ),
-						);
+						];
 						foreach ( $options as $key => $value ) {
 							echo '<option value="' . esc_attr( $key ) . '">' . esc_html( $value ) . '</option>';
 						}
@@ -68,9 +68,9 @@ defined( 'ABSPATH' ) || exit;
 				<span class="input-text-wrap">
 					<select class="tax_class" name="_tax_class">
 						<?php
-						$options = array(
+						$options = [
 							'' => __( 'Standard', 'woocommerce' ),
-						);
+						];
 
 						$tax_classes = WC_Tax::get_tax_classes();
 
@@ -141,12 +141,12 @@ defined( 'ABSPATH' ) || exit;
 						<?php
 						$options = apply_filters(
 							'woocommerce_product_visibility_options',
-							array(
+							[
 								'visible' => __( 'Catalog &amp; search', 'woocommerce' ),
 								'catalog' => __( 'Catalog', 'woocommerce' ),
 								'search'  => __( 'Search', 'woocommerce' ),
 								'hidden'  => __( 'Hidden', 'woocommerce' ),
-							)
+							]
 						);
 						foreach ( $options as $key => $value ) {
 							echo '<option value="' . esc_attr( $key ) . '">' . esc_html( $value ) . '</option>';

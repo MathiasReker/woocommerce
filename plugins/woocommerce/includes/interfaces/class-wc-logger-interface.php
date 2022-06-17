@@ -44,7 +44,7 @@ interface WC_Logger_Interface {
 	 * @param string $message Log message.
 	 * @param array  $context Optional. Additional information for log handlers.
 	 */
-	public function log( $level, $message, $context = array() );
+	public function log( $level, $message, $context = [] );
 
 	/**
 	 * Adds an emergency level message.
@@ -54,7 +54,7 @@ interface WC_Logger_Interface {
 	 * @param string $message Log message.
 	 * @param array  $context Optional. Additional information for log handlers.
 	 */
-	public function emergency( $message, $context = array() );
+	public function emergency( $message, $context = [] );
 
 	/**
 	 * Adds an alert level message.
@@ -65,7 +65,7 @@ interface WC_Logger_Interface {
 	 * @param string $message Log message.
 	 * @param array  $context Optional. Additional information for log handlers.
 	 */
-	public function alert( $message, $context = array() );
+	public function alert( $message, $context = [] );
 
 	/**
 	 * Adds a critical level message.
@@ -76,7 +76,7 @@ interface WC_Logger_Interface {
 	 * @param string $message Log message.
 	 * @param array  $context Optional. Additional information for log handlers.
 	 */
-	public function critical( $message, $context = array() );
+	public function critical( $message, $context = [] );
 
 	/**
 	 * Adds an error level message.
@@ -87,7 +87,7 @@ interface WC_Logger_Interface {
 	 * @param string $message Log message.
 	 * @param array  $context Optional. Additional information for log handlers.
 	 */
-	public function error( $message, $context = array() );
+	public function error( $message, $context = [] );
 
 	/**
 	 * Adds a warning level message.
@@ -100,7 +100,7 @@ interface WC_Logger_Interface {
 	 * @param string $message Log message.
 	 * @param array  $context Optional. Additional information for log handlers.
 	 */
-	public function warning( $message, $context = array() );
+	public function warning( $message, $context = [] );
 
 	/**
 	 * Adds a notice level message.
@@ -110,7 +110,7 @@ interface WC_Logger_Interface {
 	 * @param string $message Log message.
 	 * @param array  $context Optional. Additional information for log handlers.
 	 */
-	public function notice( $message, $context = array() );
+	public function notice( $message, $context = [] );
 
 	/**
 	 * Adds a info level message.
@@ -121,7 +121,7 @@ interface WC_Logger_Interface {
 	 * @param string $message Log message.
 	 * @param array  $context Optional. Additional information for log handlers.
 	 */
-	public function info( $message, $context = array() );
+	public function info( $message, $context = [] );
 
 	/**
 	 * Adds a debug level message.
@@ -131,5 +131,5 @@ interface WC_Logger_Interface {
 	 * @param string $message Log message.
 	 * @param array  $context Optional. Additional information for log handlers.
 	 */
-	public function debug( $message, $context = array() );
+	public function debug( $message, $context = [] );
 }

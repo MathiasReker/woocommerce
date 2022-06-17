@@ -36,12 +36,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 					<label><?php esc_html_e( 'Customer download link', 'woocommerce' ); ?></label>
 					<?php
 					$download_link = add_query_arg(
-						array(
+						[
 							'download_file' => $download->get_product_id(),
 							'order'         => $download->get_order_key(),
 							'email'         => urlencode( $download->get_user_email() ),
 							'key'           => $download->get_download_id(),
-						),
+						],
 						trailingslashit( home_url() )
 					);
 					?>

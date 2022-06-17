@@ -21,13 +21,13 @@ class WC_Widget_Layered_Nav_Filters extends WC_Widget {
 		$this->widget_description = __( 'Display a list of active product filters.', 'woocommerce' );
 		$this->widget_id          = 'woocommerce_layered_nav_filters';
 		$this->widget_name        = __( 'Active Product Filters', 'woocommerce' );
-		$this->settings           = array(
-			'title' => array(
+		$this->settings           = [
+			'title' => [
 				'type'  => 'text',
 				'std'   => __( 'Active filters', 'woocommerce' ),
 				'label' => __( 'Title', 'woocommerce' ),
-			),
-		);
+			],
+		];
 
 		parent::__construct();
 	}
@@ -47,7 +47,7 @@ class WC_Widget_Layered_Nav_Filters extends WC_Widget {
 		$_chosen_attributes = WC_Query::get_layered_nav_chosen_attributes();
 		$min_price          = isset( $_GET['min_price'] ) ? wc_clean( wp_unslash( $_GET['min_price'] ) ) : 0; // WPCS: input var ok, CSRF ok.
 		$max_price          = isset( $_GET['max_price'] ) ? wc_clean( wp_unslash( $_GET['max_price'] ) ) : 0; // WPCS: input var ok, CSRF ok.
-		$rating_filter      = isset( $_GET['rating_filter'] ) ? array_filter( array_map( 'absint', explode( ',', wp_unslash( $_GET['rating_filter'] ) ) ) ) : array(); // WPCS: sanitization ok, input var ok, CSRF ok.
+		$rating_filter      = isset( $_GET['rating_filter'] ) ? array_filter( array_map( 'absint', explode( ',', wp_unslash( $_GET['rating_filter'] ) ) ) ) : []; // WPCS: sanitization ok, input var ok, CSRF ok.
 		$base_link          = $this->get_current_page_url();
 
 		if ( 0 < count( $_chosen_attributes ) || 0 < $min_price || 0 < $max_price || ! empty( $rating_filter ) ) {
@@ -66,17 +66,17 @@ class WC_Widget_Layered_Nav_Filters extends WC_Widget {
 						}
 
 						$filter_name    = 'filter_' . wc_attribute_taxonomy_slug( $taxonomy );
-						$current_filter = isset( $_GET[ $filter_name ] ) ? explode( ',', wc_clean( wp_unslash( $_GET[ $filter_name ] ) ) ) : array(); // WPCS: input var ok, CSRF ok.
+						$current_filter = isset( $_GET[ $filter_name ] ) ? explode( ',', wc_clean( wp_unslash( $_GET[ $filter_name ] ) ) ) : []; // WPCS: input var ok, CSRF ok.
 						$current_filter = array_map( 'sanitize_title', $current_filter );
-						$new_filter     = array_diff( $current_filter, array( $term_slug ) );
+						$new_filter     = array_diff( $current_filter, [ $term_slug ] );
 
-						$link = remove_query_arg( array( 'add-to-cart', $filter_name ), $base_link );
+						$link = remove_query_arg( [ 'add-to-cart', $filter_name ], $base_link );
 
 						if ( count( $new_filter ) > 0 ) {
 							$link = add_query_arg( $filter_name, implode( ',', $new_filter ), $link );
 						}
 
-						$filter_classes = array( 'chosen', 'chosen-' . sanitize_html_class( str_replace( 'pa_', '', $taxonomy ) ), 'chosen-' . sanitize_html_class( str_replace( 'pa_', '', $taxonomy ) . '-' . $term_slug ) );
+						$filter_classes = [ 'chosen', 'chosen-' . sanitize_html_class( str_replace( 'pa_', '', $taxonomy ) ), 'chosen-' . sanitize_html_class( str_replace( 'pa_', '', $taxonomy ) . '-' . $term_slug ) ];
 
 						echo '<li class="' . esc_attr( implode( ' ', $filter_classes ) ) . '"><a rel="nofollow" aria-label="' . esc_attr__( 'Remove filter', 'woocommerce' ) . '" href="' . esc_url( $link ) . '">' . esc_html( $term->name ) . '</a></li>';
 					}
@@ -97,7 +97,7 @@ class WC_Widget_Layered_Nav_Filters extends WC_Widget {
 
 			if ( ! empty( $rating_filter ) ) {
 				foreach ( $rating_filter as $rating ) {
-					$link_ratings = implode( ',', array_diff( $rating_filter, array( $rating ) ) );
+					$link_ratings = implode( ',', array_diff( $rating_filter, [ $rating ] ) );
 					$link         = $link_ratings ? add_query_arg( 'rating_filter', $link_ratings ) : remove_query_arg( 'rating_filter', $base_link );
 
 					/* translators: %s: rating */

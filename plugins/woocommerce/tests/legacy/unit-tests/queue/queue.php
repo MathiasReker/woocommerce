@@ -34,20 +34,20 @@ class WC_Tests_Queue extends WC_Unit_Test_Case {
 
 		// Test that the action can be found.
 		$action_ids = $queue->search(
-			array(
+			[
 				'hook' => $hook,
 				'args' => $args,
 				'group' => $group,
-			),
+			],
 			'ids'
 		);
 		$this->assertContains( $single, $action_ids );
 		$action_ids = $queue->search(
-			array(
+			[
 				'hook' => $hook,
 				'search' => $unique_hash,
 				'group' => $group,
-			),
+			],
 			'ids'
 		);
 		$this->assertContains( $single, $action_ids );
@@ -62,20 +62,20 @@ class WC_Tests_Queue extends WC_Unit_Test_Case {
 
 		// Test that the action can be found.
 		$action_ids = $queue->search(
-			array(
+			[
 				'hook' => $hook,
 				'args' => $args,
 				'group' => $group,
-			),
+			],
 			'ids'
 		);
 		$this->assertContains( $recurring, $action_ids );
 		$action_ids = $queue->search(
-			array(
+			[
 				'hook' => $hook,
 				'search' => $unique_hash,
 				'group' => $group,
-			),
+			],
 			'ids'
 		);
 		$this->assertContains( $recurring, $action_ids );
@@ -92,26 +92,26 @@ class WC_Tests_Queue extends WC_Unit_Test_Case {
 
 		// Test that the action can be found.
 		$action_ids = $queue->search(
-			array(
+			[
 				'hook' => $hook,
 				'args' => $args,
 				'group' => $group,
-			),
+			],
 			'ids'
 		);
 		$this->assertContains( $cron_action, $action_ids );
 		$action_ids = $queue->search(
-			array(
+			[
 				'hook' => $hook,
 				'search' => $unique_hash,
 				'group' => $group,
-			),
+			],
 			'ids'
 		);
 		$this->assertContains( $cron_action, $action_ids );
 
 		// Test wildcard search.
-		$action_ids = $queue->search( array( 'search' => $unique_hash ), 'ids' );
+		$action_ids = $queue->search( [ 'search' => $unique_hash ], 'ids' );
 		$this->assertEquals( count( $action_ids ), 3 );
 	}
 }

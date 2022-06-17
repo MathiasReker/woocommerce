@@ -24,9 +24,9 @@ class WC_Admin_Tests_API_Product_Attributes extends WC_REST_Unit_Test_Case {
 		parent::setUp();
 
 		$this->user = $this->factory->user->create(
-			array(
+			[
 				'role' => 'administrator',
-			)
+			]
 		);
 	}
 
@@ -50,7 +50,7 @@ class WC_Admin_Tests_API_Product_Attributes extends WC_REST_Unit_Test_Case {
 		// Add a custom attribute.
 		$custom_attr = new WC_Product_Attribute();
 		$custom_attr->set_name( 'Numeric Size' );
-		$custom_attr->set_options( array( '1', '2', '3', '4', '5' ) );
+		$custom_attr->set_options( [ '1', '2', '3', '4', '5' ] );
 		$custom_attr->set_visible( true );
 		$custom_attr->set_variation( true );
 		$attributes[] = $custom_attr;
@@ -68,22 +68,22 @@ class WC_Admin_Tests_API_Product_Attributes extends WC_REST_Unit_Test_Case {
 		// Add more custom Numeric Size values to another product.
 		$product_2 = new WC_Product_Variable();
 		$product_2->set_props(
-			array(
+			[
 				'name' => 'Dummy Variable Product 2',
 				'sku'  => 'DUMMY VARIABLE SKU 2',
-			)
+			]
 		);
 
 		$custom_attr_2 = new WC_Product_Attribute();
 		$custom_attr_2->set_name( 'Numeric Size' );
-		$custom_attr_2->set_options( array( '6', '7', '8', '9', '10' ) );
+		$custom_attr_2->set_options( [ '6', '7', '8', '9', '10' ] );
 		$custom_attr_2->set_visible( true );
 		$custom_attr_2->set_variation( true );
 
 		$product_2->set_attributes(
-			array(
+			[
 				$custom_attr_2,
-			)
+			]
 		);
 		$product_2->save();
 	}
@@ -119,7 +119,7 @@ class WC_Admin_Tests_API_Product_Attributes extends WC_REST_Unit_Test_Case {
 
 		$this->assertEquals( 6, count( $properties ) );
 		$this->assertArrayHasKey( 'id', $properties );
-		$this->assertEquals( array( 'integer', 'string' ), $properties['id']['type'] );
+		$this->assertEquals( [ 'integer', 'string' ], $properties['id']['type'] );
 		$this->assertArrayHasKey( 'name', $properties );
 		$this->assertArrayHasKey( 'slug', $properties );
 		$this->assertArrayHasKey( 'type', $properties );
@@ -153,9 +153,9 @@ class WC_Admin_Tests_API_Product_Attributes extends WC_REST_Unit_Test_Case {
 
 		$request = new WP_REST_Request( 'GET', $this->endpoint );
 		$request->set_query_params(
-			array(
+			[
 				'search' => 'num',
-			)
+			]
 		);
 		$response   = $this->server->dispatch( $request );
 		$attributes = $response->get_data();
@@ -211,7 +211,7 @@ class WC_Admin_Tests_API_Product_Attributes extends WC_REST_Unit_Test_Case {
 
 		$this->assertEquals( 6, count( $properties ) );
 		$this->assertArrayHasKey( 'id', $properties );
-		$this->assertEquals( array( 'integer', 'string' ), $properties['id']['type'] );
+		$this->assertEquals( [ 'integer', 'string' ], $properties['id']['type'] );
 		$this->assertArrayHasKey( 'name', $properties );
 		$this->assertArrayHasKey( 'slug', $properties );
 		$this->assertArrayHasKey( 'description', $properties );

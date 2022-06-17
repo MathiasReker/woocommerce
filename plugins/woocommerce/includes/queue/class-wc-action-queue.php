@@ -27,7 +27,7 @@ class WC_Action_Queue implements WC_Queue_Interface {
 	 * @param string $group The group to assign this job to.
 	 * @return string The action ID.
 	 */
-	public function add( $hook, $args = array(), $group = '' ) {
+	public function add( $hook, $args = [], $group = '' ) {
 		return $this->schedule_single( time(), $hook, $args, $group );
 	}
 
@@ -40,7 +40,7 @@ class WC_Action_Queue implements WC_Queue_Interface {
 	 * @param string $group The group to assign this job to.
 	 * @return string The action ID.
 	 */
-	public function schedule_single( $timestamp, $hook, $args = array(), $group = '' ) {
+	public function schedule_single( $timestamp, $hook, $args = [], $group = '' ) {
 		return as_schedule_single_action( $timestamp, $hook, $args, $group );
 	}
 
@@ -54,7 +54,7 @@ class WC_Action_Queue implements WC_Queue_Interface {
 	 * @param string $group The group to assign this job to.
 	 * @return string The action ID.
 	 */
-	public function schedule_recurring( $timestamp, $interval_in_seconds, $hook, $args = array(), $group = '' ) {
+	public function schedule_recurring( $timestamp, $interval_in_seconds, $hook, $args = [], $group = '' ) {
 		return as_schedule_recurring_action( $timestamp, $interval_in_seconds, $hook, $args, $group );
 	}
 
@@ -78,7 +78,7 @@ class WC_Action_Queue implements WC_Queue_Interface {
 	 * @param string $group The group to assign this job to.
 	 * @return string The action ID
 	 */
-	public function schedule_cron( $timestamp, $cron_schedule, $hook, $args = array(), $group = '' ) {
+	public function schedule_cron( $timestamp, $cron_schedule, $hook, $args = [], $group = '' ) {
 		return as_schedule_cron_action( $timestamp, $cron_schedule, $hook, $args, $group );
 	}
 
@@ -98,7 +98,7 @@ class WC_Action_Queue implements WC_Queue_Interface {
 	 * @param array  $args Args that would have been passed to the job.
 	 * @param string $group The group the job is assigned to (if any).
 	 */
-	public function cancel( $hook, $args = array(), $group = '' ) {
+	public function cancel( $hook, $args = [], $group = '' ) {
 		as_unschedule_action( $hook, $args, $group );
 	}
 
@@ -109,7 +109,7 @@ class WC_Action_Queue implements WC_Queue_Interface {
 	 * @param array  $args Args that would have been passed to the job.
 	 * @param string $group The group the job is assigned to (if any).
 	 */
-	public function cancel_all( $hook, $args = array(), $group = '' ) {
+	public function cancel_all( $hook, $args = [], $group = '' ) {
 		as_unschedule_all_actions( $hook, $args, $group );
 	}
 
@@ -154,7 +154,7 @@ class WC_Action_Queue implements WC_Queue_Interface {
 	 * @param string $return_format OBJECT, ARRAY_A, or ids.
 	 * @return array
 	 */
-	public function search( $args = array(), $return_format = OBJECT ) {
+	public function search( $args = [], $return_format = OBJECT ) {
 		return as_get_scheduled_actions( $args, $return_format );
 	}
 }

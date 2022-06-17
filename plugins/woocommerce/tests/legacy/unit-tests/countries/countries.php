@@ -36,11 +36,11 @@ class WC_Tests_Countries extends WC_Unit_Test_Case {
 		$this->assertSame( $all_continents, $countries->get_shipping_continents() );
 
 		update_option( 'woocommerce_ship_to_countries', 'specific' );
-		update_option( 'woocommerce_specific_ship_to_countries', array( 'CA', 'JP' ) );
-		$expected = array(
+		update_option( 'woocommerce_specific_ship_to_countries', [ 'CA', 'JP' ] );
+		$expected = [
 			'AS' => $all_continents['AS'],
 			'NA' => $all_continents['NA'],
-		);
+		];
 		$this->assertSame( $expected, $countries->get_shipping_continents() );
 	}
 
@@ -53,18 +53,18 @@ class WC_Tests_Countries extends WC_Unit_Test_Case {
 		$countries = new WC_Countries();
 
 		update_option( 'woocommerce_allowed_countries', 'specific' );
-		update_option( 'woocommerce_specific_allowed_countries', array( 'RO', 'SI' ) );
-		$expected = array(
+		update_option( 'woocommerce_specific_allowed_countries', [ 'RO', 'SI' ] );
+		$expected = [
 			'RO' => 'Romania',
 			'SI' => 'Slovenia',
-		);
+		];
 		$this->assertEquals( $expected, $countries->get_allowed_countries() );
 
 		update_option( 'woocommerce_allowed_countries', 'all' );
 		$this->assertEquals( $countries->get_countries(), $countries->get_allowed_countries() );
 
 		update_option( 'woocommerce_allowed_countries', 'all_except' );
-		update_option( 'woocommerce_all_except_countries', array( 'RO', 'SI' ) );
+		update_option( 'woocommerce_all_except_countries', [ 'RO', 'SI' ] );
 		$allowed_countries = $countries->get_allowed_countries();
 		$this->assertEquals( count( $countries->get_countries() ) - 2, count( $allowed_countries ) );
 		$this->assertFalse( isset( $allowed_countries['RO'], $allowed_countries['SI'] ) );
@@ -82,18 +82,18 @@ class WC_Tests_Countries extends WC_Unit_Test_Case {
 		$this->assertEquals( $countries->get_allowed_countries(), $countries->get_shipping_countries() );
 
 		update_option( 'woocommerce_allowed_countries', 'specific' );
-		update_option( 'woocommerce_specific_allowed_countries', array( 'RO', 'SI' ) );
+		update_option( 'woocommerce_specific_allowed_countries', [ 'RO', 'SI' ] );
 		$this->assertEquals( $countries->get_allowed_countries(), $countries->get_shipping_countries() );
 
 		update_option( 'woocommerce_ship_to_countries', 'all' );
 		$this->assertEquals( $countries->get_countries(), $countries->get_shipping_countries() );
 
 		update_option( 'woocommerce_ship_to_countries', 'specific' );
-		update_option( 'woocommerce_specific_ship_to_countries', array( 'RO', 'SI' ) );
-		$expected = array(
+		update_option( 'woocommerce_specific_ship_to_countries', [ 'RO', 'SI' ] );
+		$expected = [
 			'RO' => 'Romania',
 			'SI' => 'Slovenia',
-		);
+		];
 		$this->assertEquals( $expected, $countries->get_shipping_countries() );
 	}
 
@@ -109,7 +109,7 @@ class WC_Tests_Countries extends WC_Unit_Test_Case {
 		$this->assertEquals( $countries->get_states(), $countries->get_allowed_country_states() );
 
 		update_option( 'woocommerce_allowed_countries', 'specific' );
-		update_option( 'woocommerce_specific_allowed_countries', array( 'US' ) );
+		update_option( 'woocommerce_specific_allowed_countries', [ 'US' ] );
 
 		$all_states = $countries->get_allowed_country_states();
 		$us_states  = $all_states['US'];
@@ -133,7 +133,7 @@ class WC_Tests_Countries extends WC_Unit_Test_Case {
 		$this->assertEquals( $countries->get_states(), $countries->get_shipping_country_states() );
 
 		update_option( 'woocommerce_ship_to_countries', 'specific' );
-		update_option( 'woocommerce_specific_ship_to_countries', array( 'US' ) );
+		update_option( 'woocommerce_specific_ship_to_countries', [ 'US' ] );
 
 		$all_states = $countries->get_shipping_country_states();
 		$us_states  = $all_states['US'];
@@ -192,7 +192,7 @@ class WC_Tests_Countries extends WC_Unit_Test_Case {
 	public function test_get_country_locale() {
 		$countries = new WC_Countries();
 		update_option( 'woocommerce_allowed_countries', 'specific' );
-		update_option( 'woocommerce_specific_allowed_countries', array( 'RO', 'SI' ) );
+		update_option( 'woocommerce_specific_allowed_countries', [ 'RO', 'SI' ] );
 
 		$locales = $countries->get_country_locale();
 		$this->assertArrayHasKey( 'RO', $locales );

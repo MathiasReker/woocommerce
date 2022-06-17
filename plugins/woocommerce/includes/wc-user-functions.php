@@ -38,7 +38,7 @@ if ( ! function_exists( 'wc_create_new_customer' ) ) {
 	 * @param  array  $args     List of arguments to pass to `wp_insert_user()`.
 	 * @return int|WP_Error Returns WP_Error on failure, Int (user ID) on success.
 	 */
-	function wc_create_new_customer( $email, $username = '', $password = '', $args = array() ) {
+	function wc_create_new_customer( $email, $username = '', $password = '', $args = [] ) {
 		if ( empty( $email ) || ! is_email( $email ) ) {
 			return new WP_Error( 'registration-error-invalid-email', __( 'Please provide a valid email address.', 'woocommerce' ) );
 		}
@@ -87,12 +87,12 @@ if ( ! function_exists( 'wc_create_new_customer' ) ) {
 			'woocommerce_new_customer_data',
 			array_merge(
 				$args,
-				array(
+				[
 					'user_login' => $username,
 					'user_pass'  => $password,
 					'user_email' => $email,
 					'role'       => 'customer',
-				)
+				]
 			)
 		);
 
@@ -117,8 +117,8 @@ if ( ! function_exists( 'wc_create_new_customer' ) ) {
  * @param string $suffix Append string to username to make it unique.
  * @return string Generated username.
  */
-function wc_create_new_customer_username( $email, $new_user_args = array(), $suffix = '' ) {
-	$username_parts = array();
+function wc_create_new_customer_username( $email, $new_user_args = [], $suffix = '' ) {
+	$username_parts = [];
 
 	if ( isset( $new_user_args['first_name'] ) ) {
 		$username_parts[] = sanitize_user( $new_user_args['first_name'], true );
@@ -139,13 +139,13 @@ function wc_create_new_customer_username( $email, $new_user_args = array(), $suf
 		// Exclude common prefixes.
 		if ( in_array(
 			$email_username,
-			array(
+			[
 				'sales',
 				'hello',
 				'mail',
 				'contact',
 				'info',
-			),
+			],
 			true
 		) ) {
 			// Get the domain part.
@@ -167,11 +167,11 @@ function wc_create_new_customer_username( $email, $new_user_args = array(), $suf
 	 * @since 3.7.0
 	 * @param array $usernames Array of blocked usernames.
 	 */
-	$illegal_logins = (array) apply_filters( 'illegal_user_logins', array() );
+	$illegal_logins = (array) apply_filters( 'illegal_user_logins', [] );
 
 	// Stop illegal logins and generate a new random username.
 	if ( in_array( strtolower( $username ), array_map( 'strtolower', $illegal_logins ), true ) ) {
-		$new_args = array();
+		$new_args = [];
 
 		/**
 		 * Filter generated customer username.
@@ -235,11 +235,11 @@ function wc_update_new_customer_past_orders( $customer_id ) {
 	$complete        = 0;
 	$customer        = get_user_by( 'id', absint( $customer_id ) );
 	$customer_orders = wc_get_orders(
-		array(
+		[
 			'limit'    => -1,
-			'customer' => array( array( 0, $customer->user_email ) ),
+			'customer' => [ [ 0, $customer->user_email ] ],
 			'return'   => 'ids',
-		)
+		]
 	);
 
 	if ( ! empty( $customer_orders ) ) {
@@ -323,7 +323,7 @@ function wc_customer_bought_product( $customer_email, $user_id, $product_id ) {
 	if ( isset( $transient_value['value'], $transient_value['version'] ) && $transient_value['version'] === $transient_version ) {
 		$result = $transient_value['value'];
 	} else {
-		$customer_data = array( $user_id );
+		$customer_data = [ $user_id ];
 
 		if ( $user_id ) {
 			$user = get_user_by( 'id', $user_id );
@@ -359,10 +359,10 @@ function wc_customer_bought_product( $customer_email, $user_id, $product_id ) {
 		); // WPCS: unprepared SQL ok.
 		$result = array_map( 'absint', $result );
 
-		$transient_value = array(
+		$transient_value = [
 			'version' => $transient_version,
 			'value'   => $result,
-		);
+		];
 
 		set_transient( $transient_name, $transient_value, DAY_IN_SECONDS * 30 );
 	}
@@ -502,7 +502,7 @@ function wc_modify_editable_roles( $roles ) {
 		unset( $roles['administrator'] );
 
 		if ( wc_current_user_has_role( 'shop_manager' ) ) {
-			$shop_manager_editable_roles = apply_filters( 'woocommerce_shop_manager_editable_roles', array( 'customer' ) );
+			$shop_manager_editable_roles = apply_filters( 'woocommerce_shop_manager_editable_roles', [ 'customer' ] );
 			return array_intersect_key( $roles, array_flip( $shop_manager_editable_roles ) );
 		}
 	}
@@ -540,7 +540,7 @@ function wc_modify_map_meta_cap( $caps, $cap, $user_id, $args ) {
 					} elseif ( wc_current_user_has_role( 'shop_manager' ) ) {
 						// Shop managers can only edit customer info.
 						$userdata                    = get_userdata( $args[0] );
-						$shop_manager_editable_roles = apply_filters( 'woocommerce_shop_manager_editable_roles', array( 'customer' ) );
+						$shop_manager_editable_roles = apply_filters( 'woocommerce_shop_manager_editable_roles', [ 'customer' ] );
 						if ( property_exists( $userdata, 'roles' ) && ! empty( $userdata->roles ) && ! array_intersect( $userdata->roles, $shop_manager_editable_roles ) ) {
 							$caps[] = 'do_not_allow';
 						}
@@ -571,7 +571,7 @@ function wc_get_customer_download_permissions( $customer_id ) {
  * @return array
  */
 function wc_get_customer_available_downloads( $customer_id ) {
-	$downloads   = array();
+	$downloads   = [];
 	$_product    = null;
 	$order       = null;
 	$file_number = 0;
@@ -628,14 +628,14 @@ function wc_get_customer_available_downloads( $customer_id ) {
 				$file_number
 			);
 
-			$downloads[] = array(
+			$downloads[] = [
 				'download_url'        => add_query_arg(
-					array(
+					[
 						'download_file' => $product_id,
 						'order'         => $result->order_key,
 						'email'         => rawurlencode( $result->user_email ),
 						'key'           => $result->download_id,
-					),
+					],
 					home_url( '/' )
 				),
 				'download_id'         => $result->download_id,
@@ -647,11 +647,11 @@ function wc_get_customer_available_downloads( $customer_id ) {
 				'order_key'           => $order->get_order_key(),
 				'downloads_remaining' => $result->downloads_remaining,
 				'access_expires'      => $result->access_expires,
-				'file'                => array(
+				'file'                => [
 					'name' => $download_file->get_name(),
 					'file' => $download_file->get_file(),
-				),
-			);
+				],
+			];
 
 			$file_number++;
 		}
@@ -692,13 +692,13 @@ function wc_reset_order_customer_id_on_deleted_user( $user_id ) {
 
 	$wpdb->update(
 		$wpdb->postmeta,
-		array(
+		[
 			'meta_value' => 0,
-		),
-		array(
+		],
+		[
 			'meta_key'   => '_customer_user',
 			'meta_value' => $user_id,
-		)
+		]
 	); // WPCS: slow query ok.
 }
 
@@ -758,7 +758,7 @@ add_action( 'profile_update', 'wc_update_profile_last_update_time', 10, 2 );
  * @param string $_meta_value Value of the meta that was changed.
  */
 function wc_meta_update_last_update_time( $meta_id, $user_id, $meta_key, $_meta_value ) {
-	$keys_to_track = apply_filters( 'woocommerce_user_last_update_fields', array( 'first_name', 'last_name' ) );
+	$keys_to_track = apply_filters( 'woocommerce_user_last_update_fields', [ 'first_name', 'last_name' ] );
 
 	$update_time = in_array( $meta_key, $keys_to_track, true ) ? true : false;
 	$update_time = 'billing_' === substr( $meta_key, 0, 8 ) ? true : $update_time;
@@ -789,7 +789,7 @@ function wc_set_user_last_update_time( $user_id ) {
  * @return array
  */
 function wc_get_customer_saved_methods_list( $customer_id ) {
-	return apply_filters( 'woocommerce_saved_payment_methods_list', array(), $customer_id );
+	return apply_filters( 'woocommerce_saved_payment_methods_list', [], $customer_id );
 }
 
 /**
@@ -829,17 +829,17 @@ function wc_delete_user_data( $user_id ) {
 	// Clean up sessions.
 	$wpdb->delete(
 		$wpdb->prefix . 'woocommerce_sessions',
-		array(
+		[
 			'session_key' => $user_id,
-		)
+		]
 	);
 
 	// Revoke API keys.
 	$wpdb->delete(
 		$wpdb->prefix . 'woocommerce_api_keys',
-		array(
+		[
 			'user_id' => $user_id,
-		)
+		]
 	);
 
 	// Clean up payment tokens.
@@ -860,7 +860,7 @@ add_action( 'delete_user', 'wc_delete_user_data' );
  */
 function wc_maybe_store_user_agent( $user_login, $user ) {
 	if ( 'yes' === get_option( 'woocommerce_allow_tracking', 'no' ) && user_can( $user, 'manage_woocommerce' ) ) {
-		$admin_user_agents   = array_filter( (array) get_option( 'woocommerce_tracker_ua', array() ) );
+		$admin_user_agents   = array_filter( (array) get_option( 'woocommerce_tracker_ua', [] ) );
 		$admin_user_agents[] = wc_get_user_agent();
 		update_option( 'woocommerce_tracker_ua', array_unique( $admin_user_agents ), false );
 	}
@@ -922,7 +922,7 @@ function wc_translate_user_roles( $translation, $text, $context, $domain ) {
 		return $translation;
 	}
 
-	if ( 'User role' === $context && 'default' === $domain && in_array( $text, array( 'Shop manager', 'Customer' ), true ) ) {
+	if ( 'User role' === $context && 'default' === $domain && in_array( $text, [ 'Shop manager', 'Customer' ], true ) ) {
 		return translate_user_role( $text, 'woocommerce' );
 	}
 

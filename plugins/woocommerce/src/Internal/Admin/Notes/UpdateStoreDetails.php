@@ -30,7 +30,7 @@ class UpdateStoreDetails {
 	 * @return Note
 	 */
 	public static function get_note() {
-		$onboarding_profile = get_option( 'woocommerce_onboarding_profile', array() );
+		$onboarding_profile = get_option( 'woocommerce_onboarding_profile', [] );
 
 		// Bail when profile was set up by client.
 		if ( isset( $onboarding_profile['setup_client'] ) && $onboarding_profile['setup_client'] ) {
@@ -47,7 +47,7 @@ class UpdateStoreDetails {
 		$note->set_content( __( 'Nice work completing your store profile! You can always go back and edit the details you just shared, as needed.', 'woocommerce' ) );
 		$note->set_type( Note::E_WC_ADMIN_NOTE_INFORMATIONAL );
 		$note->set_name( self::NOTE_NAME );
-		$note->set_content_data( (object) array() );
+		$note->set_content_data( (object) [] );
 		$note->set_source( 'woocommerce-admin' );
 		$note->add_action(
 			'update-store-details',

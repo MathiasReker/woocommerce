@@ -166,7 +166,7 @@ trait NoteTraits {
 
 		$need_save = in_array(
 			true,
-			array(
+			[
 				self::update_note_field_if_changed( $note_in_db, $note, 'title' ),
 				self::update_note_field_if_changed( $note_in_db, $note, 'content' ),
 				self::update_note_field_if_changed( $note_in_db, $note, 'content_data' ),
@@ -174,7 +174,7 @@ trait NoteTraits {
 				self::update_note_field_if_changed( $note_in_db, $note, 'locale' ),
 				self::update_note_field_if_changed( $note_in_db, $note, 'source' ),
 				self::update_note_field_if_changed( $note_in_db, $note, 'actions' )
-			),
+			],
 			true
 		);
 
@@ -216,10 +216,10 @@ trait NoteTraits {
 	private static function update_note_field_if_changed( $note1, $note2, $field_name ) {
 		// We need to serialize the stdObject to compare it.
 		$note1_field_value = self::possibly_convert_object_to_array(
-			call_user_func( array( $note1, 'get_' . $field_name ) )
+			call_user_func( [ $note1, 'get_' . $field_name ] )
 		);
 		$note2_field_value = self::possibly_convert_object_to_array(
-			call_user_func( array( $note2, 'get_' . $field_name ) )
+			call_user_func( [ $note2, 'get_' . $field_name ] )
 		);
 
 		if ( 'actions' === $field_name ) {
@@ -244,9 +244,9 @@ trait NoteTraits {
 
 		if ( $need_update ) {
 			call_user_func(
-				array( $note1, 'set_' . $field_name ),
+				[ $note1, 'set_' . $field_name ],
 				// Get note2 field again because it may have been changed during the comparison.
-				call_user_func( array( $note2, 'get_' . $field_name ) )
+				call_user_func( [ $note2, 'get_' . $field_name ] )
 			);
 			return true;
 		}

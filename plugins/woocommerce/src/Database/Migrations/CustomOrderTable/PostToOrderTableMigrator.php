@@ -23,35 +23,35 @@ class PostToOrderTableMigrator extends MetaToCustomTableMigrator {
 		global $wpdb;
 
 		// TODO: Remove hardcoding.
-		$this->table_names = array(
+		$this->table_names = [
 			'orders'    => $wpdb->prefix . 'wc_orders',
 			'addresses' => $wpdb->prefix . 'wc_order_addresses',
 			'op_data'   => $wpdb->prefix . 'wc_order_operational_data',
 			'meta'      => $wpdb->prefix . 'wc_orders_meta',
-		);
+		];
 
-		return array(
-			'source'      => array(
-				'entity' => array(
+		return [
+			'source'      => [
+				'entity' => [
 					'table_name'             => $wpdb->posts,
 					'meta_rel_column'        => 'ID',
 					'destination_rel_column' => 'ID',
 					'primary_key'            => 'ID',
-				),
-				'meta'   => array(
+				],
+				'meta'   => [
 					'table_name'        => $wpdb->postmeta,
 					'meta_key_column'   => 'meta_key',
 					'meta_value_column' => 'meta_value',
 					'entity_id_column'  => 'post_id',
-				),
-			),
-			'destination' => array(
+				],
+			],
+			'destination' => [
 				'table_name'        => $this->table_names['orders'],
 				'source_rel_column' => 'id',
 				'primary_key'       => 'id',
 				'primary_key_type'  => 'int',
-			),
-		);
+			],
+		];
 	}
 
 	/**
@@ -60,28 +60,28 @@ class PostToOrderTableMigrator extends MetaToCustomTableMigrator {
 	 * @return \string[][] Config.
 	 */
 	protected function get_core_column_mapping(): array {
-		return array(
-			'ID'                => array(
+		return [
+			'ID'                => [
 				'type'        => 'int',
 				'destination' => 'id',
-			),
-			'post_status'       => array(
+			],
+			'post_status'       => [
 				'type'        => 'string',
 				'destination' => 'status',
-			),
-			'post_date_gmt'     => array(
+			],
+			'post_date_gmt'     => [
 				'type'        => 'date',
 				'destination' => 'date_created_gmt',
-			),
-			'post_modified_gmt' => array(
+			],
+			'post_modified_gmt' => [
 				'type'        => 'date',
 				'destination' => 'date_updated_gmt',
-			),
-			'post_parent'       => array(
+			],
+			'post_parent'       => [
 				'type'        => 'int',
 				'destination' => 'parent_order_id',
-			),
-		);
+			],
+		];
 	}
 
 	/**
@@ -90,47 +90,47 @@ class PostToOrderTableMigrator extends MetaToCustomTableMigrator {
 	 * @return \string[][] Config.
 	 */
 	public function get_meta_column_config(): array {
-		return array(
-			'_order_currency'       => array(
+		return [
+			'_order_currency'       => [
 				'type'        => 'string',
 				'destination' => 'currency',
-			),
-			'_order_tax'            => array(
+			],
+			'_order_tax'            => [
 				'type'        => 'decimal',
 				'destination' => 'tax_amount',
-			),
-			'_order_total'          => array(
+			],
+			'_order_total'          => [
 				'type'        => 'decimal',
 				'destination' => 'total_amount',
-			),
-			'_customer_user'        => array(
+			],
+			'_customer_user'        => [
 				'type'        => 'int',
 				'destination' => 'customer_id',
-			),
-			'_billing_email'        => array(
+			],
+			'_billing_email'        => [
 				'type'        => 'string',
 				'destination' => 'billing_email',
-			),
-			'_payment_method'       => array(
+			],
+			'_payment_method'       => [
 				'type'        => 'string',
 				'destination' => 'payment_method',
-			),
-			'_payment_method_title' => array(
+			],
+			'_payment_method_title' => [
 				'type'        => 'string',
 				'destination' => 'payment_method_title',
-			),
-			'_customer_ip_address'  => array(
+			],
+			'_customer_ip_address'  => [
 				'type'        => 'string',
 				'destination' => 'ip_address',
-			),
-			'_customer_user_agent'  => array(
+			],
+			'_customer_user_agent'  => [
 				'type'        => 'string',
 				'destination' => 'user_agent',
-			),
-			'_transaction_id'       => array(
+			],
+			'_transaction_id'       => [
 				'type'        => 'string',
 				'destination' => 'transaction_id',
-			),
-		);
+			],
+		];
 	}
 }

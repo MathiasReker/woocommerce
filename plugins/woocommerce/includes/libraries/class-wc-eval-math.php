@@ -26,28 +26,28 @@ if ( ! class_exists( 'WC_Eval_Math', false ) ) {
 		 *
 		 * @var array
 		 */
-		public static $v = array( 'e' => 2.71, 'pi' => 3.14 );
+		public static $v = [ 'e' => 2.71, 'pi' => 3.14 ];
 
 		/**
 		 * User-defined functions.
 		 *
 		 * @var array
 		 */
-		public static $f = array();
+		public static $f = [];
 
 		/**
 		 * Constants.
 		 *
 		 * @var array
 		 */
-		public static $vb = array( 'e', 'pi' );
+		public static $vb = [ 'e', 'pi' ];
 
 		/**
 		 * Built-in functions.
 		 *
 		 * @var array
 		 */
-		public static $fb = array();
+		public static $fb = [];
 
 		/**
 		 * Evaluate maths string.
@@ -94,7 +94,7 @@ if ( ! class_exists( 'WC_Eval_Math', false ) ) {
 						}
 					}
 				}
-				self::$f[ $fnn ] = array( 'args' => $args, 'func' => $stack );
+				self::$f[ $fnn ] = [ 'args' => $args, 'func' => $stack ];
 				return true;
 				// ===============
 			} else {
@@ -113,12 +113,12 @@ if ( ! class_exists( 'WC_Eval_Math', false ) ) {
 
 			$index = 0;
 			$stack = new WC_Eval_Math_Stack;
-			$output = array(); // postfix form of expression, to be passed to pfx()
+			$output = []; // postfix form of expression, to be passed to pfx()
 			$expr = trim( $expr );
 
-			$ops   = array( '+', '-', '*', '/', '^', '_' );
-			$ops_r = array( '+' => 0, '-' => 0, '*' => 0, '/' => 0, '^' => 1 ); // right-associative operator?
-			$ops_p = array( '+' => 0, '-' => 0, '*' => 1, '/' => 1, '_' => 1, '^' => 2 ); // operator precedence
+			$ops   = [ '+', '-', '*', '/', '^', '_' ];
+			$ops_r = [ '+' => 0, '-' => 0, '*' => 0, '/' => 0, '^' => 1 ]; // right-associative operator?
+			$ops_p = [ '+' => 0, '-' => 0, '*' => 1, '/' => 1, '_' => 1, '^' => 2 ]; // operator precedence
 
 			$expecting_op = false; // we use this in syntax-checking the expression
 			// and determining when a - is a negation
@@ -251,7 +251,7 @@ if ( ! class_exists( 'WC_Eval_Math', false ) ) {
 		 *
 		 * @return mixed
 		 */
-		private static function pfx( $tokens, $vars = array() ) {
+		private static function pfx( $tokens, $vars = [] ) {
 			if ( false == $tokens ) {
 				return false;
 			}
@@ -259,7 +259,7 @@ if ( ! class_exists( 'WC_Eval_Math', false ) ) {
 
 			foreach ( $tokens as $token ) { // nice and easy
 				// if the token is a binary operator, pop two values off the stack, do the operation, and push the result back on
-				if ( in_array( $token, array( '+', '-', '*', '/', '^' ) ) ) {
+				if ( in_array( $token, [ '+', '-', '*', '/', '^' ] ) ) {
 					if ( is_null( $op2 = $stack->pop() ) ) {
 						return self::trigger( "internal error" );
 					}
@@ -358,7 +358,7 @@ if ( ! class_exists( 'WC_Eval_Math', false ) ) {
 		 *
 		 * @var array
 		 */
-		public $stack = array();
+		public $stack = [];
 
 		/**
 		 * Stack counter.

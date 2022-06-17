@@ -56,7 +56,7 @@ class EditProductsOnTheMove {
 
 		$note->set_title( __( 'Edit products on the move', 'woocommerce' ) );
 		$note->set_content( __( 'Edit and create new products from your mobile devices with the Woo app', 'woocommerce' ) );
-		$note->set_content_data( (object) array() );
+		$note->set_content_data( (object) [] );
 		$note->set_type( Note::E_WC_ADMIN_NOTE_INFORMATIONAL );
 		$note->set_name( self::NOTE_NAME );
 		$note->set_source( 'woocommerce-admin' );

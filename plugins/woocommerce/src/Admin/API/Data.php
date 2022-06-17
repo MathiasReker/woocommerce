@@ -34,10 +34,10 @@ class Data extends \WC_REST_Data_Controller {
 		$response         = parent::get_items( $request );
 		$response->data[] = $this->prepare_response_for_collection(
 			$this->prepare_item_for_response(
-				(object) array(
+				(object) [
 					'slug'        => 'download-ips',
 					'description' => __( 'An endpoint used for searching download logs for a specific IP address.', 'woocommerce' ),
-				),
+				],
 				$request
 			)
 		);

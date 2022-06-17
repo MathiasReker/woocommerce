@@ -21,13 +21,13 @@ class WC_Widget_Rating_Filter extends WC_Widget {
 		$this->widget_description = __( 'Display a list of star ratings to filter products in your store.', 'woocommerce' );
 		$this->widget_id          = 'woocommerce_rating_filter';
 		$this->widget_name        = __( 'Filter Products by Rating', 'woocommerce' );
-		$this->settings           = array(
-			'title' => array(
+		$this->settings           = [
+			'title' => [
 				'type'  => 'text',
 				'std'   => __( 'Average rating', 'woocommerce' ),
 				'label' => __( 'Title', 'woocommerce' ),
-			),
-		);
+			],
+		];
 		parent::__construct();
 	}
 
@@ -53,13 +53,13 @@ class WC_Widget_Rating_Filter extends WC_Widget {
 
 		// Set new rating filter.
 		$product_visibility_terms = wc_get_product_visibility_term_ids();
-		$tax_query[]              = array(
+		$tax_query[]              = [
 			'taxonomy'      => 'product_visibility',
 			'field'         => 'term_taxonomy_id',
 			'terms'         => $product_visibility_terms[ 'rated-' . $rating ],
 			'operator'      => 'IN',
 			'rating_filter' => true,
-		);
+		];
 
 		$meta_query     = new WP_Meta_Query( $meta_query );
 		$tax_query      = new WP_Tax_Query( $tax_query );
@@ -98,7 +98,7 @@ class WC_Widget_Rating_Filter extends WC_Widget {
 		ob_start();
 
 		$found         = false;
-		$rating_filter = isset( $_GET['rating_filter'] ) ? array_filter( array_map( 'absint', explode( ',', wp_unslash( $_GET['rating_filter'] ) ) ) ) : array(); // WPCS: input var ok, CSRF ok, sanitization ok.
+		$rating_filter = isset( $_GET['rating_filter'] ) ? array_filter( array_map( 'absint', explode( ',', wp_unslash( $_GET['rating_filter'] ) ) ) ) : []; // WPCS: input var ok, CSRF ok, sanitization ok.
 		$base_link     = remove_query_arg( 'paged', $this->get_current_page_url() );
 
 		$this->widget_start( $args, $instance );
@@ -114,9 +114,9 @@ class WC_Widget_Rating_Filter extends WC_Widget {
 			$link  = $base_link;
 
 			if ( in_array( $rating, $rating_filter, true ) ) {
-				$link_ratings = implode( ',', array_diff( $rating_filter, array( $rating ) ) );
+				$link_ratings = implode( ',', array_diff( $rating_filter, [ $rating ] ) );
 			} else {
-				$link_ratings = implode( ',', array_merge( $rating_filter, array( $rating ) ) );
+				$link_ratings = implode( ',', array_merge( $rating_filter, [ $rating ] ) );
 			}
 
 			$class       = in_array( $rating, $rating_filter, true ) ? 'wc-layered-nav-rating chosen' : 'wc-layered-nav-rating';
@@ -124,11 +124,11 @@ class WC_Widget_Rating_Filter extends WC_Widget {
 			$rating_html = wc_get_star_rating_html( $rating );
 			$count_html  = wp_kses(
 				apply_filters( 'woocommerce_rating_filter_count', "({$count})", $count, $rating ),
-				array(
-					'em'     => array(),
-					'span'   => array(),
-					'strong' => array(),
-				)
+				[
+					'em'     => [],
+					'span'   => [],
+					'strong' => [],
+				]
 			);
 
 			printf( '<li class="%s"><a href="%s"><span class="star-rating">%s</span> %s</a></li>', esc_attr( $class ), esc_url( $link ), $rating_html, $count_html ); // WPCS: XSS ok.

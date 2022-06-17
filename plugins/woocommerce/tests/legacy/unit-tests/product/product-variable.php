@@ -92,9 +92,9 @@ class WC_Tests_Product_Variable extends WC_Unit_Test_Case {
 		$child2->set_parent_id( $product->get_id() );
 		$child2->save();
 
-		$product->set_children( array( $child1->get_id(), $child2->get_id() ) );
+		$product->set_children( [ $child1->get_id(), $child2->get_id() ] );
 
-		return array( $product, $child1, $child2 );
+		return [ $product, $child1, $child2 ];
 	}
 
 	/**

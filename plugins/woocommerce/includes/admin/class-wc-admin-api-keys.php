@@ -17,9 +17,9 @@ class WC_Admin_API_Keys {
 	 * Initialize the API Keys admin actions.
 	 */
 	public function __construct() {
-		add_action( 'admin_init', array( $this, 'actions' ) );
-		add_action( 'woocommerce_settings_page_init', array( $this, 'screen_option' ) );
-		add_filter( 'woocommerce_save_settings_advanced_keys', array( $this, 'allow_save_settings' ) );
+		add_action( 'admin_init', [ $this, 'actions' ] );
+		add_action( 'woocommerce_settings_page_init', [ $this, 'screen_option' ] );
+		add_filter( 'woocommerce_save_settings_advanced_keys', [ $this, 'allow_save_settings' ] );
 	}
 
 	/**
@@ -82,10 +82,10 @@ class WC_Admin_API_Keys {
 			// Add screen option.
 			add_screen_option(
 				'per_page',
-				array(
+				[
 					'default' => 10,
 					'option'  => 'woocommerce_keys_per_page',
-				)
+				]
 			);
 		}
 	}
@@ -130,14 +130,14 @@ class WC_Admin_API_Keys {
 	private static function get_key_data( $key_id ) {
 		global $wpdb;
 
-		$empty = array(
+		$empty = [
 			'key_id'        => 0,
 			'user_id'       => '',
 			'description'   => '',
 			'permissions'   => '',
 			'truncated_key' => '',
 			'last_access'   => '',
-		);
+		];
 
 		if ( 0 === $key_id ) {
 			return $empty;
@@ -208,7 +208,7 @@ class WC_Admin_API_Keys {
 			}
 		}
 
-		wp_safe_redirect( esc_url_raw( add_query_arg( array( 'revoked' => 1 ), admin_url( 'admin.php?page=wc-settings&tab=advanced&section=keys' ) ) ) );
+		wp_safe_redirect( esc_url_raw( add_query_arg( [ 'revoked' => 1 ], admin_url( 'admin.php?page=wc-settings&tab=advanced&section=keys' ) ) ) );
 		exit();
 	}
 
@@ -224,7 +224,7 @@ class WC_Admin_API_Keys {
 
 		if ( isset( $_REQUEST['action'] ) ) { // WPCS: input var okay, CSRF ok.
 			$action = sanitize_text_field( wp_unslash( $_REQUEST['action'] ) ); // WPCS: input var okay, CSRF ok.
-			$keys   = isset( $_REQUEST['key'] ) ? array_map( 'absint', (array) $_REQUEST['key'] ) : array(); // WPCS: input var okay, CSRF ok.
+			$keys   = isset( $_REQUEST['key'] ) ? array_map( 'absint', (array) $_REQUEST['key'] ) : []; // WPCS: input var okay, CSRF ok.
 
 			if ( 'revoke' === $action ) {
 				$this->bulk_revoke_key( $keys );
@@ -252,7 +252,7 @@ class WC_Admin_API_Keys {
 		}
 
 		// Redirect to webhooks page.
-		wp_safe_redirect( esc_url_raw( add_query_arg( array( 'revoked' => $qty ), admin_url( 'admin.php?page=wc-settings&tab=advanced&section=keys' ) ) ) );
+		wp_safe_redirect( esc_url_raw( add_query_arg( [ 'revoked' => $qty ], admin_url( 'admin.php?page=wc-settings&tab=advanced&section=keys' ) ) ) );
 		exit();
 	}
 
@@ -265,7 +265,7 @@ class WC_Admin_API_Keys {
 	private function remove_key( $key_id ) {
 		global $wpdb;
 
-		$delete = $wpdb->delete( $wpdb->prefix . 'woocommerce_api_keys', array( 'key_id' => $key_id ), array( '%d' ) );
+		$delete = $wpdb->delete( $wpdb->prefix . 'woocommerce_api_keys', [ 'key_id' => $key_id ], [ '%d' ] );
 
 		return $delete;
 	}

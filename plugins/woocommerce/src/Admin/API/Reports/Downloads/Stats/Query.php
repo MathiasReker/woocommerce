@@ -20,7 +20,7 @@ class Query extends ReportsQuery {
 	 * @return array
 	 */
 	protected function get_default_query_vars() {
-		return array();
+		return [];
 	}
 
 	/**

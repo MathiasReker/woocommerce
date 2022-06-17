@@ -13,7 +13,7 @@ class WC_Install_Test extends \WC_Unit_Test_Case {
 
 		// Remove drop filter because we do want to drop temp table if it exists.
 		// This filter was added to only allow dropping temporary tables which will then be rollbacked after the test.
-		remove_filter( 'query', array( $this, '_drop_temporary_tables' ) );
+		remove_filter( 'query', [ $this, '_drop_temporary_tables' ] );
 
 		$original_table_name = "{$wpdb->prefix}wc_tax_rate_classes";
 		$changed_table_name  = "{$wpdb->prefix}wc_tax_rate_classes_2";
@@ -33,7 +33,7 @@ class WC_Install_Test extends \WC_Unit_Test_Case {
 		$missing_tables = \WC_Install::verify_base_tables();
 
 		$wpdb->query( sprintf( $rename_table_query, $changed_table_name, $original_table_name ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
-		add_filter( 'query', array( $this, '_drop_temporary_tables' ) );
+		add_filter( 'query', [ $this, '_drop_temporary_tables' ] );
 
 		$this->assertContains( $original_table_name, $missing_tables );
 		$this->assertContains( 'base_tables_missing', \WC_Admin_Notices::get_notices() );
@@ -54,7 +54,7 @@ class WC_Install_Test extends \WC_Unit_Test_Case {
 
 		// Remove drop filter because we do want to drop temp table if it exists.
 		// This filter was added to only allow dropping temporary tables which will then be rollbacked after the test.
-		remove_filter( 'query', array( $this, '_drop_temporary_tables' ) );
+		remove_filter( 'query', [ $this, '_drop_temporary_tables' ] );
 
 		$original_table_name = "{$wpdb->prefix}wc_tax_rate_classes";
 		$changed_table_name  = "{$wpdb->prefix}wc_tax_rate_classes_2";
@@ -75,7 +75,7 @@ class WC_Install_Test extends \WC_Unit_Test_Case {
 
 		$wpdb->query( sprintf( $clear_query, $original_table_name ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 		$wpdb->query( sprintf( $rename_table_query, $changed_table_name, $original_table_name ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
-		add_filter( 'query', array( $this, '_drop_temporary_tables' ) );
+		add_filter( 'query', [ $this, '_drop_temporary_tables' ] );
 
 		// Ideally, no missing table because verify base tables created the table as well.
 		$this->assertNotContains( $original_table_name, $missing_tables );
@@ -88,12 +88,12 @@ class WC_Install_Test extends \WC_Unit_Test_Case {
 	public function test_plugin_row_meta() {
 		// Simulate connection break.
 		delete_option( 'woocommerce_helper_data' );
-		$plugin_row_data = \WC_Install::plugin_row_meta( array(), WC_PLUGIN_BASENAME );
+		$plugin_row_data = \WC_Install::plugin_row_meta( [], WC_PLUGIN_BASENAME );
 
 		$this->assertNotContains( 'premium_support', array_keys( $plugin_row_data ) );
 
-		update_option( 'woocommerce_helper_data', array( 'auth' => 'random token' ) );
-		$plugin_row_data = \WC_Install::plugin_row_meta( array(), WC_PLUGIN_BASENAME );
+		update_option( 'woocommerce_helper_data', [ 'auth' => 'random token' ] );
+		$plugin_row_data = \WC_Install::plugin_row_meta( [], WC_PLUGIN_BASENAME );
 		$this->assertContains( 'premium_support', array_keys( $plugin_row_data ) );
 	}
 

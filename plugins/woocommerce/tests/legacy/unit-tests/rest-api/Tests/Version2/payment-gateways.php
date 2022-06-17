@@ -18,9 +18,9 @@ class Payment_Gateways_V2 extends WC_REST_Unit_Test_Case {
 		parent::setUp();
 		$this->endpoint = new WC_REST_Payment_Gateways_Controller();
 		$this->user     = $this->factory->user->create(
-			array(
+			[
 				'role' => 'administrator',
-			)
+			]
 		);
 	}
 
@@ -48,7 +48,7 @@ class Payment_Gateways_V2 extends WC_REST_Unit_Test_Case {
 
 		$this->assertEquals( 200, $response->get_status() );
 		$this->assertContains(
-			array(
+			[
 				'id'                     => 'cheque',
 				'title'                  => 'Check payments',
 				'description'            => 'Please send a check to Store Name, Store Street, Store Town, Store State / County, Store Postcode.',
@@ -58,30 +58,30 @@ class Payment_Gateways_V2 extends WC_REST_Unit_Test_Case {
 				'method_description'     => 'Take payments in person via checks. This offline gateway can also be useful to test purchases.',
 				'settings'               => array_diff_key(
 					$this->get_settings( 'WC_Gateway_Cheque' ),
-					array(
+					[
 						'enabled'     => false,
 						'description' => false,
-					)
+					]
 				),
 				'needs_setup'            => false,
-				'post_install_scripts'   => array(),
+				'post_install_scripts'   => [],
 				'settings_url'           => 'http://example.org/wp-admin/admin.php?page=wc-settings&tab=checkout&section=cheque',
 				'connection_url'         => '',
 				'setup_help_text'        => '',
-				'required_settings_keys' => array(),
-				'_links'                 => array(
-					'self'       => array(
-						array(
+				'required_settings_keys' => [],
+				'_links'                 => [
+					'self'       => [
+						[
 							'href' => rest_url( '/wc/v2/payment_gateways/cheque' ),
-						),
-					),
-					'collection' => array(
-						array(
+						],
+					],
+					'collection' => [
+						[
 							'href' => rest_url( '/wc/v2/payment_gateways' ),
-						),
-					),
-				),
-			),
+						],
+					],
+				],
+			],
 			$gateways
 		);
 	}
@@ -110,7 +110,7 @@ class Payment_Gateways_V2 extends WC_REST_Unit_Test_Case {
 
 		$this->assertEquals( 200, $response->get_status() );
 		$this->assertEquals(
-			array(
+			[
 				'id'                     => 'paypal',
 				'title'                  => 'PayPal',
 				'description'            => "Pay via PayPal; you can pay with your credit card if you don't have a PayPal account.",
@@ -120,18 +120,18 @@ class Payment_Gateways_V2 extends WC_REST_Unit_Test_Case {
 				'method_description'     => 'PayPal Standard redirects customers to PayPal to enter their payment information.',
 				'settings'               => array_diff_key(
 					$this->get_settings( 'WC_Gateway_Paypal' ),
-					array(
+					[
 						'enabled'     => false,
 						'description' => false,
-					)
+					]
 				),
 				'needs_setup'            => false,
-				'post_install_scripts'   => array(),
+				'post_install_scripts'   => [],
 				'settings_url'           => 'http://example.org/wp-admin/admin.php?page=wc-settings&tab=checkout&section=paypal',
 				'connection_url'         => null,
 				'setup_help_text'        => null,
-				'required_settings_keys' => array(),
-			),
+				'required_settings_keys' => [],
+			],
 			$paypal
 		);
 	}
@@ -177,11 +177,11 @@ class Payment_Gateways_V2 extends WC_REST_Unit_Test_Case {
 		// Test updating single setting.
 		$request = new WP_REST_Request( 'POST', '/wc/v2/payment_gateways/paypal' );
 		$request->set_body_params(
-			array(
-				'settings' => array(
+			[
+				'settings' => [
 					'email' => 'woo@woo.local',
-				),
-			)
+				],
+			]
 		);
 		$response = $this->server->dispatch( $request );
 		$paypal   = $response->get_data();
@@ -194,12 +194,12 @@ class Payment_Gateways_V2 extends WC_REST_Unit_Test_Case {
 		// Test updating multiple settings.
 		$request = new WP_REST_Request( 'POST', '/wc/v2/payment_gateways/paypal' );
 		$request->set_body_params(
-			array(
-				'settings' => array(
+			[
+				'settings' => [
 					'testmode' => 'yes',
 					'title'    => 'PayPal - New Title',
-				),
-			)
+				],
+			]
 		);
 		$response = $this->server->dispatch( $request );
 		$paypal   = $response->get_data();
@@ -212,10 +212,10 @@ class Payment_Gateways_V2 extends WC_REST_Unit_Test_Case {
 		// Test other parameters, and recheck settings.
 		$request = new WP_REST_Request( 'POST', '/wc/v2/payment_gateways/paypal' );
 		$request->set_body_params(
-			array(
+			[
 				'enabled' => false,
 				'order'   => 2,
-			)
+			]
 		);
 		$response = $this->server->dispatch( $request );
 		$paypal   = $response->get_data();
@@ -229,22 +229,22 @@ class Payment_Gateways_V2 extends WC_REST_Unit_Test_Case {
 		// Test bogus parameter.
 		$request = new WP_REST_Request( 'POST', '/wc/v2/payment_gateways/paypal' );
 		$request->set_body_params(
-			array(
-				'settings' => array(
+			[
+				'settings' => [
 					'paymentaction' => 'afasfasf',
-				),
-			)
+				],
+			]
 		);
 		$response = $this->server->dispatch( $request );
 		$this->assertEquals( 400, $response->get_status() );
 
 		$request = new WP_REST_Request( 'POST', '/wc/v2/payment_gateways/paypal' );
 		$request->set_body_params(
-			array(
-				'settings' => array(
+			[
+				'settings' => [
 					'paymentaction' => 'authorization',
-				),
-			)
+				],
+			]
 		);
 		$response = $this->server->dispatch( $request );
 		$paypal   = $response->get_data();
@@ -260,12 +260,12 @@ class Payment_Gateways_V2 extends WC_REST_Unit_Test_Case {
 		wp_set_current_user( 0 );
 		$request = new WP_REST_Request( 'POST', '/wc/v2/payment_gateways/paypal' );
 		$request->set_body_params(
-			array(
-				'settings' => array(
+			[
+				'settings' => [
 					'testmode' => 'yes',
 					'title'    => 'PayPal - New Title',
-				),
-			)
+				],
+			]
 		);
 		$response = $this->server->dispatch( $request );
 		$this->assertEquals( 401, $response->get_status() );
@@ -280,9 +280,9 @@ class Payment_Gateways_V2 extends WC_REST_Unit_Test_Case {
 		wp_set_current_user( $this->user );
 		$request = new WP_REST_Request( 'POST', '/wc/v2/payment_gateways/totally_fake_method' );
 		$request->set_body_params(
-			array(
+			[
 				'enabled' => true,
-			)
+			]
 		);
 		$response = $this->server->dispatch( $request );
 		$this->assertEquals( 404, $response->get_status() );
@@ -320,7 +320,7 @@ class Payment_Gateways_V2 extends WC_REST_Unit_Test_Case {
 	 */
 	private function get_settings( $gateway_class ) {
 		$gateway  = new $gateway_class();
-		$settings = array();
+		$settings = [];
 		$gateway->init_form_fields();
 		foreach ( $gateway->form_fields as $id => $field ) {
 			// Make sure we at least have a title and type.
@@ -331,7 +331,7 @@ class Payment_Gateways_V2 extends WC_REST_Unit_Test_Case {
 			if ( 'title' === $field['type'] ) {
 				continue;
 			}
-			$data = array(
+			$data = [
 				'id'          => $id,
 				'label'       => empty( $field['label'] ) ? $field['title'] : $field['label'],
 				'description' => empty( $field['description'] ) ? '' : $field['description'],
@@ -340,7 +340,7 @@ class Payment_Gateways_V2 extends WC_REST_Unit_Test_Case {
 				'default'     => empty( $field['default'] ) ? '' : $field['default'],
 				'tip'         => empty( $field['description'] ) ? '' : $field['description'],
 				'placeholder' => empty( $field['placeholder'] ) ? '' : $field['placeholder'],
-			);
+			];
 			if ( ! empty( $field['options'] ) ) {
 				$data['options'] = $field['options'];
 			}

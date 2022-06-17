@@ -15,7 +15,7 @@ class WC_Importer_Tracking {
 	 * Init tracking.
 	 */
 	public function init() {
-		add_action( 'product_page_product_importer', array( $this, 'track_product_importer' ) );
+		add_action( 'product_page_product_importer', [ $this, 'track_product_importer' ] );
 	}
 
 	/**
@@ -50,10 +50,10 @@ class WC_Importer_Tracking {
 			return;
 		}
 
-		$properties = array(
+		$properties = [
 			'update_existing' => isset( $_REQUEST['update_existing'] ) ? (bool) $_REQUEST['update_existing'] : false,
 			'delimiter'       => empty( $_REQUEST['delimiter'] ) ? ',' : wc_clean( wp_unslash( $_REQUEST['delimiter'] ) ),
-		);
+		];
 		// phpcs:enable
 
 		WC_Tracks::record_event( 'product_import_start', $properties );
@@ -70,12 +70,12 @@ class WC_Importer_Tracking {
 			return;
 		}
 
-		$properties = array(
+		$properties = [
 			'imported' => isset( $_GET['products-imported'] ) ? absint( $_GET['products-imported'] ) : 0,
 			'updated'  => isset( $_GET['products-updated'] ) ? absint( $_GET['products-updated'] ) : 0,
 			'failed'   => isset( $_GET['products-failed'] ) ? absint( $_GET['products-failed'] ) : 0,
 			'skipped'  => isset( $_GET['products-skipped'] ) ? absint( $_GET['products-skipped'] ) : 0,
-		);
+		];
 		// phpcs:enable
 
 		WC_Tracks::record_event( 'product_import_complete', $properties );

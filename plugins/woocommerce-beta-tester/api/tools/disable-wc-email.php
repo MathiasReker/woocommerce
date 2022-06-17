@@ -7,9 +7,9 @@ register_woocommerce_admin_test_helper_rest_route(
 register_woocommerce_admin_test_helper_rest_route(
 	'/tools/get-email-status/v1',
 	'get_email_status',
-	array(
+	[
 		'methods' => 'GET',
-	)
+	]
 );
 
 function toggle_emails() {
@@ -39,8 +39,8 @@ function disable_wc_emails( $key ) {
 }
 
 function unhook_other_wc_emails( $email ) {
-	remove_action( 'woocommerce_low_stock_notification', array( $email, 'low_stock' ) );
-	remove_action( 'woocommerce_no_stock_notification', array( $email, 'no_stock' ) );
-	remove_action( 'woocommerce_product_on_backorder_notification', array( $email, 'backorder' ) );
-	remove_action( 'woocommerce_new_customer_note_notification', array( $email->emails['WC_Email_Customer_Note'], 'trigger' ) );
+	remove_action( 'woocommerce_low_stock_notification', [ $email, 'low_stock' ] );
+	remove_action( 'woocommerce_no_stock_notification', [ $email, 'no_stock' ] );
+	remove_action( 'woocommerce_product_on_backorder_notification', [ $email, 'backorder' ] );
+	remove_action( 'woocommerce_new_customer_note_notification', [ $email->emails['WC_Email_Customer_Note'], 'trigger' ] );
 }

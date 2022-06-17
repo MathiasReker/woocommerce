@@ -35,19 +35,19 @@ class WC_API_Reports extends WC_API_Resource {
 	public function register_routes( $routes ) {
 
 		# GET /reports
-		$routes[ $this->base ] = array(
-			array( array( $this, 'get_reports' ),     WC_API_Server::READABLE ),
-		);
+		$routes[ $this->base ] = [
+			[ [ $this, 'get_reports' ],     WC_API_Server::READABLE ],
+		];
 
 		# GET /reports/sales
-		$routes[ $this->base . '/sales' ] = array(
-			array( array( $this, 'get_sales_report' ), WC_API_Server::READABLE ),
-		);
+		$routes[ $this->base . '/sales' ] = [
+			[ [ $this, 'get_sales_report' ], WC_API_Server::READABLE ],
+		];
 
 		# GET /reports/sales/top_sellers
-		$routes[ $this->base . '/sales/top_sellers' ] = array(
-			array( array( $this, 'get_top_sellers_report' ), WC_API_Server::READABLE ),
-		);
+		$routes[ $this->base . '/sales/top_sellers' ] = [
+			[ [ $this, 'get_top_sellers_report' ], WC_API_Server::READABLE ],
+		];
 
 		return $routes;
 	}
@@ -59,7 +59,7 @@ class WC_API_Reports extends WC_API_Resource {
 	 * @return array
 	 */
 	public function get_reports() {
-		return array( 'reports' => array( 'sales', 'sales/top_sellers' ) );
+		return [ 'reports' => [ 'sales', 'sales/top_sellers' ] ];
 	}
 
 	/**
@@ -70,7 +70,7 @@ class WC_API_Reports extends WC_API_Resource {
 	 * @param array $filter date filtering
 	 * @return array|WP_Error
 	 */
-	public function get_sales_report( $fields = null, $filter = array() ) {
+	public function get_sales_report( $fields = null, $filter = [] ) {
 
 		// check user permissions
 		$check = $this->validate_request();
@@ -85,10 +85,10 @@ class WC_API_Reports extends WC_API_Resource {
 
 		// new customers
 		$users_query = new WP_User_Query(
-			array(
-				'fields' => array( 'user_registered' ),
+			[
+				'fields' => [ 'user_registered' ],
 				'role'   => 'customer',
-			)
+			]
 		);
 
 		$customers = $users_query->get_results();
@@ -101,7 +101,7 @@ class WC_API_Reports extends WC_API_Resource {
 
 		$total_customers = count( $customers );
 		$report_data     = $this->report->get_report_data();
-		$period_totals   = array();
+		$period_totals   = [];
 
 		// setup period totals by ensuring each period in the interval has data
 		for ( $i = 0; $i <= $this->report->chart_interval; $i ++ ) {
@@ -123,7 +123,7 @@ class WC_API_Reports extends WC_API_Resource {
 				}
  			}
 
-			$period_totals[ $time ] = array(
+			$period_totals[ $time ] = [
 				'sales'     => wc_format_decimal( 0.00, 2 ),
 				'orders'    => 0,
 				'items'     => 0,
@@ -131,7 +131,7 @@ class WC_API_Reports extends WC_API_Resource {
 				'shipping'  => wc_format_decimal( 0.00, 2 ),
 				'discount'  => wc_format_decimal( 0.00, 2 ),
 				'customers' => $customer_count,
-			);
+			];
 		}
 
 		// add total sales, total order count, total tax and total shipping for each period
@@ -179,7 +179,7 @@ class WC_API_Reports extends WC_API_Resource {
 			$period_totals[ $time ]['discount'] = wc_format_decimal( $discount->discount_amount, 2 );
 		}
 
-		$sales_data  = array(
+		$sales_data  = [
 			'total_sales'       => $report_data->total_sales,
 			'net_sales'         => $report_data->net_sales,
 			'average_sales'     => $report_data->average_sales,
@@ -192,9 +192,9 @@ class WC_API_Reports extends WC_API_Resource {
 			'totals_grouped_by' => $this->report->chart_groupby,
 			'totals'            => $period_totals,
 			'total_customers'   => $total_customers,
-		);
+		];
 
-		return array( 'sales' => apply_filters( 'woocommerce_api_report_response', $sales_data, $this->report, $fields, $this->server ) );
+		return [ 'sales' => apply_filters( 'woocommerce_api_report_response', $sales_data, $this->report, $fields, $this->server ) ];
 	}
 
 	/**
@@ -205,7 +205,7 @@ class WC_API_Reports extends WC_API_Resource {
 	 * @param array $filter date filtering
 	 * @return array|WP_Error
 	 */
-	public function get_top_sellers_report( $fields = null, $filter = array() ) {
+	public function get_top_sellers_report( $fields = null, $filter = [] ) {
 
 		// check user permissions
 		$check = $this->validate_request();
@@ -217,44 +217,44 @@ class WC_API_Reports extends WC_API_Resource {
 		// set date filtering
 		$this->setup_report( $filter );
 
-		$top_sellers = $this->report->get_order_report_data( array(
-			'data' => array(
-				'_product_id' => array(
+		$top_sellers = $this->report->get_order_report_data( [
+			'data' => [
+				'_product_id' => [
 					'type'            => 'order_item_meta',
 					'order_item_type' => 'line_item',
 					'function'        => '',
 					'name'            => 'product_id',
-				),
-				'_qty' => array(
+				],
+				'_qty' => [
 					'type'            => 'order_item_meta',
 					'order_item_type' => 'line_item',
 					'function'        => 'SUM',
 					'name'            => 'order_item_qty',
-				),
-			),
+				],
+			],
 			'order_by'     => 'order_item_qty DESC',
 			'group_by'     => 'product_id',
 			'limit'        => isset( $filter['limit'] ) ? absint( $filter['limit'] ) : 12,
 			'query_type'   => 'get_results',
 			'filter_range' => true,
-		) );
+		] );
 
-		$top_sellers_data = array();
+		$top_sellers_data = [];
 
 		foreach ( $top_sellers as $top_seller ) {
 
 			$product = wc_get_product( $top_seller->product_id );
 
 			if ( $product ) {
-				$top_sellers_data[] = array(
+				$top_sellers_data[] = [
 					'title'      => $product->get_name(),
 					'product_id' => $top_seller->product_id,
 					'quantity'   => $top_seller->order_item_qty,
-				);
+				];
 			}
 		}
 
-		return array( 'top_sellers' => apply_filters( 'woocommerce_api_report_response', $top_sellers_data, $this->report, $fields, $this->server ) );
+		return [ 'top_sellers' => apply_filters( 'woocommerce_api_report_response', $top_sellers_data, $this->report, $fields, $this->server ) ];
 	}
 
 	/**
@@ -289,7 +289,7 @@ class WC_API_Reports extends WC_API_Resource {
 		} else {
 
 			// ensure period is valid
-			if ( ! in_array( $filter['period'], array( 'week', 'month', 'last_month', 'year' ) ) ) {
+			if ( ! in_array( $filter['period'], [ 'week', 'month', 'last_month', 'year' ] ) ) {
 				$filter['period'] = 'week';
 			}
 
@@ -324,7 +324,7 @@ class WC_API_Reports extends WC_API_Resource {
 		return new WP_Error(
 			'woocommerce_api_user_cannot_read_report',
 			__( 'You do not have permission to read this report', 'woocommerce' ),
-			array( 'status' => 401 )
+			[ 'status' => 401 ]
 		);
 	}
 }

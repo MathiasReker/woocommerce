@@ -20,30 +20,30 @@ class WC_Tests_User_Functions extends WC_Unit_Test_Case {
 		$password = wp_generate_password();
 
 		$admin_id = wp_insert_user(
-			array(
+			[
 				'user_login' => 'test_admin',
 				'user_pass'  => $password,
 				'user_email' => 'admin@example.com',
 				'role'       => 'administrator',
-			)
+			]
 		);
 
 		$editor_id = wp_insert_user(
-			array(
+			[
 				'user_login' => 'test_editor',
 				'user_pass'  => $password,
 				'user_email' => 'editor@example.com',
 				'role'       => 'editor',
-			)
+			]
 		);
 
 		$manager_id = wp_insert_user(
-			array(
+			[
 				'user_login' => 'test_manager',
 				'user_pass'  => $password,
 				'user_email' => 'manager@example.com',
 				'role'       => 'shop_manager',
-			)
+			]
 		);
 
 		// Admins should be able to edit anyone.
@@ -65,7 +65,7 @@ class WC_Tests_User_Functions extends WC_Unit_Test_Case {
 		// Shop manager should only be able to edit customers.
 		wp_set_current_user( $manager_id );
 		$manager_editable_roles = array_keys( get_editable_roles() );
-		$this->assertEquals( array( 'customer' ), $manager_editable_roles );
+		$this->assertEquals( [ 'customer' ], $manager_editable_roles );
 	}
 
 	/**
@@ -77,47 +77,47 @@ class WC_Tests_User_Functions extends WC_Unit_Test_Case {
 		$password = wp_generate_password();
 
 		$admin_id = wp_insert_user(
-			array(
+			[
 				'user_login' => 'test_admin',
 				'user_pass'  => $password,
 				'user_email' => 'admin@example.com',
 				'role'       => 'administrator',
-			)
+			]
 		);
 
 		$editor_id = wp_insert_user(
-			array(
+			[
 				'user_login' => 'test_editor',
 				'user_pass'  => $password,
 				'user_email' => 'editor@example.com',
 				'role'       => 'editor',
-			)
+			]
 		);
 
 		$manager_id = wp_insert_user(
-			array(
+			[
 				'user_login' => 'test_manager',
 				'user_pass'  => $password,
 				'user_email' => 'manager@example.com',
 				'role'       => 'shop_manager',
-			)
+			]
 		);
 
 		$customer_id = wp_insert_user(
-			array(
+			[
 				'user_login' => 'test_customer',
 				'user_pass'  => $password,
 				'user_email' => 'customer@example.com',
 				'role'       => 'customer',
-			)
+			]
 		);
 
 		// Admins should be able to edit or promote anyone.
 		wp_set_current_user( $admin_id );
 		$caps = map_meta_cap( 'edit_user', $admin_id, $editor_id );
-		$this->assertEquals( array( 'edit_users' ), $caps );
+		$this->assertEquals( [ 'edit_users' ], $caps );
 		$caps = map_meta_cap( 'promote_user', $admin_id, $manager_id );
-		$this->assertEquals( array( 'promote_users' ), $caps );
+		$this->assertEquals( [ 'promote_users' ], $caps );
 
 		// Shop managers should only be able to edit themselves or customers.
 		wp_set_current_user( $manager_id );
@@ -126,7 +126,7 @@ class WC_Tests_User_Functions extends WC_Unit_Test_Case {
 		$caps = map_meta_cap( 'edit_user', $manager_id, $editor_id );
 		$this->assertContains( 'do_not_allow', $caps );
 		$caps = map_meta_cap( 'edit_user', $manager_id, $customer_id );
-		$this->assertEquals( array( 'edit_users' ), $caps );
+		$this->assertEquals( [ 'edit_users' ], $caps );
 	}
 
 	/**
@@ -138,22 +138,22 @@ class WC_Tests_User_Functions extends WC_Unit_Test_Case {
 		$password = wp_generate_password();
 
 		$manager_id = wp_insert_user(
-			array(
+			[
 				'user_login' => 'test_manager',
 				'user_pass'  => $password,
 				'user_email' => 'manager@example.com',
 				'role'       => 'shop_manager',
-			)
+			]
 		);
 		$manager    = new WP_User( $manager_id );
 
 		$editor_id = wp_insert_user(
-			array(
+			[
 				'user_login' => 'test_editor',
 				'user_pass'  => $password,
 				'user_email' => 'editor@example.com',
 				'role'       => 'editor',
-			)
+			]
 		);
 		$editor    = new WP_User( $editor_id );
 

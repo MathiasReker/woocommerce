@@ -23,10 +23,10 @@ class WC_Order_Item extends WC_Data implements ArrayAccess {
 	 * @since 3.0.0
 	 * @var array
 	 */
-	protected $data = array(
+	protected $data = [
 		'order_id' => 0,
 		'name'     => '',
-	);
+	];
 
 	/**
 	 * Stores meta in cache for future reads.
@@ -91,7 +91,7 @@ class WC_Order_Item extends WC_Data implements ArrayAccess {
 				$this->data[ $key ] = $change;
 			}
 		}
-		$this->changes = array();
+		$this->changes = [];
 	}
 
 	/*
@@ -212,7 +212,7 @@ class WC_Order_Item extends WC_Data implements ArrayAccess {
 	 * @param  array $calculate_tax_for Location data to get taxes for. Required.
 	 * @return bool  True if taxes were calculated.
 	 */
-	public function calculate_taxes( $calculate_tax_for = array() ) {
+	public function calculate_taxes( $calculate_tax_for = [] ) {
 		if ( ! isset( $calculate_tax_for['country'], $calculate_tax_for['state'], $calculate_tax_for['postcode'], $calculate_tax_for['city'] ) ) {
 			return false;
 		}
@@ -224,13 +224,13 @@ class WC_Order_Item extends WC_Data implements ArrayAccess {
 			if ( method_exists( $this, 'get_subtotal' ) ) {
 				$subtotal_taxes = WC_Tax::calc_tax( $this->get_subtotal(), $tax_rates, false );
 				$this->set_taxes(
-					array(
+					[
 						'total'    => $taxes,
 						'subtotal' => $subtotal_taxes,
-					)
+					]
 				);
 			} else {
-				$this->set_taxes( array( 'total' => $taxes ) );
+				$this->set_taxes( [ 'total' => $taxes ] );
 			}
 		} else {
 			$this->set_taxes( false );
@@ -266,10 +266,10 @@ class WC_Order_Item extends WC_Data implements ArrayAccess {
 	 * @return array
 	 */
 	public function get_formatted_meta_data( $hideprefix = '_', $include_all = false ) {
-		$formatted_meta    = array();
+		$formatted_meta    = [];
 		$meta_data         = $this->get_meta_data();
 		$hideprefix_length = ! empty( $hideprefix ) ? strlen( $hideprefix ) : 0;
-		$product           = is_callable( array( $this, 'get_product' ) ) ? $this->get_product() : false;
+		$product           = is_callable( [ $this, 'get_product' ] ) ? $this->get_product() : false;
 		$order_item_name   = $this->get_name();
 
 		foreach ( $meta_data as $meta ) {
@@ -295,12 +295,12 @@ class WC_Order_Item extends WC_Data implements ArrayAccess {
 				continue;
 			}
 
-			$formatted_meta[ $meta->id ] = (object) array(
+			$formatted_meta[ $meta->id ] = (object) [
 				'key'           => $meta->key,
 				'value'         => $meta->value,
 				'display_key'   => apply_filters( 'woocommerce_order_item_display_meta_key', $display_key, $meta, $this ),
 				'display_value' => wpautop( make_clickable( apply_filters( 'woocommerce_order_item_display_meta_value', $display_value, $meta, $this ) ) ),
-			);
+			];
 		}
 
 		return apply_filters( 'woocommerce_order_item_get_formatted_meta_data', $formatted_meta, $this );
@@ -332,7 +332,7 @@ class WC_Order_Item extends WC_Data implements ArrayAccess {
 
 		if ( array_key_exists( $offset, $this->data ) ) {
 			$setter = "set_$offset";
-			if ( is_callable( array( $this, $setter ) ) ) {
+			if ( is_callable( [ $this, $setter ] ) ) {
 				$this->$setter( $value );
 			}
 			return;
@@ -351,7 +351,7 @@ class WC_Order_Item extends WC_Data implements ArrayAccess {
 		$this->maybe_read_meta_data();
 
 		if ( 'item_meta_array' === $offset || 'item_meta' === $offset ) {
-			$this->meta_data = array();
+			$this->meta_data = [];
 			return;
 		}
 
@@ -392,7 +392,7 @@ class WC_Order_Item extends WC_Data implements ArrayAccess {
 		$this->maybe_read_meta_data();
 
 		if ( 'item_meta_array' === $offset ) {
-			$return = array();
+			$return = [];
 
 			foreach ( $this->meta_data as $meta ) {
 				$return[ $meta->id ] = $meta;
@@ -409,7 +409,7 @@ class WC_Order_Item extends WC_Data implements ArrayAccess {
 			return $this->get_type();
 		} elseif ( array_key_exists( $offset, $this->data ) ) {
 			$getter = "get_$offset";
-			if ( is_callable( array( $this, $getter ) ) ) {
+			if ( is_callable( [ $this, $getter ] ) ) {
 				return $this->$getter();
 			}
 		} elseif ( array_key_exists( '_' . $offset, $meta_values ) ) {

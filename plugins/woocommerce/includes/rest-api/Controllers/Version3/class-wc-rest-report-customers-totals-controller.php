@@ -43,7 +43,7 @@ class WC_REST_Report_Customers_Totals_Controller extends WC_REST_Reports_Control
 		$total_customers = 0;
 
 		foreach ( $users_count['avail_roles'] as $role => $total ) {
-			if ( in_array( $role, array( 'administrator', 'shop_manager' ), true ) ) {
+			if ( in_array( $role, [ 'administrator', 'shop_manager' ], true ) ) {
 				continue;
 			}
 
@@ -51,35 +51,35 @@ class WC_REST_Report_Customers_Totals_Controller extends WC_REST_Reports_Control
 		}
 
 		$customers_query = new WP_User_Query(
-			array(
-				'role__not_in' => array( 'administrator', 'shop_manager' ),
+			[
+				'role__not_in' => [ 'administrator', 'shop_manager' ],
 				'number'       => 0,
 				'fields'       => 'ID',
 				'count_total'  => true,
-				'meta_query'   => array( // WPCS: slow query ok.
-					array(
+				'meta_query'   => [ // WPCS: slow query ok.
+					[
 						'key'     => 'paying_customer',
 						'value'   => 1,
 						'compare' => '=',
-					),
-				),
-			)
+					],
+				],
+			]
 		);
 
 		$total_paying = (int) $customers_query->get_total();
 
-		$data = array(
-			array(
+		$data = [
+			[
 				'slug'  => 'paying',
 				'name'  => __( 'Paying customer', 'woocommerce' ),
 				'total' => $total_paying,
-			),
-			array(
+			],
+			[
 				'slug'  => 'non_paying',
 				'name'  => __( 'Non-paying customer', 'woocommerce' ),
 				'total' => $total_customers - $total_paying,
-			),
-		);
+			],
+		];
 
 		return $data;
 	}
@@ -92,11 +92,11 @@ class WC_REST_Report_Customers_Totals_Controller extends WC_REST_Reports_Control
 	 * @return WP_REST_Response $response Response data.
 	 */
 	public function prepare_item_for_response( $report, $request ) {
-		$data = array(
+		$data = [
 			'slug'  => $report->slug,
 			'name'  => $report->name,
 			'total' => $report->total,
-		);
+		];
 
 		$context = ! empty( $request['context'] ) ? $request['context'] : 'view';
 		$data    = $this->add_additional_fields_to_object( $data, $request );
@@ -123,31 +123,31 @@ class WC_REST_Report_Customers_Totals_Controller extends WC_REST_Reports_Control
 	 * @return array
 	 */
 	public function get_item_schema() {
-		$schema = array(
+		$schema = [
 			'$schema'    => 'http://json-schema.org/draft-04/schema#',
 			'title'      => 'report_customer_total',
 			'type'       => 'object',
-			'properties' => array(
-				'slug'  => array(
+			'properties' => [
+				'slug'  => [
 					'description' => __( 'An alphanumeric identifier for the resource.', 'woocommerce' ),
 					'type'        => 'string',
-					'context'     => array( 'view' ),
+					'context'     => [ 'view' ],
 					'readonly'    => true,
-				),
-				'name'  => array(
+				],
+				'name'  => [
 					'description' => __( 'Customer type name.', 'woocommerce' ),
 					'type'        => 'string',
-					'context'     => array( 'view' ),
+					'context'     => [ 'view' ],
 					'readonly'    => true,
-				),
-				'total' => array(
+				],
+				'total' => [
 					'description' => __( 'Amount of customers.', 'woocommerce' ),
 					'type'        => 'string',
-					'context'     => array( 'view' ),
+					'context'     => [ 'view' ],
 					'readonly'    => true,
-				),
-			),
-		);
+				],
+			],
+		];
 
 		return $this->add_additional_fields_schema( $schema );
 	}

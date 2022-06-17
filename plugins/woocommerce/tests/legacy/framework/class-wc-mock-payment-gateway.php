@@ -20,10 +20,10 @@ class WC_Mock_Payment_Gateway extends WC_Payment_Gateway {
 		$this->method_title       = 'Mock Gateway';
 		$this->method_description = 'Mock Gateway for unit tests';
 		$this->pay_button_id      = 'mock-pay-button';
-		$this->supports           = array(
+		$this->supports           = [
 			'products',
 			'pay_button',
-		);
+		];
 
 		// Load the settings.
 		$this->init_form_fields();
@@ -34,14 +34,14 @@ class WC_Mock_Payment_Gateway extends WC_Payment_Gateway {
 	 * Initialise Gateway Settings Form Fields.
 	 */
 	public function init_form_fields() {
-		$this->form_fields = array(
-			'enabled' => array(
+		$this->form_fields = [
+			'enabled' => [
 				'title'   => '',
 				'type'    => 'checkbox',
 				'label'   => '',
 				'default' => 'yes',
-			),
-		);
+			],
+		];
 	}
 }
 

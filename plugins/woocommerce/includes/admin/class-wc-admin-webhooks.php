@@ -17,9 +17,9 @@ class WC_Admin_Webhooks {
 	 * Initialize the webhooks admin actions.
 	 */
 	public function __construct() {
-		add_action( 'admin_init', array( $this, 'actions' ) );
-		add_action( 'woocommerce_settings_page_init', array( $this, 'screen_option' ) );
-		add_filter( 'woocommerce_save_settings_advanced_webhooks', array( $this, 'allow_save_settings' ) );
+		add_action( 'admin_init', [ $this, 'actions' ] );
+		add_action( 'woocommerce_settings_page_init', [ $this, 'screen_option' ] );
+		add_filter( 'woocommerce_save_settings_advanced_webhooks', [ $this, 'allow_save_settings' ] );
 	}
 
 	/**
@@ -56,7 +56,7 @@ class WC_Admin_Webhooks {
 			wp_die( esc_html__( 'You do not have permission to update Webhooks', 'woocommerce' ) );
 		}
 
-		$errors     = array();
+		$errors     = [];
 		$webhook_id = isset( $_POST['webhook_id'] ) ? absint( $_POST['webhook_id'] ) : 0;  // WPCS: input var okay, CSRF ok.
 		$webhook    = new WC_Webhook( $webhook_id );
 
@@ -175,7 +175,7 @@ class WC_Admin_Webhooks {
 			$webhook_id = absint( $_GET['delete'] ); // WPCS: input var okay, CSRF ok.
 
 			if ( $webhook_id ) {
-				$this->bulk_delete( array( $webhook_id ) );
+				$this->bulk_delete( [ $webhook_id ] );
 			}
 		}
 	}
@@ -253,10 +253,10 @@ class WC_Admin_Webhooks {
 			// Add screen option.
 			add_screen_option(
 				'per_page',
-				array(
+				[
 					'default' => 10,
 					'option'  => 'woocommerce_webhooks_per_page',
-				)
+				]
 			);
 		}
 	}
@@ -322,16 +322,16 @@ class WC_Admin_Webhooks {
 
 			if ( 'action' === $resource ) {
 				$topic = 'action';
-			} elseif ( ! in_array( $resource, array( 'coupon', 'customer', 'order', 'product' ), true ) ) {
+			} elseif ( ! in_array( $resource, [ 'coupon', 'customer', 'order', 'product' ], true ) ) {
 				$topic = 'custom';
 			}
 		}
 
-		return array(
+		return [
 			'topic'    => $topic,
 			'event'    => $event,
 			'resource' => $resource,
-		);
+		];
 	}
 
 	/**

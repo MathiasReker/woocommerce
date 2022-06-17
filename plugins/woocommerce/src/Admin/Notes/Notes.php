@@ -21,9 +21,9 @@ class Notes {
 	 * Hook appropriate actions.
 	 */
 	public static function init() {
-		add_action( 'admin_init', array( __CLASS__, 'schedule_unsnooze_notes' ) );
-		add_action( 'admin_init', array( __CLASS__, 'possibly_delete_survey_notes' ) );
-		add_action( 'update_option_woocommerce_show_marketplace_suggestions', array( __CLASS__, 'possibly_delete_marketing_notes' ), 10, 2 );
+		add_action( 'admin_init', [ __CLASS__, 'schedule_unsnooze_notes' ] );
+		add_action( 'admin_init', [ __CLASS__, 'possibly_delete_survey_notes' ] );
+		add_action( 'update_option_woocommerce_show_marketplace_suggestions', [ __CLASS__, 'possibly_delete_marketing_notes' ], 10, 2 );
 	}
 
 	/**
@@ -33,10 +33,10 @@ class Notes {
 	 * @param array  $args Arguments to pass to the query( e.g. per_page and page).
 	 * @return array Array of arrays.
 	 */
-	public static function get_notes( $context = 'edit', $args = array() ) {
+	public static function get_notes( $context = 'edit', $args = [] ) {
 		$data_store = self::load_data_store();
 		$raw_notes  = $data_store->get_notes( $args );
-		$notes      = array();
+		$notes      = [];
 		foreach ( (array) $raw_notes as $raw_note ) {
 			try {
 				$note                               = new Note( $raw_note );
@@ -57,7 +57,7 @@ class Notes {
 				$notes[ $note_id ]['image']         = $note->get_image( $context );
 				$notes[ $note_id ]['is_deleted']    = $note->get_is_deleted( $context );
 			} catch ( \Exception $e ) {
-				wc_caught_exception( $e, __CLASS__ . '::' . __FUNCTION__, array( $note_id ) );
+				wc_caught_exception( $e, __CLASS__ . '::' . __FUNCTION__, [ $note_id ] );
 			}
 		}
 		return $notes;
@@ -74,7 +74,7 @@ class Notes {
 			try {
 				return new Note( $note_id );
 			} catch ( \Exception $e ) {
-				wc_caught_exception( $e, __CLASS__ . '::' . __FUNCTION__, array( $note_id ) );
+				wc_caught_exception( $e, __CLASS__ . '::' . __FUNCTION__, [ $note_id ] );
 				return false;
 			}
 		}
@@ -109,7 +109,7 @@ class Notes {
 	 * @param string $status Comma separated list of statuses.
 	 * @return int
 	 */
-	public static function get_notes_count( $type = array(), $status = array() ) {
+	public static function get_notes_count( $type = [], $status = [] ) {
 		$data_store = self::load_data_store();
 		return $data_store->get_notes_count( $type, $status );
 	}
@@ -121,7 +121,7 @@ class Notes {
 	 */
 	public static function delete_notes_with_name( $names ) {
 		if ( is_string( $names ) ) {
-			$names = array( $names );
+			$names = [ $names ];
 		} elseif ( ! is_array( $names ) ) {
 			return;
 		}
@@ -188,26 +188,26 @@ class Notes {
 	 * @param array $args Arguments to pass to the query (ex: status).
 	 * @return array Array of notes.
 	 */
-	public static function delete_all_notes( $args = array() ) {
+	public static function delete_all_notes( $args = [] ) {
 		$data_store = self::load_data_store();
-		$defaults   = array(
+		$defaults   = [
 			'order'      => 'desc',
 			'orderby'    => 'date_created',
 			'per_page'   => 25,
 			'page'       => 1,
-			'type'       => array(
+			'type'       => [
 				Note::E_WC_ADMIN_NOTE_INFORMATIONAL,
 				Note::E_WC_ADMIN_NOTE_MARKETING,
 				Note::E_WC_ADMIN_NOTE_WARNING,
 				Note::E_WC_ADMIN_NOTE_SURVEY,
-			),
+			],
 			'is_deleted' => 0,
-		);
+		];
 		$args       = wp_parse_args( $args, $defaults );
 		// Here we filter for the same params we are using to show the note list in client side.
 		$raw_notes = $data_store->get_notes( $args );
 
-		$notes = array();
+		$notes = [];
 		foreach ( (array) $raw_notes as $raw_note ) {
 			$note = self::get_note( $raw_note->note_id );
 			if ( $note ) {
@@ -224,9 +224,9 @@ class Notes {
 	public static function unsnooze_notes() {
 		$data_store = self::load_data_store();
 		$raw_notes  = $data_store->get_notes(
-			array(
-				'status' => array( Note::E_WC_ADMIN_NOTE_SNOOZED ),
-			)
+			[
+				'status' => [ Note::E_WC_ADMIN_NOTE_SNOOZED ],
+			]
 		);
 		$now        = new \DateTime();
 
@@ -366,7 +366,7 @@ class Notes {
 
 		$note->save();
 
-		$event_params = array(
+		$event_params = [
 			'note_name'    => $note->get_name(),
 			'note_type'    => $note->get_type(),
 			'note_title'   => $note->get_title(),
@@ -374,9 +374,9 @@ class Notes {
 			'action_name'  => $triggered_action->name,
 			'action_label' => $triggered_action->label,
 			'screen'       => self::get_screen_name(),
-		);
+		];
 
-		if ( in_array( $note->get_type(), array( 'error', 'update' ), true ) ) {
+		if ( in_array( $note->get_type(), [ 'error', 'update' ], true ) ) {
 			wc_admin_record_tracks_event( 'store_alert_action', $event_params );
 		} else {
 			self::record_tracks_event_without_cookies( 'inbox_action_click', $event_params );

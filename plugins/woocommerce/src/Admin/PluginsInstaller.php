@@ -21,7 +21,7 @@ class PluginsInstaller {
 	 * Constructor
 	 */
 	public static function init() {
-		add_action( 'admin_init', array( __CLASS__, 'possibly_install_activate_plugins' ) );
+		add_action( 'admin_init', [ __CLASS__, 'possibly_install_activate_plugins' ] );
 	}
 
 	/**
@@ -54,14 +54,14 @@ class PluginsInstaller {
 
 		switch ( $plugin_action ) {
 			case 'install':
-				$install_result = $plugins_api->install_plugins( array( 'plugins' => $plugins ) );
+				$install_result = $plugins_api->install_plugins( [ 'plugins' => $plugins ] );
 				break;
 			case 'activate':
-				$activate_result = $plugins_api->activate_plugins( array( 'plugins' => $plugins ) );
+				$activate_result = $plugins_api->activate_plugins( [ 'plugins' => $plugins ] );
 				break;
 			case 'install-activate':
-				$install_result  = $plugins_api->install_plugins( array( 'plugins' => $plugins ) );
-				$activate_result = $plugins_api->activate_plugins( array( 'plugins' => implode( ',', $install_result['data']['installed'] ) ) );
+				$install_result  = $plugins_api->install_plugins( [ 'plugins' => $plugins ] );
+				$activate_result = $plugins_api->activate_plugins( [ 'plugins' => implode( ',', $install_result['data']['installed'] ) ] );
 				break;
 		}
 
@@ -88,12 +88,12 @@ class PluginsInstaller {
 		}
 
 		TransientNotices::add(
-			array(
+			[
 				'user_id' => get_current_user_id(),
 				'id'      => 'plugin-installer-' . str_replace( ',', '-', $plugins ),
 				'status'  => 'success',
 				'content' => $message,
-			)
+			]
 		);
 	}
 

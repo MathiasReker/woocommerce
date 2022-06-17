@@ -39,24 +39,24 @@ class WC_REST_Report_Reviews_Totals_Controller extends WC_REST_Reports_Controlle
 	 * @return array
 	 */
 	protected function get_reports() {
-		$data = array();
+		$data = [];
 
-		$query_data = array(
+		$query_data = [
 			'count'      => true,
 			'post_type'  => 'product',
 			'meta_key'   => 'rating', // WPCS: slow query ok.
 			'meta_value' => '', // WPCS: slow query ok.
-		);
+		];
 
 		for ( $i = 1; $i <= 5; $i++ ) {
 			$query_data['meta_value'] = $i;
 
-			$data[] = array(
+			$data[] = [
 				'slug'  => 'rated_' . $i . '_out_of_5',
 				/* translators: %s: average rating */
 				'name'  => sprintf( __( 'Rated %s out of 5', 'woocommerce' ), $i ),
 				'total' => (int) get_comments( $query_data ),
-			);
+			];
 		}
 
 		return $data;
@@ -70,11 +70,11 @@ class WC_REST_Report_Reviews_Totals_Controller extends WC_REST_Reports_Controlle
 	 * @return WP_REST_Response $response Response data.
 	 */
 	public function prepare_item_for_response( $report, $request ) {
-		$data = array(
+		$data = [
 			'slug'  => $report->slug,
 			'name'  => $report->name,
 			'total' => $report->total,
-		);
+		];
 
 		$context = ! empty( $request['context'] ) ? $request['context'] : 'view';
 		$data    = $this->add_additional_fields_to_object( $data, $request );
@@ -101,31 +101,31 @@ class WC_REST_Report_Reviews_Totals_Controller extends WC_REST_Reports_Controlle
 	 * @return array
 	 */
 	public function get_item_schema() {
-		$schema = array(
+		$schema = [
 			'$schema'    => 'http://json-schema.org/draft-04/schema#',
 			'title'      => 'report_review_total',
 			'type'       => 'object',
-			'properties' => array(
-				'slug'  => array(
+			'properties' => [
+				'slug'  => [
 					'description' => __( 'An alphanumeric identifier for the resource.', 'woocommerce' ),
 					'type'        => 'string',
-					'context'     => array( 'view' ),
+					'context'     => [ 'view' ],
 					'readonly'    => true,
-				),
-				'name'  => array(
+				],
+				'name'  => [
 					'description' => __( 'Review type name.', 'woocommerce' ),
 					'type'        => 'string',
-					'context'     => array( 'view' ),
+					'context'     => [ 'view' ],
 					'readonly'    => true,
-				),
-				'total' => array(
+				],
+				'total' => [
 					'description' => __( 'Amount of reviews.', 'woocommerce' ),
 					'type'        => 'string',
-					'context'     => array( 'view' ),
+					'context'     => [ 'view' ],
 					'readonly'    => true,
-				),
-			),
-		);
+				],
+			],
+		];
 
 		return $this->add_additional_fields_schema( $schema );
 	}

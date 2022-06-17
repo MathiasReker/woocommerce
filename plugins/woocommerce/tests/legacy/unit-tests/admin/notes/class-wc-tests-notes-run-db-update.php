@@ -70,22 +70,22 @@ class WC_Tests_Notes_Run_Db_Update extends WC_Unit_Test_Case {
 			)
 		);
 
-		$note_actions = array(
-			array(
+		$note_actions = [
+			[
 				'name'    => 'update-db_run',
 				'label'   => __( 'Update WooCommerce Database', 'woocommerce' ),
 				'url'     => $update_url,
 				'status'  => 'unactioned',
 				'primary' => true,
-			),
-			array(
+			],
+			[
 				'name'    => 'update-db_learn-more',
 				'label'   => __( 'Learn more about updates', 'woocommerce' ),
 				'url'     => 'https://docs.woocommerce.com/document/how-to-update-woocommerce/',
 				'status'  => 'unactioned',
 				'primary' => false,
-			),
-		);
+			],
+		];
 
 		$note = new Note();
 
@@ -93,7 +93,7 @@ class WC_Tests_Notes_Run_Db_Update extends WC_Unit_Test_Case {
 		$note->set_content( 'To keep things running smoothly, we have to update your database to the newest version.' );
 		$note->set_type( Note::E_WC_ADMIN_NOTE_UPDATE );
 		$note->set_name( WC_Notes_Run_Db_Update::NOTE_NAME );
-		$note->set_content_data( (object) array() );
+		$note->set_content_data( (object) [] );
 		$note->set_source( 'woocommerce-core' );
 		$note->set_status( Note::E_WC_ADMIN_NOTE_UNACTIONED );
 

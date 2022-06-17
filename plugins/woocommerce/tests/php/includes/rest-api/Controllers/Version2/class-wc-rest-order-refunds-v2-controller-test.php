@@ -17,25 +17,25 @@ class WC_REST_Order_Refunds_V2_Controller_Test extends WC_REST_Unit_Test_Case {
 		$shipping_item = current( $order->get_items( 'shipping' ) );
 
 		$refund = wc_create_refund(
-			array(
+			[
 				'order_id'   => $order->get_id(),
 				'reason'     => 'testing',
-				'line_items' => array(
+				'line_items' => [
 					$product_item->get_id()  =>
-						array(
+						[
 							'qty'          => 1,
 							'refund_total' => 1,
-						),
+						],
 					$fee_item->get_id()      =>
-						array(
+						[
 							'refund_total' => 10,
-						),
+						],
 					$shipping_item->get_id() =>
-						array(
+						[
 							'refund_total' => 20,
-						),
-				),
-			)
+						],
+				],
+			]
 		);
 
 		$this->assertNotWPError( $refund );

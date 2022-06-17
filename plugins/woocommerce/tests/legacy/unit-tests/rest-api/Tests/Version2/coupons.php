@@ -16,9 +16,9 @@ class WC_Tests_API_Coupons_V2 extends WC_REST_Unit_Test_Case {
 		parent::setUp();
 		$this->endpoint = new WC_REST_Coupons_Controller();
 		$this->user     = $this->factory->user->create(
-			array(
+			[
 				'role' => 'administrator',
-			)
+			]
 		);
 	}
 
@@ -50,7 +50,7 @@ class WC_Tests_API_Coupons_V2 extends WC_REST_Unit_Test_Case {
 		$this->assertEquals( 200, $response->get_status() );
 		$this->assertEquals( 2, count( $coupons ) );
 		$this->assertContains(
-			array(
+			[
 				'id'                          => $coupon_1->get_id(),
 				'code'                        => 'dummycoupon-1',
 				'status'                      => $coupon_1->get_status(),
@@ -65,33 +65,33 @@ class WC_Tests_API_Coupons_V2 extends WC_REST_Unit_Test_Case {
 				'date_expires_gmt'            => '',
 				'usage_count'                 => 0,
 				'individual_use'              => false,
-				'product_ids'                 => array(),
-				'excluded_product_ids'        => array(),
+				'product_ids'                 => [],
+				'excluded_product_ids'        => [],
 				'usage_limit'                 => '',
 				'usage_limit_per_user'        => '',
 				'limit_usage_to_x_items'      => null,
 				'free_shipping'               => false,
-				'product_categories'          => array(),
-				'excluded_product_categories' => array(),
+				'product_categories'          => [],
+				'excluded_product_categories' => [],
 				'exclude_sale_items'          => false,
 				'minimum_amount'              => '0.00',
 				'maximum_amount'              => '0.00',
-				'email_restrictions'          => array(),
-				'used_by'                     => array(),
-				'meta_data'                   => array(),
-				'_links'                      => array(
-					'self'       => array(
-						array(
+				'email_restrictions'          => [],
+				'used_by'                     => [],
+				'meta_data'                   => [],
+				'_links'                      => [
+					'self'       => [
+						[
 							'href' => rest_url( '/wc/v2/coupons/' . $coupon_1->get_id() ),
-						),
-					),
-					'collection' => array(
-						array(
+						],
+					],
+					'collection' => [
+						[
 							'href' => rest_url( '/wc/v2/coupons' ),
-						),
-					),
-				),
-			),
+						],
+					],
+				],
+			],
 			$coupons
 		);
 	}
@@ -119,7 +119,7 @@ class WC_Tests_API_Coupons_V2 extends WC_REST_Unit_Test_Case {
 
 		$this->assertEquals( 200, $response->get_status() );
 		$this->assertEquals(
-			array(
+			[
 				'id'                          => $coupon->get_id(),
 				'code'                        => 'dummycoupon-1',
 				'status'                      => $coupon->get_status(),
@@ -134,21 +134,21 @@ class WC_Tests_API_Coupons_V2 extends WC_REST_Unit_Test_Case {
 				'date_expires_gmt'            => null,
 				'usage_count'                 => 0,
 				'individual_use'              => false,
-				'product_ids'                 => array(),
-				'excluded_product_ids'        => array(),
+				'product_ids'                 => [],
+				'excluded_product_ids'        => [],
 				'usage_limit'                 => null,
 				'usage_limit_per_user'        => null,
 				'limit_usage_to_x_items'      => null,
 				'free_shipping'               => false,
-				'product_categories'          => array(),
-				'excluded_product_categories' => array(),
+				'product_categories'          => [],
+				'excluded_product_categories' => [],
 				'exclude_sale_items'          => false,
 				'minimum_amount'              => '0.00',
 				'maximum_amount'              => '0.00',
-				'email_restrictions'          => array(),
-				'used_by'                     => array(),
-				'meta_data'                   => array(),
-			),
+				'email_restrictions'          => [],
+				'used_by'                     => [],
+				'meta_data'                   => [],
+			],
 			$data
 		);
 	}
@@ -182,20 +182,20 @@ class WC_Tests_API_Coupons_V2 extends WC_REST_Unit_Test_Case {
 		wp_set_current_user( $this->user );
 		$request = new WP_REST_Request( 'POST', '/wc/v2/coupons' );
 		$request->set_body_params(
-			array(
+			[
 				'code'          => 'test',
 				'amount'        => '5.00',
 				'discount_type' => 'fixed_product',
 				'description'   => 'Test',
 				'usage_limit'   => 10,
-			)
+			]
 		);
 		$response = $this->server->dispatch( $request );
 		$data     = $response->get_data();
 
 		$this->assertEquals( 201, $response->get_status() );
 		$this->assertEquals(
-			array(
+			[
 				'id'                          => $data['id'],
 				'code'                        => 'test',
 				'status'                      => 'publish',
@@ -210,21 +210,21 @@ class WC_Tests_API_Coupons_V2 extends WC_REST_Unit_Test_Case {
 				'date_expires_gmt'            => null,
 				'usage_count'                 => 0,
 				'individual_use'              => false,
-				'product_ids'                 => array(),
-				'excluded_product_ids'        => array(),
+				'product_ids'                 => [],
+				'excluded_product_ids'        => [],
 				'usage_limit'                 => 10,
 				'usage_limit_per_user'        => null,
 				'limit_usage_to_x_items'      => null,
 				'free_shipping'               => false,
-				'product_categories'          => array(),
-				'excluded_product_categories' => array(),
+				'product_categories'          => [],
+				'excluded_product_categories' => [],
 				'exclude_sale_items'          => false,
 				'minimum_amount'              => '0.00',
 				'maximum_amount'              => '0.00',
-				'email_restrictions'          => array(),
-				'used_by'                     => array(),
-				'meta_data'                   => array(),
-			),
+				'email_restrictions'          => [],
+				'used_by'                     => [],
+				'meta_data'                   => [],
+			],
 			$data
 		);
 	}
@@ -239,10 +239,10 @@ class WC_Tests_API_Coupons_V2 extends WC_REST_Unit_Test_Case {
 		// test no code...
 		$request = new WP_REST_Request( 'POST', '/wc/v2/coupons' );
 		$request->set_body_params(
-			array(
+			[
 				'amount'        => '5.00',
 				'discount_type' => 'fixed_product',
-			)
+			]
 		);
 		$response = $this->server->dispatch( $request );
 		$data     = $response->get_data();
@@ -260,11 +260,11 @@ class WC_Tests_API_Coupons_V2 extends WC_REST_Unit_Test_Case {
 		// test no code...
 		$request = new WP_REST_Request( 'POST', '/wc/v2/coupons' );
 		$request->set_body_params(
-			array(
+			[
 				'code'          => 'fail',
 				'amount'        => '5.00',
 				'discount_type' => 'fixed_product',
-			)
+			]
 		);
 		$response = $this->server->dispatch( $request );
 		$data     = $response->get_data();
@@ -289,10 +289,10 @@ class WC_Tests_API_Coupons_V2 extends WC_REST_Unit_Test_Case {
 
 		$request = new WP_REST_Request( 'PUT', '/wc/v2/coupons/' . $coupon->get_id() );
 		$request->set_body_params(
-			array(
+			[
 				'amount'      => '10.00',
 				'description' => 'New description',
-			)
+			]
 		);
 		$response = $this->server->dispatch( $request );
 		$data     = $response->get_data();
@@ -311,11 +311,11 @@ class WC_Tests_API_Coupons_V2 extends WC_REST_Unit_Test_Case {
 
 		$request = new WP_REST_Request( 'PUT', '/wc/v2/coupons/0' );
 		$request->set_body_params(
-			array(
+			[
 				'code'        => 'tester',
 				'amount'      => '10.00',
 				'description' => 'New description',
-			)
+			]
 		);
 		$response = $this->server->dispatch( $request );
 		$data     = $response->get_data();
@@ -334,10 +334,10 @@ class WC_Tests_API_Coupons_V2 extends WC_REST_Unit_Test_Case {
 
 		$request = new WP_REST_Request( 'PUT', '/wc/v2/coupons/' . $coupon->get_id() );
 		$request->set_body_params(
-			array(
+			[
 				'amount'      => '10.00',
 				'description' => 'New description',
-			)
+			]
 		);
 		$response = $this->server->dispatch( $request );
 
@@ -397,24 +397,24 @@ class WC_Tests_API_Coupons_V2 extends WC_REST_Unit_Test_Case {
 
 		$request = new WP_REST_Request( 'POST', '/wc/v2/coupons/batch' );
 		$request->set_body_params(
-			array(
-				'update' => array(
-					array(
+			[
+				'update' => [
+					[
 						'id'     => $coupon_1->get_id(),
 						'amount' => '5.15',
-					),
-				),
-				'delete' => array(
+					],
+				],
+				'delete' => [
 					$coupon_2->get_id(),
 					$coupon_3->get_id(),
-				),
-				'create' => array(
-					array(
+				],
+				'create' => [
+					[
 						'code'   => 'new-coupon',
 						'amount' => '11.00',
-					),
-				),
-			)
+					],
+				],
+			]
 		);
 		$response = $this->server->dispatch( $request );
 		$data     = $response->get_data();

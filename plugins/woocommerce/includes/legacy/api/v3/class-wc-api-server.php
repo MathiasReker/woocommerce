@@ -50,14 +50,14 @@ class WC_API_Server {
 	 * Map of HTTP verbs to constants
 	 * @var array
 	 */
-	public static $method_map = array(
+	public static $method_map = [
 		'HEAD'   => self::METHOD_GET,
 		'GET'    => self::METHOD_GET,
 		'POST'   => self::METHOD_POST,
 		'PUT'    => self::METHOD_PUT,
 		'PATCH'  => self::METHOD_PATCH,
 		'DELETE' => self::METHOD_DELETE,
-	);
+	];
 
 	/**
 	 * Requested path (relative to the API root, wp-json.php)
@@ -81,21 +81,21 @@ class WC_API_Server {
 	 *
 	 * @var array
 	 */
-	public $params = array( 'GET' => array(), 'POST' => array() );
+	public $params = [ 'GET' => [], 'POST' => [] ];
 
 	/**
 	 * Request headers
 	 *
 	 * @var array
 	 */
-	public $headers = array();
+	public $headers = [];
 
 	/**
 	 * Request files (matches $_FILES)
 	 *
 	 * @var array
 	 */
-	public $files = array();
+	public $files = [];
 
 	/**
 	 * Request/Response handler, either JSON by default
@@ -161,7 +161,7 @@ class WC_API_Server {
 		} elseif ( ! is_wp_error( $user ) ) {
 
 			// WP_Errors are handled in serve_request()
-			$user = new WP_Error( 'woocommerce_api_authentication_error', __( 'Invalid authentication method', 'woocommerce' ), array( 'code' => 500 ) );
+			$user = new WP_Error( 'woocommerce_api_authentication_error', __( 'Invalid authentication method', 'woocommerce' ), [ 'code' => 500 ] );
 
 		}
 
@@ -180,14 +180,14 @@ class WC_API_Server {
 	 * @return array List of associative arrays with code and message keys
 	 */
 	protected function error_to_array( $error ) {
-		$errors = array();
+		$errors = [];
 		foreach ( (array) $error->errors as $code => $messages ) {
 			foreach ( (array) $messages as $message ) {
-				$errors[] = array( 'code' => $code, 'message' => $message );
+				$errors[] = [ 'code' => $code, 'message' => $message ];
 			}
 		}
 
-		return array( 'errors' => $errors );
+		return [ 'errors' => $errors ];
 	}
 
 	/**
@@ -210,7 +210,7 @@ class WC_API_Server {
 
 			$this->send_status( 404 );
 
-			echo $this->handler->generate_response( array( 'errors' => array( 'code' => 'woocommerce_api_disabled', 'message' => 'The WooCommerce API is disabled on this site' ) ) );
+			echo $this->handler->generate_response( [ 'errors' => [ 'code' => 'woocommerce_api_disabled', 'message' => 'The WooCommerce API is disabled on this site' ] ] );
 
 			return;
 		}
@@ -267,17 +267,17 @@ class WC_API_Server {
 	public function get_routes() {
 
 		// index added by default
-		$endpoints = array(
+		$endpoints = [
 
-			'/' => array( array( $this, 'get_index' ), self::READABLE ),
-		);
+			'/' => [ [ $this, 'get_index' ], self::READABLE ],
+		];
 
 		$endpoints = apply_filters( 'woocommerce_api_endpoints', $endpoints );
 
 		// Normalise the endpoints
 		foreach ( $endpoints as $route => &$handlers ) {
 			if ( count( $handlers ) <= 2 && isset( $handlers[1] ) && ! is_array( $handlers[1] ) ) {
-				$handlers = array( $handlers );
+				$handlers = [ $handlers ];
 			}
 		}
 
@@ -316,7 +316,7 @@ class WC_API_Server {
 				break;
 
 			default :
-				return new WP_Error( 'woocommerce_api_unsupported_method', __( 'Unsupported request method', 'woocommerce' ), array( 'status' => 400 ) );
+				return new WP_Error( 'woocommerce_api_unsupported_method', __( 'Unsupported request method', 'woocommerce' ), [ 'status' => 400 ] );
 		}
 
 		foreach ( $this->get_routes() as $route => $handlers ) {
@@ -335,7 +335,7 @@ class WC_API_Server {
 				}
 
 				if ( ! is_callable( $callback ) ) {
-					return new WP_Error( 'woocommerce_api_invalid_handler', __( 'The handler for the route is invalid', 'woocommerce' ), array( 'status' => 500 ) );
+					return new WP_Error( 'woocommerce_api_invalid_handler', __( 'The handler for the route is invalid', 'woocommerce' ), [ 'status' => 500 ] );
 				}
 
 				$args = array_merge( $args, $this->params['GET'] );
@@ -344,10 +344,10 @@ class WC_API_Server {
 				}
 				if ( $supported & self::ACCEPT_DATA ) {
 					$data = $this->handler->parse_body( $this->get_raw_data() );
-					$args = array_merge( $args, array( 'data' => $data ) );
+					$args = array_merge( $args, [ 'data' => $data ] );
 				} elseif ( $supported & self::ACCEPT_RAW_DATA ) {
 					$data = $this->get_raw_data();
-					$args = array_merge( $args, array( 'data' => $data ) );
+					$args = array_merge( $args, [ 'data' => $data ] );
 				}
 
 				$args['_method']  = $method;
@@ -372,7 +372,7 @@ class WC_API_Server {
 			}
 		}
 
-		return new WP_Error( 'woocommerce_api_no_route', __( 'No route was found matching the URL and request method', 'woocommerce' ), array( 'status' => 404 ) );
+		return new WP_Error( 'woocommerce_api_no_route', __( 'No route was found matching the URL and request method', 'woocommerce' ), [ 'status' => 404 ] );
 	}
 
 	/**
@@ -385,7 +385,7 @@ class WC_API_Server {
 	 */
 	protected function urldecode_deep( $value ) {
 		if ( is_array( $value ) ) {
-			return array_map( array( $this, 'urldecode_deep' ), $value );
+			return array_map( [ $this, 'urldecode_deep' ], $value );
 		} else {
 			return urldecode( $value );
 		}
@@ -412,7 +412,7 @@ class WC_API_Server {
 		}
 
 		$wanted = $ref_func->getParameters();
-		$ordered_parameters = array();
+		$ordered_parameters = [];
 
 		foreach ( $wanted as $param ) {
 			if ( isset( $provided[ $param->getName() ] ) ) {
@@ -428,7 +428,7 @@ class WC_API_Server {
 				$ordered_parameters[] = $param->getDefaultValue();
 			} else {
 				// We don't have this parameter and it wasn't optional, abort!
-				return new WP_Error( 'woocommerce_api_missing_callback_param', sprintf( __( 'Missing parameter %s', 'woocommerce' ), $param->getName() ), array( 'status' => 400 ) );
+				return new WP_Error( 'woocommerce_api_missing_callback_param', sprintf( __( 'Missing parameter %s', 'woocommerce' ), $param->getName() ), [ 'status' => 400 ] );
 			}
 		}
 
@@ -446,15 +446,15 @@ class WC_API_Server {
 	public function get_index() {
 
 		// General site data
-		$available = array(
-			'store' => array(
+		$available = [
+			'store' => [
 				'name'        => get_option( 'blogname' ),
 				'description' => get_option( 'blogdescription' ),
 				'URL'         => get_option( 'siteurl' ),
 				'wc_version'  => WC()->version,
 				'version'     => WC_API::VERSION,
-				'routes'      => array(),
-				'meta'        => array(
+				'routes'      => [],
+				'meta'        => [
 					'timezone'           => wc_timezone_string(),
 					'currency'           => get_woocommerce_currency(),
 					'currency_format'    => get_woocommerce_currency_symbol(),
@@ -468,16 +468,16 @@ class WC_API_Server {
 					'ssl_enabled'        => ( 'yes' === get_option( 'woocommerce_force_ssl_checkout' ) || wc_site_is_https() ),
 					'permalinks_enabled' => ( '' !== get_option( 'permalink_structure' ) ),
 					'generate_password'  => ( 'yes' === get_option( 'woocommerce_registration_generate_password' ) ),
-					'links'              => array(
+					'links'              => [
 						'help' => 'https://woocommerce.github.io/woocommerce-rest-api-docs/',
-					),
-				),
-			),
-		);
+					],
+				],
+			],
+		];
 
 		// Find the available routes
 		foreach ( $this->get_routes() as $route => $callbacks ) {
-			$data = array();
+			$data = [];
 
 			$route = preg_replace( '#\(\?P(<\w+?>).*?\)#', '$1', $route );
 
@@ -498,9 +498,9 @@ class WC_API_Server {
 
 					// For non-variable routes, generate links
 					if ( strpos( $route, '<' ) === false ) {
-						$data['meta'] = array(
+						$data['meta'] = [
 							'self' => get_woocommerce_api_url( $route ),
-						);
+						];
 					}
 				}
 			}
@@ -546,7 +546,7 @@ class WC_API_Server {
 	 * @param string $link Target IRI for the link
 	 * @param array $other Other parameters to send, as an associative array
 	 */
-	public function link_header( $rel, $link, $other = array() ) {
+	public function link_header( $rel, $link, $other = [] ) {
 
 		$header = sprintf( '<%s>; rel="%s"', $link, esc_attr( $rel ) );
 
@@ -760,9 +760,9 @@ class WC_API_Server {
 	 * @return array Headers extracted from the input
 	 */
 	public function get_headers( $server ) {
-		$headers = array();
+		$headers = [];
 		// CONTENT_* headers are not prefixed with HTTP_
-		$additional = array( 'CONTENT_LENGTH' => true, 'CONTENT_MD5' => true, 'CONTENT_TYPE' => true );
+		$additional = [ 'CONTENT_LENGTH' => true, 'CONTENT_MD5' => true, 'CONTENT_TYPE' => true ];
 
 		foreach ( $server as $key => $value ) {
 			if ( strpos( $key, 'HTTP_' ) === 0 ) {

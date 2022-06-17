@@ -57,7 +57,7 @@ class WC_Widget_Layered_Nav extends WC_Widget {
 	 * Init settings after post types are registered.
 	 */
 	public function init_settings() {
-		$attribute_array      = array();
+		$attribute_array      = [];
 		$std_attribute        = '';
 		$attribute_taxonomies = wc_get_attribute_taxonomies();
 
@@ -70,37 +70,37 @@ class WC_Widget_Layered_Nav extends WC_Widget {
 			$std_attribute = current( $attribute_array );
 		}
 
-		$this->settings = array(
-			'title'        => array(
+		$this->settings = [
+			'title'        => [
 				'type'  => 'text',
 				'std'   => __( 'Filter by', 'woocommerce' ),
 				'label' => __( 'Title', 'woocommerce' ),
-			),
-			'attribute'    => array(
+			],
+			'attribute'    => [
 				'type'    => 'select',
 				'std'     => $std_attribute,
 				'label'   => __( 'Attribute', 'woocommerce' ),
 				'options' => $attribute_array,
-			),
-			'display_type' => array(
+			],
+			'display_type' => [
 				'type'    => 'select',
 				'std'     => 'list',
 				'label'   => __( 'Display type', 'woocommerce' ),
-				'options' => array(
+				'options' => [
 					'list'     => __( 'List', 'woocommerce' ),
 					'dropdown' => __( 'Dropdown', 'woocommerce' ),
-				),
-			),
-			'query_type'   => array(
+				],
+			],
+			'query_type'   => [
 				'type'    => 'select',
 				'std'     => 'and',
 				'label'   => __( 'Query type', 'woocommerce' ),
-				'options' => array(
+				'options' => [
 					'and' => __( 'AND', 'woocommerce' ),
 					'or'  => __( 'OR', 'woocommerce' ),
-				),
-			),
-		);
+				],
+			],
+		];
 	}
 
 	/**
@@ -169,7 +169,7 @@ class WC_Widget_Layered_Nav extends WC_Widget {
 			return;
 		}
 
-		$terms = get_terms( $taxonomy, array( 'hide_empty' => '1' ) );
+		$terms = get_terms( $taxonomy, [ 'hide_empty' => '1' ] );
 
 		if ( 0 === count( $terms ) ) {
 			return;
@@ -249,10 +249,10 @@ class WC_Widget_Layered_Nav extends WC_Widget {
 			/* translators: %s: taxonomy name */
 			$any_label      = apply_filters( 'woocommerce_layered_nav_any_label', sprintf( __( 'Any %s', 'woocommerce' ), $taxonomy_label ), $taxonomy_label, $taxonomy );
 			$multiple       = 'or' === $query_type;
-			$current_values = isset( $_chosen_attributes[ $taxonomy ]['terms'] ) ? $_chosen_attributes[ $taxonomy ]['terms'] : array();
+			$current_values = isset( $_chosen_attributes[ $taxonomy ]['terms'] ) ? $_chosen_attributes[ $taxonomy ]['terms'] : [];
 
 			if ( '' === get_option( 'permalink_structure' ) ) {
-				$form_action = remove_query_arg( array( 'page', 'paged' ), add_query_arg( $wp->query_string, '', home_url( $wp->request ) ) );
+				$form_action = remove_query_arg( [ 'page', 'paged' ], add_query_arg( $wp->query_string, '', home_url( $wp->request ) ) );
 			} else {
 				$form_action = preg_replace( '%\/page/[0-9]+%', '', home_url( user_trailingslashit( $wp->request ) ) );
 			}
@@ -293,7 +293,7 @@ class WC_Widget_Layered_Nav extends WC_Widget {
 			}
 
 			echo '<input type="hidden" name="filter_' . esc_attr( $taxonomy_filter_name ) . '" value="' . esc_attr( implode( ',', $current_values ) ) . '" />';
-			echo wc_query_string_form_fields( null, array( 'filter_' . $taxonomy_filter_name, 'query_type_' . $taxonomy_filter_name ), '', true ); // @codingStandardsIgnoreLine
+			echo wc_query_string_form_fields( null, [ 'filter_' . $taxonomy_filter_name, 'query_type_' . $taxonomy_filter_name ], '', true ); // @codingStandardsIgnoreLine
 			echo '</form>';
 
 			wc_enqueue_js(
@@ -395,7 +395,7 @@ class WC_Widget_Layered_Nav extends WC_Widget {
 		$base_link          = $this->get_current_page_url();
 
 		foreach ( $terms as $term ) {
-			$current_values = isset( $_chosen_attributes[ $taxonomy ]['terms'] ) ? $_chosen_attributes[ $taxonomy ]['terms'] : array();
+			$current_values = isset( $_chosen_attributes[ $taxonomy ]['terms'] ) ? $_chosen_attributes[ $taxonomy ]['terms'] : [];
 			$option_is_set  = in_array( $term->slug, $current_values, true );
 			$count          = isset( $term_counts[ $term->term_id ] ) ? $term_counts[ $term->term_id ] : 0;
 
@@ -413,7 +413,7 @@ class WC_Widget_Layered_Nav extends WC_Widget {
 
 			$filter_name = 'filter_' . wc_attribute_taxonomy_slug( $taxonomy );
 			// phpcs:ignore WordPress.Security.NonceVerification.Recommended
-			$current_filter = isset( $_GET[ $filter_name ] ) ? explode( ',', wc_clean( wp_unslash( $_GET[ $filter_name ] ) ) ) : array();
+			$current_filter = isset( $_GET[ $filter_name ] ) ? explode( ',', wc_clean( wp_unslash( $_GET[ $filter_name ] ) ) ) : [];
 			$current_filter = array_map( 'sanitize_title', $current_filter );
 
 			if ( ! in_array( $term->slug, $current_filter, true ) ) {

@@ -16,11 +16,11 @@ class OrdersProvider {
 	 *
 	 * @var array
 	 */
-	protected $allowed_statuses = array(
+	protected $allowed_statuses = [
 		'pending',
 		'processing',
 		'completed',
-	);
+	];
 
 	/**
 	 * Returns the number of orders.

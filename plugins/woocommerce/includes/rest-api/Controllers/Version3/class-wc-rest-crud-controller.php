@@ -40,7 +40,7 @@ abstract class WC_REST_CRUD_Controller extends WC_REST_Posts_Controller {
 	 */
 	protected function get_object( $id ) {
 		// translators: %s: Class method name.
-		return new WP_Error( 'invalid-method', sprintf( __( "Method '%s' not implemented. Must be overridden in subclass.", 'woocommerce' ), __METHOD__ ), array( 'status' => 405 ) );
+		return new WP_Error( 'invalid-method', sprintf( __( "Method '%s' not implemented. Must be overridden in subclass.", 'woocommerce' ), __METHOD__ ), [ 'status' => 405 ] );
 	}
 
 	/**
@@ -53,7 +53,7 @@ abstract class WC_REST_CRUD_Controller extends WC_REST_Posts_Controller {
 		$object = $this->get_object( (int) $request['id'] );
 
 		if ( $object && 0 !== $object->get_id() && ! wc_rest_check_post_permissions( $this->post_type, 'read', $object->get_id() ) ) {
-			return new WP_Error( 'woocommerce_rest_cannot_view', __( 'Sorry, you cannot view this resource.', 'woocommerce' ), array( 'status' => rest_authorization_required_code() ) );
+			return new WP_Error( 'woocommerce_rest_cannot_view', __( 'Sorry, you cannot view this resource.', 'woocommerce' ), [ 'status' => rest_authorization_required_code() ] );
 		}
 
 		return true;
@@ -69,7 +69,7 @@ abstract class WC_REST_CRUD_Controller extends WC_REST_Posts_Controller {
 		$object = $this->get_object( (int) $request['id'] );
 
 		if ( $object && 0 !== $object->get_id() && ! wc_rest_check_post_permissions( $this->post_type, 'edit', $object->get_id() ) ) {
-			return new WP_Error( 'woocommerce_rest_cannot_edit', __( 'Sorry, you are not allowed to edit this resource.', 'woocommerce' ), array( 'status' => rest_authorization_required_code() ) );
+			return new WP_Error( 'woocommerce_rest_cannot_edit', __( 'Sorry, you are not allowed to edit this resource.', 'woocommerce' ), [ 'status' => rest_authorization_required_code() ] );
 		}
 
 		return true;
@@ -85,7 +85,7 @@ abstract class WC_REST_CRUD_Controller extends WC_REST_Posts_Controller {
 		$object = $this->get_object( (int) $request['id'] );
 
 		if ( $object && 0 !== $object->get_id() && ! wc_rest_check_post_permissions( $this->post_type, 'delete', $object->get_id() ) ) {
-			return new WP_Error( 'woocommerce_rest_cannot_delete', __( 'Sorry, you are not allowed to delete this resource.', 'woocommerce' ), array( 'status' => rest_authorization_required_code() ) );
+			return new WP_Error( 'woocommerce_rest_cannot_delete', __( 'Sorry, you are not allowed to delete this resource.', 'woocommerce' ), [ 'status' => rest_authorization_required_code() ] );
 		}
 
 		return true;
@@ -111,7 +111,7 @@ abstract class WC_REST_CRUD_Controller extends WC_REST_Posts_Controller {
 	 */
 	protected function prepare_object_for_response( $object, $request ) {
 		// translators: %s: Class method name.
-		return new WP_Error( 'invalid-method', sprintf( __( "Method '%s' not implemented. Must be overridden in subclass.", 'woocommerce' ), __METHOD__ ), array( 'status' => 405 ) );
+		return new WP_Error( 'invalid-method', sprintf( __( "Method '%s' not implemented. Must be overridden in subclass.", 'woocommerce' ), __METHOD__ ), [ 'status' => 405 ] );
 	}
 
 	/**
@@ -124,7 +124,7 @@ abstract class WC_REST_CRUD_Controller extends WC_REST_Posts_Controller {
 	 */
 	protected function prepare_object_for_database( $request, $creating = false ) {
 		// translators: %s: Class method name.
-		return new WP_Error( 'invalid-method', sprintf( __( "Method '%s' not implemented. Must be overridden in subclass.", 'woocommerce' ), __METHOD__ ), array( 'status' => 405 ) );
+		return new WP_Error( 'invalid-method', sprintf( __( "Method '%s' not implemented. Must be overridden in subclass.", 'woocommerce' ), __METHOD__ ), [ 'status' => 405 ] );
 	}
 
 	/**
@@ -137,14 +137,14 @@ abstract class WC_REST_CRUD_Controller extends WC_REST_Posts_Controller {
 		$object = $this->get_object( (int) $request['id'] );
 
 		if ( ! $object || 0 === $object->get_id() ) {
-			return new WP_Error( "woocommerce_rest_{$this->post_type}_invalid_id", __( 'Invalid ID.', 'woocommerce' ), array( 'status' => 404 ) );
+			return new WP_Error( "woocommerce_rest_{$this->post_type}_invalid_id", __( 'Invalid ID.', 'woocommerce' ), [ 'status' => 404 ] );
 		}
 
 		$data     = $this->prepare_object_for_response( $object, $request );
 		$response = rest_ensure_response( $data );
 
 		if ( $this->public ) {
-			$response->link_header( 'alternate', $this->get_permalink( $object ), array( 'type' => 'text/html' ) );
+			$response->link_header( 'alternate', $this->get_permalink( $object ), [ 'type' => 'text/html' ] );
 		}
 
 		return $response;
@@ -172,7 +172,7 @@ abstract class WC_REST_CRUD_Controller extends WC_REST_Posts_Controller {
 		} catch ( WC_Data_Exception $e ) {
 			return new WP_Error( $e->getErrorCode(), $e->getMessage(), $e->getErrorData() );
 		} catch ( WC_REST_Exception $e ) {
-			return new WP_Error( $e->getErrorCode(), $e->getMessage(), array( 'status' => $e->getCode() ) );
+			return new WP_Error( $e->getErrorCode(), $e->getMessage(), [ 'status' => $e->getCode() ] );
 		}
 	}
 
@@ -185,7 +185,7 @@ abstract class WC_REST_CRUD_Controller extends WC_REST_Posts_Controller {
 	public function create_item( $request ) {
 		if ( ! empty( $request['id'] ) ) {
 			/* translators: %s: post type */
-			return new WP_Error( "woocommerce_rest_{$this->post_type}_exists", sprintf( __( 'Cannot create existing %s.', 'woocommerce' ), $this->post_type ), array( 'status' => 400 ) );
+			return new WP_Error( "woocommerce_rest_{$this->post_type}_exists", sprintf( __( 'Cannot create existing %s.', 'woocommerce' ), $this->post_type ), [ 'status' => 400 ] );
 		}
 
 		$object = $this->save_object( $request, true );
@@ -210,7 +210,7 @@ abstract class WC_REST_CRUD_Controller extends WC_REST_Posts_Controller {
 			return new WP_Error( $e->getErrorCode(), $e->getMessage(), $e->getErrorData() );
 		} catch ( WC_REST_Exception $e ) {
 			$object->delete();
-			return new WP_Error( $e->getErrorCode(), $e->getMessage(), array( 'status' => $e->getCode() ) );
+			return new WP_Error( $e->getErrorCode(), $e->getMessage(), [ 'status' => $e->getCode() ] );
 		}
 
 		$request->set_param( 'context', 'edit' );
@@ -232,7 +232,7 @@ abstract class WC_REST_CRUD_Controller extends WC_REST_Posts_Controller {
 		$object = $this->get_object( (int) $request['id'] );
 
 		if ( ! $object || 0 === $object->get_id() ) {
-			return new WP_Error( "woocommerce_rest_{$this->post_type}_invalid_id", __( 'Invalid ID.', 'woocommerce' ), array( 'status' => 400 ) );
+			return new WP_Error( "woocommerce_rest_{$this->post_type}_invalid_id", __( 'Invalid ID.', 'woocommerce' ), [ 'status' => 400 ] );
 		}
 
 		$object = $this->save_object( $request, false );
@@ -255,7 +255,7 @@ abstract class WC_REST_CRUD_Controller extends WC_REST_Posts_Controller {
 		} catch ( WC_Data_Exception $e ) {
 			return new WP_Error( $e->getErrorCode(), $e->getMessage(), $e->getErrorData() );
 		} catch ( WC_REST_Exception $e ) {
-			return new WP_Error( $e->getErrorCode(), $e->getMessage(), array( 'status' => $e->getCode() ) );
+			return new WP_Error( $e->getErrorCode(), $e->getMessage(), [ 'status' => $e->getCode() ] );
 		}
 
 		$request->set_param( 'context', 'edit' );
@@ -271,7 +271,7 @@ abstract class WC_REST_CRUD_Controller extends WC_REST_Posts_Controller {
 	 * @return array
 	 */
 	protected function prepare_objects_query( $request ) {
-		$args                        = array();
+		$args                        = [];
 		$args['offset']              = $request['offset'];
 		$args['order']               = $request['order'];
 		$args['orderby']             = $request['orderby'];
@@ -289,35 +289,35 @@ abstract class WC_REST_CRUD_Controller extends WC_REST_Posts_Controller {
 			$args['orderby'] = 'date ID';
 		}
 
-		$date_query = array();
+		$date_query = [];
 		$use_gmt    = $request['dates_are_gmt'];
 
 		if ( isset( $request['before'] ) ) {
-			$date_query[] = array(
+			$date_query[] = [
 				'column' => $use_gmt ? 'post_date_gmt' : 'post_date',
 				'before' => $request['before'],
-			);
+			];
 		}
 
 		if ( isset( $request['after'] ) ) {
-			$date_query[] = array(
+			$date_query[] = [
 				'column' => $use_gmt ? 'post_date_gmt' : 'post_date',
 				'after'  => $request['after'],
-			);
+			];
 		}
 
 		if ( isset( $request['modified_before'] ) ) {
-			$date_query[] = array(
+			$date_query[] = [
 				'column' => $use_gmt ? 'post_modified_gmt' : 'post_modified',
 				'before' => $request['modified_before'],
-			);
+			];
 		}
 
 		if ( isset( $request['modified_after'] ) ) {
-			$date_query[] = array(
+			$date_query[] = [
 				'column' => $use_gmt ? 'post_modified_gmt' : 'post_modified',
 				'after'  => $request['modified_after'],
-			);
+			];
 		}
 
 		if ( ! empty( $date_query ) ) {
@@ -362,11 +362,11 @@ abstract class WC_REST_CRUD_Controller extends WC_REST_Posts_Controller {
 			$total_posts = $count_query->found_posts;
 		}
 
-		return array(
-			'objects' => array_filter( array_map( array( $this, 'get_object' ), $result ) ),
+		return [
+			'objects' => array_filter( array_map( [ $this, 'get_object' ], $result ) ),
 			'total'   => (int) $total_posts,
 			'pages'   => (int) ceil( $total_posts / (int) $query->query_vars['posts_per_page'] ),
-		);
+		];
 	}
 
 	/**
@@ -382,7 +382,7 @@ abstract class WC_REST_CRUD_Controller extends WC_REST_Posts_Controller {
 		}
 		$query_results = $this->get_objects( $query_args );
 
-		$objects = array();
+		$objects = [];
 		foreach ( $query_results['objects'] as $object ) {
 			if ( ! wc_rest_check_post_permissions( $this->post_type, 'read', $object->get_id() ) ) {
 				continue;
@@ -402,7 +402,7 @@ abstract class WC_REST_CRUD_Controller extends WC_REST_Posts_Controller {
 		$base          = $this->rest_base;
 		$attrib_prefix = '(?P<';
 		if ( strpos( $base, $attrib_prefix ) !== false ) {
-			$attrib_names = array();
+			$attrib_names = [];
 			preg_match( '/\(\?P<[^>]+>.*\)/', $base, $attrib_names, PREG_OFFSET_CAPTURE );
 			foreach ( $attrib_names as $attrib_name_match ) {
 				$beginning_offset = strlen( $attrib_prefix );
@@ -444,10 +444,10 @@ abstract class WC_REST_CRUD_Controller extends WC_REST_Posts_Controller {
 		$result = false;
 
 		if ( ! $object || 0 === $object->get_id() ) {
-			return new WP_Error( "woocommerce_rest_{$this->post_type}_invalid_id", __( 'Invalid ID.', 'woocommerce' ), array( 'status' => 404 ) );
+			return new WP_Error( "woocommerce_rest_{$this->post_type}_invalid_id", __( 'Invalid ID.', 'woocommerce' ), [ 'status' => 404 ] );
 		}
 
-		$supports_trash = EMPTY_TRASH_DAYS > 0 && is_callable( array( $object, 'get_status' ) );
+		$supports_trash = EMPTY_TRASH_DAYS > 0 && is_callable( [ $object, 'get_status' ] );
 
 		/**
 		 * Filter whether an object is trashable.
@@ -461,7 +461,7 @@ abstract class WC_REST_CRUD_Controller extends WC_REST_Posts_Controller {
 
 		if ( ! wc_rest_check_post_permissions( $this->post_type, 'delete', $object->get_id() ) ) {
 			/* translators: %s: post type */
-			return new WP_Error( "woocommerce_rest_user_cannot_delete_{$this->post_type}", sprintf( __( 'Sorry, you are not allowed to delete %s.', 'woocommerce' ), $this->post_type ), array( 'status' => rest_authorization_required_code() ) );
+			return new WP_Error( "woocommerce_rest_user_cannot_delete_{$this->post_type}", sprintf( __( 'Sorry, you are not allowed to delete %s.', 'woocommerce' ), $this->post_type ), [ 'status' => rest_authorization_required_code() ] );
 		}
 
 		$request->set_param( 'context', 'edit' );
@@ -475,14 +475,14 @@ abstract class WC_REST_CRUD_Controller extends WC_REST_Posts_Controller {
 			// If we don't support trashing for this type, error out.
 			if ( ! $supports_trash ) {
 				/* translators: %s: post type */
-				return new WP_Error( 'woocommerce_rest_trash_not_supported', sprintf( __( 'The %s does not support trashing.', 'woocommerce' ), $this->post_type ), array( 'status' => 501 ) );
+				return new WP_Error( 'woocommerce_rest_trash_not_supported', sprintf( __( 'The %s does not support trashing.', 'woocommerce' ), $this->post_type ), [ 'status' => 501 ] );
 			}
 
 			// Otherwise, only trash if we haven't already.
-			if ( is_callable( array( $object, 'get_status' ) ) ) {
+			if ( is_callable( [ $object, 'get_status' ] ) ) {
 				if ( 'trash' === $object->get_status() ) {
 					/* translators: %s: post type */
-					return new WP_Error( 'woocommerce_rest_already_trashed', sprintf( __( 'The %s has already been deleted.', 'woocommerce' ), $this->post_type ), array( 'status' => 410 ) );
+					return new WP_Error( 'woocommerce_rest_already_trashed', sprintf( __( 'The %s has already been deleted.', 'woocommerce' ), $this->post_type ), [ 'status' => 410 ] );
 				}
 
 				$object->delete();
@@ -492,7 +492,7 @@ abstract class WC_REST_CRUD_Controller extends WC_REST_Posts_Controller {
 
 		if ( ! $result ) {
 			/* translators: %s: post type */
-			return new WP_Error( 'woocommerce_rest_cannot_delete', sprintf( __( 'The %s cannot be deleted.', 'woocommerce' ), $this->post_type ), array( 'status' => 500 ) );
+			return new WP_Error( 'woocommerce_rest_cannot_delete', sprintf( __( 'The %s cannot be deleted.', 'woocommerce' ), $this->post_type ), [ 'status' => 500 ] );
 		}
 
 		/**
@@ -516,7 +516,7 @@ abstract class WC_REST_CRUD_Controller extends WC_REST_Posts_Controller {
 	 * @return array Data fetched from getters.
 	 */
 	public function fetch_fields_using_getters( $object, $context, $fields ) {
-		$data = array();
+		$data = [];
 		foreach ( $fields as $field ) {
 			if ( method_exists( $this, "api_get_$field" ) ) {
 				$data[ $field ] = $this->{"api_get_$field"}( $object, $context );
@@ -533,14 +533,14 @@ abstract class WC_REST_CRUD_Controller extends WC_REST_Posts_Controller {
 	 * @return array                   Links for the given post.
 	 */
 	protected function prepare_links( $object, $request ) {
-		$links = array(
-			'self'       => array(
+		$links = [
+			'self'       => [
 				'href' => rest_url( sprintf( '/%s/%s/%d', $this->namespace, $this->rest_base, $object->get_id() ) ),
-			),
-			'collection' => array(
+			],
+			'collection' => [
 				'href' => rest_url( sprintf( '/%s/%s', $this->namespace, $this->rest_base ) ),
-			),
-		);
+			],
+		];
 
 		return $links;
 	}
@@ -551,19 +551,19 @@ abstract class WC_REST_CRUD_Controller extends WC_REST_Posts_Controller {
 	 * @return array
 	 */
 	public function get_collection_params() {
-		$params                       = array();
+		$params                       = [];
 		$params['context']            = $this->get_context_param();
 		$params['context']['default'] = 'view';
 
-		$params['page']            = array(
+		$params['page']            = [
 			'description'       => __( 'Current page of the collection.', 'woocommerce' ),
 			'type'              => 'integer',
 			'default'           => 1,
 			'sanitize_callback' => 'absint',
 			'validate_callback' => 'rest_validate_request_arg',
 			'minimum'           => 1,
-		);
-		$params['per_page']        = array(
+		];
+		$params['per_page']        = [
 			'description'       => __( 'Maximum number of items to be returned in result set.', 'woocommerce' ),
 			'type'              => 'integer',
 			'default'           => 10,
@@ -571,108 +571,108 @@ abstract class WC_REST_CRUD_Controller extends WC_REST_Posts_Controller {
 			'maximum'           => 100,
 			'sanitize_callback' => 'absint',
 			'validate_callback' => 'rest_validate_request_arg',
-		);
-		$params['search']          = array(
+		];
+		$params['search']          = [
 			'description'       => __( 'Limit results to those matching a string.', 'woocommerce' ),
 			'type'              => 'string',
 			'sanitize_callback' => 'sanitize_text_field',
 			'validate_callback' => 'rest_validate_request_arg',
-		);
-		$params['after']           = array(
+		];
+		$params['after']           = [
 			'description'       => __( 'Limit response to resources published after a given ISO8601 compliant date.', 'woocommerce' ),
 			'type'              => 'string',
 			'format'            => 'date-time',
 			'validate_callback' => 'rest_validate_request_arg',
-		);
-		$params['before']          = array(
+		];
+		$params['before']          = [
 			'description'       => __( 'Limit response to resources published before a given ISO8601 compliant date.', 'woocommerce' ),
 			'type'              => 'string',
 			'format'            => 'date-time',
 			'validate_callback' => 'rest_validate_request_arg',
-		);
-		$params['modified_after']  = array(
+		];
+		$params['modified_after']  = [
 			'description'       => __( 'Limit response to resources modified after a given ISO8601 compliant date.', 'woocommerce' ),
 			'type'              => 'string',
 			'format'            => 'date-time',
 			'validate_callback' => 'rest_validate_request_arg',
-		);
-		$params['modified_before'] = array(
+		];
+		$params['modified_before'] = [
 			'description'       => __( 'Limit response to resources modified before a given ISO8601 compliant date.', 'woocommerce' ),
 			'type'              => 'string',
 			'format'            => 'date-time',
 			'validate_callback' => 'rest_validate_request_arg',
-		);
-		$params['dates_are_gmt']   = array(
+		];
+		$params['dates_are_gmt']   = [
 			'description'       => __( 'Whether to consider GMT post dates when limiting response by published or modified date.', 'woocommerce' ),
 			'type'              => 'boolean',
 			'default'           => false,
 			'validate_callback' => 'rest_validate_request_arg',
-		);
-		$params['exclude']         = array(
+		];
+		$params['exclude']         = [
 			'description'       => __( 'Ensure result set excludes specific IDs.', 'woocommerce' ),
 			'type'              => 'array',
-			'items'             => array(
+			'items'             => [
 				'type' => 'integer',
-			),
-			'default'           => array(),
+			],
+			'default'           => [],
 			'sanitize_callback' => 'wp_parse_id_list',
-		);
-		$params['include']         = array(
+		];
+		$params['include']         = [
 			'description'       => __( 'Limit result set to specific ids.', 'woocommerce' ),
 			'type'              => 'array',
-			'items'             => array(
+			'items'             => [
 				'type' => 'integer',
-			),
-			'default'           => array(),
+			],
+			'default'           => [],
 			'sanitize_callback' => 'wp_parse_id_list',
-		);
-		$params['offset']          = array(
+		];
+		$params['offset']          = [
 			'description'       => __( 'Offset the result set by a specific number of items.', 'woocommerce' ),
 			'type'              => 'integer',
 			'sanitize_callback' => 'absint',
 			'validate_callback' => 'rest_validate_request_arg',
-		);
-		$params['order']           = array(
+		];
+		$params['order']           = [
 			'description'       => __( 'Order sort attribute ascending or descending.', 'woocommerce' ),
 			'type'              => 'string',
 			'default'           => 'desc',
-			'enum'              => array( 'asc', 'desc' ),
+			'enum'              => [ 'asc', 'desc' ],
 			'validate_callback' => 'rest_validate_request_arg',
-		);
-		$params['orderby']         = array(
+		];
+		$params['orderby']         = [
 			'description'       => __( 'Sort collection by object attribute.', 'woocommerce' ),
 			'type'              => 'string',
 			'default'           => 'date',
-			'enum'              => array(
+			'enum'              => [
 				'date',
 				'id',
 				'include',
 				'title',
 				'slug',
 				'modified',
-			),
+			],
 			'validate_callback' => 'rest_validate_request_arg',
-		);
+		];
 
 		if ( $this->hierarchical ) {
-			$params['parent']         = array(
+			$params['parent']         = [
 				'description'       => __( 'Limit result set to those of particular parent IDs.', 'woocommerce' ),
 				'type'              => 'array',
-				'items'             => array(
+				'items'             => [
 					'type' => 'integer',
-				),
+				],
 				'sanitize_callback' => 'wp_parse_id_list',
-				'default'           => array(),
-			);
-			$params['parent_exclude'] = array(
+				'default'           => [],
+			];
+			$params['parent_exclude'] = [
 				'description'       => __( 'Limit result set to all items except those of a particular parent ID.', 'woocommerce' ),
 				'type'              => 'array',
-				'items'             => array(
+				'items'             => [
 					'type' => 'integer',
-				),
+				],
 				'sanitize_callback' => 'wp_parse_id_list',
-				'default'           => array(),
-			);
+				'default'           => [],
+			];
 		}
 
 		/**

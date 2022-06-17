@@ -27,7 +27,7 @@ class WC_Product_Variation extends WC_Product_Simple {
 	 *
 	 * @var array
 	 */
-	protected $parent_data = array(
+	protected $parent_data = [
 		'title'             => '',
 		'sku'               => '',
 		'manage_stock'      => '',
@@ -41,7 +41,7 @@ class WC_Product_Variation extends WC_Product_Simple {
 		'shipping_class_id' => '',
 		'image_id'          => '',
 		'purchase_note'     => '',
-	);
+	];
 
 	/**
 	 * Override the default constructor to set custom defaults.
@@ -117,7 +117,7 @@ class WC_Product_Variation extends WC_Product_Simple {
 	 */
 	public function get_variation_attributes( $with_prefix = true ) {
 		$attributes           = $this->get_attributes();
-		$variation_attributes = array();
+		$variation_attributes = [];
 		$prefix               = $with_prefix ? 'attribute_' : '';
 
 		foreach ( $attributes as $key => $value ) {
@@ -193,10 +193,10 @@ class WC_Product_Variation extends WC_Product_Simple {
 		$url = $this->is_purchasable() ? remove_query_arg(
 			'added-to-cart',
 			add_query_arg(
-				array(
+				[
 					'variation_id' => $this->get_id(),
 					'add-to-cart'  => $this->get_parent_id(),
-				),
+				],
 				$this->get_permalink()
 			)
 		) : $this->get_permalink();
@@ -461,7 +461,7 @@ class WC_Product_Variation extends WC_Product_Simple {
 	public function set_parent_data( $parent_data ) {
 		$parent_data = wp_parse_args(
 			$parent_data,
-			array(
+			[
 				'title'              => '',
 				'status'             => '',
 				'sku'                => '',
@@ -477,7 +477,7 @@ class WC_Product_Variation extends WC_Product_Simple {
 				'image_id'           => 0,
 				'purchase_note'      => '',
 				'catalog_visibility' => 'visible',
-			)
+			]
 		);
 
 		// Normalize tax class.
@@ -510,7 +510,7 @@ class WC_Product_Variation extends WC_Product_Simple {
 	 */
 	public function set_attributes( $raw_attributes ) {
 		$raw_attributes = (array) $raw_attributes;
-		$attributes     = array();
+		$attributes     = [];
 
 		foreach ( $raw_attributes as $key => $value ) {
 			// Remove attribute prefix which meta gets stored with.

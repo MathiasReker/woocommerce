@@ -55,7 +55,7 @@ class OnlineClothingStore {
 			return;
 		}
 
-		$onboarding_profile = get_option( 'woocommerce_onboarding_profile', array() );
+		$onboarding_profile = get_option( 'woocommerce_onboarding_profile', [] );
 
 		// Confirm that $onboarding_profile is set.
 		if ( empty( $onboarding_profile ) ) {
@@ -85,7 +85,7 @@ class OnlineClothingStore {
 		$note->set_content( __( 'Starting a fashion website is exciting but it may seem overwhelming as well. In this article, we\'ll walk you through the setup process, teach you to create successful product listings, and show you how to market to your ideal audience.', 'woocommerce' ) );
 		$note->set_type( Note::E_WC_ADMIN_NOTE_INFORMATIONAL );
 		$note->set_name( self::NOTE_NAME );
-		$note->set_content_data( (object) array() );
+		$note->set_content_data( (object) [] );
 		$note->set_source( 'woocommerce-admin' );
 		$note->add_action(
 			'online-clothing-store',

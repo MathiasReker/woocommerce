@@ -26,12 +26,12 @@ class WC_Customer_Download_Log extends WC_Data {
 	 *
 	 * @var array
 	 */
-	protected $data = array(
+	protected $data = [
 		'timestamp'       => null,
 		'permission_id'   => 0,
 		'user_id'         => null,
 		'user_ip_address' => null,
-	);
+	];
 
 	/**
 	 * Constructor.

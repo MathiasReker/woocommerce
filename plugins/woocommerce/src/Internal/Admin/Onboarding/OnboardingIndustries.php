@@ -14,7 +14,7 @@ class OnboardingIndustries {
 	 * Init.
 	 */
 	public static function init() {
-		add_filter( 'woocommerce_admin_onboarding_preloaded_data', array( __CLASS__, 'preload_data' ) );
+		add_filter( 'woocommerce_admin_onboarding_preloaded_data', [ __CLASS__, 'preload_data' ] );
 	}
 
 	/**
@@ -26,48 +26,48 @@ class OnboardingIndustries {
 		/* With "use_description" we turn the description input on. With "description_label" we set the input label */
 		return apply_filters(
 			'woocommerce_admin_onboarding_industries',
-			array(
-				'fashion-apparel-accessories'     => array(
+			[
+				'fashion-apparel-accessories'     => [
 					'label'             => __( 'Fashion, apparel, and accessories', 'woocommerce' ),
 					'use_description'   => false,
 					'description_label' => '',
-				),
-				'health-beauty'                   => array(
+				],
+				'health-beauty'                   => [
 					'label'             => __( 'Health and beauty', 'woocommerce' ),
 					'use_description'   => false,
 					'description_label' => '',
-				),
-				'electronics-computers'           => array(
+				],
+				'electronics-computers'           => [
 					'label'             => __( 'Electronics and computers', 'woocommerce' ),
 					'use_description'   => false,
 					'description_label' => '',
-				),
-				'food-drink'                      => array(
+				],
+				'food-drink'                      => [
 					'label'             => __( 'Food and drink', 'woocommerce' ),
 					'use_description'   => false,
 					'description_label' => '',
-				),
-				'home-furniture-garden'           => array(
+				],
+				'home-furniture-garden'           => [
 					'label'             => __( 'Home, furniture, and garden', 'woocommerce' ),
 					'use_description'   => false,
 					'description_label' => '',
-				),
-				'cbd-other-hemp-derived-products' => array(
+				],
+				'cbd-other-hemp-derived-products' => [
 					'label'             => __( 'CBD and other hemp-derived products', 'woocommerce' ),
 					'use_description'   => false,
 					'description_label' => '',
-				),
-				'education-and-learning'          => array(
+				],
+				'education-and-learning'          => [
 					'label'             => __( 'Education and learning', 'woocommerce' ),
 					'use_description'   => false,
 					'description_label' => '',
-				),
-				'other'                           => array(
+				],
+				'other'                           => [
 					'label'             => __( 'Other', 'woocommerce' ),
 					'use_description'   => true,
 					'description_label' => __( 'Description', 'woocommerce' ),
-				),
-			)
+				],
+			]
 		);
 	}
 

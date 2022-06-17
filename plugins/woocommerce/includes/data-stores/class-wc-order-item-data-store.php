@@ -28,16 +28,16 @@ class WC_Order_Item_Data_Store implements WC_Order_Item_Data_Store_Interface {
 		global $wpdb;
 		$wpdb->insert(
 			$wpdb->prefix . 'woocommerce_order_items',
-			array(
+			[
 				'order_item_name' => $item['order_item_name'],
 				'order_item_type' => $item['order_item_type'],
 				'order_id'        => $order_id,
-			),
-			array(
+			],
+			[
 				'%s',
 				'%s',
 				'%d',
-			)
+			]
 		);
 
 		$item_id = absint( $wpdb->insert_id );
@@ -57,7 +57,7 @@ class WC_Order_Item_Data_Store implements WC_Order_Item_Data_Store_Interface {
 	 */
 	public function update_order_item( $item_id, $item ) {
 		global $wpdb;
-		$updated = $wpdb->update( $wpdb->prefix . 'woocommerce_order_items', $item, array( 'order_item_id' => $item_id ) );
+		$updated = $wpdb->update( $wpdb->prefix . 'woocommerce_order_items', $item, [ 'order_item_id' => $item_id ] );
 		$this->clear_caches( $item_id, null );
 		return $updated;
 	}

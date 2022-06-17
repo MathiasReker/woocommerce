@@ -34,20 +34,20 @@ class ProductAttributes extends \WC_REST_Product_Attributes_Controller {
 		register_rest_route(
 			$this->namespace,
 			'products/attributes/(?P<slug>[a-z0-9_\-]+)',
-			array(
-				'args'   => array(
-					'slug' => array(
+			[
+				'args'   => [
+					'slug' => [
 						'description' => __( 'Slug identifier for the resource.', 'woocommerce' ),
 						'type'        => 'string',
-					),
-				),
-				array(
+					],
+				],
+				[
 					'methods'             => \WP_REST_Server::READABLE,
-					'callback'            => array( $this, 'get_item_by_slug' ),
-					'permission_callback' => array( $this, 'get_items_permissions_check' ),
-				),
-				'schema' => array( $this, 'get_public_item_schema' ),
-			)
+					'callback'            => [ $this, 'get_item_by_slug' ],
+					'permission_callback' => [ $this, 'get_items_permissions_check' ],
+				],
+				'schema' => [ $this, 'get_public_item_schema' ],
+			]
 		);
 	}
 
@@ -58,11 +58,11 @@ class ProductAttributes extends \WC_REST_Product_Attributes_Controller {
 	 */
 	public function get_collection_params() {
 		$params           = parent::get_collection_params();
-		$params['search'] = array(
+		$params['search'] = [
 			'description'       => __( 'Search by similar attribute name.', 'woocommerce' ),
 			'type'              => 'string',
 			'validate_callback' => 'rest_validate_request_arg',
-		);
+		];
 
 		return $params;
 	}
@@ -75,7 +75,7 @@ class ProductAttributes extends \WC_REST_Product_Attributes_Controller {
 	public function get_item_schema() {
 		$schema = parent::get_item_schema();
 		// Custom attributes substitute slugs for numeric IDs.
-		$schema['properties']['id']['type'] = array( 'integer', 'string' );
+		$schema['properties']['id']['type'] = [ 'integer', 'string' ];
 
 		return $schema;
 	}
@@ -88,7 +88,7 @@ class ProductAttributes extends \WC_REST_Product_Attributes_Controller {
 	 */
 	public function get_item_by_slug( $request ) {
 		if ( empty( $request['slug'] ) ) {
-			return array();
+			return [];
 		}
 
 		$attributes = $this->get_custom_attribute_by_slug( $request['slug'] );
@@ -109,20 +109,20 @@ class ProductAttributes extends \WC_REST_Product_Attributes_Controller {
 	 * @return array
 	 */
 	protected function format_custom_attribute_items_for_response( $custom_attributes ) {
-		$response = array();
+		$response = [];
 
 		foreach ( $custom_attributes as $attribute_key => $attribute_value ) {
-			$data = array(
+			$data = [
 				'id'           => $attribute_key,
 				'name'         => $attribute_value['name'],
 				'slug'         => $attribute_key,
 				'type'         => 'select',
 				'order_by'     => 'menu_order',
 				'has_archives' => false,
-			);
+			];
 
 			$item_response = rest_ensure_response( $data );
-			$item_response->add_links( $this->prepare_links( (object) array( 'attribute_id' => $attribute_key ) ) );
+			$item_response->add_links( $this->prepare_links( (object) [ 'attribute_id' => $attribute_key ] ) );
 			$item_response = $this->prepare_response_for_collection(
 				$item_response
 			);
@@ -145,7 +145,7 @@ class ProductAttributes extends \WC_REST_Product_Attributes_Controller {
 		}
 
 		$search_string       = $request['search'];
-		$custom_attributes   = $this->get_custom_attributes( array( 'name' => $search_string ) );
+		$custom_attributes   = $this->get_custom_attributes( [ 'name' => $search_string ] );
 		$matching_attributes = $this->format_custom_attribute_items_for_response( $custom_attributes );
 		$taxonomy_attributes = wc_get_attribute_taxonomies();
 

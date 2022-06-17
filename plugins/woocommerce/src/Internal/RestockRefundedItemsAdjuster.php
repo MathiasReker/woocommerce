@@ -27,7 +27,7 @@ class RestockRefundedItemsAdjuster {
 	 */
 	final public function init() {
 		$this->order_factory = wc_get_container()->get( LegacyProxy::class )->get_instance_of( \WC_Order_Factory::class );
-		add_action( 'woocommerce_before_save_order_items', array( $this, 'initialize_restock_refunded_items' ), 10, 2 );
+		add_action( 'woocommerce_before_save_order_items', [ $this, 'initialize_restock_refunded_items' ], 10, 2 );
 	}
 
 	/**

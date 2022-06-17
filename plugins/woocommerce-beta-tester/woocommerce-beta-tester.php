@@ -47,7 +47,7 @@ function _wc_beta_tester_bootstrap() {
 		include dirname( __FILE__ ) . '/includes/class-wc-beta-tester-admin-notices.php';
 		$notices = new WC_Beta_Tester_Admin_Notices();
 
-		add_action( 'admin_notices', array( $notices, 'woocoommerce_not_installed' ) );
+		add_action( 'admin_notices', [ $notices, 'woocoommerce_not_installed' ] );
 	} elseif ( ! class_exists( 'WC_Beta_Tester' ) ) {
 		include dirname( __FILE__ ) . '/includes/class-wc-beta-tester.php';
 		// Settings.
@@ -57,9 +57,9 @@ function _wc_beta_tester_bootstrap() {
 		// Tools.
 		include dirname( __FILE__ ) . '/includes/class-wc-beta-tester-version-picker.php';
 
-		register_activation_hook( __FILE__, array( 'WC_Beta_Tester', 'activate' ) );
+		register_activation_hook( __FILE__, [ 'WC_Beta_Tester', 'activate' ] );
 
-		add_action( 'admin_init', array( 'WC_Beta_Tester', 'instance' ) );
+		add_action( 'admin_init', [ 'WC_Beta_Tester', 'instance' ] );
 	}
 
 	// Load admin
@@ -76,7 +76,7 @@ function add_extension_register_script() {
 	$script_asset_path = dirname( __FILE__ ) . '/build/index.asset.php';
 	$script_asset      = file_exists( $script_asset_path )
 		? require( $script_asset_path )
-		: array( 'dependencies' => array(), 'version' => filemtime( $script_path ) );
+		: [ 'dependencies' => [], 'version' => filemtime( $script_path ) ];
 	$script_url = plugins_url( $script_path, __FILE__ );
 
 	wp_register_script(
@@ -93,7 +93,7 @@ function add_extension_register_script() {
 	wp_register_style(
 		'wp-components',
 		plugins_url( 'dist/components/style.css', __FILE__ ),
-		array(),
+		[],
 		$css_file_version
 	);
 
@@ -101,9 +101,9 @@ function add_extension_register_script() {
 		'woocommerce-admin-test-helper',
 		plugins_url( '/build/index.css', __FILE__ ),
 		// Add any dependencies styles may have, such as wp-components.
-		array(
+		[
 			'wp-components'
-		),
+		],
 		$css_file_version
 	);
 

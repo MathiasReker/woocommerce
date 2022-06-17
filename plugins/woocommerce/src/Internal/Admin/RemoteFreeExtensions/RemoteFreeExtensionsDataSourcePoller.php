@@ -9,9 +9,9 @@ class RemoteFreeExtensionsDataSourcePoller extends \Automattic\WooCommerce\Admin
 
 	const ID = 'remote_free_extensions';
 
-	const DATA_SOURCES = array(
+	const DATA_SOURCES = [
 		'https://woocommerce.com/wp-json/wccom/obw-free-extensions/3.0/extensions.json',
-	);
+	];
 
 	/**
 	 * Class instance.
@@ -28,9 +28,9 @@ class RemoteFreeExtensionsDataSourcePoller extends \Automattic\WooCommerce\Admin
 			self::$instance = new self(
 				self::ID,
 				self::DATA_SOURCES,
-				array(
+				[
 					'spec_key' => 'key',
-				)
+				]
 			);
 		}
 		return self::$instance;

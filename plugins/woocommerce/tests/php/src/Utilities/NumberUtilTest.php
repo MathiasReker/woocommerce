@@ -78,13 +78,13 @@ class NumberUtilTest extends \WC_Unit_Test_Case {
 	 * @return array Values to test.
 	 */
 	public function data_provider_for_test_round_when_passing_a_non_number_like_string() {
-		return array(
-			array( null ),
-			array( '' ),
-			array( 'foobar' ),
-			array( array() ),
-			array( false ),
-		);
+		return [
+			[ null ],
+			[ '' ],
+			[ 'foobar' ],
+			[ [] ],
+			[ false ],
+		];
 	}
 
 	/**

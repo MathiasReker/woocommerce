@@ -72,10 +72,10 @@ class Filterer {
 			$in_stock_clause = '';
 		}
 
-		$attribute_ids_for_and_filtering = array();
+		$attribute_ids_for_and_filtering = [];
 
 		foreach ( $attributes_to_filter_by as $taxonomy => $data ) {
-			$all_terms                  = get_terms( $taxonomy, array( 'hide_empty' => false ) );
+			$all_terms                  = get_terms( $taxonomy, [ 'hide_empty' => false ] );
 			$term_ids_by_slug           = wp_list_pluck( $all_terms, 'term_id', 'slug' );
 			$term_ids_to_filter_by      = array_values( array_intersect_key( $term_ids_by_slug, array_flip( $data['terms'] ) ) );
 			$term_ids_to_filter_by      = array_map( 'absint', $term_ids_to_filter_by );
@@ -175,7 +175,7 @@ class Filterer {
 		if ( true === $cache ) {
 			$cached_counts = (array) get_transient( 'wc_layered_nav_counts_' . sanitize_title( $taxonomy ) );
 		} else {
-			$cached_counts = array();
+			$cached_counts = [];
 		}
 		if ( ! isset( $cached_counts[ $query_hash ] ) ) {
 			// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
@@ -225,13 +225,13 @@ class Filterer {
 			$attributes_to_filter_by = \WC_Query::get_layered_nav_chosen_attributes();
 
 			if ( ! empty( $attributes_to_filter_by ) ) {
-				$and_term_ids = array();
+				$and_term_ids = [];
 
 				foreach ( $attributes_to_filter_by as $taxonomy => $data ) {
 					if ( 'and' !== $data['query_type'] ) {
 						continue;
 					}
-					$all_terms             = get_terms( $taxonomy, array( 'hide_empty' => false ) );
+					$all_terms             = get_terms( $taxonomy, [ 'hide_empty' => false ] );
 					$term_ids_by_slug      = wp_list_pluck( $all_terms, 'term_id', 'slug' );
 					$term_ids_to_filter_by = array_values( array_intersect_key( $term_ids_by_slug, array_flip( $data['terms'] ) ) );
 					$and_term_ids          = array_merge( $and_term_ids, $term_ids_to_filter_by );
@@ -292,7 +292,7 @@ class Filterer {
 		$tax_query_sql  = $tax_query->get_sql( $wpdb->posts, 'ID' );
 
 		// Generate query.
-		$query           = array();
+		$query           = [];
 		$query['select'] = "SELECT COUNT( DISTINCT {$wpdb->posts}.ID ) AS term_count, terms.term_id AS term_count_id";
 		$query['from']   = "FROM {$wpdb->posts}";
 		$query['join']   = "

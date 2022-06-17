@@ -120,7 +120,7 @@ class WC_Tests_CustomerCRUD extends WC_Unit_Test_Case {
 		// Properties.
 		// Accessing properties directly will throw some wanted deprected notices
 		// So we need to let PHPUnit know we are expecting them and it's fine to continue
-		$legacy_keys = array(
+		$legacy_keys = [
 			'id',
 			'country',
 			'state',
@@ -138,7 +138,7 @@ class WC_Tests_CustomerCRUD extends WC_Unit_Test_Case {
 			'shipping_address_2',
 			'is_vat_exempt',
 			'calculated_shipping',
-		);
+		];
 
 		$this->expected_doing_it_wrong = array_merge( $this->expected_doing_it_wrong, $legacy_keys );
 
@@ -180,7 +180,7 @@ class WC_Tests_CustomerCRUD extends WC_Unit_Test_Case {
 	 */
 	public function test_customer_setters_and_getters() {
 		$time    = time();
-		$setters = array(
+		$setters = [
 			'username'            => 'test',
 			'email'               => 'test@woo.local',
 			'first_name'          => 'Bob',
@@ -205,7 +205,7 @@ class WC_Tests_CustomerCRUD extends WC_Unit_Test_Case {
 			'is_vat_exempt'       => true,
 			'calculated_shipping' => true,
 			'is_paying_customer'  => true,
-		);
+		];
 
 		$customer = new WC_Customer();
 
@@ -213,7 +213,7 @@ class WC_Tests_CustomerCRUD extends WC_Unit_Test_Case {
 			$customer->{"set_{$method}"}( $value );
 		}
 
-		$getters = array();
+		$getters = [];
 
 		foreach ( $setters as $method => $value ) {
 			$getters[ $method ] = $customer->{"get_{$method}"}();

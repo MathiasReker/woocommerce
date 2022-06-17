@@ -77,7 +77,7 @@ final class ReserveStock {
 					return $item->is_type( 'line_item' ) && $item->get_product() instanceof \WC_Product && $item->get_quantity() > 0;
 				}
 			);
-			$rows  = array();
+			$rows  = [];
 
 			foreach ( $items as $item ) {
 				$product = $item->get_product();
@@ -138,9 +138,9 @@ final class ReserveStock {
 
 		$wpdb->delete(
 			$wpdb->wc_reserved_stock,
-			array(
+			[
 				'order_id' => $order->get_id(),
-			)
+			]
 		);
 	}
 

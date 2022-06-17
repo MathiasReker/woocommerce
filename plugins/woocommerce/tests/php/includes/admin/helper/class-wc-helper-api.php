@@ -12,7 +12,7 @@ class WC_Tests_Helper_API extends WC_Unit_Test_Case {
 		parent::setUp();
 
 		// Callback used by WP_HTTP_TestCase to decide whether to perform HTTP requests or to provide a mocked response.
-		$this->http_responder = array( $this, 'mock_http_responses' );
+		$this->http_responder = [ $this, 'mock_http_responses' ];
 	}
 
 	/**
@@ -70,24 +70,24 @@ class WC_Tests_Helper_API extends WC_Unit_Test_Case {
 		$mocked_response = false;
 
 		if ( 'GET' === $request['method'] && WC_Helper_API::url( 'test-get' ) === $url ) {
-			$mocked_response = array(
+			$mocked_response = [
 				'body'     => 'Mocked response',
-				'response' => array( 'code' => 200 ),
-			);
+				'response' => [ 'code' => 200 ],
+			];
 		}
 
 		if ( 'POST' === $request['method'] && WC_Helper_API::url( 'test-post' ) === $url ) {
-			$mocked_response = array(
+			$mocked_response = [
 				'body'     => 'Mocked response',
-				'response' => array( 'code' => 200 ),
-			);
+				'response' => [ 'code' => 200 ],
+			];
 		}
 
 		if ( 'PUT' === $request['method'] && WC_Helper_API::url( 'test-put' ) === $url ) {
-			$mocked_response = array(
+			$mocked_response = [
 				'body'     => 'Mocked response',
-				'response' => array( 'code' => 200 ),
-			);
+				'response' => [ 'code' => 200 ],
+			];
 		}
 
 		return $mocked_response;

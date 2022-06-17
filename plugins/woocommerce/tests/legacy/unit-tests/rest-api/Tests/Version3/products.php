@@ -23,9 +23,9 @@ class WC_Tests_API_Product extends WC_REST_Unit_Test_Case {
 		parent::setUp();
 		$this->endpoint = new WC_REST_Products_Controller();
 		$this->user     = $this->factory->user->create(
-			array(
+			[
 				'role' => 'administrator',
-			)
+			]
 		);
 	}
 
@@ -72,7 +72,7 @@ class WC_Tests_API_Product extends WC_REST_Unit_Test_Case {
 		$data_store = WC_Data_Store::load( 'product' );
 		$data_store->delete( $product );
 		$request = new WP_REST_Request( 'GET', '/wc/v3/products' );
-		$request->set_query_params( array( 'status' => 'trash' ) );
+		$request->set_query_params( [ 'status' => 'trash' ] );
 		$response = $this->server->dispatch( $request );
 		$products = $response->get_data();
 
@@ -141,14 +141,14 @@ class WC_Tests_API_Product extends WC_REST_Unit_Test_Case {
 
 		$this->assertEquals( 200, $response->get_status() );
 		$this->assertContains(
-			array(
+			[
 				'id'            => $simple->get_id(),
 				'name'          => 'Dummy External Product',
 				'type'          => 'simple',
 				'status'        => 'publish',
 				'sku'           => 'DUMMY EXTERNAL SKU',
 				'regular_price' => 10,
-			),
+			],
 			$product
 		);
 	}
@@ -231,19 +231,19 @@ class WC_Tests_API_Product extends WC_REST_Unit_Test_Case {
 
 		$request = new WP_REST_Request( 'PUT', '/wc/v3/products/' . $product->get_id() );
 		$request->set_body_params(
-			array(
+			[
 				'sku'          => 'FIXED-SKU',
 				'sale_price'   => '8',
 				'description'  => 'Testing',
 				'date_created' => $date_created,
-				'images'       => array(
-					array(
+				'images'       => [
+					[
 						'position' => 0,
 						'src'      => 'http://cldup.com/Dr1Bczxq4q.png',
 						'alt'      => 'test upload image',
-					),
-				),
-			)
+					],
+				],
+			]
 		);
 		$response = $this->server->dispatch( $request );
 		$data     = $response->get_data();
@@ -264,42 +264,42 @@ class WC_Tests_API_Product extends WC_REST_Unit_Test_Case {
 		$response = $this->server->dispatch( new WP_REST_Request( 'GET', '/wc/v3/products/' . $product->get_id() ) );
 		$data     = $response->get_data();
 
-		foreach ( array( 'small', 'large' ) as $term_name ) {
+		foreach ( [ 'small', 'large' ] as $term_name ) {
 			$this->assertContains( $term_name, $data['attributes'][0]['options'] );
 		}
 
 		$request = new WP_REST_Request( 'PUT', '/wc/v3/products/' . $product->get_id() );
 		$request->set_body_params(
-			array(
-				'attributes' => array(
-					array(
+			[
+				'attributes' => [
+					[
 						'id'        => 0,
 						'name'      => 'pa_color',
-						'options'   => array(
+						'options'   => [
 							'red',
 							'yellow',
-						),
+						],
 						'visible'   => false,
 						'variation' => 1,
-					),
-					array(
+					],
+					[
 						'id'        => 0,
 						'name'      => 'pa_size',
-						'options'   => array(
+						'options'   => [
 							'small',
-						),
+						],
 						'visible'   => false,
 						'variation' => 1,
-					),
-				),
-			)
+					],
+				],
+			]
 		);
 		$response = $this->server->dispatch( $request );
 		$data     = $response->get_data();
 
-		$this->assertEquals( array( 'small' ), $data['attributes'][0]['options'] );
+		$this->assertEquals( [ 'small' ], $data['attributes'][0]['options'] );
 
-		foreach ( array( 'red', 'yellow' ) as $term_name ) {
+		foreach ( [ 'red', 'yellow' ] as $term_name ) {
 			$this->assertContains( $term_name, $data['attributes'][1]['options'] );
 		}
 
@@ -315,10 +315,10 @@ class WC_Tests_API_Product extends WC_REST_Unit_Test_Case {
 
 		$request = new WP_REST_Request( 'PUT', '/wc/v3/products/' . $product->get_id() );
 		$request->set_body_params(
-			array(
+			[
 				'button_text'  => 'Test API Update',
 				'external_url' => 'http://automattic.com',
-			)
+			]
 		);
 		$response = $this->server->dispatch( $request );
 		$data     = $response->get_data();
@@ -337,9 +337,9 @@ class WC_Tests_API_Product extends WC_REST_Unit_Test_Case {
 		$product = \Automattic\WooCommerce\RestApi\UnitTests\Helpers\ProductHelper::create_simple_product();
 		$request = new WP_REST_Request( 'PUT', '/wc/v3/products/' . $product->get_id() );
 		$request->set_body_params(
-			array(
+			[
 				'sku' => 'FIXED-SKU-NO-PERMISSION',
-			)
+			]
 		);
 		$response = $this->server->dispatch( $request );
 		$this->assertEquals( 401, $response->get_status() );
@@ -354,9 +354,9 @@ class WC_Tests_API_Product extends WC_REST_Unit_Test_Case {
 		wp_set_current_user( $this->user );
 		$request = new WP_REST_Request( 'PUT', '/wc/v2/products/0' );
 		$request->set_body_params(
-			array(
+			[
 				'sku' => 'FIXED-SKU-INVALID-ID',
-			)
+			]
 		);
 		$response = $this->server->dispatch( $request );
 		$this->assertEquals( 400, $response->get_status() );
@@ -372,9 +372,9 @@ class WC_Tests_API_Product extends WC_REST_Unit_Test_Case {
 
 		$request = new WP_REST_Request( 'POST', '/wc/v3/products/shipping_classes' );
 		$request->set_body_params(
-			array(
+			[
 				'name' => 'Test',
-			)
+			]
 		);
 		$response          = $this->server->dispatch( $request );
 		$data              = $response->get_data();
@@ -383,13 +383,13 @@ class WC_Tests_API_Product extends WC_REST_Unit_Test_Case {
 		// Create simple.
 		$request = new WP_REST_Request( 'POST', '/wc/v3/products' );
 		$request->set_body_params(
-			array(
+			[
 				'type'           => 'simple',
 				'name'           => 'Test Simple Product',
 				'sku'            => 'DUMMY SKU SIMPLE API',
 				'regular_price'  => '10',
 				'shipping_class' => 'test',
-			)
+			]
 		);
 		$response = $this->server->dispatch( $request );
 		$data     = $response->get_data();
@@ -405,14 +405,14 @@ class WC_Tests_API_Product extends WC_REST_Unit_Test_Case {
 		// Create external.
 		$request = new WP_REST_Request( 'POST', '/wc/v3/products' );
 		$request->set_body_params(
-			array(
+			[
 				'type'          => 'external',
 				'name'          => 'Test External Product',
 				'sku'           => 'DUMMY SKU EXTERNAL API',
 				'regular_price' => '10',
 				'button_text'   => 'Test Button',
 				'external_url'  => 'https://wordpress.org',
-			)
+			]
 		);
 		$response = $this->server->dispatch( $request );
 		$data     = $response->get_data();
@@ -429,23 +429,23 @@ class WC_Tests_API_Product extends WC_REST_Unit_Test_Case {
 		// Create variable.
 		$request = new WP_REST_Request( 'POST', '/wc/v3/products' );
 		$request->set_body_params(
-			array(
+			[
 				'type'       => 'variable',
 				'name'       => 'Test Variable Product',
 				'sku'        => 'DUMMY SKU VARIABLE API',
-				'attributes' => array(
-					array(
+				'attributes' => [
+					[
 						'id'        => 0,
 						'name'      => 'pa_size',
-						'options'   => array(
+						'options'   => [
 							'small',
 							'medium',
-						),
+						],
 						'visible'   => false,
 						'variation' => 1,
-					),
-				),
-			)
+					],
+				],
+			]
 		);
 		$response = $this->server->dispatch( $request );
 		$data     = $response->get_data();
@@ -453,7 +453,7 @@ class WC_Tests_API_Product extends WC_REST_Unit_Test_Case {
 		$this->assertEquals( 'DUMMY SKU VARIABLE API', $data['sku'] );
 		$this->assertEquals( 'Test Variable Product', $data['name'] );
 		$this->assertEquals( 'variable', $data['type'] );
-		$this->assertEquals( array( 'small', 'medium' ), $data['attributes'][0]['options'] );
+		$this->assertEquals( [ 'small', 'medium' ], $data['attributes'][0]['options'] );
 
 		$response = $this->server->dispatch( new WP_REST_Request( 'GET', '/wc/v3/products' ) );
 		$products = $response->get_data();
@@ -482,27 +482,27 @@ class WC_Tests_API_Product extends WC_REST_Unit_Test_Case {
 
 		$request = new WP_REST_Request( 'PUT', '/wc/v3/products/' . $product->get_id() );
 
-		$request->set_body_params( array( 'date_on_sale_from' => $date_from_sale ) );
+		$request->set_body_params( [ 'date_on_sale_from' => $date_from_sale ] );
 		$response = $this->server->dispatch( $request );
 		$this->assertEquals( 200, $response->get_status() );
 		$data = $response->get_data();
 		$this->assertEquals( $date_from_sale, $data['date_on_sale_from'] );
 
 		// Empty string should delete.
-		$request->set_body_params( array( 'date_on_sale_from' => '' ) );
+		$request->set_body_params( [ 'date_on_sale_from' => '' ] );
 		$response = $this->server->dispatch( $request );
 		$this->assertEquals( 200, $response->get_status() );
 		$data = $response->get_data();
 		$this->assertEquals( null, $data['date_on_sale_from'] );
 
-		$request->set_body_params( array( 'date_on_sale_from' => $date_from_sale ) );
+		$request->set_body_params( [ 'date_on_sale_from' => $date_from_sale ] );
 		$response = $this->server->dispatch( $request );
 		$this->assertEquals( 200, $response->get_status() );
 		$data = $response->get_data();
 		$this->assertEquals( $date_from_sale, $data['date_on_sale_from'] );
 
 		// Null does not delete.
-		$request->set_body_params( array( 'date_on_sale_from' => null ) );
+		$request->set_body_params( [ 'date_on_sale_from' => null ] );
 		$response = $this->server->dispatch( $request );
 		$this->assertEquals( 200, $response->get_status() );
 		$data = $response->get_data();
@@ -519,10 +519,10 @@ class WC_Tests_API_Product extends WC_REST_Unit_Test_Case {
 
 		$request = new WP_REST_Request( 'POST', '/wc/v3/products' );
 		$request->set_body_params(
-			array(
+			[
 				'name'          => 'Test Product',
 				'regular_price' => '12',
-			)
+			]
 		);
 		$response = $this->server->dispatch( $request );
 		$this->assertEquals( 401, $response->get_status() );
@@ -539,32 +539,32 @@ class WC_Tests_API_Product extends WC_REST_Unit_Test_Case {
 		$product_2 = \Automattic\WooCommerce\RestApi\UnitTests\Helpers\ProductHelper::create_simple_product();
 		$request   = new WP_REST_Request( 'POST', '/wc/v3/products/batch' );
 		$request->set_body_params(
-			array(
-				'update' => array(
-					array(
+			[
+				'update' => [
+					[
 						'id'          => $product->get_id(),
 						'description' => 'Updated description.',
-					),
-				),
-				'delete' => array(
+					],
+				],
+				'delete' => [
 					$product_2->get_id(),
-				),
-				'create' => array(
-					array(
+				],
+				'create' => [
+					[
 						'sku'           => 'DUMMY SKU BATCH TEST 1',
 						'regular_price' => '10',
 						'name'          => 'Test Batch Create 1',
 						'type'          => 'external',
 						'button_text'   => 'Test Button',
-					),
-					array(
+					],
+					[
 						'sku'           => 'DUMMY SKU BATCH TEST 2',
 						'regular_price' => '20',
 						'name'          => 'Test Batch Create 2',
 						'type'          => 'simple',
-					),
-				),
-			)
+					],
+				],
+			]
 		);
 		$response = $this->server->dispatch( $request );
 		$data     = $response->get_data();
@@ -596,10 +596,10 @@ class WC_Tests_API_Product extends WC_REST_Unit_Test_Case {
 			$product = \Automattic\WooCommerce\RestApi\UnitTests\Helpers\ProductHelper::create_simple_product();
 			if ( 0 === $i % 2 ) {
 				wp_update_post(
-					array(
+					[
 						'ID'          => $product->get_id(),
 						'post_status' => 'draft',
-					)
+					]
 				);
 			}
 		}
@@ -661,7 +661,7 @@ class WC_Tests_API_Product extends WC_REST_Unit_Test_Case {
 		$category = wp_insert_term( 'Some Category', 'product_cat' );
 
 		$product = new WC_Product_Simple();
-		$product->set_category_ids( array( $category['term_id'] ) );
+		$product->set_category_ids( [ $category['term_id'] ] );
 		$product->save();
 
 		// Create one product without category, i.e. Uncategorized.
@@ -669,9 +669,9 @@ class WC_Tests_API_Product extends WC_REST_Unit_Test_Case {
 		$product_2->save();
 
 		// Test product assigned to a single category.
-		$query_params = array(
+		$query_params = [
 			'category' => (string) $category['term_id'],
-		);
+		];
 		$request      = new WP_REST_Request( 'GET', '/wc/v2/products' );
 		$request->set_query_params( $query_params );
 		$response          = $this->server->dispatch( $request );
@@ -707,21 +707,21 @@ class WC_Tests_API_Product extends WC_REST_Unit_Test_Case {
 		$grouped  = \Automattic\WooCommerce\RestApi\UnitTests\Helpers\ProductHelper::create_grouped_product();
 		$variable = \Automattic\WooCommerce\RestApi\UnitTests\Helpers\ProductHelper::create_variation_product();
 
-		$product_ids_for_type = array(
-			'simple'   => array( $simple->get_id() ),
-			'external' => array( $external->get_id() ),
-			'grouped'  => array( $grouped->get_id() ),
-			'variable' => array( $variable->get_id() ),
-		);
+		$product_ids_for_type = [
+			'simple'   => [ $simple->get_id() ],
+			'external' => [ $external->get_id() ],
+			'grouped'  => [ $grouped->get_id() ],
+			'variable' => [ $variable->get_id() ],
+		];
 
 		foreach ( $grouped->get_children() as $additional_product ) {
 			$product_ids_for_type['simple'][] = $additional_product;
 		}
 
 		foreach ( $product_ids_for_type as $product_type => $product_ids ) {
-			$query_params = array(
+			$query_params = [
 				'type' => $product_type,
-			);
+			];
 			$request      = new WP_REST_Request( 'GET', '/wc/v2/products' );
 			$request->set_query_params( $query_params );
 			$response          = $this->server->dispatch( $request );
@@ -752,9 +752,9 @@ class WC_Tests_API_Product extends WC_REST_Unit_Test_Case {
 		$nonfeat_product = \Automattic\WooCommerce\RestApi\UnitTests\Helpers\ProductHelper::create_simple_product();
 		$nonfeat_product->save();
 
-		$query_params = array(
+		$query_params = [
 			'featured' => 'true',
-		);
+		];
 		$request      = new WP_REST_Request( 'GET', '/wc/v2/products' );
 		$request->set_query_params( $query_params );
 		$response          = $this->server->dispatch( $request );
@@ -765,9 +765,9 @@ class WC_Tests_API_Product extends WC_REST_Unit_Test_Case {
 			$this->assertEquals( $feat_product->get_id(), $response_product['id'], 'REST API: Featured product not found correctly' );
 		}
 
-		$query_params = array(
+		$query_params = [
 			'featured' => 'false',
-		);
+		];
 		$request      = new WP_REST_Request( 'GET', '/wc/v2/products' );
 		$request->set_query_params( $query_params );
 		$response          = $this->server->dispatch( $request );
@@ -793,9 +793,9 @@ class WC_Tests_API_Product extends WC_REST_Unit_Test_Case {
 		$product_1->set_shipping_class_id( $shipping_class_1['term_id'] );
 		$product_1->save();
 
-		$query_params = array(
+		$query_params = [
 			'shipping_class' => (string) $shipping_class_1['term_id'],
-		);
+		];
 		$request      = new WP_REST_Request( 'GET', '/wc/v2/products' );
 		$request->set_query_params( $query_params );
 		$response          = $this->server->dispatch( $request );
@@ -819,15 +819,15 @@ class WC_Tests_API_Product extends WC_REST_Unit_Test_Case {
 
 		// Product with a tag.
 		$product = \Automattic\WooCommerce\RestApi\UnitTests\Helpers\ProductHelper::create_simple_product();
-		$product->set_tag_ids( array( $test_tag_1['term_id'] ) );
+		$product->set_tag_ids( [ $test_tag_1['term_id'] ] );
 		$product->save();
 
 		// Product without a tag.
 		$product_2 = \Automattic\WooCommerce\RestApi\UnitTests\Helpers\ProductHelper::create_simple_product();
 
-		$query_params = array(
+		$query_params = [
 			'tag' => (string) $test_tag_1['term_id'],
-		);
+		];
 		$request      = new WP_REST_Request( 'GET', '/wc/v2/products' );
 		$request->set_query_params( $query_params );
 		$response          = $this->server->dispatch( $request );
@@ -860,28 +860,28 @@ class WC_Tests_API_Product extends WC_REST_Unit_Test_Case {
 
 		// Simple product with attribute size = large.
 		$product_2 = \Automattic\WooCommerce\RestApi\UnitTests\Helpers\ProductHelper::create_simple_product();
-		$product_2->set_attributes( array( 'pa_size' => 'large' ) );
+		$product_2->set_attributes( [ 'pa_size' => 'large' ] );
 		$product_2->save();
 
 		// Link the product to the term.
 		$wpdb->insert(
 			$wpdb->prefix . 'term_relationships',
-			array(
+			[
 				'object_id'        => $product_2->get_id(),
 				'term_taxonomy_id' => $term_large->term_id,
 				'term_order'       => 0,
-			)
+			]
 		);
 
 		// Products with attribute size == large.
-		$expected_product_ids = array(
+		$expected_product_ids = [
 			$variable_product->get_id(),
 			$product_2->get_id(),
-		);
-		$query_params         = array(
+		];
+		$query_params         = [
 			'attribute'      => 'pa_size',
 			'attribute_term' => (string) $term_large->term_id,
-		);
+		];
 		$request              = new WP_REST_Request( 'GET', '/wc/v2/products' );
 		$request->set_query_params( $query_params );
 		$response          = $this->server->dispatch( $request );
@@ -894,13 +894,13 @@ class WC_Tests_API_Product extends WC_REST_Unit_Test_Case {
 		}
 
 		// Products with attribute size == small.
-		$expected_product_ids = array(
+		$expected_product_ids = [
 			$variable_product->get_id(),
-		);
-		$query_params         = array(
+		];
+		$query_params         = [
 			'attribute'      => 'pa_size',
 			'attribute_term' => (string) $term_small->term_id,
-		);
+		];
 		$request              = new WP_REST_Request( 'GET', '/wc/v2/products' );
 		$request->set_query_params( $query_params );
 		$response          = $this->server->dispatch( $request );

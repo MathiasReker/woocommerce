@@ -36,10 +36,10 @@ class WC_REST_Webhooks_V2_Controller extends WC_REST_Webhooks_V1_Controller {
 		$webhook = wc_get_webhook( $id );
 
 		if ( empty( $webhook ) || is_null( $webhook ) ) {
-			return new WP_Error( "woocommerce_rest_{$this->post_type}_invalid_id", __( 'ID is invalid.', 'woocommerce' ), array( 'status' => 400 ) );
+			return new WP_Error( "woocommerce_rest_{$this->post_type}_invalid_id", __( 'ID is invalid.', 'woocommerce' ), [ 'status' => 400 ] );
 		}
 
-		$data = array(
+		$data = [
 			'id'                => $webhook->get_id(),
 			'name'              => $webhook->get_name(),
 			'status'            => $webhook->get_status(),
@@ -52,7 +52,7 @@ class WC_REST_Webhooks_V2_Controller extends WC_REST_Webhooks_V1_Controller {
 			'date_created_gmt'  => wc_rest_prepare_date_response( $webhook->get_date_created() ),
 			'date_modified'     => wc_rest_prepare_date_response( $webhook->get_date_modified(), false ),
 			'date_modified_gmt' => wc_rest_prepare_date_response( $webhook->get_date_modified() ),
-		);
+		];
 
 		$context = ! empty( $request['context'] ) ? $request['context'] : 'view';
 		$data    = $this->add_additional_fields_to_object( $data, $request );
@@ -89,93 +89,93 @@ class WC_REST_Webhooks_V2_Controller extends WC_REST_Webhooks_V1_Controller {
 	 * @return array
 	 */
 	public function get_item_schema() {
-		$schema = array(
+		$schema = [
 			'$schema'    => 'http://json-schema.org/draft-04/schema#',
 			'title'      => 'webhook',
 			'type'       => 'object',
-			'properties' => array(
-				'id'                => array(
+			'properties' => [
+				'id'                => [
 					'description' => __( 'Unique identifier for the resource.', 'woocommerce' ),
 					'type'        => 'integer',
-					'context'     => array( 'view', 'edit' ),
+					'context'     => [ 'view', 'edit' ],
 					'readonly'    => true,
-				),
-				'name'              => array(
+				],
+				'name'              => [
 					'description' => __( 'A friendly name for the webhook.', 'woocommerce' ),
 					'type'        => 'string',
-					'context'     => array( 'view', 'edit' ),
-				),
-				'status'            => array(
+					'context'     => [ 'view', 'edit' ],
+				],
+				'status'            => [
 					'description' => __( 'Webhook status.', 'woocommerce' ),
 					'type'        => 'string',
 					'default'     => 'active',
 					'enum'        => array_keys( wc_get_webhook_statuses() ),
-					'context'     => array( 'view', 'edit' ),
-				),
-				'topic'             => array(
+					'context'     => [ 'view', 'edit' ],
+				],
+				'topic'             => [
 					'description' => __( 'Webhook topic.', 'woocommerce' ),
 					'type'        => 'string',
-					'context'     => array( 'view', 'edit' ),
-				),
-				'resource'          => array(
+					'context'     => [ 'view', 'edit' ],
+				],
+				'resource'          => [
 					'description' => __( 'Webhook resource.', 'woocommerce' ),
 					'type'        => 'string',
-					'context'     => array( 'view', 'edit' ),
+					'context'     => [ 'view', 'edit' ],
 					'readonly'    => true,
-				),
-				'event'             => array(
+				],
+				'event'             => [
 					'description' => __( 'Webhook event.', 'woocommerce' ),
 					'type'        => 'string',
-					'context'     => array( 'view', 'edit' ),
+					'context'     => [ 'view', 'edit' ],
 					'readonly'    => true,
-				),
-				'hooks'             => array(
+				],
+				'hooks'             => [
 					'description' => __( 'WooCommerce action names associated with the webhook.', 'woocommerce' ),
 					'type'        => 'array',
-					'context'     => array( 'view', 'edit' ),
+					'context'     => [ 'view', 'edit' ],
 					'readonly'    => true,
-					'items'       => array(
+					'items'       => [
 						'type' => 'string',
-					),
-				),
-				'delivery_url'      => array(
+					],
+				],
+				'delivery_url'      => [
 					'description' => __( 'The URL where the webhook payload is delivered.', 'woocommerce' ),
 					'type'        => 'string',
 					'format'      => 'uri',
-					'context'     => array( 'view', 'edit' ),
+					'context'     => [ 'view', 'edit' ],
 					'readonly'    => true,
-				),
-				'secret'            => array(
+				],
+				'secret'            => [
 					'description' => __( "Secret key used to generate a hash of the delivered webhook and provided in the request headers. This will default to a MD5 hash from the current user's ID|username if not provided.", 'woocommerce' ),
 					'type'        => 'string',
-					'context'     => array( 'edit' ),
-				),
-				'date_created'      => array(
+					'context'     => [ 'edit' ],
+				],
+				'date_created'      => [
 					'description' => __( "The date the webhook was created, in the site's timezone.", 'woocommerce' ),
 					'type'        => 'date-time',
-					'context'     => array( 'view', 'edit' ),
+					'context'     => [ 'view', 'edit' ],
 					'readonly'    => true,
-				),
-				'date_created_gmt'  => array(
+				],
+				'date_created_gmt'  => [
 					'description' => __( 'The date the webhook was created, as GMT.', 'woocommerce' ),
 					'type'        => 'date-time',
-					'context'     => array( 'view', 'edit' ),
+					'context'     => [ 'view', 'edit' ],
 					'readonly'    => true,
-				),
-				'date_modified'     => array(
+				],
+				'date_modified'     => [
 					'description' => __( "The date the webhook was last modified, in the site's timezone.", 'woocommerce' ),
 					'type'        => 'date-time',
-					'context'     => array( 'view', 'edit' ),
+					'context'     => [ 'view', 'edit' ],
 					'readonly'    => true,
-				),
-				'date_modified_gmt' => array(
+				],
+				'date_modified_gmt' => [
 					'description' => __( 'The date the webhook was last modified, as GMT.', 'woocommerce' ),
 					'type'        => 'date-time',
-					'context'     => array( 'view', 'edit' ),
+					'context'     => [ 'view', 'edit' ],
 					'readonly'    => true,
-				),
-			),
-		);
+				],
+			],
+		];
 
 		return $this->add_additional_fields_schema( $schema );
 	}

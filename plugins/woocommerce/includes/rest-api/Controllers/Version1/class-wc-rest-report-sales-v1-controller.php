@@ -47,15 +47,15 @@ class WC_REST_Report_Sales_V1_Controller extends WC_REST_Controller {
 	 * Register the routes for sales reports.
 	 */
 	public function register_routes() {
-		register_rest_route( $this->namespace, '/' . $this->rest_base, array(
-			array(
+		register_rest_route( $this->namespace, '/' . $this->rest_base, [
+			[
 				'methods'             => WP_REST_Server::READABLE,
-				'callback'            => array( $this, 'get_items' ),
-				'permission_callback' => array( $this, 'get_items_permissions_check' ),
+				'callback'            => [ $this, 'get_items' ],
+				'permission_callback' => [ $this, 'get_items_permissions_check' ],
 				'args'                => $this->get_collection_params(),
-			),
-			'schema' => array( $this, 'get_public_item_schema' ),
-		) );
+			],
+			'schema' => [ $this, 'get_public_item_schema' ],
+		] );
 	}
 
 	/**
@@ -66,7 +66,7 @@ class WC_REST_Report_Sales_V1_Controller extends WC_REST_Controller {
 	 */
 	public function get_items_permissions_check( $request ) {
 		if ( ! wc_rest_check_manager_permissions( 'reports', 'read' ) ) {
-			return new WP_Error( 'woocommerce_rest_cannot_view', __( 'Sorry, you cannot list resources.', 'woocommerce' ), array( 'status' => rest_authorization_required_code() ) );
+			return new WP_Error( 'woocommerce_rest_cannot_view', __( 'Sorry, you cannot list resources.', 'woocommerce' ), [ 'status' => rest_authorization_required_code() ] );
 		}
 
 		return true;
@@ -79,7 +79,7 @@ class WC_REST_Report_Sales_V1_Controller extends WC_REST_Controller {
 	 * @return array|WP_Error
 	 */
 	public function get_items( $request ) {
-		$data   = array();
+		$data   = [];
 		$item   = $this->prepare_item_for_response( null, $request );
 		$data[] = $this->prepare_response_for_collection( $item );
 
@@ -95,19 +95,19 @@ class WC_REST_Report_Sales_V1_Controller extends WC_REST_Controller {
 	 */
 	public function prepare_item_for_response( $_, $request ) {
 		// Set date filtering.
-		$filter = array(
+		$filter = [
 			'period'   => $request['period'],
 			'date_min' => $request['date_min'],
 			'date_max' => $request['date_max'],
-		);
+		];
 		$this->setup_report( $filter );
 
 		// New customers.
 		$users_query = new WP_User_Query(
-			array(
-				'fields' => array( 'user_registered' ),
+			[
+				'fields' => [ 'user_registered' ],
 				'role'   => 'customer',
-			)
+			]
 		);
 
 		$customers = $users_query->get_results();
@@ -120,7 +120,7 @@ class WC_REST_Report_Sales_V1_Controller extends WC_REST_Controller {
 
 		$total_customers = count( $customers );
 		$report_data     = $this->report->get_report_data();
-		$period_totals   = array();
+		$period_totals   = [];
 
 		// Setup period totals by ensuring each period in the interval has data.
 		for ( $i = 0; $i <= $this->report->chart_interval; $i++ ) {
@@ -142,7 +142,7 @@ class WC_REST_Report_Sales_V1_Controller extends WC_REST_Controller {
 				}
  			}
 
-			$period_totals[ $time ] = array(
+			$period_totals[ $time ] = [
 				'sales'     => wc_format_decimal( 0.00, 2 ),
 				'orders'    => 0,
 				'items'     => 0,
@@ -150,7 +150,7 @@ class WC_REST_Report_Sales_V1_Controller extends WC_REST_Controller {
 				'shipping'  => wc_format_decimal( 0.00, 2 ),
 				'discount'  => wc_format_decimal( 0.00, 2 ),
 				'customers' => $customer_count,
-			);
+			];
 		}
 
 		// add total sales, total order count, total tax and total shipping for each period
@@ -198,7 +198,7 @@ class WC_REST_Report_Sales_V1_Controller extends WC_REST_Controller {
 			$period_totals[ $time ]['discount'] = wc_format_decimal( $discount->discount_amount, 2 );
 		}
 
-		$sales_data = array(
+		$sales_data = [
 			'total_sales'       => $report_data->total_sales,
 			'net_sales'         => $report_data->net_sales,
 			'average_sales'     => $report_data->average_sales,
@@ -211,7 +211,7 @@ class WC_REST_Report_Sales_V1_Controller extends WC_REST_Controller {
 			'totals_grouped_by' => $this->report->chart_groupby,
 			'totals'            => $period_totals,
 			'total_customers'   => $total_customers,
-		);
+		];
 
 		$context = ! empty( $request['context'] ) ? $request['context'] : 'view';
 		$data    = $this->add_additional_fields_to_object( $sales_data, $request );
@@ -219,11 +219,11 @@ class WC_REST_Report_Sales_V1_Controller extends WC_REST_Controller {
 
 		// Wrap the data in a response object.
 		$response = rest_ensure_response( $data );
-		$response->add_links( array(
-			'about' => array(
+		$response->add_links( [
+			'about' => [
 				'href' => rest_url( sprintf( '%s/reports', $this->namespace ) ),
-			),
-		) );
+			],
+		] );
 
 		/**
 		 * Filter a report sales returned from the API.
@@ -281,82 +281,82 @@ class WC_REST_Report_Sales_V1_Controller extends WC_REST_Controller {
 	 * @return array
 	 */
 	public function get_item_schema() {
-		$schema = array(
+		$schema = [
 			'$schema'    => 'http://json-schema.org/draft-04/schema#',
 			'title'      => 'sales_report',
 			'type'       => 'object',
-			'properties' => array(
-				'total_sales' => array(
+			'properties' => [
+				'total_sales' => [
 					'description' => __( 'Gross sales in the period.', 'woocommerce' ),
 					'type'        => 'string',
-					'context'     => array( 'view' ),
+					'context'     => [ 'view' ],
 					'readonly'    => true,
-				),
-				'net_sales' => array(
+				],
+				'net_sales' => [
 					'description' => __( 'Net sales in the period.', 'woocommerce' ),
 					'type'        => 'string',
-					'context'     => array( 'view' ),
+					'context'     => [ 'view' ],
 					'readonly'    => true,
-				),
-				'average_sales' => array(
+				],
+				'average_sales' => [
 					'description' => __( 'Average net daily sales.', 'woocommerce' ),
 					'type'        => 'string',
-					'context'     => array( 'view' ),
+					'context'     => [ 'view' ],
 					'readonly'    => true,
-				),
-				'total_orders' => array(
+				],
+				'total_orders' => [
 					'description' => __( 'Total of orders placed.', 'woocommerce' ),
 					'type'        => 'integer',
-					'context'     => array( 'view' ),
+					'context'     => [ 'view' ],
 					'readonly'    => true,
-				),
-				'total_items' => array(
+				],
+				'total_items' => [
 					'description' => __( 'Total of items purchased.', 'woocommerce' ),
 					'type'        => 'integer',
-					'context'     => array( 'view' ),
+					'context'     => [ 'view' ],
 					'readonly'    => true,
-				),
-				'total_tax' => array(
+				],
+				'total_tax' => [
 					'description' => __( 'Total charged for taxes.', 'woocommerce' ),
 					'type'        => 'string',
-					'context'     => array( 'view' ),
+					'context'     => [ 'view' ],
 					'readonly'    => true,
-				),
-				'total_shipping' => array(
+				],
+				'total_shipping' => [
 					'description' => __( 'Total charged for shipping.', 'woocommerce' ),
 					'type'        => 'string',
-					'context'     => array( 'view' ),
+					'context'     => [ 'view' ],
 					'readonly'    => true,
-				),
-				'total_refunds' => array(
+				],
+				'total_refunds' => [
 					'description' => __( 'Total of refunded orders.', 'woocommerce' ),
 					'type'        => 'integer',
-					'context'     => array( 'view' ),
+					'context'     => [ 'view' ],
 					'readonly'    => true,
-				),
-				'total_discount' => array(
+				],
+				'total_discount' => [
 					'description' => __( 'Total of coupons used.', 'woocommerce' ),
 					'type'        => 'integer',
-					'context'     => array( 'view' ),
+					'context'     => [ 'view' ],
 					'readonly'    => true,
-				),
-				'totals_grouped_by' => array(
+				],
+				'totals_grouped_by' => [
 					'description' => __( 'Group type.', 'woocommerce' ),
 					'type'        => 'string',
-					'context'     => array( 'view' ),
+					'context'     => [ 'view' ],
 					'readonly'    => true,
-				),
-				'totals' => array(
+				],
+				'totals' => [
 					'description' => __( 'Totals.', 'woocommerce' ),
 					'type'        => 'array',
-					'items'       => array(
+					'items'       => [
 						'type'    => 'array',
-					),
-					'context'     => array( 'view' ),
+					],
+					'context'     => [ 'view' ],
 					'readonly'    => true,
-				),
-			),
-		);
+				],
+			],
+		];
 
 		return $this->add_additional_fields_schema( $schema );
 	}
@@ -367,31 +367,31 @@ class WC_REST_Report_Sales_V1_Controller extends WC_REST_Controller {
 	 * @return array
 	 */
 	public function get_collection_params() {
-		return array(
-			'context' => $this->get_context_param( array( 'default' => 'view' ) ),
-			'period' => array(
+		return [
+			'context' => $this->get_context_param( [ 'default' => 'view' ] ),
+			'period' => [
 				'description'       => __( 'Report period.', 'woocommerce' ),
 				'type'              => 'string',
-				'enum'              => array( 'week', 'month', 'last_month', 'year' ),
+				'enum'              => [ 'week', 'month', 'last_month', 'year' ],
 				'validate_callback' => 'rest_validate_request_arg',
 				'sanitize_callback' => 'sanitize_text_field',
-			),
-			'date_min' => array(
+			],
+			'date_min' => [
 				/* translators: %s: date format */
 				'description'       => sprintf( __( 'Return sales for a specific start date, the date need to be in the %s format.', 'woocommerce' ), 'YYYY-MM-DD' ),
 				'type'              => 'string',
 				'format'            => 'date',
 				'validate_callback' => 'wc_rest_validate_reports_request_arg',
 				'sanitize_callback' => 'sanitize_text_field',
-			),
-			'date_max' => array(
+			],
+			'date_max' => [
 				/* translators: %s: date format */
 				'description'       => sprintf( __( 'Return sales for a specific end date, the date need to be in the %s format.', 'woocommerce' ), 'YYYY-MM-DD' ),
 				'type'              => 'string',
 				'format'            => 'date',
 				'validate_callback' => 'wc_rest_validate_reports_request_arg',
 				'sanitize_callback' => 'sanitize_text_field',
-			),
-		);
+			],
+		];
 	}
 }

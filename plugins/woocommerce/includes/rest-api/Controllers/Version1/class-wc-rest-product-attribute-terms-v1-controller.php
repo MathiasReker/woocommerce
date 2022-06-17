@@ -41,89 +41,89 @@ class WC_REST_Product_Attribute_Terms_V1_Controller extends WC_REST_Terms_Contro
 	 */
 	public function register_routes() {
 		register_rest_route( $this->namespace, '/' . $this->rest_base,
-		array(
-			'args' => array(
-				'attribute_id' => array(
+		[
+			'args' => [
+				'attribute_id' => [
 					'description' => __( 'Unique identifier for the attribute of the terms.', 'woocommerce' ),
 					'type'        => 'integer',
-				),
-			),
-			array(
+				],
+			],
+			[
 				'methods'             => WP_REST_Server::READABLE,
-				'callback'            => array( $this, 'get_items' ),
-				'permission_callback' => array( $this, 'get_items_permissions_check' ),
+				'callback'            => [ $this, 'get_items' ],
+				'permission_callback' => [ $this, 'get_items_permissions_check' ],
 				'args'                => $this->get_collection_params(),
-			),
-			array(
+			],
+			[
 				'methods'             => WP_REST_Server::CREATABLE,
-				'callback'            => array( $this, 'create_item' ),
-				'permission_callback' => array( $this, 'create_item_permissions_check' ),
-				'args'                => array_merge( $this->get_endpoint_args_for_item_schema( WP_REST_Server::CREATABLE ), array(
-					'name' => array(
+				'callback'            => [ $this, 'create_item' ],
+				'permission_callback' => [ $this, 'create_item_permissions_check' ],
+				'args'                => array_merge( $this->get_endpoint_args_for_item_schema( WP_REST_Server::CREATABLE ), [
+					'name' => [
 						'type'        => 'string',
 						'description' => __( 'Name for the resource.', 'woocommerce' ),
 						'required'    => true,
-					),
-				) ),
-			),
-			'schema' => array( $this, 'get_public_item_schema' ),
-		));
+					],
+				] ),
+			],
+			'schema' => [ $this, 'get_public_item_schema' ],
+		]);
 
-		register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<id>[\d]+)', array(
-			'args' => array(
-				'id' => array(
+		register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<id>[\d]+)', [
+			'args' => [
+				'id' => [
 					'description' => __( 'Unique identifier for the resource.', 'woocommerce' ),
 					'type'        => 'integer',
-				),
-				'attribute_id' => array(
+				],
+				'attribute_id' => [
 					'description' => __( 'Unique identifier for the attribute of the terms.', 'woocommerce' ),
 					'type'        => 'integer',
-				),
-			),
-			array(
+				],
+			],
+			[
 				'methods'             => WP_REST_Server::READABLE,
-				'callback'            => array( $this, 'get_item' ),
-				'permission_callback' => array( $this, 'get_item_permissions_check' ),
-				'args'                => array(
-					'context'         => $this->get_context_param( array( 'default' => 'view' ) ),
-				),
-			),
-			array(
+				'callback'            => [ $this, 'get_item' ],
+				'permission_callback' => [ $this, 'get_item_permissions_check' ],
+				'args'                => [
+					'context'         => $this->get_context_param( [ 'default' => 'view' ] ),
+				],
+			],
+			[
 				'methods'             => WP_REST_Server::EDITABLE,
-				'callback'            => array( $this, 'update_item' ),
-				'permission_callback' => array( $this, 'update_item_permissions_check' ),
+				'callback'            => [ $this, 'update_item' ],
+				'permission_callback' => [ $this, 'update_item_permissions_check' ],
 				'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::EDITABLE ),
-			),
-			array(
+			],
+			[
 				'methods'             => WP_REST_Server::DELETABLE,
-				'callback'            => array( $this, 'delete_item' ),
-				'permission_callback' => array( $this, 'delete_item_permissions_check' ),
-				'args'                => array(
-					'force' => array(
+				'callback'            => [ $this, 'delete_item' ],
+				'permission_callback' => [ $this, 'delete_item_permissions_check' ],
+				'args'                => [
+					'force' => [
 						'default'     => false,
 						'type'        => 'boolean',
 						'description' => __( 'Required to be true, as resource does not support trashing.', 'woocommerce' ),
-					),
-				),
-			),
-			'schema' => array( $this, 'get_public_item_schema' ),
-		) );
+					],
+				],
+			],
+			'schema' => [ $this, 'get_public_item_schema' ],
+		] );
 
-		register_rest_route( $this->namespace, '/' . $this->rest_base . '/batch', array(
-			'args' => array(
-				'attribute_id' => array(
+		register_rest_route( $this->namespace, '/' . $this->rest_base . '/batch', [
+			'args' => [
+				'attribute_id' => [
 					'description' => __( 'Unique identifier for the attribute of the terms.', 'woocommerce' ),
 					'type'        => 'integer',
-				),
-			),
-			array(
+				],
+			],
+			[
 				'methods'             => WP_REST_Server::EDITABLE,
-				'callback'            => array( $this, 'batch_items' ),
-				'permission_callback' => array( $this, 'batch_items_permissions_check' ),
+				'callback'            => [ $this, 'batch_items' ],
+				'permission_callback' => [ $this, 'batch_items_permissions_check' ],
 				'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::EDITABLE ),
-			),
-			'schema' => array( $this, 'get_public_batch_schema' ),
-		) );
+			],
+			'schema' => [ $this, 'get_public_batch_schema' ],
+		] );
 	}
 
 	/**
@@ -137,14 +137,14 @@ class WC_REST_Product_Attribute_Terms_V1_Controller extends WC_REST_Terms_Contro
 		// Get term order.
 		$menu_order = get_term_meta( $item->term_id, 'order_' . $this->taxonomy, true );
 
-		$data = array(
+		$data = [
 			'id'          => (int) $item->term_id,
 			'name'        => $item->name,
 			'slug'        => $item->slug,
 			'description' => $item->description,
 			'menu_order'  => (int) $menu_order,
 			'count'       => (int) $item->count,
-		);
+		];
 
 		$context = ! empty( $request['context'] ) ? $request['context'] : 'view';
 		$data    = $this->add_additional_fields_to_object( $data, $request );
@@ -187,54 +187,54 @@ class WC_REST_Product_Attribute_Terms_V1_Controller extends WC_REST_Terms_Contro
 	 * @return array
 	 */
 	public function get_item_schema() {
-		$schema = array(
+		$schema = [
 			'$schema'              => 'http://json-schema.org/draft-04/schema#',
 			'title'                => 'product_attribute_term',
 			'type'                 => 'object',
-			'properties'           => array(
-				'id' => array(
+			'properties'           => [
+				'id' => [
 					'description' => __( 'Unique identifier for the resource.', 'woocommerce' ),
 					'type'        => 'integer',
-					'context'     => array( 'view', 'edit' ),
+					'context'     => [ 'view', 'edit' ],
 					'readonly'    => true,
-				),
-				'name' => array(
+				],
+				'name' => [
 					'description' => __( 'Term name.', 'woocommerce' ),
 					'type'        => 'string',
-					'context'     => array( 'view', 'edit' ),
-					'arg_options' => array(
+					'context'     => [ 'view', 'edit' ],
+					'arg_options' => [
 						'sanitize_callback' => 'sanitize_text_field',
-					),
-				),
-				'slug' => array(
+					],
+				],
+				'slug' => [
 					'description' => __( 'An alphanumeric identifier for the resource unique to its type.', 'woocommerce' ),
 					'type'        => 'string',
-					'context'     => array( 'view', 'edit' ),
-					'arg_options' => array(
+					'context'     => [ 'view', 'edit' ],
+					'arg_options' => [
 						'sanitize_callback' => 'sanitize_title',
-					),
-				),
-				'description' => array(
+					],
+				],
+				'description' => [
 					'description' => __( 'HTML description of the resource.', 'woocommerce' ),
 					'type'        => 'string',
-					'context'     => array( 'view', 'edit' ),
-					'arg_options' => array(
+					'context'     => [ 'view', 'edit' ],
+					'arg_options' => [
 						'sanitize_callback' => 'wp_filter_post_kses',
-					),
-				),
-				'menu_order' => array(
+					],
+				],
+				'menu_order' => [
 					'description' => __( 'Menu order, used to custom sort the resource.', 'woocommerce' ),
 					'type'        => 'integer',
-					'context'     => array( 'view', 'edit' ),
-				),
-				'count' => array(
+					'context'     => [ 'view', 'edit' ],
+				],
+				'count' => [
 					'description' => __( 'Number of published products for the resource.', 'woocommerce' ),
 					'type'        => 'integer',
-					'context'     => array( 'view', 'edit' ),
+					'context'     => [ 'view', 'edit' ],
 					'readonly'    => true,
-				),
-			),
-		);
+				],
+			],
+		];
 
 		return $this->add_additional_fields_schema( $schema );
 	}

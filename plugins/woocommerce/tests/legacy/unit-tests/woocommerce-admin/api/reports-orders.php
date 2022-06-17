@@ -32,9 +32,9 @@ class WC_Admin_Tests_API_Reports_Orders extends WC_REST_Unit_Test_Case {
 		parent::setUp();
 
 		$this->user = $this->factory->user->create(
-			array(
+			[
 				'role' => 'administrator',
-			)
+			]
 		);
 	}
 
@@ -168,7 +168,7 @@ class WC_Admin_Tests_API_Reports_Orders extends WC_REST_Unit_Test_Case {
 		WC_Helper_Queue::run_all_pending();
 
 		$request = new WP_REST_Request( 'GET', $this->endpoint );
-		$request->set_query_params( array( 'per_page' => 15 ) );
+		$request->set_query_params( [ 'per_page' => 15 ] );
 		$response        = $this->server->dispatch( $request );
 		$response_orders = $response->get_data();
 
@@ -181,20 +181,20 @@ class WC_Admin_Tests_API_Reports_Orders extends WC_REST_Unit_Test_Case {
 		$small_term   = get_term_by( 'slug', 'small', 'pa_size' );
 
 		// Test bad values to filter parameter.
-		$bad_args = array(
+		$bad_args = [
 			'not an array!',                   // Not an array.
-			array( 1, 2, 3 ),                  // Not a tuple.
-			array( -1, $small_term->term_id ), // Invaid attribute ID.
-			array( $size_attr_id, -1 ),        // Invaid term ID.
-		);
+			[ 1, 2, 3 ],                  // Not a tuple.
+			[ -1, $small_term->term_id ], // Invaid attribute ID.
+			[ $size_attr_id, -1 ],        // Invaid term ID.
+		];
 
 		foreach ( $bad_args as $bad_arg ) {
 			$request = new WP_REST_Request( 'GET', $this->endpoint );
 			$request->set_query_params(
-				array(
+				[
 					'per_page'     => 15,
 					'attribute_is' => $bad_arg,
-				)
+				]
 			);
 			$response        = $this->server->dispatch( $request );
 			$response_orders = $response->get_data();
@@ -207,11 +207,11 @@ class WC_Admin_Tests_API_Reports_Orders extends WC_REST_Unit_Test_Case {
 		// Filter by the "size" attribute, with value "small".
 		$request = new WP_REST_Request( 'GET', $this->endpoint );
 		$request->set_query_params(
-			array(
-				'attribute_is' => array(
-					array( $size_attr_id, $small_term->term_id ),
-				),
-			)
+			[
+				'attribute_is' => [
+					[ $size_attr_id, $small_term->term_id ],
+				],
+			]
 		);
 		$response        = $this->server->dispatch( $request );
 		$response_orders = $response->get_data();
@@ -223,12 +223,12 @@ class WC_Admin_Tests_API_Reports_Orders extends WC_REST_Unit_Test_Case {
 		// Verify the opposite result set.
 		$request = new WP_REST_Request( 'GET', $this->endpoint );
 		$request->set_query_params(
-			array(
-				'attribute_is_not' => array(
-					array( $size_attr_id, $small_term->term_id ),
-				),
+			[
+				'attribute_is_not' => [
+					[ $size_attr_id, $small_term->term_id ],
+				],
 				'per_page'         => 15,
-			)
+			]
 		);
 		$response        = $this->server->dispatch( $request );
 		$response_orders = $response->get_data();
@@ -257,7 +257,7 @@ class WC_Admin_Tests_API_Reports_Orders extends WC_REST_Unit_Test_Case {
 		$attributes  = $variable_product->get_attributes();
 		$custom_attr = new WC_Product_Attribute();
 		$custom_attr->set_name( 'Numeric Size' );
-		$custom_attr->set_options( array( '1', '2', '3', '4', '5' ) );
+		$custom_attr->set_options( [ '1', '2', '3', '4', '5' ] );
 		$custom_attr->set_visible( true );
 		$custom_attr->set_variation( true );
 		$attributes[] = $custom_attr;
@@ -294,7 +294,7 @@ class WC_Admin_Tests_API_Reports_Orders extends WC_REST_Unit_Test_Case {
 		WC_Helper_Queue::run_all_pending();
 
 		$request = new WP_REST_Request( 'GET', $this->endpoint );
-		$request->set_query_params( array( 'per_page' => 15 ) );
+		$request->set_query_params( [ 'per_page' => 15 ] );
 		$response        = $this->server->dispatch( $request );
 		$response_orders = $response->get_data();
 
@@ -305,11 +305,11 @@ class WC_Admin_Tests_API_Reports_Orders extends WC_REST_Unit_Test_Case {
 		// Filter by the "Numeric Size" custom attribute, with value "1".
 		$request = new WP_REST_Request( 'GET', $this->endpoint );
 		$request->set_query_params(
-			array(
-				'attribute_is' => array(
-					array( 'numeric-size', '5' ),
-				),
-			)
+			[
+				'attribute_is' => [
+					[ 'numeric-size', '5' ],
+				],
+			]
 		);
 		$response        = $this->server->dispatch( $request );
 		$response_orders = $response->get_data();
@@ -343,12 +343,12 @@ class WC_Admin_Tests_API_Reports_Orders extends WC_REST_Unit_Test_Case {
 		$order_to_be_excluded  = WC_Helper_Order::create_order( $this->user, $variation_to_exclude );
 		$excluded_product_item = new WC_Order_Item_Product();
 		$excluded_product_item->set_props(
-			array(
+			[
 				'product'  => $simple_product_to_exclude,
 				'quantity' => 1,
-				'subtotal' => wc_get_price_excluding_tax( $simple_product_to_exclude, array( 'qty' => 1 ) ),
-				'total'    => wc_get_price_excluding_tax( $simple_product_to_exclude, array( 'qty' => 1 ) ),
-			)
+				'subtotal' => wc_get_price_excluding_tax( $simple_product_to_exclude, [ 'qty' => 1 ] ),
+				'total'    => wc_get_price_excluding_tax( $simple_product_to_exclude, [ 'qty' => 1 ] ),
+			]
 		);
 		$excluded_product_item->save();
 		$order_to_be_excluded->add_item( $excluded_product_item );
@@ -365,9 +365,9 @@ class WC_Admin_Tests_API_Reports_Orders extends WC_REST_Unit_Test_Case {
 		// Test product exclusion.
 		$request = new WP_REST_Request( 'GET', $this->endpoint );
 		$request->set_query_params(
-			array(
-				'product_excludes' => array( $simple_product_to_exclude->get_id() ),
-			)
+			[
+				'product_excludes' => [ $simple_product_to_exclude->get_id() ],
+			]
 		);
 		$response        = $this->server->dispatch( $request );
 		$response_orders = $response->get_data();
@@ -380,9 +380,9 @@ class WC_Admin_Tests_API_Reports_Orders extends WC_REST_Unit_Test_Case {
 		// Test variation exclusion.
 		$request = new WP_REST_Request( 'GET', $this->endpoint );
 		$request->set_query_params(
-			array(
-				'variation_excludes' => array( $variation_to_exclude->get_id() ),
-			)
+			[
+				'variation_excludes' => [ $variation_to_exclude->get_id() ],
+			]
 		);
 		$response        = $this->server->dispatch( $request );
 		$response_orders = $response->get_data();
@@ -395,9 +395,9 @@ class WC_Admin_Tests_API_Reports_Orders extends WC_REST_Unit_Test_Case {
 		// Sanity check - test the opposite.
 		$request = new WP_REST_Request( 'GET', $this->endpoint );
 		$request->set_query_params(
-			array(
-				'product_excludes' => array( $simple_product->get_id() ),
-			)
+			[
+				'product_excludes' => [ $simple_product->get_id() ],
+			]
 		);
 		$response        = $this->server->dispatch( $request );
 		$response_orders = $response->get_data();
@@ -441,9 +441,9 @@ class WC_Admin_Tests_API_Reports_Orders extends WC_REST_Unit_Test_Case {
 		// Get the created orders from REST API
 		$request = new WP_REST_Request( 'GET', $this->endpoint );
 		$request->set_query_params(
-			array(
-				'order_status' => array( 'on-hold' ),
-			)
+			[
+				'order_status' => [ 'on-hold' ],
+			]
 		);
 		$response        = $this->server->dispatch( $request );
 		$response_orders = $response->get_data();
@@ -457,7 +457,7 @@ class WC_Admin_Tests_API_Reports_Orders extends WC_REST_Unit_Test_Case {
 				$result[ $item['order_id'] ] = $item;
 				return $result;
 			},
-			array()
+			[]
 		);
 
 		// Check if result has the correct orders.

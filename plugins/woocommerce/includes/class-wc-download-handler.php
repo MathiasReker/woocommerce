@@ -20,11 +20,11 @@ class WC_Download_Handler {
 	 */
 	public static function init() {
 		if ( isset( $_GET['download_file'], $_GET['order'] ) && ( isset( $_GET['email'] ) || isset( $_GET['uid'] ) ) ) { // WPCS: input var ok, CSRF ok.
-			add_action( 'init', array( __CLASS__, 'download_product' ) );
+			add_action( 'init', [ __CLASS__, 'download_product' ] );
 		}
-		add_action( 'woocommerce_download_file_redirect', array( __CLASS__, 'download_file_redirect' ), 10, 2 );
-		add_action( 'woocommerce_download_file_xsendfile', array( __CLASS__, 'download_file_xsendfile' ), 10, 2 );
-		add_action( 'woocommerce_download_file_force', array( __CLASS__, 'download_file_force' ), 10, 2 );
+		add_action( 'woocommerce_download_file_redirect', [ __CLASS__, 'download_file_redirect' ], 10, 2 );
+		add_action( 'woocommerce_download_file_xsendfile', [ __CLASS__, 'download_file_xsendfile' ], 10, 2 );
+		add_action( 'woocommerce_download_file_force', [ __CLASS__, 'download_file_force' ], 10, 2 );
 	}
 
 	/**
@@ -34,7 +34,7 @@ class WC_Download_Handler {
 		// phpcs:disable WordPress.Security.NonceVerification.Recommended
 		$product_id = absint( $_GET['download_file'] ); // phpcs:ignore WordPress.VIP.SuperGlobalInputUsage.AccessDetected, WordPress.VIP.ValidatedSanitizedInput.InputNotValidated, WordPress.Security.ValidatedSanitizedInput.InputNotValidated
 		$product    = wc_get_product( $product_id );
-		$downloads  = $product ? $product->get_downloads() : array();
+		$downloads  = $product ? $product->get_downloads() : [];
 		$data_store = WC_Data_Store::load( 'customer-download' );
 
 		$key = empty( $_GET['key'] ) ? '' : sanitize_text_field( wp_unslash( $_GET['key'] ) );
@@ -73,7 +73,7 @@ class WC_Download_Handler {
 		}
 
 		$download_ids = $data_store->get_downloads(
-			array(
+			[
 				'user_email'  => sanitize_email( str_replace( ' ', '+', $email_address ) ),
 				'order_key'   => wc_clean( wp_unslash( $_GET['order'] ) ), // WPCS: input var ok, CSRF ok.
 				'product_id'  => $product_id,
@@ -82,7 +82,7 @@ class WC_Download_Handler {
 				'order'       => 'DESC',
 				'limit'       => 1,
 				'return'      => 'ids',
-			)
+			]
 		);
 
 		if ( empty( $download_ids ) ) {
@@ -239,7 +239,7 @@ class WC_Download_Handler {
 		$file_download_method = apply_filters( 'woocommerce_file_download_method', get_option( 'woocommerce_file_download_method', 'force' ), $product_id, $file_path );
 
 		// Add action to prevent issues in IE.
-		add_action( 'nocache_headers', array( __CLASS__, 'ie_nocache_headers_fix' ) );
+		add_action( 'nocache_headers', [ __CLASS__, 'ie_nocache_headers_fix' ] );
 
 		// Trigger download via one of the methods.
 		do_action( 'woocommerce_download_file_' . $file_download_method, $file_path, $filename );
@@ -272,13 +272,13 @@ class WC_Download_Handler {
 		 * Note the str_replace on site_url is on purpose, so if https is forced
 		 * via filters we can still do the string replacement on a HTTP file.
 		 */
-		$replacements = array(
+		$replacements = [
 			$wp_uploads_url                                                   => $wp_uploads_dir,
 			network_site_url( '/', 'https' )                                  => ABSPATH,
 			str_replace( 'https:', 'http:', network_site_url( '/', 'http' ) ) => ABSPATH,
 			site_url( '/', 'https' )                                          => ABSPATH,
 			str_replace( 'https:', 'http:', site_url( '/', 'http' ) )         => ABSPATH,
-		);
+		];
 
 		$count            = 0;
 		$file_path        = str_replace( array_keys( $replacements ), array_values( $replacements ), $file_path, $count );
@@ -295,10 +295,10 @@ class WC_Download_Handler {
 			 * @since 6.5.0
 			 * @param string $file_path File path.
 			 */
-			return array(
+			return [
 				'remote_file' => true,
 				'file_path'   => apply_filters( 'woocommerce_download_parse_remote_file_path', $file_path ),
-			);
+			];
 		}
 
 		// See if path needs an abspath prepended to work.
@@ -311,7 +311,7 @@ class WC_Download_Handler {
 			$file_path   = realpath( WP_CONTENT_DIR . substr( $file_path, 11 ) );
 
 			// Check if we have an absolute path.
-		} elseif ( ( ! isset( $parsed_file_path['scheme'] ) || ! in_array( $parsed_file_path['scheme'], array( 'http', 'https', 'ftp' ), true ) ) && isset( $parsed_file_path['path'] ) ) {
+		} elseif ( ( ! isset( $parsed_file_path['scheme'] ) || ! in_array( $parsed_file_path['scheme'], [ 'http', 'https', 'ftp' ], true ) ) && isset( $parsed_file_path['path'] ) ) {
 			$remote_file = false;
 			$file_path   = $parsed_file_path['path'];
 		}
@@ -323,10 +323,10 @@ class WC_Download_Handler {
 		* @param string  $file_path File path.
 		* @param bool $remote_file Remote File Indicator.
 		*/
-		return array(
+		return [
 			'remote_file' => $remote_file,
 			'file_path'   => apply_filters( 'woocommerce_download_parse_file_path', $file_path, $remote_file ),
-		);
+		];
 	}
 
 	/**
@@ -394,11 +394,11 @@ class WC_Download_Handler {
 	 */
 	protected static function get_download_range( $file_size ) {
 		$start          = 0;
-		$download_range = array(
+		$download_range = [
 			'start'            => $start,
 			'is_range_valid'   => false,
 			'is_range_request' => false,
-		);
+		];
 
 		if ( ! $file_size ) {
 			return $download_range;
@@ -514,7 +514,7 @@ class WC_Download_Handler {
 	 * @param string $filename       File name.
 	 * @param array  $download_range Array containing info about range download request (see {@see get_download_range} for structure).
 	 */
-	private static function download_headers( $file_path, $filename, $download_range = array() ) {
+	private static function download_headers( $file_path, $filename, $download_range = [] ) {
 		self::check_server_config();
 		self::clean_buffers();
 		wc_nocache_headers();
@@ -677,7 +677,7 @@ class WC_Download_Handler {
 		if ( ! strstr( $message, '<a ' ) ) {
 			$message .= ' <a href="' . esc_url( wc_get_page_permalink( 'shop' ) ) . '" class="wc-forward">' . esc_html__( 'Go to shop', 'woocommerce' ) . '</a>';
 		}
-		wp_die( $message, $title, array( 'response' => $status ) ); // WPCS: XSS ok.
+		wp_die( $message, $title, [ 'response' => $status ] ); // WPCS: XSS ok.
 	}
 }
 

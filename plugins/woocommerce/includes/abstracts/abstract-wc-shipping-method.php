@@ -30,7 +30,7 @@ abstract class WC_Shipping_Method extends WC_Settings_API {
 	 *
 	 * @var array
 	 */
-	public $supports = array( 'settings' );
+	public $supports = [ 'settings' ];
 
 	/**
 	 * Unique ID for the shipping method - must be set.
@@ -72,7 +72,7 @@ abstract class WC_Shipping_Method extends WC_Settings_API {
 	 *
 	 * @var array
 	 */
-	public $rates = array();
+	public $rates = [];
 
 	/**
 	 * If 'taxable' tax will be charged for this method (if applicable).
@@ -107,14 +107,14 @@ abstract class WC_Shipping_Method extends WC_Settings_API {
 	 *
 	 * @var array
 	 */
-	public $instance_form_fields = array();
+	public $instance_form_fields = [];
 
 	/**
 	 * Instance settings.
 	 *
 	 * @var array
 	 */
-	public $instance_settings = array();
+	public $instance_settings = [];
 
 	/**
 	 * Availability - legacy. Used for method Availability.
@@ -132,7 +132,7 @@ abstract class WC_Shipping_Method extends WC_Settings_API {
 	 * @deprecated 2.6.0
 	 * @var array
 	 */
-	public $countries = array();
+	public $countries = [];
 
 	/**
 	 * Constructor.
@@ -160,7 +160,7 @@ abstract class WC_Shipping_Method extends WC_Settings_API {
 	 *
 	 * @param array $package Package array.
 	 */
-	public function calculate_shipping( $package = array() ) {}
+	public function calculate_shipping( $package = [] ) {}
 
 	/**
 	 * Whether or not we need to calculate tax on top of the shipping rate.
@@ -228,7 +228,7 @@ abstract class WC_Shipping_Method extends WC_Settings_API {
 	 * @return array
 	 */
 	public function get_rates_for_package( $package ) {
-		$this->rates = array();
+		$this->rates = [];
 		if ( $this->is_available( $package ) && ( empty( $package['ship_via'] ) || in_array( $this->id, $package['ship_via'] ) ) ) {
 			$this->calculate_shipping( $package );
 		}
@@ -244,7 +244,7 @@ abstract class WC_Shipping_Method extends WC_Settings_API {
 	 * @return string
 	 */
 	public function get_rate_id( $suffix = '' ) {
-		$rate_id = array( $this->id );
+		$rate_id = [ $this->id ];
 
 		if ( $this->instance_id ) {
 			$rate_id[] = $this->instance_id;
@@ -262,21 +262,21 @@ abstract class WC_Shipping_Method extends WC_Settings_API {
 	 *
 	 * @param array $args Arguments (default: array()).
 	 */
-	public function add_rate( $args = array() ) {
+	public function add_rate( $args = [] ) {
 		$args = apply_filters(
 			'woocommerce_shipping_method_add_rate_args',
 			wp_parse_args(
 				$args,
-				array(
+				[
 					'id'             => $this->get_rate_id(), // ID for the rate. If not passed, this id:instance default will be used.
 					'label'          => '', // Label for the rate.
 					'cost'           => '0', // Amount or array of costs (per item shipping).
 					'taxes'          => '', // Pass taxes, or leave empty to have it calculated for you, or 'false' to disable calculations.
 					'calc_tax'       => 'per_order', // Calc tax per_order or per_item. Per item needs an array of costs.
-					'meta_data'      => array(), // Array of misc meta data to store along with this rate - key value pairs.
+					'meta_data'      => [], // Array of misc meta data to store along with this rate - key value pairs.
 					'package'        => false, // Package array this rate was generated for @since 2.6.0.
 					'price_decimals' => wc_get_price_decimals(),
-				)
+				]
 			),
 			$this
 		);
@@ -315,7 +315,7 @@ abstract class WC_Shipping_Method extends WC_Settings_API {
 
 		// Store package data.
 		if ( $args['package'] ) {
-			$items_in_package = array();
+			$items_in_package = [];
 			foreach ( $args['package']['contents'] as $item ) {
 				$product            = $item['data'];
 				$items_in_package[] = $product->get_name() . ' &times; ' . $item['quantity'];
@@ -334,7 +334,7 @@ abstract class WC_Shipping_Method extends WC_Settings_API {
 	 * @return array of taxes
 	 */
 	protected function get_taxes_per_item( $costs ) {
-		$taxes = array();
+		$taxes = [];
 
 		// If we have an array of costs we can look up each items tax class and add tax accordingly.
 		if ( is_array( $costs ) ) {
@@ -379,7 +379,7 @@ abstract class WC_Shipping_Method extends WC_Settings_API {
 
 		// Country availability (legacy, for non-zone based methods).
 		if ( ! $this->instance_id && $available ) {
-			$countries = is_array( $this->countries ) ? $this->countries : array();
+			$countries = is_array( $this->countries ) ? $this->countries : [];
 
 			switch ( $this->availability ) {
 				case 'specific':
@@ -504,7 +504,7 @@ abstract class WC_Shipping_Method extends WC_Settings_API {
 	 * @return array
 	 */
 	public function get_instance_form_fields() {
-		return apply_filters( 'woocommerce_shipping_instance_form_fields_' . $this->id, array_map( array( $this, 'set_defaults' ), $this->instance_form_fields ) );
+		return apply_filters( 'woocommerce_shipping_instance_form_fields_' . $this->id, array_map( [ $this, 'set_defaults' ], $this->instance_form_fields ) );
 	}
 
 	/**

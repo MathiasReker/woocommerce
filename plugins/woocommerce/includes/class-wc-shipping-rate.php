@@ -21,14 +21,14 @@ class WC_Shipping_Rate {
 	 * @since 3.2.0
 	 * @var   array
 	 */
-	protected $data = array(
+	protected $data = [
 		'id'          => '',
 		'method_id'   => '',
 		'instance_id' => 0,
 		'label'       => '',
 		'cost'        => 0,
-		'taxes'       => array(),
-	);
+		'taxes'       => [],
+	];
 
 	/**
 	 * Stores meta data for this rate.
@@ -36,7 +36,7 @@ class WC_Shipping_Rate {
 	 * @since 2.6.0
 	 * @var   array
 	 */
-	protected $meta_data = array();
+	protected $meta_data = [];
 
 	/**
 	 * Constructor.
@@ -48,7 +48,7 @@ class WC_Shipping_Rate {
 	 * @param string  $method_id   Shipping method ID.
 	 * @param int     $instance_id Shipping instance ID.
 	 */
-	public function __construct( $id = '', $label = '', $cost = 0, $taxes = array(), $method_id = '', $instance_id = 0 ) {
+	public function __construct( $id = '', $label = '', $cost = 0, $taxes = [], $method_id = '', $instance_id = 0 ) {
 		$this->set_id( $id );
 		$this->set_label( $label );
 		$this->set_cost( $cost );
@@ -79,7 +79,7 @@ class WC_Shipping_Rate {
 	 * @return mixed
 	 */
 	public function __get( $key ) {
-		if ( is_callable( array( $this, "get_{$key}" ) ) ) {
+		if ( is_callable( [ $this, "get_{$key}" ] ) ) {
 			return $this->{"get_{$key}"}();
 		} elseif ( isset( $this->data[ $key ] ) ) {
 			return $this->data[ $key ];
@@ -96,7 +96,7 @@ class WC_Shipping_Rate {
 	 * @param mixed  $value Value.
 	 */
 	public function __set( $key, $value ) {
-		if ( is_callable( array( $this, "set_{$key}" ) ) ) {
+		if ( is_callable( [ $this, "set_{$key}" ] ) ) {
 			$this->{"set_{$key}"}( $value );
 		} else {
 			$this->data[ $key ] = $value;
@@ -161,7 +161,7 @@ class WC_Shipping_Rate {
 	 * @param array $taxes List of taxes applied to shipping rate.
 	 */
 	public function set_taxes( $taxes ) {
-		$this->data['taxes'] = ! empty( $taxes ) && is_array( $taxes ) ? $taxes : array();
+		$this->data['taxes'] = ! empty( $taxes ) && is_array( $taxes ) ? $taxes : [];
 	}
 
 	/**

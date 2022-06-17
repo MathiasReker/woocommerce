@@ -64,7 +64,7 @@ class WC_Admin_Tests_RemoteInboxNotifications_OptionRuleProcessor extends WC_Uni
 	 * @group fast
 	 */
 	public function test_rule_passes_for_contains() {
-		add_option( 'contain_item', array( 'test' ) );
+		add_option( 'contain_item', [ 'test' ] );
 		$processor = new OptionRuleProcessor();
 		$rule      = json_decode(
 			'

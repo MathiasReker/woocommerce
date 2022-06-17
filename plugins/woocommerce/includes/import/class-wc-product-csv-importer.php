@@ -39,19 +39,19 @@ class WC_Product_CSV_Importer extends WC_Product_Importer {
 	 * @param string $file   File to read.
 	 * @param array  $params Arguments for the parser.
 	 */
-	public function __construct( $file, $params = array() ) {
-		$default_args = array(
+	public function __construct( $file, $params = [] ) {
+		$default_args = [
 			'start_pos'        => 0, // File pointer start.
 			'end_pos'          => -1, // File pointer end.
 			'lines'            => -1, // Max lines to read.
-			'mapping'          => array(), // Column mapping. csv_heading => schema_heading.
+			'mapping'          => [], // Column mapping. csv_heading => schema_heading.
 			'parse'            => false, // Whether to sanitize and format data.
 			'update_existing'  => false, // Whether to update existing items.
 			'delimiter'        => ',', // CSV delimiter.
 			'prevent_timeouts' => true, // Check memory and time usage and abort if reaching limit.
 			'enclosure'        => '"', // The character used to wrap text in the CSV.
 			'escape'           => "\0", // PHP uses '\' as the default escape character. This is not RFC-4180 compliant. This disables the escape character.
-		);
+		];
 
 		$this->params = wp_parse_args( $params, $default_args );
 		$this->file   = $file;
@@ -278,10 +278,10 @@ class WC_Product_CSV_Importer extends WC_Product_Importer {
 	 */
 	public function parse_relative_comma_field( $value ) {
 		if ( empty( $value ) ) {
-			return array();
+			return [];
 		}
 
-		return array_filter( array_map( array( $this, 'parse_relative_field' ), $this->explode_values( $value ) ) );
+		return array_filter( array_map( [ $this, 'parse_relative_field' ], $this->explode_values( $value ) ) );
 	}
 
 	/**
@@ -293,7 +293,7 @@ class WC_Product_CSV_Importer extends WC_Product_Importer {
 	 */
 	public function parse_comma_field( $value ) {
 		if ( empty( $value ) && '0' !== $value ) {
-			return array();
+			return [];
 		}
 
 		$value = $this->unescape_data( $value );
@@ -388,11 +388,11 @@ class WC_Product_CSV_Importer extends WC_Product_Importer {
 	 */
 	public function parse_categories_field( $value ) {
 		if ( empty( $value ) ) {
-			return array();
+			return [];
 		}
 
 		$row_terms  = $this->explode_values( $value );
-		$categories = array();
+		$categories = [];
 
 		foreach ( $row_terms as $row_term ) {
 			$parent = null;
@@ -405,7 +405,7 @@ class WC_Product_CSV_Importer extends WC_Product_Importer {
 					break;
 				}
 
-				$term = wp_insert_term( $_term, 'product_cat', array( 'parent' => intval( $parent ) ) );
+				$term = wp_insert_term( $_term, 'product_cat', [ 'parent' => intval( $parent ) ] );
 
 				if ( is_wp_error( $term ) ) {
 					if ( $term->get_error_code() === 'term_exists' ) {
@@ -441,12 +441,12 @@ class WC_Product_CSV_Importer extends WC_Product_Importer {
 	 */
 	public function parse_tags_field( $value ) {
 		if ( empty( $value ) ) {
-			return array();
+			return [];
 		}
 
 		$value = $this->unescape_data( $value );
 		$names = $this->explode_values( $value );
-		$tags  = array();
+		$tags  = [];
 
 		foreach ( $names as $name ) {
 			$term = get_term_by( 'name', $name, 'product_tag' );
@@ -472,12 +472,12 @@ class WC_Product_CSV_Importer extends WC_Product_Importer {
 	 */
 	public function parse_tags_spaces_field( $value ) {
 		if ( empty( $value ) ) {
-			return array();
+			return [];
 		}
 
 		$value = $this->unescape_data( $value );
 		$names = $this->explode_values( $value, ' ' );
-		$tags  = array();
+		$tags  = [];
 
 		foreach ( $names as $name ) {
 			$term = get_term_by( 'name', $name, 'product_tag' );
@@ -528,10 +528,10 @@ class WC_Product_CSV_Importer extends WC_Product_Importer {
 	 */
 	public function parse_images_field( $value ) {
 		if ( empty( $value ) ) {
-			return array();
+			return [];
 		}
 
-		$images    = array();
+		$images    = [];
 		$separator = apply_filters( 'woocommerce_product_import_image_separator', ',' );
 
 		foreach ( $this->explode_values( $value, $separator ) as $image ) {
@@ -696,58 +696,58 @@ class WC_Product_CSV_Importer extends WC_Product_Importer {
 		 * Columns not mentioned here will get parsed with 'wc_clean'.
 		 * column_name => callback.
 		 */
-		$data_formatting = array(
-			'id'                => array( $this, 'parse_id_field' ),
-			'type'              => array( $this, 'parse_comma_field' ),
-			'published'         => array( $this, 'parse_published_field' ),
-			'featured'          => array( $this, 'parse_bool_field' ),
-			'date_on_sale_from' => array( $this, 'parse_date_field' ),
-			'date_on_sale_to'   => array( $this, 'parse_date_field' ),
-			'name'              => array( $this, 'parse_skip_field' ),
-			'short_description' => array( $this, 'parse_description_field' ),
-			'description'       => array( $this, 'parse_description_field' ),
-			'manage_stock'      => array( $this, 'parse_bool_field' ),
-			'low_stock_amount'  => array( $this, 'parse_stock_quantity_field' ),
-			'backorders'        => array( $this, 'parse_backorders_field' ),
-			'stock_status'      => array( $this, 'parse_bool_field' ),
-			'sold_individually' => array( $this, 'parse_bool_field' ),
-			'width'             => array( $this, 'parse_float_field' ),
-			'length'            => array( $this, 'parse_float_field' ),
-			'height'            => array( $this, 'parse_float_field' ),
-			'weight'            => array( $this, 'parse_float_field' ),
-			'reviews_allowed'   => array( $this, 'parse_bool_field' ),
+		$data_formatting = [
+			'id'                => [ $this, 'parse_id_field' ],
+			'type'              => [ $this, 'parse_comma_field' ],
+			'published'         => [ $this, 'parse_published_field' ],
+			'featured'          => [ $this, 'parse_bool_field' ],
+			'date_on_sale_from' => [ $this, 'parse_date_field' ],
+			'date_on_sale_to'   => [ $this, 'parse_date_field' ],
+			'name'              => [ $this, 'parse_skip_field' ],
+			'short_description' => [ $this, 'parse_description_field' ],
+			'description'       => [ $this, 'parse_description_field' ],
+			'manage_stock'      => [ $this, 'parse_bool_field' ],
+			'low_stock_amount'  => [ $this, 'parse_stock_quantity_field' ],
+			'backorders'        => [ $this, 'parse_backorders_field' ],
+			'stock_status'      => [ $this, 'parse_bool_field' ],
+			'sold_individually' => [ $this, 'parse_bool_field' ],
+			'width'             => [ $this, 'parse_float_field' ],
+			'length'            => [ $this, 'parse_float_field' ],
+			'height'            => [ $this, 'parse_float_field' ],
+			'weight'            => [ $this, 'parse_float_field' ],
+			'reviews_allowed'   => [ $this, 'parse_bool_field' ],
 			'purchase_note'     => 'wp_filter_post_kses',
 			'price'             => 'wc_format_decimal',
 			'regular_price'     => 'wc_format_decimal',
-			'stock_quantity'    => array( $this, 'parse_stock_quantity_field' ),
-			'category_ids'      => array( $this, 'parse_categories_field' ),
-			'tag_ids'           => array( $this, 'parse_tags_field' ),
-			'tag_ids_spaces'    => array( $this, 'parse_tags_spaces_field' ),
-			'shipping_class_id' => array( $this, 'parse_shipping_class_field' ),
-			'images'            => array( $this, 'parse_images_field' ),
-			'parent_id'         => array( $this, 'parse_relative_field' ),
-			'grouped_products'  => array( $this, 'parse_relative_comma_field' ),
-			'upsell_ids'        => array( $this, 'parse_relative_comma_field' ),
-			'cross_sell_ids'    => array( $this, 'parse_relative_comma_field' ),
-			'download_limit'    => array( $this, 'parse_int_field' ),
-			'download_expiry'   => array( $this, 'parse_int_field' ),
+			'stock_quantity'    => [ $this, 'parse_stock_quantity_field' ],
+			'category_ids'      => [ $this, 'parse_categories_field' ],
+			'tag_ids'           => [ $this, 'parse_tags_field' ],
+			'tag_ids_spaces'    => [ $this, 'parse_tags_spaces_field' ],
+			'shipping_class_id' => [ $this, 'parse_shipping_class_field' ],
+			'images'            => [ $this, 'parse_images_field' ],
+			'parent_id'         => [ $this, 'parse_relative_field' ],
+			'grouped_products'  => [ $this, 'parse_relative_comma_field' ],
+			'upsell_ids'        => [ $this, 'parse_relative_comma_field' ],
+			'cross_sell_ids'    => [ $this, 'parse_relative_comma_field' ],
+			'download_limit'    => [ $this, 'parse_int_field' ],
+			'download_expiry'   => [ $this, 'parse_int_field' ],
 			'product_url'       => 'esc_url_raw',
 			'menu_order'        => 'intval',
-			'tax_status'        => array( $this, 'parse_tax_status_field' ),
-		);
+			'tax_status'        => [ $this, 'parse_tax_status_field' ],
+		];
 
 		/**
 		 * Match special column names.
 		 */
-		$regex_match_data_formatting = array(
-			'/attributes:value*/'    => array( $this, 'parse_comma_field' ),
-			'/attributes:visible*/'  => array( $this, 'parse_bool_field' ),
-			'/attributes:taxonomy*/' => array( $this, 'parse_bool_field' ),
-			'/downloads:url*/'       => array( $this, 'parse_download_file_field' ),
+		$regex_match_data_formatting = [
+			'/attributes:value*/'    => [ $this, 'parse_comma_field' ],
+			'/attributes:visible*/'  => [ $this, 'parse_bool_field' ],
+			'/attributes:taxonomy*/' => [ $this, 'parse_bool_field' ],
+			'/downloads:url*/'       => [ $this, 'parse_download_file_field' ],
 			'/meta:*/'               => 'wp_kses_post', // Allow some HTML in meta fields.
-		);
+		];
 
-		$callbacks = array();
+		$callbacks = [];
 
 		// Figure out the parse function for each column.
 		foreach ( $this->get_mapped_keys() as $index => $heading ) {
@@ -810,7 +810,7 @@ class WC_Product_CSV_Importer extends WC_Product_Importer {
 			$data['downloadable'] = in_array( 'downloadable', $data['type'], true );
 
 			// Convert type to string.
-			$data['type'] = current( array_diff( $data['type'], array( 'virtual', 'downloadable' ) ) );
+			$data['type'] = current( array_diff( $data['type'], [ 'virtual', 'downloadable' ] ) );
 
 			if ( ! $data['type'] ) {
 				$data['type'] = 'simple';
@@ -819,11 +819,11 @@ class WC_Product_CSV_Importer extends WC_Product_Importer {
 
 		// Status is mapped from a special published field.
 		if ( isset( $data['published'] ) ) {
-			$statuses       = array(
+			$statuses       = [
 				-1 => 'draft',
 				0  => 'private',
 				1  => 'publish',
-			);
+			];
 			$data['status'] = isset( $statuses[ $data['published'] ] ) ? $statuses[ $data['published'] ] : 'draft';
 
 			// Fix draft status of variations.
@@ -865,9 +865,9 @@ class WC_Product_CSV_Importer extends WC_Product_Importer {
 		}
 
 		// Handle special column names which span multiple columns.
-		$attributes = array();
-		$downloads  = array();
-		$meta_data  = array();
+		$attributes = [];
+		$downloads  = [];
+		$meta_data  = [];
 
 		foreach ( $data as $key => $value ) {
 			if ( $this->starts_with( $key, 'attributes:name' ) ) {
@@ -913,10 +913,10 @@ class WC_Product_CSV_Importer extends WC_Product_Importer {
 				unset( $data[ $key ] );
 
 			} elseif ( $this->starts_with( $key, 'meta:' ) ) {
-				$meta_data[] = array(
+				$meta_data[] = [
 					'key'   => str_replace( 'meta:', '', $key ),
 					'value' => $value,
-				);
+				];
 				unset( $data[ $key ] );
 			}
 		}
@@ -933,18 +933,18 @@ class WC_Product_CSV_Importer extends WC_Product_Importer {
 		}
 
 		if ( ! empty( $downloads ) ) {
-			$data['downloads'] = array();
+			$data['downloads'] = [];
 
 			foreach ( $downloads as $key => $file ) {
 				if ( empty( $file['url'] ) ) {
 					continue;
 				}
 
-				$data['downloads'][] = array(
+				$data['downloads'][] = [
 					'download_id' => isset( $file['id'] ) ? $file['id'] : null,
 					'name'        => $file['name'] ? $file['name'] : wc_get_filename_from_url( $file['url'] ),
 					'file'        => $file['url'],
-				);
+				];
 			}
 		}
 
@@ -972,7 +972,7 @@ class WC_Product_CSV_Importer extends WC_Product_Importer {
 
 			$this->parsing_raw_data_index = $row_index;
 
-			$data = array();
+			$data = [];
 
 			do_action( 'woocommerce_product_importer_before_set_parsed_data', $row, $mapped_keys );
 
@@ -1018,7 +1018,7 @@ class WC_Product_CSV_Importer extends WC_Product_Importer {
 		$id       = isset( $parsed_data['id'] ) ? absint( $parsed_data['id'] ) : 0;
 		$sku      = isset( $parsed_data['sku'] ) ? esc_attr( $parsed_data['sku'] ) : '';
 		$name     = isset( $parsed_data['name'] ) ? esc_attr( $parsed_data['name'] ) : '';
-		$row_data = array();
+		$row_data = [];
 
 		if ( $name ) {
 			$row_data[] = $name;
@@ -1048,12 +1048,12 @@ class WC_Product_CSV_Importer extends WC_Product_Importer {
 		$this->start_time = time();
 		$index            = 0;
 		$update_existing  = $this->params['update_existing'];
-		$data             = array(
-			'imported' => array(),
-			'failed'   => array(),
-			'updated'  => array(),
-			'skipped'  => array(),
-		);
+		$data             = [
+			'imported' => [],
+			'failed'   => [],
+			'updated'  => [],
+			'skipped'  => [],
+		];
 
 		foreach ( $this->parsed_data as $parsed_data_key => $parsed_data ) {
 			do_action( 'woocommerce_product_import_before_import', $parsed_data );
@@ -1078,10 +1078,10 @@ class WC_Product_CSV_Importer extends WC_Product_Importer {
 				$data['skipped'][] = new WP_Error(
 					'woocommerce_product_importer_error',
 					esc_html__( 'A product with this ID already exists.', 'woocommerce' ),
-					array(
+					[
 						'id'  => $id,
 						'row' => $this->get_row_id( $parsed_data ),
-					)
+					]
 				);
 				continue;
 			}
@@ -1090,10 +1090,10 @@ class WC_Product_CSV_Importer extends WC_Product_Importer {
 				$data['skipped'][] = new WP_Error(
 					'woocommerce_product_importer_error',
 					esc_html__( 'A product with this SKU already exists.', 'woocommerce' ),
-					array(
+					[
 						'sku' => esc_attr( $sku ),
 						'row' => $this->get_row_id( $parsed_data ),
-					)
+					]
 				);
 				continue;
 			}
@@ -1102,11 +1102,11 @@ class WC_Product_CSV_Importer extends WC_Product_Importer {
 				$data['skipped'][] = new WP_Error(
 					'woocommerce_product_importer_error',
 					esc_html__( 'No matching product exists to update.', 'woocommerce' ),
-					array(
+					[
 						'id'  => $id,
 						'sku' => esc_attr( $sku ),
 						'row' => $this->get_row_id( $parsed_data ),
-					)
+					]
 				);
 				continue;
 			}
@@ -1114,7 +1114,7 @@ class WC_Product_CSV_Importer extends WC_Product_Importer {
 			$result = $this->process_item( $parsed_data );
 
 			if ( is_wp_error( $result ) ) {
-				$result->add_data( array( 'row' => $this->get_row_id( $parsed_data ) ) );
+				$result->add_data( [ 'row' => $this->get_row_id( $parsed_data ) ] );
 				$data['failed'][] = $result;
 			} elseif ( $result['updated'] ) {
 				$data['updated'][] = $result['id'];

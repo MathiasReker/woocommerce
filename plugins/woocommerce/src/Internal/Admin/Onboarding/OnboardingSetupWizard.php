@@ -42,14 +42,14 @@ class OnboardingSetupWizard {
 
 		// Old settings injection.
 		// Run after Automattic\WooCommerce\Internal\Admin\Loader.
-		add_filter( 'woocommerce_components_settings', array( $this, 'component_settings' ), 20 );
+		add_filter( 'woocommerce_components_settings', [ $this, 'component_settings' ], 20 );
 		// New settings injection.
-		add_filter( 'woocommerce_admin_shared_settings', array( $this, 'component_settings' ), 20 );
-		add_filter( 'woocommerce_admin_preload_settings', array( $this, 'preload_settings' ) );
-		add_filter( 'admin_body_class', array( $this, 'add_loading_classes' ) );
-		add_action( 'admin_init', array( $this, 'do_admin_redirects' ) );
-		add_action( 'current_screen', array( $this, 'redirect_to_profiler' ) );
-		add_filter( 'woocommerce_show_admin_notice', array( $this, 'remove_old_install_notice' ), 10, 2 );
+		add_filter( 'woocommerce_admin_shared_settings', [ $this, 'component_settings' ], 20 );
+		add_filter( 'woocommerce_admin_preload_settings', [ $this, 'preload_settings' ] );
+		add_filter( 'admin_body_class', [ $this, 'add_loading_classes' ] );
+		add_action( 'admin_init', [ $this, 'do_admin_redirects' ] );
+		add_action( 'current_screen', [ $this, 'redirect_to_profiler' ] );
+		add_filter( 'woocommerce_show_admin_notice', [ $this, 'remove_old_install_notice' ], 10, 2 );
 	}
 
 	/**
@@ -207,10 +207,10 @@ class OnboardingSetupWizard {
 	 * @return array
 	 */
 	public function component_settings( $settings ) {
-		$profile                = (array) get_option( OnboardingProfile::DATA_OPTION, array() );
-		$settings['onboarding'] = array(
+		$profile                = (array) get_option( OnboardingProfile::DATA_OPTION, [] );
+		$settings['onboarding'] = [
 			'profile' => $profile,
-		);
+		];
 
 		// Only fetch if the onboarding wizard OR the task list is incomplete or currently shown
 		// or the current page is one of the WooCommerce Admin pages.

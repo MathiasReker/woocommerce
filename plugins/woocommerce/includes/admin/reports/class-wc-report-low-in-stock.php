@@ -33,7 +33,7 @@ class WC_Report_Low_In_Stock extends WC_Report_Stock {
 		global $wpdb;
 
 		$this->max_items = 0;
-		$this->items     = array();
+		$this->items     = [];
 
 		$stock   = absint( max( get_option( 'woocommerce_notify_low_stock_amount' ), 1 ) );
 		$nostock = absint( max( get_option( 'woocommerce_notify_no_stock_amount' ), 0 ) );

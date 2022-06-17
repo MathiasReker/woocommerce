@@ -10,10 +10,10 @@
 
 defined( 'ABSPATH' ) || exit;
 
-return array(
-	'AF' => array(
+return [
+	'AF' => [
 		'name'      => __( 'Africa', 'woocommerce' ),
-		'countries' => array(
+		'countries' => [
 			'AO',
 			'BF',
 			'BI',
@@ -72,21 +72,21 @@ return array(
 			'ZA',
 			'ZM',
 			'ZW',
-		),
-	),
-	'AN' => array(
+		],
+	],
+	'AN' => [
 		'name'      => __( 'Antarctica', 'woocommerce' ),
-		'countries' => array(
+		'countries' => [
 			'AQ',
 			'BV',
 			'GS',
 			'HM',
 			'TF',
-		),
-	),
-	'AS' => array(
+		],
+	],
+	'AS' => [
 		'name'      => __( 'Asia', 'woocommerce' ),
-		'countries' => array(
+		'countries' => [
 			'AE',
 			'AF',
 			'AM',
@@ -140,11 +140,11 @@ return array(
 			'UZ',
 			'VN',
 			'YE',
-		),
-	),
-	'EU' => array(
+		],
+	],
+	'EU' => [
 		'name'      => __( 'Europe', 'woocommerce' ),
-		'countries' => array(
+		'countries' => [
 			'AD',
 			'AL',
 			'AT',
@@ -197,11 +197,11 @@ return array(
 			'TR',
 			'UA',
 			'VA',
-		),
-	),
-	'NA' => array(
+		],
+	],
+	'NA' => [
 		'name'      => __( 'North America', 'woocommerce' ),
-		'countries' => array(
+		'countries' => [
 			'AG',
 			'AI',
 			'AW',
@@ -243,11 +243,11 @@ return array(
 			'VC',
 			'VG',
 			'VI',
-		),
-	),
-	'OC' => array(
+		],
+	],
+	'OC' => [
 		'name'      => __( 'Oceania', 'woocommerce' ),
-		'countries' => array(
+		'countries' => [
 			'AS',
 			'AU',
 			'CK',
@@ -274,11 +274,11 @@ return array(
 			'VU',
 			'WF',
 			'WS',
-		),
-	),
-	'SA' => array(
+		],
+	],
+	'SA' => [
 		'name'      => __( 'South America', 'woocommerce' ),
-		'countries' => array(
+		'countries' => [
 			'AR',
 			'BO',
 			'BR',
@@ -293,6 +293,6 @@ return array(
 			'SR',
 			'UY',
 			'VE',
-		),
-	),
-);
+		],
+	],
+];

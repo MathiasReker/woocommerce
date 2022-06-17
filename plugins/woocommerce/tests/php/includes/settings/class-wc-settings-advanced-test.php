@@ -23,14 +23,14 @@ class WC_Settings_Advanced_Test extends WC_Settings_Unit_Test_Case {
 
 		$section_names = array_keys( $sut->get_sections() );
 
-		$expected = array(
+		$expected = [
 			'',
 			'keys',
 			'webhooks',
 			'legacy_api',
 			'woocommerce_com',
 			'features',
-		);
+		];
 
 		$this->assertEquals( $expected, $section_names );
 	}
@@ -83,22 +83,22 @@ class WC_Settings_Advanced_Test extends WC_Settings_Unit_Test_Case {
 
 		update_option( 'home', $site_is_https ? 'https://foo.bar' : 'http://foo.bar' );
 
-		$expected = array(
-			'advanced_page_options'                        => array( 'title', 'sectionend' ),
+		$expected = [
+			'advanced_page_options'                        => [ 'title', 'sectionend' ],
 			'woocommerce_cart_page_id'                     => 'single_select_page_with_search',
 			'woocommerce_checkout_page_id'                 => 'single_select_page_with_search',
 			'woocommerce_myaccount_page_id'                => 'single_select_page_with_search',
 			'woocommerce_terms_page_id'                    => 'single_select_page_with_search',
-			'checkout_process_options'                     => array( 'title', 'sectionend' ),
+			'checkout_process_options'                     => [ 'title', 'sectionend' ],
 			'woocommerce_force_ssl_checkout'               => 'checkbox',
 			'woocommerce_unforce_ssl_checkout'             => 'checkbox',
-			'checkout_endpoint_options'                    => array( 'title', 'sectionend' ),
+			'checkout_endpoint_options'                    => [ 'title', 'sectionend' ],
 			'woocommerce_checkout_pay_endpoint'            => 'text',
 			'woocommerce_checkout_order_received_endpoint' => 'text',
 			'woocommerce_myaccount_add_payment_method_endpoint' => 'text',
 			'woocommerce_myaccount_delete_payment_method_endpoint' => 'text',
 			'woocommerce_myaccount_set_default_payment_method_endpoint' => 'text',
-			'account_endpoint_options'                     => array( 'title', 'sectionend' ),
+			'account_endpoint_options'                     => [ 'title', 'sectionend' ],
 			'woocommerce_myaccount_orders_endpoint'        => 'text',
 			'woocommerce_myaccount_view_order_endpoint'    => 'text',
 			'woocommerce_myaccount_downloads_endpoint'     => 'text',
@@ -107,7 +107,7 @@ class WC_Settings_Advanced_Test extends WC_Settings_Unit_Test_Case {
 			'woocommerce_myaccount_payment_methods_endpoint' => 'text',
 			'woocommerce_myaccount_lost_password_endpoint' => 'text',
 			'woocommerce_logout_endpoint'                  => 'text',
-		);
+		];
 
 		if ( $site_is_https ) {
 			unset( $expected['unforce_ssl_checkout'], $expected['force_ssl_checkout'] );
@@ -154,12 +154,12 @@ class WC_Settings_Advanced_Test extends WC_Settings_Unit_Test_Case {
 	public function test_get_woocommerce_com_settings_returns_all_settings() {
 		$sut = new WC_Settings_Advanced();
 
-		$expected = array(
-			'tracking_options'                         => array( 'title', 'sectionend' ),
+		$expected = [
+			'tracking_options'                         => [ 'title', 'sectionend' ],
 			'woocommerce_allow_tracking'               => 'checkbox',
-			'marketplace_suggestions'                  => array( 'title', 'sectionend' ),
+			'marketplace_suggestions'                  => [ 'title', 'sectionend' ],
 			'woocommerce_show_marketplace_suggestions' => 'checkbox',
-		);
+		];
 
 		$settings               = $sut->get_settings_for_section( 'woocommerce_com' );
 		$settings_ids_and_types = $this->get_ids_and_types( $settings );
@@ -173,10 +173,10 @@ class WC_Settings_Advanced_Test extends WC_Settings_Unit_Test_Case {
 	public function test_get_legacy_api_settings_returns_all_settings() {
 		$sut = new WC_Settings_Advanced();
 
-		$expected = array(
-			'legacy_api_options'      => array( 'title', 'sectionend' ),
+		$expected = [
+			'legacy_api_options'      => [ 'title', 'sectionend' ],
 			'woocommerce_api_enabled' => 'checkbox',
-		);
+		];
 
 		$settings               = $sut->get_settings_for_section( 'legacy_api' );
 		$settings_ids_and_types = $this->get_ids_and_types( $settings );
@@ -200,23 +200,23 @@ class WC_Settings_Advanced_Test extends WC_Settings_Unit_Test_Case {
 		$actual_invoked_class = null;
 
 		StaticMockerHack::add_method_mocks(
-			array(
-				'WC_Admin_Webhooks' => array(
+			[
+				'WC_Admin_Webhooks' => [
 					'page_output' => function() use ( &$actual_invoked_class ) {
 						$actual_invoked_class = 'WC_Admin_Webhooks';
 					},
-				),
-				'WC_Admin_API_Keys' => array(
+				],
+				'WC_Admin_API_Keys' => [
 					'page_output' => function() use ( &$actual_invoked_class ) {
 						$actual_invoked_class = 'WC_Admin_API_Keys';
 					},
-				),
-				'WC_Admin_Settings' => array(
+				],
+				'WC_Admin_Settings' => [
 					'output_fields' => function( $settings ) use ( &$actual_invoked_class ) {
 						$actual_invoked_class = 'WC_Admin_Settings';
 					},
-				),
-			)
+				],
+			]
 		);
 
 		$current_section = $current_section_to_use;
@@ -242,18 +242,18 @@ class WC_Settings_Advanced_Test extends WC_Settings_Unit_Test_Case {
 		$actual_invoked_class = null;
 
 		StaticMockerHack::add_method_mocks(
-			array(
-				'WC_Admin_Webhooks' => array(
+			[
+				'WC_Admin_Webhooks' => [
 					'notices' => function() use ( &$actual_invoked_class ) {
 						$actual_invoked_class = 'WC_Admin_Webhooks';
 					},
-				),
-				'WC_Admin_API_Keys' => array(
+				],
+				'WC_Admin_API_Keys' => [
 					'notices' => function() use ( &$actual_invoked_class ) {
 						$actual_invoked_class = 'WC_Admin_API_Keys';
 					},
-				),
-			)
+				],
+			]
 		);
 
 		$_GET['section'] = $section_in_query_string;
@@ -320,13 +320,13 @@ class WC_Settings_Advanced_Test extends WC_Settings_Unit_Test_Case {
 		);
 
 		StaticMockerHack::add_method_mocks(
-			array(
-				'WC_Admin_Settings' => array(
+			[
+				'WC_Admin_Settings' => [
 					'save_fields' => function( $settings ) use ( &$settings_were_saved ) {
 						$settings_were_saved = true;
 					},
-				),
-			)
+				],
+			]
 		);
 
 		$sut = new WC_Settings_Advanced();

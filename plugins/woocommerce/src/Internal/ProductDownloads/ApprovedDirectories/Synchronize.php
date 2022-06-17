@@ -74,7 +74,7 @@ class Synchronize {
 	 * Performs any work needed to add hooks and otherwise integrate with the wider system.
 	 */
 	final public function init_hooks() {
-		add_action( self::SYNC_TASK, array( $this, 'run' ) );
+		add_action( self::SYNC_TASK, [ $this, 'run' ] );
 	}
 
 	/**
@@ -124,7 +124,7 @@ class Synchronize {
 		}
 
 		update_option( self::SYNC_TASK_PAGE, 1 );
-		$this->queue->schedule_single( time(), self::SYNC_TASK, array(), self::SYNC_TASK_GROUP );
+		$this->queue->schedule_single( time(), self::SYNC_TASK, [], self::SYNC_TASK_GROUP );
 		wc_get_logger()->log( 'info', __( 'Approved Download Directories sync: new scan scheduled.', 'woocommerce' ) );
 		return true;
 	}
@@ -153,7 +153,7 @@ class Synchronize {
 					$this->get_progress()
 				)
 			);
-			$this->queue->schedule_single( time() + 1, self::SYNC_TASK, array(), self::SYNC_TASK_GROUP );
+			$this->queue->schedule_single( time() + 1, self::SYNC_TASK, [], self::SYNC_TASK_GROUP );
 		}
 	}
 
@@ -176,10 +176,10 @@ class Synchronize {
 	 */
 	private function get_next_set_of_downloadable_products(): array {
 		$query_filter = function ( array $query ): array {
-			$query['meta_query'][] = array(
+			$query['meta_query'][] = [
 				'key'     => '_downloadable_files',
 				'compare' => 'EXISTS',
-			);
+			];
 
 			return $query;
 		};
@@ -188,11 +188,11 @@ class Synchronize {
 		add_filter( 'woocommerce_product_data_store_cpt_get_products_query', $query_filter );
 
 		$products = wc_get_products(
-			array(
+			[
 				'limit'    => self::SYNC_TASK_BATCH_SIZE,
 				'page'     => $page,
 				'paginate' => true,
-			)
+			]
 		);
 
 		remove_filter( 'woocommerce_product_data_store_cpt_get_products_query', $query_filter );

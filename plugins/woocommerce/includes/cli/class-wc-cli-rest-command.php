@@ -32,12 +32,12 @@ class WC_CLI_REST_Command {
 	 *
 	 * @var array
 	 */
-	protected $routes_with_parent_id = array(
+	protected $routes_with_parent_id = [
 		'customer_download',
 		'product_review',
 		'order_note',
 		'shop_order_refund',
-	);
+	];
 
 	/**
 	 * Name of command/endpoint object.
@@ -72,7 +72,7 @@ class WC_CLI_REST_Command {
 	 *
 	 * @var array
 	 */
-	private $supported_ids = array();
+	private $supported_ids = [];
 
 	/**
 	 * Sets up REST Command.
@@ -104,7 +104,7 @@ class WC_CLI_REST_Command {
 	 *
 	 * @param array $supported_ids List of supported IDs.
 	 */
-	public function set_supported_ids( $supported_ids = array() ) {
+	public function set_supported_ids( $supported_ids = [] ) {
 		$this->supported_ids = $supported_ids;
 	}
 
@@ -187,11 +187,11 @@ class WC_CLI_REST_Command {
 			echo wp_json_encode( $body );
 		} elseif ( 'envelope' === $assoc_args['format'] ) {
 			echo wp_json_encode(
-				array(
+				[
 					'body'    => $body,
 					'headers' => $headers,
 					'status'  => $status,
-				)
+				]
 			);
 		} else {
 			$formatter = $this->get_formatter( $assoc_args );
@@ -243,12 +243,12 @@ class WC_CLI_REST_Command {
 			echo wp_json_encode( $body );
 		} elseif ( 'envelope' === $assoc_args['format'] ) {
 			echo wp_json_encode(
-				array(
+				[
 					'body'    => $body,
 					'headers' => $headers,
 					'status'  => $status,
 					'api_url' => $this->api_url,
-				)
+				]
 			);
 		} else {
 			$formatter = $this->get_formatter( $assoc_args );
@@ -287,7 +287,7 @@ class WC_CLI_REST_Command {
 		wc_maybe_define_constant( 'REST_REQUEST', true );
 
 		$request = new WP_REST_Request( $method, $route );
-		if ( in_array( $method, array( 'POST', 'PUT' ), true ) ) {
+		if ( in_array( $method, [ 'POST', 'PUT' ], true ) ) {
 			$request->set_body_params( $assoc_args );
 		} else {
 			foreach ( $assoc_args as $key => $value ) {
@@ -295,11 +295,11 @@ class WC_CLI_REST_Command {
 			}
 		}
 		if ( Constants::is_true( 'SAVEQUERIES' ) ) {
-			$original_queries = is_array( $GLOBALS['wpdb']->queries ) ? array_keys( $GLOBALS['wpdb']->queries ) : array();
+			$original_queries = is_array( $GLOBALS['wpdb']->queries ) ? array_keys( $GLOBALS['wpdb']->queries ) : [];
 		}
 		$response = rest_do_request( $request );
 		if ( Constants::is_true( 'SAVEQUERIES' ) ) {
-			$performed_queries = array();
+			$performed_queries = [];
 			foreach ( (array) $GLOBALS['wpdb']->queries as $key => $query ) {
 				if ( in_array( $key, $original_queries, true ) ) {
 					continue;
@@ -356,7 +356,7 @@ EOT;
 			}
 			WP_CLI::error( $error );
 		}
-		return array( $response->get_status(), $response->get_data(), $response->get_headers() );
+		return [ $response->get_status(), $response->get_data(), $response->get_headers() ];
 	}
 
 	/**
@@ -389,7 +389,7 @@ EOT;
 	 * @return array
 	 */
 	private function get_context_fields( $context ) {
-		$fields = array();
+		$fields = [];
 		foreach ( $this->schema['properties'] as $key => $args ) {
 			if ( empty( $args['context'] ) || in_array( $context, $args['context'], true ) ) {
 				$fields[] = $key;
@@ -404,20 +404,20 @@ EOT;
 	 * @param  array $args Positional arguments passed to the originating WP-CLI command.
 	 * @return string
 	 */
-	private function get_filled_route( $args = array() ) {
+	private function get_filled_route( $args = [] ) {
 		$supported_id_matched = false;
 		$route                = $this->route;
 
 		foreach ( $this->get_supported_ids() as $id_name => $id_desc ) {
 			if ( 'id' !== $id_name && strpos( $route, '<' . $id_name . '>' ) !== false && ! empty( $args ) ) {
-				$route                = str_replace( array( '(?P<' . $id_name . '>[\d]+)', '(?P<' . $id_name . '>\w[\w\s\-]*)' ), $args[0], $route );
+				$route                = str_replace( [ '(?P<' . $id_name . '>[\d]+)', '(?P<' . $id_name . '>\w[\w\s\-]*)' ], $args[0], $route );
 				$supported_id_matched = true;
 			}
 		}
 
 		if ( ! empty( $args ) ) {
 			$id_replacement = $supported_id_matched && ! empty( $args[1] ) ? $args[1] : $args[0];
-			$route          = str_replace( array( '(?P<id>[\d]+)', '(?P<id>[\w-]+)' ), $id_replacement, $route );
+			$route          = str_replace( [ '(?P<id>[\d]+)', '(?P<id>[\w-]+)' ], $id_replacement, $route );
 		}
 
 		return rtrim( $route );

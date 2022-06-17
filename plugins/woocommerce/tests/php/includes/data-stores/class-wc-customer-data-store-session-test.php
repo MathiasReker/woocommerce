@@ -88,27 +88,27 @@ class WC_Customer_Data_Store_Session_Test extends WC_Unit_Test_Case {
 		$shipping_address_is_effectively_empty->set_shipping_address( ' ' );
 		$shipping_address_is_effectively_empty->save();
 
-		return array(
-			'has_billing_address_only' => array(
+		return [
+			'has_billing_address_only' => [
 				$has_billing_address_only,
 				true,
 				true,
-			),
-			'separate_billing_and_shipping_state_and_country' => array(
+			],
+			'separate_billing_and_shipping_state_and_country' => [
 				$separate_billing_and_shipping_state_and_country,
 				false,
 				false,
-			),
-			'separate_billing_state_same_country' => array(
+			],
+			'separate_billing_state_same_country' => [
 				$separate_billing_state_same_country,
 				false,
 				true,
-			),
-			'shipping_address_is_effectively_empty' => array(
+			],
+			'shipping_address_is_effectively_empty' => [
 				$shipping_address_is_effectively_empty,
 				true,
 				true,
-			),
-		);
+			],
+		];
 	}
 }

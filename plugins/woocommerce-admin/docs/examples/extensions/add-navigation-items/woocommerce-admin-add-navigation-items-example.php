@@ -38,40 +38,40 @@ function add_navigation_items_register_items() {
 	}
 
 	\Automattic\WooCommerce\Admin\Features\Navigation\Menu::add_plugin_item(
-		array(
+		[
 			'id'         => 'example-plugin',
 			'title'      => 'Example Plugin',
 			'capability' => 'view_woocommerce_reports',
 			'url'        => 'https://www.google.com',
-		)
+		]
 	);
 
 	\Automattic\WooCommerce\Admin\Features\Navigation\Menu::add_plugin_category(
-		array(
+		[
 			'id'         => 'example-category',
 			'title'      => 'Example Category',
 			'capability' => 'view_woocommerce_reports',
-		)
+		]
 	);
 
 	\Automattic\WooCommerce\Admin\Features\Navigation\Menu::add_plugin_item(
-		array(
+		[
 			'id'         => 'example-category-child-1',
 			'parent'     => 'example-category',
 			'title'      => 'Sub Menu Child 1',
 			'capability' => 'view_woocommerce_reports',
 			'url'        => 'https://www.google.com',
-		)
+		]
 	);
 
 	\Automattic\WooCommerce\Admin\Features\Navigation\Menu::add_plugin_item(
-		array(
+		[
 			'id'         => 'example-category-child-2',
 			'parent'     => 'example-category',
 			'title'      => 'Sub Menu Child 2',
 			'capability' => 'view_woocommerce_reports',
 			'url'        => 'https://www.google.com',
-		)
+		]
 	);
 }
 add_filter( 'admin_menu', 'add_navigation_items_register_items' );

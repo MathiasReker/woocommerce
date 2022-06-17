@@ -87,7 +87,7 @@ if ( wc_tax_enabled() ) {
 		</tbody>
 		<tbody id="order_shipping_line_items">
 			<?php
-			$shipping_methods = WC()->shipping() ? WC()->shipping()->load_shipping_methods() : array();
+			$shipping_methods = WC()->shipping() ? WC()->shipping()->load_shipping_methods() : [];
 			foreach ( $line_items_shipping as $item_id => $item ) {
 				include __DIR__ . '/html-order-shipping.php';
 			}
@@ -127,21 +127,21 @@ if ( wc_tax_enabled() ) {
 							$post_url = apply_filters(
 								'woocommerce_admin_order_item_coupon_url',
 								add_query_arg(
-									array(
+									[
 										'post'   => $post_id,
 										'action' => 'edit',
-									),
+									],
 									admin_url( 'post.php' )
 								),
 								$item,
 								$order
 							);
 							?>
-							<a href="<?php echo esc_url( $post_url ); ?>" class="tips" data-tip="<?php echo esc_attr( wc_price( $item->get_discount(), array( 'currency' => $order->get_currency() ) ) ); ?>">
+							<a href="<?php echo esc_url( $post_url ); ?>" class="tips" data-tip="<?php echo esc_attr( wc_price( $item->get_discount(), [ 'currency' => $order->get_currency() ] ) ); ?>">
 								<span><?php echo esc_html( $item->get_code() ); ?></span>
 							</a>
 						<?php else : ?>
-							<span class="tips" data-tip="<?php echo esc_attr( wc_price( $item->get_discount(), array( 'currency' => $order->get_currency() ) ) ); ?>">
+							<span class="tips" data-tip="<?php echo esc_attr( wc_price( $item->get_discount(), [ 'currency' => $order->get_currency() ] ) ); ?>">
 								<span><?php echo esc_html( $item->get_code() ); ?></span>
 							</span>
 						<?php endif; ?>
@@ -158,7 +158,7 @@ if ( wc_tax_enabled() ) {
 				<td class="label"><?php esc_html_e( 'Items Subtotal:', 'woocommerce' ); ?></td>
 				<td width="1%"></td>
 				<td class="total">
-					<?php echo wc_price( $order->get_subtotal(), array( 'currency' => $order->get_currency() ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+					<?php echo wc_price( $order->get_subtotal(), [ 'currency' => $order->get_currency() ] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 				</td>
 			</tr>
 		<?php if ( 0 < $order->get_total_discount() ) : ?>
@@ -166,7 +166,7 @@ if ( wc_tax_enabled() ) {
 				<td class="label"><?php esc_html_e( 'Coupon(s):', 'woocommerce' ); ?></td>
 				<td width="1%"></td>
 				<td class="total">-
-					<?php echo wc_price( $order->get_total_discount(), array( 'currency' => $order->get_currency() ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+					<?php echo wc_price( $order->get_total_discount(), [ 'currency' => $order->get_currency() ] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 				</td>
 			</tr>
 		<?php endif; ?>
@@ -175,7 +175,7 @@ if ( wc_tax_enabled() ) {
 				<td class="label"><?php esc_html_e( 'Fees:', 'woocommerce' ); ?></td>
 				<td width="1%"></td>
 				<td class="total">
-					<?php echo wc_price( $order->get_total_fees(), array( 'currency' => $order->get_currency() ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+					<?php echo wc_price( $order->get_total_fees(), [ 'currency' => $order->get_currency() ] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 				</td>
 			</tr>
 		<?php endif; ?>
@@ -187,7 +187,7 @@ if ( wc_tax_enabled() ) {
 				<td class="label"><?php esc_html_e( 'Shipping:', 'woocommerce' ); ?></td>
 				<td width="1%"></td>
 				<td class="total">
-					<?php echo wc_price( $order->get_shipping_total(), array( 'currency' => $order->get_currency() ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+					<?php echo wc_price( $order->get_shipping_total(), [ 'currency' => $order->get_currency() ] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 				</td>
 			</tr>
 		<?php endif; ?>
@@ -202,7 +202,7 @@ if ( wc_tax_enabled() ) {
 					<td class="total">
 						<?php
 							// We use wc_round_tax_total here because tax may need to be round up or round down depending upon settings, whereas wc_price alone will always round it down.
-							echo wc_price( wc_round_tax_total( $tax_total->amount ), array( 'currency' => $order->get_currency() ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+							echo wc_price( wc_round_tax_total( $tax_total->amount ), [ 'currency' => $order->get_currency() ] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 						?>
 					</td>
 				</tr>
@@ -215,7 +215,7 @@ if ( wc_tax_enabled() ) {
 			<td class="label"><?php esc_html_e( 'Order Total', 'woocommerce' ); ?>:</td>
 			<td width="1%"></td>
 			<td class="total">
-				<?php echo wc_price( $order->get_total(), array( 'currency' => $order->get_currency() ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+				<?php echo wc_price( $order->get_total(), [ 'currency' => $order->get_currency() ] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 			</td>
 		</tr>
 
@@ -223,14 +223,14 @@ if ( wc_tax_enabled() ) {
 
 	<div class="clear"></div>
 
-	<?php if ( in_array( $order->get_status(), array( 'processing', 'completed', 'refunded' ), true ) && ! empty( $order->get_date_paid() ) ) : ?>
+	<?php if ( in_array( $order->get_status(), [ 'processing', 'completed', 'refunded' ], true ) && ! empty( $order->get_date_paid() ) ) : ?>
 
 		<table class="wc-order-totals" style="border-top: 1px solid #999; margin-top:12px; padding-top:12px">
 			<tr>
 				<td class="<?php echo $order->get_total_refunded() ? 'label' : 'label label-highlight'; ?>"><?php esc_html_e( 'Paid', 'woocommerce' ); ?>: <br /></td>
 				<td width="1%"></td>
 				<td class="total">
-					<?php echo wc_price( $order->get_total(), array( 'currency' => $order->get_currency() ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+					<?php echo wc_price( $order->get_total(), [ 'currency' => $order->get_currency() ] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 				</td>
 			</tr>
 			<tr>
@@ -259,7 +259,7 @@ if ( wc_tax_enabled() ) {
 			<tr>
 				<td class="label refunded-total"><?php esc_html_e( 'Refunded', 'woocommerce' ); ?>:</td>
 				<td width="1%"></td>
-				<td class="total refunded-total">-<?php echo wc_price( $order->get_total_refunded(), array( 'currency' => $order->get_currency() ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></td>
+				<td class="total refunded-total">-<?php echo wc_price( $order->get_total_refunded(), [ 'currency' => $order->get_currency() ] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></td>
 			</tr>
 
 			<?php do_action( 'woocommerce_admin_order_totals_after_refunded', $order->get_id() ); ?>
@@ -268,7 +268,7 @@ if ( wc_tax_enabled() ) {
 				<td class="label label-highlight"><?php esc_html_e( 'Net Payment', 'woocommerce' ); ?>:</td>
 				<td width="1%"></td>
 				<td class="total">
-				<?php echo wc_price( $order->get_total() - $order->get_total_refunded(), array( 'currency' => $order->get_currency() ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+				<?php echo wc_price( $order->get_total() - $order->get_total_refunded(), [ 'currency' => $order->get_currency() ] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 				</td>
 			</tr>
 
@@ -330,11 +330,11 @@ if ( wc_tax_enabled() ) {
 		<?php endif; ?>
 		<tr>
 			<td class="label"><?php esc_html_e( 'Amount already refunded', 'woocommerce' ); ?>:</td>
-			<td class="total">-<?php echo wc_price( $order->get_total_refunded(), array( 'currency' => $order->get_currency() ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></td>
+			<td class="total">-<?php echo wc_price( $order->get_total_refunded(), [ 'currency' => $order->get_currency() ] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></td>
 		</tr>
 		<tr>
 			<td class="label"><?php esc_html_e( 'Total available to refund', 'woocommerce' ); ?>:</td>
-			<td class="total"><?php echo wc_price( $order->get_total() - $order->get_total_refunded(), array( 'currency' => $order->get_currency() ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></td>
+			<td class="total"><?php echo wc_price( $order->get_total() - $order->get_total_refunded(), [ 'currency' => $order->get_currency() ] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></td>
 		</tr>
 		<tr>
 			<td class="label">
@@ -372,7 +372,7 @@ if ( wc_tax_enabled() ) {
 	<div class="clear"></div>
 	<div class="refund-actions">
 		<?php
-		$refund_amount = '<span class="wc-order-refund-amount">' . wc_price( 0, array( 'currency' => $order->get_currency() ) ) . '</span>';
+		$refund_amount = '<span class="wc-order-refund-amount">' . wc_price( 0, [ 'currency' => $order->get_currency() ] ) . '</span>';
 		$gateway_name  = false !== $payment_gateway ? ( ! empty( $payment_gateway->method_title ) ? $payment_gateway->method_title : $payment_gateway->get_title() ) : __( 'Payment gateway', 'woocommerce' );
 
 		if ( false !== $payment_gateway && $payment_gateway->can_refund_order( $order ) ) {

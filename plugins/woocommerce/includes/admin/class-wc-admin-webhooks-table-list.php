@@ -22,11 +22,11 @@ class WC_Admin_Webhooks_Table_List extends WP_List_Table {
 	 */
 	public function __construct() {
 		parent::__construct(
-			array(
+			[
 				'singular' => 'webhook',
 				'plural'   => 'webhooks',
 				'ajax'     => false,
-			)
+			]
 		);
 	}
 
@@ -43,13 +43,13 @@ class WC_Admin_Webhooks_Table_List extends WP_List_Table {
 	 * @return array
 	 */
 	public function get_columns() {
-		return array(
+		return [
 			'cb'           => '<input type="checkbox" />',
 			'title'        => __( 'Name', 'woocommerce' ),
 			'status'       => __( 'Status', 'woocommerce' ),
 			'topic'        => __( 'Topic', 'woocommerce' ),
 			'delivery_url' => __( 'Delivery URL', 'woocommerce' ),
-		);
+		];
 	}
 
 	/**
@@ -76,7 +76,7 @@ class WC_Admin_Webhooks_Table_List extends WP_List_Table {
 		$output .= '<strong><a href="' . esc_url( $edit_link ) . '" class="row-title">' . esc_html( $webhook->get_name() ) . '</a></strong>';
 
 		// Get actions.
-		$actions = array(
+		$actions = [
 			/* translators: %s: webhook ID. */
 			'id'     => sprintf( __( 'ID: %d', 'woocommerce' ), $webhook->get_id() ),
 			'edit'   => '<a href="' . esc_url( $edit_link ) . '">' . esc_html__( 'Edit', 'woocommerce' ) . '</a>',
@@ -84,18 +84,18 @@ class WC_Admin_Webhooks_Table_List extends WP_List_Table {
 			'delete' => '<a class="submitdelete" aria-label="' . esc_attr( sprintf( __( 'Delete "%s" permanently', 'woocommerce' ), $webhook->get_name() ) ) . '" href="' . esc_url(
 				wp_nonce_url(
 					add_query_arg(
-						array(
+						[
 							'delete' => $webhook->get_id(),
-						),
+						],
 						admin_url( 'admin.php?page=wc-settings&tab=advanced&section=webhooks' )
 					),
 					'delete-webhook'
 				)
 			) . '">' . esc_html__( 'Delete permanently', 'woocommerce' ) . '</a>',
-		);
+		];
 
 		$actions     = apply_filters( 'webhook_row_actions', $actions, $webhook );
-		$row_actions = array();
+		$row_actions = [];
 
 		foreach ( $actions as $action => $link ) {
 			$row_actions[] = '<span class="' . esc_attr( $action ) . '">' . $link . '</span>';
@@ -147,20 +147,20 @@ class WC_Admin_Webhooks_Table_List extends WP_List_Table {
 		$statuses = wc_get_webhook_statuses();
 
 		if ( isset( $statuses[ $status_name ] ) ) {
-			return array(
+			return [
 				'singular' => sprintf( '%s <span class="count">(%s)</span>', esc_html( $statuses[ $status_name ] ), $amount ),
 				'plural'   => sprintf( '%s <span class="count">(%s)</span>', esc_html( $statuses[ $status_name ] ), $amount ),
 				'context'  => '',
 				'domain'   => 'woocommerce',
-			);
+			];
 		}
 
-		return array(
+		return [
 			'singular' => sprintf( '%s <span class="count">(%s)</span>', esc_html( $status_name ), $amount ),
 			'plural'   => sprintf( '%s <span class="count">(%s)</span>', esc_html( $status_name ), $amount ),
 			'context'  => '',
 			'domain'   => 'woocommerce',
-		);
+		];
 	}
 
 	/**
@@ -169,7 +169,7 @@ class WC_Admin_Webhooks_Table_List extends WP_List_Table {
 	 * @return array
 	 */
 	protected function get_views() {
-		$status_links   = array();
+		$status_links   = [];
 		$data_store     = WC_Data_Store::load( 'webhook' );
 		$num_webhooks   = $data_store->get_count_webhooks_by_status();
 		$total_webhooks = array_sum( (array) $num_webhooks );
@@ -204,9 +204,9 @@ class WC_Admin_Webhooks_Table_List extends WP_List_Table {
 	 * @return array
 	 */
 	protected function get_bulk_actions() {
-		return array(
+		return [
 			'delete' => __( 'Delete permanently', 'woocommerce' ),
-		);
+		];
 	}
 
 	/**
@@ -214,7 +214,7 @@ class WC_Admin_Webhooks_Table_List extends WP_List_Table {
 	 */
 	public function process_bulk_action() {
 		$action   = $this->current_action();
-		$webhooks = isset( $_REQUEST['webhook'] ) ? array_map( 'absint', (array) $_REQUEST['webhook'] ) : array(); // WPCS: input var okay, CSRF ok.
+		$webhooks = isset( $_REQUEST['webhook'] ) ? array_map( 'absint', (array) $_REQUEST['webhook'] ) : []; // WPCS: input var okay, CSRF ok.
 
 		if ( ! current_user_can( 'manage_woocommerce' ) ) {
 			wp_die( esc_html__( 'You do not have permission to edit Webhooks', 'woocommerce' ) );
@@ -268,9 +268,9 @@ class WC_Admin_Webhooks_Table_List extends WP_List_Table {
 			'',
 			'',
 			false,
-			array(
+			[
 				'id' => 'search-submit',
-			)
+			]
 		);
 		echo '</p>';
 	}
@@ -283,10 +283,10 @@ class WC_Admin_Webhooks_Table_List extends WP_List_Table {
 		$current_page = $this->get_pagenum();
 
 		// Query args.
-		$args = array(
+		$args = [
 			'limit'  => $per_page,
 			'offset' => $per_page * ( $current_page - 1 ),
-		);
+		];
 
 		// Handle the status query.
 		if ( ! empty( $_REQUEST['status'] ) ) { // WPCS: input var okay, CSRF ok.
@@ -306,11 +306,11 @@ class WC_Admin_Webhooks_Table_List extends WP_List_Table {
 
 		// Set the pagination.
 		$this->set_pagination_args(
-			array(
+			[
 				'total_items' => $webhooks->total,
 				'per_page'    => $per_page,
 				'total_pages' => $webhooks->max_num_pages,
-			)
+			]
 		);
 	}
 }

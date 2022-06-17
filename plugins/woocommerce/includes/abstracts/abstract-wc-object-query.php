@@ -24,14 +24,14 @@ abstract class WC_Object_Query {
 	 *
 	 * @var array
 	 */
-	protected $query_vars = array();
+	protected $query_vars = [];
 
 	/**
 	 * Create a new query.
 	 *
 	 * @param array $args Criteria to query on in a format similar to WP_Query.
 	 */
-	public function __construct( $args = array() ) {
+	public function __construct( $args = [] ) {
 		$this->query_vars = wp_parse_args( $args, $this->get_default_query_vars() );
 	}
 
@@ -75,7 +75,7 @@ abstract class WC_Object_Query {
 	 */
 	protected function get_default_query_vars() {
 
-		return array(
+		return [
 			'name'           => '',
 			'parent'         => '',
 			'parent_exclude' => '',
@@ -90,6 +90,6 @@ abstract class WC_Object_Query {
 			'orderby'        => 'date',
 
 			'return'         => 'objects',
-		);
+		];
 	}
 }

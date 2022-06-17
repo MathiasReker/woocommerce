@@ -39,9 +39,9 @@ class Notes extends \WC_REST_CRUD_Controller {
 	 *
 	 * @var array
 	 */
-	protected $allowed_promo_notes = array(
+	protected $allowed_promo_notes = [
 		'wcpay-promo-2022-3-incentive-100-off',
-	);
+	];
 
 	/**
 	 * Register the routes for admin notes.
@@ -50,116 +50,116 @@ class Notes extends \WC_REST_CRUD_Controller {
 		register_rest_route(
 			$this->namespace,
 			'/' . $this->rest_base,
-			array(
-				array(
+			[
+				[
 					'methods'             => \WP_REST_Server::READABLE,
-					'callback'            => array( $this, 'get_items' ),
-					'permission_callback' => array( $this, 'get_items_permissions_check' ),
+					'callback'            => [ $this, 'get_items' ],
+					'permission_callback' => [ $this, 'get_items_permissions_check' ],
 					'args'                => $this->get_collection_params(),
-				),
-				'schema' => array( $this, 'get_public_item_schema' ),
-			)
+				],
+				'schema' => [ $this, 'get_public_item_schema' ],
+			]
 		);
 
 		register_rest_route(
 			$this->namespace,
 			'/' . $this->rest_base . '/(?P<id>[\d-]+)',
-			array(
-				'args'   => array(
-					'id' => array(
+			[
+				'args'   => [
+					'id' => [
 						'description' => __( 'Unique ID for the resource.', 'woocommerce' ),
 						'type'        => 'integer',
-					),
-				),
-				array(
+					],
+				],
+				[
 					'methods'             => \WP_REST_Server::READABLE,
-					'callback'            => array( $this, 'get_item' ),
-					'permission_callback' => array( $this, 'get_item_permissions_check' ),
-				),
-				array(
+					'callback'            => [ $this, 'get_item' ],
+					'permission_callback' => [ $this, 'get_item_permissions_check' ],
+				],
+				[
 					'methods'             => \WP_REST_Server::EDITABLE,
-					'callback'            => array( $this, 'update_item' ),
-					'permission_callback' => array( $this, 'update_items_permissions_check' ),
-				),
-				'schema' => array( $this, 'get_public_item_schema' ),
-			)
+					'callback'            => [ $this, 'update_item' ],
+					'permission_callback' => [ $this, 'update_items_permissions_check' ],
+				],
+				'schema' => [ $this, 'get_public_item_schema' ],
+			]
 		);
 
 		register_rest_route(
 			$this->namespace,
 			'/' . $this->rest_base . '/delete/(?P<id>[\d-]+)',
-			array(
-				array(
+			[
+				[
 					'methods'             => \WP_REST_Server::DELETABLE,
-					'callback'            => array( $this, 'delete_item' ),
-					'permission_callback' => array( $this, 'update_items_permissions_check' ),
-				),
-				'schema' => array( $this, 'get_public_item_schema' ),
-			)
+					'callback'            => [ $this, 'delete_item' ],
+					'permission_callback' => [ $this, 'update_items_permissions_check' ],
+				],
+				'schema' => [ $this, 'get_public_item_schema' ],
+			]
 		);
 
 		register_rest_route(
 			$this->namespace,
 			'/' . $this->rest_base . '/delete/all',
-			array(
-				array(
+			[
+				[
 					'methods'             => \WP_REST_Server::DELETABLE,
-					'callback'            => array( $this, 'delete_all_items' ),
-					'permission_callback' => array( $this, 'update_items_permissions_check' ),
-					'args'                => array(
-						'status' => array(
+					'callback'            => [ $this, 'delete_all_items' ],
+					'permission_callback' => [ $this, 'update_items_permissions_check' ],
+					'args'                => [
+						'status' => [
 							'description'       => __( 'Status of note.', 'woocommerce' ),
 							'type'              => 'array',
 							'sanitize_callback' => 'wp_parse_slug_list',
 							'validate_callback' => 'rest_validate_request_arg',
-							'items'             => array(
+							'items'             => [
 								'enum' => Note::get_allowed_statuses(),
 								'type' => 'string',
-							),
-						),
-					),
-				),
-				'schema' => array( $this, 'get_public_item_schema' ),
-			)
+							],
+						],
+					],
+				],
+				'schema' => [ $this, 'get_public_item_schema' ],
+			]
 		);
 
 		register_rest_route(
 			$this->namespace,
 			'/' . $this->rest_base . '/tracker/(?P<note_id>[\d-]+)/user/(?P<user_id>[\d-]+)',
-			array(
-				array(
+			[
+				[
 					'methods'             => \WP_REST_Server::READABLE,
-					'callback'            => array( $this, 'track_opened_email' ),
+					'callback'            => [ $this, 'track_opened_email' ],
 					'permission_callback' => '__return_true',
-				),
-				'schema' => array( $this, 'get_public_item_schema' ),
-			)
+				],
+				'schema' => [ $this, 'get_public_item_schema' ],
+			]
 		);
 
 		register_rest_route(
 			$this->namespace,
 			'/' . $this->rest_base . '/update',
-			array(
-				array(
+			[
+				[
 					'methods'             => \WP_REST_Server::EDITABLE,
-					'callback'            => array( $this, 'batch_update_items' ),
-					'permission_callback' => array( $this, 'update_items_permissions_check' ),
-				),
-				'schema' => array( $this, 'get_public_item_schema' ),
-			)
+					'callback'            => [ $this, 'batch_update_items' ],
+					'permission_callback' => [ $this, 'update_items_permissions_check' ],
+				],
+				'schema' => [ $this, 'get_public_item_schema' ],
+			]
 		);
 
 		register_rest_route(
 			$this->namespace,
 			'/' . $this->rest_base . '/experimental-activate-promo/(?P<promo_note_name>[\w-]+)',
-			array(
-				array(
+			[
+				[
 					'methods'             => \WP_REST_Server::EDITABLE,
-					'callback'            => array( $this, 'activate_promo_note' ),
-					'permission_callback' => array( $this, 'update_items_permissions_check' ),
-				),
-				'schema' => array( $this, 'get_public_item_schema' ),
-			)
+					'callback'            => [ $this, 'activate_promo_note' ],
+					'permission_callback' => [ $this, 'update_items_permissions_check' ],
+				],
+				'schema' => [ $this, 'get_public_item_schema' ],
+			]
 		);
 	}
 
@@ -176,7 +176,7 @@ class Notes extends \WC_REST_CRUD_Controller {
 			return new \WP_Error(
 				'woocommerce_note_invalid_id',
 				__( 'Sorry, there is no resource with that ID.', 'woocommerce' ),
-				array( 'status' => 404 )
+				[ 'status' => 404 ]
 			);
 		}
 
@@ -200,7 +200,7 @@ class Notes extends \WC_REST_CRUD_Controller {
 
 		$notes = NotesRepository::get_notes( 'edit', $query_args );
 
-		$data = array();
+		$data = [];
 		foreach ( (array) $notes as $note_obj ) {
 			$note   = $this->prepare_item_for_response( $note_obj, $request );
 			$note   = $this->prepare_response_for_collection( $note );
@@ -253,14 +253,14 @@ class Notes extends \WC_REST_CRUD_Controller {
 	 * @return array
 	 */
 	protected function prepare_objects_query( $request ) {
-		$args               = array();
+		$args               = [];
 		$args['order']      = $request['order'];
 		$args['orderby']    = $request['orderby'];
 		$args['per_page']   = $request['per_page'];
 		$args['page']       = $request['page'];
-		$args['type']       = isset( $request['type'] ) ? $request['type'] : array();
-		$args['status']     = isset( $request['status'] ) ? $request['status'] : array();
-		$args['source']     = isset( $request['source'] ) ? $request['source'] : array();
+		$args['type']       = isset( $request['type'] ) ? $request['type'] : [];
+		$args['status']     = isset( $request['status'] ) ? $request['status'] : [];
+		$args['source']     = isset( $request['source'] ) ? $request['source'] : [];
 		$args['is_deleted'] = 0;
 
 		if ( 'date' === $args['orderby'] ) {
@@ -290,7 +290,7 @@ class Notes extends \WC_REST_CRUD_Controller {
 	 */
 	public function get_item_permissions_check( $request ) {
 		if ( ! wc_rest_check_manager_permissions( 'system_status', 'read' ) ) {
-			return new \WP_Error( 'woocommerce_rest_cannot_view', __( 'Sorry, you cannot list resources.', 'woocommerce' ), array( 'status' => rest_authorization_required_code() ) );
+			return new \WP_Error( 'woocommerce_rest_cannot_view', __( 'Sorry, you cannot list resources.', 'woocommerce' ), [ 'status' => rest_authorization_required_code() ] );
 		}
 
 		return true;
@@ -304,7 +304,7 @@ class Notes extends \WC_REST_CRUD_Controller {
 	 */
 	public function get_items_permissions_check( $request ) {
 		if ( ! wc_rest_check_manager_permissions( 'system_status', 'read' ) ) {
-			return new \WP_Error( 'woocommerce_rest_cannot_view', __( 'Sorry, you cannot list resources.', 'woocommerce' ), array( 'status' => rest_authorization_required_code() ) );
+			return new \WP_Error( 'woocommerce_rest_cannot_view', __( 'Sorry, you cannot list resources.', 'woocommerce' ), [ 'status' => rest_authorization_required_code() ] );
 		}
 
 		return true;
@@ -323,7 +323,7 @@ class Notes extends \WC_REST_CRUD_Controller {
 			return new \WP_Error(
 				'woocommerce_note_invalid_id',
 				__( 'Sorry, there is no resource with that ID.', 'woocommerce' ),
-				array( 'status' => 404 )
+				[ 'status' => 404 ]
 			);
 		}
 
@@ -344,7 +344,7 @@ class Notes extends \WC_REST_CRUD_Controller {
 			return new \WP_Error(
 				'woocommerce_note_invalid_id',
 				__( 'Sorry, there is no note with that ID.', 'woocommerce' ),
-				array( 'status' => 404 )
+				[ 'status' => 404 ]
 			);
 		}
 
@@ -360,18 +360,18 @@ class Notes extends \WC_REST_CRUD_Controller {
 	 * @return WP_REST_Request|WP_Error
 	 */
 	public function delete_all_items( $request ) {
-		$args = array();
+		$args = [];
 		if ( isset( $request['status'] ) ) {
 			$args['status'] = $request['status'];
 		}
 		$notes = NotesRepository::delete_all_notes( $args );
-		$data  = array();
+		$data  = [];
 		foreach ( (array) $notes as $note_obj ) {
 			$data[] = $this->prepare_note_data_for_response( $note_obj, $request );
 		}
 
 		$response = rest_ensure_response( $data );
-		$response->header( 'X-WP-Total', NotesRepository::get_notes_count( array( 'info', 'warning' ), array() ) );
+		$response->header( 'X-WP-Total', NotesRepository::get_notes_count( [ 'info', 'warning' ], [] ) );
 		return $response;
 	}
 
@@ -396,7 +396,7 @@ class Notes extends \WC_REST_CRUD_Controller {
 	 * @return array A list of the requested updates values.
 	 */
 	protected function get_requested_updates( $request ) {
-		$requested_updates = array();
+		$requested_updates = [];
 		if ( ! is_null( $request->get_param( 'status' ) ) ) {
 			$requested_updates['status'] = $request->get_param( 'status' );
 		}
@@ -423,14 +423,14 @@ class Notes extends \WC_REST_CRUD_Controller {
 	 * @return WP_REST_Request|WP_Error
 	 */
 	public function batch_update_items( $request ) {
-		$data     = array();
+		$data     = [];
 		$note_ids = $request->get_param( 'noteIds' );
 
 		if ( ! isset( $note_ids ) || ! is_array( $note_ids ) ) {
 			return new \WP_Error(
 				'woocommerce_note_invalid_ids',
 				__( 'Please provide an array of IDs through the noteIds param.', 'woocommerce' ),
-				array( 'status' => 422 )
+				[ 'status' => 422 ]
 			);
 		}
 
@@ -443,7 +443,7 @@ class Notes extends \WC_REST_CRUD_Controller {
 		}
 
 		$response = rest_ensure_response( $data );
-		$response->header( 'X-WP-Total', NotesRepository::get_notes_count( array( 'info', 'warning' ), array() ) );
+		$response->header( 'X-WP-Total', NotesRepository::get_notes_count( [ 'info', 'warning' ], [] ) );
 		return $response;
 	}
 
@@ -460,7 +460,7 @@ class Notes extends \WC_REST_CRUD_Controller {
 			return new \WP_Error(
 				'woocommerce_note_invalid_promo_note_name',
 				__( 'Please provide a valid promo note name.', 'woocommerce' ),
-				array( 'status' => 422 )
+				[ 'status' => 422 ]
 			);
 		}
 
@@ -486,9 +486,9 @@ class Notes extends \WC_REST_CRUD_Controller {
 		}
 
 		return rest_ensure_response(
-			array(
+			[
 				'success' => true,
-			)
+			]
 		);
 	}
 
@@ -500,7 +500,7 @@ class Notes extends \WC_REST_CRUD_Controller {
 	 */
 	public function update_items_permissions_check( $request ) {
 		if ( ! wc_rest_check_manager_permissions( 'settings', 'edit' ) ) {
-			return new \WP_Error( 'woocommerce_rest_cannot_edit', __( 'Sorry, you cannot edit this resource.', 'woocommerce' ), array( 'status' => rest_authorization_required_code() ) );
+			return new \WP_Error( 'woocommerce_rest_cannot_edit', __( 'Sorry, you cannot edit this resource.', 'woocommerce' ), [ 'status' => rest_authorization_required_code() ] );
 		}
 		return true;
 	}
@@ -584,14 +584,14 @@ class Notes extends \WC_REST_CRUD_Controller {
 		// Wrap the data in a response object.
 		$response = rest_ensure_response( $data );
 		$response->add_links(
-			array(
-				'self'       => array(
+			[
+				'self'       => [
 					'href' => rest_url( sprintf( '/%s/%s/%d', $this->namespace, $this->rest_base, $data['id'] ) ),
-				),
-				'collection' => array(
+				],
+				'collection' => [
 					'href' => rest_url( sprintf( '%s/%s', $this->namespace, $this->rest_base ) ),
-				),
-			)
+				],
+			]
 		);
 		/**
 		 * Filter a note returned from the API.
@@ -618,7 +618,7 @@ class Notes extends \WC_REST_CRUD_Controller {
 			return;
 		}
 
-		NotesRepository::record_tracks_event_with_user( $request->get_param( 'user_id' ), 'email_note_opened', array( 'note_name' => $note->get_name() ) );
+		NotesRepository::record_tracks_event_with_user( $request->get_param( 'user_id' ), 'email_note_opened', [ 'note_name' => $note->get_name() ] );
 	}
 
 	/**
@@ -627,37 +627,37 @@ class Notes extends \WC_REST_CRUD_Controller {
 	 * @return array
 	 */
 	public function get_collection_params() {
-		$params             = array();
-		$params['context']  = $this->get_context_param( array( 'default' => 'view' ) );
-		$params['order']    = array(
+		$params             = [];
+		$params['context']  = $this->get_context_param( [ 'default' => 'view' ] );
+		$params['order']    = [
 			'description'       => __( 'Order sort attribute ascending or descending.', 'woocommerce' ),
 			'type'              => 'string',
 			'default'           => 'desc',
-			'enum'              => array( 'asc', 'desc' ),
+			'enum'              => [ 'asc', 'desc' ],
 			'validate_callback' => 'rest_validate_request_arg',
-		);
-		$params['orderby']  = array(
+		];
+		$params['orderby']  = [
 			'description'       => __( 'Sort collection by object attribute.', 'woocommerce' ),
 			'type'              => 'string',
 			'default'           => 'date',
-			'enum'              => array(
+			'enum'              => [
 				'note_id',
 				'date',
 				'type',
 				'title',
 				'status',
-			),
+			],
 			'validate_callback' => 'rest_validate_request_arg',
-		);
-		$params['page']     = array(
+		];
+		$params['page']     = [
 			'description'       => __( 'Current page of the collection.', 'woocommerce' ),
 			'type'              => 'integer',
 			'default'           => 1,
 			'sanitize_callback' => 'absint',
 			'validate_callback' => 'rest_validate_request_arg',
 			'minimum'           => 1,
-		);
-		$params['per_page'] = array(
+		];
+		$params['per_page'] = [
 			'description'       => __( 'Maximum number of items to be returned in result set.', 'woocommerce' ),
 			'type'              => 'integer',
 			'default'           => 10,
@@ -665,36 +665,36 @@ class Notes extends \WC_REST_CRUD_Controller {
 			'maximum'           => 100,
 			'sanitize_callback' => 'absint',
 			'validate_callback' => 'rest_validate_request_arg',
-		);
-		$params['type']     = array(
+		];
+		$params['type']     = [
 			'description'       => __( 'Type of note.', 'woocommerce' ),
 			'type'              => 'array',
 			'sanitize_callback' => 'wp_parse_slug_list',
 			'validate_callback' => 'rest_validate_request_arg',
-			'items'             => array(
+			'items'             => [
 				'enum' => Note::get_allowed_types(),
 				'type' => 'string',
-			),
-		);
-		$params['status']   = array(
+			],
+		];
+		$params['status']   = [
 			'description'       => __( 'Status of note.', 'woocommerce' ),
 			'type'              => 'array',
 			'sanitize_callback' => 'wp_parse_slug_list',
 			'validate_callback' => 'rest_validate_request_arg',
-			'items'             => array(
+			'items'             => [
 				'enum' => Note::get_allowed_statuses(),
 				'type' => 'string',
-			),
-		);
-		$params['source']   = array(
+			],
+		];
+		$params['source']   = [
 			'description'       => __( 'Source of note.', 'woocommerce' ),
 			'type'              => 'array',
 			'sanitize_callback' => 'wp_parse_list',
 			'validate_callback' => 'rest_validate_request_arg',
-			'items'             => array(
+			'items'             => [
 				'type' => 'string',
-			),
-		);
+			],
+		];
 		return $params;
 	}
 
@@ -704,120 +704,120 @@ class Notes extends \WC_REST_CRUD_Controller {
 	 * @return array
 	 */
 	public function get_item_schema() {
-		$schema = array(
+		$schema = [
 			'$schema'    => 'http://json-schema.org/draft-04/schema#',
 			'title'      => 'note',
 			'type'       => 'object',
-			'properties' => array(
-				'id'                => array(
+			'properties' => [
+				'id'                => [
 					'description' => __( 'ID of the note record.', 'woocommerce' ),
 					'type'        => 'integer',
-					'context'     => array( 'view' ),
+					'context'     => [ 'view' ],
 					'readonly'    => true,
-				),
-				'name'              => array(
+				],
+				'name'              => [
 					'description' => __( 'Name of the note.', 'woocommerce' ),
 					'type'        => 'string',
-					'context'     => array( 'view', 'edit' ),
+					'context'     => [ 'view', 'edit' ],
 					'readonly'    => true,
-				),
-				'type'              => array(
+				],
+				'type'              => [
 					'description' => __( 'The type of the note (e.g. error, warning, etc.).', 'woocommerce' ),
 					'type'        => 'string',
-					'context'     => array( 'view', 'edit' ),
+					'context'     => [ 'view', 'edit' ],
 					'readonly'    => true,
-				),
-				'locale'            => array(
+				],
+				'locale'            => [
 					'description' => __( 'Locale used for the note title and content.', 'woocommerce' ),
 					'type'        => 'string',
-					'context'     => array( 'view', 'edit' ),
+					'context'     => [ 'view', 'edit' ],
 					'readonly'    => true,
-				),
-				'title'             => array(
+				],
+				'title'             => [
 					'description' => __( 'Title of the note.', 'woocommerce' ),
 					'type'        => 'string',
-					'context'     => array( 'view', 'edit' ),
+					'context'     => [ 'view', 'edit' ],
 					'readonly'    => true,
-				),
-				'content'           => array(
+				],
+				'content'           => [
 					'description' => __( 'Content of the note.', 'woocommerce' ),
 					'type'        => 'string',
-					'context'     => array( 'view', 'edit' ),
+					'context'     => [ 'view', 'edit' ],
 					'readonly'    => true,
-				),
-				'content_data'      => array(
+				],
+				'content_data'      => [
 					'description' => __( 'Content data for the note. JSON string. Available for re-localization.', 'woocommerce' ),
 					'type'        => 'string',
-					'context'     => array( 'view', 'edit' ),
+					'context'     => [ 'view', 'edit' ],
 					'readonly'    => true,
-				),
-				'status'            => array(
+				],
+				'status'            => [
 					'description' => __( 'The status of the note (e.g. unactioned, actioned).', 'woocommerce' ),
 					'type'        => 'string',
-					'context'     => array( 'view', 'edit' ),
-				),
-				'source'            => array(
+					'context'     => [ 'view', 'edit' ],
+				],
+				'source'            => [
 					'description' => __( 'Source of the note.', 'woocommerce' ),
 					'type'        => 'string',
-					'context'     => array( 'view', 'edit' ),
+					'context'     => [ 'view', 'edit' ],
 					'readonly'    => true,
-				),
-				'date_created'      => array(
+				],
+				'date_created'      => [
 					'description' => __( 'Date the note was created.', 'woocommerce' ),
 					'type'        => 'string',
-					'context'     => array( 'view', 'edit' ),
+					'context'     => [ 'view', 'edit' ],
 					'readonly'    => true,
-				),
-				'date_created_gmt'  => array(
+				],
+				'date_created_gmt'  => [
 					'description' => __( 'Date the note was created (GMT).', 'woocommerce' ),
 					'type'        => 'string',
-					'context'     => array( 'view', 'edit' ),
+					'context'     => [ 'view', 'edit' ],
 					'readonly'    => true,
-				),
-				'date_reminder'     => array(
+				],
+				'date_reminder'     => [
 					'description' => __( 'Date after which the user should be reminded of the note, if any.', 'woocommerce' ),
 					'type'        => 'string',
-					'context'     => array( 'view', 'edit' ),
+					'context'     => [ 'view', 'edit' ],
 					'readonly'    => true, // @todo Allow date_reminder to be updated.
-				),
-				'date_reminder_gmt' => array(
+				],
+				'date_reminder_gmt' => [
 					'description' => __( 'Date after which the user should be reminded of the note, if any (GMT).', 'woocommerce' ),
 					'type'        => 'string',
-					'context'     => array( 'view', 'edit' ),
+					'context'     => [ 'view', 'edit' ],
 					'readonly'    => true,
-				),
-				'is_snoozable'      => array(
+				],
+				'is_snoozable'      => [
 					'description' => __( 'Whether or not a user can request to be reminded about the note.', 'woocommerce' ),
 					'type'        => 'boolean',
-					'context'     => array( 'view', 'edit' ),
+					'context'     => [ 'view', 'edit' ],
 					'readonly'    => true,
-				),
-				'actions'           => array(
+				],
+				'actions'           => [
 					'description' => __( 'An array of actions, if any, for the note.', 'woocommerce' ),
 					'type'        => 'array',
-					'context'     => array( 'view', 'edit' ),
+					'context'     => [ 'view', 'edit' ],
 					'readonly'    => true,
-				),
-				'layout'            => array(
+				],
+				'layout'            => [
 					'description' => __( 'The layout of the note (e.g. banner, thumbnail, plain).', 'woocommerce' ),
 					'type'        => 'string',
-					'context'     => array( 'view', 'edit' ),
+					'context'     => [ 'view', 'edit' ],
 					'readonly'    => true,
-				),
-				'image'             => array(
+				],
+				'image'             => [
 					'description' => __( 'The image of the note, if any.', 'woocommerce' ),
 					'type'        => 'string',
-					'context'     => array( 'view', 'edit' ),
+					'context'     => [ 'view', 'edit' ],
 					'readonly'    => true,
-				),
-				'is_deleted'        => array(
+				],
+				'is_deleted'        => [
 					'description' => __( 'Registers whether the note is deleted or not', 'woocommerce' ),
 					'type'        => 'boolean',
-					'context'     => array( 'view', 'edit' ),
+					'context'     => [ 'view', 'edit' ],
 					'readonly'    => true,
-				),
-			),
-		);
+				],
+			],
+		];
 		return $this->add_additional_fields_schema( $schema );
 	}
 }

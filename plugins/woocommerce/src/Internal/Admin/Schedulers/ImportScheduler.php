@@ -34,22 +34,22 @@ abstract class ImportScheduler implements ImportInterface {
 	 */
 	public static function is_importing() {
 		$pending_jobs = self::queue()->search(
-			array(
+			[
 				'status'   => 'pending',
 				'per_page' => 1,
 				'claimed'  => false,
 				'search'   => 'import',
 				'group'    => self::$group,
-			)
+			]
 		);
 		if ( empty( $pending_jobs ) ) {
 			$in_progress = self::queue()->search(
-				array(
+				[
 					'status'   => 'in-progress',
 					'per_page' => 1,
 					'search'   => 'import',
 					'group'    => self::$group,
-				)
+				]
 			);
 		}
 
@@ -65,11 +65,11 @@ abstract class ImportScheduler implements ImportInterface {
 	public static function get_batch_sizes() {
 		return array_merge(
 			self::get_scheduler_batch_sizes(),
-			array(
+			[
 				'delete' => 10,
 				'import' => 25,
 				'queue'  => 100,
-			)
+			]
 		);
 
 	}
@@ -82,13 +82,13 @@ abstract class ImportScheduler implements ImportInterface {
 	 * @return array
 	 */
 	public static function get_scheduler_actions() {
-		return array(
+		return [
 			'import_batch_init' => 'wc-admin_import_batch_init_' . static::$name,
 			'import_batch'      => 'wc-admin_import_batch_' . static::$name,
 			'delete_batch_init' => 'wc-admin_delete_batch_init_' . static::$name,
 			'delete_batch'      => 'wc-admin_delete_batch_' . static::$name,
 			'import'            => 'wc-admin_import_' . static::$name,
-		);
+		];
 	}
 
 	/**
@@ -108,7 +108,7 @@ abstract class ImportScheduler implements ImportInterface {
 
 		$num_batches = ceil( $items->total / $batch_size );
 
-		self::queue_batches( 1, $num_batches, 'import_batch', array( $days, $skip_existing ) );
+		self::queue_batches( 1, $num_batches, 'import_batch', [ $days, $skip_existing ] );
 	}
 
 	/**
@@ -123,11 +123,11 @@ abstract class ImportScheduler implements ImportInterface {
 	public static function import_batch( $batch_number, $days, $skip_existing ) {
 		$batch_size = static::get_batch_size( 'import' );
 
-		$properties = array(
+		$properties = [
 			'batch_number' => $batch_number,
 			'batch_size'   => $batch_size,
 			'type'         => static::$name,
-		);
+		];
 		wc_admin_record_tracks_event( 'import_job_start', $properties );
 
 		// When we are skipping already imported items, the table of items to import gets smaller in
@@ -139,7 +139,7 @@ abstract class ImportScheduler implements ImportInterface {
 			static::import( $id );
 		}
 
-		$import_stats                              = get_option( self::IMPORT_STATS_OPTION, array() );
+		$import_stats                              = get_option( self::IMPORT_STATS_OPTION, [] );
 		$imported_count                            = absint( $import_stats[ static::$name ]['imported'] ) + count( $items->ids );
 		$import_stats[ static::$name ]['imported'] = $imported_count;
 		update_option( self::IMPORT_STATS_OPTION, $import_stats );
@@ -175,13 +175,13 @@ abstract class ImportScheduler implements ImportInterface {
 	 * @return void
 	 */
 	public static function delete_batch() {
-		wc_admin_record_tracks_event( 'delete_import_data_job_start', array( 'type' => static::$name ) );
+		wc_admin_record_tracks_event( 'delete_import_data_job_start', [ 'type' => static::$name ] );
 
 		$batch_size = static::get_batch_size( 'delete' );
 		static::delete( $batch_size );
 
 		ReportsCache::invalidate();
 
-		wc_admin_record_tracks_event( 'delete_import_data_job_complete', array( 'type' => static::$name ) );
+		wc_admin_record_tracks_event( 'delete_import_data_job_complete', [ 'type' => static::$name ] );
 	}
 }

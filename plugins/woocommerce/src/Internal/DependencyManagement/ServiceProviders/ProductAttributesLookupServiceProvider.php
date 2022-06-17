@@ -20,11 +20,11 @@ class ProductAttributesLookupServiceProvider extends AbstractServiceProvider {
 	 *
 	 * @var array
 	 */
-	protected $provides = array(
+	protected $provides = [
 		DataRegenerator::class,
 		Filterer::class,
 		LookupDataStore::class,
-	);
+	];
 
 	/**
 	 * Register the classes.

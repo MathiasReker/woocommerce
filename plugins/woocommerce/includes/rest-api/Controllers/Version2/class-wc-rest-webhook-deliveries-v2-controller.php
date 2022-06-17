@@ -61,92 +61,92 @@ class WC_REST_Webhook_Deliveries_V2_Controller extends WC_REST_Webhook_Deliverie
 	 * @return array
 	 */
 	public function get_item_schema() {
-		$schema = array(
+		$schema = [
 			'$schema'    => 'http://json-schema.org/draft-04/schema#',
 			'title'      => 'webhook_delivery',
 			'type'       => 'object',
-			'properties' => array(
-				'id'               => array(
+			'properties' => [
+				'id'               => [
 					'description' => __( 'Unique identifier for the resource.', 'woocommerce' ),
 					'type'        => 'integer',
-					'context'     => array( 'view' ),
+					'context'     => [ 'view' ],
 					'readonly'    => true,
-				),
-				'duration'         => array(
+				],
+				'duration'         => [
 					'description' => __( 'The delivery duration, in seconds.', 'woocommerce' ),
 					'type'        => 'string',
-					'context'     => array( 'view' ),
+					'context'     => [ 'view' ],
 					'readonly'    => true,
-				),
-				'summary'          => array(
+				],
+				'summary'          => [
 					'description' => __( 'A friendly summary of the response including the HTTP response code, message, and body.', 'woocommerce' ),
 					'type'        => 'string',
-					'context'     => array( 'view' ),
+					'context'     => [ 'view' ],
 					'readonly'    => true,
-				),
-				'request_url'      => array(
+				],
+				'request_url'      => [
 					'description' => __( 'The URL where the webhook was delivered.', 'woocommerce' ),
 					'type'        => 'string',
 					'format'      => 'uri',
-					'context'     => array( 'view' ),
+					'context'     => [ 'view' ],
 					'readonly'    => true,
-				),
-				'request_headers'  => array(
+				],
+				'request_headers'  => [
 					'description' => __( 'Request headers.', 'woocommerce' ),
 					'type'        => 'array',
-					'context'     => array( 'view' ),
+					'context'     => [ 'view' ],
 					'readonly'    => true,
-					'items'       => array(
+					'items'       => [
 						'type' => 'string',
-					),
-				),
-				'request_body'     => array(
+					],
+				],
+				'request_body'     => [
 					'description' => __( 'Request body.', 'woocommerce' ),
 					'type'        => 'string',
-					'context'     => array( 'view' ),
+					'context'     => [ 'view' ],
 					'readonly'    => true,
-				),
-				'response_code'    => array(
+				],
+				'response_code'    => [
 					'description' => __( 'The HTTP response code from the receiving server.', 'woocommerce' ),
 					'type'        => 'string',
-					'context'     => array( 'view' ),
+					'context'     => [ 'view' ],
 					'readonly'    => true,
-				),
-				'response_message' => array(
+				],
+				'response_message' => [
 					'description' => __( 'The HTTP response message from the receiving server.', 'woocommerce' ),
 					'type'        => 'string',
-					'context'     => array( 'view' ),
+					'context'     => [ 'view' ],
 					'readonly'    => true,
-				),
-				'response_headers' => array(
+				],
+				'response_headers' => [
 					'description' => __( 'Array of the response headers from the receiving server.', 'woocommerce' ),
 					'type'        => 'array',
-					'context'     => array( 'view' ),
+					'context'     => [ 'view' ],
 					'readonly'    => true,
-					'items'       => array(
+					'items'       => [
 						'type' => 'string',
-					),
-				),
-				'response_body'    => array(
+					],
+				],
+				'response_body'    => [
 					'description' => __( 'The response body from the receiving server.', 'woocommerce' ),
 					'type'        => 'string',
-					'context'     => array( 'view' ),
+					'context'     => [ 'view' ],
 					'readonly'    => true,
-				),
-				'date_created'     => array(
+				],
+				'date_created'     => [
 					'description' => __( "The date the webhook delivery was logged, in the site's timezone.", 'woocommerce' ),
 					'type'        => 'date-time',
-					'context'     => array( 'view', 'edit' ),
+					'context'     => [ 'view', 'edit' ],
 					'readonly'    => true,
-				),
-				'date_created_gmt' => array(
+				],
+				'date_created_gmt' => [
 					'description' => __( 'The date the webhook delivery was logged, as GMT.', 'woocommerce' ),
 					'type'        => 'date-time',
-					'context'     => array( 'view', 'edit' ),
+					'context'     => [ 'view', 'edit' ],
 					'readonly'    => true,
-				),
-			),
-		);
+				],
+			],
+		];
 
 		return $this->add_additional_fields_schema( $schema );
 	}

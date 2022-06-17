@@ -28,14 +28,14 @@ class WC_Discounts {
 	 *
 	 * @var array
 	 */
-	protected $items = array();
+	protected $items = [];
 
 	/**
 	 * An array of discounts which have been applied to items.
 	 *
 	 * @var array[] Code => Item Key => Value
 	 */
-	protected $discounts = array();
+	protected $discounts = [];
 
 	/**
 	 * WC_Discounts Constructor.
@@ -58,8 +58,8 @@ class WC_Discounts {
 	 */
 	public function set_items( $items ) {
 		$this->items     = $items;
-		$this->discounts = array();
-		uasort( $this->items, array( $this, 'sort_by_price' ) );
+		$this->discounts = [];
+		uasort( $this->items, [ $this, 'sort_by_price' ] );
 	}
 
 	/**
@@ -69,8 +69,8 @@ class WC_Discounts {
 	 * @param WC_Cart $cart Cart object.
 	 */
 	public function set_items_from_cart( $cart ) {
-		$this->items     = array();
-		$this->discounts = array();
+		$this->items     = [];
+		$this->discounts = [];
 
 		if ( ! is_a( $cart, 'WC_Cart' ) ) {
 			return;
@@ -88,7 +88,7 @@ class WC_Discounts {
 			$this->items[ $key ] = $item;
 		}
 
-		uasort( $this->items, array( $this, 'sort_by_price' ) );
+		uasort( $this->items, [ $this, 'sort_by_price' ] );
 	}
 
 	/**
@@ -98,8 +98,8 @@ class WC_Discounts {
 	 * @param WC_Order $order Order object.
 	 */
 	public function set_items_from_order( $order ) {
-		$this->items     = array();
-		$this->discounts = array();
+		$this->items     = [];
+		$this->discounts = [];
 
 		if ( ! is_a( $order, 'WC_Order' ) ) {
 			return;
@@ -122,7 +122,7 @@ class WC_Discounts {
 			$this->items[ $order_item->get_id() ] = $item;
 		}
 
-		uasort( $this->items, array( $this, 'sort_by_price' ) );
+		uasort( $this->items, [ $this, 'sort_by_price' ] );
 	}
 
 	/**
@@ -317,7 +317,7 @@ class WC_Discounts {
 	 * @return array
 	 */
 	protected function get_items_to_apply_coupon( $coupon ) {
-		$items_to_apply = array();
+		$items_to_apply = [];
 
 		foreach ( $this->get_items_to_validate() as $item ) {
 			$item_to_apply = clone $item; // Clone the item so changes to this item do not affect the originals.
@@ -463,7 +463,7 @@ class WC_Discounts {
 	protected function apply_coupon_fixed_cart( $coupon, $items_to_apply, $amount = null ) {
 		$total_discount = 0;
 		$amount         = $amount ? $amount : wc_add_number_precision( $coupon->get_amount() );
-		$items_to_apply = array_filter( $items_to_apply, array( $this, 'filter_products_with_price' ) );
+		$items_to_apply = array_filter( $items_to_apply, [ $this, 'filter_products_with_price' ] );
 		$item_count     = array_sum( wp_list_pluck( $items_to_apply, 'quantity' ) );
 
 		if ( ! $item_count ) {
@@ -604,7 +604,7 @@ class WC_Discounts {
 		}
 		$usage_count           = $coupon->get_usage_count();
 		$data_store            = $coupon->get_data_store();
-		$tentative_usage_count = is_callable( array( $data_store, 'get_tentative_usage_count' ) ) ? $data_store->get_tentative_usage_count( $coupon->get_id() ) : 0;
+		$tentative_usage_count = is_callable( [ $data_store, 'get_tentative_usage_count' ] ) ? $data_store->get_tentative_usage_count( $coupon->get_id() ) : 0;
 		if ( $usage_count + $tentative_usage_count < $coupon->get_usage_limit() ) {
 			// All good.
 			return true;
@@ -615,12 +615,12 @@ class WC_Discounts {
 			$error_code = WC_Coupon::E_WC_COUPON_USAGE_LIMIT_REACHED;
 		} elseif ( is_user_logged_in() ) {
 			$recent_pending_orders = wc_get_orders(
-				array(
+				[
 					'limit'       => 1,
-					'post_status' => array( 'wc-failed', 'wc-pending' ),
+					'post_status' => [ 'wc-failed', 'wc-pending' ],
 					'customer'    => get_current_user_id(),
 					'return'      => 'ids',
-				)
+				]
 			);
 			if ( count( $recent_pending_orders ) > 0 ) {
 				// User logged in and have a pending order, maybe they are trying to use the coupon.
@@ -660,7 +660,7 @@ class WC_Discounts {
 			$data_store  = $coupon->get_data_store();
 			$usage_count = $data_store->get_usage_by_user_id( $coupon, $user_id );
 			if ( $usage_count >= $coupon->get_usage_limit_per_user() ) {
-				if ( $data_store->get_tentative_usages_for_user( $coupon->get_id(), array( $user_id ) ) > 0 ) {
+				if ( $data_store->get_tentative_usages_for_user( $coupon->get_id(), [ $user_id ] ) > 0 ) {
 					$error_message = $coupon->get_coupon_error( WC_Coupon::E_WC_COUPON_USAGE_LIMIT_COUPON_STUCK );
 					$error_code    = WC_Coupon::E_WC_COUPON_USAGE_LIMIT_COUPON_STUCK;
 				} else {
@@ -877,7 +877,7 @@ class WC_Discounts {
 	protected function validate_coupon_excluded_product_ids( $coupon ) {
 		// Exclude Products.
 		if ( count( $coupon->get_excluded_product_ids() ) > 0 ) {
-			$products = array();
+			$products = [];
 
 			foreach ( $this->get_items_to_validate() as $item ) {
 				if ( $item->product && in_array( $item->product->get_id(), $coupon->get_excluded_product_ids(), true ) || in_array( $item->product->get_parent_id(), $coupon->get_excluded_product_ids(), true ) ) {
@@ -904,7 +904,7 @@ class WC_Discounts {
 	 */
 	protected function validate_coupon_excluded_product_categories( $coupon ) {
 		if ( count( $coupon->get_excluded_product_categories() ) > 0 ) {
-			$categories = array();
+			$categories = [];
 
 			foreach ( $this->get_items_to_validate() as $item ) {
 				if ( ! $item->product ) {
@@ -1011,9 +1011,9 @@ class WC_Discounts {
 			return new WP_Error(
 				'invalid_coupon',
 				$message,
-				array(
+				[
 					'status' => 400,
-				)
+				]
 			);
 		}
 		return true;

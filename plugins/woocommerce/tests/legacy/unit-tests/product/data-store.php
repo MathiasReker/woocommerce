@@ -19,7 +19,7 @@ class WC_Tests_Product_Data_Store extends WC_Unit_Test_Case {
 	 */
 	public function test_product_store_loads() {
 		$product_store = new WC_Data_Store( 'product' );
-		$this->assertTrue( is_callable( array( $product_store, 'read' ) ) );
+		$this->assertTrue( is_callable( [ $product_store, 'read' ] ) );
 		$this->assertEquals( 'WC_Product_Data_Store_CPT', $product_store->get_current_class_name() );
 	}
 
@@ -101,12 +101,12 @@ class WC_Tests_Product_Data_Store extends WC_Unit_Test_Case {
 	public function test_grouped_product_create() {
 		$simple_product = WC_Helper_Product::create_simple_product();
 		$product        = new WC_Product_Grouped();
-		$product->set_children( array( $simple_product->get_id() ) );
+		$product->set_children( [ $simple_product->get_id() ] );
 		$product->set_name( 'My Grouped Product' );
 		$product->save();
 		$read_product = new WC_Product_Grouped( $product->get_id() );
 		$this->assertEquals( 'My Grouped Product', $read_product->get_name() );
-		$this->assertEquals( array( $simple_product->get_id() ), $read_product->get_children() );
+		$this->assertEquals( [ $simple_product->get_id() ], $read_product->get_children() );
 	}
 
 	/**
@@ -241,14 +241,14 @@ class WC_Tests_Product_Data_Store extends WC_Unit_Test_Case {
 
 		$this->assertEquals( $expected_prices, $product->get_variation_prices() );
 
-		$expected_attributes = array(
-			'pa_size'   => array( 'small', 'large', 'huge' ),
-			'pa_colour' => array(
+		$expected_attributes = [
+			'pa_size'   => [ 'small', 'large', 'huge' ],
+			'pa_colour' => [
 				0 => 'red',
 				2 => 'blue',
-			),
-			'pa_number' => array( '0', '1', '2' ),
-		);
+			],
+			'pa_number' => [ '0', '1', '2' ],
+		];
 		$this->assertEquals( $expected_attributes, $product->get_variation_attributes() );
 	}
 
@@ -268,7 +268,7 @@ class WC_Tests_Product_Data_Store extends WC_Unit_Test_Case {
 		$attribute->set_visible( false );
 		$attribute->set_variation( true );
 
-		$product->set_attributes( array( $attribute ) );
+		$product->set_attributes( [ $attribute ] );
 		$product->save();
 
 		$this->assertEquals( 'Variable Product', $product->get_name() );
@@ -281,7 +281,7 @@ class WC_Tests_Product_Data_Store extends WC_Unit_Test_Case {
 		$variation->set_downloadable( 'no' );
 		$variation->set_virtual( 'no' );
 		$variation->set_stock_status( 'instock' );
-		$variation->set_attributes( array( 'pa_color' => 'green' ) );
+		$variation->set_attributes( [ 'pa_color' => 'green' ] );
 		$variation->save();
 
 		$this->assertEquals( 'CRUD DUMMY SKU VARIABLE GREEN', $variation->get_sku() );
@@ -291,7 +291,7 @@ class WC_Tests_Product_Data_Store extends WC_Unit_Test_Case {
 		$children = $product->get_children();
 		$this->assertEquals( $variation->get_id(), $children[0] );
 
-		$expected_attributes = array( 'pa_color' => array( 'green' ) );
+		$expected_attributes = [ 'pa_color' => [ 'green' ] ];
 		$this->assertEquals( $expected_attributes, $product->get_variation_attributes() );
 
 		$variation_2 = new WC_Product_Variation();
@@ -302,7 +302,7 @@ class WC_Tests_Product_Data_Store extends WC_Unit_Test_Case {
 		$variation_2->set_downloadable( 'no' );
 		$variation_2->set_virtual( 'no' );
 		$variation_2->set_stock_status( 'instock' );
-		$variation_2->set_attributes( array( 'pa_color' => 'red' ) );
+		$variation_2->set_attributes( [ 'pa_color' => 'red' ] );
 		$variation_2->save();
 
 		$this->assertEquals( 'CRUD DUMMY SKU VARIABLE RED', $variation_2->get_sku() );
@@ -313,7 +313,7 @@ class WC_Tests_Product_Data_Store extends WC_Unit_Test_Case {
 		$this->assertEquals( $variation_2->get_id(), $children[1] );
 		$this->assertEquals( 2, count( $children ) );
 
-		$expected_attributes = array( 'pa_color' => array( 'green', 'red' ) );
+		$expected_attributes = [ 'pa_color' => [ 'green', 'red' ] ];
 		$this->assertEquals( $expected_attributes, $product->get_variation_attributes() );
 
 		$variation_2->set_regular_price( 15 );
@@ -353,13 +353,13 @@ class WC_Tests_Product_Data_Store extends WC_Unit_Test_Case {
 		$attribute->set_visible( true );
 		$attribute->set_variation( true );
 
-		$product->set_attributes( array( $attribute ) );
+		$product->set_attributes( [ $attribute ] );
 		$product->save();
 
 		// Create a new variation with the color 'green'.
 		$variation = new WC_Product_Variation();
 		$variation->set_parent_id( $product->get_id() );
-		$variation->set_attributes( array( 'color' => 'green' ) );
+		$variation->set_attributes( [ 'color' => 'green' ] );
 		$variation->set_status( 'private' );
 		$variation->save();
 
@@ -383,7 +383,7 @@ class WC_Tests_Product_Data_Store extends WC_Unit_Test_Case {
 
 		// Create a variable product with sold individually.
 		$product = new WC_Product_Variable();
-		$options = array( '1', '0', 'true', 'false' );
+		$options = [ '1', '0', 'true', 'false' ];
 
 		$attribute_1 = new WC_Product_Attribute();
 		$attribute_1->set_name( 'sample-attribute-0' );
@@ -436,7 +436,7 @@ class WC_Tests_Product_Data_Store extends WC_Unit_Test_Case {
 		$attribute_10->set_variation( true );
 		$attribute_10->set_options( $options );
 
-		$product->set_attributes( array( $attribute_1, $attribute_2, $attribute_3, $attribute_4, $attribute_5, $attribute_6, $attribute_7, $attribute_8, $attribute_9, $attribute_10 ) );
+		$product->set_attributes( [ $attribute_1, $attribute_2, $attribute_3, $attribute_4, $attribute_5, $attribute_6, $attribute_7, $attribute_8, $attribute_9, $attribute_10 ] );
 		$product->save();
 
 		// Save with a set of FALSE equivalents and some values we expect to come through as true.  We should see
@@ -444,7 +444,7 @@ class WC_Tests_Product_Data_Store extends WC_Unit_Test_Case {
 		$test_object           = new stdClass();
 		$test_object->property = '12345';
 		$product->set_default_attributes(
-			array(
+			[
 				'sample-attribute-0' => 0,
 				'sample-attribute-1' => false,
 				'sample-attribute-2' => '',
@@ -453,9 +453,9 @@ class WC_Tests_Product_Data_Store extends WC_Unit_Test_Case {
 				'sample-attribute-5' => 1,
 				'sample-attribute-6' => 'true',
 				'sample-attribute-7' => 'false',
-				'sample-attribute-8' => array( 'exists' => 'false' ),
+				'sample-attribute-8' => [ 'exists' => 'false' ],
 				'sample-attribute-9' => $test_object,
-			)
+			]
 		);
 		$product->save();
 		$product_id = $product->get_id();
@@ -464,12 +464,12 @@ class WC_Tests_Product_Data_Store extends WC_Unit_Test_Case {
 		$product            = wc_get_product( $product_id );
 		$default_attributes = $product->get_default_attributes();
 		$this->assertEquals(
-			array(
+			[
 				'sample-attribute-4' => '0',
 				'sample-attribute-5' => '1',
 				'sample-attribute-6' => 'true',
 				'sample-attribute-7' => 'false',
-			),
+			],
 			$default_attributes
 		);
 	}
@@ -563,27 +563,27 @@ class WC_Tests_Product_Data_Store extends WC_Unit_Test_Case {
 
 		$one_attribute_variation = new WC_Product_Variation();
 		$one_attribute_variation->set_parent_id( $product->get_id() );
-		$one_attribute_variation->set_attributes( array( 'color' => 'Green' ) );
+		$one_attribute_variation->set_attributes( [ 'color' => 'Green' ] );
 		$one_attribute_variation->save();
 
 		$two_attribute_variation = new WC_Product_Variation();
 		$two_attribute_variation->set_parent_id( $product->get_id() );
 		$two_attribute_variation->set_attributes(
-			array(
+			[
 				'color' => 'Green',
 				'size'  => 'Large',
-			)
+			]
 		);
 		$two_attribute_variation->save();
 
 		$multiword_attribute_variation = new WC_Product_Variation();
 		$multiword_attribute_variation->set_parent_id( $product->get_id() );
 		$multiword_attribute_variation->set_attributes(
-			array(
+			[
 				'color'          => 'Green',
 				'mounting-plate' => 'galaxy-s6',
 				'support'        => 'one-year',
-			)
+			]
 		);
 		$multiword_attribute_variation->save();
 
@@ -609,7 +609,7 @@ class WC_Tests_Product_Data_Store extends WC_Unit_Test_Case {
 
 		$variation = new WC_Product_Variation();
 		$variation->set_parent_id( $product->get_id() );
-		$variation->set_attributes( array( 'color' => 'green' ) );
+		$variation->set_attributes( [ 'color' => 'green' ] );
 		$variation->save();
 
 		$loaded_variation = wc_get_product( $variation->get_id() );
@@ -626,7 +626,7 @@ class WC_Tests_Product_Data_Store extends WC_Unit_Test_Case {
 
 		$variation = new WC_Product_Variation();
 		$variation->set_parent_id( $product->get_id() );
-		$variation->set_attributes( array() );
+		$variation->set_attributes( [] );
 		$variation->save();
 
 		$loaded_variation = wc_get_product( $variation->get_id() );
@@ -647,27 +647,27 @@ class WC_Tests_Product_Data_Store extends WC_Unit_Test_Case {
 
 		$one_attribute_variation = new WC_Product_Variation();
 		$one_attribute_variation->set_parent_id( $product->get_id() );
-		$one_attribute_variation->set_attributes( array( 'color' => 'Green' ) );
+		$one_attribute_variation->set_attributes( [ 'color' => 'Green' ] );
 		$one_attribute_variation->save();
 
 		$two_attribute_variation = new WC_Product_Variation();
 		$two_attribute_variation->set_parent_id( $product->get_id() );
 		$two_attribute_variation->set_attributes(
-			array(
+			[
 				'color' => 'Green',
 				'size'  => 'Large',
-			)
+			]
 		);
 		$two_attribute_variation->save();
 
 		$multiword_attribute_variation = new WC_Product_Variation();
 		$multiword_attribute_variation->set_parent_id( $product->get_id() );
 		$multiword_attribute_variation->set_attributes(
-			array(
+			[
 				'color'          => 'Green',
 				'mounting-plate' => 'galaxy-s6',
 				'support'        => 'one-year',
-			)
+			]
 		);
 		$multiword_attribute_variation->save();
 
@@ -683,36 +683,36 @@ class WC_Tests_Product_Data_Store extends WC_Unit_Test_Case {
 		// Add atributes to parent so that they are loaded correctly for variation.
 		$attribute_1 = new WC_Product_Attribute();
 		$attribute_1->set_name( 'color' );
-		$attribute_1->set_options( array( 'Green', 'Blue' ) );
+		$attribute_1->set_options( [ 'Green', 'Blue' ] );
 		$attribute_1->set_position( '0' );
 		$attribute_1->set_visible( 1 );
 		$attribute_1->set_variation( 1 );
 
 		$attribute_2 = new WC_Product_Attribute();
 		$attribute_2->set_name( 'size' );
-		$attribute_2->set_options( array( 'Large', 'Not so Large' ) );
+		$attribute_2->set_options( [ 'Large', 'Not so Large' ] );
 		$attribute_2->set_position( '1' );
 		$attribute_2->set_visible( 1 );
 		$attribute_2->set_variation( 1 );
 
-		$attributes = array(
+		$attributes = [
 			$attribute_1,
 			$attribute_2,
-		);
+		];
 
 		$product->set_attributes( $attributes );
 		$product->save();
 
 		$two_attribute_variation->set_attributes(
-			array(
+			[
 				'color' => 'Blue',
 				'size'  => 'Not so Large',
-			)
+			]
 		);
 		$two_attribute_variation->save();
 
 		// Remove the record from the db to simulate existing variation with invalid excerpt set.
-		$GLOBALS['wpdb']->update( $GLOBALS['wpdb']->posts, array( 'post_excerpt' => '_EMPTY_' ), array( 'ID' => $two_attribute_variation->get_id() ) );
+		$GLOBALS['wpdb']->update( $GLOBALS['wpdb']->posts, [ 'post_excerpt' => '_EMPTY_' ], [ 'ID' => $two_attribute_variation->get_id() ] );
 
 		// Read on new instance should get correct value.
 		$two_attribute_variation_2 = new WC_Product_Variation( $two_attribute_variation->get_id() );
@@ -736,7 +736,7 @@ class WC_Tests_Product_Data_Store extends WC_Unit_Test_Case {
 		$product->update_meta_data( '_test', 'hello' );
 		$product->set_name( 'Test Product_' );
 
-		add_action( 'save_post', array( 'WC_Helper_Product', 'save_post_test_update_meta_data_direct' ), 11 );
+		add_action( 'save_post', [ 'WC_Helper_Product', 'save_post_test_update_meta_data_direct' ], 11 );
 		$product->save();
 
 		$test  = get_post_meta( $product->get_id(), '_test', true );
@@ -747,7 +747,7 @@ class WC_Tests_Product_Data_Store extends WC_Unit_Test_Case {
 		$this->assertEquals( 'world', $product->get_meta( '_test2' ) );
 		$this->assertEquals( 'Test Product_', $product->get_name() );
 
-		remove_action( 'save_post', array( 'WC_Helper_Product', 'save_post_test_update_meta_data_direct' ) );
+		remove_action( 'save_post', [ 'WC_Helper_Product', 'save_post_test_update_meta_data_direct' ] );
 	}
 
 	/**
@@ -831,15 +831,15 @@ class WC_Tests_Product_Data_Store extends WC_Unit_Test_Case {
 		$this->assertNotContains( $product4->get_id(), $results );
 
 		$results = $data_store->search_products( 'green', '', true, true, 1 );
-		$this->assertEquals( 1, count( array_diff( $results, array( 0 ) ) ) );
+		$this->assertEquals( 1, count( array_diff( $results, [ 0 ] ) ) );
 
-		$results = $data_store->search_products( 'green', '', true, true, null, array( $product3->get_id() ) );
+		$results = $data_store->search_products( 'green', '', true, true, null, [ $product3->get_id() ] );
 		$this->assertNotContains( $product->get_id(), $results );
 		$this->assertNotContains( $product2->get_id(), $results );
 		$this->assertContains( $product3->get_id(), $results );
 		$this->assertNotContains( $product4->get_id(), $results );
 
-		$results = $data_store->search_products( 'green', '', true, true, null, null, array( $product3->get_id() ) );
+		$results = $data_store->search_products( 'green', '', true, true, null, null, [ $product3->get_id() ] );
 		$this->assertNotContains( $product->get_id(), $results );
 		$this->assertNotContains( $product2->get_id(), $results );
 		$this->assertNotContains( $product3->get_id(), $results );
@@ -857,25 +857,25 @@ class WC_Tests_Product_Data_Store extends WC_Unit_Test_Case {
 		$attribute_1->set_name( 'color' );
 		$attribute_1->set_visible( true );
 		$attribute_1->set_variation( true );
-		$attribute_1->set_options( array( 'red', 'green', 'blue' ) );
+		$attribute_1->set_options( [ 'red', 'green', 'blue' ] );
 
 		$attribute_2 = new WC_Product_Attribute();
 		$attribute_2->set_name( 'size' );
 		$attribute_2->set_visible( true );
 		$attribute_2->set_variation( true );
-		$attribute_2->set_options( array( 'small', 'medium', 'large' ) );
+		$attribute_2->set_options( [ 'small', 'medium', 'large' ] );
 
 		$attribute_3 = new WC_Product_Attribute();
 		$attribute_3->set_name( 'pattern' );
 		$attribute_3->set_visible( true );
 		$attribute_3->set_variation( true );
-		$attribute_3->set_options( array( 'striped', 'polka-dot', 'plain' ) );
+		$attribute_3->set_options( [ 'striped', 'polka-dot', 'plain' ] );
 
-		$attributes = array(
+		$attributes = [
 			$attribute_1,
 			$attribute_2,
 			$attribute_3,
-		);
+		];
 
 		$product->set_attributes( $attributes );
 		$product_id = $product->save();
@@ -901,25 +901,25 @@ class WC_Tests_Product_Data_Store extends WC_Unit_Test_Case {
 		$attribute_1->set_name( 'color' );
 		$attribute_1->set_visible( true );
 		$attribute_1->set_variation( true );
-		$attribute_1->set_options( array( 'red', 'green', 'blue' ) );
+		$attribute_1->set_options( [ 'red', 'green', 'blue' ] );
 
 		$attribute_2 = new WC_Product_Attribute();
 		$attribute_2->set_name( 'size' );
 		$attribute_2->set_visible( true );
 		$attribute_2->set_variation( true );
-		$attribute_2->set_options( array( 'small', 'medium', 'large' ) );
+		$attribute_2->set_options( [ 'small', 'medium', 'large' ] );
 
 		$attribute_3 = new WC_Product_Attribute();
 		$attribute_3->set_name( 'pattern' );
 		$attribute_3->set_visible( true );
 		$attribute_3->set_variation( true );
-		$attribute_3->set_options( array( 'striped', 'polka-dot', 'plain' ) );
+		$attribute_3->set_options( [ 'striped', 'polka-dot', 'plain' ] );
 
-		$attributes = array(
+		$attributes = [
 			$attribute_1,
 			$attribute_2,
 			$attribute_3,
-		);
+		];
 
 		$product->set_attributes( $attributes );
 		$product_id = $product->save();
@@ -946,78 +946,78 @@ class WC_Tests_Product_Data_Store extends WC_Unit_Test_Case {
 		$data_store = WC_Data_Store::load( 'product' );
 		$children   = $product->get_children();
 
-		$match = $data_store->find_matching_product_variation( $product, array() );
+		$match = $data_store->find_matching_product_variation( $product, [] );
 		$this->assertEquals( 0, $match );
 
 		$match = $data_store->find_matching_product_variation(
 			$product,
-			array(
+			[
 				'attribute_pa_size' => 'small',
-			)
+			]
 		);
 		$this->assertEquals( $children[0], $match );
 
 		$match = $data_store->find_matching_product_variation(
 			$product,
-			array(
+			[
 				'attribute_pa_size' => 'large',
-			)
+			]
 		);
 		$this->assertEquals( $children[1], $match );
 
 		$match = $data_store->find_matching_product_variation(
 			$product,
-			array(
+			[
 				'attribute_pa_size'   => 'small',
 				'attribute_pa_colour' => '',
-			)
+			]
 		);
 		$this->assertEquals( $children[0], $match );
 
 		$match = $data_store->find_matching_product_variation(
 			$product,
-			array(
+			[
 				'attribute_pa_size'   => 'large',
 				'attribute_pa_colour' => '',
-			)
+			]
 		);
 		$this->assertEquals( $children[1], $match );
 
 		$match = $data_store->find_matching_product_variation(
 			$product,
-			array(
+			[
 				'attribute_pa_size'   => 'small',
 				'attribute_pa_colour' => 'red',
-			)
+			]
 		);
 		$this->assertEquals( $children[0], $match );
 
 		$match = $data_store->find_matching_product_variation(
 			$product,
-			array(
+			[
 				'attribute_pa_size'   => 'large',
 				'attribute_pa_colour' => 'blue',
-			)
+			]
 		);
 		$this->assertEquals( $children[1], $match );
 
 		// Test against non matching colour, should still return first attribute.
 		$match = $data_store->find_matching_product_variation(
 			$product,
-			array(
+			[
 				'attribute_pa_size'   => 'small',
 				'attribute_pa_colour' => 'pink',
-			)
+			]
 		);
 		$this->assertEquals( $children[0], $match );
 
 		// Test against non matching colour, should still return first attribute.
 		$match = $data_store->find_matching_product_variation(
 			$product,
-			array(
+			[
 				'attribute_pa_size'   => 'large',
 				'attribute_pa_colour' => 'pink',
-			)
+			]
 		);
 		$this->assertEquals( $children[1], $match );
 
@@ -1025,47 +1025,47 @@ class WC_Tests_Product_Data_Store extends WC_Unit_Test_Case {
 		// If second attribute in variation is any and you omit the first attribute it should not match anything.
 		$match = $data_store->find_matching_product_variation(
 			$product,
-			array(
+			[
 				'attribute_pa_colour' => 'blue',
-			)
+			]
 		);
 		$this->assertEquals( 0, $match );
 
 		// If second attribute in variation is any and you pass a blank in the first attribute it should not match anything.
 		$match = $data_store->find_matching_product_variation(
 			$product,
-			array(
+			[
 				'attribute_pa_size'   => '',
 				'attribute_pa_colour' => 'red',
-			)
+			]
 		);
 		$this->assertEquals( 0, $match );
 
 		// Passing blanks as both attributes should not match anything.
 		$match = $data_store->find_matching_product_variation(
 			$product,
-			array(
+			[
 				'attribute_pa_size'   => '',
 				'attribute_pa_colour' => '',
-			)
+			]
 		);
 		$this->assertEquals( 0, $match );
 
 		// Passing an empty array should not match anything.
 		$match = $data_store->find_matching_product_variation(
 			$product,
-			array()
+			[]
 		);
 		$this->assertEquals( 0, $match );
 
 		// Test numeric attribute values.
 		$match = $data_store->find_matching_product_variation(
 			$product,
-			array(
+			[
 				'attribute_pa_size'   => 'huge',
 				'attribute_pa_colour' => 'red',
 				'attribute_pa_number' => '2',
-			)
+			]
 		);
 
 		$this->assertEquals( $children[3], $match );
@@ -1073,11 +1073,11 @@ class WC_Tests_Product_Data_Store extends WC_Unit_Test_Case {
 		// Test numeric attribute value 0.
 		$match = $data_store->find_matching_product_variation(
 			$product,
-			array(
+			[
 				'attribute_pa_size'   => 'huge',
 				'attribute_pa_colour' => 'red',
 				'attribute_pa_number' => '0',
-			)
+			]
 		);
 
 		$this->assertEquals( $children[2], $match );

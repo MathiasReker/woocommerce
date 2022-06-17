@@ -41,11 +41,11 @@ class WC_Gateway_Cheque extends WC_Payment_Gateway {
 		$this->instructions = $this->get_option( 'instructions' );
 
 		// Actions.
-		add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array( $this, 'process_admin_options' ) );
-		add_action( 'woocommerce_thankyou_cheque', array( $this, 'thankyou_page' ) );
+		add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, [ $this, 'process_admin_options' ] );
+		add_action( 'woocommerce_thankyou_cheque', [ $this, 'thankyou_page' ] );
 
 		// Customer Emails.
-		add_action( 'woocommerce_email_before_order_table', array( $this, 'email_instructions' ), 10, 3 );
+		add_action( 'woocommerce_email_before_order_table', [ $this, 'email_instructions' ], 10, 3 );
 	}
 
 	/**
@@ -53,35 +53,35 @@ class WC_Gateway_Cheque extends WC_Payment_Gateway {
 	 */
 	public function init_form_fields() {
 
-		$this->form_fields = array(
-			'enabled'      => array(
+		$this->form_fields = [
+			'enabled'      => [
 				'title'   => __( 'Enable/Disable', 'woocommerce' ),
 				'type'    => 'checkbox',
 				'label'   => __( 'Enable check payments', 'woocommerce' ),
 				'default' => 'no',
-			),
-			'title'        => array(
+			],
+			'title'        => [
 				'title'       => __( 'Title', 'woocommerce' ),
 				'type'        => 'safe_text',
 				'description' => __( 'This controls the title which the user sees during checkout.', 'woocommerce' ),
 				'default'     => _x( 'Check payments', 'Check payment method', 'woocommerce' ),
 				'desc_tip'    => true,
-			),
-			'description'  => array(
+			],
+			'description'  => [
 				'title'       => __( 'Description', 'woocommerce' ),
 				'type'        => 'textarea',
 				'description' => __( 'Payment method description that the customer will see on your checkout.', 'woocommerce' ),
 				'default'     => __( 'Please send a check to Store Name, Store Street, Store Town, Store State / County, Store Postcode.', 'woocommerce' ),
 				'desc_tip'    => true,
-			),
-			'instructions' => array(
+			],
+			'instructions' => [
 				'title'       => __( 'Instructions', 'woocommerce' ),
 				'type'        => 'textarea',
 				'description' => __( 'Instructions that will be added to the thank you page and emails.', 'woocommerce' ),
 				'default'     => '',
 				'desc_tip'    => true,
-			),
-		);
+			],
+		];
 	}
 
 	/**
@@ -128,9 +128,9 @@ class WC_Gateway_Cheque extends WC_Payment_Gateway {
 		WC()->cart->empty_cart();
 
 		// Return thankyou redirect.
-		return array(
+		return [
 			'result'   => 'success',
 			'redirect' => $this->get_return_url( $order ),
-		);
+		];
 	}
 }

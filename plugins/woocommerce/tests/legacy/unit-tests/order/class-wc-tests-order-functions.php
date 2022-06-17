@@ -24,7 +24,7 @@ class WC_Tests_Order_Functions extends WC_Unit_Test_Case {
 
 		$order_statuses = apply_filters(
 			'wc_order_statuses',
-			array(
+			[
 				'wc-pending'    => _x( 'Pending payment', 'Order status', 'woocommerce' ),
 				'wc-processing' => _x( 'Processing', 'Order status', 'woocommerce' ),
 				'wc-on-hold'    => _x( 'On hold', 'Order status', 'woocommerce' ),
@@ -32,7 +32,7 @@ class WC_Tests_Order_Functions extends WC_Unit_Test_Case {
 				'wc-cancelled'  => _x( 'Cancelled', 'Order status', 'woocommerce' ),
 				'wc-refunded'   => _x( 'Refunded', 'Order status', 'woocommerce' ),
 				'wc-failed'     => _x( 'Failed', 'Order status', 'woocommerce' ),
-			)
+			]
 		);
 
 		$this->assertEquals( $order_statuses, wc_get_order_statuses() );
@@ -120,7 +120,7 @@ class WC_Tests_Order_Functions extends WC_Unit_Test_Case {
 		$this->assertInstanceOf( 'WC_Order', wc_get_order( $order->get_id() ) );
 
 		// Assert that a non-shop_order post returns false.
-		$post = $this->factory->post->create_and_get( array( 'post_type' => 'post' ) );
+		$post = $this->factory->post->create_and_get( [ 'post_type' => 'post' ] );
 		$this->assertFalse( wc_get_order( $post->ID ) );
 
 		// Assert the return when $the_order args is false.
@@ -140,7 +140,7 @@ class WC_Tests_Order_Functions extends WC_Unit_Test_Case {
 		$this->assertEmpty( $order->get_payment_tokens() );
 
 		$token = WC_Helper_Payment_Token::create_cc_token();
-		update_post_meta( $order->get_id(), '_payment_tokens', array( $token->get_id() ) );
+		update_post_meta( $order->get_id(), '_payment_tokens', [ $token->get_id() ] );
 
 		$this->assertCount( 1, $order->get_payment_tokens() );
 	}
@@ -177,34 +177,34 @@ class WC_Tests_Order_Functions extends WC_Unit_Test_Case {
 		$order_4 = $order4->get_id();
 
 		$orders   = wc_get_orders(
-			array(
+			[
 				'customer' => 0,
 				'return'   => 'ids',
-			)
+			]
 		);
-		$expected = array( $order_1, $order_2 );
+		$expected = [ $order_1, $order_2 ];
 		sort( $expected );
 		sort( $orders );
 		$this->assertEquals( $expected, $orders );
 
 		$orders   = wc_get_orders(
-			array(
+			[
 				'customer' => 1,
 				'return'   => 'ids',
-			)
+			]
 		);
-		$expected = array( $order_3, $order_4 );
+		$expected = [ $order_3, $order_4 ];
 		sort( $expected );
 		sort( $orders );
 		$this->assertEquals( $expected, $orders );
 
 		$orders   = wc_get_orders(
-			array(
+			[
 				'customer' => '',
 				'return'   => 'ids',
-			)
+			]
 		);
-		$expected = array( $order_1, $order_2, $order_3, $order_4 );
+		$expected = [ $order_1, $order_2, $order_3, $order_4 ];
 		sort( $expected );
 		sort( $orders );
 		$this->assertEquals( $expected, $orders );
@@ -230,68 +230,68 @@ class WC_Tests_Order_Functions extends WC_Unit_Test_Case {
 		$order_3 = $order3->get_id();
 
 		$orders   = wc_get_orders(
-			array(
+			[
 				'date_before' => '2017-01-15',
 				'return'      => 'ids',
-			)
+			]
 		);
-		$expected = array( $order_1, $order_2, $order_3 );
+		$expected = [ $order_1, $order_2, $order_3 ];
 		sort( $expected );
 		sort( $orders );
 		$this->assertEquals( $expected, $orders );
 
 		$orders   = wc_get_orders(
-			array(
+			[
 				'date_before' => '2017-01-01',
 				'return'      => 'ids',
-			)
+			]
 		);
-		$expected = array( $order_1 );
+		$expected = [ $order_1 ];
 		sort( $expected );
 		sort( $orders );
 		$this->assertEquals( $expected, $orders );
 
 		$orders   = wc_get_orders(
-			array(
+			[
 				'date_before' => '2016-12-31',
 				'return'      => 'ids',
-			)
+			]
 		);
-		$expected = array( $order_1 );
+		$expected = [ $order_1 ];
 		sort( $expected );
 		sort( $orders );
 		$this->assertEquals( $expected, $orders );
 
 		$orders   = wc_get_orders(
-			array(
+			[
 				'date_after' => '2015-01-01 00:00:00',
 				'return'     => 'ids',
-			)
+			]
 		);
-		$expected = array( $order_1, $order_2, $order_3 );
+		$expected = [ $order_1, $order_2, $order_3 ];
 		sort( $expected );
 		sort( $orders );
 		$this->assertEquals( $expected, $orders );
 
 		$orders   = wc_get_orders(
-			array(
+			[
 				'date_after' => '2016-01-01',
 				'return'     => 'ids',
-			)
+			]
 		);
-		$expected = array( $order_2, $order_3 );
+		$expected = [ $order_2, $order_3 ];
 		sort( $expected );
 		sort( $orders );
 		$this->assertEquals( $expected, $orders );
 
 		$orders   = wc_get_orders(
-			array(
+			[
 				'date_before' => '2017-01-15',
 				'date_after'  => '2015-01-01 00:00:00',
 				'return'      => 'ids',
-			)
+			]
 		);
-		$expected = array( $order_1, $order_2, $order_3 );
+		$expected = [ $order_1, $order_2, $order_3 ];
 		sort( $expected );
 		sort( $orders );
 		$this->assertEquals( $expected, $orders );
@@ -311,21 +311,21 @@ class WC_Tests_Order_Functions extends WC_Unit_Test_Case {
 		$order2->save();
 
 		$orders   = wc_get_orders(
-			array(
+			[
 				'status' => 'pending',
 				'return' => 'ids',
-			)
+			]
 		);
-		$expected = array( $order1->get_id() );
+		$expected = [ $order1->get_id() ];
 		$this->assertEquals( $expected, $orders );
 
 		$orders   = wc_get_orders(
-			array(
+			[
 				'status' => 'completed',
 				'return' => 'ids',
-			)
+			]
 		);
-		$expected = array( $order2->get_id() );
+		$expected = [ $order2->get_id() ];
 		$this->assertEquals( $expected, $orders );
 	}
 
@@ -341,21 +341,21 @@ class WC_Tests_Order_Functions extends WC_Unit_Test_Case {
 		$refund->save();
 
 		$orders   = wc_get_orders(
-			array(
+			[
 				'type'   => 'shop_order_refund',
 				'return' => 'ids',
-			)
+			]
 		);
-		$expected = array( $refund->get_id() );
+		$expected = [ $refund->get_id() ];
 		$this->assertEquals( $expected, $orders );
 
 		$orders   = wc_get_orders(
-			array(
+			[
 				'type'   => 'shop_order',
 				'return' => 'ids',
-			)
+			]
 		);
-		$expected = array( $order->get_id() );
+		$expected = [ $order->get_id() ];
 		$this->assertEquals( $expected, $orders );
 	}
 
@@ -369,21 +369,21 @@ class WC_Tests_Order_Functions extends WC_Unit_Test_Case {
 		$order->save();
 
 		$orders   = wc_get_orders(
-			array(
+			[
 				'version' => Constants::get_constant( 'WC_VERSION' ),
 				'return'  => 'ids',
-			)
+			]
 		);
-		$expected = array( $order->get_id() );
+		$expected = [ $order->get_id() ];
 		$this->assertEquals( $expected, $orders );
 
 		$orders   = wc_get_orders(
-			array(
+			[
 				'version' => '2.1.0',
 				'return'  => 'ids',
-			)
+			]
 		);
-		$expected = array();
+		$expected = [];
 		$this->assertEquals( $expected, $orders );
 	}
 
@@ -401,21 +401,21 @@ class WC_Tests_Order_Functions extends WC_Unit_Test_Case {
 		$order2->save();
 
 		$orders   = wc_get_orders(
-			array(
+			[
 				'created_via' => 'rest-api',
 				'return'      => 'ids',
-			)
+			]
 		);
-		$expected = array( $order1->get_id() );
+		$expected = [ $order1->get_id() ];
 		$this->assertEquals( $expected, $orders );
 
 		$orders   = wc_get_orders(
-			array(
+			[
 				'created_via' => 'checkout',
 				'return'      => 'ids',
-			)
+			]
 		);
-		$expected = array( $order2->get_id() );
+		$expected = [ $order2->get_id() ];
 		$this->assertEquals( $expected, $orders );
 	}
 
@@ -435,12 +435,12 @@ class WC_Tests_Order_Functions extends WC_Unit_Test_Case {
 		$order2->save();
 
 		$orders   = wc_get_orders(
-			array(
+			[
 				'parent' => $parent->get_id(),
 				'return' => 'ids',
-			)
+			]
 		);
-		$expected = array( $order1->get_id() );
+		$expected = [ $order1->get_id() ];
 		$this->assertEquals( $expected, $orders );
 	}
 
@@ -460,13 +460,13 @@ class WC_Tests_Order_Functions extends WC_Unit_Test_Case {
 		$order2->save();
 
 		$orders = wc_get_orders(
-			array(
-				'parent_exclude' => array( $parent->get_id() ),
+			[
+				'parent_exclude' => [ $parent->get_id() ],
 				'return'         => 'ids',
-			)
+			]
 		);
 		sort( $orders );
-		$expected = array( $parent->get_id(), $order2->get_id() );
+		$expected = [ $parent->get_id(), $order2->get_id() ];
 		$this->assertEquals( $expected, $orders );
 	}
 
@@ -482,12 +482,12 @@ class WC_Tests_Order_Functions extends WC_Unit_Test_Case {
 		$order2->save();
 
 		$orders   = wc_get_orders(
-			array(
-				'exclude' => array( $order1->get_id() ),
+			[
+				'exclude' => [ $order1->get_id() ],
 				'return'  => 'ids',
-			)
+			]
 		);
-		$expected = array( $order2->get_id() );
+		$expected = [ $order2->get_id() ];
 		$this->assertEquals( $expected, $orders );
 	}
 
@@ -502,7 +502,7 @@ class WC_Tests_Order_Functions extends WC_Unit_Test_Case {
 		$order2 = WC_Helper_Order::create_order();
 		$order2->save();
 
-		$orders = wc_get_orders( array( 'limit' => 1 ) );
+		$orders = wc_get_orders( [ 'limit' => 1 ] );
 		$this->assertEquals( 1, count( $orders ) );
 	}
 
@@ -518,27 +518,27 @@ class WC_Tests_Order_Functions extends WC_Unit_Test_Case {
 		$order2->save();
 
 		$orders   = wc_get_orders(
-			array(
+			[
 				'paged'   => 1,
 				'orderby' => 'ID',
 				'order'   => 'ASC',
 				'limit'   => 1,
 				'return'  => 'ids',
-			)
+			]
 		);
-		$expected = array( $order1->get_id() );
+		$expected = [ $order1->get_id() ];
 		$this->assertEquals( $expected, $orders );
 
 		$orders   = wc_get_orders(
-			array(
+			[
 				'paged'   => 2,
 				'orderby' => 'ID',
 				'order'   => 'ASC',
 				'limit'   => 1,
 				'return'  => 'ids',
-			)
+			]
 		);
-		$expected = array( $order2->get_id() );
+		$expected = [ $order2->get_id() ];
 		$this->assertEquals( $expected, $orders );
 	}
 
@@ -554,14 +554,14 @@ class WC_Tests_Order_Functions extends WC_Unit_Test_Case {
 		$order2->save();
 
 		$orders   = wc_get_orders(
-			array(
+			[
 				'offset'  => 1,
 				'orderby' => 'ID',
 				'order'   => 'ASC',
 				'return'  => 'ids',
-			)
+			]
 		);
-		$expected = array( $order2->get_id() );
+		$expected = [ $order2->get_id() ];
 		$this->assertEquals( $expected, $orders );
 	}
 
@@ -576,7 +576,7 @@ class WC_Tests_Order_Functions extends WC_Unit_Test_Case {
 		$order2 = WC_Helper_Order::create_order();
 		$order2->save();
 
-		$orders = wc_get_orders( array( 'paginate' => true ) );
+		$orders = wc_get_orders( [ 'paginate' => true ] );
 		$this->assertEquals( 2, $orders->total );
 		$this->assertEquals( 2, count( $orders->orders ) );
 		$this->assertInstanceOf( 'WC_Order', $orders->orders[0] );
@@ -593,10 +593,10 @@ class WC_Tests_Order_Functions extends WC_Unit_Test_Case {
 		$order->save();
 
 		$orders = wc_get_orders(
-			array(
+			[
 				'paginate' => true,
 				'return'   => 'ids',
-			)
+			]
 		);
 		$this->assertEquals( 1, $orders->total );
 		$this->assertEquals( 1, $orders->max_num_pages );
@@ -615,23 +615,23 @@ class WC_Tests_Order_Functions extends WC_Unit_Test_Case {
 		$order2->save();
 
 		$orders   = wc_get_orders(
-			array(
+			[
 				'orderby' => 'ID',
 				'order'   => 'DESC',
 				'return'  => 'ids',
-			)
+			]
 		);
-		$expected = array( $order2->get_id(), $order1->get_id() );
+		$expected = [ $order2->get_id(), $order1->get_id() ];
 		$this->assertEquals( $expected, $orders );
 
 		$orders   = wc_get_orders(
-			array(
+			[
 				'orderby' => 'ID',
 				'order'   => 'ASC',
 				'return'  => 'ids',
-			)
+			]
 		);
-		$expected = array( $order1->get_id(), $order2->get_id() );
+		$expected = [ $order1->get_id(), $order2->get_id() ];
 		$this->assertEquals( $expected, $orders );
 	}
 
@@ -649,21 +649,21 @@ class WC_Tests_Order_Functions extends WC_Unit_Test_Case {
 		$order2->save();
 
 		$orders   = wc_get_orders(
-			array(
+			[
 				'currency' => 'BRL',
 				'return'   => 'ids',
-			)
+			]
 		);
-		$expected = array( $order1->get_id() );
+		$expected = [ $order1->get_id() ];
 		$this->assertEquals( $expected, $orders );
 
 		$orders   = wc_get_orders(
-			array(
+			[
 				'currency' => 'USD',
 				'return'   => 'ids',
-			)
+			]
 		);
-		$expected = array( $order2->get_id() );
+		$expected = [ $order2->get_id() ];
 		$this->assertEquals( $expected, $orders );
 	}
 
@@ -681,21 +681,21 @@ class WC_Tests_Order_Functions extends WC_Unit_Test_Case {
 		$order2->save();
 
 		$orders   = wc_get_orders(
-			array(
+			[
 				'prices_include_tax' => 'yes',
 				'return'             => 'ids',
-			)
+			]
 		);
-		$expected = array( $order1->get_id() );
+		$expected = [ $order1->get_id() ];
 		$this->assertEquals( $expected, $orders );
 
 		$orders   = wc_get_orders(
-			array(
+			[
 				'prices_include_tax' => 'no',
 				'return'             => 'ids',
-			)
+			]
 		);
-		$expected = array( $order2->get_id() );
+		$expected = [ $order2->get_id() ];
 		$this->assertEquals( $expected, $orders );
 	}
 
@@ -713,21 +713,21 @@ class WC_Tests_Order_Functions extends WC_Unit_Test_Case {
 		$order2->save();
 
 		$orders   = wc_get_orders(
-			array(
+			[
 				'payment_method' => 'cheque',
 				'return'         => 'ids',
-			)
+			]
 		);
-		$expected = array( $order1->get_id() );
+		$expected = [ $order1->get_id() ];
 		$this->assertEquals( $expected, $orders );
 
 		$orders   = wc_get_orders(
-			array(
+			[
 				'payment_method' => 'cod',
 				'return'         => 'ids',
-			)
+			]
 		);
-		$expected = array( $order2->get_id() );
+		$expected = [ $order2->get_id() ];
 		$this->assertEquals( $expected, $orders );
 	}
 
@@ -745,21 +745,21 @@ class WC_Tests_Order_Functions extends WC_Unit_Test_Case {
 		$order2->save();
 
 		$orders   = wc_get_orders(
-			array(
+			[
 				'payment_method_title' => 'Check payments',
 				'return'               => 'ids',
-			)
+			]
 		);
-		$expected = array( $order1->get_id() );
+		$expected = [ $order1->get_id() ];
 		$this->assertEquals( $expected, $orders );
 
 		$orders   = wc_get_orders(
-			array(
+			[
 				'payment_method_title' => 'PayPal',
 				'return'               => 'ids',
-			)
+			]
 		);
-		$expected = array( $order2->get_id() );
+		$expected = [ $order2->get_id() ];
 		$this->assertEquals( $expected, $orders );
 	}
 
@@ -787,57 +787,57 @@ class WC_Tests_Order_Functions extends WC_Unit_Test_Case {
 		$order2->save();
 
 		$orders   = wc_get_orders(
-			array(
+			[
 				'discount_total' => 5.50,
 				'return'         => 'ids',
-			)
+			]
 		);
-		$expected = array( $order1->get_id() );
+		$expected = [ $order1->get_id() ];
 		$this->assertEquals( $expected, $orders );
 
 		$orders   = wc_get_orders(
-			array(
+			[
 				'discount_tax' => 0.20,
 				'return'       => 'ids',
-			)
+			]
 		);
-		$expected = array( $order2->get_id() );
+		$expected = [ $order2->get_id() ];
 		$this->assertEquals( $expected, $orders );
 
 		$orders   = wc_get_orders(
-			array(
+			[
 				'shipping_total' => 3.99,
 				'return'         => 'ids',
-			)
+			]
 		);
-		$expected = array( $order1->get_id() );
+		$expected = [ $order1->get_id() ];
 		$this->assertEquals( $expected, $orders );
 
 		$orders   = wc_get_orders(
-			array(
+			[
 				'shipping_tax' => 0.15,
 				'return'       => 'ids',
-			)
+			]
 		);
-		$expected = array( $order2->get_id() );
+		$expected = [ $order2->get_id() ];
 		$this->assertEquals( $expected, $orders );
 
 		$orders   = wc_get_orders(
-			array(
+			[
 				'cart_tax' => 0.10,
 				'return'   => 'ids',
-			)
+			]
 		);
-		$expected = array( $order1->get_id() );
+		$expected = [ $order1->get_id() ];
 		$this->assertEquals( $expected, $orders );
 
 		$orders   = wc_get_orders(
-			array(
+			[
 				'total'  => 5.89,
 				'return' => 'ids',
-			)
+			]
 		);
-		$expected = array( $order2->get_id() );
+		$expected = [ $order2->get_id() ];
 		$this->assertEquals( $expected, $orders );
 	}
 
@@ -865,33 +865,33 @@ class WC_Tests_Order_Functions extends WC_Unit_Test_Case {
 		$order2->save();
 
 		$orders   = wc_get_orders(
-			array(
+			[
 				'customer' => $customer1->get_billing_email(),
 				'return'   => 'ids',
-			)
+			]
 		);
-		$expected = array( $order1->get_id() );
+		$expected = [ $order1->get_id() ];
 		$this->assertEquals( $expected, $orders );
 
 		$orders   = wc_get_orders(
-			array(
+			[
 				'customer' => $customer2->get_id(),
 				'return'   => 'ids',
-			)
+			]
 		);
-		$expected = array( $order2->get_id() );
+		$expected = [ $order2->get_id() ];
 		$this->assertEquals( $expected, $orders );
 
-		$orders = wc_get_orders( array( 'customer' => 'invalid' ) );
+		$orders = wc_get_orders( [ 'customer' => 'invalid' ] );
 		$this->assertEmpty( $orders );
 
-		$orders = wc_get_orders( array( 'customer' => array( 'invalid' ) ) );
+		$orders = wc_get_orders( [ 'customer' => [ 'invalid' ] ] );
 		$this->assertEmpty( $orders );
 
-		$orders = wc_get_orders( array( 'customer' => array( '' ) ) );
+		$orders = wc_get_orders( [ 'customer' => [ '' ] ] );
 		$this->assertEmpty( $orders );
 
-		$orders = wc_get_orders( array( 'customer' => 'doesnt@exist.com' ) );
+		$orders = wc_get_orders( [ 'customer' => 'doesnt@exist.com' ] );
 		$this->assertEmpty( $orders );
 	}
 
@@ -917,21 +917,21 @@ class WC_Tests_Order_Functions extends WC_Unit_Test_Case {
 		$order2->save();
 
 		$orders   = wc_get_orders(
-			array(
+			[
 				'customer_id' => $customer1->get_id(),
 				'return'      => 'ids',
-			)
+			]
 		);
-		$expected = array( $order1->get_id() );
+		$expected = [ $order1->get_id() ];
 		$this->assertEquals( $expected, $orders );
 
 		$orders   = wc_get_orders(
-			array(
+			[
 				'customer_id' => $customer2->get_id(),
 				'return'      => 'ids',
-			)
+			]
 		);
-		$expected = array( $order2->get_id() );
+		$expected = [ $order2->get_id() ];
 		$this->assertEquals( $expected, $orders );
 	}
 
@@ -943,7 +943,7 @@ class WC_Tests_Order_Functions extends WC_Unit_Test_Case {
 	public function test_wc_get_order_address_params() {
 		$order1 = WC_Helper_Order::create_order();
 		$order1->set_props(
-			array(
+			[
 				'billing_email'       => 'test1@test.com',
 				'billing_first_name'  => 'Bill',
 				'billing_last_name'   => 'Powers',
@@ -964,14 +964,14 @@ class WC_Tests_Order_Functions extends WC_Unit_Test_Case {
 				'shipping_state'      => 'OR',
 				'shipping_postcode'   => '97222',
 				'shipping_country'    => 'US',
-			)
+			]
 		);
 		$order1->save();
 		$order1_id = $order1->get_id();
 
 		$order2 = WC_Helper_Order::create_order();
 		$order2->set_props(
-			array(
+			[
 				'billing_email'       => 'test2@test.com',
 				'billing_first_name'  => 'Joe',
 				'billing_last_name'   => 'Thunder',
@@ -992,203 +992,203 @@ class WC_Tests_Order_Functions extends WC_Unit_Test_Case {
 				'shipping_state'      => 'WA',
 				'shipping_postcode'   => '97233',
 				'shipping_country'    => 'US',
-			)
+			]
 		);
 		$order2->save();
 		$order2_id = $order2->get_id();
 
 		$orders   = wc_get_orders(
-			array(
+			[
 				'billing_email' => 'test1@test.com',
 				'return'        => 'ids',
-			)
+			]
 		);
-		$expected = array( $order1_id );
+		$expected = [ $order1_id ];
 		$this->assertEquals( $expected, $orders );
 
 		$orders   = wc_get_orders(
-			array(
+			[
 				'billing_first_name' => 'Joe',
 				'return'             => 'ids',
-			)
+			]
 		);
-		$expected = array( $order2_id );
+		$expected = [ $order2_id ];
 		$this->assertEquals( $expected, $orders );
 
 		$orders   = wc_get_orders(
-			array(
+			[
 				'billing_last_name' => 'Powers',
 				'return'            => 'ids',
-			)
+			]
 		);
-		$expected = array( $order1_id );
+		$expected = [ $order1_id ];
 		$this->assertEquals( $expected, $orders );
 
 		$orders   = wc_get_orders(
-			array(
+			[
 				'billing_company' => 'ThunderCo.',
 				'return'          => 'ids',
-			)
+			]
 		);
-		$expected = array( $order2_id );
+		$expected = [ $order2_id ];
 		$this->assertEquals( $expected, $orders );
 
 		$orders   = wc_get_orders(
-			array(
+			[
 				'billing_address_1' => '1234 Cool St.',
 				'return'            => 'ids',
-			)
+			]
 		);
-		$expected = array( $order1_id );
+		$expected = [ $order1_id ];
 		$this->assertEquals( $expected, $orders );
 
 		$orders   = wc_get_orders(
-			array(
+			[
 				'billing_address_2' => 'Apt 2',
 				'return'            => 'ids',
-			)
+			]
 		);
-		$expected = array( $order1_id );
+		$expected = [ $order1_id ];
 		$this->assertEquals( $expected, $orders );
 
 		$orders   = wc_get_orders(
-			array(
+			[
 				'billing_city' => 'Vancouver',
 				'return'       => 'ids',
-			)
+			]
 		);
-		$expected = array( $order2_id );
+		$expected = [ $order2_id ];
 		$this->assertEquals( $expected, $orders );
 
 		$orders   = wc_get_orders(
-			array(
+			[
 				'billing_state' => 'OR',
 				'return'        => 'ids',
-			)
+			]
 		);
-		$expected = array( $order1_id );
+		$expected = [ $order1_id ];
 		$this->assertEquals( $expected, $orders );
 
 		$orders   = wc_get_orders(
-			array(
+			[
 				'billing_postcode' => '97267',
 				'return'           => 'ids',
-			)
+			]
 		);
-		$expected = array( $order2_id );
+		$expected = [ $order2_id ];
 		$this->assertEquals( $expected, $orders );
 
 		$orders   = wc_get_orders(
-			array(
+			[
 				'billing_country' => 'US',
 				'orderby'         => 'ID',
 				'order'           => 'ASC',
 				'return'          => 'ids',
-			)
+			]
 		);
-		$expected = array( $order1_id, $order2_id );
+		$expected = [ $order1_id, $order2_id ];
 		$this->assertEquals( $expected, $orders );
 
 		$orders   = wc_get_orders(
-			array(
+			[
 				'billing_phone' => '503-333-3333',
 				'return'        => 'ids',
-			)
+			]
 		);
-		$expected = array( $order2_id );
+		$expected = [ $order2_id ];
 		$this->assertEquals( $expected, $orders );
 
 		$orders   = wc_get_orders(
-			array(
+			[
 				'shipping_first_name' => 'Jane',
 				'return'              => 'ids',
-			)
+			]
 		);
-		$expected = array( $order1_id );
+		$expected = [ $order1_id ];
 		$this->assertEquals( $expected, $orders );
 
 		$orders   = wc_get_orders(
-			array(
+			[
 				'shipping_last_name' => 'Thunder',
 				'return'             => 'ids',
-			)
+			]
 		);
-		$expected = array( $order2_id );
+		$expected = [ $order2_id ];
 		$this->assertEquals( $expected, $orders );
 
 		$orders   = wc_get_orders(
-			array(
+			[
 				'shipping_company' => 'Thunder Inc',
 				'return'           => 'ids',
-			)
+			]
 		);
-		$expected = array( $order2_id );
+		$expected = [ $order2_id ];
 		$this->assertEquals( $expected, $orders );
 
 		$orders   = wc_get_orders(
-			array(
+			[
 				'shipping_address_1' => '1 Thunder Blvd',
 				'return'             => 'ids',
-			)
+			]
 		);
-		$expected = array( $order2_id );
+		$expected = [ $order2_id ];
 		$this->assertEquals( $expected, $orders );
 
 		$orders   = wc_get_orders(
-			array(
+			[
 				'shipping_address_2' => 'Apt 1',
 				'return'             => 'ids',
-			)
+			]
 		);
-		$expected = array( $order1_id );
+		$expected = [ $order1_id ];
 		$this->assertEquals( $expected, $orders );
 
 		$orders   = wc_get_orders(
-			array(
+			[
 				'shipping_city' => 'Vancouver',
 				'return'        => 'ids',
-			)
+			]
 		);
-		$expected = array( $order2_id );
+		$expected = [ $order2_id ];
 		$this->assertEquals( $expected, $orders );
 
 		$orders   = wc_get_orders(
-			array(
+			[
 				'shipping_state' => 'OR',
 				'return'         => 'ids',
-			)
+			]
 		);
-		$expected = array( $order1_id );
+		$expected = [ $order1_id ];
 		$this->assertEquals( $expected, $orders );
 
 		$orders   = wc_get_orders(
-			array(
+			[
 				'shipping_postcode' => '97233',
 				'return'            => 'ids',
-			)
+			]
 		);
-		$expected = array( $order2_id );
+		$expected = [ $order2_id ];
 		$this->assertEquals( $expected, $orders );
 
 		$orders   = wc_get_orders(
-			array(
+			[
 				'shipping_country' => 'US',
 				'orderby'          => 'ID',
 				'order'            => 'ASC',
 				'return'           => 'ids',
-			)
+			]
 		);
-		$expected = array( $order1_id, $order2_id );
+		$expected = [ $order1_id, $order2_id ];
 		$this->assertEquals( $expected, $orders );
 
 		$orders   = wc_get_orders(
-			array(
+			[
 				'billing_first_name' => 'Joe',
 				'billing_last_name'  => 'Thunder',
 				'return'             => 'ids',
-			)
+			]
 		);
-		$expected = array( $order2_id );
+		$expected = [ $order2_id ];
 		$this->assertEquals( $expected, $orders );
 	}
 
@@ -1207,70 +1207,70 @@ class WC_Tests_Order_Functions extends WC_Unit_Test_Case {
 		// Populate orders.
 		$us_now = WC_Helper_Order::create_order();
 		$us_now->set_props(
-			array(
+			[
 				'shipping_country' => 'US',
-			)
+			]
 		);
 		$us_now->save();
 
 		$us_old = WC_Helper_Order::create_order();
 		$us_old->set_props(
-			array(
+			[
 				'date_created'     => $yesterday,
 				'shipping_country' => 'US',
-			)
+			]
 		);
 		$us_old->save();
 
 		$mx_now = WC_Helper_Order::create_order();
 		$mx_now->set_props(
-			array(
+			[
 				'shipping_country' => 'MX',
-			)
+			]
 		);
 		$mx_now->save();
 
 		$mx_old = WC_Helper_Order::create_order();
 		$mx_old->set_props(
-			array(
+			[
 				'date_created'     => $yesterday,
 				'shipping_country' => 'MX',
-			)
+			]
 		);
 		$mx_old->save();
 
 		// Test just date range.
-		$args     = array(
+		$args     = [
 			'return'       => 'ids',
 			'date_created' => $date_range,
 			'orderby'      => 'ID',
 			'order'        => 'ASC',
-		);
+		];
 		$orders   = wc_get_orders( $args );
-		$expected = array( $us_now->get_id(), $mx_now->get_id() );
+		$expected = [ $us_now->get_id(), $mx_now->get_id() ];
 		$this->assertEquals( $expected, $orders );
 
 		// Test just US orders.
-		$args     = array(
+		$args     = [
 			'return'           => 'ids',
 			'shipping_country' => 'US',
 			'orderby'          => 'ID',
 			'order'            => 'ASC',
-		);
+		];
 		$orders   = wc_get_orders( $args );
-		$expected = array( $us_now->get_id(), $us_old->get_id() );
+		$expected = [ $us_now->get_id(), $us_old->get_id() ];
 		$this->assertEquals( $expected, $orders );
 
 		// Test US orders with date range.
-		$args     = array(
+		$args     = [
 			'return'           => 'ids',
 			'date_created'     => $date_range,
 			'shipping_country' => 'US',
 			'orderby'          => 'ID',
 			'order'            => 'ASC',
-		);
+		];
 		$orders   = wc_get_orders( $args );
-		$expected = array( $us_now->get_id() );
+		$expected = [ $us_now->get_id() ];
 		$this->assertEquals( $expected, $orders );
 	}
 
@@ -1285,12 +1285,12 @@ class WC_Tests_Order_Functions extends WC_Unit_Test_Case {
 
 		$fee = new WC_Order_Item_Fee();
 		$fee->set_props(
-			array(
+			[
 				'name'       => 'Some Fee',
 				'tax_status' => 'taxable',
 				'total'      => '10',
 				'tax_class'  => '',
-			)
+			]
 		);
 		$order->add_item( $fee );
 		$order->calculate_totals( true );
@@ -1306,19 +1306,19 @@ class WC_Tests_Order_Functions extends WC_Unit_Test_Case {
 
 		$fee_id = array_keys( $fee_items )[0];
 
-		$args = array(
+		$args = [
 			'amount'     => 55,
 			'order_id'   => $order->get_id(),
-			'line_items' => array(
-				$fee_id     => array(
+			'line_items' => [
+				$fee_id     => [
 					'refund_total' => 5,
-				),
-				$product_id => array(
+				],
+				$product_id => [
 					'qty'          => 5,
 					'refund_total' => 50,
-				),
-			),
-		);
+				],
+			],
+		];
 
 		$refund_obj = wc_create_refund( $args );
 
@@ -1348,12 +1348,12 @@ class WC_Tests_Order_Functions extends WC_Unit_Test_Case {
 		$note_content = 'Note content';
 		$order        = WC_Helper_Order::create_order();
 		$note_id      = (int) $order->add_order_note( $note_content );
-		$expected     = array(
+		$expected     = [
 			'id'            => $note_id,
 			'content'       => $note_content,
 			'customer_note' => false,
 			'added_by'      => 'system',
-		);
+		];
 		$note         = (array) wc_get_order_note( $note_id );
 		unset( $note['date_created'] );
 
@@ -1371,22 +1371,22 @@ class WC_Tests_Order_Functions extends WC_Unit_Test_Case {
 		$order->add_order_note( 'Internal note' );
 		$order->add_order_note( 'Another internal note' );
 
-		$notes = wc_get_order_notes( array( 'order_id' => $order->get_id() ) );
+		$notes = wc_get_order_notes( [ 'order_id' => $order->get_id() ] );
 		$this->assertEquals( 3, count( $notes ) );
 
 		$notes = wc_get_order_notes(
-			array(
+			[
 				'order_id' => $order->get_id(),
 				'type'     => 'customer',
-			)
+			]
 		);
 		$this->assertEquals( 1, count( $notes ) );
 
 		$notes = wc_get_order_notes(
-			array(
+			[
 				'order_id' => $order->get_id(),
 				'type'     => 'internal',
-			)
+			]
 		);
 		$this->assertEquals( 2, count( $notes ) );
 	}
@@ -1424,10 +1424,10 @@ class WC_Tests_Order_Functions extends WC_Unit_Test_Case {
 		$order = WC_Helper_Order::create_order();
 
 		// Should find order searching by billing address name.
-		$this->assertEquals( array( $order->get_id() ), wc_order_search( 'Jeroen' ) );
+		$this->assertEquals( [ $order->get_id() ], wc_order_search( 'Jeroen' ) );
 
 		// Should find order searching by order item name.
-		$this->assertEquals( array( $order->get_id() ), wc_order_search( 'Dummy Product' ) );
+		$this->assertEquals( [ $order->get_id() ], wc_order_search( 'Dummy Product' ) );
 
 		// Should return nothing when searching for nonexistent term.
 		$this->assertEmpty( wc_order_search( 'Nonexistent term' ) );
@@ -1444,10 +1444,10 @@ class WC_Tests_Order_Functions extends WC_Unit_Test_Case {
 
 		$coupon = WC_Helper_Coupon::create_coupon(
 			$coupon_code,
-			array(
+			[
 				'usage_limit' => 2,
 				'usage_limit_per_user' => 2,
-			)
+			]
 		);
 
 		$product = WC_Helper_Product::create_simple_product( true );
@@ -1456,15 +1456,15 @@ class WC_Tests_Order_Functions extends WC_Unit_Test_Case {
 		$this->assertEquals( 0, $coupon_data_store->get_usage_by_email( $coupon, 'a@b.com' ) );
 
 		$order_id = WC_Checkout::instance()->create_order(
-			array(
+			[
 				'billing_email'  => 'a@b.com',
 				'payment_method' => 'dummy',
-			)
+			]
 		);
 
 		$this->assertEquals( 0, $coupon->get_usage_count() );
 		$this->assertEquals( 1, $coupon_data_store->get_tentative_usage_count( $coupon->get_id() ) );
-		$this->assertEquals( 1, $coupon_data_store->get_tentative_usages_for_user( $coupon->get_id(), array( 'a@b.com' ) ) );
+		$this->assertEquals( 1, $coupon_data_store->get_tentative_usages_for_user( $coupon->get_id(), [ 'a@b.com' ] ) );
 		$this->assertEquals( 1, $coupon_data_store->get_usage_by_email( $coupon, 'a@b.com' ) );
 
 		$order = new WC_Order( $order_id );
@@ -1473,7 +1473,7 @@ class WC_Tests_Order_Functions extends WC_Unit_Test_Case {
 		$this->assertEquals( 1, get_post_meta( $coupon->get_id(), 'usage_count', true ) );
 		$this->assertEquals( 0, $coupon_data_store->get_tentative_usage_count( $coupon->get_id() ) );
 		$this->assertEquals( 1, $coupon_data_store->get_usage_by_email( $coupon, 'a@b.com' ) );
-		$this->assertEquals( 0, $coupon_data_store->get_tentative_usages_for_user( $coupon->get_id(), array( 'a@b.com' ) ) );
+		$this->assertEquals( 0, $coupon_data_store->get_tentative_usages_for_user( $coupon->get_id(), [ 'a@b.com' ] ) );
 	}
 
 	/**
@@ -1487,10 +1487,10 @@ class WC_Tests_Order_Functions extends WC_Unit_Test_Case {
 
 		$coupon = WC_Helper_Coupon::create_coupon(
 			$coupon_code,
-			array(
+			[
 				'usage_limit' => 1,
 				'usage_limit_per_user' => 1,
-			)
+			]
 		);
 
 		$product = WC_Helper_Product::create_simple_product( true );
@@ -1498,20 +1498,20 @@ class WC_Tests_Order_Functions extends WC_Unit_Test_Case {
 		WC()->cart->add_discount( $coupon_code );
 
 		$order_id = WC_Checkout::instance()->create_order(
-			array(
+			[
 				'billing_email'  => 'a@b.com',
 				'payment_method' => 'dummy',
-			)
+			]
 		);
 
 		$this->assertEquals( 1, $coupon_data_store->get_tentative_usage_count( $coupon->get_id() ) );
-		$this->assertEquals( 1, $coupon_data_store->get_tentative_usages_for_user( $coupon->get_id(), array( 'a@b.com' ) ) );
+		$this->assertEquals( 1, $coupon_data_store->get_tentative_usages_for_user( $coupon->get_id(), [ 'a@b.com' ] ) );
 		$this->assertEquals( 1, $coupon_data_store->get_usage_by_email( $coupon, 'a@b.com' ) );
 
 		$order = new WC_Order( $order_id );
 		$order->update_status( 'cancelled' );
 		$this->assertEquals( 0, $coupon_data_store->get_tentative_usage_count( $coupon->get_id() ) );
-		$this->assertEquals( 0, $coupon_data_store->get_tentative_usages_for_user( $coupon->get_id(), array( 'a@b.com' ) ) );
+		$this->assertEquals( 0, $coupon_data_store->get_tentative_usages_for_user( $coupon->get_id(), [ 'a@b.com' ] ) );
 		$this->assertEquals( 0, $coupon_data_store->get_usage_by_email( $coupon, 'a@b.com' ) );
 	}
 
@@ -1524,10 +1524,10 @@ class WC_Tests_Order_Functions extends WC_Unit_Test_Case {
 
 		$coupon = WC_Helper_Coupon::create_coupon(
 			$coupon_code,
-			array(
+			[
 				'usage_limit' => 2,
 				'usage_limit_per_user' => 2,
-			)
+			]
 		);
 
 		$product = WC_Helper_Product::create_simple_product( true );
@@ -1538,15 +1538,15 @@ class WC_Tests_Order_Functions extends WC_Unit_Test_Case {
 		add_filter( 'woocommerce_hold_stock_for_checkout', '__return_false' );
 
 		$order_id = WC_Checkout::instance()->create_order(
-			array(
+			[
 				'billing_email'  => 'a@b.com',
 				'payment_method' => 'dummy',
-			)
+			]
 		);
 
 		$this->assertEquals( 0, $coupon->get_usage_count() );
 		$this->assertEquals( 0, $coupon_data_store->get_tentative_usage_count( $coupon->get_id() ) );
-		$this->assertEquals( 0, $coupon_data_store->get_tentative_usages_for_user( $coupon->get_id(), array( 'a@b.com' ) ) );
+		$this->assertEquals( 0, $coupon_data_store->get_tentative_usages_for_user( $coupon->get_id(), [ 'a@b.com' ] ) );
 		$this->assertEquals( 0, $coupon_data_store->get_usage_by_email( $coupon, 'a@b.com' ) );
 
 		$order = new WC_Order( $order_id );
@@ -1555,7 +1555,7 @@ class WC_Tests_Order_Functions extends WC_Unit_Test_Case {
 		$this->assertEquals( 1, get_post_meta( $coupon->get_id(), 'usage_count', true ) );
 		$this->assertEquals( 0, $coupon_data_store->get_tentative_usage_count( $coupon->get_id() ) );
 		$this->assertEquals( 1, $coupon_data_store->get_usage_by_email( $coupon, 'a@b.com' ) );
-		$this->assertEquals( 0, $coupon_data_store->get_tentative_usages_for_user( $coupon->get_id(), array( 'a@b.com' ) ) );
+		$this->assertEquals( 0, $coupon_data_store->get_tentative_usages_for_user( $coupon->get_id(), [ 'a@b.com' ] ) );
 
 		remove_filter( 'woocommerce_hold_stock_for_checkout', '__return_false' );
 	}

@@ -22,7 +22,7 @@ class CustomerHelper {
 	 * @return WC_Customer
 	 */
 	public static function create_mock_customer() {
-		$customer_data = array(
+		$customer_data = [
 			'id'                  => 0,
 			'date_modified'       => null,
 			'country'             => 'US',
@@ -39,7 +39,7 @@ class CustomerHelper {
 			'shipping_address_2'  => 'Apt 1',
 			'is_vat_exempt'       => false,
 			'calculated_shipping' => false,
-		);
+		];
 
 		self::set_customer_details( $customer_data );
 
@@ -79,7 +79,7 @@ class CustomerHelper {
 	 * @return array
 	 */
 	public static function get_expected_store_location() {
-		return array( 'US', 'CA', '', '' );
+		return [ 'US', 'CA', '', '' ];
 	}
 
 	/**

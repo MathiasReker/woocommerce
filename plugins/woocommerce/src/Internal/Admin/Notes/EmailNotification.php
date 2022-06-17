@@ -31,9 +31,9 @@ class EmailNotification extends \WC_Email {
 		$this->note          = $note;
 		$this->id            = 'merchant_notification';
 		$this->template_base = WC_ADMIN_ABSPATH . 'includes/react-admin/emails/';
-		$this->placeholders  = array(
+		$this->placeholders  = [
 			'{greetings}' => __( 'Hi there,', 'woocommerce' ),
-		);
+		];
 
 		// Call parent constructor.
 		parent::__construct();
@@ -56,7 +56,7 @@ class EmailNotification extends \WC_Email {
 	 * @return string
 	 */
 	public function get_template_filename( $type = 'html' ) {
-		if ( ! in_array( $type, array( 'html', 'plain' ), true ) ) {
+		if ( ! in_array( $type, [ 'html', 'plain' ], true ) ) {
 			return;
 		}
 		$content_data      = $this->note->get_content_data();
@@ -144,7 +144,7 @@ class EmailNotification extends \WC_Email {
 	public function get_content_html() {
 		return wc_get_template_html(
 			$this->get_template_filename( 'html' ),
-			array(
+			[
 				'email_actions'           => $this->get_actions(),
 				'email_content'           => $this->format_string( $this->get_note_content() ),
 				'email_heading'           => $this->format_string( $this->get_heading() ),
@@ -154,7 +154,7 @@ class EmailNotification extends \WC_Email {
 				'email'                   => $this,
 				'opened_tracking_url'     => $this->opened_tracking_url,
 				'trigger_note_action_url' => $this->trigger_note_action_url,
-			),
+			],
 			'',
 			$this->template_base
 		);
@@ -168,7 +168,7 @@ class EmailNotification extends \WC_Email {
 	public function get_content_plain() {
 		return wc_get_template_html(
 			$this->get_template_filename( 'plain' ),
-			array(
+			[
 				'email_heading'           => $this->format_string( $this->get_heading() ),
 				'email_content'           => $this->format_string( $this->get_note_content() ),
 				'email_actions'           => $this->get_actions(),
@@ -176,7 +176,7 @@ class EmailNotification extends \WC_Email {
 				'plain_text'              => true,
 				'email'                   => $this,
 				'trigger_note_action_url' => $this->trigger_note_action_url,
-			),
+			],
 			'',
 			$this->template_base
 		);
@@ -216,6 +216,6 @@ class EmailNotification extends \WC_Email {
 			$this->get_headers(),
 			$this->get_attachments()
 		);
-		Notes::record_tracks_event_with_user( $user_id, 'email_note_sent', array( 'note_name' => $this->note->get_name() ) );
+		Notes::record_tracks_event_with_user( $user_id, 'email_note_sent', [ 'note_name' => $this->note->get_name() ] );
 	}
 }

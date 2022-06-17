@@ -33,7 +33,7 @@ class SystemStatusReport {
 	 * Hook into WooCommerce.
 	 */
 	public function __construct() {
-		add_action( 'woocommerce_system_status_report', array( $this, 'system_status_report' ) );
+		add_action( 'woocommerce_system_status_report', [ $this, 'system_status_report' ] );
 	}
 
 	/**
@@ -142,7 +142,7 @@ class SystemStatusReport {
 
 		$all_options_expected = is_numeric( $woocommerce_admin_install_timestamp )
 			&& 0 < (int) $woocommerce_admin_install_timestamp
-			&& is_array( get_option( 'woocommerce_onboarding_profile', array() ) );
+			&& is_array( get_option( 'woocommerce_onboarding_profile', [] ) );
 
 		?>
 			<tr>
@@ -188,7 +188,7 @@ class SystemStatusReport {
 	 * Render the onboarding state row.
 	 */
 	public function render_onboarding_state() {
-		$onboarding_profile = get_option( 'woocommerce_onboarding_profile', array() );
+		$onboarding_profile = get_option( 'woocommerce_onboarding_profile', [] );
 		$onboarding_state   = '-';
 
 		if ( isset( $onboarding_profile['skipped'] ) && $onboarding_profile['skipped'] ) {

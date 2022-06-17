@@ -117,7 +117,7 @@ final class WooCommerce {
 	 *
 	 * @var array of WC_Deprecated_Hooks
 	 */
-	public $deprecated_hook_handlers = array();
+	public $deprecated_hook_handlers = [];
 
 	/**
 	 * Main WooCommerce Instance.
@@ -161,7 +161,7 @@ final class WooCommerce {
 	 * @return mixed
 	 */
 	public function __get( $key ) {
-		if ( in_array( $key, array( 'payment_gateways', 'shipping', 'mailer', 'checkout' ), true ) ) {
+		if ( in_array( $key, [ 'payment_gateways', 'shipping', 'mailer', 'checkout' ], true ) ) {
 			return $this->$key();
 		}
 	}
@@ -200,23 +200,23 @@ final class WooCommerce {
 	 * @since 2.3
 	 */
 	private function init_hooks() {
-		register_activation_hook( WC_PLUGIN_FILE, array( 'WC_Install', 'install' ) );
-		register_shutdown_function( array( $this, 'log_errors' ) );
+		register_activation_hook( WC_PLUGIN_FILE, [ 'WC_Install', 'install' ] );
+		register_shutdown_function( [ $this, 'log_errors' ] );
 
-		add_action( 'plugins_loaded', array( $this, 'on_plugins_loaded' ), -1 );
-		add_action( 'admin_notices', array( $this, 'build_dependencies_notice' ) );
-		add_action( 'after_setup_theme', array( $this, 'setup_environment' ) );
-		add_action( 'after_setup_theme', array( $this, 'include_template_functions' ), 11 );
-		add_action( 'init', array( $this, 'init' ), 0 );
-		add_action( 'init', array( 'WC_Shortcodes', 'init' ) );
-		add_action( 'init', array( 'WC_Emails', 'init_transactional_emails' ) );
-		add_action( 'init', array( $this, 'add_image_sizes' ) );
-		add_action( 'init', array( $this, 'load_rest_api' ) );
-		add_action( 'switch_blog', array( $this, 'wpdb_table_fix' ), 0 );
-		add_action( 'activated_plugin', array( $this, 'activated_plugin' ) );
-		add_action( 'deactivated_plugin', array( $this, 'deactivated_plugin' ) );
-		add_action( 'woocommerce_installed', array( $this, 'add_woocommerce_inbox_variant' ) );
-		add_action( 'woocommerce_updated', array( $this, 'add_woocommerce_inbox_variant' ) );
+		add_action( 'plugins_loaded', [ $this, 'on_plugins_loaded' ], -1 );
+		add_action( 'admin_notices', [ $this, 'build_dependencies_notice' ] );
+		add_action( 'after_setup_theme', [ $this, 'setup_environment' ] );
+		add_action( 'after_setup_theme', [ $this, 'include_template_functions' ], 11 );
+		add_action( 'init', [ $this, 'init' ], 0 );
+		add_action( 'init', [ 'WC_Shortcodes', 'init' ] );
+		add_action( 'init', [ 'WC_Emails', 'init_transactional_emails' ] );
+		add_action( 'init', [ $this, 'add_image_sizes' ] );
+		add_action( 'init', [ $this, 'load_rest_api' ] );
+		add_action( 'switch_blog', [ $this, 'wpdb_table_fix' ], 0 );
+		add_action( 'activated_plugin', [ $this, 'activated_plugin' ] );
+		add_action( 'deactivated_plugin', [ $this, 'deactivated_plugin' ] );
+		add_action( 'woocommerce_installed', [ $this, 'add_woocommerce_inbox_variant' ] );
+		add_action( 'woocommerce_updated', [ $this, 'add_woocommerce_inbox_variant' ] );
 
 		// These classes set up hooks on instantiation.
 		wc_get_container()->get( ProductDownloadDirectories::class );
@@ -247,14 +247,14 @@ final class WooCommerce {
 	 */
 	public function log_errors() {
 		$error = error_get_last();
-		if ( $error && in_array( $error['type'], array( E_ERROR, E_PARSE, E_COMPILE_ERROR, E_USER_ERROR, E_RECOVERABLE_ERROR ), true ) ) {
+		if ( $error && in_array( $error['type'], [ E_ERROR, E_PARSE, E_COMPILE_ERROR, E_USER_ERROR, E_RECOVERABLE_ERROR ], true ) ) {
 			$logger = wc_get_logger();
 			$logger->critical(
 				/* translators: 1: error message 2: file name and path 3: line number */
 				sprintf( __( '%1$s in %2$s on line %3$s', 'woocommerce' ), $error['message'], $error['file'], $error['line'] ) . PHP_EOL,
-				array(
+				[
 					'source' => 'fatal-errors',
-				)
+				]
 			);
 
 			/**
@@ -307,13 +307,13 @@ final class WooCommerce {
 		global $wpdb;
 
 		// List of tables without prefixes.
-		$tables = array(
+		$tables = [
 			'payment_tokenmeta'      => 'woocommerce_payment_tokenmeta',
 			'order_itemmeta'         => 'woocommerce_order_itemmeta',
 			'wc_product_meta_lookup' => 'wc_product_meta_lookup',
 			'wc_tax_rate_classes'    => 'wc_tax_rate_classes',
 			'wc_reserved_stock'      => 'wc_reserved_stock',
-		);
+		];
 
 		foreach ( $tables as $name => $table ) {
 			$wpdb->$name    = $wpdb->prefix . $table;
@@ -838,7 +838,7 @@ final class WooCommerce {
 		if ( is_null( $this->customer ) || ! $this->customer instanceof WC_Customer ) {
 			$this->customer = new WC_Customer( get_current_user_id(), true );
 			// Customer should be saved during shutdown.
-			add_action( 'shutdown', array( $this->customer, 'save' ), 10 );
+			add_action( 'shutdown', [ $this->customer, 'save' ], 10 );
 		}
 		if ( is_null( $this->cart ) || ! $this->cart instanceof WC_Cart ) {
 			$this->cart = new WC_Cart();

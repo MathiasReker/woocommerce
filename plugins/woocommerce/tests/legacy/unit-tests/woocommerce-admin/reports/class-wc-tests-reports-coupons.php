@@ -64,36 +64,36 @@ class WC_Admin_Tests_Reports_Coupons extends WC_Unit_Test_Case {
 		$data_store = new CouponsDataStore();
 		$start_time = gmdate( 'Y-m-d 00:00:00', $order->get_date_created()->getOffsetTimestamp() );
 		$end_time   = gmdate( 'Y-m-d 23:59:59', $order->get_date_created()->getOffsetTimestamp() );
-		$args       = array(
+		$args       = [
 			'after'  => $start_time,
 			'before' => $end_time,
-		);
+		];
 
 		// Test retrieving the stats through the data store.
-		$coupon_1_response = array(
+		$coupon_1_response = [
 			'coupon_id'     => $coupon_1->get_id(),
 			'amount'        => floatval( $coupon_1_amount * 2 ),
 			'orders_count'  => 2,
 			'extended_info' => new ArrayObject(),
-		);
-		$coupon_2_response = array(
+		];
+		$coupon_2_response = [
 			'coupon_id'     => $coupon_2->get_id(),
 			'amount'        => floatval( $coupon_2_amount ),
 			'orders_count'  => 1,
 			'extended_info' => new ArrayObject(),
-		);
+		];
 
 		// Order by coupon id DESC is the default.
 		$data          = $data_store->get_data( $args );
-		$expected_data = (object) array(
+		$expected_data = (object) [
 			'total'   => 2,
 			'pages'   => 1,
 			'page_no' => 1,
-			'data'    => array(
+			'data'    => [
 				0 => $coupon_2_response,
 				1 => $coupon_1_response,
-			),
-		);
+			],
+		];
 		$this->assertEquals( $expected_data, $data );
 
 		// Test retrieving the stats through the query class.
@@ -101,80 +101,80 @@ class WC_Admin_Tests_Reports_Coupons extends WC_Unit_Test_Case {
 		$this->assertEquals( $expected_data, $query->get_data() );
 
 		// Test order by orders_count DESC.
-		$args = array(
+		$args = [
 			'after'   => $start_time,
 			'before'  => $end_time,
 			'orderby' => 'orders_count',
 			'order'   => 'desc',
-		);
+		];
 
 		$data          = $data_store->get_data( $args );
-		$expected_data = (object) array(
+		$expected_data = (object) [
 			'total'   => 2,
 			'pages'   => 1,
 			'page_no' => 1,
-			'data'    => array(
+			'data'    => [
 				0 => $coupon_1_response,
 				1 => $coupon_2_response,
-			),
-		);
+			],
+		];
 		$this->assertEquals( $expected_data, $data );
 
 		// Test order by amount ASC.
-		$args = array(
+		$args = [
 			'after'   => $start_time,
 			'before'  => $end_time,
 			'orderby' => 'amount',
 			'order'   => 'asc',
-		);
+		];
 
 		$data          = $data_store->get_data( $args );
-		$expected_data = (object) array(
+		$expected_data = (object) [
 			'total'   => 2,
 			'pages'   => 1,
 			'page_no' => 1,
-			'data'    => array(
+			'data'    => [
 				0 => $coupon_1_response,
 				1 => $coupon_2_response,
-			),
-		);
+			],
+		];
 		$this->assertEquals( $expected_data, $data );
 
 		// Test filtering by coupon id: coupon_1.
-		$args = array(
+		$args = [
 			'after'   => $start_time,
 			'before'  => $end_time,
-			'coupons' => array( $coupon_1->get_id() ),
-		);
+			'coupons' => [ $coupon_1->get_id() ],
+		];
 
 		$data          = $data_store->get_data( $args );
-		$expected_data = (object) array(
+		$expected_data = (object) [
 			'total'   => 1,
 			'pages'   => 1,
 			'page_no' => 1,
-			'data'    => array(
+			'data'    => [
 				0 => $coupon_1_response,
-			),
-		);
+			],
+		];
 		$this->assertEquals( $expected_data, $data );
 
 		// Test filtering by coupon id: coupon_1 & coupon_2.
-		$args = array(
+		$args = [
 			'after'   => $start_time,
 			'before'  => $end_time,
-			'coupons' => array( $coupon_1->get_id(), $coupon_2->get_id() ),
-		);
+			'coupons' => [ $coupon_1->get_id(), $coupon_2->get_id() ],
+		];
 
 		$data          = $data_store->get_data( $args );
-		$expected_data = (object) array(
+		$expected_data = (object) [
 			'total'   => 2,
 			'pages'   => 1,
 			'page_no' => 1,
-			'data'    => array(
+			'data'    => [
 				0 => $coupon_2_response,
 				1 => $coupon_1_response,
-			),
-		);
+			],
+		];
 		$this->assertEquals( $expected_data, $data );
 
 		// Test extended info.
@@ -203,19 +203,19 @@ class WC_Admin_Tests_Reports_Coupons extends WC_Unit_Test_Case {
 			$c1_date_expires_gmt = $c1_date_expires_gmt->format( TimeInterval::$iso_datetime_format );
 		}
 
-		$coupon_1_response = array(
+		$coupon_1_response = [
 			'coupon_id'     => $coupon_1->get_id(),
 			'amount'        => $coupon_1_amount * 2,
 			'orders_count'  => 2,
-			'extended_info' => array(
+			'extended_info' => [
 				'code'             => $coupon_1->get_code(),
 				'date_created'     => $c1_date_created,
 				'date_created_gmt' => $c1_date_created_gmt,
 				'date_expires'     => $c1_date_expires,
 				'date_expires_gmt' => $c1_date_expires_gmt,
 				'discount_type'    => $coupon_1->get_discount_type(),
-			),
-		);
+			],
+		];
 
 		$c2_date_created = $coupon_2->get_date_created();
 		if ( null === $c2_date_created ) {
@@ -241,66 +241,66 @@ class WC_Admin_Tests_Reports_Coupons extends WC_Unit_Test_Case {
 			$c2_date_expires_gmt = $c2_date_expires_gmt->format( TimeInterval::$iso_datetime_format );
 		}
 
-		$coupon_2_response = array(
+		$coupon_2_response = [
 			'coupon_id'     => $coupon_2->get_id(),
 			'amount'        => $coupon_2_amount,
 			'orders_count'  => 1,
-			'extended_info' => array(
+			'extended_info' => [
 				'code'             => $coupon_2->get_code(),
 				'date_created'     => $c2_date_created,
 				'date_created_gmt' => $c2_date_created_gmt,
 				'date_expires'     => $c2_date_expires,
 				'date_expires_gmt' => $c2_date_expires_gmt,
 				'discount_type'    => $coupon_2->get_discount_type(),
-			),
-		);
-		$args              = array(
+			],
+		];
+		$args              = [
 			'after'         => $start_time,
 			'before'        => $end_time,
 			'extended_info' => true,
-		);
+		];
 
 		$data          = $data_store->get_data( $args );
-		$expected_data = (object) array(
+		$expected_data = (object) [
 			'total'   => 2,
 			'pages'   => 1,
 			'page_no' => 1,
-			'data'    => array(
+			'data'    => [
 				0 => $coupon_2_response,
 				1 => $coupon_1_response,
-			),
-		);
+			],
+		];
 		$this->assertEquals( $expected_data, $data );
 
 		// Test the CSV export.
-		$expected_csv_columns = array(
+		$expected_csv_columns = [
 			'"Coupon code"',
 			'Orders',
 			'"Amount discounted"',
 			'Created',
 			'Expires',
 			'Type',
-		);
+		];
 
 		// Expected CSV for Coupon 2.
-		$coupon_2_csv = array(
+		$coupon_2_csv = [
 			$coupon_2_response['extended_info']['code'],
 			$coupon_2_response['orders_count'],
 			$coupon_2_response['amount'],
 			$coupon_2_response['extended_info']['date_created'],
 			$coupon_2_response['extended_info']['date_expires'] ? $coupon_2_response['extended_info']['date_expires'] : 'N/A',
 			$coupon_2_response['extended_info']['discount_type'],
-		);
+		];
 
 		// Expected CSV for Coupon 1.
-		$coupon_1_csv = array(
+		$coupon_1_csv = [
 			$coupon_1_response['extended_info']['code'],
 			$coupon_1_response['orders_count'],
 			$coupon_1_response['amount'],
 			$coupon_1_response['extended_info']['date_created'],
 			$coupon_1_response['extended_info']['date_expires'] ? $coupon_1_response['extended_info']['date_expires'] : 'N/A',
 			$coupon_1_response['extended_info']['discount_type'],
-		);
+		];
 
 		// Build the expected CSV data, including Excel header (see: WC_CSV_Exporter::export).
 		$expected_csv  = chr( 239 ) . chr( 187 ) . chr( 191 );
@@ -381,37 +381,37 @@ class WC_Admin_Tests_Reports_Coupons extends WC_Unit_Test_Case {
 		$data_store = new CouponsDataStore();
 		$start_time = gmdate( 'Y-m-d 00:00:00', $order->get_date_created()->getOffsetTimestamp() );
 		$end_time   = gmdate( 'Y-m-d 23:59:59', $order->get_date_created()->getOffsetTimestamp() );
-		$args       = array(
+		$args       = [
 			'after'  => $start_time,
 			'before' => $end_time,
-		);
+		];
 
 		// Test retrieving the stats through the data store.
-		$coupon_1_response = array(
+		$coupon_1_response = [
 			'coupon_id'     => $coupon_1->get_id(),
 			'amount'        => floatval( $coupon_1_amount ),
 			'orders_count'  => 1,
 			'extended_info' => new ArrayObject(),
-		);
-		$coupon_2_response = array(
+		];
+		$coupon_2_response = [
 			'coupon_id'     => $coupon_2_id, // coupon_2 was deleted, but has metadata containing the ID.
 			'amount'        => floatval( $coupon_2_amount ),
 			'orders_count'  => 1,
 			'extended_info' => new ArrayObject(),
-		);
+		];
 
 		// Order by coupon id DESC is the default.
 		$data          = $data_store->get_data( $args );
-		$expected_data = (object) array(
+		$expected_data = (object) [
 			'total'   => 2,
 			'pages'   => 1,
 			'page_no' => 1,
-			'data'    => array(
+			'data'    => [
 				// Order query is sorted by coupon ID descending.
 				0 => $coupon_2_response,
 				1 => $coupon_1_response,
-			),
-		);
+			],
+		];
 		$this->assertEquals( $expected_data, $data );
 
 		// Test extended info.
@@ -440,50 +440,50 @@ class WC_Admin_Tests_Reports_Coupons extends WC_Unit_Test_Case {
 			$c1_date_expires_gmt = $c1_date_expires_gmt->format( TimeInterval::$iso_datetime_format );
 		}
 
-		$coupon_1_response = array(
+		$coupon_1_response = [
 			'coupon_id'     => $coupon_1->get_id(),
 			'amount'        => floatval( $coupon_1_amount ),
 			'orders_count'  => 1,
-			'extended_info' => array(
+			'extended_info' => [
 				'code'             => $coupon_1->get_code(),
 				'date_created'     => $c1_date_created,
 				'date_created_gmt' => $c1_date_created_gmt,
 				'date_expires'     => $c1_date_expires,
 				'date_expires_gmt' => $c1_date_expires_gmt,
 				'discount_type'    => $coupon_1->get_discount_type(),
-			),
-		);
+			],
+		];
 
-		$coupon_2_response = array(
+		$coupon_2_response = [
 			'coupon_id'     => $coupon_2_id, // coupon_2 was deleted, but has metadata containing the ID.
 			'amount'        => floatval( $coupon_2_amount ),
 			'orders_count'  => 1,
-			'extended_info' => array(
+			'extended_info' => [
 				'code'             => '(Deleted)',
 				'date_created'     => '',
 				'date_created_gmt' => '',
 				'date_expires'     => '',
 				'date_expires_gmt' => '',
 				'discount_type'    => 'N/A',
-			),
-		);
+			],
+		];
 
-		$args          = array(
+		$args          = [
 			'after'         => $start_time,
 			'before'        => $end_time,
 			'extended_info' => true,
-		);
+		];
 		$data          = $data_store->get_data( $args );
-		$expected_data = (object) array(
+		$expected_data = (object) [
 			'total'   => 2,
 			'pages'   => 1,
 			'page_no' => 1,
-			'data'    => array(
+			'data'    => [
 				// Order query is sorted by coupon ID descending.
 				0 => $coupon_2_response,
 				1 => $coupon_1_response,
-			),
-		);
+			],
+		];
 		$this->assertEquals( $expected_data, $data );
 	}
 }

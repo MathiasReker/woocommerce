@@ -48,9 +48,9 @@ class Customers extends WC_REST_Unit_Test_Case {
 
 		$request = new WP_REST_Request( 'GET', '/wc/v3/customers' );
 		$request->set_query_params(
-			array(
+			[
 				'orderby' => 'id',
-			)
+			]
 		);
 		$response     = $this->server->dispatch( $request );
 		$customers    = $response->get_data();
@@ -60,7 +60,7 @@ class Customers extends WC_REST_Unit_Test_Case {
 		$this->assertEquals( 2, count( $customers ) );
 
 		$this->assertContains(
-			array(
+			[
 				'id'                 => $customer_1->get_id(),
 				'date_created'       => wc_rest_prepare_date_response( $date_created, false ),
 				'date_created_gmt'   => wc_rest_prepare_date_response( $date_created ),
@@ -71,7 +71,7 @@ class Customers extends WC_REST_Unit_Test_Case {
 				'last_name'          => '',
 				'role'               => 'customer',
 				'username'           => 'testcustomer',
-				'billing'            => array(
+				'billing'            => [
 					'first_name' => '',
 					'last_name'  => '',
 					'company'    => '',
@@ -83,8 +83,8 @@ class Customers extends WC_REST_Unit_Test_Case {
 					'country'    => 'US',
 					'email'      => '',
 					'phone'      => '',
-				),
-				'shipping'           => array(
+				],
+				'shipping'           => [
 					'first_name' => '',
 					'last_name'  => '',
 					'company'    => '',
@@ -95,23 +95,23 @@ class Customers extends WC_REST_Unit_Test_Case {
 					'postcode'   => '94110',
 					'country'    => 'US',
 					'phone'      => '',
-				),
+				],
 				'is_paying_customer' => false,
 				'avatar_url'         => $customer_1->get_avatar_url(),
-				'meta_data'          => array(),
-				'_links'             => array(
-					'self'       => array(
-						array(
+				'meta_data'          => [],
+				'_links'             => [
+					'self'       => [
+						[
 							'href' => rest_url( '/wc/v3/customers/' . $customer_1->get_id() . '' ),
-						),
-					),
-					'collection' => array(
-						array(
+						],
+					],
+					'collection' => [
+						[
 							'href' => rest_url( '/wc/v3/customers' ),
-						),
-					),
-				),
-			),
+						],
+					],
+				],
+			],
 			$customers
 		);
 
@@ -120,9 +120,9 @@ class Customers extends WC_REST_Unit_Test_Case {
 
 		$request = new WP_REST_Request( 'GET', '/wc/v3/customers' );
 		$request->set_query_params(
-			array(
+			[
 				'orderby' => 'id',
-			)
+			]
 		);
 		$response     = $this->server->dispatch( $request );
 		$customers    = $response->get_data();
@@ -131,7 +131,7 @@ class Customers extends WC_REST_Unit_Test_Case {
 		$this->assertEquals( 200, $response->get_status() );
 
 		$this->assertContains(
-			array(
+			[
 				'id'                 => $customer_3->get_id(),
 				'date_created'       => wc_rest_prepare_date_response( $date_created, false ),
 				'date_created_gmt'   => wc_rest_prepare_date_response( $date_created ),
@@ -142,7 +142,7 @@ class Customers extends WC_REST_Unit_Test_Case {
 				'last_name'          => '',
 				'role'               => 'customer',
 				'username'           => 'timezonetest',
-				'billing'            => array(
+				'billing'            => [
 					'first_name' => '',
 					'last_name'  => '',
 					'company'    => '',
@@ -154,8 +154,8 @@ class Customers extends WC_REST_Unit_Test_Case {
 					'country'    => 'US',
 					'email'      => '',
 					'phone'      => '',
-				),
-				'shipping'           => array(
+				],
+				'shipping'           => [
 					'first_name' => '',
 					'last_name'  => '',
 					'company'    => '',
@@ -166,23 +166,23 @@ class Customers extends WC_REST_Unit_Test_Case {
 					'postcode'   => '94110',
 					'country'    => 'US',
 					'phone'      => '',
-				),
+				],
 				'is_paying_customer' => false,
 				'avatar_url'         => $customer_3->get_avatar_url(),
-				'meta_data'          => array(),
-				'_links'             => array(
-					'self'       => array(
-						array(
+				'meta_data'          => [],
+				'_links'             => [
+					'self'       => [
+						[
 							'href' => rest_url( '/wc/v3/customers/' . $customer_3->get_id() . '' ),
-						),
-					),
-					'collection' => array(
-						array(
+						],
+					],
+					'collection' => [
+						[
 							'href' => rest_url( '/wc/v3/customers' ),
-						),
-					),
-				),
-			),
+						],
+					],
+				],
+			],
 			$customers
 		);
 
@@ -210,18 +210,18 @@ class Customers extends WC_REST_Unit_Test_Case {
 		// Test just the basics first..
 		$request = new WP_REST_Request( 'POST', '/wc/v3/customers' );
 		$request->set_body_params(
-			array(
+			[
 				'username' => 'create_customer_test',
 				'password' => 'test123',
 				'email'    => 'create_customer_test@woo.local',
-			)
+			]
 		);
 		$response = $this->server->dispatch( $request );
 		$data     = $response->get_data();
 
 		$this->assertEquals( 201, $response->get_status() );
 		$this->assertEquals(
-			array(
+			[
 				'id'                 => $data['id'],
 				'date_created'       => $data['date_created'],
 				'date_created_gmt'   => $data['date_created_gmt'],
@@ -232,7 +232,7 @@ class Customers extends WC_REST_Unit_Test_Case {
 				'last_name'          => '',
 				'role'               => 'customer',
 				'username'           => 'create_customer_test',
-				'billing'            => array(
+				'billing'            => [
 					'first_name' => '',
 					'last_name'  => '',
 					'company'    => '',
@@ -244,8 +244,8 @@ class Customers extends WC_REST_Unit_Test_Case {
 					'country'    => '',
 					'email'      => '',
 					'phone'      => '',
-				),
-				'shipping'           => array(
+				],
+				'shipping'           => [
 					'first_name' => '',
 					'last_name'  => '',
 					'company'    => '',
@@ -256,39 +256,39 @@ class Customers extends WC_REST_Unit_Test_Case {
 					'postcode'   => '',
 					'country'    => '',
 					'phone'      => '',
-				),
+				],
 				'is_paying_customer' => false,
-				'meta_data'          => array(),
+				'meta_data'          => [],
 				'avatar_url'         => $data['avatar_url'],
-			),
+			],
 			$data
 		);
 
 		// Test extra data.
 		$request = new WP_REST_Request( 'POST', '/wc/v3/customers' );
 		$request->set_body_params(
-			array(
+			[
 				'username'   => 'create_customer_test2',
 				'password'   => 'test123',
 				'email'      => 'create_customer_test2@woo.local',
 				'first_name' => 'Test',
 				'last_name'  => 'McTestFace',
-				'billing'    => array(
+				'billing'    => [
 					'country' => 'US',
 					'state'   => 'WA',
-				),
-				'shipping'   => array(
+				],
+				'shipping'   => [
 					'state'   => 'CA',
 					'country' => 'US',
-				),
-			)
+				],
+			]
 		);
 		$response = $this->server->dispatch( $request );
 		$data     = $response->get_data();
 
 		$this->assertEquals( 201, $response->get_status() );
 		$this->assertEquals(
-			array(
+			[
 				'id'                 => $data['id'],
 				'date_created'       => $data['date_created'],
 				'date_created_gmt'   => $data['date_created_gmt'],
@@ -299,7 +299,7 @@ class Customers extends WC_REST_Unit_Test_Case {
 				'last_name'          => 'McTestFace',
 				'role'               => 'customer',
 				'username'           => 'create_customer_test2',
-				'billing'            => array(
+				'billing'            => [
 					'first_name' => '',
 					'last_name'  => '',
 					'company'    => '',
@@ -311,8 +311,8 @@ class Customers extends WC_REST_Unit_Test_Case {
 					'country'    => 'US',
 					'email'      => '',
 					'phone'      => '',
-				),
-				'shipping'           => array(
+				],
+				'shipping'           => [
 					'first_name' => '',
 					'last_name'  => '',
 					'company'    => '',
@@ -323,22 +323,22 @@ class Customers extends WC_REST_Unit_Test_Case {
 					'postcode'   => '',
 					'country'    => 'US',
 					'phone'      => '',
-				),
+				],
 				'is_paying_customer' => false,
-				'meta_data'          => array(),
+				'meta_data'          => [],
 				'avatar_url'         => $data['avatar_url'],
-			),
+			],
 			$data
 		);
 
 		// Test without required field.
 		$request = new WP_REST_Request( 'POST', '/wc/v3/customers' );
 		$request->set_body_params(
-			array(
+			[
 				'username'   => 'create_customer_test3',
 				'first_name' => 'Test',
 				'last_name'  => 'McTestFace',
-			)
+			]
 		);
 		$response = $this->server->dispatch( $request );
 		$data     = $response->get_data();
@@ -355,11 +355,11 @@ class Customers extends WC_REST_Unit_Test_Case {
 		wp_set_current_user( 0 );
 		$request = new WP_REST_Request( 'POST', '/wc/v3/customers' );
 		$request->set_body_params(
-			array(
+			[
 				'username' => 'create_customer_test_without_permission',
 				'password' => 'test123',
 				'email'    => 'create_customer_test_without_permission@woo.local',
-			)
+			]
 		);
 		$response = $this->server->dispatch( $request );
 		$this->assertEquals( 401, $response->get_status() );
@@ -377,7 +377,7 @@ class Customers extends WC_REST_Unit_Test_Case {
 		$data     = $response->get_data();
 
 		$this->assertEquals(
-			array(
+			[
 				'id'                 => $data['id'],
 				'date_created'       => $data['date_created'],
 				'date_created_gmt'   => $data['date_created_gmt'],
@@ -385,7 +385,7 @@ class Customers extends WC_REST_Unit_Test_Case {
 				'date_modified_gmt'  => $data['date_modified_gmt'],
 				'email'              => 'get_customer_test@woo.local',
 				'first_name'         => 'Justin',
-				'billing'            => array(
+				'billing'            => [
 					'first_name' => '',
 					'last_name'  => '',
 					'company'    => '',
@@ -397,8 +397,8 @@ class Customers extends WC_REST_Unit_Test_Case {
 					'country'    => 'US',
 					'email'      => '',
 					'phone'      => '',
-				),
-				'shipping'           => array(
+				],
+				'shipping'           => [
 					'first_name' => '',
 					'last_name'  => '',
 					'company'    => '',
@@ -409,14 +409,14 @@ class Customers extends WC_REST_Unit_Test_Case {
 					'postcode'   => '94110',
 					'country'    => 'US',
 					'phone'      => '',
-				),
+				],
 				'is_paying_customer' => false,
-				'meta_data'          => array(),
+				'meta_data'          => [],
 				'last_name'          => '',
 				'role'               => 'customer',
 				'username'           => 'get_customer_test',
 				'avatar_url'         => $data['avatar_url'],
-			),
+			],
 			$data
 		);
 	}
@@ -460,10 +460,10 @@ class Customers extends WC_REST_Unit_Test_Case {
 
 		$request = new WP_REST_Request( 'PUT', '/wc/v3/customers/' . $customer->get_id() );
 		$request->set_body_params(
-			array(
+			[
 				'email'      => 'updated_email@woo.local',
 				'first_name' => 'UpdatedTest',
-			)
+			]
 		);
 		$response = $this->server->dispatch( $request );
 		$data     = $response->get_data();
@@ -552,25 +552,25 @@ class Customers extends WC_REST_Unit_Test_Case {
 
 		$request = new WP_REST_Request( 'POST', '/wc/v3/customers/batch' );
 		$request->set_body_params(
-			array(
-				'update' => array(
-					array(
+			[
+				'update' => [
+					[
 						'id'        => $customer_1->get_id(),
 						'last_name' => 'McTest',
-					),
-				),
-				'delete' => array(
+					],
+				],
+				'delete' => [
 					$customer_2->get_id(),
 					$customer_3->get_id(),
-				),
-				'create' => array(
-					array(
+				],
+				'create' => [
+					[
 						'username' => 'newuser',
 						'password' => 'test123',
 						'email'    => 'newuser@woo.local',
-					),
-				),
-			)
+					],
+				],
+			]
 		);
 		$response = $this->server->dispatch( $request );
 		$data     = $response->get_data();

@@ -76,12 +76,12 @@ abstract class WP_HTTP_TestCase extends WP_UnitTestCase {
 	 *
 	 * @var array
 	 */
-	protected static $cache_request_fields = array(
+	protected static $cache_request_fields = [
 		'method'  => 1,
 		'headers' => 1,
 		'cookies' => 1,
 		'body'    => 1,
-	);
+	];
 
 	/**
 	 * The directory the cache files are in.
@@ -162,13 +162,13 @@ abstract class WP_HTTP_TestCase extends WP_UnitTestCase {
 
 		parent::setUp();
 
-		$this->http_requests = array();
+		$this->http_requests = [];
 
 		if ( ! empty( self::$host ) ) {
-			$this->http_responder = array( $this, 'route_request' );
+			$this->http_responder = [ $this, 'route_request' ];
 		}
 
-		add_filter( 'pre_http_request', array( $this, 'http_request_listner' ), 10, 3 );
+		add_filter( 'pre_http_request', [ $this, 'http_request_listner' ], 10, 3 );
 	}
 
 	/**
@@ -180,7 +180,7 @@ abstract class WP_HTTP_TestCase extends WP_UnitTestCase {
 
 		parent::tearDown();
 
-		remove_filter( 'pre_http_request', array( $this, 'http_request_listner' ) );
+		remove_filter( 'pre_http_request', [ $this, 'http_request_listner' ] );
 
 		$this->skip_cache_next = false;
 	}
@@ -204,10 +204,10 @@ abstract class WP_HTTP_TestCase extends WP_UnitTestCase {
 	 */
 	public function http_request_listner( $preempt, $request, $url ) {
 
-		$this->http_requests[] = array(
+		$this->http_requests[] = [
 			'url'     => $url,
 			'request' => $request,
-		);
+		];
 
 		if ( $this->http_responder ) {
 			$preempt = call_user_func( $this->http_responder, $request, $url );

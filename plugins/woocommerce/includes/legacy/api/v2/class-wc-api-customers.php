@@ -36,10 +36,10 @@ class WC_API_Customers extends WC_API_Resource {
 		parent::__construct( $server );
 
 		// add customer data to order responses
-		add_filter( 'woocommerce_api_order_response', array( $this, 'add_customer_data' ), 10, 2 );
+		add_filter( 'woocommerce_api_order_response', [ $this, 'add_customer_data' ], 10, 2 );
 
 		// modify WP_User_Query to support created_at date filtering
-		add_action( 'pre_user_query', array( $this, 'modify_user_query' ) );
+		add_action( 'pre_user_query', [ $this, 'modify_user_query' ] );
 	}
 
 	/**
@@ -57,42 +57,42 @@ class WC_API_Customers extends WC_API_Resource {
 	public function register_routes( $routes ) {
 
 		# GET/POST /customers
-		$routes[ $this->base ] = array(
-			array( array( $this, 'get_customers' ),   WC_API_SERVER::READABLE ),
-			array( array( $this, 'create_customer' ), WC_API_SERVER::CREATABLE | WC_API_Server::ACCEPT_DATA ),
-		);
+		$routes[ $this->base ] = [
+			[ [ $this, 'get_customers' ],   WC_API_SERVER::READABLE ],
+			[ [ $this, 'create_customer' ], WC_API_SERVER::CREATABLE | WC_API_Server::ACCEPT_DATA ],
+		];
 
 		# GET /customers/count
-		$routes[ $this->base . '/count' ] = array(
-			array( array( $this, 'get_customers_count' ), WC_API_SERVER::READABLE ),
-		);
+		$routes[ $this->base . '/count' ] = [
+			[ [ $this, 'get_customers_count' ], WC_API_SERVER::READABLE ],
+		];
 
 		# GET/PUT/DELETE /customers/<id>
-		$routes[ $this->base . '/(?P<id>\d+)' ] = array(
-			array( array( $this, 'get_customer' ),    WC_API_SERVER::READABLE ),
-			array( array( $this, 'edit_customer' ),   WC_API_SERVER::EDITABLE | WC_API_SERVER::ACCEPT_DATA ),
-			array( array( $this, 'delete_customer' ), WC_API_SERVER::DELETABLE ),
-		);
+		$routes[ $this->base . '/(?P<id>\d+)' ] = [
+			[ [ $this, 'get_customer' ],    WC_API_SERVER::READABLE ],
+			[ [ $this, 'edit_customer' ],   WC_API_SERVER::EDITABLE | WC_API_SERVER::ACCEPT_DATA ],
+			[ [ $this, 'delete_customer' ], WC_API_SERVER::DELETABLE ],
+		];
 
 		# GET /customers/email/<email>
-		$routes[ $this->base . '/email/(?P<email>.+)' ] = array(
-			array( array( $this, 'get_customer_by_email' ), WC_API_SERVER::READABLE ),
-		);
+		$routes[ $this->base . '/email/(?P<email>.+)' ] = [
+			[ [ $this, 'get_customer_by_email' ], WC_API_SERVER::READABLE ],
+		];
 
 		# GET /customers/<id>/orders
-		$routes[ $this->base . '/(?P<id>\d+)/orders' ] = array(
-			array( array( $this, 'get_customer_orders' ), WC_API_SERVER::READABLE ),
-		);
+		$routes[ $this->base . '/(?P<id>\d+)/orders' ] = [
+			[ [ $this, 'get_customer_orders' ], WC_API_SERVER::READABLE ],
+		];
 
 		# GET /customers/<id>/downloads
-		$routes[ $this->base . '/(?P<id>\d+)/downloads' ] = array(
-			array( array( $this, 'get_customer_downloads' ), WC_API_SERVER::READABLE ),
-		);
+		$routes[ $this->base . '/(?P<id>\d+)/downloads' ] = [
+			[ [ $this, 'get_customer_downloads' ], WC_API_SERVER::READABLE ],
+		];
 
 		# POST|PUT /customers/bulk
-		$routes[ $this->base . '/bulk' ] = array(
-			array( array( $this, 'bulk' ), WC_API_Server::EDITABLE | WC_API_Server::ACCEPT_DATA ),
-		);
+		$routes[ $this->base . '/bulk' ] = [
+			[ [ $this, 'bulk' ], WC_API_Server::EDITABLE | WC_API_Server::ACCEPT_DATA ],
+		];
 
 		return $routes;
 	}
@@ -106,13 +106,13 @@ class WC_API_Customers extends WC_API_Resource {
 	 * @param int $page
 	 * @return array
 	 */
-	public function get_customers( $fields = null, $filter = array(), $page = 1 ) {
+	public function get_customers( $fields = null, $filter = [], $page = 1 ) {
 
 		$filter['page'] = $page;
 
 		$query = $this->query_customers( $filter );
 
-		$customers = array();
+		$customers = [];
 
 		foreach ( $query->get_results() as $user_id ) {
 
@@ -125,7 +125,7 @@ class WC_API_Customers extends WC_API_Resource {
 
 		$this->server->add_pagination_headers( $query );
 
-		return array( 'customers' => $customers );
+		return [ 'customers' => $customers ];
 	}
 
 	/**
@@ -147,7 +147,7 @@ class WC_API_Customers extends WC_API_Resource {
 
 		$customer      = new WC_Customer( $id );
 		$last_order    = $customer->get_last_order();
-		$customer_data = array(
+		$customer_data = [
 			'id'               => $customer->get_id(),
 			'created_at'       => $this->server->format_datetime( $customer->get_date_created() ? $customer->get_date_created()->getTimestamp() : 0 ), // API gives UTC times.
 			'email'            => $customer->get_email(),
@@ -160,7 +160,7 @@ class WC_API_Customers extends WC_API_Resource {
 			'orders_count'     => $customer->get_order_count(),
 			'total_spent'      => wc_format_decimal( $customer->get_total_spent(), 2 ),
 			'avatar_url'       => $customer->get_avatar_url(),
-			'billing_address'  => array(
+			'billing_address'  => [
 				'first_name' => $customer->get_billing_first_name(),
 				'last_name'  => $customer->get_billing_last_name(),
 				'company'    => $customer->get_billing_company(),
@@ -172,8 +172,8 @@ class WC_API_Customers extends WC_API_Resource {
 				'country'    => $customer->get_billing_country(),
 				'email'      => $customer->get_billing_email(),
 				'phone'      => $customer->get_billing_phone(),
-			),
-			'shipping_address' => array(
+			],
+			'shipping_address' => [
 				'first_name' => $customer->get_shipping_first_name(),
 				'last_name'  => $customer->get_shipping_last_name(),
 				'company'    => $customer->get_shipping_company(),
@@ -183,10 +183,10 @@ class WC_API_Customers extends WC_API_Resource {
 				'state'      => $customer->get_shipping_state(),
 				'postcode'   => $customer->get_shipping_postcode(),
 				'country'    => $customer->get_shipping_country(),
-			),
-		);
+			],
+		];
 
-		return array( 'customer' => apply_filters( 'woocommerce_api_customer_response', $customer_data, $customer, $fields, $this->server ) );
+		return [ 'customer' => apply_filters( 'woocommerce_api_customer_response', $customer_data, $customer, $fields, $this->server ) ];
 	}
 
 	/**
@@ -212,7 +212,7 @@ class WC_API_Customers extends WC_API_Resource {
 
 			return $this->get_customer( $customer->ID, $fields );
 		} catch ( WC_API_Exception $e ) {
-			return new WP_Error( $e->getErrorCode(), $e->getMessage(), array( 'status' => $e->getCode() ) );
+			return new WP_Error( $e->getErrorCode(), $e->getMessage(), [ 'status' => $e->getCode() ] );
 		}
 	}
 
@@ -225,7 +225,7 @@ class WC_API_Customers extends WC_API_Resource {
 	 *
 	 * @return array|WP_Error
 	 */
-	public function get_customers_count( $filter = array() ) {
+	public function get_customers_count( $filter = [] ) {
 		try {
 			if ( ! current_user_can( 'list_users' ) ) {
 				throw new WC_API_Exception( 'woocommerce_api_user_cannot_read_customers_count', __( 'You do not have permission to read the customers count', 'woocommerce' ), 401 );
@@ -233,9 +233,9 @@ class WC_API_Customers extends WC_API_Resource {
 
 			$query = $this->query_customers( $filter );
 
-			return array( 'count' => $query->get_total() );
+			return [ 'count' => $query->get_total() ];
 		} catch ( WC_API_Exception $e ) {
-			return new WP_Error( $e->getErrorCode(), $e->getMessage(), array( 'status' => $e->getCode() ) );
+			return new WP_Error( $e->getErrorCode(), $e->getMessage(), [ 'status' => $e->getCode() ] );
 		}
 	}
 
@@ -246,7 +246,7 @@ class WC_API_Customers extends WC_API_Resource {
 	 * @return array
 	 */
 	protected function get_customer_billing_address() {
-		$billing_address = apply_filters( 'woocommerce_api_customer_billing_address', array(
+		$billing_address = apply_filters( 'woocommerce_api_customer_billing_address', [
 			'first_name',
 			'last_name',
 			'company',
@@ -258,7 +258,7 @@ class WC_API_Customers extends WC_API_Resource {
 			'country',
 			'email',
 			'phone',
-		) );
+		] );
 
 		return $billing_address;
 	}
@@ -270,7 +270,7 @@ class WC_API_Customers extends WC_API_Resource {
 	 * @return array
 	 */
 	protected function get_customer_shipping_address() {
-		$shipping_address = apply_filters( 'woocommerce_api_customer_shipping_address', array(
+		$shipping_address = apply_filters( 'woocommerce_api_customer_shipping_address', [
 			'first_name',
 			'last_name',
 			'company',
@@ -280,7 +280,7 @@ class WC_API_Customers extends WC_API_Resource {
 			'state',
 			'postcode',
 			'country',
-		) );
+		] );
 
 		return $shipping_address;
 	}
@@ -309,7 +309,7 @@ class WC_API_Customers extends WC_API_Resource {
 		if ( isset( $data['billing_address'] ) ) {
 			foreach ( $this->get_customer_billing_address() as $field ) {
 				if ( isset( $data['billing_address'][ $field ] ) ) {
-					if ( is_callable( array( $customer, "set_billing_{$field}" ) ) ) {
+					if ( is_callable( [ $customer, "set_billing_{$field}" ] ) ) {
 						$customer->{"set_billing_{$field}"}( $data['billing_address'][ $field ] );
 					} else {
 						$customer->update_meta_data( 'billing_' . $field, wc_clean( $data['billing_address'][ $field ] ) );
@@ -322,7 +322,7 @@ class WC_API_Customers extends WC_API_Resource {
 		if ( isset( $data['shipping_address'] ) ) {
 			foreach ( $this->get_customer_shipping_address() as $field ) {
 				if ( isset( $data['shipping_address'][ $field ] ) ) {
-					if ( is_callable( array( $customer, "set_shipping_{$field}" ) ) ) {
+					if ( is_callable( [ $customer, "set_shipping_{$field}" ] ) ) {
 						$customer->{"set_shipping_{$field}"}( $data['shipping_address'][ $field ] );
 					} else {
 						$customer->update_meta_data( 'shipping_' . $field, wc_clean( $data['shipping_address'][ $field ] ) );
@@ -384,7 +384,7 @@ class WC_API_Customers extends WC_API_Resource {
 
 			return $this->get_customer( $customer->get_id() );
 		} catch ( Exception $e ) {
-			return new WP_Error( $e->getErrorCode(), $e->getMessage(), array( 'status' => $e->getCode() ) );
+			return new WP_Error( $e->getErrorCode(), $e->getMessage(), [ 'status' => $e->getCode() ] );
 		}
 	}
 
@@ -437,7 +437,7 @@ class WC_API_Customers extends WC_API_Resource {
 
 			return $this->get_customer( $customer->get_id() );
 		} catch ( Exception $e ) {
-			return new WP_Error( $e->getErrorCode(), $e->getMessage(), array( 'status' => $e->getCode() ) );
+			return new WP_Error( $e->getErrorCode(), $e->getMessage(), [ 'status' => $e->getCode() ] );
 		}
 	}
 
@@ -480,25 +480,25 @@ class WC_API_Customers extends WC_API_Resource {
 			return $id;
 		}
 
-		$order_ids = wc_get_orders( array(
+		$order_ids = wc_get_orders( [
 			'customer' => $id,
 			'limit'    => -1,
 			'orderby'  => 'date',
 			'order'    => 'ASC',
 			'return'   => 'ids',
-		) );
+		] );
 
 		if ( empty( $order_ids ) ) {
-			return array( 'orders' => array() );
+			return [ 'orders' => [] ];
 		}
 
-		$orders = array();
+		$orders = [];
 
 		foreach ( $order_ids as $order_id ) {
 			$orders[] = current( WC()->api->WC_API_Orders->get_order( $order_id, $fields ) );
 		}
 
-		return array( 'orders' => apply_filters( 'woocommerce_api_customer_orders_response', $orders, $id, $fields, $order_ids, $this->server ) );
+		return [ 'orders' => apply_filters( 'woocommerce_api_customer_orders_response', $orders, $id, $fields, $order_ids, $this->server ) ];
 	}
 
 	/**
@@ -516,11 +516,11 @@ class WC_API_Customers extends WC_API_Resource {
 			return $id;
 		}
 
-		$downloads  = array();
+		$downloads  = [];
 		$_downloads = wc_get_customer_available_downloads( $id );
 
 		foreach ( $_downloads as $key => $download ) {
-			$downloads[] = array(
+			$downloads[] = [
 				'download_url'        => $download['download_url'],
 				'download_id'         => $download['download_id'],
 				'product_id'          => $download['product_id'],
@@ -530,10 +530,10 @@ class WC_API_Customers extends WC_API_Resource {
 				'downloads_remaining' => $download['downloads_remaining'],
 				'access_expires'      => $download['access_expires'] ? $this->server->format_datetime( $download['access_expires'] ) : null,
 				'file'                => $download['file'],
-			);
+			];
 		}
 
-		return array( 'downloads' => apply_filters( 'woocommerce_api_customer_downloads_response', $downloads, $id, $fields, $this->server ) );
+		return [ 'downloads' => apply_filters( 'woocommerce_api_customer_downloads_response', $downloads, $id, $fields, $this->server ) ];
 	}
 
 	/**
@@ -548,18 +548,18 @@ class WC_API_Customers extends WC_API_Resource {
 	 * @param array $args request arguments for filtering query
 	 * @return WP_User_Query
 	 */
-	private function query_customers( $args = array() ) {
+	private function query_customers( $args = [] ) {
 
 		// default users per page
 		$users_per_page = get_option( 'posts_per_page' );
 
 		// Set base query arguments
-		$query_args = array(
+		$query_args = [
 			'fields'  => 'ID',
 			'role'    => 'customer',
 			'orderby' => 'registered',
 			'number'  => $users_per_page,
-		);
+		];
 
 		// Custom Role
 		if ( ! empty( $args['role'] ) ) {
@@ -639,12 +639,12 @@ class WC_API_Customers extends WC_API_Resource {
 		if ( 0 == $order->get_user_id() ) {
 
 			// add customer data from order
-			$order_data['customer'] = array(
+			$order_data['customer'] = [
 				'id'               => 0,
 				'email'            => $order->get_billing_email(),
 				'first_name'       => $order->get_billing_first_name(),
 				'last_name'        => $order->get_billing_last_name(),
-				'billing_address'  => array(
+				'billing_address'  => [
 					'first_name' => $order->get_billing_first_name(),
 					'last_name'  => $order->get_billing_last_name(),
 					'company'    => $order->get_billing_company(),
@@ -656,8 +656,8 @@ class WC_API_Customers extends WC_API_Resource {
 					'country'    => $order->get_billing_country(),
 					'email'      => $order->get_billing_email(),
 					'phone'      => $order->get_billing_phone(),
-				),
-				'shipping_address' => array(
+				],
+				'shipping_address' => [
 					'first_name' => $order->get_shipping_first_name(),
 					'last_name'  => $order->get_shipping_last_name(),
 					'company'    => $order->get_shipping_company(),
@@ -667,8 +667,8 @@ class WC_API_Customers extends WC_API_Resource {
 					'state'      => $order->get_shipping_state(),
 					'postcode'   => $order->get_shipping_postcode(),
 					'country'    => $order->get_shipping_country(),
-				),
-			);
+				],
+			];
 
 		} else {
 
@@ -750,7 +750,7 @@ class WC_API_Customers extends WC_API_Resource {
 
 			return $id;
 		} catch ( WC_API_Exception $e ) {
-			return new WP_Error( $e->getErrorCode(), $e->getMessage(), array( 'status' => $e->getCode() ) );
+			return new WP_Error( $e->getErrorCode(), $e->getMessage(), [ 'status' => $e->getCode() ] );
 		}
 	}
 
@@ -792,7 +792,7 @@ class WC_API_Customers extends WC_API_Resource {
 				throw new WC_API_Exception( 'woocommerce_api_customers_request_entity_too_large', sprintf( __( 'Unable to accept more than %s items for this request.', 'woocommerce' ), $limit ), 413 );
 			}
 
-			$customers = array();
+			$customers = [];
 
 			foreach ( $data as $_customer ) {
 				$customer_id = 0;
@@ -804,34 +804,34 @@ class WC_API_Customers extends WC_API_Resource {
 
 				// Customer exists / edit customer
 				if ( $customer_id ) {
-					$edit = $this->edit_customer( $customer_id, array( 'customer' => $_customer ) );
+					$edit = $this->edit_customer( $customer_id, [ 'customer' => $_customer ] );
 
 					if ( is_wp_error( $edit ) ) {
-						$customers[] = array(
+						$customers[] = [
 							'id'    => $customer_id,
-							'error' => array( 'code' => $edit->get_error_code(), 'message' => $edit->get_error_message() ),
-						);
+							'error' => [ 'code' => $edit->get_error_code(), 'message' => $edit->get_error_message() ],
+						];
 					} else {
 						$customers[] = $edit['customer'];
 					}
 				} else {
 					// Customer don't exists / create customer
-					$new = $this->create_customer( array( 'customer' => $_customer ) );
+					$new = $this->create_customer( [ 'customer' => $_customer ] );
 
 					if ( is_wp_error( $new ) ) {
-						$customers[] = array(
+						$customers[] = [
 							'id'    => $customer_id,
-							'error' => array( 'code' => $new->get_error_code(), 'message' => $new->get_error_message() ),
-						);
+							'error' => [ 'code' => $new->get_error_code(), 'message' => $new->get_error_message() ],
+						];
 					} else {
 						$customers[] = $new['customer'];
 					}
 				}
 			}
 
-			return array( 'customers' => apply_filters( 'woocommerce_api_customers_bulk_response', $customers, $this ) );
+			return [ 'customers' => apply_filters( 'woocommerce_api_customers_bulk_response', $customers, $this ) ];
 		} catch ( WC_API_Exception $e ) {
-			return new WP_Error( $e->getErrorCode(), $e->getMessage(), array( 'status' => $e->getCode() ) );
+			return new WP_Error( $e->getErrorCode(), $e->getMessage(), [ 'status' => $e->getCode() ] );
 		}
 	}
 }

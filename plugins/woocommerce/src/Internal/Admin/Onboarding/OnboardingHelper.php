@@ -39,9 +39,9 @@ class OnboardingHelper {
 			return;
 		}
 
-		add_action( 'current_screen', array( $this, 'add_help_tab' ), 60 );
-		add_action( 'current_screen', array( $this, 'reset_task_list' ) );
-		add_action( 'current_screen', array( $this, 'reset_extended_task_list' ) );
+		add_action( 'current_screen', [ $this, 'add_help_tab' ], 60 );
+		add_action( 'current_screen', [ $this, 'reset_task_list' ] );
+		add_action( 'current_screen', [ $this, 'reset_extended_task_list' ] );
 	}
 
 	/**
@@ -69,10 +69,10 @@ class OnboardingHelper {
 		}
 
 		// Add the new help tab.
-		$help_tab = array(
+		$help_tab = [
 			'title' => __( 'Setup wizard', 'woocommerce' ),
 			'id'    => 'woocommerce_onboard_tab',
-		);
+		];
 
 		$setup_list    = TaskLists::get_list( 'setup' );
 		$extended_list = TaskLists::get_list( 'extended' );
@@ -126,9 +126,9 @@ class OnboardingHelper {
 		if ( $update ) {
 			wc_admin_record_tracks_event(
 				'tasklist_toggled',
-				array(
+				[
 					'status' => $show ? 'enabled' : 'disabled',
-				)
+				]
 			);
 		}
 
@@ -158,9 +158,9 @@ class OnboardingHelper {
 		if ( $update ) {
 			wc_admin_record_tracks_event(
 				'extended_tasklist_toggled',
-				array(
+				[
 					'status' => $show ? 'disabled' : 'enabled',
-				)
+				]
 			);
 		}
 

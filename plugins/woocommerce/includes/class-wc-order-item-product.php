@@ -20,7 +20,7 @@ class WC_Order_Item_Product extends WC_Order_Item {
 	 * @since 3.0.0
 	 * @var array
 	 */
-	protected $extra_data = array(
+	protected $extra_data = [
 		'product_id'   => 0,
 		'variation_id' => 0,
 		'quantity'     => 1,
@@ -29,11 +29,11 @@ class WC_Order_Item_Product extends WC_Order_Item {
 		'subtotal_tax' => 0,
 		'total'        => 0,
 		'total_tax'    => 0,
-		'taxes'        => array(
-			'subtotal' => array(),
-			'total'    => array(),
-		),
-	);
+		'taxes'        => [
+			'subtotal' => [],
+			'total'    => [],
+		],
+	];
 
 	/*
 	|--------------------------------------------------------------------------
@@ -146,10 +146,10 @@ class WC_Order_Item_Product extends WC_Order_Item {
 	 */
 	public function set_taxes( $raw_tax_data ) {
 		$raw_tax_data = maybe_unserialize( $raw_tax_data );
-		$tax_data     = array(
-			'total'    => array(),
-			'subtotal' => array(),
-		);
+		$tax_data     = [
+			'total'    => [],
+			'subtotal' => [],
+		];
 		if ( ! empty( $raw_tax_data['total'] ) && ! empty( $raw_tax_data['subtotal'] ) ) {
 			$tax_data['subtotal'] = array_map( 'wc_format_decimal', $raw_tax_data['subtotal'] );
 			$tax_data['total']    = array_map( 'wc_format_decimal', $raw_tax_data['total'] );
@@ -175,7 +175,7 @@ class WC_Order_Item_Product extends WC_Order_Item {
 	 *
 	 * @param array $data Key/Value pairs.
 	 */
-	public function set_variation( $data = array() ) {
+	public function set_variation( $data = [] ) {
 		if ( is_array( $data ) ) {
 			foreach ( $data as $key => $value ) {
 				$this->add_meta_data( str_replace( 'attribute_', '', $key ), $value, true );
@@ -195,7 +195,7 @@ class WC_Order_Item_Product extends WC_Order_Item {
 		if ( $product->is_type( 'variation' ) ) {
 			$this->set_product_id( $product->get_parent_id() );
 			$this->set_variation_id( $product->get_id() );
-			$this->set_variation( is_callable( array( $product, 'get_variation_attributes' ) ) ? $product->get_variation_attributes() : array() );
+			$this->set_variation( is_callable( [ $product, 'get_variation_attributes' ] ) ? $product->get_variation_attributes() : [] );
 		} else {
 			$this->set_product_id( $product->get_id() );
 		}
@@ -348,12 +348,12 @@ class WC_Order_Item_Product extends WC_Order_Item {
 		$order = $this->get_order();
 
 		return $order ? add_query_arg(
-			array(
+			[
 				'download_file' => $this->get_variation_id() ? $this->get_variation_id() : $this->get_product_id(),
 				'order'         => $order->get_order_key(),
 				'email'         => rawurlencode( $order->get_billing_email() ),
 				'key'           => $download_id,
-			),
+			],
 			trailingslashit( home_url() )
 		) : '';
 	}
@@ -364,7 +364,7 @@ class WC_Order_Item_Product extends WC_Order_Item {
 	 * @return array
 	 */
 	public function get_item_downloads() {
-		$files      = array();
+		$files      = [];
 		$product    = $this->get_product();
 		$order      = $this->get_order();
 		$product_id = $this->get_variation_id() ? $this->get_variation_id() : $this->get_product_id();
@@ -373,11 +373,11 @@ class WC_Order_Item_Product extends WC_Order_Item {
 			$email_hash         = function_exists( 'hash' ) ? hash( 'sha256', $order->get_billing_email() ) : sha1( $order->get_billing_email() );
 			$data_store         = WC_Data_Store::load( 'customer-download' );
 			$customer_downloads = $data_store->get_downloads(
-				array(
+				[
 					'user_email' => $order->get_billing_email(),
 					'order_id'   => $order->get_id(),
 					'product_id' => $product_id,
-				)
+				]
 			);
 			foreach ( $customer_downloads as $customer_download ) {
 				$download_id = $customer_download->get_download_id();
@@ -388,12 +388,12 @@ class WC_Order_Item_Product extends WC_Order_Item {
 					$files[ $download_id ]['downloads_remaining'] = $customer_download->get_downloads_remaining();
 					$files[ $download_id ]['access_expires']      = $customer_download->get_access_expires();
 					$files[ $download_id ]['download_url']        = add_query_arg(
-						array(
+						[
 							'download_file' => $product_id,
 							'order'         => $order->get_order_key(),
 							'uid'           => $email_hash,
 							'key'           => $download_id,
-						),
+						],
 						trailingslashit( home_url() )
 					);
 				}
@@ -480,7 +480,7 @@ class WC_Order_Item_Product extends WC_Order_Item {
 	 */
 	#[\ReturnTypeWillChange]
 	public function offsetExists( $offset ) {
-		if ( in_array( $offset, array( 'line_subtotal', 'line_subtotal_tax', 'line_total', 'line_tax', 'line_tax_data', 'item_meta_array', 'item_meta', 'qty' ), true ) ) {
+		if ( in_array( $offset, [ 'line_subtotal', 'line_subtotal_tax', 'line_total', 'line_tax', 'line_tax_data', 'item_meta_array', 'item_meta', 'qty' ], true ) ) {
 			return true;
 		}
 		return parent::offsetExists( $offset );

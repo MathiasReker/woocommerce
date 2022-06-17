@@ -44,22 +44,22 @@ class WC_Geolocation {
 	 *
 	 * @var array
 	 */
-	private static $ip_lookup_apis = array(
+	private static $ip_lookup_apis = [
 		'ipify'  => 'http://api.ipify.org/',
 		'ipecho' => 'http://ipecho.net/plain',
 		'ident'  => 'http://ident.me',
 		'tnedi'  => 'http://tnedi.me',
-	);
+	];
 
 	/**
 	 * API endpoints for geolocating an IP address
 	 *
 	 * @var array
 	 */
-	private static $geoip_apis = array(
+	private static $geoip_apis = [
 		'ipinfo.io'  => 'https://ipinfo.io/%s/json',
 		'ip-api.com' => 'http://ip-api.com/json/%s',
-	);
+	];
 
 	/**
 	 * Check if geolocation is enabled.
@@ -69,7 +69,7 @@ class WC_Geolocation {
 	 * @return bool
 	 */
 	private static function is_geolocation_enabled( $current_settings ) {
-		return in_array( $current_settings, array( 'geolocation', 'geolocation_ajax' ), true );
+		return in_array( $current_settings, [ 'geolocation', 'geolocation_ajax' ], true );
 	}
 
 	/**
@@ -113,7 +113,7 @@ class WC_Geolocation {
 
 			foreach ( $ip_lookup_services_keys as $service_name ) {
 				$service_endpoint = $ip_lookup_services[ $service_name ];
-				$response         = wp_safe_remote_get( $service_endpoint, array( 'timeout' => 2 ) );
+				$response         = wp_safe_remote_get( $service_endpoint, [ 'timeout' => 2 ] );
 
 				if ( ! is_wp_error( $response ) && rest_is_ip_address( $response['body'] ) ) {
 					$external_ip_address = apply_filters( 'woocommerce_geolocation_ip_lookup_api_response', wc_clean( $response['body'] ), $service_name );
@@ -140,12 +140,12 @@ class WC_Geolocation {
 		$country_code = apply_filters( 'woocommerce_geolocate_ip', false, $ip_address, $fallback, $api_fallback );
 
 		if ( false !== $country_code ) {
-			return array(
+			return [
 				'country'  => $country_code,
 				'state'    => '',
 				'city'     => '',
 				'postcode' => '',
-			);
+			];
 		}
 
 		if ( empty( $ip_address ) ) {
@@ -162,12 +162,12 @@ class WC_Geolocation {
 		 */
 		$geolocation = apply_filters(
 			'woocommerce_get_geolocation',
-			array(
+			[
 				'country'  => $country_code,
 				'state'    => '',
 				'city'     => '',
 				'postcode' => '',
-			),
+			],
 			$ip_address
 		);
 
@@ -187,12 +187,12 @@ class WC_Geolocation {
 			}
 		}
 
-		return array(
+		return [
 			'country'  => $geolocation['country'],
 			'state'    => $geolocation['state'],
 			'city'     => $geolocation['city'],
 			'postcode' => $geolocation['postcode'],
-		);
+		];
 	}
 
 	/**
@@ -229,12 +229,12 @@ class WC_Geolocation {
 	private static function get_country_code_from_headers() {
 		$country_code = '';
 
-		$headers = array(
+		$headers = [
 			'MM_COUNTRY_CODE',
 			'GEOIP_COUNTRY_CODE',
 			'HTTP_CF_IPCOUNTRY',
 			'HTTP_X_COUNTRY_CODE',
-		);
+		];
 
 		foreach ( $headers as $header ) {
 			if ( empty( $_SERVER[ $header ] ) ) {
@@ -276,7 +276,7 @@ class WC_Geolocation {
 
 			foreach ( $geoip_services_keys as $service_name ) {
 				$service_endpoint = $geoip_services[ $service_name ];
-				$response         = wp_safe_remote_get( sprintf( $service_endpoint, $ip_address ), array( 'timeout' => 2 ) );
+				$response         = wp_safe_remote_get( sprintf( $service_endpoint, $ip_address ), [ 'timeout' => 2 ] );
 
 				if ( ! is_wp_error( $response ) && $response['body'] ) {
 					switch ( $service_name ) {

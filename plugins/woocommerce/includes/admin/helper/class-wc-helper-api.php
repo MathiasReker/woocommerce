@@ -41,7 +41,7 @@ class WC_Helper_API {
 	 *
 	 * @return array|WP_Error The response from wp_safe_remote_request()
 	 */
-	public static function request( $endpoint, $args = array() ) {
+	public static function request( $endpoint, $args = [] ) {
 		$url = self::url( $endpoint );
 
 		if ( ! empty( $args['authenticated'] ) ) {
@@ -81,11 +81,11 @@ class WC_Helper_API {
 			$request_uri .= '?' . $query_string;
 		}
 
-		$data = array(
+		$data = [
 			'host'        => parse_url( $url, PHP_URL_HOST ),
 			'request_uri' => $request_uri,
 			'method'      => ! empty( $args['method'] ) ? $args['method'] : 'GET',
-		);
+		];
 
 		if ( ! empty( $args['body'] ) ) {
 			$data['body'] = $args['body'];
@@ -93,20 +93,20 @@ class WC_Helper_API {
 
 		$signature = hash_hmac( 'sha256', json_encode( $data ), $auth['access_token_secret'] );
 		if ( empty( $args['headers'] ) ) {
-			$args['headers'] = array();
+			$args['headers'] = [];
 		}
 
-		$headers         = array(
+		$headers         = [
 			'Authorization'   => 'Bearer ' . $auth['access_token'],
 			'X-Woo-Signature' => $signature,
-		);
+		];
 		$args['headers'] = wp_parse_args( $headers, $args['headers'] );
 
 		$url = add_query_arg(
-			array(
+			[
 				'token'     => $auth['access_token'],
 				'signature' => $signature,
-			),
+			],
 			$url
 		);
 
@@ -121,7 +121,7 @@ class WC_Helper_API {
 	 *
 	 * @return array The response object from wp_safe_remote_request().
 	 */
-	public static function get( $endpoint, $args = array() ) {
+	public static function get( $endpoint, $args = [] ) {
 		$args['method'] = 'GET';
 		return self::request( $endpoint, $args );
 	}
@@ -134,7 +134,7 @@ class WC_Helper_API {
 	 *
 	 * @return array The response object from wp_safe_remote_request().
 	 */
-	public static function post( $endpoint, $args = array() ) {
+	public static function post( $endpoint, $args = [] ) {
 		$args['method'] = 'POST';
 		return self::request( $endpoint, $args );
 	}
@@ -147,7 +147,7 @@ class WC_Helper_API {
 	 *
 	 * @return array The response object from wp_safe_remote_request().
 	 */
-	public static function put( $endpoint, $args = array() ) {
+	public static function put( $endpoint, $args = [] ) {
 		$args['method'] = 'PUT';
 		return self::request( $endpoint, $args );
 	}

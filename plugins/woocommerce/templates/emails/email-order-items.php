@@ -59,9 +59,9 @@ foreach ( $items as $item_id => $item ) :
 
 		wc_display_item_meta(
 			$item,
-			array(
+			[
 				'label_before' => '<strong class="wc-item-meta-label" style="float: ' . esc_attr( $text_align ) . '; margin-' . esc_attr( $margin_side ) . ': .25em; clear: both">',
-			)
+			]
 		);
 
 		// allow other plugins to add additional product information here.

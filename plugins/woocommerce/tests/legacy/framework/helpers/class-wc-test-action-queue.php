@@ -14,7 +14,7 @@ class WC_Admin_Test_Action_Queue extends WC_Action_Queue {
 	 *
 	 * @var array
 	 */
-	public $actions = array();
+	public $actions = [];
 
 	/**
 	 * Override of WC_Action_Queue::schedule_single that just places
@@ -26,7 +26,7 @@ class WC_Admin_Test_Action_Queue extends WC_Action_Queue {
 	 * @param string $group Group.
 	 * @return bool
 	 */
-	public function schedule_single( $timestamp, $hook, $args = array(), $group = '' ) {
+	public function schedule_single( $timestamp, $hook, $args = [], $group = '' ) {
 		$this->actions[] = compact( 'timestamp', 'hook', 'args', 'group' );
 		return true;
 	}

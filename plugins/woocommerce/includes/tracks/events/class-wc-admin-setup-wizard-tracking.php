@@ -18,7 +18,7 @@ class WC_Admin_Setup_Wizard_Tracking {
 	 *
 	 * @var array
 	 */
-	private $steps = array();
+	private $steps = [];
 
 	/**
 	 * Init tracking.
@@ -57,7 +57,7 @@ class WC_Admin_Setup_Wizard_Tracking {
 	public function dequeue_non_allowed_scripts() {
 		_deprecated_function( __CLASS__ . '::' . __FUNCTION__, '4.6.0', __( 'Onboarding is maintained in WooCommerce Admin.', 'woocommerce' ) );
 		global $wp_scripts;
-		$allowed = array( 'woo-tracks' );
+		$allowed = [ 'woo-tracks' ];
 
 		foreach ( $wp_scripts->queue as $script ) {
 			if ( in_array( $script, $allowed, true ) ) {

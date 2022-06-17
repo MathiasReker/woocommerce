@@ -38,10 +38,10 @@ class WC_Logger implements WC_Logger_Interface {
 	 */
 	public function __construct( $handlers = null, $threshold = null ) {
 		if ( null === $handlers ) {
-			$handlers = apply_filters( 'woocommerce_register_log_handlers', array() );
+			$handlers = apply_filters( 'woocommerce_register_log_handlers', [] );
 		}
 
-		$register_handlers = array();
+		$register_handlers = [];
 
 		if ( ! empty( $handlers ) && is_array( $handlers ) ) {
 			foreach ( $handlers as $handler ) {
@@ -108,12 +108,12 @@ class WC_Logger implements WC_Logger_Interface {
 		$this->log(
 			$level,
 			$message,
-			array(
+			[
 				'source'  => $handle,
 				'_legacy' => true,
-			)
+			]
 		);
-		wc_do_deprecated_action( 'woocommerce_log_add', array( $handle, $message ), '3.0', 'This action has been deprecated with no alternative.' );
+		wc_do_deprecated_action( 'woocommerce_log_add', [ $handle, $message ], '3.0', 'This action has been deprecated with no alternative.' );
 		return true;
 	}
 
@@ -132,7 +132,7 @@ class WC_Logger implements WC_Logger_Interface {
 	 * @param string $message Log message.
 	 * @param array  $context Optional. Additional information for log handlers.
 	 */
-	public function log( $level, $message, $context = array() ) {
+	public function log( $level, $message, $context = [] ) {
 		if ( ! WC_Log_Levels::is_valid_level( $level ) ) {
 			/* translators: 1: WC_Logger::log 2: level */
 			wc_doing_it_wrong( __METHOD__, sprintf( __( '%1$s was called with an invalid level "%2$s".', 'woocommerce' ), '<code>WC_Logger::log</code>', $level ), '3.0' );
@@ -170,7 +170,7 @@ class WC_Logger implements WC_Logger_Interface {
 	 * @param string $message Message to log.
 	 * @param array  $context Log context.
 	 */
-	public function emergency( $message, $context = array() ) {
+	public function emergency( $message, $context = [] ) {
 		$this->log( WC_Log_Levels::EMERGENCY, $message, $context );
 	}
 
@@ -185,7 +185,7 @@ class WC_Logger implements WC_Logger_Interface {
 	 * @param string $message Message to log.
 	 * @param array  $context Log context.
 	 */
-	public function alert( $message, $context = array() ) {
+	public function alert( $message, $context = [] ) {
 		$this->log( WC_Log_Levels::ALERT, $message, $context );
 	}
 
@@ -200,7 +200,7 @@ class WC_Logger implements WC_Logger_Interface {
 	 * @param string $message Message to log.
 	 * @param array  $context Log context.
 	 */
-	public function critical( $message, $context = array() ) {
+	public function critical( $message, $context = [] ) {
 		$this->log( WC_Log_Levels::CRITICAL, $message, $context );
 	}
 
@@ -215,7 +215,7 @@ class WC_Logger implements WC_Logger_Interface {
 	 * @param string $message Message to log.
 	 * @param array  $context Log context.
 	 */
-	public function error( $message, $context = array() ) {
+	public function error( $message, $context = [] ) {
 		$this->log( WC_Log_Levels::ERROR, $message, $context );
 	}
 
@@ -232,7 +232,7 @@ class WC_Logger implements WC_Logger_Interface {
 	 * @param string $message Message to log.
 	 * @param array  $context Log context.
 	 */
-	public function warning( $message, $context = array() ) {
+	public function warning( $message, $context = [] ) {
 		$this->log( WC_Log_Levels::WARNING, $message, $context );
 	}
 
@@ -246,7 +246,7 @@ class WC_Logger implements WC_Logger_Interface {
 	 * @param string $message Message to log.
 	 * @param array  $context Log context.
 	 */
-	public function notice( $message, $context = array() ) {
+	public function notice( $message, $context = [] ) {
 		$this->log( WC_Log_Levels::NOTICE, $message, $context );
 	}
 
@@ -261,7 +261,7 @@ class WC_Logger implements WC_Logger_Interface {
 	 * @param string $message Message to log.
 	 * @param array  $context Log context.
 	 */
-	public function info( $message, $context = array() ) {
+	public function info( $message, $context = [] ) {
 		$this->log( WC_Log_Levels::INFO, $message, $context );
 	}
 
@@ -275,7 +275,7 @@ class WC_Logger implements WC_Logger_Interface {
 	 * @param string $message Message to log.
 	 * @param array  $context Log context.
 	 */
-	public function debug( $message, $context = array() ) {
+	public function debug( $message, $context = [] ) {
 		$this->log( WC_Log_Levels::DEBUG, $message, $context );
 	}
 
@@ -290,7 +290,7 @@ class WC_Logger implements WC_Logger_Interface {
 			return false;
 		}
 		foreach ( $this->handlers as $handler ) {
-			if ( is_callable( array( $handler, 'clear' ) ) ) {
+			if ( is_callable( [ $handler, 'clear' ] ) ) {
 				$handler->clear( $source );
 			}
 		}
@@ -307,7 +307,7 @@ class WC_Logger implements WC_Logger_Interface {
 		$timestamp = strtotime( "-{$days} days" );
 
 		foreach ( $this->handlers as $handler ) {
-			if ( is_callable( array( $handler, 'delete_logs_before_timestamp' ) ) ) {
+			if ( is_callable( [ $handler, 'delete_logs_before_timestamp' ] ) ) {
 				$handler->delete_logs_before_timestamp( $timestamp );
 			}
 		}

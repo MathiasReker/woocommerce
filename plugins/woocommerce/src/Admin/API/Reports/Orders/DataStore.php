@@ -38,7 +38,7 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 	 *
 	 * @var array
 	 */
-	protected $column_types = array(
+	protected $column_types = [
 		'order_id'         => 'intval',
 		'parent_id'        => 'intval',
 		'date_created'     => 'strval',
@@ -49,7 +49,7 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 		'total_sales'      => 'floatval',
 		'num_items_sold'   => 'intval',
 		'customer_type'    => 'strval',
-	);
+	];
 
 	/**
 	 * Data store context used to pass to filters.
@@ -64,7 +64,7 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 	protected function assign_report_columns() {
 		$table_name = self::get_db_table_name();
 		// Avoid ambigious columns in SQL query.
-		$this->report_columns = array(
+		$this->report_columns = [
 			'order_id'         => "DISTINCT {$table_name}.order_id",
 			'parent_id'        => "{$table_name}.parent_id",
 			'date_created'     => "{$table_name}.date_created",
@@ -75,7 +75,7 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 			'total_sales'      => "{$table_name}.total_sales",
 			'num_items_sold'   => "{$table_name}.num_items_sold",
 			'customer_type'    => "(CASE WHEN {$table_name}.returning_customer = 0 THEN 'new' ELSE 'returning' END) as customer_type",
-		);
+		];
 	}
 
 	/**
@@ -90,7 +90,7 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 		$order_product_lookup_table = $wpdb->prefix . 'wc_order_product_lookup';
 		$order_tax_lookup_table     = $wpdb->prefix . 'wc_order_tax_lookup';
 		$operator                   = $this->get_match_operator( $query_args );
-		$where_subquery             = array();
+		$where_subquery             = [];
 		$have_joined_products_table = false;
 
 		$this->add_time_period_sql_params( $query_args, $order_stats_lookup_table );
@@ -210,7 +210,7 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 		$table_name = self::get_db_table_name();
 
 		// These defaults are only partially applied when used via REST API, as that has its own defaults.
-		$defaults   = array(
+		$defaults   = [
 			'per_page'          => get_option( 'posts_per_page' ),
 			'page'              => 1,
 			'order'             => 'DESC',
@@ -218,19 +218,19 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 			'before'            => TimeInterval::default_before(),
 			'after'             => TimeInterval::default_after(),
 			'fields'            => '*',
-			'product_includes'  => array(),
-			'product_excludes'  => array(),
-			'coupon_includes'   => array(),
-			'coupon_excludes'   => array(),
-			'tax_rate_includes' => array(),
-			'tax_rate_excludes' => array(),
+			'product_includes'  => [],
+			'product_excludes'  => [],
+			'coupon_includes'   => [],
+			'coupon_excludes'   => [],
+			'tax_rate_includes' => [],
+			'tax_rate_excludes' => [],
 			'customer_type'     => null,
-			'status_is'         => array(),
+			'status_is'         => [],
 			'extended_info'     => false,
 			'refunds'           => null,
-			'order_includes'    => array(),
-			'order_excludes'    => array(),
-		);
+			'order_includes'    => [],
+			'order_excludes'    => [],
+		];
 		$query_args = wp_parse_args( $query_args, $defaults );
 		$this->normalize_timezones( $query_args, $defaults );
 
@@ -244,12 +244,12 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 		if ( false === $data ) {
 			$this->initialize_queries();
 
-			$data = (object) array(
-				'data'    => array(),
+			$data = (object) [
+				'data'    => [],
 				'total'   => 0,
 				'pages'   => 0,
 				'page_no' => 0,
-			);
+			];
 
 			$selections = $this->selected_columns( $query_args );
 			$params     = $this->get_limit_params( $query_args );
@@ -268,12 +268,12 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 				$total_pages = (int) ceil( $db_records_count / $params['per_page'] );
 			}
 			if ( $query_args['page'] < 1 || $query_args['page'] > $total_pages ) {
-				$data = (object) array(
-					'data'    => array(),
+				$data = (object) [
+					'data'    => [],
 					'total'   => $db_records_count,
 					'pages'   => 0,
 					'page_no' => 0,
-				);
+				];
 				return $data;
 			}
 
@@ -296,13 +296,13 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 				$this->include_extended_info( $orders_data, $query_args );
 			}
 
-			$orders_data = array_map( array( $this, 'cast_numbers' ), $orders_data );
-			$data        = (object) array(
+			$orders_data = array_map( [ $this, 'cast_numbers' ], $orders_data );
+			$data        = (object) [
 				'data'    => $orders_data,
 				'total'   => $db_records_count,
 				'pages'   => $total_pages,
 				'page_no' => (int) $query_args['page'],
-			);
+			];
 
 			$this->set_cached_data( $cache_key, $data );
 		}
@@ -338,18 +338,18 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 		$customers        = $this->get_customers_by_orders( $orders_data );
 		$mapped_customers = $this->map_array_by_key( $customers, 'customer_id' );
 
-		$mapped_data = array();
+		$mapped_data = [];
 		foreach ( $products as $product ) {
 			if ( ! isset( $mapped_data[ $product['order_id'] ] ) ) {
-				$mapped_data[ $product['order_id'] ]['products'] = array();
+				$mapped_data[ $product['order_id'] ]['products'] = [];
 			}
 
 			$is_variation = '0' !== $product['variation_id'];
-			$product_data = array(
+			$product_data = [
 				'id'       => $is_variation ? $product['variation_id'] : $product['product_id'],
 				'name'     => $product['product_name'],
 				'quantity' => $product['product_quantity'],
-			);
+			];
 
 			if ( $is_variation ) {
 				$variation = wc_get_product( $product_data['id'] );
@@ -376,21 +376,21 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 
 		foreach ( $coupons as $coupon ) {
 			if ( ! isset( $mapped_data[ $coupon['order_id'] ] ) ) {
-				$mapped_data[ $product['order_id'] ]['coupons'] = array();
+				$mapped_data[ $product['order_id'] ]['coupons'] = [];
 			}
 
-			$mapped_data[ $coupon['order_id'] ]['coupons'][] = array(
+			$mapped_data[ $coupon['order_id'] ]['coupons'][] = [
 				'id'   => $coupon['coupon_id'],
 				'code' => wc_format_coupon_code( $coupon['coupon_code'] ),
-			);
+			];
 		}
 
 		foreach ( $orders_data as $key => $order_data ) {
-			$defaults                             = array(
-				'products' => array(),
-				'coupons'  => array(),
-				'customer' => array(),
-			);
+			$defaults                             = [
+				'products' => [],
+				'coupons'  => [],
+				'customer' => [],
+			];
 			$orders_data[ $key ]['extended_info'] = isset( $mapped_data[ $order_data['order_id'] ] ) ? array_merge( $defaults, $mapped_data[ $order_data['order_id'] ] ) : $defaults;
 			if ( $order_data['customer_id'] && isset( $mapped_customers[ $order_data['customer_id'] ] ) ) {
 				$orders_data[ $key ]['extended_info']['customer'] = $mapped_customers[ $order_data['customer_id'] ];
@@ -405,7 +405,7 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 	 * @return array
 	 */
 	protected function get_orders_with_parent_id( $orders ) {
-		$related_orders = array();
+		$related_orders = [];
 		foreach ( $orders as $order ) {
 			if ( '0' !== $order['parent_id'] ) {
 				$related_orders[ $order['parent_id'] ] = $order;
@@ -422,7 +422,7 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 	 * @return array
 	 */
 	protected function map_array_by_key( $array, $key ) {
-		$mapped = array();
+		$mapped = [];
 		foreach ( $array as $item ) {
 			$mapped[ $item[ $key ] ] = $item;
 		}
@@ -477,7 +477,7 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 		global $wpdb;
 
 		$customer_lookup_table = $wpdb->prefix . 'wc_customer_lookup';
-		$customer_ids          = array();
+		$customer_ids          = [];
 
 		foreach ( $orders as $order ) {
 			if ( $order['customer_id'] ) {
@@ -486,7 +486,7 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 		}
 
 		if ( empty( $customer_ids ) ) {
-			return array();
+			return [];
 		}
 
 		/* phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared */

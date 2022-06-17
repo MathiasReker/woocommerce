@@ -33,8 +33,8 @@ class OrdersTableDataStoreTests extends WC_Unit_Test_Case {
 	public function setUp(): void {
 		parent::setUp();
 		// Remove the Test Suite’s use of temporary tables https://wordpress.stackexchange.com/a/220308.
-		remove_filter( 'query', array( $this, '_create_temporary_tables' ) );
-		remove_filter( 'query', array( $this, '_drop_temporary_tables' ) );
+		remove_filter( 'query', [ $this, '_create_temporary_tables' ] );
+		remove_filter( 'query', [ $this, '_drop_temporary_tables' ] );
 		OrderHelper::delete_order_custom_tables(); // We need this since non-temporary tables won't drop automatically.
 		OrderHelper::create_order_custom_table_if_not_exist();
 		$this->sut            = wc_get_container()->get( OrdersTableDataStore::class );
@@ -47,8 +47,8 @@ class OrdersTableDataStoreTests extends WC_Unit_Test_Case {
 	 */
 	public function tearDown(): void {
 		// Add back removed filter.
-		add_filter( 'query', array( $this, '_create_temporary_tables' ) );
-		add_filter( 'query', array( $this, '_drop_temporary_tables' ) );
+		add_filter( 'query', [ $this, '_create_temporary_tables' ] );
+		add_filter( 'query', [ $this, '_drop_temporary_tables' ] );
 		parent::tearDown();
 	}
 
@@ -57,7 +57,7 @@ class OrdersTableDataStoreTests extends WC_Unit_Test_Case {
 	 */
 	public function test_read_from_migrated_order() {
 		$post_order_id = OrderHelper::create_complex_wp_post_order();
-		$this->migrator->migrate_orders( array( $post_order_id ) );
+		$this->migrator->migrate_orders( [ $post_order_id ] );
 
 		wp_cache_flush();
 		$cot_order = new WC_Order();
@@ -83,13 +83,13 @@ class OrdersTableDataStoreTests extends WC_Unit_Test_Case {
 	 */
 	public function test_backfill_post_record() {
 		$post_order_id = OrderHelper::create_complex_wp_post_order();
-		$this->migrator->migrate_orders( array( $post_order_id ) );
+		$this->migrator->migrate_orders( [ $post_order_id ] );
 
 		$post_data      = get_post( $post_order_id, ARRAY_A );
 		$post_meta_data = get_post_meta( $post_order_id );
 		// TODO: Remove `_recorded_sales` from exempted keys after https://github.com/woocommerce/woocommerce/issues/32843.
-		$exempted_keys         = array( 'post_modified', 'post_modified_gmt', '_recorded_sales' );
-		$convert_to_float_keys = array( '_cart_discount_tax', '_order_shipping', '_order_shipping_tax', '_order_tax', '_cart_discount', 'cart_tax' );
+		$exempted_keys         = [ 'post_modified', 'post_modified_gmt', '_recorded_sales' ];
+		$convert_to_float_keys = [ '_cart_discount_tax', '_order_shipping', '_order_shipping_tax', '_order_tax', '_cart_discount', 'cart_tax' ];
 		$exempted_keys         = array_flip( array_merge( $exempted_keys, $convert_to_float_keys ) );
 
 		$post_data_float      = array_intersect_key( $post_data, array_flip( $convert_to_float_keys ) );
@@ -99,7 +99,7 @@ class OrdersTableDataStoreTests extends WC_Unit_Test_Case {
 
 		// Let's update post data.
 		wp_update_post(
-			array(
+			[
 				'ID'            => $post_order_id,
 				'post_status'   => 'migration_pending',
 				'post_type'     => DataSynchronizer::PLACEHOLDER_ORDER_POST_TYPE,
@@ -108,12 +108,12 @@ class OrdersTableDataStoreTests extends WC_Unit_Test_Case {
 				'menu_order'    => 0,
 				'post_date'     => '',
 				'post_date_gmt' => '',
-			)
+			]
 		);
 		$this->delete_all_meta_for_post( $post_order_id );
 
 		$this->assertEquals( 'migration_pending', get_post_status( $post_order_id ) ); // assert post was updated.
-		$this->assertEquals( array(), get_post_meta( $post_order_id ) ); // assert postmeta was deleted.
+		$this->assertEquals( [], get_post_meta( $post_order_id ) ); // assert postmeta was deleted.
 
 		$cot_order = new WC_Order();
 		$cot_order->set_id( $post_order_id );
@@ -137,23 +137,23 @@ class OrdersTableDataStoreTests extends WC_Unit_Test_Case {
 	 * Tests update() on the COT datastore.
 	 */
 	public function test_cot_datastore_update() {
-		static $props_to_update   = array(
+		static $props_to_update   = [
 			'billing_first_name' => 'John',
 			'billing_last_name'  => 'Doe',
 			'shipping_phone'     => '555-55-55',
 			'status'             => 'on-hold',
 			'cart_hash'          => 'YET-ANOTHER-CART-HASH',
-		);
-		static $datastore_updates = array(
+		];
+		static $datastore_updates = [
 			'email_sent' => true,
-		);
-		static $meta_to_update    = array(
-			'my_meta_key' => array( 'my', 'custom', 'meta' ),
-		);
+		];
+		static $meta_to_update    = [
+			'my_meta_key' => [ 'my', 'custom', 'meta' ],
+		];
 
 		// Set up order.
 		$post_order = OrderHelper::create_order();
-		$this->migrator->migrate_orders( array( $post_order->get_id() ) );
+		$this->migrator->migrate_orders( [ $post_order->get_id() ] );
 
 		// Read order using the COT datastore.
 		wp_cache_flush();
@@ -202,7 +202,7 @@ class OrdersTableDataStoreTests extends WC_Unit_Test_Case {
 	 */
 	private function delete_all_meta_for_post( $post_id ) {
 		global $wpdb;
-		$wpdb->delete( $wpdb->postmeta, array( 'post_id' => $post_id ) );
+		$wpdb->delete( $wpdb->postmeta, [ 'post_id' => $post_id ] );
 	}
 
 	/**

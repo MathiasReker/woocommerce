@@ -13,9 +13,9 @@ class WCPayPromotionDataSourcePoller extends DataSourcePoller {
 	/**
 	 * Default data sources array.
 	 */
-	const DATA_SOURCES = array(
+	const DATA_SOURCES = [
 		'https://woocommerce.com/wp-json/wccom/payment-gateway-suggestions/1.0/payment-method/promotions.json',
-	);
+	];
 
 	/**
 	 * Class instance.

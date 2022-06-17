@@ -19,8 +19,8 @@ class Init {
 	 * Constructor.
 	 */
 	public function __construct() {
-		add_action( 'change_locale', array( __CLASS__, 'delete_specs_transient' ) );
-		add_action( 'woocommerce_updated', array( __CLASS__, 'delete_specs_transient' ) );
+		add_action( 'change_locale', [ __CLASS__, 'delete_specs_transient' ] );
+		add_action( 'woocommerce_updated', [ __CLASS__, 'delete_specs_transient' ] );
 	}
 
 	/**
@@ -29,14 +29,14 @@ class Init {
 	 * @param array $allowed_bundles Optional array of allowed bundles to be returned.
 	 * @return array
 	 */
-	public static function get_extensions( $allowed_bundles = array() ) {
-		$bundles = array();
+	public static function get_extensions( $allowed_bundles = [] ) {
+		$bundles = [];
 		$specs   = self::get_specs();
 
 		foreach ( $specs as $spec ) {
 			$spec              = (object) $spec;
 			$bundle            = (array) $spec;
-			$bundle['plugins'] = array();
+			$bundle['plugins'] = [];
 
 			if ( ! empty( $allowed_bundles ) && ! in_array( $spec->key, $allowed_bundles, true ) ) {
 				continue;

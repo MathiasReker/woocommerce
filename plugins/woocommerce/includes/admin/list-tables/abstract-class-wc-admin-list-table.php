@@ -38,18 +38,18 @@ abstract class WC_Admin_List_Table {
 	 */
 	public function __construct() {
 		if ( $this->list_table_type ) {
-			add_action( 'manage_posts_extra_tablenav', array( $this, 'maybe_render_blank_state' ) );
-			add_filter( 'view_mode_post_types', array( $this, 'disable_view_mode' ) );
-			add_action( 'restrict_manage_posts', array( $this, 'restrict_manage_posts' ) );
-			add_filter( 'request', array( $this, 'request_query' ) );
-			add_filter( 'post_row_actions', array( $this, 'row_actions' ), 100, 2 );
-			add_filter( 'default_hidden_columns', array( $this, 'default_hidden_columns' ), 10, 2 );
-			add_filter( 'list_table_primary_column', array( $this, 'list_table_primary_column' ), 10, 2 );
-			add_filter( 'manage_edit-' . $this->list_table_type . '_sortable_columns', array( $this, 'define_sortable_columns' ) );
-			add_filter( 'manage_' . $this->list_table_type . '_posts_columns', array( $this, 'define_columns' ) );
-			add_filter( 'bulk_actions-edit-' . $this->list_table_type, array( $this, 'define_bulk_actions' ) );
-			add_action( 'manage_' . $this->list_table_type . '_posts_custom_column', array( $this, 'render_columns' ), 10, 2 );
-			add_filter( 'handle_bulk_actions-edit-' . $this->list_table_type, array( $this, 'handle_bulk_actions' ), 10, 3 );
+			add_action( 'manage_posts_extra_tablenav', [ $this, 'maybe_render_blank_state' ] );
+			add_filter( 'view_mode_post_types', [ $this, 'disable_view_mode' ] );
+			add_action( 'restrict_manage_posts', [ $this, 'restrict_manage_posts' ] );
+			add_filter( 'request', [ $this, 'request_query' ] );
+			add_filter( 'post_row_actions', [ $this, 'row_actions' ], 100, 2 );
+			add_filter( 'default_hidden_columns', [ $this, 'default_hidden_columns' ], 10, 2 );
+			add_filter( 'list_table_primary_column', [ $this, 'list_table_primary_column' ], 10, 2 );
+			add_filter( 'manage_edit-' . $this->list_table_type . '_sortable_columns', [ $this, 'define_sortable_columns' ] );
+			add_filter( 'manage_' . $this->list_table_type . '_posts_columns', [ $this, 'define_columns' ] );
+			add_filter( 'bulk_actions-edit-' . $this->list_table_type, [ $this, 'define_bulk_actions' ] );
+			add_action( 'manage_' . $this->list_table_type . '_posts_custom_column', [ $this, 'render_columns' ], 10, 2 );
+			add_filter( 'handle_bulk_actions-edit-' . $this->list_table_type, [ $this, 'handle_bulk_actions' ], 10, 3 );
 		}
 	}
 
@@ -204,7 +204,7 @@ abstract class WC_Admin_List_Table {
 	 * @return array
 	 */
 	protected function define_hidden_columns() {
-		return array();
+		return [];
 	}
 
 	/**
@@ -257,7 +257,7 @@ abstract class WC_Admin_List_Table {
 			return;
 		}
 
-		if ( is_callable( array( $this, 'render_' . $column . '_column' ) ) ) {
+		if ( is_callable( [ $this, 'render_' . $column . '_column' ] ) ) {
 			$this->{"render_{$column}_column"}();
 		}
 	}

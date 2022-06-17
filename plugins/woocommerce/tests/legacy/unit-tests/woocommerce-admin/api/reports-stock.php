@@ -25,9 +25,9 @@ class WC_Admin_Tests_API_Reports_Stock extends WC_REST_Unit_Test_Case {
 		parent::setUp();
 
 		$this->user = $this->factory->user->create(
-			array(
+			[
 				'role' => 'administrator',
-			)
+			]
 		);
 	}
 
@@ -63,7 +63,7 @@ class WC_Admin_Tests_API_Reports_Stock extends WC_REST_Unit_Test_Case {
 		$out_of_stock->save();
 
 		$request = new WP_REST_Request( 'GET', $this->endpoint );
-		$request->set_param( 'include', implode( ',', array( $low_stock->get_id(), $out_of_stock->get_id() ) ) );
+		$request->set_param( 'include', implode( ',', [ $low_stock->get_id(), $out_of_stock->get_id() ] ) );
 		$request->set_param( 'orderby', 'id' );
 		$response = $this->server->dispatch( $request );
 		$reports  = $response->get_data();
@@ -78,7 +78,7 @@ class WC_Admin_Tests_API_Reports_Stock extends WC_REST_Unit_Test_Case {
 		$this->assertArrayHasKey( 'product', $reports[0]['_links'] );
 
 		$request = new WP_REST_Request( 'GET', $this->endpoint );
-		$request->set_param( 'include', implode( ',', array( $low_stock->get_id(), $out_of_stock->get_id() ) ) );
+		$request->set_param( 'include', implode( ',', [ $low_stock->get_id(), $out_of_stock->get_id() ] ) );
 		$request->set_param( 'type', 'lowstock' );
 		$response = $this->server->dispatch( $request );
 		$reports  = $response->get_data();

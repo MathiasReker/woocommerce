@@ -21,13 +21,13 @@ class WC_Widget_Product_Search extends WC_Widget {
 		$this->widget_description = __( 'A search form for your store.', 'woocommerce' );
 		$this->widget_id          = 'woocommerce_product_search';
 		$this->widget_name        = __( 'Product Search', 'woocommerce' );
-		$this->settings           = array(
-			'title' => array(
+		$this->settings           = [
+			'title' => [
 				'type'  => 'text',
 				'std'   => '',
 				'label' => __( 'Title', 'woocommerce' ),
-			),
-		);
+			],
+		];
 
 		parent::__construct();
 	}

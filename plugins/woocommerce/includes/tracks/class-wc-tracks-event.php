@@ -80,9 +80,9 @@ class WC_Tracks_Event {
 			unset( $event->_via_ip );
 		}
 
-		$validated = array(
+		$validated = [
 			'browser_type' => WC_Tracks_Client::BROWSER_TYPE,
-		);
+		];
 
 		$_event = (object) array_merge( (array) $event, $validated );
 
@@ -150,10 +150,10 @@ class WC_Tracks_Event {
 			return;
 		}
 
-		$allowed_key_names = array(
+		$allowed_key_names = [
 			'anonId',
 			'Browser_Type',
-		);
+		];
 
 		foreach ( array_keys( (array) $event ) as $key ) {
 			if ( in_array( $key, $allowed_key_names, true ) ) {

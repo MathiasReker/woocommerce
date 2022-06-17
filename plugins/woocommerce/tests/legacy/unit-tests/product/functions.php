@@ -24,80 +24,80 @@ class WC_Tests_Product_Functions extends WC_Unit_Test_Case {
 		$term_tag_2 = get_term_by( 'id', $test_tag_2['term_id'], 'product_tag' );
 
 		$product = WC_Helper_Product::create_simple_product();
-		$product->set_tag_ids( array( $test_tag_1['term_id'] ) );
-		$product->set_category_ids( array( $test_cat_1['term_id'] ) );
+		$product->set_tag_ids( [ $test_tag_1['term_id'] ] );
+		$product->set_category_ids( [ $test_cat_1['term_id'] ] );
 		$product->set_sku( 'GET TEST SKU SIMPLE' );
 		$product->save();
 
 		$product_2 = WC_Helper_Product::create_simple_product();
-		$product_2->set_category_ids( array( $test_cat_1['term_id'] ) );
+		$product_2->set_category_ids( [ $test_cat_1['term_id'] ] );
 		$product_2->save();
 
 		$external = WC_Helper_Product::create_simple_product();
-		$external->set_category_ids( array( $test_cat_1['term_id'] ) );
+		$external->set_category_ids( [ $test_cat_1['term_id'] ] );
 		$external->set_sku( 'GET TEST SKU EXTERNAL' );
 		$external->save();
 
 		$external_2 = WC_Helper_Product::create_simple_product();
-		$external_2->set_tag_ids( array( $test_tag_2['term_id'] ) );
+		$external_2->set_tag_ids( [ $test_tag_2['term_id'] ] );
 		$external_2->save();
 
 		$grouped = WC_Helper_Product::create_grouped_product();
 
 		$variation = WC_Helper_Product::create_variation_product();
-		$variation->set_tag_ids( array( $test_tag_1['term_id'] ) );
+		$variation->set_tag_ids( [ $test_tag_1['term_id'] ] );
 		$variation->save();
 
 		$draft = WC_Helper_Product::create_simple_product();
 		$draft->set_status( 'draft' );
 		$draft->save();
 
-		$this->assertCount( 9, wc_get_products( array( 'return' => 'ids' ) ) );
+		$this->assertCount( 9, wc_get_products( [ 'return' => 'ids' ] ) );
 
 		// Test status.
 		$products = wc_get_products(
-			array(
+			[
 				'return' => 'ids',
 				'status' => 'draft',
-			)
+			]
 		);
-		$this->assertEquals( array( $draft->get_id() ), $products );
+		$this->assertEquals( [ $draft->get_id() ], $products );
 
 		// Test type.
 		$products = wc_get_products(
-			array(
+			[
 				'return' => 'ids',
 				'type'   => 'variation',
-			)
+			]
 		);
 		$this->assertCount( 6, $products );
 
 		// Test parent.
 		$products = wc_get_products(
-			array(
+			[
 				'return' => 'ids',
 				'type'   => 'variation',
 				'parent' => $variation->get_id(),
-			)
+			]
 		);
 		$this->assertCount( 6, $products );
 
 		// Test parent_exclude.
 		$products = wc_get_products(
-			array(
+			[
 				'return'         => 'ids',
 				'type'           => 'variation',
-				'parent_exclude' => array( $variation->get_id() ),
-			)
+				'parent_exclude' => [ $variation->get_id() ],
+			]
 		);
 		$this->assertCount( 0, $products );
 
 		// Test skus.
 		$products = wc_get_products(
-			array(
+			[
 				'return' => 'ids',
 				'sku'    => 'GET TEST SKU',
-			)
+			]
 		);
 		$this->assertCount( 2, $products );
 		$this->assertContains( $product->get_id(), $products );
@@ -105,60 +105,60 @@ class WC_Tests_Product_Functions extends WC_Unit_Test_Case {
 
 		// Test categories.
 		$products = wc_get_products(
-			array(
+			[
 				'return'   => 'ids',
-				'category' => array( $term_cat_1->slug ),
-			)
+				'category' => [ $term_cat_1->slug ],
+			]
 		);
 		$this->assertCount( 3, $products );
 
 		// Test tags.
 		$products = wc_get_products(
-			array(
+			[
 				'return' => 'ids',
-				'tag'    => array( $term_tag_1->slug ),
-			)
+				'tag'    => [ $term_tag_1->slug ],
+			]
 		);
 		$this->assertCount( 2, $products );
 
 		$products = wc_get_products(
-			array(
+			[
 				'return' => 'ids',
-				'tag'    => array( $term_tag_2->slug ),
-			)
+				'tag'    => [ $term_tag_2->slug ],
+			]
 		);
 		$this->assertCount( 1, $products );
 
 		$products = wc_get_products(
-			array(
+			[
 				'return' => 'ids',
-				'tag'    => array( $term_tag_1->slug, $term_tag_2->slug ),
-			)
+				'tag'    => [ $term_tag_1->slug, $term_tag_2->slug ],
+			]
 		);
 		$this->assertCount( 3, $products );
 
 		// Test limit.
 		$products = wc_get_products(
-			array(
+			[
 				'return' => 'ids',
 				'limit'  => 5,
-			)
+			]
 		);
 		$this->assertCount( 5, $products );
 
 		// Test offset.
 		$products        = wc_get_products(
-			array(
+			[
 				'return' => 'ids',
 				'limit'  => 2,
-			)
+			]
 		);
 		$products_offset = wc_get_products(
-			array(
+			[
 				'return' => 'ids',
 				'limit'  => 2,
 				'offset' => 2,
-			)
+			]
 		);
 		$this->assertCount( 2, $products );
 		$this->assertCount( 2, $products_offset );
@@ -166,17 +166,17 @@ class WC_Tests_Product_Functions extends WC_Unit_Test_Case {
 
 		// Test page.
 		$products_page_1 = wc_get_products(
-			array(
+			[
 				'return' => 'ids',
 				'limit'  => 2,
-			)
+			]
 		);
 		$products_page_2 = wc_get_products(
-			array(
+			[
 				'return' => 'ids',
 				'limit'  => 2,
 				'page'   => 2,
-			)
+			]
 		);
 		$this->assertCount( 2, $products_page_1 );
 		$this->assertCount( 2, $products_page_2 );
@@ -184,36 +184,36 @@ class WC_Tests_Product_Functions extends WC_Unit_Test_Case {
 
 		// Test exclude.
 		$products = wc_get_products(
-			array(
+			[
 				'return'  => 'ids',
 				'limit'   => 200,
-				'exclude' => array( $product->get_id() ),
-			)
+				'exclude' => [ $product->get_id() ],
+			]
 		);
 		$this->assertNotContains( $product->get_id(), $products );
 
 		// Test include.
 		$products = wc_get_products(
-			array(
+			[
 				'return'  => 'ids',
-				'include' => array( $product->get_id() ),
-			)
+				'include' => [ $product->get_id() ],
+			]
 		);
 		$this->assertContains( $product->get_id(), $products );
 
 		// Test order and orderby.
 		$products = wc_get_products(
-			array(
+			[
 				'return'  => 'ids',
 				'order'   => 'ASC',
 				'orderby' => 'ID',
 				'limit'   => 2,
-			)
+			]
 		);
-		$this->assertEquals( array( $product->get_id(), $product_2->get_id() ), $products );
+		$this->assertEquals( [ $product->get_id(), $product_2->get_id() ], $products );
 
 		// Test paginate.
-		$products = wc_get_products( array( 'paginate' => true ) );
+		$products = wc_get_products( [ 'paginate' => true ] );
 		$this->assertGreaterThan( 0, $products->total );
 		$this->assertGreaterThan( 0, $products->max_num_pages );
 		$this->assertNotEmpty( $products->products );
@@ -246,29 +246,29 @@ class WC_Tests_Product_Functions extends WC_Unit_Test_Case {
 		$product_2->save();
 
 		$products = wc_get_products(
-			array(
+			[
 				'return' => 'ids',
 				'width'  => 12.5,
-			)
+			]
 		);
-		$this->assertEquals( array( $product_1->get_id() ), $products );
+		$this->assertEquals( [ $product_1->get_id() ], $products );
 
 		$products = wc_get_products(
-			array(
+			[
 				'return' => 'ids',
 				'height' => 5.0,
-			)
+			]
 		);
 		sort( $products );
-		$this->assertEquals( array( $product_1->get_id(), $product_2->get_id() ), $products );
+		$this->assertEquals( [ $product_1->get_id(), $product_2->get_id() ], $products );
 
 		$products = wc_get_products(
-			array(
+			[
 				'return' => 'ids',
 				'weight' => 15,
-			)
+			]
 		);
-		$this->assertEquals( array( $product_2->get_id() ), $products );
+		$this->assertEquals( [ $product_2->get_id() ], $products );
 
 		$product_1->delete( true );
 		$product_2->delete( true );
@@ -292,29 +292,29 @@ class WC_Tests_Product_Functions extends WC_Unit_Test_Case {
 		$product_2->save();
 
 		$products = wc_get_products(
-			array(
+			[
 				'return'        => 'ids',
 				'regular_price' => 12.5,
-			)
+			]
 		);
-		$this->assertEquals( array( $product_1->get_id() ), $products );
+		$this->assertEquals( [ $product_1->get_id() ], $products );
 
 		$products = wc_get_products(
-			array(
+			[
 				'return'     => 'ids',
 				'sale_price' => 12.5,
-			)
+			]
 		);
-		$this->assertEquals( array( $product_2->get_id() ), $products );
+		$this->assertEquals( [ $product_2->get_id() ], $products );
 
 		$products = wc_get_products(
-			array(
+			[
 				'return' => 'ids',
 				'price'  => 12.5,
-			)
+			]
 		);
 		sort( $products );
-		$this->assertEquals( array( $product_1->get_id(), $product_2->get_id() ), $products );
+		$this->assertEquals( [ $product_1->get_id(), $product_2->get_id() ], $products );
 
 		$product_1->delete( true );
 		$product_2->delete( true );
@@ -338,12 +338,12 @@ class WC_Tests_Product_Functions extends WC_Unit_Test_Case {
 		$product_3->save();
 
 		$products = wc_get_products(
-			array(
+			[
 				'return'      => 'ids',
 				'total_sales' => 4,
-			)
+			]
 		);
-		$this->assertEquals( array( $product_1->get_id() ), $products );
+		$this->assertEquals( [ $product_1->get_id() ], $products );
 
 		$product_1->delete( true );
 		$product_2->delete( true );
@@ -377,82 +377,82 @@ class WC_Tests_Product_Functions extends WC_Unit_Test_Case {
 		$product_2->save();
 
 		$products = wc_get_products(
-			array(
+			[
 				'return'  => 'ids',
 				'virtual' => true,
-			)
+			]
 		);
-		$this->assertEquals( array( $product_1->get_id() ), $products );
+		$this->assertEquals( [ $product_1->get_id() ], $products );
 
 		$products = wc_get_products(
-			array(
+			[
 				'return'  => 'ids',
 				'virtual' => false,
-			)
+			]
 		);
-		$this->assertEquals( array( $product_2->get_id() ), $products );
+		$this->assertEquals( [ $product_2->get_id() ], $products );
 
 		$products = wc_get_products(
-			array(
+			[
 				'return'       => 'ids',
 				'downloadable' => false,
-			)
+			]
 		);
-		$this->assertEquals( array( $product_2->get_id() ), $products );
+		$this->assertEquals( [ $product_2->get_id() ], $products );
 
 		$products = wc_get_products(
-			array(
+			[
 				'return'   => 'ids',
 				'featured' => true,
-			)
+			]
 		);
-		$this->assertEquals( array( $product_1->get_id() ), $products );
+		$this->assertEquals( [ $product_1->get_id() ], $products );
 		$products = wc_get_products(
-			array(
+			[
 				'return'   => 'ids',
 				'featured' => false,
-			)
+			]
 		);
-		$this->assertEquals( array( $product_2->get_id() ), $products );
+		$this->assertEquals( [ $product_2->get_id() ], $products );
 
 		$products = wc_get_products(
-			array(
+			[
 				'return'            => 'ids',
 				'sold_individually' => true,
-			)
+			]
 		);
-		$this->assertEquals( array( $product_1->get_id() ), $products );
+		$this->assertEquals( [ $product_1->get_id() ], $products );
 
 		$products = wc_get_products(
-			array(
+			[
 				'return'     => 'ids',
 				'backorders' => 'notify',
-			)
+			]
 		);
-		$this->assertEquals( array( $product_2->get_id() ), $products );
+		$this->assertEquals( [ $product_2->get_id() ], $products );
 
 		$products = wc_get_products(
-			array(
+			[
 				'return'       => 'ids',
 				'manage_stock' => true,
-			)
+			]
 		);
-		$this->assertEquals( array( $product_2->get_id() ), $products );
+		$this->assertEquals( [ $product_2->get_id() ], $products );
 
 		$products = wc_get_products(
-			array(
+			[
 				'return'          => 'ids',
 				'reviews_allowed' => true,
-			)
+			]
 		);
-		$this->assertEquals( array( $product_1->get_id() ), $products );
+		$this->assertEquals( [ $product_1->get_id() ], $products );
 		$products = wc_get_products(
-			array(
+			[
 				'return'          => 'ids',
 				'reviews_allowed' => false,
-			)
+			]
 		);
-		$this->assertEquals( array( $product_2->get_id() ), $products );
+		$this->assertEquals( [ $product_2->get_id() ], $products );
 
 		$product_1->delete( true );
 		$product_2->delete( true );
@@ -477,27 +477,27 @@ class WC_Tests_Product_Functions extends WC_Unit_Test_Case {
 		$product_3->save();
 
 		$products = wc_get_products(
-			array(
+			[
 				'return'     => 'ids',
 				'visibility' => 'visible',
-			)
+			]
 		);
-		$this->assertEquals( array( $product_1->get_id() ), $products );
+		$this->assertEquals( [ $product_1->get_id() ], $products );
 		$products = wc_get_products(
-			array(
+			[
 				'return'     => 'ids',
 				'visibility' => 'hidden',
-			)
+			]
 		);
-		$this->assertEquals( array( $product_2->get_id() ), $products );
+		$this->assertEquals( [ $product_2->get_id() ], $products );
 		$products = wc_get_products(
-			array(
+			[
 				'return'     => 'ids',
 				'visibility' => 'search',
-			)
+			]
 		);
 		sort( $products );
-		$this->assertEquals( array( $product_1->get_id(), $product_3->get_id() ), $products );
+		$this->assertEquals( [ $product_1->get_id(), $product_3->get_id() ], $products );
 
 		$product_1->delete( true );
 		$product_2->delete( true );
@@ -523,27 +523,27 @@ class WC_Tests_Product_Functions extends WC_Unit_Test_Case {
 		$product_2->save();
 
 		$products = wc_get_products(
-			array(
+			[
 				'return'         => 'ids',
 				'stock_quantity' => 5,
-			)
+			]
 		);
-		$this->assertEquals( array( $product_1->get_id() ), $products );
+		$this->assertEquals( [ $product_1->get_id() ], $products );
 		$products = wc_get_products(
-			array(
+			[
 				'return'         => 'ids',
 				'stock_quantity' => 0,
-			)
+			]
 		);
-		$this->assertEquals( array( $product_2->get_id() ), $products );
+		$this->assertEquals( [ $product_2->get_id() ], $products );
 
 		$products = wc_get_products(
-			array(
+			[
 				'return'       => 'ids',
 				'stock_status' => 'outofstock',
-			)
+			]
 		);
-		$this->assertEquals( array( $product_2->get_id() ), $products );
+		$this->assertEquals( [ $product_2->get_id() ], $products );
 
 		$product_1->delete( true );
 		$product_2->delete( true );
@@ -566,27 +566,27 @@ class WC_Tests_Product_Functions extends WC_Unit_Test_Case {
 		$product_2->save();
 
 		$products = wc_get_products(
-			array(
+			[
 				'return'     => 'ids',
 				'tax_status' => 'taxable',
-			)
+			]
 		);
-		$this->assertEquals( array( $product_1->get_id() ), $products );
+		$this->assertEquals( [ $product_1->get_id() ], $products );
 		$products = wc_get_products(
-			array(
+			[
 				'return'     => 'ids',
 				'tax_status' => 'none',
-			)
+			]
 		);
-		$this->assertEquals( array( $product_2->get_id() ), $products );
+		$this->assertEquals( [ $product_2->get_id() ], $products );
 
 		$products = wc_get_products(
-			array(
+			[
 				'return'    => 'ids',
 				'tax_class' => 'reduced-rate',
-			)
+			]
 		);
-		$this->assertEquals( array( $product_1->get_id() ), $products );
+		$this->assertEquals( [ $product_1->get_id() ], $products );
 
 		$product_1->delete( true );
 		$product_2->delete( true );
@@ -610,19 +610,19 @@ class WC_Tests_Product_Functions extends WC_Unit_Test_Case {
 		$product_2->save();
 
 		$products = wc_get_products(
-			array(
+			[
 				'return'         => 'ids',
 				'shipping_class' => 'bulky',
-			)
+			]
 		);
-		$this->assertEquals( array( $product_1->get_id() ), $products );
+		$this->assertEquals( [ $product_1->get_id() ], $products );
 		$products = wc_get_products(
-			array(
+			[
 				'return'         => 'ids',
 				'shipping_class' => 'standard',
-			)
+			]
 		);
-		$this->assertEquals( array( $product_2->get_id() ), $products );
+		$this->assertEquals( [ $product_2->get_id() ], $products );
 
 		$product_1->delete( true );
 		$product_2->delete( true );
@@ -647,34 +647,34 @@ class WC_Tests_Product_Functions extends WC_Unit_Test_Case {
 		$product_2->save();
 
 		$products = wc_get_products(
-			array(
+			[
 				'return'         => 'ids',
 				'download_limit' => 5,
-			)
+			]
 		);
-		$this->assertEquals( array( $product_1->get_id() ), $products );
+		$this->assertEquals( [ $product_1->get_id() ], $products );
 		$products = wc_get_products(
-			array(
+			[
 				'return'         => 'ids',
 				'download_limit' => -1,
-			)
+			]
 		);
-		$this->assertEquals( array( $product_2->get_id() ), $products );
+		$this->assertEquals( [ $product_2->get_id() ], $products );
 
 		$products = wc_get_products(
-			array(
+			[
 				'return'          => 'ids',
 				'download_expiry' => 90,
-			)
+			]
 		);
-		$this->assertEquals( array( $product_1->get_id() ), $products );
+		$this->assertEquals( [ $product_1->get_id() ], $products );
 		$products = wc_get_products(
-			array(
+			[
 				'return'          => 'ids',
 				'download_expiry' => -1,
-			)
+			]
 		);
-		$this->assertEquals( array( $product_2->get_id() ), $products );
+		$this->assertEquals( [ $product_2->get_id() ], $products );
 	}
 
 	/**
@@ -694,34 +694,34 @@ class WC_Tests_Product_Functions extends WC_Unit_Test_Case {
 		$product_2->save();
 
 		$products = wc_get_products(
-			array(
+			[
 				'return'         => 'ids',
 				'average_rating' => 5.0,
-			)
+			]
 		);
-		$this->assertEquals( array( $product_1->get_id() ), $products );
+		$this->assertEquals( [ $product_1->get_id() ], $products );
 		$products = wc_get_products(
-			array(
+			[
 				'return'         => 'ids',
 				'average_rating' => 3.0,
-			)
+			]
 		);
-		$this->assertEquals( array( $product_2->get_id() ), $products );
+		$this->assertEquals( [ $product_2->get_id() ], $products );
 
 		$products = wc_get_products(
-			array(
+			[
 				'return'       => 'ids',
 				'review_count' => 5,
-			)
+			]
 		);
-		$this->assertEquals( array( $product_1->get_id() ), $products );
+		$this->assertEquals( [ $product_1->get_id() ], $products );
 		$products = wc_get_products(
-			array(
+			[
 				'return'       => 'ids',
 				'review_count' => 1,
-			)
+			]
 		);
-		$this->assertEquals( array( $product_2->get_id() ), $products );
+		$this->assertEquals( [ $product_2->get_id() ], $products );
 
 		$product_1->delete( true );
 		$product_2->delete( true );
@@ -865,7 +865,7 @@ class WC_Tests_Product_Functions extends WC_Unit_Test_Case {
 	 * @since 2.4
 	 */
 	public function test_wc_get_product_ids_on_sale() {
-		$this->assertEquals( array(), wc_get_product_ids_on_sale() );
+		$this->assertEquals( [], wc_get_product_ids_on_sale() );
 
 		delete_transient( 'wc_products_onsale' );
 
@@ -874,7 +874,7 @@ class WC_Tests_Product_Functions extends WC_Unit_Test_Case {
 		$product->set_sale_price( 5 );
 		$product->save();
 
-		$this->assertEquals( array( $product->get_id() ), wc_get_product_ids_on_sale() );
+		$this->assertEquals( [ $product->get_id() ], wc_get_product_ids_on_sale() );
 	}
 
 	/**
@@ -883,7 +883,7 @@ class WC_Tests_Product_Functions extends WC_Unit_Test_Case {
 	 * @since 2.4
 	 */
 	public function test_wc_get_featured_product_ids() {
-		$this->assertEquals( array(), wc_get_featured_product_ids() );
+		$this->assertEquals( [], wc_get_featured_product_ids() );
 
 		delete_transient( 'wc_featured_products' );
 
@@ -891,7 +891,7 @@ class WC_Tests_Product_Functions extends WC_Unit_Test_Case {
 		$product->set_featured( true );
 		$product->save();
 
-		$this->assertEquals( array( $product->get_id() ), wc_get_featured_product_ids() );
+		$this->assertEquals( [ $product->get_id() ], wc_get_featured_product_ids() );
 	}
 
 	/**
@@ -903,7 +903,7 @@ class WC_Tests_Product_Functions extends WC_Unit_Test_Case {
 		$this->assertTrue( (bool) strstr( wc_placeholder_img(), wc_placeholder_img_src() ) );
 
 		// Test custom class attribute is honoured.
-		$attr = array( 'class' => 'custom-class' );
+		$attr = [ 'class' => 'custom-class' ];
 		$this->assertStringContainsString( 'class="custom-class"', wc_placeholder_img( 'woocommerce_thumbnail', $attr ) );
 	}
 
@@ -915,12 +915,12 @@ class WC_Tests_Product_Functions extends WC_Unit_Test_Case {
 	public function test_wc_get_product_types() {
 		$product_types = (array) apply_filters(
 			'product_type_selector',
-			array(
+			[
 				'simple'   => 'Simple product',
 				'grouped'  => 'Grouped product',
 				'external' => 'External/Affiliate product',
 				'variable' => 'Variable product',
-			)
+			]
 		);
 
 		$this->assertEquals( $product_types, wc_get_product_types() );
@@ -955,19 +955,19 @@ class WC_Tests_Product_Functions extends WC_Unit_Test_Case {
 	 */
 	public function test_wc_get_min_max_price_meta_query() {
 		$meta_query = wc_get_min_max_price_meta_query(
-			array(
+			[
 				'min_price' => 10,
 				'max_price' => 100,
-			)
+			]
 		);
 
 		$this->assertEquals(
-			array(
+			[
 				'key'     => '_price',
-				'value'   => array( 10, 100 ),
+				'value'   => [ 10, 100 ],
 				'compare' => 'BETWEEN',
 				'type'    => 'DECIMAL(10,2)',
-			),
+			],
 			$meta_query
 		);
 	}
@@ -1021,40 +1021,40 @@ class WC_Tests_Product_Functions extends WC_Unit_Test_Case {
 	 * Test: test_wc_get_attachment_image_attributes.
 	 */
 	public function test_wc_get_attachment_image_attributes() {
-		$image_attr = array(
+		$image_attr = [
 			'src'    => 'https://wc.local/wp-content/uploads/2018/02/single-1-250x250.jpg',
 			'class'  => 'attachment-woocommerce_thumbnail size-woocommerce_thumbnail',
 			'alt'    => '',
 			'srcset' => 'https://wc.local/wp-content/uploads/2018/02/single-1-250x250.jpg 250w, https://wc.local/wp-content/uploads/2018/02/single-1-350x350.jpg 350w, https://wc.local/wp-content/uploads/2018/02/single-1-150x150.jpg 150w, https://wc.local/wp-content/uploads/2018/02/single-1-300x300.jpg 300w, https://wc.local/wp-content/uploads/2018/02/single-1-768x768.jpg 768w, https://wc.local/wp-content/uploads/2018/02/single-1-100x100.jpg 100w, https://wc.local/wp-content/uploads/2018/02/single-1.jpg 800w',
 			'sizes'  => '(max-width: 250px) 100vw, 250px',
-		);
+		];
 		// Test regular image attr.
 		$this->assertEquals( $image_attr, wc_get_attachment_image_attributes( $image_attr ) );
 
-		$image_attr = array(
+		$image_attr = [
 			'src'    => '',
 			'class'  => 'attachment-woocommerce_thumbnail size-woocommerce_thumbnail',
 			'alt'    => '',
 			'srcset' => '',
 			'sizes'  => '(max-width: 250px) 100vw, 250px',
-		);
+		];
 		// Test blank src image attr, this is used in lazy loading.
 		$this->assertEquals( $image_attr, wc_get_attachment_image_attributes( $image_attr ) );
 
-		$image_attr    = array(
+		$image_attr    = [
 			'src'    => 'https://wc.local/wp-content/woocommerce_uploads/my-image.jpg',
 			'class'  => 'attachment-woocommerce_thumbnail size-woocommerce_thumbnail',
 			'alt'    => '',
 			'srcset' => 'https://wc.local/wp-content/woocommerce_uploads/my-image-250x250.jpg 250w, https://wc.local/wp-content/woocommerce_uploads/my-image-350x350 350w',
 			'sizes'  => '(max-width: 250px) 100vw, 250px',
-		);
-		$expected_attr = array(
+		];
+		$expected_attr = [
 			'src'    => WC()->plugin_url() . '/assets/images/placeholder.png',
 			'class'  => 'attachment-woocommerce_thumbnail size-woocommerce_thumbnail',
 			'alt'    => '',
 			'srcset' => '',
 			'sizes'  => '(max-width: 250px) 100vw, 250px',
-		);
+		];
 		// Test image hosted in woocommerce_uploads which is not allowed, think shops selling photos.
 		$this->assertEquals( $expected_attr, wc_get_attachment_image_attributes( $image_attr ) );
 
@@ -1069,11 +1069,11 @@ class WC_Tests_Product_Functions extends WC_Unit_Test_Case {
 	public function test_wc_get_product_stock_status_options() {
 		$status_options = (array) apply_filters(
 			'woocommerce_product_stock_status_options',
-			array(
+			[
 				'instock'     => 'In stock',
 				'outofstock'  => 'Out of stock',
 				'onbackorder' => 'On backorder',
-			)
+			]
 		);
 
 		$this->assertEquals( $status_options, wc_get_product_stock_status_options() );

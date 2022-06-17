@@ -42,170 +42,170 @@ class Plugins extends \WC_REST_Data_Controller {
 		register_rest_route(
 			$this->namespace,
 			'/' . $this->rest_base . '/install',
-			array(
-				array(
+			[
+				[
 					'methods'             => \WP_REST_Server::EDITABLE,
-					'callback'            => array( $this, 'install_plugins' ),
-					'permission_callback' => array( $this, 'update_item_permissions_check' ),
-				),
-				'schema' => array( $this, 'get_item_schema' ),
-			)
+					'callback'            => [ $this, 'install_plugins' ],
+					'permission_callback' => [ $this, 'update_item_permissions_check' ],
+				],
+				'schema' => [ $this, 'get_item_schema' ],
+			]
 		);
 
 		register_rest_route(
 			$this->namespace,
 			'/' . $this->rest_base . '/install/status',
-			array(
-				array(
+			[
+				[
 					'methods'             => \WP_REST_Server::READABLE,
-					'callback'            => array( $this, 'get_installation_status' ),
-					'permission_callback' => array( $this, 'update_item_permissions_check' ),
-				),
-				'schema' => array( $this, 'get_item_schema' ),
-			)
+					'callback'            => [ $this, 'get_installation_status' ],
+					'permission_callback' => [ $this, 'update_item_permissions_check' ],
+				],
+				'schema' => [ $this, 'get_item_schema' ],
+			]
 		);
 
 		register_rest_route(
 			$this->namespace,
 			'/' . $this->rest_base . '/install/status/(?P<job_id>[a-z0-9_\-]+)',
-			array(
-				array(
+			[
+				[
 					'methods'             => \WP_REST_Server::READABLE,
-					'callback'            => array( $this, 'get_job_installation_status' ),
-					'permission_callback' => array( $this, 'update_item_permissions_check' ),
-				),
-				'schema' => array( $this, 'get_item_schema' ),
-			)
+					'callback'            => [ $this, 'get_job_installation_status' ],
+					'permission_callback' => [ $this, 'update_item_permissions_check' ],
+				],
+				'schema' => [ $this, 'get_item_schema' ],
+			]
 		);
 
 		register_rest_route(
 			$this->namespace,
 			'/' . $this->rest_base . '/active',
-			array(
-				array(
+			[
+				[
 					'methods'             => \WP_REST_Server::READABLE,
-					'callback'            => array( $this, 'active_plugins' ),
-					'permission_callback' => array( $this, 'get_item_permissions_check' ),
-				),
-				'schema' => array( $this, 'get_item_schema' ),
-			)
+					'callback'            => [ $this, 'active_plugins' ],
+					'permission_callback' => [ $this, 'get_item_permissions_check' ],
+				],
+				'schema' => [ $this, 'get_item_schema' ],
+			]
 		);
 
 		register_rest_route(
 			$this->namespace,
 			'/' . $this->rest_base . '/installed',
-			array(
-				array(
+			[
+				[
 					'methods'             => \WP_REST_Server::READABLE,
-					'callback'            => array( $this, 'installed_plugins' ),
-					'permission_callback' => array( $this, 'get_item_permissions_check' ),
-				),
-				'schema' => array( $this, 'get_item_schema' ),
-			)
+					'callback'            => [ $this, 'installed_plugins' ],
+					'permission_callback' => [ $this, 'get_item_permissions_check' ],
+				],
+				'schema' => [ $this, 'get_item_schema' ],
+			]
 		);
 
 		register_rest_route(
 			$this->namespace,
 			'/' . $this->rest_base . '/activate',
-			array(
-				array(
+			[
+				[
 					'methods'             => \WP_REST_Server::EDITABLE,
-					'callback'            => array( $this, 'activate_plugins' ),
-					'permission_callback' => array( $this, 'update_item_permissions_check' ),
-				),
-				'schema' => array( $this, 'get_item_schema' ),
-			)
+					'callback'            => [ $this, 'activate_plugins' ],
+					'permission_callback' => [ $this, 'update_item_permissions_check' ],
+				],
+				'schema' => [ $this, 'get_item_schema' ],
+			]
 		);
 
 		register_rest_route(
 			$this->namespace,
 			'/' . $this->rest_base . '/activate/status',
-			array(
-				array(
+			[
+				[
 					'methods'             => \WP_REST_Server::READABLE,
-					'callback'            => array( $this, 'get_activation_status' ),
-					'permission_callback' => array( $this, 'update_item_permissions_check' ),
-				),
-				'schema' => array( $this, 'get_item_schema' ),
-			)
+					'callback'            => [ $this, 'get_activation_status' ],
+					'permission_callback' => [ $this, 'update_item_permissions_check' ],
+				],
+				'schema' => [ $this, 'get_item_schema' ],
+			]
 		);
 
 		register_rest_route(
 			$this->namespace,
 			'/' . $this->rest_base . '/activate/status/(?P<job_id>[a-z0-9_\-]+)',
-			array(
-				array(
+			[
+				[
 					'methods'             => \WP_REST_Server::READABLE,
-					'callback'            => array( $this, 'get_job_activation_status' ),
-					'permission_callback' => array( $this, 'update_item_permissions_check' ),
-				),
-				'schema' => array( $this, 'get_item_schema' ),
-			)
+					'callback'            => [ $this, 'get_job_activation_status' ],
+					'permission_callback' => [ $this, 'update_item_permissions_check' ],
+				],
+				'schema' => [ $this, 'get_item_schema' ],
+			]
 		);
 
 		register_rest_route(
 			$this->namespace,
 			'/' . $this->rest_base . '/connect-jetpack',
-			array(
-				array(
+			[
+				[
 					'methods'             => \WP_REST_Server::READABLE,
-					'callback'            => array( $this, 'connect_jetpack' ),
-					'permission_callback' => array( $this, 'update_item_permissions_check' ),
-				),
-				'schema' => array( $this, 'get_connect_schema' ),
-			)
+					'callback'            => [ $this, 'connect_jetpack' ],
+					'permission_callback' => [ $this, 'update_item_permissions_check' ],
+				],
+				'schema' => [ $this, 'get_connect_schema' ],
+			]
 		);
 
 		register_rest_route(
 			$this->namespace,
 			'/' . $this->rest_base . '/request-wccom-connect',
-			array(
-				array(
+			[
+				[
 					'methods'             => 'POST',
-					'callback'            => array( $this, 'request_wccom_connect' ),
-					'permission_callback' => array( $this, 'update_item_permissions_check' ),
-				),
-				'schema' => array( $this, 'get_connect_schema' ),
-			)
+					'callback'            => [ $this, 'request_wccom_connect' ],
+					'permission_callback' => [ $this, 'update_item_permissions_check' ],
+				],
+				'schema' => [ $this, 'get_connect_schema' ],
+			]
 		);
 
 		register_rest_route(
 			$this->namespace,
 			'/' . $this->rest_base . '/finish-wccom-connect',
-			array(
-				array(
+			[
+				[
 					'methods'             => 'POST',
-					'callback'            => array( $this, 'finish_wccom_connect' ),
-					'permission_callback' => array( $this, 'update_item_permissions_check' ),
-				),
-				'schema' => array( $this, 'get_connect_schema' ),
-			)
+					'callback'            => [ $this, 'finish_wccom_connect' ],
+					'permission_callback' => [ $this, 'update_item_permissions_check' ],
+				],
+				'schema' => [ $this, 'get_connect_schema' ],
+			]
 		);
 
 		register_rest_route(
 			$this->namespace,
 			'/' . $this->rest_base . '/connect-wcpay',
-			array(
-				array(
+			[
+				[
 					'methods'             => \WP_REST_Server::EDITABLE,
-					'callback'            => array( $this, 'connect_wcpay' ),
-					'permission_callback' => array( $this, 'update_item_permissions_check' ),
-				),
-				'schema' => array( $this, 'get_connect_schema' ),
-			)
+					'callback'            => [ $this, 'connect_wcpay' ],
+					'permission_callback' => [ $this, 'update_item_permissions_check' ],
+				],
+				'schema' => [ $this, 'get_connect_schema' ],
+			]
 		);
 
 		register_rest_route(
 			$this->namespace,
 			'/' . $this->rest_base . '/connect-square',
-			array(
-				array(
+			[
+				[
 					'methods'             => \WP_REST_Server::EDITABLE,
-					'callback'            => array( $this, 'connect_square' ),
-					'permission_callback' => array( $this, 'update_item_permissions_check' ),
-				),
-				'schema' => array( $this, 'get_connect_schema' ),
-			)
+					'callback'            => [ $this, 'connect_square' ],
+					'permission_callback' => [ $this, 'update_item_permissions_check' ],
+				],
+				'schema' => [ $this, 'get_connect_schema' ],
+			]
 		);
 	}
 
@@ -217,7 +217,7 @@ class Plugins extends \WC_REST_Data_Controller {
 	 */
 	public function update_item_permissions_check( $request ) {
 		if ( ! current_user_can( 'install_plugins' ) ) {
-			return new \WP_Error( 'woocommerce_rest_cannot_update', __( 'Sorry, you cannot manage plugins.', 'woocommerce' ), array( 'status' => rest_authorization_required_code() ) );
+			return new \WP_Error( 'woocommerce_rest_cannot_update', __( 'Sorry, you cannot manage plugins.', 'woocommerce' ), [ 'status' => rest_authorization_required_code() ] );
 		}
 		return true;
 	}
@@ -251,29 +251,29 @@ class Plugins extends \WC_REST_Data_Controller {
 		if ( isset( $request['async'] ) && $request['async'] ) {
 			$job_id = PluginsHelper::schedule_install_plugins( $plugins );
 
-			return array(
-				'data'    => array(
+			return [
+				'data'    => [
 					'job_id'  => $job_id,
 					'plugins' => $plugins,
-				),
+				],
 				'message' => __( 'Plugin installation has been scheduled.', 'woocommerce' ),
-			);
+			];
 		}
 
 		$data = PluginsHelper::install_plugins( $plugins );
 
-		return array(
-			'data'    => array(
+		return [
+			'data'    => [
 				'installed'    => $data['installed'],
 				'results'      => $data['results'],
 				'install_time' => $data['time'],
-			),
+			],
 			'errors'  => $data['errors'],
 			'success' => count( $data['errors']->errors ) === 0,
 			'message' => count( $data['errors']->errors ) === 0
 				? __( 'Plugins were successfully installed.', 'woocommerce' )
 				: __( 'There was a problem installing some of the requested plugins.', 'woocommerce' ),
-		);
+		];
 	}
 
 	/**
@@ -304,9 +304,9 @@ class Plugins extends \WC_REST_Data_Controller {
 	 * @return array Active plugins
 	 */
 	public static function active_plugins() {
-		return( array(
+		return( [
 			'plugins' => array_values( PluginsHelper::get_active_plugin_slugs() ),
-		) );
+		] );
 	}
 	/**
 	 * Returns a list of active plugins.
@@ -325,9 +325,9 @@ class Plugins extends \WC_REST_Data_Controller {
 	 * @return array Installed plugins
 	 */
 	public function installed_plugins() {
-		return( array(
+		return( [
 			'plugins' => PluginsHelper::get_installed_plugin_slugs(),
-		) );
+		] );
 	}
 
 	/**
@@ -346,28 +346,28 @@ class Plugins extends \WC_REST_Data_Controller {
 		if ( isset( $request['async'] ) && $request['async'] ) {
 			$job_id = PluginsHelper::schedule_activate_plugins( $plugins );
 
-			return array(
-				'data'    => array(
+			return [
+				'data'    => [
 					'job_id'  => $job_id,
 					'plugins' => $plugins,
-				),
+				],
 				'message' => __( 'Plugin activation has been scheduled.', 'woocommerce' ),
-			);
+			];
 		}
 
 		$data = PluginsHelper::activate_plugins( $plugins );
 
-		return( array(
-			'data'    => array(
+		return( [
+			'data'    => [
 				'activated' => $data['activated'],
 				'active'    => $data['active'],
-			),
+			],
 			'errors'  => $data['errors'],
 			'success' => count( $data['errors']->errors ) === 0,
 			'message' => count( $data['errors']->errors ) === 0
 				? __( 'Plugins were successfully activated.', 'woocommerce' )
 				: __( 'There was a problem activating some of the requested plugins.', 'woocommerce' ),
-		) );
+		] );
 	}
 
 	/**
@@ -406,14 +406,14 @@ class Plugins extends \WC_REST_Data_Controller {
 		$redirect_url = apply_filters( 'woocommerce_admin_onboarding_jetpack_connect_redirect_url', esc_url_raw( $request['redirect_url'] ) );
 		$connect_url  = \Jetpack::init()->build_connect_url( true, $redirect_url, 'woocommerce-onboarding' );
 
-		$calypso_env = defined( 'WOOCOMMERCE_CALYPSO_ENVIRONMENT' ) && in_array( WOOCOMMERCE_CALYPSO_ENVIRONMENT, array( 'development', 'wpcalypso', 'horizon', 'stage' ), true ) ? WOOCOMMERCE_CALYPSO_ENVIRONMENT : 'production';
-		$connect_url = add_query_arg( array( 'calypso_env' => $calypso_env ), $connect_url );
+		$calypso_env = defined( 'WOOCOMMERCE_CALYPSO_ENVIRONMENT' ) && in_array( WOOCOMMERCE_CALYPSO_ENVIRONMENT, [ 'development', 'wpcalypso', 'horizon', 'stage' ], true ) ? WOOCOMMERCE_CALYPSO_ENVIRONMENT : 'production';
+		$connect_url = add_query_arg( [ 'calypso_env' => $calypso_env ], $connect_url );
 
-		return( array(
+		return( [
 			'slug'          => 'jetpack',
 			'name'          => __( 'Jetpack', 'woocommerce' ),
 			'connectAction' => $connect_url,
-		) );
+		] );
 	}
 
 	/**
@@ -431,12 +431,12 @@ class Plugins extends \WC_REST_Data_Controller {
 
 		$request = \WC_Helper_API::post(
 			'oauth/request_token',
-			array(
-				'body' => array(
+			[
+				'body' => [
 					'home_url'     => home_url(),
 					'redirect_uri' => $redirect_uri,
-				),
-			)
+				],
+			]
 		);
 
 		$code = wp_remote_retrieve_response_code( $request );
@@ -452,27 +452,27 @@ class Plugins extends \WC_REST_Data_Controller {
 		do_action( 'woocommerce_helper_connect_start' );
 
 		$connect_url = add_query_arg(
-			array(
+			[
 				'home_url'     => rawurlencode( home_url() ),
 				'redirect_uri' => rawurlencode( $redirect_uri ),
 				'secret'       => rawurlencode( $secret ),
 				'wccom-from'   => 'onboarding',
-			),
+			],
 			\WC_Helper_API::url( 'oauth/authorize' )
 		);
 
-		if ( defined( 'WOOCOMMERCE_CALYPSO_ENVIRONMENT' ) && in_array( WOOCOMMERCE_CALYPSO_ENVIRONMENT, array( 'development', 'wpcalypso', 'horizon', 'stage' ), true ) ) {
+		if ( defined( 'WOOCOMMERCE_CALYPSO_ENVIRONMENT' ) && in_array( WOOCOMMERCE_CALYPSO_ENVIRONMENT, [ 'development', 'wpcalypso', 'horizon', 'stage' ], true ) ) {
 			$connect_url = add_query_arg(
-				array(
+				[
 					'calypso_env' => WOOCOMMERCE_CALYPSO_ENVIRONMENT,
-				),
+				],
 				$connect_url
 			);
 		}
 
-		return( array(
+		return( [
 			'connectAction' => $connect_url,
-		) );
+		] );
 	}
 
 	/**
@@ -493,12 +493,12 @@ class Plugins extends \WC_REST_Data_Controller {
 		// Obtain an access token.
 		$request = \WC_Helper_API::post(
 			'oauth/access_token',
-			array(
-				'body' => array(
+			[
+				'body' => [
 					'request_token' => wp_unslash( $rest_request['request_token'] ), // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 					'home_url'      => home_url(),
-				),
-			)
+				],
+			]
 		);
 
 		$code = wp_remote_retrieve_response_code( $request );
@@ -513,17 +513,17 @@ class Plugins extends \WC_REST_Data_Controller {
 
 		\WC_Helper_Options::update(
 			'auth',
-			array(
+			[
 				'access_token'        => $access_token['access_token'],
 				'access_token_secret' => $access_token['access_token_secret'],
 				'site_id'             => $access_token['site_id'],
 				'user_id'             => get_current_user_id(),
 				'updated'             => time(),
-			)
+			]
 		);
 
 		if ( ! \WC_Helper::_flush_authentication_cache() ) {
-			\WC_Helper_Options::update( 'auth', array() );
+			\WC_Helper_Options::update( 'auth', [] );
 			return new \WP_Error( 'woocommerce_rest_helper_connect', __( 'There was an error connecting to WooCommerce.com. Please try again.', 'woocommerce' ), 500 );
 		}
 
@@ -532,9 +532,9 @@ class Plugins extends \WC_REST_Data_Controller {
 
 		do_action( 'woocommerce_helper_connected' );
 
-		return array(
+		return [
 			'success' => true,
-		);
+		];
 	}
 
 
@@ -549,7 +549,7 @@ class Plugins extends \WC_REST_Data_Controller {
 		}
 
 		if ( 'US' === WC()->countries->get_base_country() ) {
-			$profile = get_option( OnboardingProfile::DATA_OPTION, array() );
+			$profile = get_option( OnboardingProfile::DATA_OPTION, [] );
 			if ( ! empty( $profile['industry'] ) ) {
 				$has_cbd_industry = in_array( 'cbd-other-hemp-derived-products', array_column( $profile['industry'], 'slug' ), true );
 			}
@@ -562,11 +562,11 @@ class Plugins extends \WC_REST_Data_Controller {
 		}
 
 		$redirect_url = wp_nonce_url( wc_admin_url( '&task=payments&method=square&square-connect-finish=1' ), 'wc_square_connected' );
-		$args         = array(
+		$args         = [
 			'redirect' => rawurlencode( rawurlencode( $redirect_url ) ),
 			'scopes'   => implode(
 				',',
-				array(
+				[
 					'MERCHANT_PROFILE_READ',
 					'PAYMENTS_READ',
 					'PAYMENTS_WRITE',
@@ -579,15 +579,15 @@ class Plugins extends \WC_REST_Data_Controller {
 					'ITEMS_WRITE',
 					'INVENTORY_READ',
 					'INVENTORY_WRITE',
-				)
+				]
 			),
-		);
+		];
 
 		$connect_url = add_query_arg( $args, $url );
 
-		return( array(
+		return( [
 			'connectUrl' => $connect_url,
-		) );
+		] );
 	}
 
 	/**
@@ -601,16 +601,16 @@ class Plugins extends \WC_REST_Data_Controller {
 		}
 
 		$connect_url = add_query_arg(
-			array(
+			[
 				'wcpay-connect' => 'WCADMIN_PAYMENT_TASK',
 				'_wpnonce'      => wp_create_nonce( 'wcpay-connect' ),
-			),
+			],
 			admin_url()
 		);
 
-		return( array(
+		return( [
 			'connectUrl' => $connect_url,
-		) );
+		] );
 	}
 
 	/**
@@ -619,31 +619,31 @@ class Plugins extends \WC_REST_Data_Controller {
 	 * @return array
 	 */
 	public function get_item_schema() {
-		$schema = array(
+		$schema = [
 			'$schema'    => 'http://json-schema.org/draft-04/schema#',
 			'title'      => 'plugins',
 			'type'       => 'object',
-			'properties' => array(
-				'slug'   => array(
+			'properties' => [
+				'slug'   => [
 					'description' => __( 'Plugin slug.', 'woocommerce' ),
 					'type'        => 'string',
-					'context'     => array( 'view', 'edit' ),
+					'context'     => [ 'view', 'edit' ],
 					'readonly'    => true,
-				),
-				'name'   => array(
+				],
+				'name'   => [
 					'description' => __( 'Plugin name.', 'woocommerce' ),
 					'type'        => 'string',
-					'context'     => array( 'view', 'edit' ),
+					'context'     => [ 'view', 'edit' ],
 					'readonly'    => true,
-				),
-				'status' => array(
+				],
+				'status' => [
 					'description' => __( 'Plugin status.', 'woocommerce' ),
 					'type'        => 'string',
-					'context'     => array( 'view', 'edit' ),
+					'context'     => [ 'view', 'edit' ],
 					'readonly'    => true,
-				),
-			),
-		);
+				],
+			],
+		];
 
 		return $this->add_additional_fields_schema( $schema );
 	}
@@ -656,12 +656,12 @@ class Plugins extends \WC_REST_Data_Controller {
 	public function get_connect_schema() {
 		$schema = $this->get_item_schema();
 		unset( $schema['properties']['status'] );
-		$schema['properties']['connectAction'] = array(
+		$schema['properties']['connectAction'] = [
 			'description' => __( 'Action that should be completed to connect Jetpack.', 'woocommerce' ),
 			'type'        => 'string',
-			'context'     => array( 'view', 'edit' ),
+			'context'     => [ 'view', 'edit' ],
 			'readonly'    => true,
-		);
+		];
 		return $schema;
 	}
 }

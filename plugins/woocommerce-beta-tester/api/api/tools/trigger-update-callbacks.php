@@ -5,23 +5,23 @@ use Automattic\WooCommerce\Admin\API\Reports\Cache;
 register_woocommerce_admin_test_helper_rest_route(
 	'/tools/get-update-versions/v1',
 	'tools_get_wc_admin_versions',
-	array(
+	[
 		'methods' => 'GET',
-	)
+	]
 );
 register_woocommerce_admin_test_helper_rest_route(
 	'/tools/trigger-selected-update-callbacks/v1',
 	'trigger_selected_update_callbacks',
-	array(
+	[
 		'methods' => 'POST',
-		'args'                => array(
-			'version'     => array(
+		'args'                => [
+			'version'     => [
 				'description'       => 'Name of the update version',
 				'type'              => 'string',
 				'sanitize_callback' => 'sanitize_text_field',
-			)
-		),
-	)
+			]
+		],
+	]
 );
 
 function tools_get_wc_admin_versions() {

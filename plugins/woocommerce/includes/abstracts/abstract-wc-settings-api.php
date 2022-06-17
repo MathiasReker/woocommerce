@@ -35,28 +35,28 @@ abstract class WC_Settings_API {
 	 *
 	 * @var array of strings
 	 */
-	public $errors = array();
+	public $errors = [];
 
 	/**
 	 * Setting values.
 	 *
 	 * @var array
 	 */
-	public $settings = array();
+	public $settings = [];
 
 	/**
 	 * Form option fields.
 	 *
 	 * @var array
 	 */
-	public $form_fields = array();
+	public $form_fields = [];
 
 	/**
 	 * The posted settings data. When empty, $_POST data will be used.
 	 *
 	 * @var array
 	 */
-	protected $data = array();
+	protected $data = [];
 
 	/**
 	 * Get the form fields after they are initialized.
@@ -64,7 +64,7 @@ abstract class WC_Settings_API {
 	 * @return array of options
 	 */
 	public function get_form_fields() {
-		return apply_filters( 'woocommerce_settings_api_form_fields_' . $this->id, array_map( array( $this, 'set_defaults' ), $this->form_fields ) );
+		return apply_filters( 'woocommerce_settings_api_form_fields_' . $this->id, array_map( [ $this, 'set_defaults' ], $this->form_fields ) );
 	}
 
 	/**
@@ -134,7 +134,7 @@ abstract class WC_Settings_API {
 	 * @param array  $post_data Posted data.
 	 * @return string
 	 */
-	public function get_field_value( $key, $field, $post_data = array() ) {
+	public function get_field_value( $key, $field, $post_data = [] ) {
 		$type      = $this->get_field_type( $field );
 		$field_key = $this->get_field_key( $key );
 		$post_data = empty( $post_data ) ? $_POST : $post_data; // WPCS: CSRF ok, input var ok.
@@ -145,12 +145,12 @@ abstract class WC_Settings_API {
 		}
 
 		// Look for a validate_FIELDID_field method for special handling.
-		if ( is_callable( array( $this, 'validate_' . $key . '_field' ) ) ) {
+		if ( is_callable( [ $this, 'validate_' . $key . '_field' ] ) ) {
 			return $this->{'validate_' . $key . '_field'}( $key, $value );
 		}
 
 		// Look for a validate_FIELDTYPE_field method.
-		if ( is_callable( array( $this, 'validate_' . $type . '_field' ) ) ) {
+		if ( is_callable( [ $this, 'validate_' . $type . '_field' ] ) ) {
 			return $this->{'validate_' . $type . '_field'}( $key, $value );
 		}
 
@@ -163,7 +163,7 @@ abstract class WC_Settings_API {
 	 *
 	 * @param array $data Posted data.
 	 */
-	public function set_post_data( $data = array() ) {
+	public function set_post_data( $data = [] ) {
 		$this->data = $data;
 	}
 
@@ -219,7 +219,7 @@ abstract class WC_Settings_API {
 		}
 
 		$option_key = $this->get_option_key();
-        do_action( 'woocommerce_update_option', array( 'id' => $option_key ) );
+        do_action( 'woocommerce_update_option', [ 'id' => $option_key ] );
         return update_option( $option_key, apply_filters( 'woocommerce_settings_api_sanitized_fields_' . $this->id, $this->settings ), 'yes' );
 	}
 
@@ -320,7 +320,7 @@ abstract class WC_Settings_API {
 	 * @since  1.0.0
 	 * @uses   method_exists()
 	 */
-	public function generate_settings_html( $form_fields = array(), $echo = true ) {
+	public function generate_settings_html( $form_fields = [], $echo = true ) {
 		if ( empty( $form_fields ) ) {
 			$form_fields = $this->get_form_fields();
 		}
@@ -404,7 +404,7 @@ abstract class WC_Settings_API {
 	 * @return string
 	 */
 	public function get_custom_attribute_html( $data ) {
-		$custom_attributes = array();
+		$custom_attributes = [];
 
 		if ( ! empty( $data['custom_attributes'] ) && is_array( $data['custom_attributes'] ) ) {
 			foreach ( $data['custom_attributes'] as $attribute => $attribute_value ) {
@@ -425,7 +425,7 @@ abstract class WC_Settings_API {
 	 */
 	public function generate_text_html( $key, $data ) {
 		$field_key = $this->get_field_key( $key );
-		$defaults  = array(
+		$defaults  = [
 			'title'             => '',
 			'disabled'          => false,
 			'class'             => '',
@@ -434,8 +434,8 @@ abstract class WC_Settings_API {
 			'type'              => 'text',
 			'desc_tip'          => false,
 			'description'       => '',
-			'custom_attributes' => array(),
-		);
+			'custom_attributes' => [],
+		];
 
 		$data = wp_parse_args( $data, $defaults );
 
@@ -468,7 +468,7 @@ abstract class WC_Settings_API {
 	 */
 	public function generate_price_html( $key, $data ) {
 		$field_key = $this->get_field_key( $key );
-		$defaults  = array(
+		$defaults  = [
 			'title'             => '',
 			'disabled'          => false,
 			'class'             => '',
@@ -477,8 +477,8 @@ abstract class WC_Settings_API {
 			'type'              => 'text',
 			'desc_tip'          => false,
 			'description'       => '',
-			'custom_attributes' => array(),
-		);
+			'custom_attributes' => [],
+		];
 
 		$data = wp_parse_args( $data, $defaults );
 
@@ -511,7 +511,7 @@ abstract class WC_Settings_API {
 	 */
 	public function generate_decimal_html( $key, $data ) {
 		$field_key = $this->get_field_key( $key );
-		$defaults  = array(
+		$defaults  = [
 			'title'             => '',
 			'disabled'          => false,
 			'class'             => '',
@@ -520,8 +520,8 @@ abstract class WC_Settings_API {
 			'type'              => 'text',
 			'desc_tip'          => false,
 			'description'       => '',
-			'custom_attributes' => array(),
-		);
+			'custom_attributes' => [],
+		];
 
 		$data = wp_parse_args( $data, $defaults );
 
@@ -567,7 +567,7 @@ abstract class WC_Settings_API {
 	 */
 	public function generate_color_html( $key, $data ) {
 		$field_key = $this->get_field_key( $key );
-		$defaults  = array(
+		$defaults  = [
 			'title'             => '',
 			'disabled'          => false,
 			'class'             => '',
@@ -575,8 +575,8 @@ abstract class WC_Settings_API {
 			'placeholder'       => '',
 			'desc_tip'          => false,
 			'description'       => '',
-			'custom_attributes' => array(),
-		);
+			'custom_attributes' => [],
+		];
 
 		$data = wp_parse_args( $data, $defaults );
 
@@ -611,7 +611,7 @@ abstract class WC_Settings_API {
 	 */
 	public function generate_textarea_html( $key, $data ) {
 		$field_key = $this->get_field_key( $key );
-		$defaults  = array(
+		$defaults  = [
 			'title'             => '',
 			'disabled'          => false,
 			'class'             => '',
@@ -620,8 +620,8 @@ abstract class WC_Settings_API {
 			'type'              => 'text',
 			'desc_tip'          => false,
 			'description'       => '',
-			'custom_attributes' => array(),
-		);
+			'custom_attributes' => [],
+		];
 
 		$data = wp_parse_args( $data, $defaults );
 
@@ -654,7 +654,7 @@ abstract class WC_Settings_API {
 	 */
 	public function generate_checkbox_html( $key, $data ) {
 		$field_key = $this->get_field_key( $key );
-		$defaults  = array(
+		$defaults  = [
 			'title'             => '',
 			'label'             => '',
 			'disabled'          => false,
@@ -663,8 +663,8 @@ abstract class WC_Settings_API {
 			'type'              => 'text',
 			'desc_tip'          => false,
 			'description'       => '',
-			'custom_attributes' => array(),
-		);
+			'custom_attributes' => [],
+		];
 
 		$data = wp_parse_args( $data, $defaults );
 
@@ -702,7 +702,7 @@ abstract class WC_Settings_API {
 	 */
 	public function generate_select_html( $key, $data ) {
 		$field_key = $this->get_field_key( $key );
-		$defaults  = array(
+		$defaults  = [
 			'title'             => '',
 			'disabled'          => false,
 			'class'             => '',
@@ -711,9 +711,9 @@ abstract class WC_Settings_API {
 			'type'              => 'text',
 			'desc_tip'          => false,
 			'description'       => '',
-			'custom_attributes' => array(),
-			'options'           => array(),
-		);
+			'custom_attributes' => [],
+			'options'           => [],
+		];
 
 		$data = wp_parse_args( $data, $defaults );
 		$value = $this->get_option( $key );
@@ -759,7 +759,7 @@ abstract class WC_Settings_API {
 	 */
 	public function generate_multiselect_html( $key, $data ) {
 		$field_key = $this->get_field_key( $key );
-		$defaults  = array(
+		$defaults  = [
 			'title'             => '',
 			'disabled'          => false,
 			'class'             => '',
@@ -768,13 +768,13 @@ abstract class WC_Settings_API {
 			'type'              => 'text',
 			'desc_tip'          => false,
 			'description'       => '',
-			'custom_attributes' => array(),
+			'custom_attributes' => [],
 			'select_buttons'    => false,
-			'options'           => array(),
-		);
+			'options'           => [],
+		];
 
 		$data  = wp_parse_args( $data, $defaults );
-		$value = (array) $this->get_option( $key, array() );
+		$value = (array) $this->get_option( $key, [] );
 
 		ob_start();
 		?>
@@ -820,10 +820,10 @@ abstract class WC_Settings_API {
 	 */
 	public function generate_title_html( $key, $data ) {
 		$field_key = $this->get_field_key( $key );
-		$defaults  = array(
+		$defaults  = [
 			'title' => '',
 			'class' => '',
-		);
+		];
 
 		$data = wp_parse_args( $data, $defaults );
 
@@ -924,14 +924,14 @@ abstract class WC_Settings_API {
 		return wp_kses(
 			trim( stripslashes( $value ) ),
 			array_merge(
-				array(
-					'iframe' => array(
+				[
+					'iframe' => [
 						'src'   => true,
 						'style' => true,
 						'id'    => true,
 						'class' => true,
-					),
-				),
+					],
+				],
 				wp_kses_allowed_html( 'post' )
 			)
 		);
@@ -979,7 +979,7 @@ abstract class WC_Settings_API {
 	 * @deprecated 2.6.0 No longer used.
 	 * @param array $form_fields Array of fields.
 	 */
-	public function validate_settings_fields( $form_fields = array() ) {
+	public function validate_settings_fields( $form_fields = [] ) {
 		wc_deprecated_function( 'validate_settings_fields', '2.6' );
 	}
 

@@ -14,9 +14,9 @@ class WC_Tests_API_Reports_Coupons_Totals extends WC_REST_Unit_Test_Case {
 	public function setUp(): void {
 		parent::setUp();
 		$this->user = $this->factory->user->create(
-			array(
+			[
 				'role' => 'administrator',
-			)
+			]
 		);
 	}
 
@@ -42,7 +42,7 @@ class WC_Tests_API_Reports_Coupons_Totals extends WC_REST_Unit_Test_Case {
 		$response = $this->server->dispatch( new WP_REST_Request( 'GET', '/wc/v3/reports/coupons/totals' ) );
 		$report   = $response->get_data();
 		$types    = wc_get_coupon_types();
-		$data     = array();
+		$data     = [];
 
 		foreach ( $types as $slug => $name ) {
 			$results = $wpdb->get_results(
@@ -59,11 +59,11 @@ class WC_Tests_API_Reports_Coupons_Totals extends WC_REST_Unit_Test_Case {
 
 			$total = isset( $results[0] ) ? (int) $results[0]->total : 0;
 
-			$data[] = array(
+			$data[] = [
 				'slug'  => $slug,
 				'name'  => $name,
 				'total' => $total,
-			);
+			];
 		}
 
 		$this->assertEquals( 200, $response->get_status() );

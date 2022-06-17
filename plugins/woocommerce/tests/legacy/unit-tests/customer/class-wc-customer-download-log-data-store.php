@@ -42,14 +42,14 @@ class WC_Tests_Customer_Download_Log_Data_Store extends WC_Unit_Test_Case {
 
 		$data_store = WC_Data_Store::load( 'customer-download-log' );
 		$logs       = $data_store->get_download_logs(
-			array(
+			[
 				'return'  => 'ids',
 				'orderby' => 'user_id',
 				'order'   => 'DESC',
-			)
+			]
 		);
 
-		$expected_result = array( (string) $download_log_2->get_id(), (string) $download_log_1->get_id() );
+		$expected_result = [ (string) $download_log_2->get_id(), (string) $download_log_1->get_id() ];
 		$this->assertEquals( $expected_result, $logs );
 	}
 }

@@ -18,9 +18,9 @@ class PaymentGatewaysController {
 	 * Initialize payment gateway changes.
 	 */
 	public static function init() {
-		add_filter( 'woocommerce_rest_prepare_payment_gateway', array( __CLASS__, 'extend_response' ), 10, 3 );
-		add_filter( 'admin_init', array( __CLASS__, 'possibly_do_connection_return_action' ) );
-		add_action( 'woocommerce_admin_payment_gateway_connection_return', array( __CLASS__, 'handle_successfull_connection' ) );
+		add_filter( 'woocommerce_rest_prepare_payment_gateway', [ __CLASS__, 'extend_response' ], 10, 3 );
+		add_filter( 'admin_init', [ __CLASS__, 'possibly_do_connection_return_action' ] );
+		add_action( 'woocommerce_admin_payment_gateway_connection_return', [ __CLASS__, 'handle_successfull_connection' ] );
 	}
 
 	/**
@@ -51,7 +51,7 @@ class PaymentGatewaysController {
 
 		$data['required_settings_keys'] = method_exists( $gateway, 'get_required_settings_keys' )
 			? $gateway->get_required_settings_keys()
-			: array();
+			: [];
 
 		$response->set_data( $data );
 
@@ -65,12 +65,12 @@ class PaymentGatewaysController {
 	 * @return array Install scripts.
 	 */
 	public static function get_post_install_scripts( $gateway ) {
-		$scripts    = array();
+		$scripts    = [];
 		$wp_scripts = wp_scripts();
 
 		$handles = method_exists( $gateway, 'get_post_install_script_handles' )
 			? $gateway->get_post_install_script_handles()
-			: array();
+			: [];
 
 		foreach ( $handles as $handle ) {
 			if ( isset( $wp_scripts->registered[ $handle ] ) ) {
@@ -124,7 +124,7 @@ class PaymentGatewaysController {
 		$payment_gateway->update_option( 'enabled', 'yes' );
 
 		TransientNotices::add(
-			array(
+			[
 				'user_id' => get_current_user_id(),
 				'id'      => 'payment-gateway-connection-return-' . str_replace( ',', '-', $gateway_id ),
 				'status'  => 'success',
@@ -133,14 +133,14 @@ class PaymentGatewaysController {
 					__( '%s connected successfully', 'woocommerce' ),
 					$payment_gateway->method_title
 				),
-			)
+			]
 		);
 
 		wc_admin_record_tracks_event(
 			'tasklist_payment_connect_method',
-			array(
+			[
 				'payment_method' => $gateway_id,
-			)
+			]
 		);
 
 		wp_safe_redirect( wc_admin_url() );

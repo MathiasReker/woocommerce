@@ -44,12 +44,12 @@ class WcPaySubscriptionsPage {
 	 * Hook into WooCommerce.
 	 */
 	public function __construct() {
-		add_action( 'admin_menu', array( $this, 'register_subscriptions_page' ) );
-		add_action( 'current_screen', array( $this, 'record_user_page_view' ) );
-		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
+		add_action( 'admin_menu', [ $this, 'register_subscriptions_page' ] );
+		add_action( 'current_screen', [ $this, 'record_user_page_view' ] );
+		add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
 
 		// Priority 50 to run after Automattic\WooCommerce\Internal\Admin\Homescreen::update_link_structure() which runs on 20.
-		add_action( 'admin_menu', array( $this, 'restructure_menu_order' ), 50 );
+		add_action( 'admin_menu', [ $this, 'restructure_menu_order' ], 50 );
 	}
 
 	/**
@@ -70,13 +70,13 @@ class WcPaySubscriptionsPage {
 			return;
 		}
 
-		$menu_data = array(
+		$menu_data = [
 			'id'         => $this->page_id,
 			'title'      => _x( 'Subscriptions', 'Admin menu name', 'woocommerce' ),
 			'parent'     => 'woocommerce',
 			'path'       => '/subscriptions',
 			'capability' => 'manage_options',
-		);
+		];
 
 		wc_admin_register_page( $menu_data );
 
@@ -104,7 +104,7 @@ class WcPaySubscriptionsPage {
 	private function is_store_experiment_eligible() {
 		// Ineligible if WooCommerce Payments OR an existing subscriptions plugin is installed.
 		$installed_plugins      = PluginsHelper::get_installed_plugin_slugs();
-		$plugin_ineligible_list = array(
+		$plugin_ineligible_list = [
 			'woocommerce-payments',
 			'woocommerce-subscriptions',
 			'subscriptio',
@@ -113,7 +113,7 @@ class WcPaySubscriptionsPage {
 			'sumosubscriptions',
 			'yith-woocommerce-subscription',
 			'xa-woocommerce-subscriptions',
-		);
+		];
 		foreach ( $plugin_ineligible_list as $plugin_slug ) {
 			if ( in_array( $plugin_slug, $installed_plugins, true ) ) {
 				return false;
@@ -157,12 +157,12 @@ class WcPaySubscriptionsPage {
 
 		// Get a single order that has been paid within the last 30 days.
 		$orders = wc_get_orders(
-			array(
+			[
 				'date_created' => '>' . strtotime( '-30 days' ),
 				'status'       => wc_get_is_paid_statuses(),
 				'limit'        => 1,
 				'return'       => 'ids',
-			)
+			]
 		);
 
 		$is_eligible = count( $orders ) >= 1;
@@ -197,26 +197,26 @@ class WcPaySubscriptionsPage {
 			return;
 		}
 
-		$data = array(
+		$data = [
 			'newSubscriptionProductUrl' => add_query_arg(
-				array(
+				[
 					'post_type'             => 'product',
 					'select_subscription'   => 'true',
 					'subscription_pointers' => 'true',
-				),
+				],
 				admin_url( 'post-new.php' )
 			),
 			'onboardingUrl'             => add_query_arg(
-				array(
+				[
 					'wcpay-connect' => 'WC_SUBSCRIPTIONS_TABLE',
 					'_wpnonce'      => wp_create_nonce( 'wcpay-connect' ),
-				),
+				],
 				admin_url( 'admin.php' )
 			),
 			'dismissOptionKey'          => $this->user_dismissed_option,
 			'noThanksUrl'               => wc_admin_url(),
 			'experimentAssignment'      => $this->get_user_experiment_assignment(),
-		);
+		];
 
 		wp_add_inline_script( WC_ADMIN_APP, 'window.wcWcpaySubscriptions = ' . wp_json_encode( $data ), 'before' );
 	}
@@ -228,7 +228,7 @@ class WcPaySubscriptionsPage {
 	 */
 	public function restructure_menu_order() {
 		global $submenu;
-		$wc_admin_menu           = array();
+		$wc_admin_menu           = [];
 		$subscriptions_menu_item = null;
 
 		if ( ! isset( $submenu['woocommerce'] ) ) {

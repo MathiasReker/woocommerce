@@ -26,9 +26,9 @@ class WC_Admin_Tests_Navigation_Menu extends WC_Unit_Test_Case {
 		$this->instance = new Menu();
 
 		$this->user = $this->factory->user->create(
-			array(
+			[
 				'role' => 'administrator',
-			)
+			]
 		);
 		wp_set_current_user( $this->user );
 	}
@@ -58,13 +58,13 @@ class WC_Admin_Tests_Navigation_Menu extends WC_Unit_Test_Case {
 	 */
 	public function test_get_parent_key() {
 		global $submenu;
-		$submenu['my-parent-page'] = array( // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
-			array(
+		$submenu['my-parent-page'] = [ // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+			[
 				'my-child-item',
 				'manage_woocommerce',
 				'my-child-item',
-			),
-		);
+			],
+		];
 
 		// Items that are already parents should not return parent keys.
 		$parent_key = $this->instance->get_parent_key( 'my-parent-page' );
@@ -83,12 +83,12 @@ class WC_Admin_Tests_Navigation_Menu extends WC_Unit_Test_Case {
 	 * Test adding a menu item.
 	 */
 	public function test_add_plugin_items() {
-		$item = array(
+		$item = [
 			'id'         => 'test-plugin-item',
 			'title'      => 'Test Plugin Item',
 			'capability' => 'manage_woocommerce',
 			'url'        => 'my-test-page',
-		);
+		];
 		$this->instance->add_plugin_item( $item );
 
 		$items = $this->instance->get_items();
@@ -100,12 +100,12 @@ class WC_Admin_Tests_Navigation_Menu extends WC_Unit_Test_Case {
 	 * Test adding an existing menu ID.
 	 */
 	public function test_add_dupliacte_plugin_items() {
-		$item = array(
+		$item = [
 			'id'         => 'test-duplicate-item',
 			'title'      => 'Test Duplicate Item',
 			'capability' => 'manage_woocommerce',
 			'url'        => 'my-duplicate-page',
-		);
+		];
 		$this->instance->add_plugin_item( $item );
 
 		// Test that the duplicate ID does not replace the item.
@@ -120,21 +120,21 @@ class WC_Admin_Tests_Navigation_Menu extends WC_Unit_Test_Case {
 	 */
 	public function test_add_plugin_category() {
 		$this->instance->add_plugin_category(
-			array(
+			[
 				'id'         => 'test-plugin-category',
 				'title'      => 'Test Plugin Category',
 				'capability' => 'manage_woocommerce',
-			)
+			]
 		);
 
 		$this->instance->add_plugin_item(
-			array(
+			[
 				'id'         => 'test-plugin-child',
 				'title'      => 'Test Plugin Child',
 				'parent'     => 'test-plugin-category',
 				'capability' => 'manage_woocommerce',
 				'url'        => 'my-test-child',
-			)
+			]
 		);
 
 		$items = $this->instance->get_items();
@@ -147,23 +147,23 @@ class WC_Admin_Tests_Navigation_Menu extends WC_Unit_Test_Case {
 	 */
 	public function test_plugin_menus() {
 		$this->instance->add_plugin_item(
-			array(
+			[
 				'id'         => 'test-plugin-menu',
 				'title'      => 'Test Plugin Category',
 				'capability' => 'manage_woocommerce',
-			)
+			]
 		);
 
 		$items = $this->instance->get_items();
 		$this->assertEquals( 'plugins', $items['test-plugin-menu']['menuId'] );
 
 		$this->instance->add_plugin_item(
-			array(
+			[
 				'id'         => 'test-plugin-bad-menu',
 				'title'      => 'Test Plugin Category',
 				'capability' => 'manage_woocommerce',
 				'menuId'     => 'primary',
-			)
+			]
 		);
 
 		$items = $this->instance->get_items();
@@ -175,50 +175,50 @@ class WC_Admin_Tests_Navigation_Menu extends WC_Unit_Test_Case {
 	 */
 	public function test_get_mapped_menu_items() {
 		$this->instance->add_plugin_category(
-			array(
+			[
 				'id'         => 'test-mapped-category',
 				'title'      => 'Test Mapped Category',
 				'capability' => 'manage_woocommerce',
-			)
+			]
 		);
 
 		$this->instance->add_plugin_item(
-			array(
+			[
 				'id'         => 'test-mapped-item-c',
 				'title'      => 'Test Mapped Item C',
 				'parent'     => 'test-mapped-category',
 				'capability' => 'manage_woocommerce',
 				'order'      => 2,
-			)
+			]
 		);
 
 		$this->instance->add_plugin_item(
-			array(
+			[
 				'id'         => 'test-mapped-item-b',
 				'title'      => 'Test Mapped Item B',
 				'parent'     => 'test-mapped-category',
 				'capability' => 'manage_woocommerce',
 				'order'      => 1,
-			)
+			]
 		);
 
 		$this->instance->add_plugin_item(
-			array(
+			[
 				'id'         => 'test-mapped-item-a',
 				'title'      => 'Test Mapped Item A',
 				'parent'     => 'test-mapped-category',
 				'capability' => 'manage_woocommerce',
 				'order'      => 1,
-			)
+			]
 		);
 
 		$this->instance->add_plugin_item(
-			array(
+			[
 				'id'         => 'test-mapped-permission',
 				'title'      => 'Should not be included',
 				'parent'     => 'test-mapped-category',
 				'capability' => 'no_permission',
-			)
+			]
 		);
 
 		$map = $this->instance->get_mapped_menu_items();
@@ -237,26 +237,26 @@ class WC_Admin_Tests_Navigation_Menu extends WC_Unit_Test_Case {
 	 */
 	public function add_setting_item() {
 		$this->instance->add_setting_item(
-			array(
+			[
 				'id'    => 'test-setting-item',
 				'title' => 'Test Setting Item',
-			)
+			]
 		);
 
 		$this->instance->add_setting_item(
-			array(
+			[
 				'id'     => 'test-setting-item-bad-parent',
 				'title'  => 'Test Bad Parent',
 				'parent' => 'woocommerce',
-			)
+			]
 		);
 
 		$this->instance->add_setting_item(
-			array(
+			[
 				'id'     => 'test-setting-item-bad-menu',
 				'title'  => 'Test Bad Menu',
 				'menuId' => 'primary',
-			)
+			]
 		);
 
 		$items = $this->instance->get_items();
@@ -269,21 +269,21 @@ class WC_Admin_Tests_Navigation_Menu extends WC_Unit_Test_Case {
 	 * Test if adding a menu item can be checked via the callback.
 	 */
 	public function test_has_callback() {
-		$item = array(
+		$item = [
 			'test-callback-item',
 			'manage_woocommerce',
 			'test-callback-item',
-		);
+		];
 
 		$this->assertFalse( $this->instance->has_callback( $item ) );
 
 		$this->instance->add_plugin_item(
-			array(
+			[
 				'id'         => 'test-callback-item',
 				'title'      => 'Test Callback Item',
 				'capability' => 'manage_woocommerce',
 				'url'        => 'test-callback-item',
-			)
+			]
 		);
 
 		$this->assertTrue( $this->instance->has_callback( $item ) );

@@ -13,7 +13,7 @@ class WC_Tests_Order_Item_Meta extends WC_Unit_Test_Case {
 	public function setUp(): void {
 		parent::setUp();
 
-		wp_insert_term( 'Testing Categories', 'category', array( 'slug' => 'testing' ) );
+		wp_insert_term( 'Testing Categories', 'category', [ 'slug' => 'testing' ] );
 		$this->setExpectedDeprecated( 'WC_Order_Item_Meta::__construct' );
 	}
 
@@ -29,13 +29,13 @@ class WC_Tests_Order_Item_Meta extends WC_Unit_Test_Case {
 
 		$meta = new WC_Order_Item_Meta( $item );
 
-		$expected = array();
+		$expected = [];
 		foreach ( $item->get_meta_data() as $metadata ) {
-			$expected[ $metadata->id ] = array(
+			$expected[ $metadata->id ] = [
 				'key'   => $metadata->key,
 				'label' => wc_attribute_label( $metadata->key, null ),
 				'value' => $metadata->value,
-			);
+			];
 		}
 
 		$result = $meta->get_formatted();
@@ -58,10 +58,10 @@ class WC_Tests_Order_Item_Meta extends WC_Unit_Test_Case {
 
 		$meta = new WC_Order_Item_Meta( $item );
 
-		$expected = array(
+		$expected = [
 			'regularkey' => '1',
 			'category'   => 'Testing Categories',
-		);
+		];
 		$actual   = wp_list_pluck( $meta->get_formatted(), 'value', 'key' );
 		$this->assertEquals( $expected, $actual );
 	}

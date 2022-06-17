@@ -22,9 +22,9 @@ class WC_Settings_Emails_Test extends WC_Settings_Unit_Test_Case {
 
 		$section_names = array_keys( $sut->get_sections() );
 
-		$expected = array(
+		$expected = [
 			'',
-		);
+		];
 
 		$this->assertEquals( $expected, $section_names );
 	}
@@ -68,23 +68,23 @@ class WC_Settings_Emails_Test extends WC_Settings_Unit_Test_Case {
 		$settings               = $sut->get_settings_for_section( '' );
 		$settings_ids_and_types = $this->get_ids_and_types( $settings );
 
-		$expected = array(
-			'email_notification_settings'              => array( 'title', 'sectionend' ),
+		$expected = [
+			'email_notification_settings'              => [ 'title', 'sectionend' ],
 			''                                         => 'email_notification',
 			'email_recipient_options'                  => 'sectionend',
-			'email_options'                            => array( 'title', 'sectionend' ),
+			'email_options'                            => [ 'title', 'sectionend' ],
 			'woocommerce_email_from_name'              => 'text',
 			'woocommerce_email_from_address'           => 'email',
-			'email_template_options'                   => array( 'title', 'sectionend' ),
+			'email_template_options'                   => [ 'title', 'sectionend' ],
 			'woocommerce_email_header_image'           => 'text',
 			'woocommerce_email_footer_text'            => 'textarea',
 			'woocommerce_email_base_color'             => 'color',
 			'woocommerce_email_background_color'       => 'color',
 			'woocommerce_email_body_background_color'  => 'color',
 			'woocommerce_email_text_color'             => 'color',
-			'email_merchant_notes'                     => array( 'title', 'sectionend' ),
+			'email_merchant_notes'                     => [ 'title', 'sectionend' ],
 			'woocommerce_merchant_email_notifications' => 'checkbox',
-		);
+		];
 
 		$this->assertEquals( $expected, $settings_ids_and_types );
 	}
@@ -100,7 +100,7 @@ class WC_Settings_Emails_Test extends WC_Settings_Unit_Test_Case {
 		$actual_email          = null;
 
 		$sut = $this->getMockBuilder( WC_Settings_Emails::class )
-					->setMethods( array( 'run_email_admin_options' ) )
+					->setMethods( [ 'run_email_admin_options' ] )
 					->getMock();
 
 		$sut->method( 'run_email_admin_options' )
@@ -137,24 +137,24 @@ class WC_Settings_Emails_Test extends WC_Settings_Unit_Test_Case {
 		$email = WC_Emails::instance()->get_emails()[ WC_Email_New_Order::class ];
 
 		$emails = $this->getMockBuilder( WC_Emails::class )
-								 ->setMethods( array( 'get_emails' ) )
+								 ->setMethods( [ 'get_emails' ] )
 								 ->getMock();
 
 		$emails->method( 'get_emails' )
-						 ->willReturn( array( WC_Email_New_Order::class => $email ) );
+						 ->willReturn( [ WC_Email_New_Order::class => $email ] );
 
 		StaticMockerHack::add_method_mocks(
-			array(
-				'WC_Emails' => array(
+			[
+				'WC_Emails' => [
 					'instance' => function() use ( $emails ) {
 						return $emails;
 					},
-				),
-			)
+				],
+			]
 		);
 
 		$sut = $this->getMockBuilder( WC_Settings_Emails::class )
-					   ->setMethods( array( 'save_settings_for_current_section' ) )
+					   ->setMethods( [ 'save_settings_for_current_section' ] )
 					   ->getMock();
 
 		$sut->method( 'save_settings_for_current_section' )

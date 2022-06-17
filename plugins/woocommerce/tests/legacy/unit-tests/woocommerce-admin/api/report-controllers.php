@@ -22,9 +22,9 @@ class WC_Admin_Tests_API_Report_Controllers extends WC_REST_Unit_Test_Case {
 		parent::setUp();
 
 		$this->user = $this->factory->user->create(
-			array(
+			[
 				'role' => 'administrator',
-			)
+			]
 		);
 
 		wp_set_current_user( $this->user );
@@ -41,7 +41,7 @@ class WC_Admin_Tests_API_Report_Controllers extends WC_REST_Unit_Test_Case {
 		// - `WC_Admin_REST_Product_Variations_Controller`
 		// - `WC_Admin_REST_Reports_Import_Controller`
 		// because they don't have defaults for required params or a get_items() method.
-		$endpoints = array(
+		$endpoints = [
 			'/wc-analytics/admin/notes',
 			'/wc-analytics/coupons',
 			'/wc-analytics/customers',
@@ -71,7 +71,7 @@ class WC_Admin_Tests_API_Report_Controllers extends WC_REST_Unit_Test_Case {
 			'/wc-analytics/reports/customers/stats',
 			'/wc-analytics/taxes',
 			'/wc-analytics/reports/performance-indicators',
-		);
+		];
 
 		foreach ( $endpoints as $endpoint ) {
 			$request  = new WP_REST_Request( 'GET', $endpoint );

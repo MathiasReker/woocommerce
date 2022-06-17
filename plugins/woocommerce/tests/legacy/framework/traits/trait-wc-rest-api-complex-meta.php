@@ -15,38 +15,38 @@ trait WC_REST_API_Complex_Meta {
 	 *
 	 * @var array
 	 */
-	public static $sample_meta = array(
-		array(
+	public static $sample_meta = [
+		[
 			'key' => 'string_meta',
 			'value' => 'string_value',
-		),
-		array(
+		],
+		[
 			'key' => 'int_meta',
 			'value' => 1,
-		),
-		array(
+		],
+		[
 			'key' => 'bool_meta',
 			'value' => true,
-		),
-		array(
+		],
+		[
 			'key' => 'array_meta',
-			'value' => array( 1, 2, 'string' ),
-		),
-		array(
+			'value' => [ 1, 2, 'string' ],
+		],
+		[
 			'key' => 'null_meta',
 			'value' => 'null',
-		),
-		array(
+		],
+		[
 			'key' => 'object_meta',
-			'value' => array(
+			'value' => [
 				'nested_key1' => 'nested_value1',
 				'nested_key2' => 0,
 				'nested_key3' => true,
-				'nested_key4' => array( 2, 3, 4 ),
-				'nested_key5' => array( 2, 3, array( 'deep' => 'nesting' ) ),
-			),
-		),
-	);
+				'nested_key4' => [ 2, 3, 4 ],
+				'nested_key5' => [ 2, 3, [ 'deep' => 'nesting' ] ],
+			],
+		],
+	];
 
 	/**
 	 * Test to update `meta_data` field with a complex data type.
@@ -54,10 +54,10 @@ trait WC_REST_API_Complex_Meta {
 	 * @param string $url     URL to send request against.
 	 * @param array  $options Options for customizations.
 	 */
-	public function assert_update_complex_meta( $url, $options = array() ) {
+	public function assert_update_complex_meta( $url, $options = [] ) {
 		$meta = $options['meta'] ?? self::$sample_meta;
 		$request = new WP_REST_Request( 'PUT', $url );
-		$request->set_body_params( array( 'meta_data' => $meta ) );
+		$request->set_body_params( [ 'meta_data' => $meta ] );
 
 		$response = $this->server->dispatch( $request );
 

@@ -47,7 +47,7 @@ class WC_REST_Report_Coupons_Totals_Controller extends WC_REST_Reports_Controlle
 		}
 
 		$types = wc_get_coupon_types();
-		$data  = array();
+		$data  = [];
 
 		foreach ( $types as $slug => $name ) {
 			$results = $wpdb->get_results(
@@ -61,11 +61,11 @@ class WC_REST_Report_Coupons_Totals_Controller extends WC_REST_Reports_Controlle
 
 			$total = isset( $results[0] ) ? (int) $results[0]->total : 0;
 
-			$data[] = array(
+			$data[] = [
 				'slug'  => $slug,
 				'name'  => $name,
 				'total' => $total,
-			);
+			];
 		}
 
 		set_transient( 'rest_api_coupons_type_count', $data, YEAR_IN_SECONDS );
@@ -81,11 +81,11 @@ class WC_REST_Report_Coupons_Totals_Controller extends WC_REST_Reports_Controlle
 	 * @return WP_REST_Response $response Response data.
 	 */
 	public function prepare_item_for_response( $report, $request ) {
-		$data = array(
+		$data = [
 			'slug'  => $report->slug,
 			'name'  => $report->name,
 			'total' => $report->total,
-		);
+		];
 
 		$context = ! empty( $request['context'] ) ? $request['context'] : 'view';
 		$data    = $this->add_additional_fields_to_object( $data, $request );
@@ -112,31 +112,31 @@ class WC_REST_Report_Coupons_Totals_Controller extends WC_REST_Reports_Controlle
 	 * @return array
 	 */
 	public function get_item_schema() {
-		$schema = array(
+		$schema = [
 			'$schema'    => 'http://json-schema.org/draft-04/schema#',
 			'title'      => 'report_coupon_total',
 			'type'       => 'object',
-			'properties' => array(
-				'slug'  => array(
+			'properties' => [
+				'slug'  => [
 					'description' => __( 'An alphanumeric identifier for the resource.', 'woocommerce' ),
 					'type'        => 'string',
-					'context'     => array( 'view' ),
+					'context'     => [ 'view' ],
 					'readonly'    => true,
-				),
-				'name'  => array(
+				],
+				'name'  => [
 					'description' => __( 'Coupon type name.', 'woocommerce' ),
 					'type'        => 'string',
-					'context'     => array( 'view' ),
+					'context'     => [ 'view' ],
 					'readonly'    => true,
-				),
-				'total' => array(
+				],
+				'total' => [
 					'description' => __( 'Amount of coupons.', 'woocommerce' ),
 					'type'        => 'string',
-					'context'     => array( 'view' ),
+					'context'     => [ 'view' ],
 					'readonly'    => true,
-				),
-			),
-		);
+				],
+			],
+		];
 
 		return $this->add_additional_fields_schema( $schema );
 	}

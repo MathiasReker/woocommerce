@@ -70,7 +70,7 @@ class WC_Shipping_Legacy_Local_Pickup extends WC_Shipping_Method {
 		$this->countries    = $this->get_option( 'countries' );
 
 		// Actions.
-		add_action( 'woocommerce_update_options_shipping_' . $this->id, array( $this, 'process_admin_options' ) );
+		add_action( 'woocommerce_update_options_shipping_' . $this->id, [ $this, 'process_admin_options' ] );
 	}
 
 	/**
@@ -78,12 +78,12 @@ class WC_Shipping_Legacy_Local_Pickup extends WC_Shipping_Method {
 	 *
 	 * @param array $package Package information.
 	 */
-	public function calculate_shipping( $package = array() ) {
-		$rate = array(
+	public function calculate_shipping( $package = [] ) {
+		$rate = [
 			'id'      => $this->id,
 			'label'   => $this->title,
 			'package' => $package,
-		);
+		];
 		$this->add_rate( $rate );
 	}
 
@@ -91,50 +91,50 @@ class WC_Shipping_Legacy_Local_Pickup extends WC_Shipping_Method {
 	 * Initialize form fields.
 	 */
 	public function init_form_fields() {
-		$this->form_fields = array(
-			'enabled'      => array(
+		$this->form_fields = [
+			'enabled'      => [
 				'title'   => __( 'Enable', 'woocommerce' ),
 				'type'    => 'checkbox',
 				'label'   => __( 'Once disabled, this legacy method will no longer be available.', 'woocommerce' ),
 				'default' => 'no',
-			),
-			'title'        => array(
+			],
+			'title'        => [
 				'title'       => __( 'Title', 'woocommerce' ),
 				'type'        => 'text',
 				'description' => __( 'This controls the title which the user sees during checkout.', 'woocommerce' ),
 				'default'     => __( 'Local pickup', 'woocommerce' ),
 				'desc_tip'    => true,
-			),
-			'codes'        => array(
+			],
+			'codes'        => [
 				'title'       => __( 'Allowed ZIP/post codes', 'woocommerce' ),
 				'type'        => 'text',
 				'desc_tip'    => __( 'What ZIP/post codes are available for local pickup?', 'woocommerce' ),
 				'default'     => '',
 				'description' => __( 'Separate codes with a comma. Accepts wildcards, e.g. <code>P*</code> will match a postcode of PE30. Also accepts a pattern, e.g. <code>NG1___</code> would match NG1 1AA but not NG10 1AA', 'woocommerce' ),
 				'placeholder' => 'e.g. 12345, 56789',
-			),
-			'availability' => array(
+			],
+			'availability' => [
 				'title'   => __( 'Method availability', 'woocommerce' ),
 				'type'    => 'select',
 				'default' => 'all',
 				'class'   => 'availability wc-enhanced-select',
-				'options' => array(
+				'options' => [
 					'all'      => __( 'All allowed countries', 'woocommerce' ),
 					'specific' => __( 'Specific countries', 'woocommerce' ),
-				),
-			),
-			'countries'    => array(
+				],
+			],
+			'countries'    => [
 				'title'             => __( 'Specific countries', 'woocommerce' ),
 				'type'              => 'multiselect',
 				'class'             => 'wc-enhanced-select',
 				'css'               => 'width: 400px;',
 				'default'           => '',
 				'options'           => WC()->countries->get_shipping_countries(),
-				'custom_attributes' => array(
+				'custom_attributes' => [
 					'data-placeholder' => __( 'Select some countries', 'woocommerce' ),
-				),
-			),
-		);
+				],
+			],
+		];
 	}
 
 	/**
@@ -143,7 +143,7 @@ class WC_Shipping_Legacy_Local_Pickup extends WC_Shipping_Method {
 	 * @return array
 	 */
 	public function get_valid_postcodes() {
-		$codes = array();
+		$codes = [];
 
 		if ( '' !== $this->codes ) {
 			foreach ( explode( ',', $this->codes ) as $code ) {

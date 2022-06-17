@@ -26,16 +26,16 @@ class WC_Product_CSV_Importer_Test extends \WC_Unit_Test_Case {
 	 */
 	public function test_expand_data_with_draft_variable() {
 		$csv_file = dirname( __FILE__ ) . '/sample.csv';
-		$raw_data = array(
-			array(
+		$raw_data = [
+			[
 				'type'      => 'variable',
 				'published' => -1,
-			),
-			array(
+			],
+			[
 				'type'      => 'variation',
 				'published' => -1,
-			),
-		);
+			],
+		];
 
 		$reflected_importer = new ReflectionClass( WC_Product_CSV_Importer::class );
 		$expand_data        = $reflected_importer->getMethod( 'expand_data' );
@@ -44,17 +44,17 @@ class WC_Product_CSV_Importer_Test extends \WC_Unit_Test_Case {
 		$importer  = new WC_Product_CSV_Importer( $csv_file );
 		$variable  = $expand_data->invoke(
 			$importer,
-			array(
-				'type'      => array( 'variable' ),
+			[
+				'type'      => [ 'variable' ],
 				'published' => -1,
-			)
+			]
 		);
 		$variation = $expand_data->invoke(
 			$importer,
-			array(
-				'type'      => array( 'variation' ),
+			[
+				'type'      => [ 'variation' ],
 				'published' => -1,
-			)
+			]
 		);
 
 		$this->assertEquals( 'draft', $variable['status'] );

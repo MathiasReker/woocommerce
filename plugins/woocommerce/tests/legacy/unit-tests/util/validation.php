@@ -27,13 +27,13 @@ class WC_Tests_Validation extends WC_Unit_Test_Case {
 	 * @since 2.4
 	 */
 	public function data_provider_test_is_phone() {
-		return array(
-			array( true, WC_Validation::is_phone( '+00 000 00 00 000' ) ),
-			array( true, WC_Validation::is_phone( '+00-000-00-00-000' ) ),
-			array( true, WC_Validation::is_phone( '(000) 00 00 000' ) ),
-			array( true, WC_Validation::is_phone( '+00.000.00.00.000' ) ),
-			array( false, WC_Validation::is_phone( '+00 aaa dd ee fff' ) ),
-		);
+		return [
+			[ true, WC_Validation::is_phone( '+00 000 00 00 000' ) ],
+			[ true, WC_Validation::is_phone( '+00-000-00-00-000' ) ],
+			[ true, WC_Validation::is_phone( '(000) 00 00 000' ) ],
+			[ true, WC_Validation::is_phone( '+00.000.00.00.000' ) ],
+			[ false, WC_Validation::is_phone( '+00 aaa dd ee fff' ) ],
+		];
 	}
 
 	/**
@@ -55,81 +55,81 @@ class WC_Tests_Validation extends WC_Unit_Test_Case {
 	 * @since 2.4
 	 */
 	public function data_provider_test_is_postcode() {
-		$it = array(
-			array( true, WC_Validation::is_postcode( '99999', 'IT' ) ),
-			array( false, WC_Validation::is_postcode( '9999', 'IT' ) ),
-			array( false, WC_Validation::is_postcode( 'ABC 999', 'IT' ) ),
-			array( false, WC_Validation::is_postcode( 'ABC-999', 'IT' ) ),
-			array( false, WC_Validation::is_postcode( 'ABC_123', 'IT' ) ),
-		);
+		$it = [
+			[ true, WC_Validation::is_postcode( '99999', 'IT' ) ],
+			[ false, WC_Validation::is_postcode( '9999', 'IT' ) ],
+			[ false, WC_Validation::is_postcode( 'ABC 999', 'IT' ) ],
+			[ false, WC_Validation::is_postcode( 'ABC-999', 'IT' ) ],
+			[ false, WC_Validation::is_postcode( 'ABC_123', 'IT' ) ],
+		];
 
-		$gb = array(
-			array( true, WC_Validation::is_postcode( 'A9 9AA', 'GB' ) ),
-			array( false, WC_Validation::is_postcode( '99999', 'GB' ) ),
-		);
+		$gb = [
+			[ true, WC_Validation::is_postcode( 'A9 9AA', 'GB' ) ],
+			[ false, WC_Validation::is_postcode( '99999', 'GB' ) ],
+		];
 
-		$us = array(
-			array( true, WC_Validation::is_postcode( '99999', 'US' ) ),
-			array( true, WC_Validation::is_postcode( '99999-9999', 'US' ) ),
-			array( false, WC_Validation::is_postcode( 'ABCDE', 'US' ) ),
-			array( false, WC_Validation::is_postcode( 'ABCDE-9999', 'US' ) ),
-		);
+		$us = [
+			[ true, WC_Validation::is_postcode( '99999', 'US' ) ],
+			[ true, WC_Validation::is_postcode( '99999-9999', 'US' ) ],
+			[ false, WC_Validation::is_postcode( 'ABCDE', 'US' ) ],
+			[ false, WC_Validation::is_postcode( 'ABCDE-9999', 'US' ) ],
+		];
 
-		$ch = array(
-			array( true, WC_Validation::is_postcode( '9999', 'CH' ) ),
-			array( false, WC_Validation::is_postcode( '99999', 'CH' ) ),
-			array( false, WC_Validation::is_postcode( 'ABCDE', 'CH' ) ),
-		);
+		$ch = [
+			[ true, WC_Validation::is_postcode( '9999', 'CH' ) ],
+			[ false, WC_Validation::is_postcode( '99999', 'CH' ) ],
+			[ false, WC_Validation::is_postcode( 'ABCDE', 'CH' ) ],
+		];
 
-		$br = array(
-			array( true, WC_Validation::is_postcode( '99999-999', 'BR' ) ),
-			array( true, WC_Validation::is_postcode( '99999999', 'BR' ) ),
-			array( false, WC_Validation::is_postcode( '99999 999', 'BR' ) ),
-			array( false, WC_Validation::is_postcode( '99999-ABC', 'BR' ) ),
-		);
+		$br = [
+			[ true, WC_Validation::is_postcode( '99999-999', 'BR' ) ],
+			[ true, WC_Validation::is_postcode( '99999999', 'BR' ) ],
+			[ false, WC_Validation::is_postcode( '99999 999', 'BR' ) ],
+			[ false, WC_Validation::is_postcode( '99999-ABC', 'BR' ) ],
+		];
 
-		$ca = array(
-			array( true, WC_Validation::is_postcode( 'A9A 9A9', 'CA' ) ),
-			array( true, WC_Validation::is_postcode( 'A9A9A9', 'CA' ) ),
-			array( true, WC_Validation::is_postcode( 'a9a9a9', 'CA' ) ),
-			array( false, WC_Validation::is_postcode( 'D0A 9A9', 'CA' ) ),
-			array( false, WC_Validation::is_postcode( '99999', 'CA' ) ),
-			array( false, WC_Validation::is_postcode( 'ABC999', 'CA' ) ),
-			array( false, WC_Validation::is_postcode( '0A0A0A', 'CA' ) ),
-		);
+		$ca = [
+			[ true, WC_Validation::is_postcode( 'A9A 9A9', 'CA' ) ],
+			[ true, WC_Validation::is_postcode( 'A9A9A9', 'CA' ) ],
+			[ true, WC_Validation::is_postcode( 'a9a9a9', 'CA' ) ],
+			[ false, WC_Validation::is_postcode( 'D0A 9A9', 'CA' ) ],
+			[ false, WC_Validation::is_postcode( '99999', 'CA' ) ],
+			[ false, WC_Validation::is_postcode( 'ABC999', 'CA' ) ],
+			[ false, WC_Validation::is_postcode( '0A0A0A', 'CA' ) ],
+		];
 
-		$nl = array(
-			array( true, WC_Validation::is_postcode( '3852GC', 'NL' ) ),
-			array( true, WC_Validation::is_postcode( '3852 GC', 'NL' ) ),
-			array( true, WC_Validation::is_postcode( '3852 gc', 'NL' ) ),
-			array( false, WC_Validation::is_postcode( '3852SA', 'NL' ) ),
-			array( false, WC_Validation::is_postcode( '3852 SA', 'NL' ) ),
-			array( false, WC_Validation::is_postcode( '3852 sa', 'NL' ) ),
-		);
+		$nl = [
+			[ true, WC_Validation::is_postcode( '3852GC', 'NL' ) ],
+			[ true, WC_Validation::is_postcode( '3852 GC', 'NL' ) ],
+			[ true, WC_Validation::is_postcode( '3852 gc', 'NL' ) ],
+			[ false, WC_Validation::is_postcode( '3852SA', 'NL' ) ],
+			[ false, WC_Validation::is_postcode( '3852 SA', 'NL' ) ],
+			[ false, WC_Validation::is_postcode( '3852 sa', 'NL' ) ],
+		];
 
-		$si = array(
-			array( true, WC_Validation::is_postcode( '1234', 'SI' ) ),
-			array( true, WC_Validation::is_postcode( '1000', 'SI' ) ),
-			array( true, WC_Validation::is_postcode( '9876', 'SI' ) ),
-			array( false, WC_Validation::is_postcode( '12345', 'SI' ) ),
-			array( false, WC_Validation::is_postcode( '0123', 'SI' ) ),
-		);
+		$si = [
+			[ true, WC_Validation::is_postcode( '1234', 'SI' ) ],
+			[ true, WC_Validation::is_postcode( '1000', 'SI' ) ],
+			[ true, WC_Validation::is_postcode( '9876', 'SI' ) ],
+			[ false, WC_Validation::is_postcode( '12345', 'SI' ) ],
+			[ false, WC_Validation::is_postcode( '0123', 'SI' ) ],
+		];
 
-		$ba = array(
-			array( true, WC_Validation::is_postcode( '71000', 'BA' ) ),
-			array( true, WC_Validation::is_postcode( '78256', 'BA' ) ),
-			array( true, WC_Validation::is_postcode( '89240', 'BA' ) ),
-			array( false, WC_Validation::is_postcode( '61000', 'BA' ) ),
-			array( false, WC_Validation::is_postcode( '7850', 'BA' ) ),
-		);
+		$ba = [
+			[ true, WC_Validation::is_postcode( '71000', 'BA' ) ],
+			[ true, WC_Validation::is_postcode( '78256', 'BA' ) ],
+			[ true, WC_Validation::is_postcode( '89240', 'BA' ) ],
+			[ false, WC_Validation::is_postcode( '61000', 'BA' ) ],
+			[ false, WC_Validation::is_postcode( '7850', 'BA' ) ],
+		];
 
-		$jp = array(
-			array( true, WC_Validation::is_postcode( '1340088', 'JP' ) ),
-			array( true, WC_Validation::is_postcode( '134-0088', 'JP' ) ),
-			array( false, WC_Validation::is_postcode( '1340-088', 'JP' ) ),
-			array( false, WC_Validation::is_postcode( '12345', 'JP' ) ),
-			array( false, WC_Validation::is_postcode( '0123', 'JP' ) ),
-		);
+		$jp = [
+			[ true, WC_Validation::is_postcode( '1340088', 'JP' ) ],
+			[ true, WC_Validation::is_postcode( '134-0088', 'JP' ) ],
+			[ false, WC_Validation::is_postcode( '1340-088', 'JP' ) ],
+			[ false, WC_Validation::is_postcode( '12345', 'JP' ) ],
+			[ false, WC_Validation::is_postcode( '0123', 'JP' ) ],
+		];
 
 		return array_merge( $it, $gb, $us, $ch, $br, $ca, $nl, $si, $ba, $jp );
 	}
@@ -153,19 +153,19 @@ class WC_Tests_Validation extends WC_Unit_Test_Case {
 	 * @since 2.4
 	 */
 	public function data_provider_test_is_gb_postcode() {
-		return array(
-			array( true, WC_Validation::is_gb_postcode( 'AA9A 9AA' ) ),
-			array( true, WC_Validation::is_gb_postcode( 'A9A 9AA' ) ),
-			array( true, WC_Validation::is_gb_postcode( 'A9 9AA' ) ),
-			array( true, WC_Validation::is_gb_postcode( 'A99 9AA' ) ),
-			array( true, WC_Validation::is_gb_postcode( 'AA99 9AA' ) ),
-			array( true, WC_Validation::is_gb_postcode( 'BFPO 801' ) ),
-			array( false, WC_Validation::is_gb_postcode( '99999' ) ),
-			array( false, WC_Validation::is_gb_postcode( '9999 999' ) ),
-			array( false, WC_Validation::is_gb_postcode( '999 999' ) ),
-			array( false, WC_Validation::is_gb_postcode( '99 999' ) ),
-			array( false, WC_Validation::is_gb_postcode( '9A A9A' ) ),
-		);
+		return [
+			[ true, WC_Validation::is_gb_postcode( 'AA9A 9AA' ) ],
+			[ true, WC_Validation::is_gb_postcode( 'A9A 9AA' ) ],
+			[ true, WC_Validation::is_gb_postcode( 'A9 9AA' ) ],
+			[ true, WC_Validation::is_gb_postcode( 'A99 9AA' ) ],
+			[ true, WC_Validation::is_gb_postcode( 'AA99 9AA' ) ],
+			[ true, WC_Validation::is_gb_postcode( 'BFPO 801' ) ],
+			[ false, WC_Validation::is_gb_postcode( '99999' ) ],
+			[ false, WC_Validation::is_gb_postcode( '9999 999' ) ],
+			[ false, WC_Validation::is_gb_postcode( '999 999' ) ],
+			[ false, WC_Validation::is_gb_postcode( '99 999' ) ],
+			[ false, WC_Validation::is_gb_postcode( '9A A9A' ) ],
+		];
 	}
 
 	/**
@@ -187,14 +187,14 @@ class WC_Tests_Validation extends WC_Unit_Test_Case {
 	 * @since 2.4
 	 */
 	public function data_provider_test_format_postcode() {
-		return array(
-			array( '99999', WC_Validation::format_postcode( '99999', 'IT' ) ),
-			array( '99999', WC_Validation::format_postcode( ' 99999 ', 'IT' ) ),
-			array( '99999', WC_Validation::format_postcode( '999 99', 'IT' ) ),
-			array( 'ABCDE', WC_Validation::format_postcode( 'abcde', 'IT' ) ),
-			array( 'AB CDE', WC_Validation::format_postcode( 'abcde', 'GB' ) ),
-			array( 'AB CDE', WC_Validation::format_postcode( 'abcde', 'CA' ) ),
-		);
+		return [
+			[ '99999', WC_Validation::format_postcode( '99999', 'IT' ) ],
+			[ '99999', WC_Validation::format_postcode( ' 99999 ', 'IT' ) ],
+			[ '99999', WC_Validation::format_postcode( '999 99', 'IT' ) ],
+			[ 'ABCDE', WC_Validation::format_postcode( 'abcde', 'IT' ) ],
+			[ 'AB CDE', WC_Validation::format_postcode( 'abcde', 'GB' ) ],
+			[ 'AB CDE', WC_Validation::format_postcode( 'abcde', 'CA' ) ],
+		];
 	}
 
 	/**

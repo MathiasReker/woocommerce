@@ -84,10 +84,10 @@ class ImageAttachment {
 			return;
 		}
 		wp_update_post(
-			array(
+			[
 				'ID'         => $this->id,
 				'post_title' => $text,
-			)
+			]
 		);
 	}
 }

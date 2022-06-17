@@ -37,7 +37,7 @@ class WC_Meta_Data implements JsonSerializable {
 	 *
 	 * @param array $meta Data to wrap behind this function.
 	 */
-	public function __construct( $meta = array() ) {
+	public function __construct( $meta = [] ) {
 		$this->current_data = $meta;
 		$this->apply_changes();
 	}
@@ -100,7 +100,7 @@ class WC_Meta_Data implements JsonSerializable {
 	 * @return array
 	 */
 	public function get_changes() {
-		$changes = array();
+		$changes = [];
 		foreach ( $this->current_data as $id => $value ) {
 			if ( ! array_key_exists( $id, $this->data ) || $value !== $this->data[ $id ] ) {
 				$changes[ $id ] = $value;

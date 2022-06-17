@@ -27,9 +27,9 @@ class WC_Admin_Tests_API_Orders extends WC_REST_Unit_Test_Case {
 		parent::setUp();
 
 		$this->user = $this->factory->user->create(
-			array(
+			[
 				'role' => 'administrator',
-			)
+			]
 		);
 	}
 
@@ -38,8 +38,8 @@ class WC_Admin_Tests_API_Orders extends WC_REST_Unit_Test_Case {
 	 */
 	public function test_order_status() {
 		// Add a status to the actionable list.
-		$actionable_statuses = get_option( 'woocommerce_actionable_order_statuses', array() );
-		update_option( 'woocommerce_actionable_order_statuses', array( 'test-status' ) );
+		$actionable_statuses = get_option( 'woocommerce_actionable_order_statuses', [] );
+		update_option( 'woocommerce_actionable_order_statuses', [ 'test-status' ] );
 
 		// Ideally this would be a test using an endpoint, but the option value is used
 		// at `rest_api_init` time to create the collection param schema. It's too late
@@ -57,7 +57,7 @@ class WC_Admin_Tests_API_Orders extends WC_REST_Unit_Test_Case {
 	public function test_get_items_number_param() {
 		wp_set_current_user( $this->user );
 
-		$orders = array();
+		$orders = [];
 		for ( $i = 0; $i < 10; $i++ ) {
 			$orders[] = WC_Helper_Order::create_order( $this->user );
 		}
@@ -66,9 +66,9 @@ class WC_Admin_Tests_API_Orders extends WC_REST_Unit_Test_Case {
 
 		$request = new WP_REST_Request( 'GET', $this->endpoint );
 		$request->set_query_params(
-			array(
+			[
 				'number' => (string) $order->get_id(),
-			)
+			]
 		);
 
 		$response = $this->server->dispatch( $request );
@@ -91,13 +91,13 @@ class WC_Admin_Tests_API_Orders extends WC_REST_Unit_Test_Case {
 
 		// Create a refund order.
 		$refund = wc_create_refund(
-			array(
+			[
 				'order_id' => $order->get_id(),
-			)
+			]
 		);
 
 		// Forcibly delete the original order.
-		$wpdb->delete( $wpdb->prefix . 'posts', array( 'ID' => $order->get_id() ), array( '%d' ) );
+		$wpdb->delete( $wpdb->prefix . 'posts', [ 'ID' => $order->get_id() ], [ '%d' ] );
 		clean_post_cache( $order->get_id() );
 
 		// Trigger an order sync on the refund which should handle the missing parent order.

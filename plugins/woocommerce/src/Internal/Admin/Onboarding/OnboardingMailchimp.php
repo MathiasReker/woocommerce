@@ -33,7 +33,7 @@ class OnboardingMailchimp {
 	 * Init.
 	 */
 	public function init() {
-		add_action( 'woocommerce_onboarding_profile_data_updated', array( $this, 'on_profile_data_updated' ), 10, 2 );
+		add_action( 'woocommerce_onboarding_profile_data_updated', [ $this, 'on_profile_data_updated' ], 10, 2 );
 	}
 
 	/**

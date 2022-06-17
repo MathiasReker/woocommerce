@@ -17,7 +17,7 @@ class WC_Theme_Tracking {
 	 */
 	public function init() {
 		$this->track_initial_theme();
-		add_action( 'switch_theme', array( $this, 'track_activated_theme' ) );
+		add_action( 'switch_theme', [ $this, 'track_activated_theme' ] );
 	}
 
 	/**
@@ -45,11 +45,11 @@ class WC_Theme_Tracking {
 			$is_block_theme = wc_current_theme_is_fse_theme();
 		}
 
-		$properties = array(
+		$properties = [
 			'block_theme'   => $is_block_theme,
 			'theme_name'    => $theme_object->get( 'Name' ),
 			'theme_version' => $theme_object->get( 'Version' ),
-		);
+		];
 
 		WC_Tracks::record_event( 'activated_theme', $properties );
 	}

@@ -29,14 +29,14 @@ class WC_Webhook extends WC_Legacy_Webhook {
 	 *
 	 * @var array
 	 */
-	protected $processed = array();
+	protected $processed = [];
 
 	/**
 	 * Stores webhook data.
 	 *
 	 * @var array
 	 */
-	protected $data = array(
+	protected $data = [
 		'date_created'     => null,
 		'date_modified'    => null,
 		'status'           => 'disabled',
@@ -51,7 +51,7 @@ class WC_Webhook extends WC_Legacy_Webhook {
 		'user_id'          => 0,
 		'api_version'      => 3,
 		'pending_delivery' => false,
-	);
+	];
 
 	/**
 	 * Load webhook data based on how WC_Webhook is called.
@@ -94,7 +94,7 @@ class WC_Webhook extends WC_Legacy_Webhook {
 
 		if ( is_array( $hooks ) && ! empty( $url ) ) {
 			foreach ( $hooks as $hook ) {
-				add_action( $hook, array( $this, 'process' ) );
+				add_action( $hook, [ $this, 'process' ] );
 			}
 		}
 	}
@@ -207,7 +207,7 @@ class WC_Webhook extends WC_Legacy_Webhook {
 	 */
 	private function is_valid_post_action( $arg ) {
 		// Only deliver deleted/restored event for coupons, orders, and products.
-		if ( isset( $GLOBALS['post_type'] ) && ! in_array( $GLOBALS['post_type'], array( 'shop_coupon', 'shop_order', 'product' ), true ) ) {
+		if ( isset( $GLOBALS['post_type'] ) && ! in_array( $GLOBALS['post_type'], [ 'shop_coupon', 'shop_order', 'product' ], true ) ) {
 			return false;
 		}
 
@@ -273,11 +273,11 @@ class WC_Webhook extends WC_Legacy_Webhook {
 	private function is_valid_resource( $arg ) {
 		$resource = $this->get_resource();
 
-		if ( in_array( $resource, array( 'order', 'product', 'coupon' ), true ) ) {
+		if ( in_array( $resource, [ 'order', 'product', 'coupon' ], true ) ) {
 			$status = get_post_status( absint( $arg ) );
 
 			// Ignore auto drafts for all resources.
-			if ( in_array( $status, array( 'auto-draft', 'new' ), true ) ) {
+			if ( in_array( $status, [ 'auto-draft', 'new' ], true ) ) {
 				return false;
 			}
 
@@ -318,7 +318,7 @@ class WC_Webhook extends WC_Legacy_Webhook {
 		$payload    = $this->build_payload( $arg );
 
 		// Setup request args.
-		$http_args = array(
+		$http_args = [
 			'method'      => 'POST',
 			'timeout'     => MINUTE_IN_SECONDS,
 			'redirection' => 0,
@@ -326,11 +326,11 @@ class WC_Webhook extends WC_Legacy_Webhook {
 			'blocking'    => true,
 			'user-agent'  => sprintf( 'WooCommerce/%s Hookshot (WordPress/%s)', Constants::get_constant( 'WC_VERSION' ), $GLOBALS['wp_version'] ),
 			'body'        => trim( wp_json_encode( $payload ) ),
-			'headers'     => array(
+			'headers'     => [
 				'Content-Type' => 'application/json',
-			),
-			'cookies'     => array(),
-		);
+			],
+			'cookies'     => [],
+		];
 
 		$http_args = apply_filters( 'woocommerce_webhook_http_args', $http_args, $arg, $this->get_id() );
 
@@ -378,7 +378,7 @@ class WC_Webhook extends WC_Legacy_Webhook {
 				break;
 
 			case 'order':
-				$payload = WC()->api->WC_API_Orders->get_order( $resource_id, null, apply_filters( 'woocommerce_webhook_order_payload_filters', array() ) );
+				$payload = WC()->api->WC_API_Orders->get_order( $resource_id, null, apply_filters( 'woocommerce_webhook_order_payload_filters', [] ) );
 				break;
 
 			case 'product':
@@ -391,14 +391,14 @@ class WC_Webhook extends WC_Legacy_Webhook {
 
 			// Custom topics include the first hook argument.
 			case 'action':
-				$payload = array(
+				$payload = [
 					'action' => current( $this->get_hooks() ),
 					'arg'    => $resource_id,
-				);
+				];
 				break;
 
 			default:
-				$payload = array();
+				$payload = [];
 				break;
 		}
 
@@ -431,14 +431,14 @@ class WC_Webhook extends WC_Legacy_Webhook {
 
 			// Custom topics include the first hook argument.
 			case 'action':
-				$payload = array(
+				$payload = [
 					'action' => current( $this->get_hooks() ),
 					'arg'    => $resource_id,
-				);
+				];
 				break;
 
 			default:
-				$payload = array();
+				$payload = [];
 				break;
 		}
 
@@ -464,9 +464,9 @@ class WC_Webhook extends WC_Legacy_Webhook {
 
 		// If a resource has been deleted, just include the ID.
 		if ( 'deleted' === $event ) {
-			$payload = array(
+			$payload = [
 				'id' => $resource_id,
-			);
+			];
 		} else {
 			if ( in_array( $this->get_api_version(), wc_get_webhook_rest_api_versions(), true ) ) {
 				$payload = $this->get_wp_api_payload( $resource, $resource_id, $event );
@@ -520,30 +520,30 @@ class WC_Webhook extends WC_Legacy_Webhook {
 	 */
 	public function log_delivery( $delivery_id, $request, $response, $duration ) {
 		$logger  = wc_get_logger();
-		$message = array(
-			'Webhook Delivery' => array(
+		$message = [
+			'Webhook Delivery' => [
 				'Delivery ID' => $delivery_id,
 				'Date'        => date_i18n( __( 'M j, Y @ G:i', 'woocommerce' ), strtotime( 'now' ), true ),
 				'URL'         => $this->get_delivery_url(),
 				'Duration'    => $duration,
-				'Request'     => array(
+				'Request'     => [
 					'Method'  => $request['method'],
 					'Headers' => array_merge(
-						array(
+						[
 							'User-Agent' => $request['user-agent'],
-						),
+						],
 						$request['headers']
 					),
-				),
+				],
 				'Body'        => wp_slash( $request['body'] ),
-			),
-		);
+			],
+		];
 
 		// Parse response.
 		if ( is_wp_error( $response ) ) {
 			$response_code    = $response->get_error_code();
 			$response_message = $response->get_error_message();
-			$response_headers = array();
+			$response_headers = [];
 			$response_body    = '';
 		} else {
 			$response_code    = wp_remote_retrieve_response_code( $response );
@@ -552,12 +552,12 @@ class WC_Webhook extends WC_Legacy_Webhook {
 			$response_body    = wp_remote_retrieve_body( $response );
 		}
 
-		$message['Webhook Delivery']['Response'] = array(
+		$message['Webhook Delivery']['Response'] = [
 			'Code'    => $response_code,
 			'Message' => $response_message,
 			'Headers' => $response_headers,
 			'Body'    => $response_body,
-		);
+		];
 
 		if ( ! Constants::is_true( 'WP_DEBUG' ) ) {
 			$message['Webhook Delivery']['Body']             = 'Webhook body is not logged unless WP_DEBUG mode is turned on. This is to avoid the storing of personal data in the logs.';
@@ -566,9 +566,9 @@ class WC_Webhook extends WC_Legacy_Webhook {
 
 		$logger->info(
 			wc_print_r( $message, true ),
-			array(
+			[
 				'source' => 'webhooks-delivery',
-			)
+			]
 		);
 
 		// Track failures.
@@ -637,10 +637,10 @@ class WC_Webhook extends WC_Legacy_Webhook {
 	 * @return bool|WP_Error
 	 */
 	public function deliver_ping() {
-		$args = array(
+		$args = [
 			'user-agent' => sprintf( 'WooCommerce/%s Hookshot (WordPress/%s)', Constants::get_constant( 'WC_VERSION' ), $GLOBALS['wp_version'] ),
 			'body'       => 'webhook_id=' . $this->get_id(),
-		);
+		];
 
 		$test          = wp_safe_remote_post( $this->get_delivery_url(), $args );
 		$response_code = wp_remote_retrieve_response_code( $test );
@@ -895,7 +895,7 @@ class WC_Webhook extends WC_Legacy_Webhook {
 	 * @param string $url Delivery URL.
 	 */
 	public function set_delivery_url( $url ) {
-		$this->set_prop( 'delivery_url', esc_url_raw( $url, array( 'http', 'https' ) ) );
+		$this->set_prop( 'delivery_url', esc_url_raw( $url, [ 'http', 'https' ] ) );
 	}
 
 	/**
@@ -956,67 +956,67 @@ class WC_Webhook extends WC_Legacy_Webhook {
 	 * @return array
 	 */
 	private function get_topic_hooks( $topic ) {
-		$topic_hooks = array(
-			'coupon.created'   => array(
+		$topic_hooks = [
+			'coupon.created'   => [
 				'woocommerce_process_shop_coupon_meta',
 				'woocommerce_new_coupon',
-			),
-			'coupon.updated'   => array(
+			],
+			'coupon.updated'   => [
 				'woocommerce_process_shop_coupon_meta',
 				'woocommerce_update_coupon',
-			),
-			'coupon.deleted'   => array(
+			],
+			'coupon.deleted'   => [
 				'wp_trash_post',
-			),
-			'coupon.restored'  => array(
+			],
+			'coupon.restored'  => [
 				'untrashed_post',
-			),
-			'customer.created' => array(
+			],
+			'customer.created' => [
 				'user_register',
 				'woocommerce_created_customer',
 				'woocommerce_new_customer',
-			),
-			'customer.updated' => array(
+			],
+			'customer.updated' => [
 				'profile_update',
 				'woocommerce_update_customer',
-			),
-			'customer.deleted' => array(
+			],
+			'customer.deleted' => [
 				'delete_user',
-			),
-			'order.created'    => array(
+			],
+			'order.created'    => [
 				'woocommerce_new_order',
-			),
-			'order.updated'    => array(
+			],
+			'order.updated'    => [
 				'woocommerce_update_order',
 				'woocommerce_order_refunded',
-			),
-			'order.deleted'    => array(
+			],
+			'order.deleted'    => [
 				'wp_trash_post',
-			),
-			'order.restored'   => array(
+			],
+			'order.restored'   => [
 				'untrashed_post',
-			),
-			'product.created'  => array(
+			],
+			'product.created'  => [
 				'woocommerce_process_product_meta',
 				'woocommerce_new_product',
 				'woocommerce_new_product_variation',
-			),
-			'product.updated'  => array(
+			],
+			'product.updated'  => [
 				'woocommerce_process_product_meta',
 				'woocommerce_update_product',
 				'woocommerce_update_product_variation',
-			),
-			'product.deleted'  => array(
+			],
+			'product.deleted'  => [
 				'wp_trash_post',
-			),
-			'product.restored' => array(
+			],
+			'product.restored' => [
 				'untrashed_post',
-			),
-		);
+			],
+		];
 
 		$topic_hooks = apply_filters( 'woocommerce_webhook_topic_hooks', $topic_hooks, $this );
 
-		return isset( $topic_hooks[ $topic ] ) ? $topic_hooks[ $topic ] : array();
+		return isset( $topic_hooks[ $topic ] ) ? $topic_hooks[ $topic ] : [];
 	}
 
 	/**
@@ -1027,7 +1027,7 @@ class WC_Webhook extends WC_Legacy_Webhook {
 	 */
 	public function get_hooks() {
 		if ( 'action' === $this->get_resource() ) {
-			$hooks = array( $this->get_event() );
+			$hooks = [ $this->get_event() ];
 		} else {
 			$hooks = $this->get_topic_hooks( $this->get_topic() );
 		}

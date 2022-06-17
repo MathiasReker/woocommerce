@@ -48,9 +48,9 @@ class LookupDataStoreTest extends \WC_Unit_Test_Case {
 
 		$this->reset_legacy_proxy_mocks();
 		$this->register_legacy_proxy_class_mocks(
-			array(
+			[
 				\WC_Queue::class => new FakeQueue(),
-			)
+			]
 		);
 
 		// Initiating regeneration with a fake queue will just create the lookup table in the database.
@@ -82,20 +82,20 @@ class LookupDataStoreTest extends \WC_Unit_Test_Case {
 		$product->set_id( 10 );
 		$this->set_product_attributes(
 			$product,
-			array(
-				'pa_attribute_1'      => array(
+			[
+				'pa_attribute_1'      => [
 					'id'      => 100,
-					'options' => array( 51, 52 ),
-				),
-				'pa_attribute_2'      => array(
+					'options' => [ 51, 52 ],
+				],
+				'pa_attribute_2'      => [
 					'id'      => 200,
-					'options' => array( 73, 74 ),
-				),
-				'pa_custom_attribute' => array(
+					'options' => [ 73, 74 ],
+				],
+				'pa_custom_attribute' => [
 					'id'      => 0,
-					'options' => array( 'foo', 'bar' ),
-				),
-			)
+					'options' => [ 'foo', 'bar' ],
+				],
+			]
 		);
 
 		if ( $in_stock ) {
@@ -108,40 +108,40 @@ class LookupDataStoreTest extends \WC_Unit_Test_Case {
 
 		$this->sut->create_data_for_product( $product );
 
-		$expected = array(
-			array(
+		$expected = [
+			[
 				'product_id'             => 10,
 				'product_or_parent_id'   => 10,
 				'taxonomy'               => 'pa_attribute_1',
 				'term_id'                => 51,
 				'in_stock'               => $expected_in_stock,
 				'is_variation_attribute' => 0,
-			),
-			array(
+			],
+			[
 				'product_id'             => 10,
 				'product_or_parent_id'   => 10,
 				'taxonomy'               => 'pa_attribute_1',
 				'term_id'                => 52,
 				'in_stock'               => $expected_in_stock,
 				'is_variation_attribute' => 0,
-			),
-			array(
+			],
+			[
 				'product_id'             => 10,
 				'product_or_parent_id'   => 10,
 				'taxonomy'               => 'pa_attribute_2',
 				'term_id'                => 73,
 				'in_stock'               => $expected_in_stock,
 				'is_variation_attribute' => 0,
-			),
-			array(
+			],
+			[
 				'product_id'             => 10,
 				'product_or_parent_id'   => 10,
 				'taxonomy'               => 'pa_attribute_2',
 				'term_id'                => 74,
 				'in_stock'               => $expected_in_stock,
 				'is_variation_attribute' => 0,
-			),
-		);
+			],
+		];
 
 		$actual = $this->get_lookup_table_data();
 
@@ -152,7 +152,7 @@ class LookupDataStoreTest extends \WC_Unit_Test_Case {
 	 * @testdox `create_data_for_product` creates the appropriate entries for variable products.
 	 */
 	public function test_update_data_for_variable_product() {
-		$products = array();
+		$products = [];
 
 		/**
 		 * Create one normal attribute and two attributes used to define variations,
@@ -160,30 +160,30 @@ class LookupDataStoreTest extends \WC_Unit_Test_Case {
 		 */
 
 		$this->register_legacy_proxy_function_mocks(
-			array(
+			[
 				'get_terms'      => function( $args ) use ( &$invokations_of_get_terms ) {
 					switch ( $args['taxonomy'] ) {
 						case 'non-variation-attribute':
-							return array(
+							return [
 								10 => 'term_10',
 								20 => 'term_20',
 								30 => 'term_30',
 								40 => 'term_40',
-							);
+							];
 						case 'variation-attribute-1':
-							return array(
+							return [
 								50 => 'term_50',
 								60 => 'term_60',
 								70 => 'term_70',
 								80 => 'term_80',
-							);
+							];
 						case 'variation-attribute-2':
-							return array(
+							return [
 								90  => 'term_90',
 								100 => 'term_100',
 								110 => 'term_110',
 								120 => 'term_120',
-							);
+							];
 						default:
 							throw new \Exception( "Unexpected call to 'get_terms'" );
 					}
@@ -191,7 +191,7 @@ class LookupDataStoreTest extends \WC_Unit_Test_Case {
 				'wc_get_product' => function( $id ) use ( &$products ) {
 					return $products[ $id ];
 				},
-			)
+			]
 		);
 
 		/**
@@ -208,140 +208,140 @@ class LookupDataStoreTest extends \WC_Unit_Test_Case {
 		$product->set_id( 1000 );
 		$this->set_product_attributes(
 			$product,
-			array(
-				'non-variation-attribute' => array(
+			[
+				'non-variation-attribute' => [
 					'id'      => 100,
-					'options' => array( 10, 20, 30 ),
-				),
-				'pa_custom_attribute'     => array(
+					'options' => [ 10, 20, 30 ],
+				],
+				'pa_custom_attribute'     => [
 					'id'      => 0,
-					'options' => array( 'foo', 'bar' ),
-				),
-				'variation-attribute-1'   => array(
+					'options' => [ 'foo', 'bar' ],
+				],
+				'variation-attribute-1'   => [
 					'id'        => 200,
-					'options'   => array( 50, 60, 70 ),
+					'options'   => [ 50, 60, 70 ],
 					'variation' => true,
-				),
-				'variation-attribute-2'   => array(
+				],
+				'variation-attribute-2'   => [
 					'id'        => 300,
-					'options'   => array( 90, 100, 110 ),
+					'options'   => [ 90, 100, 110 ],
 					'variation' => true,
-				),
-			)
+				],
+			]
 		);
 		$product->set_stock_status( 'instock' );
 
 		$variation_1 = new \WC_Product_Variation();
 		$variation_1->set_id( 1001 );
 		$variation_1->set_attributes(
-			array(
+			[
 				'variation-attribute-1' => 'term_50',
 				'variation-attribute-2' => 'term_90',
-			)
+			]
 		);
 		$variation_1->set_stock_status( 'instock' );
 
 		$variation_2 = new \WC_Product_Variation();
 		$variation_2->set_id( 1002 );
 		$variation_2->set_attributes(
-			array(
+			[
 				'variation-attribute-1' => 'term_60',
-			)
+			]
 		);
 		$variation_2->set_stock_status( 'outofstock' );
 
-		$product->set_children( array( 1001, 1002 ) );
+		$product->set_children( [ 1001, 1002 ] );
 		$products[1000] = $product;
 		$products[1001] = $variation_1;
 		$products[1002] = $variation_2;
 
 		$this->sut->create_data_for_product( $product );
 
-		$expected = array(
+		$expected = [
 			// Main product: one entry for each of the regular attribute values,
 				// excluding custom product attributes.
 
-				array(
+				[
 					'product_id'             => '1000',
 					'product_or_parent_id'   => '1000',
 					'taxonomy'               => 'non-variation-attribute',
 					'term_id'                => '10',
 					'is_variation_attribute' => '0',
 					'in_stock'               => '1',
-				),
-			array(
+				],
+			[
 				'product_id'             => '1000',
 				'product_or_parent_id'   => '1000',
 				'taxonomy'               => 'non-variation-attribute',
 				'term_id'                => '20',
 				'is_variation_attribute' => '0',
 				'in_stock'               => '1',
-			),
-			array(
+			],
+			[
 				'product_id'             => '1000',
 				'product_or_parent_id'   => '1000',
 				'taxonomy'               => 'non-variation-attribute',
 				'term_id'                => '30',
 				'is_variation_attribute' => '0',
 				'in_stock'               => '1',
-			),
+			],
 
 			// Variation 1: one entry for each of the defined variation attributes.
 
-			array(
+			[
 				'product_id'             => '1001',
 				'product_or_parent_id'   => '1000',
 				'taxonomy'               => 'variation-attribute-1',
 				'term_id'                => '50',
 				'is_variation_attribute' => '1',
 				'in_stock'               => '1',
-			),
-			array(
+			],
+			[
 				'product_id'             => '1001',
 				'product_or_parent_id'   => '1000',
 				'taxonomy'               => 'variation-attribute-2',
 				'term_id'                => '90',
 				'is_variation_attribute' => '1',
 				'in_stock'               => '1',
-			),
+			],
 
 			// Variation 2: one entry for the defined value for variation-attribute-1,
 				// then one for each of the possible values of variation-attribute-2
 				// (the values defined in the parent product).
 
-				array(
+				[
 					'product_id'             => '1002',
 					'product_or_parent_id'   => '1000',
 					'taxonomy'               => 'variation-attribute-1',
 					'term_id'                => '60',
 					'is_variation_attribute' => '1',
 					'in_stock'               => '0',
-				),
-			array(
+				],
+			[
 				'product_id'             => '1002',
 				'product_or_parent_id'   => '1000',
 				'taxonomy'               => 'variation-attribute-2',
 				'term_id'                => '90',
 				'is_variation_attribute' => '1',
 				'in_stock'               => '0',
-			),
-			array(
+			],
+			[
 				'product_id'             => '1002',
 				'product_or_parent_id'   => '1000',
 				'taxonomy'               => 'variation-attribute-2',
 				'term_id'                => '100',
 				'is_variation_attribute' => '1',
 				'in_stock'               => '0',
-			),
-			array(
+			],
+			[
 				'product_id'             => '1002',
 				'product_or_parent_id'   => '1000',
 				'taxonomy'               => 'variation-attribute-2',
 				'term_id'                => '110',
 				'is_variation_attribute' => '1',
 				'in_stock'               => '0',
-			),
-		);
+			],
+		];
 
 		$actual = $this->get_lookup_table_data();
 		$this->assertEquals( sort( $expected ), sort( $actual ) );
@@ -366,7 +366,7 @@ class LookupDataStoreTest extends \WC_Unit_Test_Case {
 		$this->save( $product );
 
 		$this->register_legacy_proxy_function_mocks(
-			array(
+			[
 				'get_post_type'    => function( $id ) use ( $product ) {
 					if ( $id === $product->get_id() || $id === $product ) {
 						return 'product';
@@ -384,7 +384,7 @@ class LookupDataStoreTest extends \WC_Unit_Test_Case {
 						return current_user_can( $capability, $args );
 					}
 				},
-			)
+			]
 		);
 
 		$this->delete_product( $product, $deletion_mechanism );
@@ -393,17 +393,17 @@ class LookupDataStoreTest extends \WC_Unit_Test_Case {
 
 		$this->assertEquals( 1, count( $queue_calls ) );
 
-		$expected = array(
+		$expected = [
 			'method'    => 'schedule_single',
 			'args'      =>
-				array(
+				[
 					$product_id,
 					LookupDataStore::ACTION_DELETE,
-				),
+				],
 			'group'     => 'woocommerce-db-updates',
 			'timestamp' => 101,
 			'hook'      => 'woocommerce_run_product_attribute_lookup_update_callback',
-		);
+		];
 		$this->assertEquals( $expected, $queue_calls[0] );
 	}
 
@@ -454,13 +454,13 @@ class LookupDataStoreTest extends \WC_Unit_Test_Case {
 		$variation = new \WC_Product_Variation();
 		$variation->set_id( 1001 );
 
-		$product->set_children( array( 1001 ) );
+		$product->set_children( [ 1001 ] );
 		$this->save( $product );
 
 		$product_id = $product->get_id();
 
 		$this->register_legacy_proxy_function_mocks(
-			array(
+			[
 				'get_post_type'    => function( $id ) use ( $product, $variation ) {
 					if ( $id === $product->get_id() || $id === $product ) {
 						return 'product';
@@ -480,7 +480,7 @@ class LookupDataStoreTest extends \WC_Unit_Test_Case {
 						return current_user_can( $capability, $args );
 					}
 				},
-			)
+			]
 		);
 
 		$this->delete_product( $product, $deletion_mechanism );
@@ -489,17 +489,17 @@ class LookupDataStoreTest extends \WC_Unit_Test_Case {
 
 		$this->assertEquals( 1, count( $queue_calls ) );
 
-		$expected = array(
+		$expected = [
 			'method'    => 'schedule_single',
 			'args'      =>
-				array(
+				[
 					$product_id,
 					LookupDataStore::ACTION_DELETE,
-				),
+				],
 			'group'     => 'woocommerce-db-updates',
 			'timestamp' => 101,
 			'hook'      => 'woocommerce_run_product_attribute_lookup_update_callback',
-		);
+		];
 
 		$this->assertEquals( $expected, $queue_calls[0] );
 	}
@@ -523,13 +523,13 @@ class LookupDataStoreTest extends \WC_Unit_Test_Case {
 		$variation = new \WC_Product_Variation();
 		$variation->set_id( 1001 );
 
-		$product->set_children( array( 1001 ) );
+		$product->set_children( [ 1001 ] );
 		$this->save( $product );
 
 		$variation_id = $product->get_id();
 
 		$this->register_legacy_proxy_function_mocks(
-			array(
+			[
 				'get_post_type'    => function( $id ) use ( $product, $variation ) {
 					if ( $id === $product->get_id() || $id === $product ) {
 						return 'product';
@@ -549,7 +549,7 @@ class LookupDataStoreTest extends \WC_Unit_Test_Case {
 						return current_user_can( $capability, $args );
 					}
 				},
-			)
+			]
 		);
 
 		$this->delete_product( $product, $deletion_mechanism );
@@ -558,17 +558,17 @@ class LookupDataStoreTest extends \WC_Unit_Test_Case {
 
 		$this->assertEquals( 1, count( $queue_calls ) );
 
-		$expected = array(
+		$expected = [
 			'method'    => 'schedule_single',
 			'args'      =>
-				array(
+				[
 					$variation_id,
 					LookupDataStore::ACTION_DELETE,
-				),
+				],
 			'group'     => 'woocommerce-db-updates',
 			'timestamp' => 101,
 			'hook'      => 'woocommerce_run_product_attribute_lookup_update_callback',
-		);
+		];
 
 		$this->assertEquals( $expected, $queue_calls[0] );
 	}
@@ -580,11 +580,11 @@ class LookupDataStoreTest extends \WC_Unit_Test_Case {
 		$this->set_direct_update_option( false );
 
 		$this->register_legacy_proxy_function_mocks(
-			array(
+			[
 				'time' => function() {
 					return 100;
 				},
-			)
+			]
 		);
 
 		$this->sut->on_product_deleted( 1 );
@@ -595,30 +595,30 @@ class LookupDataStoreTest extends \WC_Unit_Test_Case {
 
 		$this->assertEquals( 2, count( $queue_calls ) );
 
-		$expected = array(
-			array(
+		$expected = [
+			[
 				'method'    => 'schedule_single',
 				'args'      =>
-					array(
+					[
 						1,
 						LookupDataStore::ACTION_DELETE,
-					),
+					],
 				'group'     => 'woocommerce-db-updates',
 				'timestamp' => 101,
 				'hook'      => 'woocommerce_run_product_attribute_lookup_update_callback',
-			),
-			array(
+			],
+			[
 				'method'    => 'schedule_single',
 				'args'      =>
-					array(
+					[
 						2,
 						LookupDataStore::ACTION_DELETE,
-					),
+					],
 				'group'     => 'woocommerce-db-updates',
 				'timestamp' => 101,
 				'hook'      => 'woocommerce_run_product_attribute_lookup_update_callback',
-			),
-		);
+			],
+		];
 
 		$this->assertEquals( $expected, $queue_calls );
 	}
@@ -643,7 +643,7 @@ class LookupDataStoreTest extends \WC_Unit_Test_Case {
 		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 		$rows = $wpdb->get_results( 'SELECT DISTINCT product_id FROM ' . $this->lookup_table_name, ARRAY_N );
 
-		$this->assertEquals( array( 1 ), $rows[0] );
+		$this->assertEquals( [ 1 ], $rows[0] );
 	}
 
 	/**
@@ -667,7 +667,7 @@ class LookupDataStoreTest extends \WC_Unit_Test_Case {
 		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 		$rows = $wpdb->get_results( 'SELECT DISTINCT product_id FROM ' . $this->lookup_table_name, ARRAY_N );
 
-		$this->assertEquals( array( 3 ), $rows[0] );
+		$this->assertEquals( [ 3 ], $rows[0] );
 	}
 
 	/**
@@ -689,11 +689,11 @@ class LookupDataStoreTest extends \WC_Unit_Test_Case {
 		$this->save( $product );
 
 		$this->register_legacy_proxy_function_mocks(
-			array(
+			[
 				'time' => function() {
 					return 100;
 				},
-			)
+			]
 		);
 
 		$product->set_stock_status( $new_status );
@@ -703,17 +703,17 @@ class LookupDataStoreTest extends \WC_Unit_Test_Case {
 
 		$this->assertEquals( 1, count( $queue_calls ) );
 
-		$expected = array(
+		$expected = [
 			'method'    => 'schedule_single',
 			'args'      =>
-				array(
+				[
 					$product_id,
 					LookupDataStore::ACTION_UPDATE_STOCK,
-				),
+				],
 			'group'     => 'woocommerce-db-updates',
 			'timestamp' => 101,
 			'hook'      => 'woocommerce_run_product_attribute_lookup_update_callback',
-		);
+		];
 		$this->assertEquals( $expected, $queue_calls[0] );
 	}
 
@@ -742,16 +742,16 @@ class LookupDataStoreTest extends \WC_Unit_Test_Case {
 		$variation->set_stock_status( $old_status );
 		$variation->save();
 
-		$product->set_children( array( 1001 ) );
+		$product->set_children( [ 1001 ] );
 		$product->set_stock_status( $old_status );
 		$this->save( $product );
 
 		$this->register_legacy_proxy_function_mocks(
-			array(
+			[
 				'time' => function () {
 					return 100;
 				},
-			)
+			]
 		);
 
 		if ( $change_variation_stock ) {
@@ -766,17 +766,17 @@ class LookupDataStoreTest extends \WC_Unit_Test_Case {
 
 		$this->assertEquals( 1, count( $queue_calls ) );
 
-		$expected = array(
+		$expected = [
 			'method'    => 'schedule_single',
 			'args'      =>
-				array(
+				[
 					$change_variation_stock ? $variation_id : $product_id,
 					LookupDataStore::ACTION_UPDATE_STOCK,
-				),
+				],
 			'group'     => 'woocommerce-db-updates',
 			'timestamp' => 101,
 			'hook'      => 'woocommerce_run_product_attribute_lookup_update_callback',
-		);
+		];
 
 		$this->assertEquals( $expected, $queue_calls[0] );
 	}
@@ -787,48 +787,48 @@ class LookupDataStoreTest extends \WC_Unit_Test_Case {
 	 * @return array[]
 	 */
 	public function data_provider_for_test_on_product_changed_with_direct_updates() {
-		return array(
-			array(
+		return [
+			[
 				null,
 				'creation',
-			),
-			array(
-				array( 'attributes' => array() ),
+			],
+			[
+				[ 'attributes' => [] ],
 				'creation',
-			),
-			array(
-				array( 'stock_quantity' => 1 ),
+			],
+			[
+				[ 'stock_quantity' => 1 ],
 				'update',
-			),
-			array(
-				array( 'stock_status' => 'instock' ),
+			],
+			[
+				[ 'stock_status' => 'instock' ],
 				'update',
-			),
-			array(
-				array( 'manage_stock' => true ),
+			],
+			[
+				[ 'manage_stock' => true ],
 				'update',
-			),
-			array(
-				array( 'catalog_visibility' => 'visible' ),
+			],
+			[
+				[ 'catalog_visibility' => 'visible' ],
 				'creation',
-			),
-			array(
-				array( 'catalog_visibility' => 'catalog' ),
+			],
+			[
+				[ 'catalog_visibility' => 'catalog' ],
 				'creation',
-			),
-			array(
-				array( 'catalog_visibility' => 'search' ),
+			],
+			[
+				[ 'catalog_visibility' => 'search' ],
 				'deletion',
-			),
-			array(
-				array( 'catalog_visibility' => 'hidden' ),
+			],
+			[
+				[ 'catalog_visibility' => 'hidden' ],
 				'deletion',
-			),
-			array(
-				array( 'foo' => 'bar' ),
+			],
+			[
+				[ 'foo' => 'bar' ],
 				'none',
-			),
-		);
+			],
+		];
 	}
 
 	/**
@@ -849,15 +849,15 @@ class LookupDataStoreTest extends \WC_Unit_Test_Case {
 		$product->set_stock_status( 'instock' );
 		$this->set_product_attributes(
 			$product,
-			array(
-				'pa_bar' => array(
+			[
+				'pa_bar' => [
 					'id'      => 100,
-					'options' => array( 20 ),
-				),
-			)
+					'options' => [ 20 ],
+				],
+			]
 		);
 		$this->register_legacy_proxy_function_mocks(
-			array(
+			[
 				'wc_get_product' => function( $id ) use ( $product ) {
 					if ( $id === $product->get_id() || $id === $product ) {
 						return $product;
@@ -865,7 +865,7 @@ class LookupDataStoreTest extends \WC_Unit_Test_Case {
 						return wc_get_product( $id );
 					}
 				},
-			)
+			]
 		);
 
 		$this->insert_lookup_table_data( 1, 1, 'pa_foo', 10, false, true );
@@ -878,15 +878,15 @@ class LookupDataStoreTest extends \WC_Unit_Test_Case {
 		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 		$rows = $wpdb->get_results( 'SELECT * FROM ' . $this->lookup_table_name, ARRAY_N );
 
-		$expected = array( array( '1', '1', 'pa_foo', '10', '0', '1' ) );
+		$expected = [ [ '1', '1', 'pa_foo', '10', '0', '1' ] ];
 
 		// Differences:
 		// Creation or update: the product is stored as having stock.
 		// None: the product remains stored as not having stock.
 		if ( 'creation' === $expected_action || 'update' === $expected_action ) {
-			$expected[] = array( '2', '2', 'pa_bar', '20', '0', '1' );
+			$expected[] = [ '2', '2', 'pa_bar', '20', '0', '1' ];
 		} elseif ( 'none' === $expected_action ) {
-			$expected[] = array( '2', '2', 'pa_bar', '20', '0', '0' );
+			$expected[] = [ '2', '2', 'pa_bar', '20', '0', '0' ];
 		}
 
 		$this->assertEquals( $expected, $rows );
@@ -909,44 +909,44 @@ class LookupDataStoreTest extends \WC_Unit_Test_Case {
 		$product->set_id( 2 );
 		$this->set_product_attributes(
 			$product,
-			array(
-				'non-variation-attribute' => array(
+			[
+				'non-variation-attribute' => [
 					'id'      => 100,
-					'options' => array( 10 ),
-				),
-				'variation-attribute'     => array(
+					'options' => [ 10 ],
+				],
+				'variation-attribute'     => [
 					'id'        => 200,
-					'options'   => array( 20 ),
+					'options'   => [ 20 ],
 					'variation' => true,
-				),
-			)
+				],
+			]
 		);
 		$product->set_stock_status( 'instock' );
 
 		$variation = new \WC_Product_Variation();
 		$variation->set_id( 3 );
 		$variation->set_attributes(
-			array(
+			[
 				'variation-attribute' => 'term_20',
-			)
+			]
 		);
 		$variation->set_stock_status( 'instock' );
 		$variation->set_parent_id( 2 );
 
-		$product->set_children( array( 3 ) );
+		$product->set_children( [ 3 ] );
 
 		$this->register_legacy_proxy_function_mocks(
-			array(
+			[
 				'get_terms'      => function( $args ) {
 					switch ( $args['taxonomy'] ) {
 						case 'non-variation-attribute':
-							return array(
+							return [
 								10 => 'term_10',
-							);
+							];
 						case 'variation-attribute':
-							return array(
+							return [
 								20 => 'term_20',
-							);
+							];
 						default:
 							throw new \Exception( "Unexpected call to 'get_terms'" );
 					}
@@ -960,7 +960,7 @@ class LookupDataStoreTest extends \WC_Unit_Test_Case {
 						return wc_get_product( $id );
 					}
 				},
-			)
+			]
 		);
 
 		$this->insert_lookup_table_data( 1, 1, 'pa_foo', 10, false, true );
@@ -974,21 +974,21 @@ class LookupDataStoreTest extends \WC_Unit_Test_Case {
 		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 		$rows = $wpdb->get_results( 'SELECT * FROM ' . $this->lookup_table_name, ARRAY_N );
 
-		$expected = array( array( '1', '1', 'pa_foo', '10', '0', '1' ) );
+		$expected = [ [ '1', '1', 'pa_foo', '10', '0', '1' ] ];
 
 		// Differences:
 		// Creation: both main product and variation are stored as having stock.
 		// Update: main product only is updated as having stock (variation is supposed to get a separate update).
 		// None: both main product and variation are still stored as not having stock.
 		if ( 'creation' === $expected_action ) {
-			$expected[] = array( '2', '2', 'non-variation-attribute', '10', '0', '1' );
-			$expected[] = array( '3', '2', 'variation-attribute', '20', '1', '1' );
+			$expected[] = [ '2', '2', 'non-variation-attribute', '10', '0', '1' ];
+			$expected[] = [ '3', '2', 'variation-attribute', '20', '1', '1' ];
 		} elseif ( 'update' === $expected_action ) {
-			$expected[] = array( '2', '2', 'non-variation-attribute', '10', '0', '1' );
-			$expected[] = array( '3', '2', 'variation-attribute', '20', '1', '0' );
+			$expected[] = [ '2', '2', 'non-variation-attribute', '10', '0', '1' ];
+			$expected[] = [ '3', '2', 'variation-attribute', '20', '1', '0' ];
 		} elseif ( 'none' === $expected_action ) {
-			$expected[] = array( '2', '2', 'non-variation-attribute', '10', '0', '0' );
-			$expected[] = array( '3', '2', 'variation-attribute', '20', '1', '0' );
+			$expected[] = [ '2', '2', 'non-variation-attribute', '10', '0', '0' ];
+			$expected[] = [ '3', '2', 'variation-attribute', '20', '1', '0' ];
 		}
 
 		$this->assertEquals( $expected, $rows );
@@ -1011,44 +1011,44 @@ class LookupDataStoreTest extends \WC_Unit_Test_Case {
 		$product->set_id( 2 );
 		$this->set_product_attributes(
 			$product,
-			array(
-				'non-variation-attribute' => array(
+			[
+				'non-variation-attribute' => [
 					'id'      => 100,
-					'options' => array( 10 ),
-				),
-				'variation-attribute'     => array(
+					'options' => [ 10 ],
+				],
+				'variation-attribute'     => [
 					'id'        => 200,
-					'options'   => array( 20 ),
+					'options'   => [ 20 ],
 					'variation' => true,
-				),
-			)
+				],
+			]
 		);
 		$product->set_stock_status( 'instock' );
 
 		$variation = new \WC_Product_Variation();
 		$variation->set_id( 3 );
 		$variation->set_attributes(
-			array(
+			[
 				'variation-attribute' => 'term_20',
-			)
+			]
 		);
 		$variation->set_stock_status( 'instock' );
 		$variation->set_parent_id( 2 );
 
-		$product->set_children( array( 3 ) );
+		$product->set_children( [ 3 ] );
 
 		$this->register_legacy_proxy_function_mocks(
-			array(
+			[
 				'get_terms'      => function( $args ) {
 					switch ( $args['taxonomy'] ) {
 						case 'non-variation-attribute':
-							return array(
+							return [
 								10 => 'term_10',
-							);
+							];
 						case 'variation-attribute':
-							return array(
+							return [
 								20 => 'term_20',
-							);
+							];
 						default:
 							throw new \Exception( "Unexpected call to 'get_terms'" );
 					}
@@ -1062,7 +1062,7 @@ class LookupDataStoreTest extends \WC_Unit_Test_Case {
 						return wc_get_product( $id );
 					}
 				},
-			)
+			]
 		);
 
 		$this->insert_lookup_table_data( 1, 1, 'pa_foo', 10, false, true );
@@ -1075,15 +1075,15 @@ class LookupDataStoreTest extends \WC_Unit_Test_Case {
 		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 		$rows = $wpdb->get_results( 'SELECT * FROM ' . $this->lookup_table_name, ARRAY_N );
 
-		$expected = array( array( '1', '1', 'pa_foo', '10', '0', '1' ) );
+		$expected = [ [ '1', '1', 'pa_foo', '10', '0', '1' ] ];
 
 		// Differences:
 		// Creation or update: the variation is stored as having stock.
 		// None: the variation is still stored as not having stock.
 		if ( 'creation' === $expected_action || 'update' === $expected_action ) {
-			$expected[] = array( '3', '2', 'variation-attribute', '20', '1', '1' );
+			$expected[] = [ '3', '2', 'variation-attribute', '20', '1', '1' ];
 		} elseif ( 'none' === $expected_action ) {
-			$expected[] = array( '3', '2', 'variation-attribute', '20', '1', '0' );
+			$expected[] = [ '3', '2', 'variation-attribute', '20', '1', '0' ];
 		}
 
 		$this->assertEquals( $expected, $rows );
@@ -1105,7 +1105,7 @@ class LookupDataStoreTest extends \WC_Unit_Test_Case {
 	 * @param array      $attributes_data The attributes to set.
 	 */
 	private function set_product_attributes( $product, $attributes_data ) {
-		$attributes = array();
+		$attributes = [];
 		foreach ( $attributes_data as $taxonomy => $attribute_data ) {
 			$attribute = new \WC_Product_Attribute();
 			$attribute->set_id( $attribute_data['id'] );

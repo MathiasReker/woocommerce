@@ -25,10 +25,10 @@ class WC_Tests_Order_Item_Data_Store extends WC_Unit_Test_Case {
 
 		$data_store->add_order_item(
 			$order->get_id(),
-			array(
+			[
 				'order_item_name' => 'Test Item',
 				'order_item_type' => 'line_item',
-			)
+			]
 		);
 
 		$cached = wp_cache_get( 'order-items-' . $order->get_id(), 'orders' );
@@ -47,7 +47,7 @@ class WC_Tests_Order_Item_Data_Store extends WC_Unit_Test_Case {
 		wp_cache_set( 'item-' . $order_item->get_id(), 'test_item', 'order-items' );
 		wp_cache_set( 'order-items-' . $order->get_id(), 'test', 'orders' );
 
-		$data_store->update_order_item( $order_item->get_id(), array( 'order_item_name' => 'Test Item' ) );
+		$data_store->update_order_item( $order_item->get_id(), [ 'order_item_name' => 'Test Item' ] );
 
 		$cached = wp_cache_get( 'item-' . $order_item->get_id(), 'order-items' );
 		$this->assertNotEquals( 'test_item', $cached );

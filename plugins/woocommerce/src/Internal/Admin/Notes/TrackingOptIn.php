@@ -30,7 +30,7 @@ class TrackingOptIn {
 	 * Attach hooks.
 	 */
 	public function __construct() {
-		add_action( 'woocommerce_note_action_tracking-opt-in', array( $this, 'opt_in_to_tracking' ) );
+		add_action( 'woocommerce_note_action_tracking-opt-in', [ $this, 'opt_in_to_tracking' ] );
 	}
 
 	/**
@@ -65,7 +65,7 @@ class TrackingOptIn {
 		$note = new Note();
 		$note->set_title( __( 'Help WooCommerce improve with usage tracking', 'woocommerce' ) );
 		$note->set_content( $note_content );
-		$note->set_content_data( (object) array() );
+		$note->set_content_data( (object) [] );
 		$note->set_type( Note::E_WC_ADMIN_NOTE_INFORMATIONAL );
 		$note->set_name( self::NOTE_NAME );
 		$note->set_source( 'woocommerce-admin' );
@@ -83,7 +83,7 @@ class TrackingOptIn {
 			// Opt in to tracking and schedule the first data update.
 			// Same mechanism as in WC_Admin_Setup_Wizard::wc_setup_store_setup_save().
 			update_option( 'woocommerce_allow_tracking', 'yes' );
-			wp_schedule_single_event( time() + 10, 'woocommerce_tracker_send_event', array( true ) );
+			wp_schedule_single_event( time() + 10, 'woocommerce_tracker_send_event', [ true ] );
 		}
 	}
 }

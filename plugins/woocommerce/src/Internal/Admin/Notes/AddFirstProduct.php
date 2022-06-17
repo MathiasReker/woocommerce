@@ -38,11 +38,11 @@ class AddFirstProduct {
 
 		// Don't show if there is a product.
 		$query    = new \WC_Product_Query(
-			array(
+			[
 				'limit'  => 1,
 				'return' => 'ids',
-				'status' => array( 'publish' ),
-			)
+				'status' => [ 'publish' ],
+			]
 		);
 		$products = $query->get_products();
 		if ( 0 !== count( $products ) ) {
@@ -50,10 +50,10 @@ class AddFirstProduct {
 		}
 
 		// Don't show if there is an orders.
-		$args   = array(
+		$args   = [
 			'limit'  => 1,
 			'return' => 'ids',
-		);
+		];
 		$orders = wc_get_orders( $args );
 		if ( 0 !== count( $orders ) ) {
 			return;
@@ -61,18 +61,18 @@ class AddFirstProduct {
 
 		// If you're updating the following please use sprintf to separate HTML tags.
 		// https://github.com/woocommerce/woocommerce-admin/pull/6617#discussion_r596889685.
-		$content_lines = array(
+		$content_lines = [
 			'{greetings}<br/><br/>',
 			/* translators: %s: line break */
 			sprintf( __( 'Nice one; you\'ve created a WooCommerce store! Now it\'s time to add your first product and get ready to start selling.%s', 'woocommerce' ), '<br/><br/>' ),
 			__( 'There are three ways to add your products: you can <strong>create products manually, import them at once via CSV file</strong>, or <strong>migrate them from another service</strong>.<br/><br/>', 'woocommerce' ),
 			/* translators: %1$s is an open anchor tag (<a>) and %2$s is a close link tag (</a>). */
 			sprintf( __( '%1$1sExplore our docs%2$2s for more information, or just get started!', 'woocommerce' ), '<a href="https://woocommerce.com/document/managing-products/?utm_source=help_panel&utm_medium=product">', '</a>' ),
-		);
+		];
 
-		$additional_data = array(
+		$additional_data = [
 			'role' => 'administrator',
-		);
+		];
 
 		$note = new Note();
 		$note->set_title( __( 'Add your first product', 'woocommerce' ) );

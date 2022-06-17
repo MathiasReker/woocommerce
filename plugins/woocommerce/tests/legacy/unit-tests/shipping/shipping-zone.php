@@ -168,9 +168,9 @@ class WC_Tests_Shipping_Zone extends WC_Unit_Test_Case {
 		$this->assertTrue( $zone->is_valid_location_type( 'continent' ) );
 		$this->assertTrue( $zone->is_valid_location_type( 'postcode' ) );
 		$this->assertFalse( $zone->is_valid_location_type( 'poop' ) );
-		add_filter( 'woocommerce_valid_location_types', array( $this, 'add_valid_zone_location' ) );
+		add_filter( 'woocommerce_valid_location_types', [ $this, 'add_valid_zone_location' ] );
 		$this->assertTrue( $zone->is_valid_location_type( 'poop' ) );
-		remove_filter( 'woocommerce_valid_location_types', array( $this, 'add_valid_zone_location' ), 10 );
+		remove_filter( 'woocommerce_valid_location_types', [ $this, 'add_valid_zone_location' ], 10 );
 	}
 
 	/**
@@ -180,7 +180,7 @@ class WC_Tests_Shipping_Zone extends WC_Unit_Test_Case {
 	 * @return array New list of valid zone locations.
 	 */
 	public function add_valid_zone_location( $locations ) {
-		return array_merge( $locations, array( 'poop' ) );
+		return array_merge( $locations, [ 'poop' ] );
 	}
 
 	/**
@@ -204,31 +204,31 @@ class WC_Tests_Shipping_Zone extends WC_Unit_Test_Case {
 		$zone = WC_Shipping_Zones::get_zone( 1 );
 		$zone->clear_locations();
 		$zone->set_locations(
-			array(
-				array(
+			[
+				[
 					'code' => 'US',
 					'type' => 'country',
-				),
-				array(
+				],
+				[
 					'code' => '90210',
 					'type' => 'postcode',
-				),
-			)
+				],
+			]
 		);
 
 		// Assert.
 		$this->assertEquals(
 			$zone->get_zone_locations(),
-			array(
-				0 => (object) array(
+			[
+				0 => (object) [
 					'code' => 'US',
 					'type' => 'country',
-				),
-				1 => (object) array(
+				],
+				1 => (object) [
 					'code' => '90210',
 					'type' => 'postcode',
-				),
-			)
+				],
+			]
 		);
 	}
 

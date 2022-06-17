@@ -46,14 +46,14 @@ class WC_Tests_Account_Functions extends WC_Unit_Test_Case {
 	 */
 	public function test_wc_get_account_menu_items() {
 		$this->assertEquals(
-			array(
+			[
 				'dashboard'       => 'Dashboard',
 				'orders'          => 'Orders',
 				'downloads'       => 'Downloads',
 				'edit-address'    => 'Addresses',
 				'edit-account'    => 'Account details',
 				'customer-logout' => 'Logout',
-			),
+			],
 			wc_get_account_menu_items()
 		);
 	}
@@ -83,13 +83,13 @@ class WC_Tests_Account_Functions extends WC_Unit_Test_Case {
 	 */
 	public function test_wc_get_account_orders_columns() {
 		$this->assertEquals(
-			array(
+			[
 				'order-number'  => 'Order',
 				'order-date'    => 'Date',
 				'order-status'  => 'Status',
 				'order-total'   => 'Total',
 				'order-actions' => 'Actions',
-			),
+			],
 			wc_get_account_orders_columns()
 		);
 	}
@@ -101,12 +101,12 @@ class WC_Tests_Account_Functions extends WC_Unit_Test_Case {
 	 */
 	public function test_wc_get_account_downloads_columns() {
 		$this->assertEquals(
-			array(
+			[
 				'download-file'      => 'Download',
 				'download-remaining' => 'Downloads remaining',
 				'download-expires'   => 'Expires',
 				'download-product'   => 'Product',
-			),
+			],
 			wc_get_account_downloads_columns()
 		);
 	}
@@ -118,11 +118,11 @@ class WC_Tests_Account_Functions extends WC_Unit_Test_Case {
 	 */
 	public function test_wc_get_account_payment_methods_columns() {
 		$this->assertEquals(
-			array(
+			[
 				'method'  => 'Method',
 				'expires' => 'Expires',
 				'actions' => '&nbsp;',
-			),
+			],
 			wc_get_account_payment_methods_columns()
 		);
 	}
@@ -134,10 +134,10 @@ class WC_Tests_Account_Functions extends WC_Unit_Test_Case {
 	 */
 	public function test_wc_get_account_payment_methods_types() {
 		$this->assertEquals(
-			array(
+			[
 				'cc'     => 'Credit card',
 				'echeck' => 'eCheck',
-			),
+			],
 			wc_get_account_payment_methods_types()
 		);
 	}
@@ -151,20 +151,20 @@ class WC_Tests_Account_Functions extends WC_Unit_Test_Case {
 		$order = WC_Helper_Order::create_order();
 
 		$this->assertEquals(
-			array(
-				'view'   => array(
+			[
+				'view'   => [
 					'url'  => $order->get_view_order_url(),
 					'name' => 'View',
-				),
-				'pay'    => array(
+				],
+				'pay'    => [
 					'url'  => $order->get_checkout_payment_url(),
 					'name' => 'Pay',
-				),
-				'cancel' => array(
+				],
+				'cancel' => [
 					'url'  => $order->get_cancel_order_url( wc_get_page_permalink( 'myaccount' ) ),
 					'name' => 'Cancel',
-				),
-			),
+				],
+			],
 			wc_get_account_orders_actions( $order->get_id() )
 		);
 
@@ -206,26 +206,26 @@ class WC_Tests_Account_Functions extends WC_Unit_Test_Case {
 		$delete_url = wp_nonce_url( $delete_url, 'delete-payment-method-' . $token->get_id() );
 
 		$this->assertEquals(
-			array(
-				'cc' => array(
-					array(
-						'method'     => array(
+			[
+				'cc' => [
+					[
+						'method'     => [
 							'gateway' => 'bacs',
 							'last4'   => '1234',
 							'brand'   => 'Mastercard',
-						),
+						],
 						'expires'    => '12/20',
 						'is_default' => true,
-						'actions'    => array(
-							'delete' => array(
+						'actions'    => [
+							'delete' => [
 								'url'  => $delete_url,
 								'name' => 'Delete',
-							),
-						),
-					),
-				),
-			),
-			wc_get_account_saved_payment_methods_list( array(), $customer->get_id() )
+							],
+						],
+					],
+				],
+			],
+			wc_get_account_saved_payment_methods_list( [], $customer->get_id() )
 		);
 
 		$customer->delete( true );
@@ -248,14 +248,14 @@ class WC_Tests_Account_Functions extends WC_Unit_Test_Case {
 		$token->save();
 
 		$this->assertEquals(
-			array(
-				'method'  => array(
+			[
+				'method'  => [
 					'last4' => '1234',
 					'brand' => 'Mastercard',
-				),
+				],
 				'expires' => '12/20',
-			),
-			wc_get_account_saved_payment_methods_list_item_cc( array(), $token )
+			],
+			wc_get_account_saved_payment_methods_list_item_cc( [], $token )
 		);
 
 		$token->delete( true );
@@ -274,13 +274,13 @@ class WC_Tests_Account_Functions extends WC_Unit_Test_Case {
 		$token->save();
 
 		$this->assertEquals(
-			array(
-				'method' => array(
+			[
+				'method' => [
 					'last4' => '1234',
 					'brand' => 'eCheck',
-				),
-			),
-			wc_get_account_saved_payment_methods_list_item_echeck( array(), $token )
+				],
+			],
+			wc_get_account_saved_payment_methods_list_item_echeck( [], $token )
 		);
 
 		$token->delete( true );

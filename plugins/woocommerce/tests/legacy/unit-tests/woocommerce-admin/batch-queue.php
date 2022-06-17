@@ -58,7 +58,7 @@ class WC_Admin_Tests_Reports_Regenerate_Batching extends WC_REST_Unit_Test_Case 
 		$this->queue = new WC_Admin_Test_Action_Queue();
 		CustomersScheduler::set_queue( $this->queue );
 		OrdersScheduler::set_queue( $this->queue );
-		add_filter( 'woocommerce_admin_scheduler_batch_size', array( $this, 'filter_batch_size' ), 10, 3 );
+		add_filter( 'woocommerce_admin_scheduler_batch_size', [ $this, 'filter_batch_size' ], 10, 3 );
 	}
 
 	/**
@@ -68,8 +68,8 @@ class WC_Admin_Tests_Reports_Regenerate_Batching extends WC_REST_Unit_Test_Case 
 		parent::tearDown();
 		CustomersScheduler::set_queue( null );
 		OrdersScheduler::set_queue( null );
-		$this->queue->actions = array();
-		remove_filter( 'woocommerce_admin_scheduler_batch_size', array( $this, 'filter_batch_size' ), 10, 3 );
+		$this->queue->actions = [];
+		remove_filter( 'woocommerce_admin_scheduler_batch_size', [ $this, 'filter_batch_size' ], 10, 3 );
 	}
 
 	/**
@@ -85,17 +85,17 @@ class WC_Admin_Tests_Reports_Regenerate_Batching extends WC_REST_Unit_Test_Case 
 
 		$this->assertCount( $num_chunks, $this->queue->actions );
 		$this->assertArraySubset(
-			array(
+			[
 				'hook' => CustomersScheduler::get_action( 'queue_batches' ),
-				'args' => array( 1, $chunk_size, 'import_batch' ),
-			),
+				'args' => [ 1, $chunk_size, 'import_batch' ],
+			],
 			$this->queue->actions[0]
 		);
 		$this->assertArraySubset(
-			array(
+			[
 				'hook' => CustomersScheduler::get_action( 'queue_batches' ),
-				'args' => array( 247, 247, 'import_batch' ),
-			),
+				'args' => [ 247, 247, 'import_batch' ],
+			],
 			$this->queue->actions[ $num_chunks - 1 ]
 		);
 	}
@@ -111,17 +111,17 @@ class WC_Admin_Tests_Reports_Regenerate_Batching extends WC_REST_Unit_Test_Case 
 
 		$this->assertCount( 9, $this->queue->actions );
 		$this->assertArraySubset(
-			array(
+			[
 				'hook' => CustomersScheduler::get_action( 'import_batch' ),
-				'args' => array( 1 ),
-			),
+				'args' => [ 1 ],
+			],
 			$this->queue->actions[0]
 		);
 		$this->assertArraySubset(
-			array(
+			[
 				'hook' => CustomersScheduler::get_action( 'import_batch' ),
-				'args' => array( 9 ),
-			),
+				'args' => [ 9 ],
+			],
 			$this->queue->actions[8]
 		);
 	}
@@ -135,16 +135,16 @@ class WC_Admin_Tests_Reports_Regenerate_Batching extends WC_REST_Unit_Test_Case 
 		OrdersScheduler::set_queue( null );
 
 		// Schedule an action that depends on blocking job.
-		OrdersScheduler::schedule_action( 'import_batch_init', array( 1, false ) );
+		OrdersScheduler::schedule_action( 'import_batch_init', [ 1, false ] );
 		// Insert a blocking job.
-		CustomersScheduler::schedule_action( 'import_batch_init', array( 1, false ) );
+		CustomersScheduler::schedule_action( 'import_batch_init', [ 1, false ] );
 		// Verify that the action was properly blocked.
 		$this->assertCount(
 			1,
 			OrdersScheduler::queue()->search(
-				array(
+				[
 					'hook' => OrdersScheduler::get_action( 'import_batch_init' ),
-				)
+				]
 			)
 		);
 		// Verify that a second follow up action was queued.
@@ -152,22 +152,22 @@ class WC_Admin_Tests_Reports_Regenerate_Batching extends WC_REST_Unit_Test_Case 
 		$this->assertCount(
 			2,
 			OrdersScheduler::queue()->search(
-				array(
+				[
 					'hook' => OrdersScheduler::get_action( 'import_batch_init' ),
-				)
+				]
 			)
 		);
 
 		// Queue an action that isn't blocked.
-		OrdersScheduler::schedule_action( 'import', array( 0 ) );
+		OrdersScheduler::schedule_action( 'import', [ 0 ] );
 		// Verify that the dependent action was queued.
 		$this->assertCount(
 			1,
 			OrdersScheduler::queue()->search(
-				array(
+				[
 					'status' => 'pending',
 					'hook'   => OrdersScheduler::get_action( 'import' ),
-				)
+				]
 			)
 		);
 		// Verify that no follow up action was queued.
@@ -175,10 +175,10 @@ class WC_Admin_Tests_Reports_Regenerate_Batching extends WC_REST_Unit_Test_Case 
 		$this->assertCount(
 			0,
 			OrdersScheduler::queue()->search(
-				array(
+				[
 					'status' => 'pending',
 					'hook'   => OrdersScheduler::get_action( 'import' ),
-				)
+				]
 			)
 		);
 

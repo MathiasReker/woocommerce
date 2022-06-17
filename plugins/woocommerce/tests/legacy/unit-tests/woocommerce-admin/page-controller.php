@@ -20,12 +20,12 @@ class WC_Admin_Tests_Page_Controller extends WP_UnitTestCase {
 	public function test_get_breadcrumbs_no_parent() {
 
 		// orders page registration data.
-		$orders_page = array(
+		$orders_page = [
 			'id'        => 'woocommerce-orders',
 			'screen_id' => 'edit-shop_order',
 			'path'      => add_query_arg( 'post_type', 'shop_order', 'edit.php' ),
-			'title'     => array( 'Orders' ),
-		);
+			'title'     => [ 'Orders' ],
+		];
 
 		$controller = PageController::get_instance();
 
@@ -50,10 +50,10 @@ class WC_Admin_Tests_Page_Controller extends WP_UnitTestCase {
 		);
 
 		$this->assertEquals(
-			array(
+			[
 				'admin.php?page=wc-admin',
 				'WooCommerce',
-			),
+			],
 			$breadcrumbs[0],
 			'Orders home breadcrumb should be WooCommerce.'
 		);
@@ -71,22 +71,22 @@ class WC_Admin_Tests_Page_Controller extends WP_UnitTestCase {
 	public function test_get_breadcrumbs_with_parent() {
 
 		// coupon page registration data.
-		$coupon_page = array(
+		$coupon_page = [
 			'id'        => 'woocommerce-coupons',
 			'parent'    => 'woocommerce-marketing',
 			'screen_id' => 'edit-shop_coupon',
 			'path'      => add_query_arg( 'post_type', 'shop_coupon', 'edit.php' ),
-			'title'     => array( 'Coupons' ),
-		);
+			'title'     => [ 'Coupons' ],
+		];
 
 		// marketing page registration data.
-		$marketing_page = array(
+		$marketing_page = [
 			'id'       => 'woocommerce-marketing',
 			'title'    => 'Marketing',
 			'path'     => '/marketing',
 			'icon'     => 'dashicons-megaphone',
 			'position' => 58,
-		);
+		];
 
 		$controller = PageController::get_instance();
 
@@ -114,19 +114,19 @@ class WC_Admin_Tests_Page_Controller extends WP_UnitTestCase {
 		);
 
 		$this->assertEquals(
-			array(
+			[
 				'admin.php?page=wc-admin',
 				'WooCommerce',
-			),
+			],
 			$breadcrumbs[0],
 			'Coupons home breadcrumb should be WooCommerce.'
 		);
 
 		$this->assertEquals(
-			array(
+			[
 				'admin.php?page=wc-admin&path=/marketing',
 				'Marketing',
-			),
+			],
 			$breadcrumbs[1],
 			'Coupons parent should be Marketing.'
 		);

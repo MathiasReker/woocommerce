@@ -44,89 +44,89 @@ class WC_REST_Product_Variations_V2_Controller extends WC_REST_Products_V2_Contr
 	 */
 	public function register_routes() {
 		register_rest_route(
-			$this->namespace, '/' . $this->rest_base, array(
-				'args'   => array(
-					'product_id' => array(
+			$this->namespace, '/' . $this->rest_base, [
+				'args'   => [
+					'product_id' => [
 						'description' => __( 'Unique identifier for the variable product.', 'woocommerce' ),
 						'type'        => 'integer',
-					),
-				),
-				array(
+					],
+				],
+				[
 					'methods'             => WP_REST_Server::READABLE,
-					'callback'            => array( $this, 'get_items' ),
-					'permission_callback' => array( $this, 'get_items_permissions_check' ),
+					'callback'            => [ $this, 'get_items' ],
+					'permission_callback' => [ $this, 'get_items_permissions_check' ],
 					'args'                => $this->get_collection_params(),
-				),
-				array(
+				],
+				[
 					'methods'             => WP_REST_Server::CREATABLE,
-					'callback'            => array( $this, 'create_item' ),
-					'permission_callback' => array( $this, 'create_item_permissions_check' ),
+					'callback'            => [ $this, 'create_item' ],
+					'permission_callback' => [ $this, 'create_item_permissions_check' ],
 					'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::CREATABLE ),
-				),
-				'schema' => array( $this, 'get_public_item_schema' ),
-			)
+				],
+				'schema' => [ $this, 'get_public_item_schema' ],
+			]
 		);
 		register_rest_route(
-			$this->namespace, '/' . $this->rest_base . '/(?P<id>[\d]+)', array(
-				'args'   => array(
-					'product_id' => array(
+			$this->namespace, '/' . $this->rest_base . '/(?P<id>[\d]+)', [
+				'args'   => [
+					'product_id' => [
 						'description' => __( 'Unique identifier for the variable product.', 'woocommerce' ),
 						'type'        => 'integer',
-					),
-					'id'         => array(
+					],
+					'id'         => [
 						'description' => __( 'Unique identifier for the variation.', 'woocommerce' ),
 						'type'        => 'integer',
-					),
-				),
-				array(
+					],
+				],
+				[
 					'methods'             => WP_REST_Server::READABLE,
-					'callback'            => array( $this, 'get_item' ),
-					'permission_callback' => array( $this, 'get_item_permissions_check' ),
-					'args'                => array(
+					'callback'            => [ $this, 'get_item' ],
+					'permission_callback' => [ $this, 'get_item_permissions_check' ],
+					'args'                => [
 						'context' => $this->get_context_param(
-							array(
+							[
 								'default' => 'view',
-							)
+							]
 						),
-					),
-				),
-				array(
+					],
+				],
+				[
 					'methods'             => WP_REST_Server::EDITABLE,
-					'callback'            => array( $this, 'update_item' ),
-					'permission_callback' => array( $this, 'update_item_permissions_check' ),
+					'callback'            => [ $this, 'update_item' ],
+					'permission_callback' => [ $this, 'update_item_permissions_check' ],
 					'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::EDITABLE ),
-				),
-				array(
+				],
+				[
 					'methods'             => WP_REST_Server::DELETABLE,
-					'callback'            => array( $this, 'delete_item' ),
-					'permission_callback' => array( $this, 'delete_item_permissions_check' ),
-					'args'                => array(
-						'force' => array(
+					'callback'            => [ $this, 'delete_item' ],
+					'permission_callback' => [ $this, 'delete_item_permissions_check' ],
+					'args'                => [
+						'force' => [
 							'default'     => false,
 							'type'        => 'boolean',
 							'description' => __( 'Whether to bypass trash and force deletion.', 'woocommerce' ),
-						),
-					),
-				),
-				'schema' => array( $this, 'get_public_item_schema' ),
-			)
+						],
+					],
+				],
+				'schema' => [ $this, 'get_public_item_schema' ],
+			]
 		);
 		register_rest_route(
-			$this->namespace, '/' . $this->rest_base . '/batch', array(
-				'args'   => array(
-					'product_id' => array(
+			$this->namespace, '/' . $this->rest_base . '/batch', [
+				'args'   => [
+					'product_id' => [
 						'description' => __( 'Unique identifier for the variable product.', 'woocommerce' ),
 						'type'        => 'integer',
-					),
-				),
-				array(
+					],
+				],
+				[
 					'methods'             => WP_REST_Server::EDITABLE,
-					'callback'            => array( $this, 'batch_items' ),
-					'permission_callback' => array( $this, 'batch_items_permissions_check' ),
+					'callback'            => [ $this, 'batch_items' ],
+					'permission_callback' => [ $this, 'batch_items_permissions_check' ],
 					'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::EDITABLE ),
-				),
-				'schema' => array( $this, 'get_public_batch_schema' ),
-			)
+				],
+				'schema' => [ $this, 'get_public_batch_schema' ],
+			]
 		);
 	}
 
@@ -151,12 +151,12 @@ class WC_REST_Product_Variations_V2_Controller extends WC_REST_Products_V2_Contr
 		$object = $this->get_object( (int) $request['id'] );
 
 		if ( $object && 0 !== $object->get_id() && ! wc_rest_check_post_permissions( $this->post_type, 'edit', $object->get_id() ) ) {
-			return new WP_Error( 'woocommerce_rest_cannot_edit', __( 'Sorry, you are not allowed to edit this resource.', 'woocommerce' ), array( 'status' => rest_authorization_required_code() ) );
+			return new WP_Error( 'woocommerce_rest_cannot_edit', __( 'Sorry, you are not allowed to edit this resource.', 'woocommerce' ), [ 'status' => rest_authorization_required_code() ] );
 		}
 
 		// Check if variation belongs to the correct parent product.
 		if ( $object && 0 !== $object->get_parent_id() && absint( $request['product_id'] ) !== $object->get_parent_id() ) {
-			return new WP_Error( 'woocommerce_rest_cannot_edit', __( 'Parent product does not match current variation.', 'woocommerce' ), array( 'status' => rest_authorization_required_code() ) );
+			return new WP_Error( 'woocommerce_rest_cannot_edit', __( 'Parent product does not match current variation.', 'woocommerce' ), [ 'status' => rest_authorization_required_code() ] );
 		}
 
 		return true;
@@ -171,7 +171,7 @@ class WC_REST_Product_Variations_V2_Controller extends WC_REST_Products_V2_Contr
 	 * @return WP_REST_Response
 	 */
 	public function prepare_object_for_response( $object, $request ) {
-		$data = array(
+		$data = [
 			'id'                    => $object->get_id(),
 			'date_created'          => wc_rest_prepare_date_response( $object->get_date_created(), false ),
 			'date_created_gmt'      => wc_rest_prepare_date_response( $object->get_date_created() ),
@@ -204,18 +204,18 @@ class WC_REST_Product_Variations_V2_Controller extends WC_REST_Products_V2_Contr
 			'backorders_allowed'    => $object->backorders_allowed(),
 			'backordered'           => $object->is_on_backorder(),
 			'weight'                => $object->get_weight(),
-			'dimensions'            => array(
+			'dimensions'            => [
 				'length' => $object->get_length(),
 				'width'  => $object->get_width(),
 				'height' => $object->get_height(),
-			),
+			],
 			'shipping_class'        => $object->get_shipping_class(),
 			'shipping_class_id'     => $object->get_shipping_class_id(),
 			'image'                 => current( $this->get_images( $object ) ),
 			'attributes'            => $this->get_attributes( $object ),
 			'menu_order'            => $object->get_menu_order(),
 			'meta_data'             => $object->get_meta_data(),
-		);
+		];
 
 		$context  = ! empty( $request['context'] ) ? $request['context'] : 'view';
 		$data     = $this->add_additional_fields_to_object( $data, $request );
@@ -288,7 +288,7 @@ class WC_REST_Product_Variations_V2_Controller extends WC_REST_Products_V2_Contr
 					$image['position'] = 0;
 				}
 
-				$variation = $this->set_product_images( $variation, array( $image ) );
+				$variation = $this->set_product_images( $variation, [ $image ] );
 			} else {
 				$variation->set_image_id( '' );
 			}
@@ -393,7 +393,7 @@ class WC_REST_Product_Variations_V2_Controller extends WC_REST_Products_V2_Contr
 
 		// Update taxonomies.
 		if ( isset( $request['attributes'] ) ) {
-			$attributes        = array();
+			$attributes        = [];
 			$parent            = wc_get_product( $variation->get_parent_id() );
 			$parent_attributes = $parent->get_attributes();
 
@@ -488,13 +488,13 @@ class WC_REST_Product_Variations_V2_Controller extends WC_REST_Products_V2_Contr
 
 		if ( ! $object || 0 === $object->get_id() ) {
 			return new WP_Error(
-				"woocommerce_rest_{$this->post_type}_invalid_id", __( 'Invalid ID.', 'woocommerce' ), array(
+				"woocommerce_rest_{$this->post_type}_invalid_id", __( 'Invalid ID.', 'woocommerce' ), [
 					'status' => 404,
-				)
+				]
 			);
 		}
 
-		$supports_trash = EMPTY_TRASH_DAYS > 0 && is_callable( array( $object, 'get_status' ) );
+		$supports_trash = EMPTY_TRASH_DAYS > 0 && is_callable( [ $object, 'get_status' ] );
 
 		/**
 		 * Filter whether an object is trashable.
@@ -509,9 +509,9 @@ class WC_REST_Product_Variations_V2_Controller extends WC_REST_Products_V2_Contr
 		if ( ! wc_rest_check_post_permissions( $this->post_type, 'delete', $object->get_id() ) ) {
 			return new WP_Error(
 				/* translators: %s: post type */
-				"woocommerce_rest_user_cannot_delete_{$this->post_type}", sprintf( __( 'Sorry, you are not allowed to delete %s.', 'woocommerce' ), $this->post_type ), array(
+				"woocommerce_rest_user_cannot_delete_{$this->post_type}", sprintf( __( 'Sorry, you are not allowed to delete %s.', 'woocommerce' ), $this->post_type ), [
 					'status' => rest_authorization_required_code(),
-				)
+				]
 			);
 		}
 
@@ -527,20 +527,20 @@ class WC_REST_Product_Variations_V2_Controller extends WC_REST_Products_V2_Contr
 			if ( ! $supports_trash ) {
 				return new WP_Error(
 					/* translators: %s: post type */
-					'woocommerce_rest_trash_not_supported', sprintf( __( 'The %s does not support trashing.', 'woocommerce' ), $this->post_type ), array(
+					'woocommerce_rest_trash_not_supported', sprintf( __( 'The %s does not support trashing.', 'woocommerce' ), $this->post_type ), [
 						'status' => 501,
-					)
+					]
 				);
 			}
 
 			// Otherwise, only trash if we haven't already.
-			if ( is_callable( array( $object, 'get_status' ) ) ) {
+			if ( is_callable( [ $object, 'get_status' ] ) ) {
 				if ( 'trash' === $object->get_status() ) {
 					return new WP_Error(
 						/* translators: %s: post type */
-						'woocommerce_rest_already_trashed', sprintf( __( 'The %s has already been deleted.', 'woocommerce' ), $this->post_type ), array(
+						'woocommerce_rest_already_trashed', sprintf( __( 'The %s has already been deleted.', 'woocommerce' ), $this->post_type ), [
 							'status' => 410,
-						)
+						]
 					);
 				}
 
@@ -552,9 +552,9 @@ class WC_REST_Product_Variations_V2_Controller extends WC_REST_Products_V2_Contr
 		if ( ! $result ) {
 			return new WP_Error(
 				/* translators: %s: post type */
-				'woocommerce_rest_cannot_delete', sprintf( __( 'The %s cannot be deleted.', 'woocommerce' ), $this->post_type ), array(
+				'woocommerce_rest_cannot_delete', sprintf( __( 'The %s cannot be deleted.', 'woocommerce' ), $this->post_type ), [
 					'status' => 500,
-				)
+				]
 			);
 		}
 
@@ -587,16 +587,16 @@ class WC_REST_Product_Variations_V2_Controller extends WC_REST_Products_V2_Contr
 		$params      = $request->get_url_params();
 		$query       = $request->get_query_params();
 		$product_id  = $params['product_id'];
-		$body_params = array();
+		$body_params = [];
 
-		foreach ( array( 'update', 'create', 'delete' ) as $batch_type ) {
+		foreach ( [ 'update', 'create', 'delete' ] as $batch_type ) {
 			if ( ! empty( $items[ $batch_type ] ) ) {
-				$injected_items = array();
+				$injected_items = [];
 				foreach ( $items[ $batch_type ] as $item ) {
 					$injected_items[] = is_array( $item ) ? array_merge(
-						array(
+						[
 							'product_id' => $product_id,
-						), $item
+						], $item
 					) : $item;
 				}
 				$body_params[ $batch_type ] = $injected_items;
@@ -620,17 +620,17 @@ class WC_REST_Product_Variations_V2_Controller extends WC_REST_Products_V2_Contr
 	protected function prepare_links( $object, $request ) {
 		$product_id = (int) $request['product_id'];
 		$base       = str_replace( '(?P<product_id>[\d]+)', $product_id, $this->rest_base );
-		$links      = array(
-			'self'       => array(
+		$links      = [
+			'self'       => [
 				'href' => rest_url( sprintf( '/%s/%s/%d', $this->namespace, $base, $object->get_id() ) ),
-			),
-			'collection' => array(
+			],
+			'collection' => [
 				'href' => rest_url( sprintf( '/%s/%s', $this->namespace, $base ) ),
-			),
-			'up'         => array(
+			],
+			'up'         => [
 				'href' => rest_url( sprintf( '/%s/products/%d', $this->namespace, $product_id ) ),
-			),
-		);
+			],
+		];
 		return $links;
 	}
 
@@ -642,354 +642,354 @@ class WC_REST_Product_Variations_V2_Controller extends WC_REST_Products_V2_Contr
 	public function get_item_schema() {
 		$weight_unit    = get_option( 'woocommerce_weight_unit' );
 		$dimension_unit = get_option( 'woocommerce_dimension_unit' );
-		$schema         = array(
+		$schema         = [
 			'$schema'    => 'http://json-schema.org/draft-04/schema#',
 			'title'      => $this->post_type,
 			'type'       => 'object',
-			'properties' => array(
-				'id'                    => array(
+			'properties' => [
+				'id'                    => [
 					'description' => __( 'Unique identifier for the resource.', 'woocommerce' ),
 					'type'        => 'integer',
-					'context'     => array( 'view', 'edit' ),
+					'context'     => [ 'view', 'edit' ],
 					'readonly'    => true,
-				),
-				'date_created'          => array(
+				],
+				'date_created'          => [
 					'description' => __( "The date the variation was created, in the site's timezone.", 'woocommerce' ),
 					'type'        => 'date-time',
-					'context'     => array( 'view', 'edit' ),
+					'context'     => [ 'view', 'edit' ],
 					'readonly'    => true,
-				),
-				'date_modified'         => array(
+				],
+				'date_modified'         => [
 					'description' => __( "The date the variation was last modified, in the site's timezone.", 'woocommerce' ),
 					'type'        => 'date-time',
-					'context'     => array( 'view', 'edit' ),
+					'context'     => [ 'view', 'edit' ],
 					'readonly'    => true,
-				),
-				'description'           => array(
+				],
+				'description'           => [
 					'description' => __( 'Variation description.', 'woocommerce' ),
 					'type'        => 'string',
-					'context'     => array( 'view', 'edit' ),
-				),
-				'permalink'             => array(
+					'context'     => [ 'view', 'edit' ],
+				],
+				'permalink'             => [
 					'description' => __( 'Variation URL.', 'woocommerce' ),
 					'type'        => 'string',
 					'format'      => 'uri',
-					'context'     => array( 'view', 'edit' ),
+					'context'     => [ 'view', 'edit' ],
 					'readonly'    => true,
-				),
-				'sku'                   => array(
+				],
+				'sku'                   => [
 					'description' => __( 'Unique identifier.', 'woocommerce' ),
 					'type'        => 'string',
-					'context'     => array( 'view', 'edit' ),
-				),
-				'price'                 => array(
+					'context'     => [ 'view', 'edit' ],
+				],
+				'price'                 => [
 					'description' => __( 'Current variation price.', 'woocommerce' ),
 					'type'        => 'string',
-					'context'     => array( 'view', 'edit' ),
+					'context'     => [ 'view', 'edit' ],
 					'readonly'    => true,
-				),
-				'regular_price'         => array(
+				],
+				'regular_price'         => [
 					'description' => __( 'Variation regular price.', 'woocommerce' ),
 					'type'        => 'string',
-					'context'     => array( 'view', 'edit' ),
-				),
-				'sale_price'            => array(
+					'context'     => [ 'view', 'edit' ],
+				],
+				'sale_price'            => [
 					'description' => __( 'Variation sale price.', 'woocommerce' ),
 					'type'        => 'string',
-					'context'     => array( 'view', 'edit' ),
-				),
-				'date_on_sale_from'     => array(
+					'context'     => [ 'view', 'edit' ],
+				],
+				'date_on_sale_from'     => [
 					'description' => __( "Start date of sale price, in the site's timezone.", 'woocommerce' ),
 					'type'        => 'date-time',
-					'context'     => array( 'view', 'edit' ),
-				),
-				'date_on_sale_from_gmt' => array(
+					'context'     => [ 'view', 'edit' ],
+				],
+				'date_on_sale_from_gmt' => [
 					'description' => __( 'Start date of sale price, as GMT.', 'woocommerce' ),
 					'type'        => 'date-time',
-					'context'     => array( 'view', 'edit' ),
-				),
-				'date_on_sale_to'       => array(
+					'context'     => [ 'view', 'edit' ],
+				],
+				'date_on_sale_to'       => [
 					'description' => __( "End date of sale price, in the site's timezone.", 'woocommerce' ),
 					'type'        => 'date-time',
-					'context'     => array( 'view', 'edit' ),
-				),
-				'date_on_sale_to_gmt'   => array(
+					'context'     => [ 'view', 'edit' ],
+				],
+				'date_on_sale_to_gmt'   => [
 					'description' => __( 'End date of sale price, as GMT.', 'woocommerce' ),
 					'type'        => 'date-time',
-					'context'     => array( 'view', 'edit' ),
-				),
-				'on_sale'               => array(
+					'context'     => [ 'view', 'edit' ],
+				],
+				'on_sale'               => [
 					'description' => __( 'Shows if the variation is on sale.', 'woocommerce' ),
 					'type'        => 'boolean',
-					'context'     => array( 'view', 'edit' ),
+					'context'     => [ 'view', 'edit' ],
 					'readonly'    => true,
-				),
-				'visible'               => array(
+				],
+				'visible'               => [
 					'description' => __( "Define if the variation is visible on the product's page.", 'woocommerce' ),
 					'type'        => 'boolean',
 					'default'     => true,
-					'context'     => array( 'view', 'edit' ),
-				),
-				'purchasable'           => array(
+					'context'     => [ 'view', 'edit' ],
+				],
+				'purchasable'           => [
 					'description' => __( 'Shows if the variation can be bought.', 'woocommerce' ),
 					'type'        => 'boolean',
-					'context'     => array( 'view', 'edit' ),
+					'context'     => [ 'view', 'edit' ],
 					'readonly'    => true,
-				),
-				'virtual'               => array(
+				],
+				'virtual'               => [
 					'description' => __( 'If the variation is virtual.', 'woocommerce' ),
 					'type'        => 'boolean',
 					'default'     => false,
-					'context'     => array( 'view', 'edit' ),
-				),
-				'downloadable'          => array(
+					'context'     => [ 'view', 'edit' ],
+				],
+				'downloadable'          => [
 					'description' => __( 'If the variation is downloadable.', 'woocommerce' ),
 					'type'        => 'boolean',
 					'default'     => false,
-					'context'     => array( 'view', 'edit' ),
-				),
-				'downloads'             => array(
+					'context'     => [ 'view', 'edit' ],
+				],
+				'downloads'             => [
 					'description' => __( 'List of downloadable files.', 'woocommerce' ),
 					'type'        => 'array',
-					'context'     => array( 'view', 'edit' ),
-					'items'       => array(
+					'context'     => [ 'view', 'edit' ],
+					'items'       => [
 						'type'       => 'object',
-						'properties' => array(
-							'id'   => array(
+						'properties' => [
+							'id'   => [
 								'description' => __( 'File ID.', 'woocommerce' ),
 								'type'        => 'string',
-								'context'     => array( 'view', 'edit' ),
-							),
-							'name' => array(
+								'context'     => [ 'view', 'edit' ],
+							],
+							'name' => [
 								'description' => __( 'File name.', 'woocommerce' ),
 								'type'        => 'string',
-								'context'     => array( 'view', 'edit' ),
-							),
-							'file' => array(
+								'context'     => [ 'view', 'edit' ],
+							],
+							'file' => [
 								'description' => __( 'File URL.', 'woocommerce' ),
 								'type'        => 'string',
-								'context'     => array( 'view', 'edit' ),
-							),
-						),
-					),
-				),
-				'download_limit'        => array(
+								'context'     => [ 'view', 'edit' ],
+							],
+						],
+					],
+				],
+				'download_limit'        => [
 					'description' => __( 'Number of times downloadable files can be downloaded after purchase.', 'woocommerce' ),
 					'type'        => 'integer',
 					'default'     => -1,
-					'context'     => array( 'view', 'edit' ),
-				),
-				'download_expiry'       => array(
+					'context'     => [ 'view', 'edit' ],
+				],
+				'download_expiry'       => [
 					'description' => __( 'Number of days until access to downloadable files expires.', 'woocommerce' ),
 					'type'        => 'integer',
 					'default'     => -1,
-					'context'     => array( 'view', 'edit' ),
-				),
-				'tax_status'            => array(
+					'context'     => [ 'view', 'edit' ],
+				],
+				'tax_status'            => [
 					'description' => __( 'Tax status.', 'woocommerce' ),
 					'type'        => 'string',
 					'default'     => 'taxable',
-					'enum'        => array( 'taxable', 'shipping', 'none' ),
-					'context'     => array( 'view', 'edit' ),
-				),
-				'tax_class'             => array(
+					'enum'        => [ 'taxable', 'shipping', 'none' ],
+					'context'     => [ 'view', 'edit' ],
+				],
+				'tax_class'             => [
 					'description' => __( 'Tax class.', 'woocommerce' ),
 					'type'        => 'string',
-					'context'     => array( 'view', 'edit' ),
-				),
-				'manage_stock'          => array(
+					'context'     => [ 'view', 'edit' ],
+				],
+				'manage_stock'          => [
 					'description' => __( 'Stock management at variation level.', 'woocommerce' ),
 					'type'        => 'mixed',
 					'default'     => false,
-					'context'     => array( 'view', 'edit' ),
-				),
-				'stock_quantity'        => array(
+					'context'     => [ 'view', 'edit' ],
+				],
+				'stock_quantity'        => [
 					'description' => __( 'Stock quantity.', 'woocommerce' ),
 					'type'        => 'integer',
-					'context'     => array( 'view', 'edit' ),
-				),
-				'in_stock'              => array(
+					'context'     => [ 'view', 'edit' ],
+				],
+				'in_stock'              => [
 					'description' => __( 'Controls whether or not the variation is listed as "in stock" or "out of stock" on the frontend.', 'woocommerce' ),
 					'type'        => 'boolean',
 					'default'     => true,
-					'context'     => array( 'view', 'edit' ),
-				),
-				'backorders'            => array(
+					'context'     => [ 'view', 'edit' ],
+				],
+				'backorders'            => [
 					'description' => __( 'If managing stock, this controls if backorders are allowed.', 'woocommerce' ),
 					'type'        => 'string',
 					'default'     => 'no',
-					'enum'        => array( 'no', 'notify', 'yes' ),
-					'context'     => array( 'view', 'edit' ),
-				),
-				'backorders_allowed'    => array(
+					'enum'        => [ 'no', 'notify', 'yes' ],
+					'context'     => [ 'view', 'edit' ],
+				],
+				'backorders_allowed'    => [
 					'description' => __( 'Shows if backorders are allowed.', 'woocommerce' ),
 					'type'        => 'boolean',
-					'context'     => array( 'view', 'edit' ),
+					'context'     => [ 'view', 'edit' ],
 					'readonly'    => true,
-				),
-				'backordered'           => array(
+				],
+				'backordered'           => [
 					'description' => __( 'Shows if the variation is on backordered.', 'woocommerce' ),
 					'type'        => 'boolean',
-					'context'     => array( 'view', 'edit' ),
+					'context'     => [ 'view', 'edit' ],
 					'readonly'    => true,
-				),
-				'weight'                => array(
+				],
+				'weight'                => [
 					/* translators: %s: weight unit */
 					'description' => sprintf( __( 'Variation weight (%s).', 'woocommerce' ), $weight_unit ),
 					'type'        => 'string',
-					'context'     => array( 'view', 'edit' ),
-				),
-				'dimensions'            => array(
+					'context'     => [ 'view', 'edit' ],
+				],
+				'dimensions'            => [
 					'description' => __( 'Variation dimensions.', 'woocommerce' ),
 					'type'        => 'object',
-					'context'     => array( 'view', 'edit' ),
-					'properties'  => array(
-						'length' => array(
+					'context'     => [ 'view', 'edit' ],
+					'properties'  => [
+						'length' => [
 							/* translators: %s: dimension unit */
 							'description' => sprintf( __( 'Variation length (%s).', 'woocommerce' ), $dimension_unit ),
 							'type'        => 'string',
-							'context'     => array( 'view', 'edit' ),
-						),
-						'width'  => array(
+							'context'     => [ 'view', 'edit' ],
+						],
+						'width'  => [
 							/* translators: %s: dimension unit */
 							'description' => sprintf( __( 'Variation width (%s).', 'woocommerce' ), $dimension_unit ),
 							'type'        => 'string',
-							'context'     => array( 'view', 'edit' ),
-						),
-						'height' => array(
+							'context'     => [ 'view', 'edit' ],
+						],
+						'height' => [
 							/* translators: %s: dimension unit */
 							'description' => sprintf( __( 'Variation height (%s).', 'woocommerce' ), $dimension_unit ),
 							'type'        => 'string',
-							'context'     => array( 'view', 'edit' ),
-						),
-					),
-				),
-				'shipping_class'        => array(
+							'context'     => [ 'view', 'edit' ],
+						],
+					],
+				],
+				'shipping_class'        => [
 					'description' => __( 'Shipping class slug.', 'woocommerce' ),
 					'type'        => 'string',
-					'context'     => array( 'view', 'edit' ),
-				),
-				'shipping_class_id'     => array(
+					'context'     => [ 'view', 'edit' ],
+				],
+				'shipping_class_id'     => [
 					'description' => __( 'Shipping class ID.', 'woocommerce' ),
 					'type'        => 'string',
-					'context'     => array( 'view', 'edit' ),
+					'context'     => [ 'view', 'edit' ],
 					'readonly'    => true,
-				),
-				'image'                 => array(
+				],
+				'image'                 => [
 					'description' => __( 'Variation image data.', 'woocommerce' ),
 					'type'        => 'object',
-					'context'     => array( 'view', 'edit' ),
-					'properties'  => array(
-						'id'                => array(
+					'context'     => [ 'view', 'edit' ],
+					'properties'  => [
+						'id'                => [
 							'description' => __( 'Image ID.', 'woocommerce' ),
 							'type'        => 'integer',
-							'context'     => array( 'view', 'edit' ),
-						),
-						'date_created'      => array(
+							'context'     => [ 'view', 'edit' ],
+						],
+						'date_created'      => [
 							'description' => __( "The date the image was created, in the site's timezone.", 'woocommerce' ),
 							'type'        => 'date-time',
-							'context'     => array( 'view', 'edit' ),
+							'context'     => [ 'view', 'edit' ],
 							'readonly'    => true,
-						),
-						'date_created_gmt'  => array(
+						],
+						'date_created_gmt'  => [
 							'description' => __( 'The date the image was created, as GMT.', 'woocommerce' ),
 							'type'        => 'date-time',
-							'context'     => array( 'view', 'edit' ),
+							'context'     => [ 'view', 'edit' ],
 							'readonly'    => true,
-						),
-						'date_modified'     => array(
+						],
+						'date_modified'     => [
 							'description' => __( "The date the image was last modified, in the site's timezone.", 'woocommerce' ),
 							'type'        => 'date-time',
-							'context'     => array( 'view', 'edit' ),
+							'context'     => [ 'view', 'edit' ],
 							'readonly'    => true,
-						),
-						'date_modified_gmt' => array(
+						],
+						'date_modified_gmt' => [
 							'description' => __( 'The date the image was last modified, as GMT.', 'woocommerce' ),
 							'type'        => 'date-time',
-							'context'     => array( 'view', 'edit' ),
+							'context'     => [ 'view', 'edit' ],
 							'readonly'    => true,
-						),
-						'src'               => array(
+						],
+						'src'               => [
 							'description' => __( 'Image URL.', 'woocommerce' ),
 							'type'        => 'string',
 							'format'      => 'uri',
-							'context'     => array( 'view', 'edit' ),
-						),
-						'name'              => array(
+							'context'     => [ 'view', 'edit' ],
+						],
+						'name'              => [
 							'description' => __( 'Image name.', 'woocommerce' ),
 							'type'        => 'string',
-							'context'     => array( 'view', 'edit' ),
-						),
-						'alt'               => array(
+							'context'     => [ 'view', 'edit' ],
+						],
+						'alt'               => [
 							'description' => __( 'Image alternative text.', 'woocommerce' ),
 							'type'        => 'string',
-							'context'     => array( 'view', 'edit' ),
-						),
-						'position'          => array(
+							'context'     => [ 'view', 'edit' ],
+						],
+						'position'          => [
 							'description' => __( 'Image position. 0 means that the image is featured.', 'woocommerce' ),
 							'type'        => 'integer',
-							'context'     => array( 'view', 'edit' ),
-						),
-					),
-				),
-				'attributes'            => array(
+							'context'     => [ 'view', 'edit' ],
+						],
+					],
+				],
+				'attributes'            => [
 					'description' => __( 'List of attributes.', 'woocommerce' ),
 					'type'        => 'array',
-					'context'     => array( 'view', 'edit' ),
-					'items'       => array(
+					'context'     => [ 'view', 'edit' ],
+					'items'       => [
 						'type'       => 'object',
-						'properties' => array(
-							'id'     => array(
+						'properties' => [
+							'id'     => [
 								'description' => __( 'Attribute ID.', 'woocommerce' ),
 								'type'        => 'integer',
-								'context'     => array( 'view', 'edit' ),
-							),
-							'name'   => array(
+								'context'     => [ 'view', 'edit' ],
+							],
+							'name'   => [
 								'description' => __( 'Attribute name.', 'woocommerce' ),
 								'type'        => 'string',
-								'context'     => array( 'view', 'edit' ),
-							),
-							'option' => array(
+								'context'     => [ 'view', 'edit' ],
+							],
+							'option' => [
 								'description' => __( 'Selected attribute term name.', 'woocommerce' ),
 								'type'        => 'string',
-								'context'     => array( 'view', 'edit' ),
-							),
-						),
-					),
-				),
-				'menu_order'            => array(
+								'context'     => [ 'view', 'edit' ],
+							],
+						],
+					],
+				],
+				'menu_order'            => [
 					'description' => __( 'Menu order, used to custom sort products.', 'woocommerce' ),
 					'type'        => 'integer',
-					'context'     => array( 'view', 'edit' ),
-				),
-				'meta_data'             => array(
+					'context'     => [ 'view', 'edit' ],
+				],
+				'meta_data'             => [
 					'description' => __( 'Meta data.', 'woocommerce' ),
 					'type'        => 'array',
-					'context'     => array( 'view', 'edit' ),
-					'items'       => array(
+					'context'     => [ 'view', 'edit' ],
+					'items'       => [
 						'type'       => 'object',
-						'properties' => array(
-							'id'    => array(
+						'properties' => [
+							'id'    => [
 								'description' => __( 'Meta ID.', 'woocommerce' ),
 								'type'        => 'integer',
-								'context'     => array( 'view', 'edit' ),
+								'context'     => [ 'view', 'edit' ],
 								'readonly'    => true,
-							),
-							'key'   => array(
+							],
+							'key'   => [
 								'description' => __( 'Meta key.', 'woocommerce' ),
 								'type'        => 'string',
-								'context'     => array( 'view', 'edit' ),
-							),
-							'value' => array(
+								'context'     => [ 'view', 'edit' ],
+							],
+							'value' => [
 								'description' => __( 'Meta value.', 'woocommerce' ),
 								'type'        => 'mixed',
-								'context'     => array( 'view', 'edit' ),
-							),
-						),
-					),
-				),
-			),
-		);
+								'context'     => [ 'view', 'edit' ],
+							],
+						],
+					],
+				],
+			],
+		];
 
 		return $this->add_additional_fields_schema( $schema );
 	}

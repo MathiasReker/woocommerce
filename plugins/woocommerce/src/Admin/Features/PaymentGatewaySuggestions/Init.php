@@ -25,7 +25,7 @@ class Init {
 	 * Constructor.
 	 */
 	public function __construct() {
-		add_action( 'change_locale', array( __CLASS__, 'delete_specs_transient' ) );
+		add_action( 'change_locale', [ __CLASS__, 'delete_specs_transient' ] );
 		PaymentGatewaysController::init();
 	}
 
@@ -33,7 +33,7 @@ class Init {
 	 * Go through the specs and run them.
 	 */
 	public static function get_suggestions() {
-		$suggestions = array();
+		$suggestions = [];
 		$specs       = self::get_specs();
 
 		foreach ( $specs as $spec ) {

@@ -44,43 +44,43 @@ class WC_REST_Legacy_Products_Controller extends WC_REST_CRUD_Controller {
 
 		// Taxonomy query to filter products by type, category,
 		// tag, shipping class, and attribute.
-		$tax_query = array();
+		$tax_query = [];
 
 		// Map between taxonomy name and arg's key.
-		$taxonomies = array(
+		$taxonomies = [
 			'product_cat'            => 'category',
 			'product_tag'            => 'tag',
 			'product_shipping_class' => 'shipping_class',
-		);
+		];
 
 		// Set tax_query for each passed arg.
 		foreach ( $taxonomies as $taxonomy => $key ) {
 			if ( ! empty( $request[ $key ] ) ) {
-				$tax_query[] = array(
+				$tax_query[] = [
 					'taxonomy' => $taxonomy,
 					'field'    => 'term_id',
 					'terms'    => $request[ $key ],
-				);
+				];
 			}
 		}
 
 		// Filter product type by slug.
 		if ( ! empty( $request['type'] ) ) {
-			$tax_query[] = array(
+			$tax_query[] = [
 				'taxonomy' => 'product_type',
 				'field'    => 'slug',
 				'terms'    => $request['type'],
-			);
+			];
 		}
 
 		// Filter by attribute and term.
 		if ( ! empty( $request['attribute'] ) && ! empty( $request['attribute_term'] ) ) {
 			if ( in_array( $request['attribute'], wc_get_attribute_taxonomy_names(), true ) ) {
-				$tax_query[] = array(
+				$tax_query[] = [
 					'taxonomy' => $request['attribute'],
 					'field'    => 'term_id',
 					'terms'    => $request['attribute_term'],
-				);
+				];
 			}
 		}
 
@@ -90,12 +90,12 @@ class WC_REST_Legacy_Products_Controller extends WC_REST_CRUD_Controller {
 
 		// Filter featured.
 		if ( is_bool( $request['featured'] ) ) {
-			$args['tax_query'][] = array(
+			$args['tax_query'][] = [
 				'taxonomy' => 'product_visibility',
 				'field'    => 'name',
 				'terms'    => 'featured',
 				'operator' => true === $request['featured'] ? 'IN' : 'NOT IN',
-			);
+			];
 		}
 
 		// Filter by sku.
@@ -106,19 +106,19 @@ class WC_REST_Legacy_Products_Controller extends WC_REST_CRUD_Controller {
 				$skus[] = $request['sku'];
 			}
 
-			$args['meta_query'] = $this->add_meta_query( $args, array(
+			$args['meta_query'] = $this->add_meta_query( $args, [
 				'key'     => '_sku',
 				'value'   => $skus,
 				'compare' => 'IN',
-			) );
+			] );
 		}
 
 		// Filter by tax class.
 		if ( ! empty( $request['tax_class'] ) ) {
-			$args['meta_query'] = $this->add_meta_query( $args, array(
+			$args['meta_query'] = $this->add_meta_query( $args, [
 				'key'   => '_tax_class',
 				'value' => 'standard' !== $request['tax_class'] ? $request['tax_class'] : '',
-			) );
+			] );
 		}
 
 		// Price filter.
@@ -128,10 +128,10 @@ class WC_REST_Legacy_Products_Controller extends WC_REST_CRUD_Controller {
 
 		// Filter product in stock or out of stock.
 		if ( is_bool( $request['in_stock'] ) ) {
-			$args['meta_query'] = $this->add_meta_query( $args, array(
+			$args['meta_query'] = $this->add_meta_query( $args, [
 				'key'   => '_stock_status',
 				'value' => true === $request['in_stock'] ? 'instock' : 'outofstock',
-			) );
+			] );
 		}
 
 		// Filter by on sale products.
@@ -142,7 +142,7 @@ class WC_REST_Legacy_Products_Controller extends WC_REST_CRUD_Controller {
 
 		// Force the post_type argument, since it's not a user input variable.
 		if ( ! empty( $request['sku'] ) ) {
-			$args['post_type'] = array( 'product', 'product_variation' );
+			$args['post_type'] = [ 'product', 'product_variation' ];
 		} else {
 			$args['post_type'] = $this->post_type;
 		}
@@ -273,7 +273,7 @@ class WC_REST_Legacy_Products_Controller extends WC_REST_CRUD_Controller {
 
 		// Attributes.
 		if ( isset( $request['attributes'] ) ) {
-			$attributes = array();
+			$attributes = [];
 
 			foreach ( $request['attributes'] as $attribute ) {
 				$attribute_id   = 0;
@@ -304,7 +304,7 @@ class WC_REST_Legacy_Products_Controller extends WC_REST_CRUD_Controller {
 						$values = array_map( 'wc_sanitize_term_text_based', $options );
 						$values = array_filter( $values, 'strlen' );
 					} else {
-						$values = array();
+						$values = [];
 					}
 
 					if ( ! empty( $values ) ) {
@@ -338,7 +338,7 @@ class WC_REST_Legacy_Products_Controller extends WC_REST_CRUD_Controller {
 		}
 
 		// Sales and prices.
-		if ( in_array( $product->get_type(), array( 'variable', 'grouped' ), true ) ) {
+		if ( in_array( $product->get_type(), [ 'variable', 'grouped' ], true ) ) {
 			$product->set_regular_price( '' );
 			$product->set_sale_price( '' );
 			$product->set_date_on_sale_to( '' );
@@ -429,7 +429,7 @@ class WC_REST_Legacy_Products_Controller extends WC_REST_CRUD_Controller {
 
 		// Upsells.
 		if ( isset( $request['upsell_ids'] ) ) {
-			$upsells = array();
+			$upsells = [];
 			$ids     = $request['upsell_ids'];
 
 			if ( ! empty( $ids ) ) {
@@ -445,7 +445,7 @@ class WC_REST_Legacy_Products_Controller extends WC_REST_CRUD_Controller {
 
 		// Cross sells.
 		if ( isset( $request['cross_sell_ids'] ) ) {
-			$crosssells = array();
+			$crosssells = [];
 			$ids        = $request['cross_sell_ids'];
 
 			if ( ! empty( $ids ) ) {
@@ -557,7 +557,7 @@ class WC_REST_Legacy_Products_Controller extends WC_REST_CRUD_Controller {
 					$image['position'] = 0;
 				}
 
-				$variation = $this->set_product_images( $variation, array( $image ) );
+				$variation = $this->set_product_images( $variation, [ $image ] );
 			}
 
 			// Virtual variation.
@@ -647,7 +647,7 @@ class WC_REST_Legacy_Products_Controller extends WC_REST_CRUD_Controller {
 
 			// Update taxonomies.
 			if ( isset( $data['attributes'] ) ) {
-				$attributes = array();
+				$attributes = [];
 				$parent_attributes = $product->get_attributes();
 
 				foreach ( $data['attributes'] as $attribute ) {
@@ -761,11 +761,11 @@ class WC_REST_Legacy_Products_Controller extends WC_REST_CRUD_Controller {
 		}
 
 		// Delete product attachments.
-		$attachments = get_posts( array(
+		$attachments = get_posts( [
 			'post_parent' => $id,
 			'post_status' => 'any',
 			'post_type'   => 'attachment',
-		) );
+		] );
 
 		foreach ( (array) $attachments as $attachment ) {
 			wp_delete_attachment( $attachment->ID, true );
@@ -784,7 +784,7 @@ class WC_REST_Legacy_Products_Controller extends WC_REST_CRUD_Controller {
 	 * @return array
 	 */
 	protected function get_post_types() {
-		return array( 'product', 'product_variation' );
+		return [ 'product', 'product_variation' ];
 	}
 
 	/**

@@ -27,7 +27,7 @@ abstract class WC_Legacy_Webhook extends WC_Data {
 	 * @return bool
 	 */
 	public function __isset( $key ) {
-		$legacy_keys = array(
+		$legacy_keys = [
 			'id',
 			'status',
 			'post_data',
@@ -39,7 +39,7 @@ abstract class WC_Legacy_Webhook extends WC_Data {
 			'event',
 			'failure_count',
 			'api_version',
-		);
+		];
 
 		if ( in_array( $key, $legacy_keys, true ) ) {
 			return true;

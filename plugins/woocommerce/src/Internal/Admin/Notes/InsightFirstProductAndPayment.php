@@ -44,7 +44,7 @@ class InsightFirstProductAndPayment {
 		$note->set_content( __( 'More than 80% of new merchants add the first product and have at least one payment method set up during the first week.<br><br>Do you find this type of insight useful?', 'woocommerce' ) );
 		$note->set_type( Note::E_WC_ADMIN_NOTE_SURVEY );
 		$note->set_name( self::NOTE_NAME );
-		$note->set_content_data( (object) array() );
+		$note->set_content_data( (object) [] );
 		$note->set_source( 'woocommerce-admin' );
 		$note->add_action(
 			'affirm-insight-first-product-and-payment',

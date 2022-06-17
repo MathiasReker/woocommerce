@@ -26,9 +26,9 @@ class WC_Admin_Tests_API_Plugins extends WC_REST_Unit_Test_Case {
 		parent::setUp();
 
 		$this->user = $this->factory->user->create(
-			array(
+			[
 				'role' => 'administrator',
-			)
+			]
 		);
 	}
 
@@ -48,16 +48,16 @@ class WC_Admin_Tests_API_Plugins extends WC_REST_Unit_Test_Case {
 
 		$request = new WP_REST_Request( 'POST', $this->endpoint . '/install' );
 		$request->set_query_params(
-			array(
+			[
 				'plugins' => 'facebook-for-woocommerce',
-			)
+			]
 		);
 		$response = $this->server->dispatch( $request );
 		$data     = $response->get_data();
 		$plugins  = get_plugins();
 
 		$this->assertEquals( 200, $response->get_status() );
-		$this->assertEquals( array( 'facebook-for-woocommerce' ), $data['data']['installed'] );
+		$this->assertEquals( [ 'facebook-for-woocommerce' ], $data['data']['installed'] );
 		$this->assertEquals( true, $data['success'] );
 		$this->assertArrayHasKey( 'facebook-for-woocommerce/facebook-for-woocommerce.php', $plugins );
 	}
@@ -70,10 +70,10 @@ class WC_Admin_Tests_API_Plugins extends WC_REST_Unit_Test_Case {
 
 		$request = new WP_REST_Request( 'POST', $this->endpoint . '/install' );
 		$request->set_query_params(
-			array(
+			[
 				'async'   => true,
 				'plugins' => 'facebook-for-woocommerce',
-			)
+			]
 		);
 		$response = $this->server->dispatch( $request );
 		$data     = $response->get_data();
@@ -104,9 +104,9 @@ class WC_Admin_Tests_API_Plugins extends WC_REST_Unit_Test_Case {
 
 		$request = new WP_REST_Request( 'POST', $this->endpoint . '/activate' );
 		$request->set_query_params(
-			array(
+			[
 				'plugins' => 'facebook-for-woocommerce',
-			)
+			]
 		);
 		$response       = $this->server->dispatch( $request );
 		$data           = $response->get_data();
@@ -126,10 +126,10 @@ class WC_Admin_Tests_API_Plugins extends WC_REST_Unit_Test_Case {
 
 		$request = new WP_REST_Request( 'POST', $this->endpoint . '/activate' );
 		$request->set_query_params(
-			array(
+			[
 				'async'   => true,
 				'plugins' => 'facebook-for-woocommerce',
-			)
+			]
 		);
 		$response = $this->server->dispatch( $request );
 		$data     = $response->get_data();

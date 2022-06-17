@@ -22,7 +22,7 @@ class WC_Admin_Exporters {
 	 *
 	 * @var string[]
 	 */
-	protected $exporters = array();
+	protected $exporters = [];
 
 	/**
 	 * Constructor.
@@ -32,19 +32,19 @@ class WC_Admin_Exporters {
 			return;
 		}
 
-		add_action( 'admin_menu', array( $this, 'add_to_menus' ) );
-		add_action( 'admin_head', array( $this, 'hide_from_menus' ) );
-		add_action( 'admin_enqueue_scripts', array( $this, 'admin_scripts' ) );
-		add_action( 'admin_init', array( $this, 'download_export_file' ) );
-		add_action( 'wp_ajax_woocommerce_do_ajax_product_export', array( $this, 'do_ajax_product_export' ) );
+		add_action( 'admin_menu', [ $this, 'add_to_menus' ] );
+		add_action( 'admin_head', [ $this, 'hide_from_menus' ] );
+		add_action( 'admin_enqueue_scripts', [ $this, 'admin_scripts' ] );
+		add_action( 'admin_init', [ $this, 'download_export_file' ] );
+		add_action( 'wp_ajax_woocommerce_do_ajax_product_export', [ $this, 'do_ajax_product_export' ] );
 
 		// Register WooCommerce exporters.
-		$this->exporters['product_exporter'] = array(
+		$this->exporters['product_exporter'] = [
 			'menu'       => 'edit.php?post_type=product',
 			'name'       => __( 'Product Export', 'woocommerce' ),
 			'capability' => 'export',
-			'callback'   => array( $this, 'product_exporter' ),
-		);
+			'callback'   => [ $this, 'product_exporter' ],
+		];
 	}
 
 	/**
@@ -88,13 +88,13 @@ class WC_Admin_Exporters {
 	public function admin_scripts() {
 		$suffix  = Constants::is_true( 'SCRIPT_DEBUG' ) ? '' : '.min';
 		$version = Constants::get_constant( 'WC_VERSION' );
-		wp_register_script( 'wc-product-export', WC()->plugin_url() . '/assets/js/admin/wc-product-export' . $suffix . '.js', array( 'jquery' ), $version );
+		wp_register_script( 'wc-product-export', WC()->plugin_url() . '/assets/js/admin/wc-product-export' . $suffix . '.js', [ 'jquery' ], $version );
 		wp_localize_script(
 			'wc-product-export',
 			'wc_product_export_params',
-			array(
+			[
 				'export_nonce' => wp_create_nonce( 'wc-product-export' ),
-			)
+			]
 		);
 	}
 
@@ -129,7 +129,7 @@ class WC_Admin_Exporters {
 		check_ajax_referer( 'wc-product-export', 'security' );
 
 		if ( ! $this->export_allowed() ) {
-			wp_send_json_error( array( 'message' => __( 'Insufficient privileges to export products.', 'woocommerce' ) ) );
+			wp_send_json_error( [ 'message' => __( 'Insufficient privileges to export products.', 'woocommerce' ) ] );
 		}
 
 		include_once WC_ABSPATH . 'includes/export/class-wc-product-csv-exporter.php';
@@ -166,28 +166,28 @@ class WC_Admin_Exporters {
 
 		$query_args = apply_filters(
 			'woocommerce_export_get_ajax_query_args',
-			array(
+			[
 				'nonce'    => wp_create_nonce( 'product-csv' ),
 				'action'   => 'download_product_csv',
 				'filename' => $exporter->get_filename(),
-			)
+			]
 		);
 
 		if ( 100 === $exporter->get_percent_complete() ) {
 			wp_send_json_success(
-				array(
+				[
 					'step'       => 'done',
 					'percentage' => 100,
 					'url'        => add_query_arg( $query_args, admin_url( 'edit.php?post_type=product&page=product_exporter' ) ),
-				)
+				]
 			);
 		} else {
 			wp_send_json_success(
-				array(
+				[
 					'step'       => ++$step,
 					'percentage' => $exporter->get_percent_complete(),
 					'columns'    => $exporter->get_column_names(),
-				)
+				]
 			);
 		}
 	}

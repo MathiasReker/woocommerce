@@ -22,9 +22,9 @@ class WC_Admin_Tests_API_Leaderboards extends WC_REST_Unit_Test_Case {
 	public function setUp(): void {
 		parent::setUp();
 		$this->user = $this->factory->user->create(
-			array(
+			[
 				'role' => 'administrator',
-			)
+			]
 		);
 	}
 
@@ -169,28 +169,28 @@ class WC_Admin_Tests_API_Leaderboards extends WC_REST_Unit_Test_Case {
 		add_filter(
 			'woocommerce_leaderboards',
 			function( $leaderboards, $per_page, $after, $before, $persisted_query ) {
-				$leaderboards[] = array(
+				$leaderboards[] = [
 					'id'      => 'top_widgets',
 					'label'   => 'Top Widgets',
-					'headers' => array(
-						array(
+					'headers' => [
+						[
 							'label' => 'Widget Link',
-						),
-					),
-					'rows'    => array(
-						array(
+						],
+					],
+					'rows'    => [
+						[
 							'display' => wc_admin_url( '/test/path', $persisted_query ),
 							'value'   => null,
-						),
-					),
-				);
+						],
+					],
+				];
 				return $leaderboards;
 			},
 			10,
 			5
 		);
 		$request = new WP_REST_Request( 'GET', $this->endpoint );
-		$request->set_query_params( array( 'persisted_query' => '{ "persisted_param": 1 }' ) );
+		$request->set_query_params( [ 'persisted_query' => '{ "persisted_param": 1 }' ] );
 		$response = $this->server->dispatch( $request );
 		$data     = $response->get_data();
 

@@ -19,10 +19,10 @@ class ProductReviewsServiceProvider extends AbstractServiceProvider {
 	 *
 	 * @var array
 	 */
-	protected $provides = array(
+	protected $provides = [
 		Reviews::class,
 		ReviewsCommentsOverrides::class,
-	);
+	];
 
 	/**
 	 * Register the classes.

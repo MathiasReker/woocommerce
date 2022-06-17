@@ -55,10 +55,10 @@ function load_dependencies() {
 }
 
 function get_vendor_paths() {
-	$vendor_paths = array(
+	$vendor_paths = [
 		WP_CLI_ROOT . '/../../../vendor',  // part of a larger project / installed via Composer (preferred)
 		WP_CLI_ROOT . '/vendor',           // top-level project / installed as Git clone
-	);
+	];
 	$maybe_composer_json = WP_CLI_ROOT . '/../../../composer.json';
 	if ( file_exists( $maybe_composer_json ) && is_readable( $maybe_composer_json ) ) {
 		$composer = json_decode( file_get_contents( $maybe_composer_json ) );
@@ -235,7 +235,7 @@ function locate_wp_config() {
 }
 
 function wp_version_compare( $since, $operator ) {
-	return version_compare( str_replace( array( '-src' ), '', $GLOBALS['wp_version'] ), $since, $operator );
+	return version_compare( str_replace( [ '-src' ], '', $GLOBALS['wp_version'] ), $since, $operator );
 }
 
 /**
@@ -298,7 +298,7 @@ function format_items( $format, $items, $fields ) {
  * @param array    $rows       Array of rows to output
  * @param array    $headers    List of CSV columns (optional)
  */
-function write_csv( $fd, $rows, $headers = array() ) {
+function write_csv( $fd, $rows, $headers = [] ) {
 	if ( ! empty( $headers ) ) {
 		fputcsv( $fd, $headers );
 	}
@@ -322,7 +322,7 @@ function write_csv( $fd, $rows, $headers = array() ) {
 function pick_fields( $item, $fields ) {
 	$item = (object) $item;
 
-	$values = array();
+	$values = [];
 
 	foreach ( $fields as $field ) {
 		$values[ $field ] = isset( $item->$field ) ? $item->$field : null;
@@ -374,7 +374,7 @@ function launch_editor_for_input( $input, $filename = 'WP-CLI' ) {
 			$editor = 'vi';
 	}
 
-	$descriptorspec = array( STDIN, STDOUT, STDERR );
+	$descriptorspec = [ STDIN, STDOUT, STDERR ];
 	$process = proc_open( "$editor " . escapeshellarg( $tmpfile ), $descriptorspec, $pipes );
 	$r = proc_close( $process );
 	if ( $r ) {
@@ -396,7 +396,7 @@ function launch_editor_for_input( $input, $filename = 'WP-CLI' ) {
  * @return array
  */
 function mysql_host_to_cli_args( $raw_host ) {
-	$assoc_args = array();
+	$assoc_args = [];
 
 	$host_parts = explode( ':',  $raw_host );
 	if ( count( $host_parts ) == 2 ) {
@@ -417,7 +417,7 @@ function mysql_host_to_cli_args( $raw_host ) {
 
 function run_mysql_command( $cmd, $assoc_args, $descriptors = null ) {
 	if ( !$descriptors )
-		$descriptors = array( STDIN, STDOUT, STDERR );
+		$descriptors = [ STDIN, STDOUT, STDERR ];
 
 	if ( isset( $assoc_args['host'] ) ) {
 		$assoc_args = array_merge( $assoc_args, mysql_host_to_cli_args( $assoc_args['host'] ) );
@@ -447,15 +447,15 @@ function run_mysql_command( $cmd, $assoc_args, $descriptors = null ) {
  *
  * IMPORTANT: Automatic HTML escaping is disabled!
  */
-function mustache_render( $template_name, $data = array() ) {
+function mustache_render( $template_name, $data = [] ) {
 	if ( ! file_exists( $template_name ) )
 		$template_name = WP_CLI_ROOT . "/templates/$template_name";
 
 	$template = file_get_contents( $template_name );
 
-	$m = new \Mustache_Engine( array(
+	$m = new \Mustache_Engine( [
 		'escape' => function ( $val ) { return $val; }
-	) );
+	] );
 
 	return $m->render( $template, $data );
 }
@@ -519,10 +519,10 @@ function is_windows() {
  * @param string $path The path to use instead of the magic constants
  */
 function replace_path_consts( $source, $path ) {
-	$replacements = array(
+	$replacements = [
 		'__FILE__' => "'$path'",
 		'__DIR__'  => "'" . dirname( $path ) . "'"
-	);
+	];
 
 	$old = array_keys( $replacements );
 	$new = array_values( $replacements );
@@ -552,7 +552,7 @@ function replace_path_consts( $source, $path ) {
  * @param array $options
  * @return object
  */
-function http_request( $method, $url, $data = null, $headers = array(), $options = array() ) {
+function http_request( $method, $url, $data = null, $headers = [], $options = [] ) {
 
 	$cert_path = '/rmccue/requests/library/Requests/Transport/cacert.pem';
 	if ( inside_phar() ) {
@@ -610,14 +610,14 @@ function increment_version( $current_version, $new_version ) {
 		case 'patch':
 			$current_version[0][2]++;
 
-			$current_version = array( $current_version[0] ); // drop possible pre-release info
+			$current_version = [ $current_version[0] ]; // drop possible pre-release info
 		break;
 
 		case 'minor':
 			$current_version[0][1]++;
 			$current_version[0][2] = 0;
 
-			$current_version = array( $current_version[0] ); // drop possible pre-release info
+			$current_version = [ $current_version[0] ]; // drop possible pre-release info
 		break;
 
 		case 'major':
@@ -625,11 +625,11 @@ function increment_version( $current_version, $new_version ) {
 			$current_version[0][1] = 0;
 			$current_version[0][2] = 0;
 
-			$current_version = array( $current_version[0] ); // drop possible pre-release info
+			$current_version = [ $current_version[0] ]; // drop possible pre-release info
 		break;
 
 		default: // not a keyword
-			$current_version = array( array( $new_version ) );
+			$current_version = [ [ $new_version ] ];
 		break;
 	}
 
@@ -734,12 +734,12 @@ function get_temp_dir() {
  */
 function parse_ssh_url( $url, $component = -1 ) {
 	preg_match( '#^([^:/~]+)(:([\d]+))?((/|~)(.+))?$#', $url, $matches );
-	$bits = array();
-	foreach( array(
+	$bits = [];
+	foreach( [
 		1 => 'host',
 		3 => 'port',
 		4 => 'path',
-	) as $i => $key ) {
+	] as $i => $key ) {
 		if ( ! empty( $matches[ $i ] ) ) {
 			$bits[ $key ] = $matches[ $i ];
 		}

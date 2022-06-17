@@ -20,7 +20,7 @@ class WC_Report_Taxes_By_Date extends WC_Admin_Report {
 	 * @return array
 	 */
 	public function get_chart_legend() {
-		return array();
+		return [];
 	}
 
 	/**
@@ -46,15 +46,15 @@ class WC_Report_Taxes_By_Date extends WC_Admin_Report {
 	 */
 	public function output_report() {
 
-		$ranges = array(
+		$ranges = [
 			'year'       => __( 'Year', 'woocommerce' ),
 			'last_month' => __( 'Last month', 'woocommerce' ),
 			'month'      => __( 'This month', 'woocommerce' ),
-		);
+		];
 
 		$current_range = ! empty( $_GET['range'] ) ? sanitize_text_field( $_GET['range'] ) : 'last_month';
 
-		if ( ! in_array( $current_range, array( 'custom', 'year', 'last_month', 'month', '7day' ) ) ) {
+		if ( ! in_array( $current_range, [ 'custom', 'year', 'last_month', 'month', '7day' ] ) ) {
 			$current_range = 'last_month';
 		}
 
@@ -70,103 +70,103 @@ class WC_Report_Taxes_By_Date extends WC_Admin_Report {
 	 * Get the main chart.
 	 */
 	public function get_main_chart() {
-		$query_data = array(
-			'_order_tax'          => array(
+		$query_data = [
+			'_order_tax'          => [
 				'type'     => 'meta',
 				'function' => 'SUM',
 				'name'     => 'tax_amount',
-			),
-			'_order_shipping_tax' => array(
+			],
+			'_order_shipping_tax' => [
 				'type'     => 'meta',
 				'function' => 'SUM',
 				'name'     => 'shipping_tax_amount',
-			),
-			'_order_total'        => array(
+			],
+			'_order_total'        => [
 				'type'     => 'meta',
 				'function' => 'SUM',
 				'name'     => 'total_sales',
-			),
-			'_order_shipping'     => array(
+			],
+			'_order_shipping'     => [
 				'type'     => 'meta',
 				'function' => 'SUM',
 				'name'     => 'total_shipping',
-			),
-			'ID'                  => array(
+			],
+			'ID'                  => [
 				'type'     => 'post_data',
 				'function' => 'COUNT',
 				'name'     => 'total_orders',
 				'distinct' => true,
-			),
-			'post_date'           => array(
+			],
+			'post_date'           => [
 				'type'     => 'post_data',
 				'function' => '',
 				'name'     => 'post_date',
-			),
-		);
+			],
+		];
 
 		// We exclude on-hold orders are they are still pending payment.
 		$tax_rows_orders = $this->get_order_report_data(
-			array(
+			[
 				'data'         => $query_data,
 				'group_by'     => $this->group_by_query,
 				'order_by'     => 'post_date ASC',
 				'query_type'   => 'get_results',
 				'filter_range' => true,
 				'order_types'  => wc_get_order_types( 'sales-reports' ),
-				'order_status' => array( 'completed', 'processing', 'refunded' ),
-			)
+				'order_status' => [ 'completed', 'processing', 'refunded' ],
+			]
 		);
 
 		$tax_rows_full_refunds = $this->get_order_report_data(
-			array(
-				'data'                => array(
-					'ID'          => array(
+			[
+				'data'                => [
+					'ID'          => [
 						'type'     => 'post_data',
 						'distinct' => true,
 						'function' => '',
 						'name'     => 'ID',
-					),
-					'post_parent' => array(
+					],
+					'post_parent' => [
 						'type'     => 'post_data',
 						'function' => '',
 						'name'     => 'post_parent',
-					),
-					'post_date'   => array(
+					],
+					'post_date'   => [
 						'type'     => 'post_data',
 						'function' => '',
 						'name'     => 'post_date',
-					),
-				),
+					],
+				],
 				'query_type'          => 'get_results',
 				'filter_range'        => true,
-				'order_types'         => array( 'shop_order_refund' ),
-				'parent_order_status' => array( 'refunded' ),
-			)
+				'order_types'         => [ 'shop_order_refund' ],
+				'parent_order_status' => [ 'refunded' ],
+			]
 		);
 
 		$tax_rows_partial_refunds = $this->get_order_report_data(
-			array(
+			[
 				'data'                => $query_data,
 				'group_by'            => $this->group_by_query,
 				'order_by'            => 'post_date ASC',
 				'query_type'          => 'get_results',
 				'filter_range'        => true,
-				'order_types'         => array( 'shop_order_refund' ),
-				'parent_order_status' => array( 'completed', 'processing' ), // Partial refunds inside refunded orders should be ignored.
-			)
+				'order_types'         => [ 'shop_order_refund' ],
+				'parent_order_status' => [ 'completed', 'processing' ], // Partial refunds inside refunded orders should be ignored.
+			]
 		);
 
-		$tax_rows = array();
+		$tax_rows = [];
 
 		foreach ( $tax_rows_orders + $tax_rows_partial_refunds as $tax_row ) {
 			$key              = date( ( 'month' === $this->chart_groupby ) ? 'Ym' : 'Ymd', strtotime( $tax_row->post_date ) );
-			$tax_rows[ $key ] = isset( $tax_rows[ $key ] ) ? $tax_rows[ $key ] : (object) array(
+			$tax_rows[ $key ] = isset( $tax_rows[ $key ] ) ? $tax_rows[ $key ] : (object) [
 				'tax_amount'          => 0,
 				'shipping_tax_amount' => 0,
 				'total_sales'         => 0,
 				'total_shipping'      => 0,
 				'total_orders'        => 0,
-			);
+			];
 		}
 
 		foreach ( $tax_rows_orders as $tax_row ) {
@@ -188,13 +188,13 @@ class WC_Report_Taxes_By_Date extends WC_Admin_Report {
 
 		foreach ( $tax_rows_full_refunds as $tax_row ) {
 			$key              = date( ( 'month' === $this->chart_groupby ) ? 'Ym' : 'Ymd', strtotime( $tax_row->post_date ) );
-			$tax_rows[ $key ] = isset( $tax_rows[ $key ] ) ? $tax_rows[ $key ] : (object) array(
+			$tax_rows[ $key ] = isset( $tax_rows[ $key ] ) ? $tax_rows[ $key ] : (object) [
 				'tax_amount'          => 0,
 				'shipping_tax_amount' => 0,
 				'total_sales'         => 0,
 				'total_shipping'      => 0,
 				'total_orders'        => 0,
-			);
+			];
 			$parent_order     = wc_get_order( $tax_row->post_parent );
 
 			if ( $parent_order ) {

@@ -66,14 +66,14 @@ class TaskList {
 	 *
 	 * @var array
 	 */
-	public $tasks = array();
+	public $tasks = [];
 
 	/**
 	 * Sort keys.
 	 *
 	 * @var array
 	 */
-	public $sort_by = array();
+	public $sort_by = [];
 
 	/**
 	 * Event prefix.
@@ -94,40 +94,40 @@ class TaskList {
 	 *
 	 * @var array
 	 */
-	public $options = array();
+	public $options = [];
 
 	/**
 	 * Array of TaskListSection.
 	 *
 	 * @var array
 	 */
-	private $sections = array();
+	private $sections = [];
 
 	/**
 	 * Key value map of task class and id used for sections.
 	 *
 	 * @var array
 	 */
-	public $task_class_id_map = array();
+	public $task_class_id_map = [];
 
 	/**
 	 * Constructor
 	 *
 	 * @param array $data Task list data.
 	 */
-	public function __construct( $data = array() ) {
-		$defaults = array(
+	public function __construct( $data = [] ) {
+		$defaults = [
 			'id'                      => null,
 			'hidden_id'               => null,
 			'title'                   => '',
-			'tasks'                   => array(),
-			'sort_by'                 => array(),
+			'tasks'                   => [],
+			'sort_by'                 => [],
 			'event_prefix'            => null,
-			'options'                 => array(),
+			'options'                 => [],
 			'visible'                 => true,
 			'display_progress_header' => false,
-			'sections'                => array(),
-		);
+			'sections'                => [],
+		];
 
 		$data = wp_parse_args( $data, $defaults );
 
@@ -161,7 +161,7 @@ class TaskList {
 	 * @return bool
 	 */
 	public function is_hidden() {
-		$hidden = get_option( self::HIDDEN_OPTION, array() );
+		$hidden = get_option( self::HIDDEN_OPTION, [] );
 		return in_array( $this->hidden_id ? $this->hidden_id : $this->id, $hidden, true );
 	}
 
@@ -198,14 +198,14 @@ class TaskList {
 
 		$this->record_tracks_event(
 			'completed',
-			array(
+			[
 				'action'                => 'remove_card',
 				'completed_task_count'  => $completed_count,
 				'incomplete_task_count' => count( $viewable_tasks ) - $completed_count,
-			)
+			]
 		);
 
-		$hidden   = get_option( self::HIDDEN_OPTION, array() );
+		$hidden   = get_option( self::HIDDEN_OPTION, [] );
 		$hidden[] = $this->hidden_id ? $this->hidden_id : $this->id;
 		return update_option( self::HIDDEN_OPTION, array_unique( $hidden ) );
 	}
@@ -216,8 +216,8 @@ class TaskList {
 	 * @return bool
 	 */
 	public function unhide() {
-		$hidden = get_option( self::HIDDEN_OPTION, array() );
-		$hidden = array_diff( $hidden, array( $this->hidden_id ? $this->hidden_id : $this->id ) );
+		$hidden = get_option( self::HIDDEN_OPTION, [] );
+		$hidden = array_diff( $hidden, [ $this->hidden_id ? $this->hidden_id : $this->id ] );
 		return update_option( self::HIDDEN_OPTION, $hidden );
 	}
 
@@ -244,7 +244,7 @@ class TaskList {
 	 * @return bool
 	 */
 	public function has_previously_completed() {
-		$complete = get_option( self::COMPLETED_OPTION, array() );
+		$complete = get_option( self::COMPLETED_OPTION, [] );
 		return in_array( $this->get_list_id(), $complete, true );
 	}
 
@@ -323,7 +323,7 @@ class TaskList {
 			return;
 		}
 
-		$completed_lists   = get_option( self::COMPLETED_OPTION, array() );
+		$completed_lists   = get_option( self::COMPLETED_OPTION, [] );
 		$completed_lists[] = $this->get_list_id();
 		update_option( self::COMPLETED_OPTION, $completed_lists );
 		$this->record_tracks_event( 'tasks_completed' );
@@ -335,7 +335,7 @@ class TaskList {
 	 * @param array $sort_by list of columns with sort order.
 	 * @return TaskList returns $this, for chaining.
 	 */
-	public function sort_tasks( $sort_by = array() ) {
+	public function sort_tasks( $sort_by = [] ) {
 		$sort_by = count( $sort_by ) > 0 ? $sort_by : $this->sort_by;
 		if ( 0 !== count( $sort_by ) ) {
 			usort(
@@ -391,7 +391,7 @@ class TaskList {
 	 */
 	public function get_json() {
 		$this->possibly_track_completion();
-		$tasks_json = array();
+		$tasks_json = [];
 		foreach ( $this->tasks as $task ) {
 			$json = $task->get_json();
 			if ( $json['canView'] ) {
@@ -399,7 +399,7 @@ class TaskList {
 			}
 		}
 
-		return array(
+		return [
 			'id'                    => $this->get_list_id(),
 			'title'                 => $this->title,
 			'isHidden'              => $this->is_hidden(),
@@ -415,6 +415,6 @@ class TaskList {
 				},
 				$this->sections
 			),
-		);
+		];
 	}
 }

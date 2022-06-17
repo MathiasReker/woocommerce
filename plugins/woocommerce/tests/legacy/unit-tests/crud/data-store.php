@@ -54,12 +54,12 @@ class WC_Tests_Data_Store extends WC_Unit_Test_Case {
 		$store = new WC_Data_Store( 'dummy' );
 		$this->assertEquals( 'WC_Dummy_Data_Store_CPT', $store->get_current_class_name() );
 
-		add_filter( 'woocommerce_dummy_data_store', array( $this, 'set_dummy_store' ) );
+		add_filter( 'woocommerce_dummy_data_store', [ $this, 'set_dummy_store' ] );
 
 		$store = new WC_Data_Store( 'dummy' );
 		$this->assertEquals( 'WC_Dummy_Data_Store_Custom_Table', $store->get_current_class_name() );
 
-		add_filter( 'woocommerce_dummy_data_store', array( $this, 'set_default_dummy_store' ) );
+		add_filter( 'woocommerce_dummy_data_store', [ $this, 'set_default_dummy_store' ] );
 	}
 
 	/**
@@ -81,7 +81,7 @@ class WC_Tests_Data_Store extends WC_Unit_Test_Case {
 		$this->load_dummy_store();
 		$store = WC_Data_Store::load( 'dummy-sub' );
 		$this->assertEquals(
-			array( 'first param', 'second param', 'third param' ),
+			[ 'first param', 'second param', 'third param' ],
 			$store->custom_method( 'first param', 'second param', 'third param', 'asdfsdf' )
 		);
 	}
@@ -95,7 +95,7 @@ class WC_Tests_Data_Store extends WC_Unit_Test_Case {
 	 */
 	private function load_dummy_store() {
 		include_once dirname( dirname( dirname( __FILE__ ) ) ) . '/framework/class-wc-dummy-data-store.php';
-		add_filter( 'woocommerce_data_stores', array( $this, 'add_dummy_data_store' ) );
+		add_filter( 'woocommerce_data_stores', [ $this, 'add_dummy_data_store' ] );
 	}
 
 	/**

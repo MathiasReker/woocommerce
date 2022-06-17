@@ -37,8 +37,8 @@ class WC_REST_Taxes_Controller extends WC_REST_Taxes_V2_Controller {
 		global $wpdb;
 
 		$data              = parent::add_tax_rate_locales( $data, $tax );
-		$data['postcodes'] = array();
-		$data['cities']    = array();
+		$data['postcodes'] = [];
+		$data['cities']    = [];
 
 		// Get locales from a tax rate.
 		$locales = $wpdb->get_results(
@@ -73,23 +73,23 @@ class WC_REST_Taxes_Controller extends WC_REST_Taxes_V2_Controller {
 	public function get_item_schema() {
 		$schema = parent::get_item_schema();
 
-		$schema['properties']['postcodes'] = array(
+		$schema['properties']['postcodes'] = [
 			'description' => __( 'List of postcodes / ZIPs. Introduced in WooCommerce 5.3.', 'woocommerce' ),
 			'type'        => 'array',
-			'items'       => array(
+			'items'       => [
 				'type' => 'string',
-			),
-			'context'     => array( 'view', 'edit' ),
-		);
+			],
+			'context'     => [ 'view', 'edit' ],
+		];
 
-		$schema['properties']['cities'] = array(
+		$schema['properties']['cities'] = [
 			'description' => __( 'List of city names. Introduced in WooCommerce 5.3.', 'woocommerce' ),
 			'type'        => 'array',
-			'items'       => array(
+			'items'       => [
 				'type' => 'string',
-			),
-			'context'     => array( 'view', 'edit' ),
-		);
+			],
+			'context'     => [ 'view', 'edit' ],
+		];
 
 		$schema['properties']['postcode']['description'] =
 			__( "Postcode/ZIP, it doesn't support multiple values. Deprecated as of WooCommerce 5.3, 'postcodes' should be used instead.", 'woocommerce' );

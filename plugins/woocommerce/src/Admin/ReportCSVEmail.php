@@ -28,7 +28,7 @@ class ReportCSVEmail extends \WC_Email {
 		$this->template_base  = WC()->plugin_path() . '/includes/react-admin/emails/';
 		$this->template_html  = 'html-admin-report-export-download.php';
 		$this->template_plain = 'plain-admin-report-export-download.php';
-		$this->report_labels  = array(
+		$this->report_labels  = [
 			'categories' => __( 'Categories', 'woocommerce' ),
 			'coupons'    => __( 'Coupons', 'woocommerce' ),
 			'customers'  => __( 'Customers', 'woocommerce' ),
@@ -39,7 +39,7 @@ class ReportCSVEmail extends \WC_Email {
 			'stock'      => __( 'Stock', 'woocommerce' ),
 			'taxes'      => __( 'Taxes', 'woocommerce' ),
 			'variations' => __( 'Variations', 'woocommerce' ),
-		);
+		];
 
 		// Call parent constructor.
 		parent::__construct();
@@ -90,14 +90,14 @@ class ReportCSVEmail extends \WC_Email {
 	public function get_content_html() {
 		return wc_get_template_html(
 			$this->template_html,
-			array(
+			[
 				'report_name'   => $this->report_type,
 				'download_url'  => $this->download_url,
 				'email_heading' => $this->get_heading(),
 				'sent_to_admin' => true,
 				'plain_text'    => false,
 				'email'         => $this,
-			),
+			],
 			'',
 			$this->template_base
 		);
@@ -111,14 +111,14 @@ class ReportCSVEmail extends \WC_Email {
 	public function get_content_plain() {
 		return wc_get_template_html(
 			$this->template_plain,
-			array(
+			[
 				'report_name'   => $this->report_type,
 				'download_url'  => $this->download_url,
 				'email_heading' => $this->get_heading(),
 				'sent_to_admin' => true,
 				'plain_text'    => true,
 				'email'         => $this,
-			),
+			],
 			'',
 			$this->template_base
 		);

@@ -39,40 +39,40 @@ class WC_REST_System_Status_Tools_V2_Controller extends WC_REST_Controller {
 		register_rest_route(
 			$this->namespace,
 			'/' . $this->rest_base,
-			array(
-				array(
+			[
+				[
 					'methods'             => WP_REST_Server::READABLE,
-					'callback'            => array( $this, 'get_items' ),
-					'permission_callback' => array( $this, 'get_items_permissions_check' ),
+					'callback'            => [ $this, 'get_items' ],
+					'permission_callback' => [ $this, 'get_items_permissions_check' ],
 					'args'                => $this->get_collection_params(),
-				),
-				'schema' => array( $this, 'get_public_item_schema' ),
-			)
+				],
+				'schema' => [ $this, 'get_public_item_schema' ],
+			]
 		);
 
 		register_rest_route(
 			$this->namespace,
 			'/' . $this->rest_base . '/(?P<id>[\w-]+)',
-			array(
-				'args'   => array(
-					'id' => array(
+			[
+				'args'   => [
+					'id' => [
 						'description' => __( 'Unique identifier for the resource.', 'woocommerce' ),
 						'type'        => 'string',
-					),
-				),
-				array(
+					],
+				],
+				[
 					'methods'             => WP_REST_Server::READABLE,
-					'callback'            => array( $this, 'get_item' ),
-					'permission_callback' => array( $this, 'get_item_permissions_check' ),
-				),
-				array(
+					'callback'            => [ $this, 'get_item' ],
+					'permission_callback' => [ $this, 'get_item_permissions_check' ],
+				],
+				[
 					'methods'             => WP_REST_Server::EDITABLE,
-					'callback'            => array( $this, 'update_item' ),
-					'permission_callback' => array( $this, 'update_item_permissions_check' ),
+					'callback'            => [ $this, 'update_item' ],
+					'permission_callback' => [ $this, 'update_item_permissions_check' ],
 					'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::EDITABLE ),
-				),
-				'schema' => array( $this, 'get_public_item_schema' ),
-			)
+				],
+				'schema' => [ $this, 'get_public_item_schema' ],
+			]
 		);
 	}
 
@@ -84,7 +84,7 @@ class WC_REST_System_Status_Tools_V2_Controller extends WC_REST_Controller {
 	 */
 	public function get_items_permissions_check( $request ) {
 		if ( ! wc_rest_check_manager_permissions( 'system_status', 'read' ) ) {
-			return new WP_Error( 'woocommerce_rest_cannot_view', __( 'Sorry, you cannot list resources.', 'woocommerce' ), array( 'status' => rest_authorization_required_code() ) );
+			return new WP_Error( 'woocommerce_rest_cannot_view', __( 'Sorry, you cannot list resources.', 'woocommerce' ), [ 'status' => rest_authorization_required_code() ] );
 		}
 		return true;
 	}
@@ -97,7 +97,7 @@ class WC_REST_System_Status_Tools_V2_Controller extends WC_REST_Controller {
 	 */
 	public function get_item_permissions_check( $request ) {
 		if ( ! wc_rest_check_manager_permissions( 'system_status', 'read' ) ) {
-			return new WP_Error( 'woocommerce_rest_cannot_view', __( 'Sorry, you cannot view this resource.', 'woocommerce' ), array( 'status' => rest_authorization_required_code() ) );
+			return new WP_Error( 'woocommerce_rest_cannot_view', __( 'Sorry, you cannot view this resource.', 'woocommerce' ), [ 'status' => rest_authorization_required_code() ] );
 		}
 		return true;
 	}
@@ -110,7 +110,7 @@ class WC_REST_System_Status_Tools_V2_Controller extends WC_REST_Controller {
 	 */
 	public function update_item_permissions_check( $request ) {
 		if ( ! wc_rest_check_manager_permissions( 'system_status', 'edit' ) ) {
-			return new WP_Error( 'woocommerce_rest_cannot_update', __( 'Sorry, you cannot update resource.', 'woocommerce' ), array( 'status' => rest_authorization_required_code() ) );
+			return new WP_Error( 'woocommerce_rest_cannot_update', __( 'Sorry, you cannot update resource.', 'woocommerce' ), [ 'status' => rest_authorization_required_code() ] );
 		}
 		return true;
 	}
@@ -122,43 +122,43 @@ class WC_REST_System_Status_Tools_V2_Controller extends WC_REST_Controller {
 	 * @return array
 	 */
 	public function get_tools() {
-		$tools = array(
-			'clear_transients'                   => array(
+		$tools = [
+			'clear_transients'                   => [
 				'name'   => __( 'WooCommerce transients', 'woocommerce' ),
 				'button' => __( 'Clear transients', 'woocommerce' ),
 				'desc'   => __( 'This tool will clear the product/shop transients cache.', 'woocommerce' ),
-			),
-			'clear_expired_transients'           => array(
+			],
+			'clear_expired_transients'           => [
 				'name'   => __( 'Expired transients', 'woocommerce' ),
 				'button' => __( 'Clear transients', 'woocommerce' ),
 				'desc'   => __( 'This tool will clear ALL expired transients from WordPress.', 'woocommerce' ),
-			),
-			'delete_orphaned_variations'         => array(
+			],
+			'delete_orphaned_variations'         => [
 				'name'   => __( 'Orphaned variations', 'woocommerce' ),
 				'button' => __( 'Delete orphaned variations', 'woocommerce' ),
 				'desc'   => __( 'This tool will delete all variations which have no parent.', 'woocommerce' ),
-			),
-			'clear_expired_download_permissions' => array(
+			],
+			'clear_expired_download_permissions' => [
 				'name'   => __( 'Used-up download permissions', 'woocommerce' ),
 				'button' => __( 'Clean up download permissions', 'woocommerce' ),
 				'desc'   => __( 'This tool will delete expired download permissions and permissions with 0 remaining downloads.', 'woocommerce' ),
-			),
-			'regenerate_product_lookup_tables'   => array(
+			],
+			'regenerate_product_lookup_tables'   => [
 				'name'   => __( 'Product lookup tables', 'woocommerce' ),
 				'button' => __( 'Regenerate', 'woocommerce' ),
 				'desc'   => __( 'This tool will regenerate product lookup table data. This process may take a while.', 'woocommerce' ),
-			),
-			'recount_terms'                      => array(
+			],
+			'recount_terms'                      => [
 				'name'   => __( 'Term counts', 'woocommerce' ),
 				'button' => __( 'Recount terms', 'woocommerce' ),
 				'desc'   => __( 'This tool will recount product terms - useful when changing your settings in a way which hides products from the catalog.', 'woocommerce' ),
-			),
-			'reset_roles'                        => array(
+			],
+			'reset_roles'                        => [
 				'name'   => __( 'Capabilities', 'woocommerce' ),
 				'button' => __( 'Reset capabilities', 'woocommerce' ),
 				'desc'   => __( 'This tool will reset the admin, customer and shop_manager roles to default. Use this if your users cannot access all of the WooCommerce admin pages.', 'woocommerce' ),
-			),
-			'clear_sessions'                     => array(
+			],
+			'clear_sessions'                     => [
 				'name'   => __( 'Clear customer sessions', 'woocommerce' ),
 				'button' => __( 'Clear', 'woocommerce' ),
 				'desc'   => sprintf(
@@ -166,8 +166,8 @@ class WC_REST_System_Status_Tools_V2_Controller extends WC_REST_Controller {
 					__( 'Note:', 'woocommerce' ),
 					__( 'This tool will delete all customer session data from the database, including current carts and saved carts in the database.', 'woocommerce' )
 				),
-			),
-			'clear_template_cache'               => array(
+			],
+			'clear_template_cache'               => [
 				'name'   => __( 'Clear template cache', 'woocommerce' ),
 				'button' => __( 'Clear', 'woocommerce' ),
 				'desc'   => sprintf(
@@ -175,8 +175,8 @@ class WC_REST_System_Status_Tools_V2_Controller extends WC_REST_Controller {
 					__( 'Note:', 'woocommerce' ),
 					__( 'This tool will empty the template cache.', 'woocommerce' )
 				),
-			),
-			'install_pages'                      => array(
+			],
+			'install_pages'                      => [
 				'name'   => __( 'Create default WooCommerce pages', 'woocommerce' ),
 				'button' => __( 'Create pages', 'woocommerce' ),
 				'desc'   => sprintf(
@@ -184,8 +184,8 @@ class WC_REST_System_Status_Tools_V2_Controller extends WC_REST_Controller {
 					__( 'Note:', 'woocommerce' ),
 					__( 'This tool will install all the missing WooCommerce pages. Pages already defined and set up will not be replaced.', 'woocommerce' )
 				),
-			),
-			'delete_taxes'                       => array(
+			],
+			'delete_taxes'                       => [
 				'name'   => __( 'Delete WooCommerce tax rates', 'woocommerce' ),
 				'button' => __( 'Delete tax rates', 'woocommerce' ),
 				'desc'   => sprintf(
@@ -193,13 +193,13 @@ class WC_REST_System_Status_Tools_V2_Controller extends WC_REST_Controller {
 					__( 'Note:', 'woocommerce' ),
 					__( 'This option will delete ALL of your tax rates, use with caution. This action cannot be reversed.', 'woocommerce' )
 				),
-			),
-			'regenerate_thumbnails'              => array(
+			],
+			'regenerate_thumbnails'              => [
 				'name'   => __( 'Regenerate shop thumbnails', 'woocommerce' ),
 				'button' => __( 'Regenerate', 'woocommerce' ),
 				'desc'   => __( 'This will regenerate all shop thumbnails to match your theme and/or image settings.', 'woocommerce' ),
-			),
-			'db_update_routine'                  => array(
+			],
+			'db_update_routine'                  => [
 				'name'   => __( 'Update database', 'woocommerce' ),
 				'button' => __( 'Update database', 'woocommerce' ),
 				'desc'   => sprintf(
@@ -207,16 +207,16 @@ class WC_REST_System_Status_Tools_V2_Controller extends WC_REST_Controller {
 					__( 'Note:', 'woocommerce' ),
 					__( 'This tool will update your WooCommerce database to the latest version. Please ensure you make sufficient backups before proceeding.', 'woocommerce' )
 				),
-			),
-		);
+			],
+		];
 		if ( method_exists( 'WC_Install', 'verify_base_tables' ) ) {
-			$tools['verify_db_tables'] = array(
+			$tools['verify_db_tables'] = [
 				'name'   => __( 'Verify base database tables', 'woocommerce' ),
 				'button' => __( 'Verify database', 'woocommerce' ),
 				'desc'   => sprintf(
 					__( 'Verify if all base database tables are present.', 'woocommerce' )
 				),
-			);
+			];
 		}
 
 		// Jetpack does the image resizing heavy lifting so you don't have to.
@@ -238,16 +238,16 @@ class WC_REST_System_Status_Tools_V2_Controller extends WC_REST_Controller {
 	 * @return WP_Error|WP_REST_Response
 	 */
 	public function get_items( $request ) {
-		$tools = array();
+		$tools = [];
 		foreach ( $this->get_tools() as $id => $tool ) {
 			$tools[] = $this->prepare_response_for_collection(
 				$this->prepare_item_for_response(
-					array(
+					[
 						'id'          => $id,
 						'name'        => $tool['name'],
 						'action'      => $tool['button'],
 						'description' => $tool['desc'],
-					),
+					],
 					$request
 				)
 			);
@@ -266,17 +266,17 @@ class WC_REST_System_Status_Tools_V2_Controller extends WC_REST_Controller {
 	public function get_item( $request ) {
 		$tools = $this->get_tools();
 		if ( empty( $tools[ $request['id'] ] ) ) {
-			return new WP_Error( 'woocommerce_rest_system_status_tool_invalid_id', __( 'Invalid tool ID.', 'woocommerce' ), array( 'status' => 404 ) );
+			return new WP_Error( 'woocommerce_rest_system_status_tool_invalid_id', __( 'Invalid tool ID.', 'woocommerce' ), [ 'status' => 404 ] );
 		}
 		$tool = $tools[ $request['id'] ];
 		return rest_ensure_response(
 			$this->prepare_item_for_response(
-				array(
+				[
 					'id'          => $request['id'],
 					'name'        => $tool['name'],
 					'action'      => $tool['button'],
 					'description' => $tool['desc'],
-				),
+				],
 				$request
 			)
 		);
@@ -291,16 +291,16 @@ class WC_REST_System_Status_Tools_V2_Controller extends WC_REST_Controller {
 	public function update_item( $request ) {
 		$tools = $this->get_tools();
 		if ( empty( $tools[ $request['id'] ] ) ) {
-			return new WP_Error( 'woocommerce_rest_system_status_tool_invalid_id', __( 'Invalid tool ID.', 'woocommerce' ), array( 'status' => 404 ) );
+			return new WP_Error( 'woocommerce_rest_system_status_tool_invalid_id', __( 'Invalid tool ID.', 'woocommerce' ), [ 'status' => 404 ] );
 		}
 
 		$tool = $tools[ $request['id'] ];
-		$tool = array(
+		$tool = [
 			'id'          => $request['id'],
 			'name'        => $tool['name'],
 			'action'      => $tool['button'],
 			'description' => $tool['desc'],
-		);
+		];
 
 		$execute_return = $this->execute_tool( $request['id'] );
 		$tool           = array_merge( $tool, $execute_return );
@@ -343,58 +343,58 @@ class WC_REST_System_Status_Tools_V2_Controller extends WC_REST_Controller {
 	 * @return array
 	 */
 	public function get_item_schema() {
-		$schema = array(
+		$schema = [
 			'$schema'    => 'http://json-schema.org/draft-04/schema#',
 			'title'      => 'system_status_tool',
 			'type'       => 'object',
-			'properties' => array(
-				'id'          => array(
+			'properties' => [
+				'id'          => [
 					'description' => __( 'A unique identifier for the tool.', 'woocommerce' ),
 					'type'        => 'string',
-					'context'     => array( 'view', 'edit' ),
-					'arg_options' => array(
+					'context'     => [ 'view', 'edit' ],
+					'arg_options' => [
 						'sanitize_callback' => 'sanitize_title',
-					),
-				),
-				'name'        => array(
+					],
+				],
+				'name'        => [
 					'description' => __( 'Tool name.', 'woocommerce' ),
 					'type'        => 'string',
-					'context'     => array( 'view', 'edit' ),
-					'arg_options' => array(
+					'context'     => [ 'view', 'edit' ],
+					'arg_options' => [
 						'sanitize_callback' => 'sanitize_text_field',
-					),
-				),
-				'action'      => array(
+					],
+				],
+				'action'      => [
 					'description' => __( 'What running the tool will do.', 'woocommerce' ),
 					'type'        => 'string',
-					'context'     => array( 'view', 'edit' ),
-					'arg_options' => array(
+					'context'     => [ 'view', 'edit' ],
+					'arg_options' => [
 						'sanitize_callback' => 'sanitize_text_field',
-					),
-				),
-				'description' => array(
+					],
+				],
+				'description' => [
 					'description' => __( 'Tool description.', 'woocommerce' ),
 					'type'        => 'string',
-					'context'     => array( 'view', 'edit' ),
-					'arg_options' => array(
+					'context'     => [ 'view', 'edit' ],
+					'arg_options' => [
 						'sanitize_callback' => 'sanitize_text_field',
-					),
-				),
-				'success'     => array(
+					],
+				],
+				'success'     => [
 					'description' => __( 'Did the tool run successfully?', 'woocommerce' ),
 					'type'        => 'boolean',
-					'context'     => array( 'edit' ),
-				),
-				'message'     => array(
+					'context'     => [ 'edit' ],
+				],
+				'message'     => [
 					'description' => __( 'Tool return message.', 'woocommerce' ),
 					'type'        => 'string',
-					'context'     => array( 'edit' ),
-					'arg_options' => array(
+					'context'     => [ 'edit' ],
+					'arg_options' => [
 						'sanitize_callback' => 'sanitize_text_field',
-					),
-				),
-			),
-		);
+					],
+				],
+			],
+		];
 
 		return $this->add_additional_fields_schema( $schema );
 	}
@@ -407,12 +407,12 @@ class WC_REST_System_Status_Tools_V2_Controller extends WC_REST_Controller {
 	 */
 	protected function prepare_links( $id ) {
 		$base  = '/' . $this->namespace . '/' . $this->rest_base;
-		$links = array(
-			'item' => array(
+		$links = [
+			'item' => [
 				'href'       => rest_url( trailingslashit( $base ) . $id ),
 				'embeddable' => true,
-			),
-		);
+			],
+		];
 
 		return $links;
 	}
@@ -423,9 +423,9 @@ class WC_REST_System_Status_Tools_V2_Controller extends WC_REST_Controller {
 	 * @return array
 	 */
 	public function get_collection_params() {
-		return array(
-			'context' => $this->get_context_param( array( 'default' => 'view' ) ),
-		);
+		return [
+			'context' => $this->get_context_param( [ 'default' => 'view' ] ),
+		];
 	}
 
 	/**
@@ -595,12 +595,12 @@ class WC_REST_System_Status_Tools_V2_Controller extends WC_REST_Controller {
 								$tool,
 								$return->getMessage()
 							),
-							array(
+							[
 								'source'   => 'run-debug-tool',
 								'tool'     => $tool,
 								'callback' => $callback,
 								'error'    => $return,
-							)
+							]
 						);
 					} elseif ( is_string( $return ) ) {
 						$message = $return;
@@ -619,10 +619,10 @@ class WC_REST_System_Status_Tools_V2_Controller extends WC_REST_Controller {
 				break;
 		}
 
-		return array(
+		return [
 			'success' => $ran,
 			'message' => $message,
-		);
+		];
 	}
 
 	/**

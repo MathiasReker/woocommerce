@@ -27,12 +27,12 @@ class CustomersScheduler extends ImportScheduler {
 	 * @internal
 	 */
 	public static function init() {
-		add_action( 'woocommerce_new_customer', array( __CLASS__, 'schedule_import' ) );
-		add_action( 'woocommerce_update_customer', array( __CLASS__, 'schedule_import' ) );
-		add_action( 'updated_user_meta', array( __CLASS__, 'schedule_import_via_last_active' ), 10, 3 );
-		add_action( 'woocommerce_privacy_remove_order_personal_data', array( __CLASS__, 'schedule_anonymize' ) );
-		add_action( 'delete_user', array( __CLASS__, 'schedule_user_delete' ) );
-		add_action( 'remove_user_from_blog', array( __CLASS__, 'schedule_user_delete' ) );
+		add_action( 'woocommerce_new_customer', [ __CLASS__, 'schedule_import' ] );
+		add_action( 'woocommerce_update_customer', [ __CLASS__, 'schedule_import' ] );
+		add_action( 'updated_user_meta', [ __CLASS__, 'schedule_import_via_last_active' ], 10, 3 );
+		add_action( 'woocommerce_privacy_remove_order_personal_data', [ __CLASS__, 'schedule_anonymize' ] );
+		add_action( 'delete_user', [ __CLASS__, 'schedule_user_delete' ] );
+		add_action( 'remove_user_from_blog', [ __CLASS__, 'schedule_user_delete' ] );
 
 		CustomersDataStore::init();
 		parent::init();
@@ -45,11 +45,11 @@ class CustomersScheduler extends ImportScheduler {
 	 * @return array
 	 */
 	public static function get_dependencies() {
-		return array(
+		return [
 			'delete_batch_init' => OrdersScheduler::get_action( 'delete_batch_init' ),
 			'anonymize'         => self::get_action( 'import' ),
 			'delete_user'       => self::get_action( 'import' ),
-		);
+		];
 	}
 
 	/**
@@ -62,34 +62,34 @@ class CustomersScheduler extends ImportScheduler {
 	 * @param bool     $skip_existing Skip already imported customers.
 	 */
 	public static function get_items( $limit = 10, $page = 1, $days = false, $skip_existing = false ) {
-		$customer_roles = apply_filters( 'woocommerce_analytics_import_customer_roles', array( 'customer' ) );
-		$query_args     = array(
+		$customer_roles = apply_filters( 'woocommerce_analytics_import_customer_roles', [ 'customer' ] );
+		$query_args     = [
 			'fields'   => 'ID',
 			'orderby'  => 'ID',
 			'order'    => 'ASC',
 			'number'   => $limit,
 			'paged'    => $page,
 			'role__in' => $customer_roles,
-		);
+		];
 
 		if ( is_int( $days ) ) {
-			$query_args['date_query'] = array(
+			$query_args['date_query'] = [
 				'after' => gmdate( 'Y-m-d 00:00:00', time() - ( DAY_IN_SECONDS * $days ) ),
-			);
+			];
 		}
 
 		if ( $skip_existing ) {
-			add_action( 'pre_user_query', array( __CLASS__, 'exclude_existing_customers_from_query' ) );
+			add_action( 'pre_user_query', [ __CLASS__, 'exclude_existing_customers_from_query' ] );
 		}
 
 		$customer_query = new \WP_User_Query( $query_args );
 
-		remove_action( 'pre_user_query', array( __CLASS__, 'exclude_existing_customers_from_query' ) );
+		remove_action( 'pre_user_query', [ __CLASS__, 'exclude_existing_customers_from_query' ] );
 
-		return (object) array(
+		return (object) [
 			'total' => $customer_query->get_total(),
 			'ids'   => $customer_query->get_results(),
-		);
+		];
 	}
 
 	/**
@@ -142,7 +142,7 @@ class CustomersScheduler extends ImportScheduler {
 	 * @return void
 	 */
 	public static function schedule_import( $user_id ) {
-		self::schedule_action( 'import', array( $user_id ) );
+		self::schedule_action( 'import', [ $user_id ] );
 	}
 
 	/**
@@ -170,7 +170,7 @@ class CustomersScheduler extends ImportScheduler {
 	public static function schedule_anonymize( $order ) {
 		if ( is_a( $order, 'WC_Order' ) ) {
 			// Postpone until any pending updates are completed.
-			self::schedule_action( 'anonymize', array( $order->get_id() ) );
+			self::schedule_action( 'anonymize', [ $order->get_id() ] );
 		}
 	}
 
@@ -184,7 +184,7 @@ class CustomersScheduler extends ImportScheduler {
 	public static function schedule_user_delete( $user_id ) {
 		if ( (int) $user_id > 0 && ! doing_action( 'wp_uninitialize_site' ) ) {
 			// Postpone until any pending updates are completed.
-			self::schedule_action( 'delete_user', array( $user_id ) );
+			self::schedule_action( 'delete_user', [ $user_id ] );
 		}
 	}
 
@@ -256,7 +256,7 @@ class CustomersScheduler extends ImportScheduler {
 						state = %s
 					WHERE
 						customer_id = %d",
-				array(
+				[
 					$deleted_text,
 					$deleted_text,
 					$deleted_text,
@@ -265,7 +265,7 @@ class CustomersScheduler extends ImportScheduler {
 					$deleted_text,
 					$deleted_text,
 					$customer_id,
-				)
+				]
 			)
 		);
 		// If the customer row was anonymized, flush the cache.

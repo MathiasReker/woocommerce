@@ -46,7 +46,7 @@ class WC_Legacy_API {
 	 * Init the legacy API.
 	 */
 	public function init() {
-		add_action( 'parse_request', array( $this, 'handle_rest_api_requests' ), 0 );
+		add_action( 'parse_request', [ $this, 'handle_rest_api_requests' ], 0 );
 	}
 
 	/**
@@ -158,7 +158,7 @@ class WC_Legacy_API {
 	public function register_resources( $server ) {
 
 		$api_classes = apply_filters( 'woocommerce_api_classes',
-			array(
+			[
 				'WC_API_Coupons',
 				'WC_API_Customers',
 				'WC_API_Orders',
@@ -166,7 +166,7 @@ class WC_Legacy_API {
 				'WC_API_Reports',
 				'WC_API_Taxes',
 				'WC_API_Webhooks',
-			)
+			]
 		);
 
 		foreach ( $api_classes as $api_class ) {
@@ -206,13 +206,13 @@ class WC_Legacy_API {
 
 		// Register available resources for legacy v1 REST API request.
 		$api_classes = apply_filters( 'woocommerce_api_classes',
-			array(
+			[
 				'WC_API_Customers',
 				'WC_API_Orders',
 				'WC_API_Products',
 				'WC_API_Coupons',
 				'WC_API_Reports',
-			)
+			]
 		);
 
 		foreach ( $api_classes as $api_class ) {
@@ -253,14 +253,14 @@ class WC_Legacy_API {
 
 		// Register available resources for legacy v2 REST API request.
 		$api_classes = apply_filters( 'woocommerce_api_classes',
-			array(
+			[
 				'WC_API_Customers',
 				'WC_API_Orders',
 				'WC_API_Products',
 				'WC_API_Coupons',
 				'WC_API_Reports',
 				'WC_API_Webhooks',
-			)
+			]
 		);
 
 		foreach ( $api_classes as $api_class ) {

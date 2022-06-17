@@ -62,26 +62,26 @@ class WC_Tests_Admin_Duplicate_Product extends WC_Unit_Test_Case {
 		$product = WC_Helper_Product::create_variation_product();
 
 		// We just want to make sure each successive duplication has the correct slugs.
-		$slug_matches = array(
-			array(
+		$slug_matches = [
+			[
 				'dummy-variable-product-small-2',
 				'dummy-variable-product-large-2',
 				'dummy-variable-product-5',
 				'dummy-variable-product-6',
-			),
-			array(
+			],
+			[
 				'dummy-variable-product-small-3',
 				'dummy-variable-product-large-3',
 				'dummy-variable-product-9',
 				'dummy-variable-product-10',
-			),
-			array(
+			],
+			[
 				'dummy-variable-product-small-4',
 				'dummy-variable-product-large-4',
 				'dummy-variable-product-13',
 				'dummy-variable-product-14',
-			),
-		);
+			],
+		];
 
 		foreach ( $slug_matches as $slug_match ) {
 			$duplicate = ( new WC_Admin_Duplicate_Product() )->product_duplicate( $product );
@@ -103,7 +103,7 @@ class WC_Tests_Admin_Duplicate_Product extends WC_Unit_Test_Case {
 	 */
 	private function assertDuplicateWasReset( $duplicate ) {
 		$this->assertEquals( 0, $duplicate->get_total_sales() );
-		$this->assertEquals( array(), $duplicate->get_rating_counts() );
+		$this->assertEquals( [], $duplicate->get_rating_counts() );
 		$this->assertEquals( 0, $duplicate->get_average_rating() );
 		$this->assertEquals( 0, $duplicate->get_rating_count() );
 	}

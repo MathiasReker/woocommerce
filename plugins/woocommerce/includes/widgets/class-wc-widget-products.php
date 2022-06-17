@@ -21,61 +21,61 @@ class WC_Widget_Products extends WC_Widget {
 		$this->widget_description = __( "A list of your store's products.", 'woocommerce' );
 		$this->widget_id          = 'woocommerce_products';
 		$this->widget_name        = __( 'Products list', 'woocommerce' );
-		$this->settings           = array(
-			'title'       => array(
+		$this->settings           = [
+			'title'       => [
 				'type'  => 'text',
 				'std'   => __( 'Products', 'woocommerce' ),
 				'label' => __( 'Title', 'woocommerce' ),
-			),
-			'number'      => array(
+			],
+			'number'      => [
 				'type'  => 'number',
 				'step'  => 1,
 				'min'   => 1,
 				'max'   => '',
 				'std'   => 5,
 				'label' => __( 'Number of products to show', 'woocommerce' ),
-			),
-			'show'        => array(
+			],
+			'show'        => [
 				'type'    => 'select',
 				'std'     => '',
 				'label'   => __( 'Show', 'woocommerce' ),
-				'options' => array(
+				'options' => [
 					''         => __( 'All products', 'woocommerce' ),
 					'featured' => __( 'Featured products', 'woocommerce' ),
 					'onsale'   => __( 'On-sale products', 'woocommerce' ),
-				),
-			),
-			'orderby'     => array(
+				],
+			],
+			'orderby'     => [
 				'type'    => 'select',
 				'std'     => 'date',
 				'label'   => __( 'Order by', 'woocommerce' ),
-				'options' => array(
+				'options' => [
 					'date'  => __( 'Date', 'woocommerce' ),
 					'price' => __( 'Price', 'woocommerce' ),
 					'rand'  => __( 'Random', 'woocommerce' ),
 					'sales' => __( 'Sales', 'woocommerce' ),
-				),
-			),
-			'order'       => array(
+				],
+			],
+			'order'       => [
 				'type'    => 'select',
 				'std'     => 'desc',
 				'label'   => _x( 'Order', 'Sorting order', 'woocommerce' ),
-				'options' => array(
+				'options' => [
 					'asc'  => __( 'ASC', 'woocommerce' ),
 					'desc' => __( 'DESC', 'woocommerce' ),
-				),
-			),
-			'hide_free'   => array(
+				],
+			],
+			'hide_free'   => [
 				'type'  => 'checkbox',
 				'std'   => 0,
 				'label' => __( 'Hide free products', 'woocommerce' ),
-			),
-			'show_hidden' => array(
+			],
+			'show_hidden' => [
 				'type'  => 'checkbox',
 				'std'   => 0,
 				'label' => __( 'Show hidden products', 'woocommerce' ),
-			),
-		);
+			],
+		];
 
 		parent::__construct();
 	}
@@ -95,55 +95,55 @@ class WC_Widget_Products extends WC_Widget {
 		$order                       = ! empty( $instance['order'] ) ? sanitize_title( $instance['order'] ) : $this->settings['order']['std'];
 		$product_visibility_term_ids = wc_get_product_visibility_term_ids();
 
-		$query_args = array(
+		$query_args = [
 			'posts_per_page' => $number,
 			'post_status'    => 'publish',
 			'post_type'      => 'product',
 			'no_found_rows'  => 1,
 			'order'          => $order,
-			'meta_query'     => array(),
-			'tax_query'      => array(
+			'meta_query'     => [],
+			'tax_query'      => [
 				'relation' => 'AND',
-			),
-		); // WPCS: slow query ok.
+			],
+		]; // WPCS: slow query ok.
 
 		if ( empty( $instance['show_hidden'] ) ) {
-			$query_args['tax_query'][] = array(
+			$query_args['tax_query'][] = [
 				'taxonomy' => 'product_visibility',
 				'field'    => 'term_taxonomy_id',
 				'terms'    => is_search() ? $product_visibility_term_ids['exclude-from-search'] : $product_visibility_term_ids['exclude-from-catalog'],
 				'operator' => 'NOT IN',
-			);
+			];
 			$query_args['post_parent'] = 0;
 		}
 
 		if ( ! empty( $instance['hide_free'] ) ) {
-			$query_args['meta_query'][] = array(
+			$query_args['meta_query'][] = [
 				'key'     => '_price',
 				'value'   => 0,
 				'compare' => '>',
 				'type'    => 'DECIMAL',
-			);
+			];
 		}
 
 		if ( 'yes' === get_option( 'woocommerce_hide_out_of_stock_items' ) ) {
-			$query_args['tax_query'][] = array(
-				array(
+			$query_args['tax_query'][] = [
+				[
 					'taxonomy' => 'product_visibility',
 					'field'    => 'term_taxonomy_id',
 					'terms'    => $product_visibility_term_ids['outofstock'],
 					'operator' => 'NOT IN',
-				),
-			); // WPCS: slow query ok.
+				],
+			]; // WPCS: slow query ok.
 		}
 
 		switch ( $show ) {
 			case 'featured':
-				$query_args['tax_query'][] = array(
+				$query_args['tax_query'][] = [
 					'taxonomy' => 'product_visibility',
 					'field'    => 'term_taxonomy_id',
 					'terms'    => $product_visibility_term_ids['featured'],
-				);
+				];
 				break;
 			case 'onsale':
 				$product_ids_on_sale    = wc_get_product_ids_on_sale();
@@ -194,10 +194,10 @@ class WC_Widget_Products extends WC_Widget {
 
 			echo wp_kses_post( apply_filters( 'woocommerce_before_widget_product_list', '<ul class="product_list_widget">' ) );
 
-			$template_args = array(
+			$template_args = [
 				'widget_id'   => isset( $args['widget_id'] ) ? $args['widget_id'] : $this->widget_id,
 				'show_rating' => true,
-			);
+			];
 
 			while ( $products->have_posts() ) {
 				$products->the_post();

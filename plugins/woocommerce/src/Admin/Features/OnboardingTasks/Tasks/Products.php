@@ -17,9 +17,9 @@ class Products extends Task {
 	 */
 	public function __construct( $task_list ) {
 		parent::__construct( $task_list );
-		add_action( 'admin_enqueue_scripts', array( $this, 'possibly_add_manual_return_notice_script' ) );
-		add_action( 'admin_enqueue_scripts', array( $this, 'possibly_add_import_return_notice_script' ) );
-		add_action( 'admin_enqueue_scripts', array( $this, 'possibly_add_load_sample_return_notice_script' ) );
+		add_action( 'admin_enqueue_scripts', [ $this, 'possibly_add_manual_return_notice_script' ] );
+		add_action( 'admin_enqueue_scripts', [ $this, 'possibly_add_import_return_notice_script' ] );
+		add_action( 'admin_enqueue_scripts', [ $this, 'possibly_add_load_sample_return_notice_script' ] );
 	}
 
 	/**
@@ -88,9 +88,9 @@ class Products extends Task {
 	 * @return array
 	 */
 	public function get_additional_data() {
-		return array(
+		return [
 			'has_products' => self::has_products(),
-		);
+		];
 	}
 
 
@@ -115,7 +115,7 @@ class Products extends Task {
 		wp_enqueue_script(
 			'onboarding-product-notice',
 			WCAdminAssets::get_url( 'wp-admin-scripts/onboarding-product-notice', 'js' ),
-			array_merge( array( WC_ADMIN_APP ), $script_assets ['dependencies'] ),
+			array_merge( [ WC_ADMIN_APP ], $script_assets ['dependencies'] ),
 			WC_VERSION,
 			true
 		);
@@ -146,7 +146,7 @@ class Products extends Task {
 		wp_enqueue_script(
 			'onboarding-product-import-notice',
 			WCAdminAssets::get_url( 'wp-admin-scripts/onboarding-product-import-notice', 'js' ),
-			array_merge( array( WC_ADMIN_APP ), $script_assets ['dependencies'] ),
+			array_merge( [ WC_ADMIN_APP ], $script_assets ['dependencies'] ),
 			WC_VERSION,
 			true
 		);
@@ -182,7 +182,7 @@ class Products extends Task {
 		wp_enqueue_script(
 			'onboarding-load-sample-products-notice',
 			WCAdminAssets::get_url( 'wp-admin-scripts/onboarding-load-sample-products-notice', 'js' ),
-			array_merge( array( WC_ADMIN_APP ), $script_assets ['dependencies'] ),
+			array_merge( [ WC_ADMIN_APP ], $script_assets ['dependencies'] ),
 			WC_VERSION,
 			true
 		);
@@ -195,11 +195,11 @@ class Products extends Task {
 	 */
 	public static function has_products() {
 		$product_query = new \WC_Product_Query(
-			array(
+			[
 				'limit'  => 1,
 				'return' => 'ids',
-				'status' => array( 'publish' ),
-			)
+				'status' => [ 'publish' ],
+			]
 		);
 		$products      = $product_query->get_products();
 

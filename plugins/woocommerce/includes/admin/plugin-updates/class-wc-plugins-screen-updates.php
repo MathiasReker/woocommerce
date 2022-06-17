@@ -32,7 +32,7 @@ class WC_Plugins_Screen_Updates extends WC_Plugin_Updates {
 	 * Constructor.
 	 */
 	public function __construct() {
-		add_action( 'in_plugin_update_message-woocommerce/woocommerce.php', array( $this, 'in_plugin_update_message' ), 10, 2 );
+		add_action( 'in_plugin_update_message-woocommerce/woocommerce.php', [ $this, 'in_plugin_update_message' ], 10, 2 );
 	}
 
 	/**
@@ -65,7 +65,7 @@ class WC_Plugins_Screen_Updates extends WC_Plugin_Updates {
 
 		if ( ! empty( $this->major_untested_plugins ) ) {
 			$this->upgrade_notice .= $this->get_extensions_modal_warning();
-			add_action( 'admin_print_footer_scripts', array( $this, 'plugin_screen_modal_js' ) );
+			add_action( 'admin_print_footer_scripts', [ $this, 'plugin_screen_modal_js' ] );
 		}
 
 		echo apply_filters( 'woocommerce_in_plugin_update_message', $this->upgrade_notice ? '</p>' . wp_kses_post( $this->upgrade_notice ) . '<p class="dummy">' : '' ); // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
@@ -101,12 +101,12 @@ class WC_Plugins_Screen_Updates extends WC_Plugin_Updates {
 	 */
 	private function parse_update_notice( $content, $new_version ) {
 		$version_parts     = explode( '.', $new_version );
-		$check_for_notices = array(
+		$check_for_notices = [
 			$version_parts[0] . '.0', // Major.
 			$version_parts[0] . '.0.0', // Major.
 			$version_parts[0] . '.' . $version_parts[1], // Minor.
 			$version_parts[0] . '.' . $version_parts[1] . '.' . $version_parts[2], // Patch.
-		);
+		];
 		$notice_regexp     = '~==\s*Upgrade Notice\s*==\s*=\s*(.*)\s*=(.*)(=\s*' . preg_quote( $new_version ) . '\s*=|$)~Uis';
 		$upgrade_notice    = '';
 

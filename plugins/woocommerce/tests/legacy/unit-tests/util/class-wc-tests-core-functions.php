@@ -41,7 +41,7 @@ class WC_Tests_Core_Functions extends WC_Unit_Test_Case {
 	public function test_get_woocommerce_currencies() {
 		static $currencies;
 
-		$expected_currencies = array(
+		$expected_currencies = [
 			'AED' => 'United Arab Emirates dirham',
 			'AFN' => 'Afghan afghani',
 			'ALL' => 'Albanian lek',
@@ -205,7 +205,7 @@ class WC_Tests_Core_Functions extends WC_Unit_Test_Case {
 			'YER' => 'Yemeni rial',
 			'ZAR' => 'South African rand',
 			'ZMW' => 'Zambian kwacha',
-		);
+		];
 
 		$this->assertEquals( $expected_currencies, get_woocommerce_currencies() );
 
@@ -241,18 +241,18 @@ class WC_Tests_Core_Functions extends WC_Unit_Test_Case {
 	public function test_wc_get_theme_support() {
 		$this->assertEquals( 'default', wc_get_theme_support( '', 'default' ) );
 
-		$theme_support_options = array(
+		$theme_support_options = [
 			'thumbnail_image_width' => 150,
 			'single_image_width'    => 300,
-			'product_grid'          => array(
+			'product_grid'          => [
 				'default_rows'    => 3,
 				'min_rows'        => 2,
 				'max_rows'        => 8,
 				'default_columns' => 4,
 				'min_columns'     => 2,
 				'max_columns'     => 5,
-			),
-		);
+			],
+		];
 		add_theme_support( 'woocommerce', $theme_support_options );
 
 		$this->assertEquals( $theme_support_options, wc_get_theme_support() );
@@ -295,7 +295,7 @@ class WC_Tests_Core_Functions extends WC_Unit_Test_Case {
 	 */
 	public function test_wc_get_logger() {
 		// This filter should have no effect because the class does not implement WC_Logger_Interface.
-		add_filter( 'woocommerce_logging_class', array( $this, 'return_bad_logger' ) );
+		add_filter( 'woocommerce_logging_class', [ $this, 'return_bad_logger' ] );
 
 		$this->setExpectedIncorrectUsage( 'wc_get_logger' );
 		$log_a = wc_get_logger();
@@ -310,7 +310,7 @@ class WC_Tests_Core_Functions extends WC_Unit_Test_Case {
 	 * Test wc_get_logger() to check if can return instance when given in filter.
 	 */
 	public function test_wc_get_logger_for_instance() {
-		add_filter( 'woocommerce_logging_class', array( $this, 'return_valid_logger_instance' ) );
+		add_filter( 'woocommerce_logging_class', [ $this, 'return_valid_logger_instance' ] );
 
 		$logger = wc_get_logger();
 
@@ -360,19 +360,19 @@ class WC_Tests_Core_Functions extends WC_Unit_Test_Case {
 	public function test_wc_format_country_state_string() {
 		// Test with correct values.
 		$this->assertEquals(
-			array(
+			[
 				'country' => 'US',
 				'state'   => 'CA',
-			),
+			],
 			wc_format_country_state_string( 'US:CA' )
 		);
 
 		// Test what happens when we pass an incorrect value.
 		$this->assertEquals(
-			array(
+			[
 				'country' => 'US-CA',
 				'state'   => '',
-			),
+			],
 			wc_format_country_state_string( 'US-CA' )
 		);
 	}
@@ -396,17 +396,17 @@ class WC_Tests_Core_Functions extends WC_Unit_Test_Case {
 	 * @since 3.0.0
 	 */
 	public function test_wc_print_r() {
-		$arr = array(
+		$arr = [
 			1,
 			2,
 			'a',
 			'b',
 			'c' => 'd',
-		);
+		];
 
 		// This filter will sequentially remove handlers, allowing us to test as though our
 		// functions were accumulatively blocked, adding one on each call.
-		add_filter( 'woocommerce_print_r_alternatives', array( $this, 'filter_wc_print_r_alternatives' ) );
+		add_filter( 'woocommerce_print_r_alternatives', [ $this, 'filter_wc_print_r_alternatives' ] );
 
 		$this->expectOutputString(
 			print_r( $arr, true ),
@@ -444,7 +444,7 @@ class WC_Tests_Core_Functions extends WC_Unit_Test_Case {
 		ob_clean();
 
 		// Reset filter to include all handlers.
-		$this->filter_wc_print_r_alternatives( array(), true );
+		$this->filter_wc_print_r_alternatives( [], true );
 
 		$this->assertEquals( print_r( $arr, true ), wc_print_r( $arr, true ) );
 		$this->assertEquals( var_export( $arr, true ), wc_print_r( $arr, true ) );
@@ -452,7 +452,7 @@ class WC_Tests_Core_Functions extends WC_Unit_Test_Case {
 		$this->assertEquals( serialize( $arr ), wc_print_r( $arr, true ) );
 		$this->assertFalse( wc_print_r( $arr, true ) );
 
-		remove_filter( 'woocommerce_print_r_alternatives', array( $this, 'filter_wc_print_r_alternatives' ) );
+		remove_filter( 'woocommerce_print_r_alternatives', [ $this, 'filter_wc_print_r_alternatives' ] );
 	}
 
 	/**
@@ -481,12 +481,12 @@ class WC_Tests_Core_Functions extends WC_Unit_Test_Case {
 	public function test_wc_get_wildcard_postcodes() {
 		$postcode  = 'cb23 6as';
 		$country   = 'GB';
-		$wildcards = array( 'cb23 6as', 'CB23 6AS', 'CB23 6AS*', 'CB23 6A*', 'CB23 6*', 'CB23 *', 'CB23*', 'CB2*', 'CB*', 'C*', '*' );
+		$wildcards = [ 'cb23 6as', 'CB23 6AS', 'CB23 6AS*', 'CB23 6A*', 'CB23 6*', 'CB23 *', 'CB23*', 'CB2*', 'CB*', 'C*', '*' ];
 		$this->assertEquals( $wildcards, wc_get_wildcard_postcodes( $postcode, $country ) );
 
 		$postcode  = 'GIJóN';
 		$country   = '';
-		$wildcards = array( 'GIJóN', 'GIJÓN', 'GIJÓN*', 'GIJÓ*', 'GIJ*', 'GI*', 'G*', '*' );
+		$wildcards = [ 'GIJóN', 'GIJÓN', 'GIJÓN*', 'GIJÓ*', 'GIJ*', 'GI*', 'G*', '*' ];
 		$this->assertEquals( $wildcards, wc_get_wildcard_postcodes( $postcode, $country ) );
 	}
 
@@ -520,12 +520,12 @@ class WC_Tests_Core_Functions extends WC_Unit_Test_Case {
 
 		// New order should be created using shop currency.
 		$order = wc_create_order(
-			array(
+			[
 				'status'      => 'pending',
 				'customer_id' => 1,
 				'created_via' => 'unit tests',
 				'cart_hash'   => '',
-			)
+			]
 		);
 		$this->assertEquals( $new_currency, $order->get_currency() );
 
@@ -533,17 +533,17 @@ class WC_Tests_Core_Functions extends WC_Unit_Test_Case {
 
 		// Currency should not change when order is updated.
 		$order = wc_update_order(
-			array(
+			[
 				'customer_id' => 2,
 				'order_id'    => $order->get_id(),
-			)
+			]
 		);
 		$this->assertEquals( $new_currency, $order->get_currency() );
 
 		$order = wc_update_order(
-			array(
+			[
 				'customer_id' => 2,
-			)
+			]
 		);
 		$this->assertInstanceOf( 'WP_Error', $order );
 	}
@@ -557,7 +557,7 @@ class WC_Tests_Core_Functions extends WC_Unit_Test_Case {
 		$current_theme = get_template();
 		$this->assertTrue( wc_is_active_theme( $current_theme ) );
 		$this->assertFalse( wc_is_active_theme( 'somegiberish' ) );
-		$this->assertTrue( wc_is_active_theme( array( $current_theme, 'somegiberish' ) ) );
+		$this->assertTrue( wc_is_active_theme( [ $current_theme, 'somegiberish' ] ) );
 	}
 
 	/**
@@ -573,31 +573,31 @@ class WC_Tests_Core_Functions extends WC_Unit_Test_Case {
 	 * Tests the wc_tokenize_path function.
 	 */
 	public function test_wc_tokenize_path() {
-		$path = wc_tokenize_path( ABSPATH . 'test', array() );
+		$path = wc_tokenize_path( ABSPATH . 'test', [] );
 		$this->assertEquals( ABSPATH . 'test', $path );
 
 		$path = wc_tokenize_path(
 			ABSPATH . 'test',
-			array(
+			[
 				'ABSPATH' => ABSPATH,
-			)
+			]
 		);
 		$this->assertEquals( '{{ABSPATH}}test', $path );
 
 		$path = wc_tokenize_path(
 			ABSPATH . 'test',
-			array(
+			[
 				'WP_CONTENT_DIR' => WP_CONTENT_DIR,
-			)
+			]
 		);
 		$this->assertEquals( ABSPATH . 'test', $path );
 
 		$path = wc_tokenize_path(
 			WP_CONTENT_DIR . 'test',
-			array(
+			[
 				'ABSPATH'        => ABSPATH,
 				'WP_CONTENT_DIR' => WP_CONTENT_DIR,
-			)
+			]
 		);
 		$this->assertEquals( '{{WP_CONTENT_DIR}}test', $path );
 	}
@@ -606,31 +606,31 @@ class WC_Tests_Core_Functions extends WC_Unit_Test_Case {
 	 * Tests the wc_untokenize_path function.
 	 */
 	public function test_wc_untokenize_path() {
-		$path = wc_untokenize_path( '{{ABSPATH}}test', array() );
+		$path = wc_untokenize_path( '{{ABSPATH}}test', [] );
 		$this->assertEquals( '{{ABSPATH}}test', $path );
 
 		$path = wc_untokenize_path(
 			'{{ABSPATH}}test',
-			array(
+			[
 				'ABSPATH' => ABSPATH,
-			)
+			]
 		);
 		$this->assertEquals( ABSPATH . 'test', $path );
 
 		$path = wc_untokenize_path(
 			'{{ABSPATH}}test',
-			array(
+			[
 				'WP_CONTENT_DIR' => WP_CONTENT_DIR,
-			)
+			]
 		);
 		$this->assertEquals( '{{ABSPATH}}test', $path );
 
 		$path = wc_untokenize_path(
 			'{{WP_CONTENT_DIR}}test',
-			array(
+			[
 				'WP_CONTENT_DIR' => WP_CONTENT_DIR,
 				'ABSPATH'        => ABSPATH,
-			)
+			]
 		);
 		$this->assertEquals( WP_CONTENT_DIR . 'test', $path );
 	}
@@ -653,9 +653,9 @@ class WC_Tests_Core_Functions extends WC_Unit_Test_Case {
 		ob_start();
 		wc_get_template(
 			'global/wrapper-start.php',
-			array(
+			[
 				'action_args' => 'this is bad',
-			)
+			]
 		);
 		$template = ob_get_clean();
 	}
@@ -672,10 +672,10 @@ class WC_Tests_Core_Functions extends WC_Unit_Test_Case {
 		ob_start();
 		wc_get_template(
 			'global/wrapper-start.php',
-			array(
+			[
 				'template' => 'x',
 				'located'  => 'x',
-			)
+			]
 		);
 		$template = ob_get_clean();
 		$this->assertNotEmpty( $template );
@@ -686,7 +686,7 @@ class WC_Tests_Core_Functions extends WC_Unit_Test_Case {
 	 * that the path can be made relative to each installation, and the cache can be shared.
 	 */
 	public function test_wc_get_template_cleans_absolute_path() {
-		add_filter( 'woocommerce_locate_template', array( $this, 'force_template_path' ), 10, 2 );
+		add_filter( 'woocommerce_locate_template', [ $this, 'force_template_path' ], 10, 2 );
 
 		ob_start();
 		try {
@@ -696,7 +696,7 @@ class WC_Tests_Core_Functions extends WC_Unit_Test_Case {
 		}
 		ob_end_clean();
 
-		remove_filter( 'woocommerce_locate_template', array( $this, 'force_template_path' ) );
+		remove_filter( 'woocommerce_locate_template', [ $this, 'force_template_path' ] );
 
 		$file_path = wp_cache_get( sanitize_key( 'template-global/wrapper-start.php---' . WC_VERSION ), 'woocommerce' );
 
@@ -709,7 +709,7 @@ class WC_Tests_Core_Functions extends WC_Unit_Test_Case {
 	 * @return void
 	 */
 	public function test_wc_get_image_size() {
-		$this->assertArrayHasKey( 'width', wc_get_image_size( array( 100, 100, 1 ) ) );
+		$this->assertArrayHasKey( 'width', wc_get_image_size( [ 100, 100, 1 ] ) );
 		$this->assertArrayHasKey( 'height', wc_get_image_size( 'shop_single' ) );
 		update_option( 'woocommerce_thumbnail_cropping', 'uncropped' );
 		$this->assertArrayHasKey( 'crop', wc_get_image_size( 'shop_thumbnail' ) );
@@ -754,18 +754,18 @@ class WC_Tests_Core_Functions extends WC_Unit_Test_Case {
 	 */
 	public function test_wc_get_page_children() {
 		$page_id = wp_insert_post(
-			array(
+			[
 				'post_title'  => 'Parent Page',
 				'post_type'   => 'page',
 				'post_name'   => 'parent-page',
 				'post_status' => 'publish',
 				'post_author' => 1,
 				'menu_order'  => 0,
-			)
+			]
 		);
 
 		$child_page_id = wp_insert_post(
-			array(
+			[
 				'post_parent' => $page_id,
 				'post_title'  => 'Parent Page',
 				'post_type'   => 'page',
@@ -773,7 +773,7 @@ class WC_Tests_Core_Functions extends WC_Unit_Test_Case {
 				'post_status' => 'publish',
 				'post_author' => 1,
 				'menu_order'  => 0,
-			)
+			]
 		);
 		$children      = wc_get_page_children( $page_id );
 		$this->assertEquals( $child_page_id, $children[0] );
@@ -809,24 +809,24 @@ class WC_Tests_Core_Functions extends WC_Unit_Test_Case {
 
 		$wpdb->insert(
 			$wpdb->prefix . 'options',
-			array(
+			[
 				'option_name'  => 'transaction_test',
 				'option_value' => '1',
-			),
-			array(
+			],
+			[
 				'%s',
 				'%s',
-			)
+			]
 		);
 		wc_transaction_query( 'start', true );
 		$wpdb->update(
 			$wpdb->prefix . 'options',
-			array(
+			[
 				'option_value' => '0',
-			),
-			array(
+			],
+			[
 				'option_name' => 'transaction_test',
-			)
+			]
 		);
 		$col = $wpdb->get_col( "SElECT option_value FROM {$wpdb->prefix}options WHERE option_name = 'transaction_test'" );
 		$this->assertEquals( '0', $col[0] );
@@ -838,12 +838,12 @@ class WC_Tests_Core_Functions extends WC_Unit_Test_Case {
 		wc_transaction_query( 'start', true );
 		$wpdb->update(
 			$wpdb->prefix . 'options',
-			array(
+			[
 				'option_value' => '0',
-			),
-			array(
+			],
+			[
 				'option_name' => 'transaction_test',
-			)
+			]
 		);
 		wc_transaction_query( 'commit', true );
 		$col = $wpdb->get_col( "SElECT option_value FROM {$wpdb->prefix}options WHERE option_name = 'transaction_test'" );
@@ -851,9 +851,9 @@ class WC_Tests_Core_Functions extends WC_Unit_Test_Case {
 
 		$wpdb->delete(
 			$wpdb->prefix . 'options',
-			array(
+			[
 				'option_name' => 'transaction_test',
-			)
+			]
 		);
 	}
 
@@ -861,43 +861,43 @@ class WC_Tests_Core_Functions extends WC_Unit_Test_Case {
 	 * Test: wc_selected
 	 */
 	public function test_wc_selected() {
-		$test_cases = array(
+		$test_cases = [
 			// both value and options int.
-			array( 0, 0, true ),
-			array( 0, 1, false ),
-			array( 1, 0, false ),
+			[ 0, 0, true ],
+			[ 0, 1, false ],
+			[ 1, 0, false ],
 
 			// value string, options int.
-			array( '0', 0, true ),
-			array( '0', 1, false ),
-			array( '1', 0, false ),
+			[ '0', 0, true ],
+			[ '0', 1, false ],
+			[ '1', 0, false ],
 
 			// value int, options string.
-			array( 0, '0', true ),
-			array( 0, '1', false ),
-			array( 1, '0', false ),
+			[ 0, '0', true ],
+			[ 0, '1', false ],
+			[ 1, '0', false ],
 
 			// both value and options str.
-			array( '0', '0', true ),
-			array( '0', '1', false ),
-			array( '1', '0', false ),
+			[ '0', '0', true ],
+			[ '0', '1', false ],
+			[ '1', '0', false ],
 
 			// both value and options int.
-			array( 0, array( 0, 1, 2 ), true ),
-			array( 0, array( 1, 1, 1 ), false ),
+			[ 0, [ 0, 1, 2 ], true ],
+			[ 0, [ 1, 1, 1 ], false ],
 
 			// value string, options int.
-			array( '0', array( 0, 1, 2 ), true ),
-			array( '0', array( 1, 1, 1 ), false ),
+			[ '0', [ 0, 1, 2 ], true ],
+			[ '0', [ 1, 1, 1 ], false ],
 
 			// value int, options string.
-			array( 0, array( '0', '1', '2' ), true ),
-			array( 0, array( '1', '1', '1' ), false ),
+			[ 0, [ '0', '1', '2' ], true ],
+			[ 0, [ '1', '1', '1' ], false ],
 
 			// both value and options str.
-			array( '0', array( '0', '1', '2' ), true ),
-			array( '0', array( '1', '1', '1' ), false ),
-		);
+			[ '0', [ '0', '1', '2' ], true ],
+			[ '0', [ '1', '1', '1' ], false ],
+		];
 
 		foreach ( $test_cases as $test_case ) {
 			list( $value, $options, $result ) = $test_case;
@@ -912,35 +912,35 @@ class WC_Tests_Core_Functions extends WC_Unit_Test_Case {
 	 * @return void
 	 */
 	public function test_wc_array_cartesian() {
-		$array = array(
-			'attr1' => array(
+		$array = [
+			'attr1' => [
 				'Attr1 Value 1',
 				'Attr1 Value 2',
-			),
-			'attr2' => array(
+			],
+			'attr2' => [
 				'Attr2 Value 1',
 				'Attr2 Value 2',
-			),
-		);
+			],
+		];
 
-		$expected_combinations = array(
-			array(
+		$expected_combinations = [
+			[
 				'attr2' => 'Attr2 Value 1',
 				'attr1' => 'Attr1 Value 1',
-			),
-			array(
+			],
+			[
 				'attr2' => 'Attr2 Value 2',
 				'attr1' => 'Attr1 Value 1',
-			),
-			array(
+			],
+			[
 				'attr2' => 'Attr2 Value 1',
 				'attr1' => 'Attr1 Value 2',
-			),
-			array(
+			],
+			[
 				'attr2' => 'Attr2 Value 2',
 				'attr1' => 'Attr1 Value 2',
-			),
-		);
+			],
+		];
 
 		$this->assertEquals( $expected_combinations, array_reverse( wc_array_cartesian( $array ) ) );
 	}
@@ -966,7 +966,7 @@ class WC_Tests_Core_Functions extends WC_Unit_Test_Case {
 	 * @return void
 	 */
 	public function test_wc_get_permalink_structure() {
-		$expected_structure = array(
+		$expected_structure = [
 			'product_base'           => 'product',
 			'category_base'          => 'product-category',
 			'tag_base'               => 'product-tag',
@@ -976,7 +976,7 @@ class WC_Tests_Core_Functions extends WC_Unit_Test_Case {
 			'category_rewrite_slug'  => 'product-category',
 			'tag_rewrite_slug'       => 'product-tag',
 			'attribute_rewrite_slug' => '',
-		);
+		];
 		$this->assertEquals( $expected_structure, wc_get_permalink_structure() );
 	}
 
@@ -986,7 +986,7 @@ class WC_Tests_Core_Functions extends WC_Unit_Test_Case {
 	 * @return void
 	 */
 	public function test_wc_decimal_to_fraction() {
-		$this->assertEquals( array( 7, 2 ), wc_decimal_to_fraction( '3.5' ) );
+		$this->assertEquals( [ 7, 2 ], wc_decimal_to_fraction( '3.5' ) );
 	}
 
 	/**
@@ -1006,17 +1006,17 @@ class WC_Tests_Core_Functions extends WC_Unit_Test_Case {
 	 * @return void
 	 */
 	public function test_wc_checkout_fields_uasort_comparison() {
-		$fields = array(
-			'billing_first_name' => array(
+		$fields = [
+			'billing_first_name' => [
 				'priority' => 10,
-			),
-			'billing_last_name'  => array(
+			],
+			'billing_last_name'  => [
 				'priority' => 20,
-			),
-			'billing_email'      => array(
+			],
+			'billing_email'      => [
 				'priority' => 1,
-			),
-		);
+			],
+		];
 		uasort( $fields, 'wc_checkout_fields_uasort_comparison' );
 		$this->assertSame( 0, array_search( 'billing_email', array_keys( $fields ) ) );
 	}
@@ -1027,20 +1027,20 @@ class WC_Tests_Core_Functions extends WC_Unit_Test_Case {
 	 * @return void
 	 */
 	public function test_wc_ascii_uasort_comparison() {
-		$unsorted_values = array(
+		$unsorted_values = [
 			'Benin',
 			'Bélgica',
-		);
+		];
 
 		// First test a normal asort which does not work right for accented characters.
 		$sorted_values = $unsorted_values;
 		asort( $sorted_values );
-		$this->assertSame( array( 'Benin', 'Bélgica' ), array_values( $sorted_values ) );
+		$this->assertSame( [ 'Benin', 'Bélgica' ], array_values( $sorted_values ) );
 
 		$sorted_values = $unsorted_values;
 		// Now test the new wc_ascii_uasort_comparison function which sorts the strings correctly.
 		uasort( $sorted_values, 'wc_ascii_uasort_comparison' );
-		$this->assertSame( array( 'Bélgica', 'Benin' ), array_values( $sorted_values ) );
+		$this->assertSame( [ 'Bélgica', 'Benin' ], array_values( $sorted_values ) );
 	}
 
 	/**

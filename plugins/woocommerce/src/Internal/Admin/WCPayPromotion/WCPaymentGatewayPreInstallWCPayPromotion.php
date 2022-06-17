@@ -48,14 +48,14 @@ class WCPaymentGatewayPreInstallWCPayPromotion extends \WC_Payment_Gateway {
 	 * Initialise Gateway Settings Form Fields.
 	 */
 	public function init_form_fields() {
-		$this->form_fields = array(
-			'is_dismissed' => array(
+		$this->form_fields = [
+			'is_dismissed' => [
 				'title'   => __( 'Dismiss', 'woocommerce' ),
 				'type'    => 'checkbox',
 				'label'   => __( 'Dismiss the gateway', 'woocommerce' ),
 				'default' => 'no',
-			),
-		);
+			],
+		];
 	}
 
 	/**
@@ -64,7 +64,7 @@ class WCPaymentGatewayPreInstallWCPayPromotion extends \WC_Payment_Gateway {
 	 * @return bool
 	 */
 	public static function is_dismissed() {
-		$settings = get_option( 'woocommerce_' . self::GATEWAY_ID . '_settings', array() );
+		$settings = get_option( 'woocommerce_' . self::GATEWAY_ID . '_settings', [] );
 		return isset( $settings['is_dismissed'] ) && 'yes' === $settings['is_dismissed'];
 	}
 }

@@ -64,7 +64,7 @@ class WC_Integration_MaxMind_Database_Service {
 		 */
 		$database_path = apply_filters_deprecated(
 			'woocommerce_geolocation_local_database_path',
-			array( $database_path, 2 ),
+			[ $database_path, 2 ],
 			'3.9.0',
 			'woocommerce_maxmind_geolocation_database_path'
 		);
@@ -86,11 +86,11 @@ class WC_Integration_MaxMind_Database_Service {
 	 */
 	public function download_database( $license_key ) {
 		$download_uri = add_query_arg(
-			array(
+			[
 				'edition_id'  => self::DATABASE,
 				'license_key' => urlencode( wc_clean( $license_key ) ),
 				'suffix'      => 'tar.gz',
-			),
+			],
 			'https://download.maxmind.com/app/geoip_download'
 		);
 
@@ -145,7 +145,7 @@ class WC_Integration_MaxMind_Database_Service {
 		$country_code = '';
 
 		if ( ! class_exists( 'MaxMind\Db\Reader' ) ) {
-			wc_get_logger()->notice( __( 'Missing MaxMind Reader library!', 'woocommerce' ), array( 'source' => 'maxmind-geolocation' ) );
+			wc_get_logger()->notice( __( 'Missing MaxMind Reader library!', 'woocommerce' ), [ 'source' => 'maxmind-geolocation' ] );
 			return $country_code;
 		}
 
@@ -164,7 +164,7 @@ class WC_Integration_MaxMind_Database_Service {
 
 			$reader->close();
 		} catch ( Exception $e ) {
-			wc_get_logger()->notice( $e->getMessage(), array( 'source' => 'maxmind-geolocation' ) );
+			wc_get_logger()->notice( $e->getMessage(), [ 'source' => 'maxmind-geolocation' ] );
 		}
 
 		return $country_code;

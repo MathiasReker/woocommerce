@@ -41,19 +41,19 @@ class Init {
 	 */
 	public function __construct() {
 		// Hook in data stores.
-		add_filter( 'woocommerce_data_stores', array( __CLASS__, 'add_data_stores' ) );
+		add_filter( 'woocommerce_data_stores', [ __CLASS__, 'add_data_stores' ] );
 		// REST API extensions init.
-		add_action( 'rest_api_init', array( $this, 'rest_api_init' ) );
+		add_action( 'rest_api_init', [ $this, 'rest_api_init' ] );
 
 		// Add currency symbol to orders endpoint response.
-		add_filter( 'woocommerce_rest_prepare_shop_order_object', array( __CLASS__, 'add_currency_symbol_to_order_response' ) );
+		add_filter( 'woocommerce_rest_prepare_shop_order_object', [ __CLASS__, 'add_currency_symbol_to_order_response' ] );
 	}
 
 	/**
 	 * Init REST API.
 	 */
 	public function rest_api_init() {
-		$controllers = array(
+		$controllers = [
 			'Automattic\WooCommerce\Admin\API\Features',
 			'Automattic\WooCommerce\Admin\API\Notes',
 			'Automattic\WooCommerce\Admin\API\NoteActions',
@@ -85,10 +85,10 @@ class Init {
 			'Automattic\WooCommerce\Admin\API\OnboardingThemes',
 			'Automattic\WooCommerce\Admin\API\NavigationFavorites',
 			'Automattic\WooCommerce\Admin\API\Taxes',
-		);
+		];
 
 		if ( Features::is_enabled( 'analytics' ) ) {
-			$analytics_controllers = array(
+			$analytics_controllers = [
 				'Automattic\WooCommerce\Admin\API\Customers',
 				'Automattic\WooCommerce\Admin\API\Leaderboards',
 				'Automattic\WooCommerce\Admin\API\Reports\Controller',
@@ -112,7 +112,7 @@ class Init {
 				'Automattic\WooCommerce\Admin\API\Reports\Downloads\Stats\Controller',
 				'Automattic\WooCommerce\Admin\API\Reports\Customers\Controller',
 				'Automattic\WooCommerce\Admin\API\Reports\Customers\Stats\Controller',
-			);
+			];
 
 			// The performance indicators controller must be registered last, after other /stats endpoints have been registered.
 			$analytics_controllers[] = 'Automattic\WooCommerce\Admin\API\Reports\PerformanceIndicators\Controller';
@@ -138,7 +138,7 @@ class Init {
 	public static function add_data_stores( $data_stores ) {
 		return array_merge(
 			$data_stores,
-			array(
+			[
 				'report-revenue-stats'    => 'Automattic\WooCommerce\Admin\API\Reports\Orders\Stats\DataStore',
 				'report-orders'           => 'Automattic\WooCommerce\Admin\API\Reports\Orders\DataStore',
 				'report-orders-stats'     => 'Automattic\WooCommerce\Admin\API\Reports\Orders\Stats\DataStore',
@@ -157,7 +157,7 @@ class Init {
 				'report-customers'        => 'Automattic\WooCommerce\Admin\API\Reports\Customers\DataStore',
 				'report-customers-stats'  => 'Automattic\WooCommerce\Admin\API\Reports\Customers\Stats\DataStore',
 				'report-stock-stats'      => 'Automattic\WooCommerce\Admin\API\Reports\Stock\Stats\DataStore',
-			)
+			]
 		);
 	}
 

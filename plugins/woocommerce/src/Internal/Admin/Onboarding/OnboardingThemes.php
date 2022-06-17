@@ -28,10 +28,10 @@ class OnboardingThemes {
 	 * Init.
 	 */
 	public static function init() {
-		add_action( 'woocommerce_theme_installed', array( __CLASS__, 'delete_themes_transient' ) );
-		add_action( 'after_switch_theme', array( __CLASS__, 'delete_themes_transient' ) );
-		add_filter( 'woocommerce_rest_prepare_themes', array( __CLASS__, 'add_uploaded_theme_data' ) );
-		add_filter( 'woocommerce_admin_onboarding_preloaded_data', array( __CLASS__, 'preload_data' ) );
+		add_action( 'woocommerce_theme_installed', [ __CLASS__, 'delete_themes_transient' ] );
+		add_action( 'after_switch_theme', [ __CLASS__, 'delete_themes_transient' ] );
+		add_filter( 'woocommerce_rest_prepare_themes', [ __CLASS__, 'add_uploaded_theme_data' ] );
+		add_filter( 'woocommerce_admin_onboarding_preloaded_data', [ __CLASS__, 'preload_data' ] );
 	}
 
 	/**
@@ -85,7 +85,7 @@ class OnboardingThemes {
 				if ( ! property_exists( $product_2, 'id' ) || ! property_exists( $product_2, 'slug' ) ) {
 					return 1;
 				}
-				if ( in_array( 'Storefront', array( $product_1->slug, $product_2->slug ), true ) ) {
+				if ( in_array( 'Storefront', [ $product_1->slug, $product_2->slug ], true ) ) {
 					return 'Storefront' === $product_1->slug ? -1 : 1;
 				}
 				return $product_1->id < $product_2->id ? 1 : -1;
@@ -103,11 +103,11 @@ class OnboardingThemes {
 		$themes = get_transient( self::THEMES_TRANSIENT );
 		if ( false === $themes ) {
 			$theme_data = wp_remote_get( 'https://woocommerce.com/wp-json/wccom-extensions/1.0/search?category=themes' );
-			$themes     = array();
+			$themes     = [];
 
 			if ( ! is_wp_error( $theme_data ) ) {
 				$theme_data    = json_decode( $theme_data['body'] );
-				$woo_themes    = property_exists( $theme_data, 'products' ) ? $theme_data->products : array();
+				$woo_themes    = property_exists( $theme_data, 'products' ) ? $theme_data->products : [];
 				$sorted_themes = self::sort_woocommerce_themes( $woo_themes );
 
 				foreach ( $sorted_themes as $theme ) {
@@ -137,7 +137,7 @@ class OnboardingThemes {
 				$themes[ $active_theme ]['has_woocommerce_support'] = true;
 			}
 
-			$themes = array( $active_theme => $themes[ $active_theme ] ) + $themes;
+			$themes = [ $active_theme => $themes[ $active_theme ] ] + $themes;
 
 			set_transient( self::THEMES_TRANSIENT, $themes, DAY_IN_SECONDS );
 		}
@@ -153,14 +153,14 @@ class OnboardingThemes {
 	 * @return array
 	 */
 	public static function get_theme_data( $theme ) {
-		return array(
+		return [
 			'slug'                    => sanitize_text_field( $theme->stylesheet ),
 			'title'                   => $theme->get( 'Name' ),
 			'price'                   => '0.00',
 			'is_installed'            => true,
 			'image'                   => $theme->get_screenshot(),
 			'has_woocommerce_support' => true,
-		);
+		];
 	}
 
 	/**
@@ -206,7 +206,7 @@ class OnboardingThemes {
 	 * @return array
 	 */
 	public static function get_allowed_themes() {
-		$allowed_themes = array();
+		$allowed_themes = [];
 		$themes         = self::get_themes();
 
 		foreach ( $themes as $theme ) {

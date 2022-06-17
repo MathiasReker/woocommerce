@@ -35,14 +35,14 @@ class WC_Gateway_Paypal_Test extends \WC_Unit_Test_Case {
 		$order->save();
 
 		// Force HTTP error.
-		add_filter( 'pre_http_request', array( $this, '__return_paypal_error' ), 10, 2 );
+		add_filter( 'pre_http_request', [ $this, '__return_paypal_error' ], 10, 2 );
 
 		( new WC_Gateway_Paypal() )->capture_payment( $order->get_id() );
 
 		// reset error.
-		remove_filter( 'pre_http_request', array( $this, '__return_paypal_error' ) );
+		remove_filter( 'pre_http_request', [ $this, '__return_paypal_error' ] );
 
-		$order_notes = wc_get_order_notes( array( 'order_id' => $order->get_id() ) );
+		$order_notes = wc_get_order_notes( [ 'order_id' => $order->get_id() ] );
 		$latest_note = current( $order_notes );
 		$this->assertStringContainsString( $this->error_message_26960, $latest_note->content );
 	}
@@ -62,16 +62,16 @@ class WC_Gateway_Paypal_Test extends \WC_Unit_Test_Case {
 		$order->save();
 
 		// Force HTTP error.
-		add_filter( 'pre_http_request', array( $this, '__return_paypal_error' ), 10, 2 );
+		add_filter( 'pre_http_request', [ $this, '__return_paypal_error' ], 10, 2 );
 
 		// Force refunds check to true.
-		$paypal_gateway = $this->getMockBuilder( WC_Gateway_Paypal::class )->setMethods( array( 'can_refund_order' ) )->getMock();
+		$paypal_gateway = $this->getMockBuilder( WC_Gateway_Paypal::class )->setMethods( [ 'can_refund_order' ] )->getMock();
 		$paypal_gateway->method( 'can_refund_order' )->willReturn( 'true' );
 
 		$response = $paypal_gateway->process_refund( $order );
 
 		// reset error.
-		remove_filter( 'pre_http_request', array( $this, '__return_paypal_error' ) );
+		remove_filter( 'pre_http_request', [ $this, '__return_paypal_error' ] );
 
 		$this->assertWPError( $response );
 		$this->assertStringContainsString( $this->error_message_26960, $response->get_error_message() );

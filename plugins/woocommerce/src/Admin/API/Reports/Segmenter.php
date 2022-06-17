@@ -27,7 +27,7 @@ class Segmenter {
 	 *
 	 * @var array
 	 */
-	protected $segment_labels = array();
+	protected $segment_labels = [];
 
 	/**
 	 * Query arguments supplied by the user for data store.
@@ -41,7 +41,7 @@ class Segmenter {
 	 *
 	 * @var array
 	 */
-	protected $report_columns = array();
+	protected $report_columns = [];
 
 	/**
 	 * Constructor.
@@ -63,7 +63,7 @@ class Segmenter {
 	 */
 	protected function prepare_selections( $columns_mapping ) {
 		if ( isset( $this->query_args['fields'] ) && is_array( $this->query_args['fields'] ) ) {
-			$keep = array();
+			$keep = [];
 			foreach ( $this->query_args['fields'] as $field ) {
 				if ( isset( $columns_mapping[ $field ] ) ) {
 					$keep[ $field ] = $columns_mapping[ $field ];
@@ -90,7 +90,7 @@ class Segmenter {
 	 * @return array Reformatted array.
 	 */
 	protected function reformat_totals_segments( $segments_db_result, $segment_dimension ) {
-		$segment_result = array();
+		$segment_result = [];
 
 		if ( strpos( $segment_dimension, '.' ) ) {
 			$segment_dimension = substr( strstr( $segment_dimension, '.' ), 1 );
@@ -104,11 +104,11 @@ class Segmenter {
 			}
 
 			unset( $segment_data[ $segment_dimension ] );
-			$segment_datum                 = array(
+			$segment_datum                 = [
 				'segment_id'    => $segment_id,
 				'segment_label' => $segment_labels[ $segment_id ],
 				'subtotals'     => $segment_data,
-			);
+			];
 			$segment_result[ $segment_id ] = $segment_datum;
 		}
 
@@ -148,7 +148,7 @@ class Segmenter {
 	 * @return array
 	 */
 	protected function merge_segment_totals_results( $segment_dimension, $result1, $result2 ) {
-		$result_segments = array();
+		$result_segments = [];
 		$segment_labels  = $this->get_segment_labels();
 
 		foreach ( $result1 as $segment_data ) {
@@ -158,11 +158,11 @@ class Segmenter {
 			}
 
 			unset( $segment_data[ $segment_dimension ] );
-			$result_segments[ $segment_id ] = array(
+			$result_segments[ $segment_id ] = [
 				'segment_label' => $segment_labels[ $segment_id ],
 				'segment_id'    => $segment_id,
 				'subtotals'     => $segment_data,
-			);
+			];
 		}
 
 		foreach ( $result2 as $segment_data ) {
@@ -173,11 +173,11 @@ class Segmenter {
 
 			unset( $segment_data[ $segment_dimension ] );
 			if ( ! isset( $result_segments[ $segment_id ] ) ) {
-				$result_segments[ $segment_id ] = array(
+				$result_segments[ $segment_id ] = [
 					'segment_label' => $segment_labels[ $segment_id ],
 					'segment_id'    => $segment_id,
-					'subtotals'     => array(),
-				);
+					'subtotals'     => [],
+				];
 			}
 			$result_segments[ $segment_id ]['subtotals'] = array_merge( $result_segments[ $segment_id ]['subtotals'], $segment_data );
 		}
@@ -222,7 +222,7 @@ class Segmenter {
 	 * @return array
 	 */
 	protected function merge_segment_intervals_results( $segment_dimension, $result1, $result2 ) {
-		$result_segments = array();
+		$result_segments = [];
 		$segment_labels  = $this->get_segment_labels();
 
 		foreach ( $result1 as $segment_data ) {
@@ -233,18 +233,18 @@ class Segmenter {
 
 			$time_interval = $segment_data['time_interval'];
 			if ( ! isset( $result_segments[ $time_interval ] ) ) {
-				$result_segments[ $time_interval ]             = array();
-				$result_segments[ $time_interval ]['segments'] = array();
+				$result_segments[ $time_interval ]             = [];
+				$result_segments[ $time_interval ]['segments'] = [];
 			}
 
 			unset( $segment_data['time_interval'] );
 			unset( $segment_data['datetime_anchor'] );
 			unset( $segment_data[ $segment_dimension ] );
-			$segment_datum = array(
+			$segment_datum = [
 				'segment_label' => $segment_labels[ $segment_id ],
 				'segment_id'    => $segment_id,
 				'subtotals'     => $segment_data,
-			);
+			];
 			$result_segments[ $time_interval ]['segments'][ $segment_id ] = $segment_datum;
 		}
 
@@ -256,8 +256,8 @@ class Segmenter {
 
 			$time_interval = $segment_data['time_interval'];
 			if ( ! isset( $result_segments[ $time_interval ] ) ) {
-				$result_segments[ $time_interval ]             = array();
-				$result_segments[ $time_interval ]['segments'] = array();
+				$result_segments[ $time_interval ]             = [];
+				$result_segments[ $time_interval ]['segments'] = [];
 			}
 
 			unset( $segment_data['time_interval'] );
@@ -265,11 +265,11 @@ class Segmenter {
 			unset( $segment_data[ $segment_dimension ] );
 
 			if ( ! isset( $result_segments[ $time_interval ]['segments'][ $segment_id ] ) ) {
-				$result_segments[ $time_interval ]['segments'][ $segment_id ] = array(
+				$result_segments[ $time_interval ]['segments'][ $segment_id ] = [
 					'segment_label' => $segment_labels[ $segment_id ],
 					'segment_id'    => $segment_id,
-					'subtotals'     => array(),
-				);
+					'subtotals'     => [],
+				];
 			}
 			$result_segments[ $time_interval ]['segments'][ $segment_id ]['subtotals'] = array_merge( $result_segments[ $time_interval ]['segments'][ $segment_id ]['subtotals'], $segment_data );
 		}
@@ -285,7 +285,7 @@ class Segmenter {
 	 * @return array Reformatted array.
 	 */
 	protected function reformat_intervals_segments( $segments_db_result, $segment_dimension ) {
-		$aggregated_segment_result = array();
+		$aggregated_segment_result = [];
 
 		if ( strpos( $segment_dimension, '.' ) ) {
 			$segment_dimension = substr( strstr( $segment_dimension, '.' ), 1 );
@@ -301,17 +301,17 @@ class Segmenter {
 
 			$time_interval = $segment_data['time_interval'];
 			if ( ! isset( $aggregated_segment_result[ $time_interval ] ) ) {
-				$aggregated_segment_result[ $time_interval ]             = array();
-				$aggregated_segment_result[ $time_interval ]['segments'] = array();
+				$aggregated_segment_result[ $time_interval ]             = [];
+				$aggregated_segment_result[ $time_interval ]['segments'] = [];
 			}
 			unset( $segment_data['time_interval'] );
 			unset( $segment_data['datetime_anchor'] );
 			unset( $segment_data[ $segment_dimension ] );
-			$segment_datum = array(
+			$segment_datum = [
 				'segment_label' => $segment_labels[ $segment_id ],
 				'segment_id'    => $segment_id,
 				'subtotals'     => $segment_data,
-			);
+			];
 			$aggregated_segment_result[ $time_interval ]['segments'][ $segment_id ] = $segment_datum;
 		}
 
@@ -327,18 +327,18 @@ class Segmenter {
 		global $wpdb;
 
 		if ( ! isset( $this->query_args['segmentby'] ) || '' === $this->query_args['segmentby'] ) {
-			$this->all_segment_ids = array();
+			$this->all_segment_ids = [];
 			return;
 		}
 
-		$segments       = array();
-		$segment_labels = array();
+		$segments       = [];
+		$segment_labels = [];
 
 		if ( 'product' === $this->query_args['segmentby'] ) {
-			$args = array(
+			$args = [
 				'return' => 'objects',
 				'limit'  => -1,
-			);
+			];
 
 			if ( isset( $this->query_args['product_includes'] ) ) {
 				$args['include'] = $this->query_args['product_includes'];
@@ -346,7 +346,7 @@ class Segmenter {
 
 			if ( isset( $this->query_args['category_includes'] ) ) {
 				$categories       = $this->query_args['category_includes'];
-				$args['category'] = array();
+				$args['category'] = [];
 				foreach ( $categories as $category_id ) {
 					$terms              = get_term_by( 'id', $category_id, 'product_cat' );
 					$args['category'][] = $terms->slug;
@@ -360,11 +360,11 @@ class Segmenter {
 				$segment_labels[ $id ] = $segment->get_name();
 			}
 		} elseif ( 'variation' === $this->query_args['segmentby'] ) {
-			$args = array(
+			$args = [
 				'return' => 'objects',
 				'limit'  => -1,
 				'type'   => 'variation',
-			);
+			];
 
 			if (
 				isset( $this->query_args['product_includes'] ) &&
@@ -398,9 +398,9 @@ class Segmenter {
 				$segment_labels[0] = $parent_object->get_name();
 			}
 		} elseif ( 'category' === $this->query_args['segmentby'] ) {
-			$args = array(
+			$args = [
 				'taxonomy' => 'product_cat',
-			);
+			];
 
 			if ( isset( $this->query_args['category_includes'] ) ) {
 				$args['include'] = $this->query_args['category_includes'];
@@ -413,7 +413,7 @@ class Segmenter {
 			$segment_labels = wp_list_pluck( $categories, 'name', 'cat_ID' );
 
 		} elseif ( 'coupon' === $this->query_args['segmentby'] ) {
-			$args = array();
+			$args = [];
 			if ( isset( $this->query_args['coupons'] ) ) {
 				$args['include'] = $this->query_args['coupons'];
 			}
@@ -425,9 +425,9 @@ class Segmenter {
 		} elseif ( 'customer_type' === $this->query_args['segmentby'] ) {
 			// 0 -- new customer
 			// 1 -- returning customer
-			$segments = array( 0, 1 );
+			$segments = [ 0, 1 ];
 		} elseif ( 'tax_rate_id' === $this->query_args['segmentby'] ) {
-			$args = array();
+			$args = [];
 			if ( isset( $this->query_args['taxes'] ) ) {
 				$args['include'] = $this->query_args['taxes'];
 			}
@@ -440,7 +440,7 @@ class Segmenter {
 			}
 		} else {
 			// Catch all default.
-			$segments = array();
+			$segments = [];
 		}
 
 		$this->all_segment_ids = $segments;
@@ -498,7 +498,7 @@ class Segmenter {
 	 * @return array
 	 */
 	protected function fill_in_missing_segments( $segments ) {
-		$segment_subtotals = array();
+		$segment_subtotals = [];
 		if ( isset( $this->query_args['fields'] ) && is_array( $this->query_args['fields'] ) ) {
 			foreach ( $this->query_args['fields'] as $field ) {
 				if ( isset( $this->report_columns[ $field ] ) ) {
@@ -511,23 +511,23 @@ class Segmenter {
 			}
 		}
 		if ( ! is_array( $segments ) ) {
-			$segments = array();
+			$segments = [];
 		}
 		$all_segment_ids = $this->get_all_segments();
 		$segment_labels  = $this->get_segment_labels();
 		foreach ( $all_segment_ids as $segment_id ) {
 			if ( ! isset( $segments[ $segment_id ] ) ) {
-				$segments[ $segment_id ] = array(
+				$segments[ $segment_id ] = [
 					'segment_id'    => $segment_id,
 					'segment_label' => $segment_labels[ $segment_id ],
 					'subtotals'     => $segment_subtotals,
-				);
+				];
 			}
 		}
 
 		// Using array_values to remove custom keys, so that it gets later converted to JSON as an array.
 		$segments_no_keys = array_values( $segments );
-		usort( $segments_no_keys, array( $this, 'segment_cmp' ) );
+		usort( $segments_no_keys, [ $this, 'segment_cmp' ] );
 		return $segments_no_keys;
 	}
 
@@ -596,7 +596,7 @@ class Segmenter {
 		$old_keys = array_keys( $intervals );
 		foreach ( $intervals as $interval ) {
 			$intervals[ $interval['time_interval'] ]             = $interval;
-			$intervals[ $interval['time_interval'] ]['segments'] = array();
+			$intervals[ $interval['time_interval'] ]['segments'] = [];
 		}
 		foreach ( $old_keys as $key ) {
 			unset( $intervals[ $key ] );

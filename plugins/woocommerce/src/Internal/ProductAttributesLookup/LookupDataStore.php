@@ -80,10 +80,10 @@ class LookupDataStore {
 			'woocommerce_get_settings_products',
 			function ( $settings, $section_id ) {
 				if ( 'advanced' === $section_id && $this->check_lookup_table_exists() ) {
-					$title_item = array(
+					$title_item = [
 						'title' => __( 'Product attributes lookup table', 'woocommerce' ),
 						'type'  => 'title',
-					);
+					];
 
 					$regeneration_is_in_progress = $this->regeneration_is_in_progress();
 
@@ -102,7 +102,7 @@ class LookupDataStore {
 								__( 'This means that the table is probably in an inconsistent state. It\'s recommended to run a new regeneration process or to resume the aborted process (Status - Tools - Regenerate the product attributes lookup table/Resume the product attributes lookup table regeneration) before enabling the table usage.', 'woocommerce' )
 							) : null;
 
-						$settings[] = array(
+						$settings[] = [
 							'title'         => __( 'Enable table usage', 'woocommerce' ),
 							'desc'          => __( 'Use the product attributes lookup table for catalog filtering.', 'woocommerce' ),
 							'desc_tip'      => $regeneration_aborted_warning,
@@ -110,19 +110,19 @@ class LookupDataStore {
 							'default'       => 'no',
 							'type'          => 'checkbox',
 							'checkboxgroup' => 'start',
-						);
+						];
 
-						$settings[] = array(
+						$settings[] = [
 							'title'         => __( 'Direct updates', 'woocommerce' ),
 							'desc'          => __( 'Update the table directly upon product changes, instead of scheduling a deferred update.', 'woocommerce' ),
 							'id'            => 'woocommerce_attribute_lookup_direct_updates',
 							'default'       => 'no',
 							'type'          => 'checkbox',
 							'checkboxgroup' => 'start',
-						);
+						];
 					}
 
-					$settings[] = array( 'type' => 'sectionend' );
+					$settings[] = [ 'type' => 'sectionend' ];
 				}
 				return $settings;
 			},
@@ -193,15 +193,15 @@ class LookupDataStore {
 			return;
 		}
 
-		$args = array( $product_id, $action );
+		$args = [ $product_id, $action ];
 
 		$queue             = WC()->get_instance_of( \WC_Queue::class );
 		$already_scheduled = $queue->search(
-			array(
+			[
 				'hook'   => 'woocommerce_run_product_attribute_lookup_update_callback',
 				'args'   => $args,
 				'status' => \ActionScheduler_Store::STATUS_PENDING,
-			),
+			],
 			'ids'
 		);
 
@@ -279,7 +279,7 @@ class LookupDataStore {
 			return self::ACTION_INSERT;
 		}
 
-		if ( array_intersect( $keys, array( 'stock_quantity', 'stock_status', 'manage_stock' ) ) ) {
+		if ( array_intersect( $keys, [ 'stock_quantity', 'stock_status', 'manage_stock' ] ) ) {
 			return self::ACTION_UPDATE_STOCK;
 		}
 
@@ -504,15 +504,15 @@ class LookupDataStore {
 	 * @return array A dictionary of taxonomies => dictionary of term slug => term id.
 	 */
 	private function get_term_ids_by_slug_cache( $taxonomies ) {
-		$result = array();
+		$result = [];
 		foreach ( $taxonomies as $taxonomy ) {
 			$terms               = WC()->call_function(
 				'get_terms',
-				array(
+				[
 					'taxonomy'   => $taxonomy,
 					'hide_empty' => false,
 					'fields'     => 'id=>slug',
-				)
+				]
 			);
 			$result[ $taxonomy ] = array_flip( $terms );
 		}
@@ -591,17 +591,17 @@ class LookupDataStore {
 	 */
 	private function get_attribute_taxonomies( \WC_Product $product ) {
 		$product_attributes = $product->get_attributes();
-		$result             = array();
+		$result             = [];
 		foreach ( $product_attributes as $taxonomy_name => $attribute_data ) {
 			if ( ! $attribute_data->get_id() ) {
 				// Custom product attribute, not suitable for attribute-based filtering.
 				continue;
 			}
 
-			$result[ $taxonomy_name ] = array(
+			$result[ $taxonomy_name ] = [
 				'term_ids'            => $attribute_data->get_options(),
 				'used_for_variations' => $attribute_data->get_variation(),
-			);
+			];
 		}
 
 		return $result;

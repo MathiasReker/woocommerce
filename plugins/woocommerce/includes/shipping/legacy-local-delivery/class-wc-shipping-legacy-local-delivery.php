@@ -71,7 +71,7 @@ class WC_Shipping_Legacy_Local_Delivery extends WC_Shipping_Local_Pickup {
 		$this->availability = $this->get_option( 'availability' );
 		$this->countries    = $this->get_option( 'countries' );
 
-		add_action( 'woocommerce_update_options_shipping_' . $this->id, array( $this, 'process_admin_options' ) );
+		add_action( 'woocommerce_update_options_shipping_' . $this->id, [ $this, 'process_admin_options' ] );
 	}
 
 	/**
@@ -79,7 +79,7 @@ class WC_Shipping_Legacy_Local_Delivery extends WC_Shipping_Local_Pickup {
 	 *
 	 * @param array $package (default: array()).
 	 */
-	public function calculate_shipping( $package = array() ) {
+	public function calculate_shipping( $package = [] ) {
 		$shipping_total = 0;
 
 		switch ( $this->type ) {
@@ -98,12 +98,12 @@ class WC_Shipping_Legacy_Local_Delivery extends WC_Shipping_Local_Pickup {
 				break;
 		}
 
-		$rate = array(
+		$rate = [
 			'id'      => $this->id,
 			'label'   => $this->title,
 			'cost'    => $shipping_total,
 			'package' => $package,
-		);
+		];
 
 		$this->add_rate( $rate );
 	}
@@ -112,70 +112,70 @@ class WC_Shipping_Legacy_Local_Delivery extends WC_Shipping_Local_Pickup {
 	 * Init form fields.
 	 */
 	public function init_form_fields() {
-		$this->form_fields = array(
-			'enabled'      => array(
+		$this->form_fields = [
+			'enabled'      => [
 				'title'   => __( 'Enable', 'woocommerce' ),
 				'type'    => 'checkbox',
 				'label'   => __( 'Once disabled, this legacy method will no longer be available.', 'woocommerce' ),
 				'default' => 'no',
-			),
-			'title'        => array(
+			],
+			'title'        => [
 				'title'       => __( 'Title', 'woocommerce' ),
 				'type'        => 'text',
 				'description' => __( 'This controls the title which the user sees during checkout.', 'woocommerce' ),
 				'default'     => __( 'Local delivery', 'woocommerce' ),
 				'desc_tip'    => true,
-			),
-			'type'         => array(
+			],
+			'type'         => [
 				'title'       => __( 'Fee type', 'woocommerce' ),
 				'type'        => 'select',
 				'class'       => 'wc-enhanced-select',
 				'description' => __( 'How to calculate delivery charges', 'woocommerce' ),
 				'default'     => 'fixed',
-				'options'     => array(
+				'options'     => [
 					'fixed'   => __( 'Fixed amount', 'woocommerce' ),
 					'percent' => __( 'Percentage of cart total', 'woocommerce' ),
 					'product' => __( 'Fixed amount per product', 'woocommerce' ),
-				),
+				],
 				'desc_tip'    => true,
-			),
-			'fee'          => array(
+			],
+			'fee'          => [
 				'title'       => __( 'Delivery fee', 'woocommerce' ),
 				'type'        => 'price',
 				'description' => __( 'What fee do you want to charge for local delivery, disregarded if you choose free. Leave blank to disable.', 'woocommerce' ),
 				'default'     => '',
 				'desc_tip'    => true,
 				'placeholder' => wc_format_localized_price( 0 ),
-			),
-			'codes'        => array(
+			],
+			'codes'        => [
 				'title'       => __( 'Allowed ZIP/post codes', 'woocommerce' ),
 				'type'        => 'text',
 				'desc_tip'    => __( 'What ZIP/post codes are available for local delivery?', 'woocommerce' ),
 				'default'     => '',
 				'description' => __( 'Separate codes with a comma. Accepts wildcards, e.g. <code>P*</code> will match a postcode of PE30. Also accepts a pattern, e.g. <code>NG1___</code> would match NG1 1AA but not NG10 1AA', 'woocommerce' ),
 				'placeholder' => 'e.g. 12345, 56789',
-			),
-			'availability' => array(
+			],
+			'availability' => [
 				'title'   => __( 'Method availability', 'woocommerce' ),
 				'type'    => 'select',
 				'default' => 'all',
 				'class'   => 'availability wc-enhanced-select',
-				'options' => array(
+				'options' => [
 					'all'      => __( 'All allowed countries', 'woocommerce' ),
 					'specific' => __( 'Specific Countries', 'woocommerce' ),
-				),
-			),
-			'countries'    => array(
+				],
+			],
+			'countries'    => [
 				'title'             => __( 'Specific countries', 'woocommerce' ),
 				'type'              => 'multiselect',
 				'class'             => 'wc-enhanced-select',
 				'css'               => 'width: 400px;',
 				'default'           => '',
 				'options'           => WC()->countries->get_shipping_countries(),
-				'custom_attributes' => array(
+				'custom_attributes' => [
 					'data-placeholder' => __( 'Select some countries', 'woocommerce' ),
-				),
-			),
-		);
+				],
+			],
+		];
 	}
 }

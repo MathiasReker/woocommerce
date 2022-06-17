@@ -24,16 +24,16 @@ class WC_Admin_Tests_API_Themes extends WC_REST_Unit_Test_Case {
 		parent::setUp();
 
 		$this->user = $this->factory->user->create(
-			array(
+			[
 				'role' => 'administrator',
-			)
+			]
 		);
 
 		// Editor does not have theme capabilities.
 		$this->editor = $this->factory->user->create(
-			array(
+			[
 				'role' => 'editor',
-			)
+			]
 		);
 	}
 

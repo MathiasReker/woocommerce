@@ -13,27 +13,27 @@ class WC_Stock_Functions_Tests extends \WC_Unit_Test_Case {
 	/**
 	 * @var array List of statuses which reduces stock from inventory.
 	 */
-	public $order_stock_reduce_statuses = array(
+	public $order_stock_reduce_statuses = [
 		'wc-processing',
 		'wc-completed',
 		'wc-on-hold',
-	);
+	];
 
 	/**
 	 * @var array List of statuses which restores stock back into inventory.
 	 */
-	public $order_stock_restore_statuses = array(
+	public $order_stock_restore_statuses = [
 		'wc-cancelled',
 		'wc-pending',
-	);
+	];
 
 	/**
 	 * @var array List of statuses which have no impact on inventory.
 	 */
-	public $order_stock_no_effect_statuses = array(
+	public $order_stock_no_effect_statuses = [
 		'wc-failed',
 		'wc-refunded',
-	);
+	];
 
 	/**
 	 * Helper function to simulate creating order from cart.
@@ -43,10 +43,10 @@ class WC_Stock_Functions_Tests extends \WC_Unit_Test_Case {
 	private function create_order_from_cart_with_status( $status ) {
 		$product = WC_Helper_Product::create_simple_product(
 			true,
-			array(
+			[
 				'manage_stock'   => true,
 				'stock_quantity' => 10,
-			)
+			]
 		);
 		WC()->cart->empty_cart();
 		WC()->cart->add_to_cart( $product->get_id(), 1 );
@@ -216,11 +216,11 @@ class WC_Stock_Functions_Tests extends \WC_Unit_Test_Case {
 		// Simple product, set low stock amount.
 		$product = WC_Helper_Product::create_simple_product(
 			true,
-			array(
+			[
 				'manage_stock'     => true,
 				'stock_quantity'   => 10,
 				'low_stock_amount' => $product_low_stock_amount,
-			)
+			]
 		);
 
 		$this->assertIsIntAndEquals( $product_low_stock_amount, wc_get_low_stock_amount( $product ) );
@@ -238,10 +238,10 @@ class WC_Stock_Functions_Tests extends \WC_Unit_Test_Case {
 		// Simple product, don't set low stock amount.
 		$product = WC_Helper_Product::create_simple_product(
 			true,
-			array(
+			[
 				'manage_stock'   => true,
 				'stock_quantity' => 10,
-			)
+			]
 		);
 
 		$this->assertIsIntAndEquals( $site_wide_low_stock_amount, wc_get_low_stock_amount( $product ) );

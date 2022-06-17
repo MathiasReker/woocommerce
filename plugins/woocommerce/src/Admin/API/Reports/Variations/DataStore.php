@@ -36,7 +36,7 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 	 *
 	 * @var array
 	 */
-	protected $column_types = array(
+	protected $column_types = [
 		'date_start'   => 'strval',
 		'date_end'     => 'strval',
 		'product_id'   => 'intval',
@@ -49,14 +49,14 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 		'image'        => 'strval',
 		'permalink'    => 'strval',
 		'sku'          => 'strval',
-	);
+	];
 
 	/**
 	 * Extended product attributes to include in the data.
 	 *
 	 * @var array
 	 */
-	protected $extended_attributes = array(
+	protected $extended_attributes = [
 		'name',
 		'price',
 		'image',
@@ -65,7 +65,7 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 		'stock_quantity',
 		'low_stock_amount',
 		'sku',
-	);
+	];
 
 	/**
 	 * Data store context used to pass to filters.
@@ -79,13 +79,13 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 	 */
 	protected function assign_report_columns() {
 		$table_name           = self::get_db_table_name();
-		$this->report_columns = array(
+		$this->report_columns = [
 			'product_id'   => 'product_id',
 			'variation_id' => 'variation_id',
 			'items_sold'   => 'SUM(product_qty) as items_sold',
 			'net_revenue'  => 'SUM(product_net_revenue) AS net_revenue',
 			'orders_count' => "COUNT(DISTINCT {$table_name}.order_id) as orders_count",
-		);
+		];
 	}
 
 	/**
@@ -154,7 +154,7 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 		$order_product_lookup_table = self::get_db_table_name();
 		$order_stats_lookup_table   = $wpdb->prefix . 'wc_order_stats';
 		$order_item_meta_table      = $wpdb->prefix . 'woocommerce_order_itemmeta';
-		$where_subquery             = array();
+		$where_subquery             = [];
 
 		$this->add_time_period_sql_params( $query_args, $order_product_lookup_table );
 		$this->get_limit_sql_params( $query_args );
@@ -238,7 +238,7 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 			if ( $query_args['extended_info'] ) {
 				$extended_attributes = apply_filters( 'woocommerce_rest_reports_variations_extended_attributes', $this->extended_attributes, $product_data );
 				$parent_product      = wc_get_product( $product_data['product_id'] );
-				$attributes          = array();
+				$attributes          = [];
 
 				// Base extended info off the parent variable product if the variation ID is 0.
 				// This is caused by simple products with prior sales being converted into variable products.
@@ -254,7 +254,7 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 				}
 				foreach ( $extended_attributes as $extended_attribute ) {
 					$function = 'get_' . $extended_attribute;
-					if ( is_callable( array( $extended_attributes_product, $function ) ) ) {
+					if ( is_callable( [ $extended_attributes_product, $function ] ) ) {
 						$value                                = $extended_attributes_product->{$function}();
 						$extended_info[ $extended_attribute ] = $value;
 					}
@@ -264,18 +264,18 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 				// NOTE: We don't fall back to the parent product here because it will include all possible attribute options.
 				if (
 					0 < $variation_id &&
-					is_callable( array( $variation_product, 'get_variation_attributes' ) )
+					is_callable( [ $variation_product, 'get_variation_attributes' ] )
 				) {
 					$variation_attributes = $variation_product->get_variation_attributes();
 
 					foreach ( $variation_attributes as $attribute_name => $attribute ) {
 						$name         = str_replace( 'attribute_', '', $attribute_name );
 						$option_term  = get_term_by( 'slug', $attribute, $name );
-						$attributes[] = array(
+						$attributes[] = [
 							'id'     => wc_attribute_taxonomy_id_by_name( $name ),
 							'name'   => str_replace( 'pa_', '', $name ),
 							'option' => $option_term && ! is_wp_error( $option_term ) ? $option_term->name : $attribute,
-						);
+						];
 					}
 				}
 
@@ -386,7 +386,7 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 		$table_name = self::get_db_table_name();
 
 		// These defaults are only partially applied when used via REST API, as that has its own defaults.
-		$defaults   = array(
+		$defaults   = [
 			'per_page'           => get_option( 'posts_per_page' ),
 			'page'               => 1,
 			'order'              => 'DESC',
@@ -394,10 +394,10 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 			'before'             => TimeInterval::default_before(),
 			'after'              => TimeInterval::default_after(),
 			'fields'             => '*',
-			'product_includes'   => array(),
-			'variation_includes' => array(),
+			'product_includes'   => [],
+			'variation_includes' => [],
 			'extended_info'      => false,
-		);
+		];
 		$query_args = wp_parse_args( $query_args, $defaults );
 		$this->normalize_timezones( $query_args, $defaults );
 
@@ -411,18 +411,18 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 		if ( false === $data ) {
 			$this->initialize_queries();
 
-			$data = (object) array(
-				'data'    => array(),
+			$data = (object) [
+				'data'    => [],
 				'total'   => 0,
 				'pages'   => 0,
 				'page_no' => 0,
-			);
+			];
 
 			$selections          = $this->selected_columns( $query_args );
 			$included_variations =
 				( isset( $query_args['variation_includes'] ) && is_array( $query_args['variation_includes'] ) )
 					? $query_args['variation_includes']
-					: array();
+					: [];
 			$params              = $this->get_limit_params( $query_args );
 			$this->add_sql_query_params( $query_args );
 
@@ -438,7 +438,7 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 				}
 
 				$fields          = $this->get_fields( $query_args );
-				$join_selections = $this->format_join_selections( $fields, array( 'variation_id' ) );
+				$join_selections = $this->format_join_selections( $fields, [ 'variation_id' ] );
 				$ids_table       = $this->get_ids_table( $included_variations, 'variation_id' );
 
 				$this->add_sql_clause( 'select', $join_selections );
@@ -492,13 +492,13 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 				$this->fill_deleted_product_name( $product_data );
 			}
 
-			$product_data = array_map( array( $this, 'cast_numbers' ), $product_data );
-			$data         = (object) array(
+			$product_data = array_map( [ $this, 'cast_numbers' ], $product_data );
+			$data         = (object) [
 				'data'    => $product_data,
 				'total'   => $total_results,
 				'pages'   => $total_pages,
 				'page_no' => (int) $query_args['page'],
-			);
+			];
 
 			$this->set_cached_data( $cache_key, $data );
 		}

@@ -19,7 +19,7 @@ class WC_Customer_Download_Data_Store implements WC_Customer_Download_Data_Store
 	/**
 	 * Names of the database fields for the download permissions table.
 	 */
-	const DOWNLOAD_PERMISSION_DB_FIELDS = array(
+	const DOWNLOAD_PERMISSION_DB_FIELDS = [
 		'download_id',
 		'product_id',
 		'user_id',
@@ -30,7 +30,7 @@ class WC_Customer_Download_Data_Store implements WC_Customer_Download_Data_Store
 		'access_granted',
 		'download_count',
 		'access_expires',
-	);
+	];
 
 	/**
 	 * Create download permission for a user, from an array of data.
@@ -61,9 +61,9 @@ class WC_Customer_Download_Data_Store implements WC_Customer_Download_Data_Store
 			$download->set_access_granted( time() );
 		}
 
-		$data = array();
+		$data = [];
 		foreach ( self::DOWNLOAD_PERMISSION_DB_FIELDS as $db_field_name ) {
-			$value                  = call_user_func( array( $download, 'get_' . $db_field_name ), 'edit' );
+			$value                  = call_user_func( [ $download, 'get_' . $db_field_name ], 'edit' );
 			$data[ $db_field_name ] = $value;
 		}
 
@@ -97,7 +97,7 @@ class WC_Customer_Download_Data_Store implements WC_Customer_Download_Data_Store
 			$data['access_expires'] = $this->adjust_date_for_db( $data['access_expires'] );
 		}
 
-		$format = array(
+		$format = [
 			'%s',
 			'%s',
 			'%s',
@@ -108,7 +108,7 @@ class WC_Customer_Download_Data_Store implements WC_Customer_Download_Data_Store
 			'%s',
 			'%d',
 			'%s',
-		);
+		];
 
 		$result = $wpdb->insert(
 			$wpdb->prefix . 'woocommerce_downloadable_product_permissions',
@@ -168,7 +168,7 @@ class WC_Customer_Download_Data_Store implements WC_Customer_Download_Data_Store
 		}
 
 		$download->set_props(
-			array(
+			[
 				'download_id'         => $raw_download->download_id,
 				'product_id'          => $raw_download->product_id,
 				'user_id'             => $raw_download->user_id,
@@ -179,7 +179,7 @@ class WC_Customer_Download_Data_Store implements WC_Customer_Download_Data_Store
 				'access_granted'      => strtotime( $raw_download->access_granted ),
 				'download_count'      => $raw_download->download_count,
 				'access_expires'      => is_null( $raw_download->access_expires ) ? null : strtotime( $raw_download->access_expires ),
-			)
+			]
 		);
 		$download->set_object_read( true );
 	}
@@ -192,7 +192,7 @@ class WC_Customer_Download_Data_Store implements WC_Customer_Download_Data_Store
 	public function update( &$download ) {
 		global $wpdb;
 
-		$data = array(
+		$data = [
 			'download_id'         => $download->get_download_id( 'edit' ),
 			'product_id'          => $download->get_product_id( 'edit' ),
 			'user_id'             => $download->get_user_id( 'edit' ),
@@ -205,9 +205,9 @@ class WC_Customer_Download_Data_Store implements WC_Customer_Download_Data_Store
 			'download_count'      => $download->get_download_count( 'edit' ),
 			// phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date
 			'access_expires'      => ! is_null( $download->get_access_expires( 'edit' ) ) ? date( 'Y-m-d', $download->get_access_expires( 'edit' )->getTimestamp() ) : null,
-		);
+		];
 
-		$format = array(
+		$format = [
 			'%s',
 			'%s',
 			'%s',
@@ -218,14 +218,14 @@ class WC_Customer_Download_Data_Store implements WC_Customer_Download_Data_Store
 			'%s',
 			'%d',
 			'%s',
-		);
+		];
 
 		$wpdb->update(
 			$wpdb->prefix . 'woocommerce_downloadable_product_permissions',
 			$data,
-			array(
+			[
 				'permission_id' => $download->get_id(),
-			),
+			],
 			$format
 		);
 		$download->apply_changes();
@@ -237,7 +237,7 @@ class WC_Customer_Download_Data_Store implements WC_Customer_Download_Data_Store
 	 * @param WC_Customer_Download $download WC_Customer_Download object.
 	 * @param array                $args Array of args to pass to the delete method.
 	 */
-	public function delete( &$download, $args = array() ) {
+	public function delete( &$download, $args = [] ) {
 		global $wpdb;
 
 		$wpdb->query(
@@ -351,12 +351,12 @@ class WC_Customer_Download_Data_Store implements WC_Customer_Download_Data_Store
 	 * @param  array $args Arguments to filter downloads. $args['return'] accepts the following values: 'objects' (default), 'ids' or a comma separated list of fields (for example: 'order_id,user_id,user_email').
 	 * @return array Can be an array of permission_ids, an array of WC_Customer_Download objects or an array of arrays containing specified fields depending on the value of $args['return'].
 	 */
-	public function get_downloads( $args = array() ) {
+	public function get_downloads( $args = [] ) {
 		global $wpdb;
 
 		$args = wp_parse_args(
 			$args,
-			array(
+			[
 				'user_email'  => '',
 				'user_id'     => '',
 				'order_id'    => '',
@@ -368,10 +368,10 @@ class WC_Customer_Download_Data_Store implements WC_Customer_Download_Data_Store
 				'limit'       => -1,
 				'page'        => 1,
 				'return'      => 'objects',
-			)
+			]
 		);
 
-		$valid_fields       = array( 'permission_id', 'download_id', 'product_id', 'order_id', 'order_key', 'user_email', 'user_id', 'downloads_remaining', 'access_granted', 'access_expires', 'download_count' );
+		$valid_fields       = [ 'permission_id', 'download_id', 'product_id', 'order_id', 'order_key', 'user_email', 'user_id', 'downloads_remaining', 'access_granted', 'access_expires', 'download_count' ];
 		$get_results_output = ARRAY_A;
 
 		if ( 'ids' === $args['return'] ) {
@@ -384,7 +384,7 @@ class WC_Customer_Download_Data_Store implements WC_Customer_Download_Data_Store
 			$fields = implode( ', ', array_intersect( $fields, $valid_fields ) );
 		}
 
-		$query   = array();
+		$query   = [];
 		$query[] = "SELECT {$fields} FROM {$wpdb->prefix}woocommerce_downloadable_product_permissions WHERE 1=1";
 
 		if ( $args['user_email'] ) {
@@ -427,7 +427,7 @@ class WC_Customer_Download_Data_Store implements WC_Customer_Download_Data_Store
 			case 'ids':
 				return wp_list_pluck( $results, 'permission_id' );
 			case 'objects':
-				return array_map( array( $this, 'get_download' ), $results );
+				return array_map( [ $this, 'get_download' ], $results );
 			default:
 				return $results;
 		}
@@ -449,13 +449,13 @@ class WC_Customer_Download_Data_Store implements WC_Customer_Download_Data_Store
 
 		$wpdb->update(
 			$wpdb->prefix . 'woocommerce_downloadable_product_permissions',
-			array(
+			[
 				'download_id' => $new_id,
-			),
-			array(
+			],
+			[
 				'download_id' => $old_id,
 				'product_id'  => $product_id,
-			)
+			]
 		);
 	}
 
@@ -502,20 +502,20 @@ class WC_Customer_Download_Data_Store implements WC_Customer_Download_Data_Store
 		global $wpdb;
 		$wpdb->update(
 			$wpdb->prefix . 'woocommerce_downloadable_product_permissions',
-			array(
+			[
 				'user_id'    => $customer_id,
 				'user_email' => $email,
-			),
-			array(
+			],
+			[
 				'order_id' => $order_id,
-			),
-			array(
+			],
+			[
 				'%d',
 				'%s',
-			),
-			array(
+			],
+			[
 				'%d',
-			)
+			]
 		);
 	}
 }

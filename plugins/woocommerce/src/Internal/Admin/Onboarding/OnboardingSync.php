@@ -34,14 +34,14 @@ class OnboardingSync {
 	 * Init.
 	 */
 	public function init() {
-		add_action( 'update_option_' . OnboardingProfile::DATA_OPTION, array( $this, 'send_profile_data_on_update' ), 10, 2 );
-		add_action( 'woocommerce_helper_connected', array( $this, 'send_profile_data_on_connect' ) );
+		add_action( 'update_option_' . OnboardingProfile::DATA_OPTION, [ $this, 'send_profile_data_on_update' ], 10, 2 );
+		add_action( 'woocommerce_helper_connected', [ $this, 'send_profile_data_on_connect' ] );
 
 		if ( ! is_admin() ) {
 			return;
 		}
 
-		add_action( 'current_screen', array( $this, 'redirect_wccom_install' ) );
+		add_action( 'current_screen', [ $this, 'redirect_wccom_install' ] );
 	}
 
 	/**
@@ -65,27 +65,27 @@ class OnboardingSync {
 			return false;
 		}
 
-		$profile       = get_option( OnboardingProfile::DATA_OPTION, array() );
+		$profile       = get_option( OnboardingProfile::DATA_OPTION, [] );
 		$base_location = wc_get_base_location();
-		$defaults      = array(
+		$defaults      = [
 			'plugins'             => 'skipped',
-			'industry'            => array(),
-			'product_types'       => array(),
+			'industry'            => [],
+			'product_types'       => [],
 			'product_count'       => '0',
 			'selling_venues'      => 'no',
 			'number_employees'    => '1',
 			'revenue'             => 'none',
 			'other_platform'      => 'none',
-			'business_extensions' => array(),
+			'business_extensions' => [],
 			'theme'               => get_stylesheet(),
 			'setup_client'        => false,
 			'store_location'      => $base_location['country'],
 			'default_currency'    => get_woocommerce_currency(),
-		);
+		];
 
 		// Prepare industries as an array of slugs if they are in array format.
 		if ( isset( $profile['industry'] ) && is_array( $profile['industry'] ) ) {
-			$industry_slugs = array();
+			$industry_slugs = [];
 			foreach ( $profile['industry'] as $industry ) {
 				$industry_slugs[] = is_array( $industry ) ? $industry['slug'] : $industry;
 			}
@@ -95,13 +95,13 @@ class OnboardingSync {
 
 		\WC_Helper_API::put(
 			'profile',
-			array(
+			[
 				'authenticated' => true,
 				'body'          => wp_json_encode( $body ),
-				'headers'       => array(
+				'headers'       => [
 					'Content-Type' => 'application/json',
-				),
-			)
+				],
+			]
 		);
 	}
 
@@ -123,7 +123,7 @@ class OnboardingSync {
 	 * Send profiler data after a site is connected.
 	 */
 	public function send_profile_data_on_connect() {
-		$profile = get_option( OnboardingProfile::DATA_OPTION, array() );
+		$profile = get_option( OnboardingProfile::DATA_OPTION, [] );
 		if ( ! isset( $profile['completed'] ) || ! $profile['completed'] ) {
 			return;
 		}

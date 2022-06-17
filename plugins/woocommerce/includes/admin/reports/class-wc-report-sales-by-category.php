@@ -22,35 +22,35 @@ class WC_Report_Sales_By_Category extends WC_Admin_Report {
 	 *
 	 * @var array
 	 */
-	public $chart_colours = array();
+	public $chart_colours = [];
 
 	/**
 	 * Categories ids.
 	 *
 	 * @var array
 	 */
-	public $show_categories = array();
+	public $show_categories = [];
 
 	/**
 	 * Item sales.
 	 *
 	 * @var array
 	 */
-	private $item_sales = array();
+	private $item_sales = [];
 
 	/**
 	 * Item sales and times.
 	 *
 	 * @var array
 	 */
-	private $item_sales_and_times = array();
+	private $item_sales_and_times = [];
 
 	/**
 	 * Constructor.
 	 */
 	public function __construct() {
 		if ( isset( $_GET['show_categories'] ) ) {
-			$this->show_categories = is_array( $_GET['show_categories'] ) ? array_map( 'absint', $_GET['show_categories'] ) : array( absint( $_GET['show_categories'] ) );
+			$this->show_categories = is_array( $_GET['show_categories'] ) ? array_map( 'absint', $_GET['show_categories'] ) : [ absint( $_GET['show_categories'] ) ];
 		}
 	}
 
@@ -76,10 +76,10 @@ class WC_Report_Sales_By_Category extends WC_Admin_Report {
 	public function get_chart_legend() {
 
 		if ( empty( $this->show_categories ) ) {
-			return array();
+			return [];
 		}
 
-		$legend = array();
+		$legend = [];
 		$index  = 0;
 
 		foreach ( $this->show_categories as $category ) {
@@ -95,12 +95,12 @@ class WC_Report_Sales_By_Category extends WC_Admin_Report {
 				}
 			}
 
-			$legend[] = array(
+			$legend[] = [
 				/* translators: 1: total items sold 2: category name */
 				'title'            => sprintf( __( '%1$s sales in %2$s', 'woocommerce' ), '<strong>' . wc_price( $total ) . '</strong>', $category->name ),
 				'color'            => isset( $this->chart_colours[ $index ] ) ? $this->chart_colours[ $index ] : $this->chart_colours[0],
 				'highlight_series' => $index,
-			);
+			];
 
 			$index++;
 		}
@@ -113,18 +113,18 @@ class WC_Report_Sales_By_Category extends WC_Admin_Report {
 	 */
 	public function output_report() {
 
-		$ranges = array(
+		$ranges = [
 			'year'       => __( 'Year', 'woocommerce' ),
 			'last_month' => __( 'Last month', 'woocommerce' ),
 			'month'      => __( 'This month', 'woocommerce' ),
 			'7day'       => __( 'Last 7 days', 'woocommerce' ),
-		);
+		];
 
-		$this->chart_colours = array( '#3498db', '#34495e', '#1abc9c', '#2ecc71', '#f1c40f', '#e67e22', '#e74c3c', '#2980b9', '#8e44ad', '#2c3e50', '#16a085', '#27ae60', '#f39c12', '#d35400', '#c0392b' );
+		$this->chart_colours = [ '#3498db', '#34495e', '#1abc9c', '#2ecc71', '#f1c40f', '#e67e22', '#e74c3c', '#2980b9', '#8e44ad', '#2c3e50', '#16a085', '#27ae60', '#f39c12', '#d35400', '#c0392b' ];
 
 		$current_range = ! empty( $_GET['range'] ) ? sanitize_text_field( wp_unslash( $_GET['range'] ) ) : '7day';
 
-		if ( ! in_array( $current_range, array( 'custom', 'year', 'last_month', 'month', '7day' ) ) ) {
+		if ( ! in_array( $current_range, [ 'custom', 'year', 'last_month', 'month', '7day' ] ) ) {
 			$current_range = '7day';
 		}
 
@@ -134,34 +134,34 @@ class WC_Report_Sales_By_Category extends WC_Admin_Report {
 		// Get item sales data.
 		if ( ! empty( $this->show_categories ) ) {
 			$order_items = $this->get_order_report_data(
-				array(
-					'data'         => array(
-						'_product_id' => array(
+				[
+					'data'         => [
+						'_product_id' => [
 							'type'            => 'order_item_meta',
 							'order_item_type' => 'line_item',
 							'function'        => '',
 							'name'            => 'product_id',
-						),
-						'_line_total' => array(
+						],
+						'_line_total' => [
 							'type'            => 'order_item_meta',
 							'order_item_type' => 'line_item',
 							'function'        => 'SUM',
 							'name'            => 'order_item_amount',
-						),
-						'post_date'   => array(
+						],
+						'post_date'   => [
 							'type'     => 'post_data',
 							'function' => '',
 							'name'     => 'post_date',
-						),
-					),
+						],
+					],
 					'group_by'     => 'ID, product_id, post_date',
 					'query_type'   => 'get_results',
 					'filter_range' => true,
-				)
+				]
 			);
 
-			$this->item_sales           = array();
-			$this->item_sales_and_times = array();
+			$this->item_sales           = [];
+			$this->item_sales_and_times = [];
 
 			if ( is_array( $order_items ) ) {
 
@@ -194,12 +194,12 @@ class WC_Report_Sales_By_Category extends WC_Admin_Report {
 	 */
 	public function get_chart_widgets() {
 
-		return array(
-			array(
+		return [
+			[
 				'title'    => __( 'Categories', 'woocommerce' ),
-				'callback' => array( $this, 'category_widget' ),
-			),
-		);
+				'callback' => [ $this, 'category_widget' ],
+			],
+		];
 	}
 
 	/**
@@ -207,13 +207,13 @@ class WC_Report_Sales_By_Category extends WC_Admin_Report {
 	 */
 	public function category_widget() {
 
-		$categories = get_terms( 'product_cat', array( 'orderby' => 'name' ) );
+		$categories = get_terms( 'product_cat', [ 'orderby' => 'name' ] );
 		?>
 		<form method="GET">
 			<div>
 				<select multiple="multiple" data-placeholder="<?php esc_attr_e( 'Select categories&hellip;', 'woocommerce' ); ?>" class="wc-enhanced-select" id="show_categories" name="show_categories[]" style="width: 205px;">
 					<?php
-						$r                 = array();
+						$r                 = [];
 						$r['pad_counts']   = 1;
 						$r['hierarchical'] = 1;
 						$r['hide_empty']   = 1;
@@ -290,14 +290,14 @@ class WC_Report_Sales_By_Category extends WC_Admin_Report {
 			</div>
 			<?php
 		} else {
-			$chart_data = array();
+			$chart_data = [];
 			$index      = 0;
 
 			foreach ( $this->show_categories as $category ) {
 
 				$category            = get_term( $category, 'product_cat' );
 				$product_ids         = $this->get_products_in_category( $category->term_id );
-				$category_chart_data = array();
+				$category_chart_data = [];
 
 				for ( $i = 0; $i <= $this->chart_interval; $i ++ ) {
 
@@ -320,7 +320,7 @@ class WC_Report_Sales_By_Category extends WC_Admin_Report {
 						}
 					}
 
-					$category_chart_data[] = array( $time, (float) wc_format_decimal( $interval_total, wc_get_price_decimals() ) );
+					$category_chart_data[] = [ $time, (float) wc_format_decimal( $interval_total, wc_get_price_decimals() ) ];
 				}
 
 				$chart_data[ $category->term_id ]['category'] = $category->name;

@@ -27,7 +27,7 @@ class WC_Customer_Download extends WC_Data implements ArrayAccess {
 	 * @since 3.0.0
 	 * @var array
 	 */
-	protected $data = array(
+	protected $data = [
 		'download_id'         => '',
 		'product_id'          => 0,
 		'user_id'             => 0,
@@ -38,7 +38,7 @@ class WC_Customer_Download extends WC_Data implements ArrayAccess {
 		'access_granted'      => null,
 		'access_expires'      => null,
 		'download_count'      => 0,
-	);
+	];
 
 	/**
 	 * Constructor.
@@ -347,7 +347,7 @@ WHERE permission_id = %d",
 	 */
 	#[\ReturnTypeWillChange]
 	public function offsetGet( $offset ) {
-		if ( is_callable( array( $this, "get_$offset" ) ) ) {
+		if ( is_callable( [ $this, "get_$offset" ] ) ) {
 			return $this->{"get_$offset"}();
 		}
 	}
@@ -360,7 +360,7 @@ WHERE permission_id = %d",
 	 */
 	#[\ReturnTypeWillChange]
 	public function offsetSet( $offset, $value ) {
-		if ( is_callable( array( $this, "set_$offset" ) ) ) {
+		if ( is_callable( [ $this, "set_$offset" ] ) ) {
 			$this->{"set_$offset"}( $value );
 		}
 	}
@@ -372,7 +372,7 @@ WHERE permission_id = %d",
 	 */
 	#[\ReturnTypeWillChange]
 	public function offsetUnset( $offset ) {
-		if ( is_callable( array( $this, "set_$offset" ) ) ) {
+		if ( is_callable( [ $this, "set_$offset" ] ) ) {
 			$this->{"set_$offset"}( '' );
 		}
 	}
@@ -405,7 +405,7 @@ WHERE permission_id = %d",
 	 * @return mixed
 	 */
 	public function __get( $key ) {
-		if ( is_callable( array( $this, "get_$key" ) ) ) {
+		if ( is_callable( [ $this, "get_$key" ] ) ) {
 			return $this->{"get_$key"}( '' );
 		}
 	}

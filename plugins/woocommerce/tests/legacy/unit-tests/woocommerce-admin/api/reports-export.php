@@ -33,9 +33,9 @@ class WC_Admin_Tests_API_Reports_Export extends WC_REST_Unit_Test_Case {
 		parent::setUp();
 
 		$this->user = $this->factory->user->create(
-			array(
+			[
 				'role' => 'administrator',
-			)
+			]
 		);
 	}
 
@@ -79,26 +79,26 @@ class WC_Admin_Tests_API_Reports_Export extends WC_REST_Unit_Test_Case {
 
 		// Add a GA tax rate.
 		$ga_rate_id = WC_Tax::_insert_tax_rate(
-			array(
+			[
 				'tax_rate'          => '7',
 				'tax_rate_country'  => 'US',
 				'tax_rate_state'    => 'GA',
 				'tax_rate_name'     => 'GA Tax',
 				'tax_rate_priority' => 1,
 				'tax_rate_order'    => 1,
-			)
+			]
 		);
 
 		// Add a FL tax rate.
 		$fl_rate_id = WC_Tax::_insert_tax_rate(
-			array(
+			[
 				'tax_rate'          => '6',
 				'tax_rate_country'  => 'US',
 				'tax_rate_state'    => 'FL',
 				'tax_rate_name'     => 'FL Tax',
 				'tax_rate_priority' => 1,
 				'tax_rate_order'    => 1,
-			)
+			]
 		);
 
 		// Create a GA order.
@@ -131,7 +131,7 @@ class WC_Admin_Tests_API_Reports_Export extends WC_REST_Unit_Test_Case {
 		$this->assertStringMatchesFormat( '%s/wc-analytics/reports/taxes/export/%d/status', $status_url );
 
 		// Check the initial status of the export.
-		$status_url_query = array();
+		$status_url_query = [];
 		parse_str( parse_url( $status_url, PHP_URL_QUERY ), $status_url_query );
 		$status_route = $status_url_query['rest_route'];
 

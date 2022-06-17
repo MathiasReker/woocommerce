@@ -33,13 +33,13 @@ class FirstDownlaodableProduct {
 	 */
 	public static function get_note() {
 		$query    = new \WC_Product_Query(
-			array(
+			[
 				'limit'        => 1,
 				'paginate'     => true,
 				'return'       => 'ids',
 				'downloadable' => 1,
-				'status'       => array( 'publish' ),
-			)
+				'status'       => [ 'publish' ],
+			]
 		);
 		$products = $query->get_products();
 
@@ -58,7 +58,7 @@ class FirstDownlaodableProduct {
 		);
 		$note->set_type( Note::E_WC_ADMIN_NOTE_INFORMATIONAL );
 		$note->set_name( self::NOTE_NAME );
-		$note->set_content_data( (object) array() );
+		$note->set_content_data( (object) [] );
 		$note->set_source( 'woocommerce-admin' );
 		$note->add_action(
 			'first-downloadable-product-handling',

@@ -105,11 +105,11 @@ class WC_Tests_Product_Variation extends WC_Unit_Test_Case {
 		$product = WC_Helper_Product::create_variation_product();
 		$sut     = wc_get_product( $product->get_children()[2] );
 
-		$expected = array(
+		$expected = [
 			$expected_prefix . 'pa_size'   => 'huge',
 			$expected_prefix . 'pa_colour' => 'red',
 			$expected_prefix . 'pa_number' => '0',
-		);
+		];
 
 		$actual = $sut->get_variation_attributes( $with_prefix );
 		$this->assertEquals( $expected, $actual );

@@ -24,15 +24,15 @@ class RemoteInboxNotificationsEngine {
 	 */
 	public static function init() {
 		// Init things that need to happen before admin_init.
-		add_action( 'init', array( __CLASS__, 'on_init' ), 0, 0 );
+		add_action( 'init', [ __CLASS__, 'on_init' ], 0, 0 );
 
 		// Continue init via admin_init.
-		add_action( 'admin_init', array( __CLASS__, 'on_admin_init' ) );
+		add_action( 'admin_init', [ __CLASS__, 'on_admin_init' ] );
 
 		// Trigger when the profile data option is updated (during onboarding).
 		add_action(
 			'update_option_' . OnboardingProfile::DATA_OPTION,
-			array( __CLASS__, 'update_profile_option' ),
+			[ __CLASS__, 'update_profile_option' ],
 			10,
 			2
 		);
@@ -44,14 +44,14 @@ class RemoteInboxNotificationsEngine {
 			function() {
 				$next_hook = WC()->queue()->get_next(
 					'woocommerce_run_on_woocommerce_admin_updated',
-					array( __CLASS__, 'run_on_woocommerce_admin_updated' ),
+					[ __CLASS__, 'run_on_woocommerce_admin_updated' ],
 					'woocommerce-remote-inbox-engine'
 				);
 				if ( null === $next_hook ) {
 					WC()->queue()->schedule_single(
 						time(),
 						'woocommerce_run_on_woocommerce_admin_updated',
-						array( __CLASS__, 'run_on_woocommerce_admin_updated' ),
+						[ __CLASS__, 'run_on_woocommerce_admin_updated' ],
 						'woocommerce-remote-inbox-engine'
 					);
 				}
@@ -85,8 +85,8 @@ class RemoteInboxNotificationsEngine {
 	 * condition and thus doesn't return any results.
 	 */
 	public static function on_admin_init() {
-		add_action( 'activated_plugin', array( __CLASS__, 'run' ) );
-		add_action( 'deactivated_plugin', array( __CLASS__, 'run_on_deactivated_plugin' ), 10, 1 );
+		add_action( 'activated_plugin', [ __CLASS__, 'run' ] );
+		add_action( 'deactivated_plugin', [ __CLASS__, 'run_on_deactivated_plugin' ], 10, 1 );
 		StoredStateSetupForProducts::admin_init();
 
 		// Pre-fetch stored state so it has the correct initial values.

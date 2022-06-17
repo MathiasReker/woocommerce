@@ -38,7 +38,7 @@ abstract class WC_Data {
 	 * @since 3.0.0
 	 * @var array
 	 */
-	protected $data = array();
+	protected $data = [];
 
 	/**
 	 * Core data changes for this object.
@@ -46,7 +46,7 @@ abstract class WC_Data {
 	 * @since 3.0.0
 	 * @var array
 	 */
-	protected $changes = array();
+	protected $changes = [];
 
 	/**
 	 * This is false until the object is read from the DB.
@@ -72,7 +72,7 @@ abstract class WC_Data {
 	 * @since 3.0.0
 	 * @var array
 	 */
-	protected $extra_data = array();
+	protected $extra_data = [];
 
 	/**
 	 * Set to _data on construct so we can track and reset data if needed.
@@ -80,7 +80,7 @@ abstract class WC_Data {
 	 * @since 3.0.0
 	 * @var array
 	 */
-	protected $default_data = array();
+	protected $default_data = [];
 
 	/**
 	 * Contains a reference to the data store for this class.
@@ -123,7 +123,7 @@ abstract class WC_Data {
 	 * @return array
 	 */
 	public function __sleep() {
-		return array( 'id' );
+		return [ 'id' ];
 	}
 
 	/**
@@ -186,7 +186,7 @@ abstract class WC_Data {
 	 */
 	public function delete( $force_delete = false ) {
 		if ( $this->data_store ) {
-			$this->data_store->delete( $this, array( 'force_delete' => $force_delete ) );
+			$this->data_store->delete( $this, [ 'force_delete' => $force_delete ] );
 			$this->set_id( 0 );
 			return true;
 		}
@@ -246,7 +246,7 @@ abstract class WC_Data {
 	 * @return array
 	 */
 	public function get_data() {
-		return array_merge( array( 'id' => $this->get_id() ), $this->data, array( 'meta_data' => $this->get_meta_data() ) );
+		return array_merge( [ 'id' => $this->get_id() ], $this->data, [ 'meta_data' => $this->get_meta_data() ] );
 	}
 
 	/**
@@ -288,7 +288,7 @@ abstract class WC_Data {
 	 */
 	public function get_meta_data() {
 		$this->maybe_read_meta_data();
-		return array_values( array_filter( $this->meta_data, array( $this, 'filter_null_meta' ) ) );
+		return array_values( array_filter( $this->meta_data, [ $this, 'filter_null_meta' ] ) );
 	}
 
 	/**
@@ -305,7 +305,7 @@ abstract class WC_Data {
 			return false;
 		}
 
-		$has_setter_or_getter = is_callable( array( $this, 'set_' . ltrim( $key, '_' ) ) ) || is_callable( array( $this, 'get_' . ltrim( $key, '_' ) ) );
+		$has_setter_or_getter = is_callable( [ $this, 'set_' . ltrim( $key, '_' ) ] ) || is_callable( [ $this, 'get_' . ltrim( $key, '_' ) ] );
 
 		if ( ! $has_setter_or_getter ) {
 			return false;
@@ -329,7 +329,7 @@ abstract class WC_Data {
 		if ( $this->is_internal_meta_key( $key ) ) {
 			$function = 'get_' . ltrim( $key, '_' );
 
-			if ( is_callable( array( $this, $function ) ) ) {
+			if ( is_callable( [ $this, $function ] ) ) {
 				return $this->{$function}();
 			}
 		}
@@ -337,7 +337,7 @@ abstract class WC_Data {
 		$this->maybe_read_meta_data();
 		$meta_data  = $this->get_meta_data();
 		$array_keys = array_keys( wp_list_pluck( $meta_data, 'key' ), $key, true );
-		$value      = $single ? '' : array();
+		$value      = $single ? '' : [];
 
 		if ( ! empty( $array_keys ) ) {
 			// We don't use the $this->meta_data property directly here because we don't want meta with a null value (i.e. meta which has been deleted via $this->delete_meta_data()).
@@ -381,11 +381,11 @@ abstract class WC_Data {
 				$meta = (array) $meta;
 				if ( isset( $meta['key'], $meta['value'], $meta['id'] ) ) {
 					$this->meta_data[] = new WC_Meta_Data(
-						array(
+						[
 							'id'    => $meta['id'],
 							'key'   => $meta['key'],
 							'value' => $meta['value'],
-						)
+						]
 					);
 				}
 			}
@@ -405,7 +405,7 @@ abstract class WC_Data {
 		if ( $this->is_internal_meta_key( $key ) ) {
 			$function = 'set_' . ltrim( $key, '_' );
 
-			if ( is_callable( array( $this, $function ) ) ) {
+			if ( is_callable( [ $this, $function ] ) ) {
 				return $this->{$function}( $value );
 			}
 		}
@@ -415,10 +415,10 @@ abstract class WC_Data {
 			$this->delete_meta_data( $key );
 		}
 		$this->meta_data[] = new WC_Meta_Data(
-			array(
+			[
 				'key'   => $key,
 				'value' => $value,
-			)
+			]
 		);
 	}
 
@@ -435,7 +435,7 @@ abstract class WC_Data {
 		if ( $this->is_internal_meta_key( $key ) ) {
 			$function = 'set_' . ltrim( $key, '_' );
 
-			if ( is_callable( array( $this, $function ) ) ) {
+			if ( is_callable( [ $this, $function ] ) ) {
 				return $this->{$function}( $value );
 			}
 		}
@@ -449,7 +449,7 @@ abstract class WC_Data {
 			$array_key  = $array_keys ? current( $array_keys ) : false;
 		} else {
 			// Find matches by key.
-			$matches = array();
+			$matches = [];
 			foreach ( $this->meta_data as $meta_data_array_key => $meta ) {
 				if ( $meta->key === $key ) {
 					$matches[] = $meta_data_array_key;
@@ -571,7 +571,7 @@ abstract class WC_Data {
 	 * @param bool $force_read True to force a new DB read (and update cache).
 	 */
 	public function read_meta_data( $force_read = false ) {
-		$this->meta_data = array();
+		$this->meta_data = [];
 		$cache_loaded    = false;
 
 		if ( ! $this->get_id() ) {
@@ -600,11 +600,11 @@ abstract class WC_Data {
 		if ( is_array( $raw_meta_data ) ) {
 			foreach ( $raw_meta_data as $meta ) {
 				$this->meta_data[] = new WC_Meta_Data(
-					array(
+					[
 						'id'    => (int) $meta->meta_id,
 						'key'   => $meta->meta_key,
 						'value' => maybe_unserialize( $meta->meta_value ),
-					)
+					]
 				);
 			}
 
@@ -662,7 +662,7 @@ abstract class WC_Data {
 	 */
 	public function set_defaults() {
 		$this->data    = $this->default_data;
-		$this->changes = array();
+		$this->changes = [];
 		$this->set_object_read( false );
 	}
 
@@ -705,12 +705,12 @@ abstract class WC_Data {
 				/**
 				 * Checks if the prop being set is allowed, and the value is not null.
 				 */
-				if ( is_null( $value ) || in_array( $prop, array( 'prop', 'date_prop', 'meta_data' ), true ) ) {
+				if ( is_null( $value ) || in_array( $prop, [ 'prop', 'date_prop', 'meta_data' ], true ) ) {
 					continue;
 				}
 				$setter = "set_$prop";
 
-				if ( is_callable( array( $this, $setter ) ) ) {
+				if ( is_callable( [ $this, $setter ] ) ) {
 					$this->{$setter}( $value );
 				}
 			} catch ( WC_Data_Exception $e ) {
@@ -763,7 +763,7 @@ abstract class WC_Data {
 	 */
 	public function apply_changes() {
 		$this->data    = array_replace_recursive( $this->data, $this->changes ); // @codingStandardsIgnoreLine
-		$this->changes = array();
+		$this->changes = [];
 	}
 
 	/**
@@ -852,7 +852,7 @@ abstract class WC_Data {
 	 * @param int    $http_status_code HTTP status code.
 	 * @param array  $data             Extra error data.
 	 */
-	protected function error( $code, $message, $http_status_code = 400, $data = array() ) {
+	protected function error( $code, $message, $http_status_code = 400, $data = [] ) {
 		throw new WC_Data_Exception( $code, $message, $http_status_code, $data );
 	}
 }

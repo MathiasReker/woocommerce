@@ -12,7 +12,7 @@ defined( 'ABSPATH' ) || exit;
 	<?php
 	if ( $notes ) {
 		foreach ( $notes as $note ) {
-			$css_class   = array( 'note' );
+			$css_class   = [ 'note' ];
 			$css_class[] = $note->customer_note ? 'customer-note' : '';
 			$css_class[] = 'system' === $note->added_by ? 'system-note' : '';
 			$css_class   = apply_filters( 'woocommerce_order_note_class', array_filter( $css_class ), $note );

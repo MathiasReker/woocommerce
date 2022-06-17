@@ -19,10 +19,10 @@ class UtilsClassesServiceProvider extends AbstractServiceProvider {
 	 *
 	 * @var array
 	 */
-	protected $provides = array(
+	protected $provides = [
 		DatabaseUtil::class,
 		HtmlSanitizer::class,
-	);
+	];
 
 	/**
 	 * Register the classes.

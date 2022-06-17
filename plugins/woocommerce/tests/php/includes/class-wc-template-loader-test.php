@@ -95,10 +95,10 @@ class WC_Template_Loader_Test extends \WC_Unit_Test_Case {
 		$wp_query->is_tax         = false;
 		$wp_query->is_singular    = true;
 		$wp_query->is_page        = false;
-		$wp_query->queried_object = (object) array(
+		$wp_query->queried_object = (object) [
 			'post_type' => 'product',
 			'post_name' => 'test',
-		);
+		];
 	}
 
 	private function load_shop_page() {
@@ -106,12 +106,12 @@ class WC_Template_Loader_Test extends \WC_Unit_Test_Case {
 		$wp_query->is_tax         = false;
 		$wp_query->is_singular    = false;
 		$wp_query->is_page        = true;
-		$wp_query->queried_object = (object) array(
+		$wp_query->queried_object = (object) [
 			'post_type'  => 'page',
 			'post_name'  => 'shop',
 			'post_title' => 'shop',
 			'ID'         => 5,
-		);
+		];
 	}
 
 	private function load_tax_in_query( $taxonomy ) {
@@ -120,10 +120,10 @@ class WC_Template_Loader_Test extends \WC_Unit_Test_Case {
 		$wp_query->is_singular    = false;
 		$wp_query->is_tax         = true;
 		$wp_query->is_page        = false;
-		$wp_query->queried_object = (object) array(
+		$wp_query->queried_object = (object) [
 			'taxonomy' => $taxonomy,
 			'slug'     => 'test',
-		);
+		];
 	}
 
 	private function assertDefaultTemplateFileName( $expected = '' ) {

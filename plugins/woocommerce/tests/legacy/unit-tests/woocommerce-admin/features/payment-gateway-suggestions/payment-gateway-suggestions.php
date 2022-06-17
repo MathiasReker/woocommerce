@@ -29,11 +29,11 @@ class WC_Admin_Tests_PaymentGatewaySuggestions_Init extends WC_Unit_Test_Case {
 					return $value;
 				}
 
-				return array(
-					array(
+				return [
+					[
 						'id' => 'default-gateway',
-					),
-				);
+					],
+				];
 			}
 		);
 	}
@@ -51,16 +51,16 @@ class WC_Admin_Tests_PaymentGatewaySuggestions_Init extends WC_Unit_Test_Case {
 	 * Add test specs.
 	 */
 	public function get_mock_specs() {
-		return array(
-			array(
+		return [
+			[
 				'id'         => 'mock-gateway',
-				'is_visible' => (object) array(
+				'is_visible' => (object) [
 					'type'      => 'base_location_country',
 					'value'     => 'ZA',
 					'operation' => '=',
-				),
-			),
-		);
+				],
+			],
+		];
 	}
 
 	/**
@@ -71,7 +71,7 @@ class WC_Admin_Tests_PaymentGatewaySuggestions_Init extends WC_Unit_Test_Case {
 		add_filter(
 			DataSourcePoller::FILTER_NAME,
 			function() {
-				return array();
+				return [];
 			}
 		);
 		$specs    = PaymentGatewaySuggestions::get_specs();
@@ -86,14 +86,14 @@ class WC_Admin_Tests_PaymentGatewaySuggestions_Init extends WC_Unit_Test_Case {
 	public function test_specs_transient() {
 		set_transient(
 			'woocommerce_admin_' . PaymentGatewaySuggestionsDataSourcePoller::ID . '_specs',
-			array(
-				array(
+			[
+				[
 					'id' => 'mock-gateway1',
-				),
-				array(
+				],
+				[
 					'id' => 'mock-gateway2',
-				),
-			)
+				],
+			]
 		);
 		$suggestions = PaymentGatewaySuggestions::get_suggestions();
 		$this->assertCount( 2, $suggestions );
@@ -131,11 +131,11 @@ class WC_Admin_Tests_PaymentGatewaySuggestions_Init extends WC_Unit_Test_Case {
 	public function test_delete_transient_on_locale_change() {
 		set_transient(
 			'woocommerce_admin_' . PaymentGatewaySuggestionsDataSourcePoller::ID . '_specs',
-			array(
-				array(
+			[
+				[
 					'id' => 'mock-gateway',
-				),
-			)
+				],
+			]
 		);
 
 		add_filter(

@@ -30,10 +30,10 @@ class WC_Meta_Box_Order_Downloads {
 				<?php
 				$data_store           = WC_Data_Store::load( 'customer-download' );
 				$download_permissions = $data_store->get_downloads(
-					array(
+					[
 						'order_id' => $post->ID,
 						'orderby'  => 'product_id',
-					)
+					]
 				);
 
 				$product      = null;

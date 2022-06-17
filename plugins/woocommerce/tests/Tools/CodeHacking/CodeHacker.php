@@ -54,14 +54,14 @@ final class CodeHacker {
 	 *
 	 * @var array
 	 */
-	private static $paths_with_files_to_hack = array();
+	private static $paths_with_files_to_hack = [];
 
 	/**
 	 * Registered hacks.
 	 *
 	 * @var array
 	 */
-	private static $hacks = array();
+	private static $hacks = [];
 
 	/**
 	 * Is the code hacker enabled?.
@@ -105,7 +105,7 @@ final class CodeHacker {
 	 */
 	public static function reset_hacks() {
 		foreach ( self::$hacks as $hack ) {
-			call_user_func( array( $hack, 'reset' ) );
+			call_user_func( [ $hack, 'reset' ] );
 		}
 	}
 
@@ -307,7 +307,7 @@ final class CodeHacker {
 	public function stream_metadata( $path, $option, $value ) {
 		switch ( $option ) {
 			case STREAM_META_TOUCH:
-				$value += array( null, null );
+				$value += [ null, null ];
 				return $this->native( 'touch', $path, $value[0], $value[1] );
 			case STREAM_META_OWNER_NAME:
 			case STREAM_META_OWNER:

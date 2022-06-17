@@ -58,7 +58,7 @@ add_filter( 'woocommerce_short_description', 'prepend_attachment' );
 add_filter( 'woocommerce_short_description', 'do_shortcode', 11 ); // After wpautop().
 add_filter( 'woocommerce_short_description', 'wc_format_product_short_description', 9999999 );
 add_filter( 'woocommerce_short_description', 'wc_do_oembeds' );
-add_filter( 'woocommerce_short_description', array( $GLOBALS['wp_embed'], 'run_shortcode' ), 8 ); // Before wpautop().
+add_filter( 'woocommerce_short_description', [ $GLOBALS['wp_embed'], 'run_shortcode' ], 8 ); // Before wpautop().
 
 /**
  * Define a constant if it is not already defined.
@@ -81,8 +81,8 @@ function wc_maybe_define_constant( $name, $value ) {
  * @param  array $args Order arguments.
  * @return WC_Order|WP_Error
  */
-function wc_create_order( $args = array() ) {
-	$default_args = array(
+function wc_create_order( $args = [] ) {
+	$default_args = [
 		'status'        => null,
 		'customer_id'   => null,
 		'customer_note' => null,
@@ -90,7 +90,7 @@ function wc_create_order( $args = array() ) {
 		'created_via'   => null,
 		'cart_hash'     => null,
 		'order_id'      => 0,
-	);
+	];
 
 	try {
 		$args  = wp_parse_args( $args, $default_args );
@@ -212,16 +212,16 @@ function wc_untokenize_path( $path, $path_tokens ) {
  * @return array The key is the define and the path is the constant.
  */
 function wc_get_path_define_tokens() {
-	$defines = array(
+	$defines = [
 		'ABSPATH',
 		'WP_CONTENT_DIR',
 		'WP_PLUGIN_DIR',
 		'WPMU_PLUGIN_DIR',
 		'PLUGINDIR',
 		'WP_THEME_DIR',
-	);
+	];
 
-	$path_tokens = array();
+	$path_tokens = [];
 	foreach ( $defines as $define ) {
 		if ( defined( $define ) ) {
 			$path_tokens[ $define ] = constant( $define );
@@ -240,16 +240,16 @@ function wc_get_path_define_tokens() {
  * @param string $name Template name (default: '').
  */
 function wc_get_template_part( $slug, $name = '' ) {
-	$cache_key = sanitize_key( implode( '-', array( 'template-part', $slug, $name, Constants::get_constant( 'WC_VERSION' ) ) ) );
+	$cache_key = sanitize_key( implode( '-', [ 'template-part', $slug, $name, Constants::get_constant( 'WC_VERSION' ) ] ) );
 	$template  = (string) wp_cache_get( $cache_key, 'woocommerce' );
 
 	if ( ! $template ) {
 		if ( $name ) {
 			$template = WC_TEMPLATE_DEBUG_MODE ? '' : locate_template(
-				array(
+				[
 					"{$slug}-{$name}.php",
 					WC()->template_path() . "{$slug}-{$name}.php",
-				)
+				]
 			);
 
 			if ( ! $template ) {
@@ -261,10 +261,10 @@ function wc_get_template_part( $slug, $name = '' ) {
 		if ( ! $template ) {
 			// If template file doesn't exist, look in yourtheme/slug.php and yourtheme/woocommerce/slug.php.
 			$template = WC_TEMPLATE_DEBUG_MODE ? '' : locate_template(
-				array(
+				[
 					"{$slug}.php",
 					WC()->template_path() . "{$slug}.php",
-				)
+				]
 			);
 		}
 
@@ -293,8 +293,8 @@ function wc_get_template_part( $slug, $name = '' ) {
  * @param string $template_path Template path. (default: '').
  * @param string $default_path  Default path. (default: '').
  */
-function wc_get_template( $template_name, $args = array(), $template_path = '', $default_path = '' ) {
-	$cache_key = sanitize_key( implode( '-', array( 'template', $template_name, $template_path, $default_path, Constants::get_constant( 'WC_VERSION' ) ) ) );
+function wc_get_template( $template_name, $args = [], $template_path = '', $default_path = '' ) {
+	$cache_key = sanitize_key( implode( '-', [ 'template', $template_name, $template_path, $default_path, Constants::get_constant( 'WC_VERSION' ) ] ) );
 	$template  = (string) wp_cache_get( $cache_key, 'woocommerce' );
 
 	if ( ! $template ) {
@@ -321,12 +321,12 @@ function wc_get_template( $template_name, $args = array(), $template_path = '', 
 		$template = $filter_template;
 	}
 
-	$action_args = array(
+	$action_args = [
 		'template_name' => $template_name,
 		'template_path' => $template_path,
 		'located'       => $template,
 		'args'          => $args,
-	);
+	];
 
 	if ( ! empty( $args ) && is_array( $args ) ) {
 		if ( isset( $args['action_args'] ) ) {
@@ -359,7 +359,7 @@ function wc_get_template( $template_name, $args = array(), $template_path = '', 
  *
  * @return string
  */
-function wc_get_template_html( $template_name, $args = array(), $template_path = '', $default_path = '' ) {
+function wc_get_template_html( $template_name, $args = [], $template_path = '', $default_path = '' ) {
 	ob_start();
 	wc_get_template( $template_name, $args, $template_path, $default_path );
 	return ob_get_clean();
@@ -391,19 +391,19 @@ function wc_locate_template( $template_name, $template_path = '', $default_path 
 	if ( false !== strpos( $template_name, 'product_cat' ) || false !== strpos( $template_name, 'product_tag' ) ) {
 		$cs_template = str_replace( '_', '-', $template_name );
 		$template    = locate_template(
-			array(
+			[
 				trailingslashit( $template_path ) . $cs_template,
 				$cs_template,
-			)
+			]
 		);
 	}
 
 	if ( empty( $template ) ) {
 		$template = locate_template(
-			array(
+			[
 				trailingslashit( $template_path ) . $template_name,
 				$template_name,
-			)
+			]
 		);
 	}
 
@@ -434,7 +434,7 @@ function wc_set_template_cache( $cache_key, $template ) {
 	if ( is_array( $cached_templates ) ) {
 		$cached_templates[] = $cache_key;
 	} else {
-		$cached_templates = array( $cache_key );
+		$cached_templates = [ $cache_key ];
 	}
 
 	wp_cache_set( 'cached_templates', $cached_templates, 'woocommerce' );
@@ -479,7 +479,7 @@ function get_woocommerce_currencies() {
 		$currencies = array_unique(
 			apply_filters(
 				'woocommerce_currencies',
-				array(
+				[
 					'AED' => __( 'United Arab Emirates dirham', 'woocommerce' ),
 					'AFN' => __( 'Afghan afghani', 'woocommerce' ),
 					'ALL' => __( 'Albanian lek', 'woocommerce' ),
@@ -643,7 +643,7 @@ function get_woocommerce_currencies() {
 					'YER' => __( 'Yemeni rial', 'woocommerce' ),
 					'ZAR' => __( 'South African rand', 'woocommerce' ),
 					'ZMW' => __( 'Zambian kwacha', 'woocommerce' ),
-				)
+				]
 			)
 		);
 	}
@@ -663,7 +663,7 @@ function get_woocommerce_currency_symbols() {
 
 	$symbols = apply_filters(
 		'woocommerce_currency_symbols',
-		array(
+		[
 			'AED' => '&#x62f;.&#x625;',
 			'AFN' => '&#x60b;',
 			'ALL' => 'L',
@@ -828,7 +828,7 @@ function get_woocommerce_currency_symbols() {
 			'YER' => '&#xfdfc;',
 			'ZAR' => '&#82;',
 			'ZMW' => 'ZK',
-		)
+		]
 	);
 
 	return $symbols;
@@ -933,18 +933,18 @@ function wc_get_image_size( $image_size ) {
 		return $size;
 	}
 
-	$size = array(
+	$size = [
 		'width'  => 600,
 		'height' => 600,
 		'crop'   => 1,
-	);
+	];
 
 	if ( is_array( $image_size ) ) {
-		$size       = array(
+		$size       = [
 			'width'  => isset( $image_size[0] ) ? absint( $image_size[0] ) : 600,
 			'height' => isset( $image_size[1] ) ? absint( $image_size[1] ) : 600,
 			'crop'   => isset( $image_size[2] ) ? absint( $image_size[2] ) : 1,
-		);
+		];
 		$image_size = $size['width'] . '_' . $size['height'];
 	} else {
 		$image_size = str_replace( 'woocommerce_', '', $image_size );
@@ -1076,7 +1076,7 @@ function wc_setcookie( $name, $value, $expire = 0, $secure = false, $httponly = 
 		 */
 		$options = apply_filters(
 			'woocommerce_set_cookie_options',
-			array(
+			[
 				'expires'  => $expire,
 				'secure'   => $secure,
 				'path'     => COOKIEPATH ? COOKIEPATH : '/',
@@ -1095,7 +1095,7 @@ function wc_setcookie( $name, $value, $expire = 0, $secure = false, $httponly = 
 				 * @param bool   $secure   If the cookie should only be served over HTTPS.
 				 */
 				'httponly' => apply_filters( 'woocommerce_cookie_httponly', $httponly, $name, $value, $expire, $secure ),
-			),
+			],
 			$name,
 			$value
 		);
@@ -1166,13 +1166,13 @@ function wc_get_log_file_name( $handle ) {
  */
 function wc_get_page_children( $page_id ) {
 	$page_ids = get_posts(
-		array(
+		[
 			'post_parent' => $page_id,
 			'post_type'   => 'page',
 			'numberposts' => -1, // @codingStandardsIgnoreLine
 			'post_status' => 'any',
 			'fields'      => 'ids',
-		)
+		]
 	);
 
 	if ( ! empty( $page_ids ) ) {
@@ -1238,7 +1238,7 @@ function wc_fix_rewrite_rules( $rules ) {
 
 	$shop_page_id = wc_get_page_id( 'shop' );
 	if ( $shop_page_id ) {
-		$page_rewrite_rules = array();
+		$page_rewrite_rules = [];
 		$subpages           = wc_get_page_children( $shop_page_id );
 
 		// Subpage rules.
@@ -1312,10 +1312,10 @@ function wc_format_country_state_string( $country_string ) {
 		$country = $country_string;
 		$state   = '';
 	}
-	return array(
+	return [
 		'country' => $country,
 		'state'   => $state,
-	);
+	];
 }
 
 /**
@@ -1413,8 +1413,8 @@ function wc_api_hash( $data ) {
  */
 function wc_array_cartesian( $input ) {
 	$input   = array_filter( $input );
-	$results = array();
-	$indexes = array();
+	$results = [];
+	$indexes = [];
 	$index   = 0;
 
 	// Generate indexes from keys and values so we have a logical sort order.
@@ -1429,7 +1429,7 @@ function wc_array_cartesian( $input ) {
 		// When result is empty, fill with the values of the first looped array.
 		if ( empty( $results ) ) {
 			foreach ( $values as $value ) {
-				$results[] = array( $key => $value );
+				$results[] = [ $key => $value ];
 			}
 		} else {
 			// Second and subsequent input sub-array merging.
@@ -1454,7 +1454,7 @@ function wc_array_cartesian( $input ) {
 
 	// Convert indexes back to values.
 	foreach ( $results as $result_key => $result ) {
-		$converted_values = array();
+		$converted_values = [];
 
 		// Sort the values.
 		arsort( $results[ $result_key ] );
@@ -1568,14 +1568,14 @@ function wc_get_credit_card_type_label( $type ) {
 
 	$labels = apply_filters(
 		'woocommerce_credit_card_type_labels',
-		array(
+		[
 			'mastercard'       => __( 'MasterCard', 'woocommerce' ),
 			'visa'             => __( 'Visa', 'woocommerce' ),
 			'discover'         => __( 'Discover', 'woocommerce' ),
 			'american express' => __( 'American Express', 'woocommerce' ),
 			'diners'           => __( 'Diners', 'woocommerce' ),
 			'jcb'              => __( 'JCB', 'woocommerce' ),
-		)
+		]
 	);
 
 	return apply_filters( 'woocommerce_get_credit_card_type_label', ( array_key_exists( $type, $labels ) ? $labels[ $type ] : ucfirst( $type ) ) );
@@ -1621,11 +1621,11 @@ function wc_help_tip( $tip, $allow_html = false ) {
 function wc_get_wildcard_postcodes( $postcode, $country = '' ) {
 	$formatted_postcode = wc_format_postcode( $postcode, $country );
 	$length             = function_exists( 'mb_strlen' ) ? mb_strlen( $formatted_postcode ) : strlen( $formatted_postcode );
-	$postcodes          = array(
+	$postcodes          = [
 		$postcode,
 		$formatted_postcode,
 		$formatted_postcode . '*',
-	);
+	];
 
 	for ( $i = 0; $i < $length; $i ++ ) {
 		$postcodes[] = ( function_exists( 'mb_substr' ) ? mb_substr( $formatted_postcode, 0, ( $i + 1 ) * -1 ) : substr( $formatted_postcode, 0, ( $i + 1 ) * -1 ) ) . '*';
@@ -1649,7 +1649,7 @@ function wc_get_wildcard_postcodes( $postcode, $country = '' ) {
 function wc_postcode_location_matcher( $postcode, $objects, $object_id_key, $object_compare_key, $country = '' ) {
 	$postcode           = wc_normalize_postcode( $postcode );
 	$wildcard_postcodes = array_map( 'wc_clean', wc_get_wildcard_postcodes( $postcode, $country ) );
-	$matches            = array();
+	$matches            = [];
 
 	foreach ( $objects as $object ) {
 		$object_id       = $object->$object_id_key;
@@ -1675,12 +1675,12 @@ function wc_postcode_location_matcher( $postcode, $objects, $object_id_key, $obj
 			}
 
 			if ( $compare >= $min && $compare <= $max ) {
-				$matches[ $object_id ]   = isset( $matches[ $object_id ] ) ? $matches[ $object_id ] : array();
+				$matches[ $object_id ]   = isset( $matches[ $object_id ] ) ? $matches[ $object_id ] : [];
 				$matches[ $object_id ][] = $compare_against;
 			}
 		} elseif ( in_array( $compare_against, $wildcard_postcodes, true ) ) {
 			// Wildcard and standard comparison.
-			$matches[ $object_id ]   = isset( $matches[ $object_id ] ) ? $matches[ $object_id ] : array();
+			$matches[ $object_id ]   = isset( $matches[ $object_id ] ) ? $matches[ $object_id ] : [];
 			$matches[ $object_id ][] = $compare_against;
 		}
 	}
@@ -1724,10 +1724,10 @@ function wc_get_shipping_method_count( $include_legacy = false, $enabled_only = 
 		}
 	}
 
-	$transient_value = array(
+	$transient_value = [
 		'version' => $transient_version,
 		'value'   => $method_count,
-	);
+	];
 
 	set_transient( $transient_name, $transient_value, DAY_IN_SECONDS * 30 );
 
@@ -2033,7 +2033,7 @@ function wc_get_logger() {
 function wc_cleanup_logs() {
 	$logger = wc_get_logger();
 
-	if ( is_callable( array( $logger, 'clear_expired_logs' ) ) ) {
+	if ( is_callable( [ $logger, 'clear_expired_logs' ] ) ) {
 		$logger->clear_expired_logs();
 	}
 }
@@ -2053,24 +2053,24 @@ add_action( 'woocommerce_cleanup_logs', 'wc_cleanup_logs' );
  *     If $return is true, a string representation will be returned.
  */
 function wc_print_r( $expression, $return = false ) {
-	$alternatives = array(
-		array(
+	$alternatives = [
+		[
 			'func' => 'print_r',
-			'args' => array( $expression, true ),
-		),
-		array(
+			'args' => [ $expression, true ],
+		],
+		[
 			'func' => 'var_export',
-			'args' => array( $expression, true ),
-		),
-		array(
+			'args' => [ $expression, true ],
+		],
+		[
 			'func' => 'json_encode',
-			'args' => array( $expression ),
-		),
-		array(
+			'args' => [ $expression ],
+		],
+		[
 			'func' => 'serialize',
-			'args' => array( $expression ),
-		),
-	);
+			'args' => [ $expression ],
+		],
+	];
 
 	$alternatives = apply_filters( 'woocommerce_print_r_alternatives', $alternatives, $expression );
 
@@ -2121,7 +2121,7 @@ add_filter( 'woocommerce_register_log_handlers', 'wc_register_default_log_handle
 function wc_list_pluck( $list, $callback_or_field, $index_key = null ) {
 	// Use wp_list_pluck if this isn't a callback.
 	$first_el = current( $list );
-	if ( ! is_object( $first_el ) || ! is_callable( array( $first_el, $callback_or_field ) ) ) {
+	if ( ! is_object( $first_el ) || ! is_callable( [ $first_el, $callback_or_field ] ) ) {
 		return wp_list_pluck( $list, $callback_or_field, $index_key );
 	}
 	if ( ! $index_key ) {
@@ -2139,10 +2139,10 @@ function wc_list_pluck( $list, $callback_or_field, $index_key = null ) {
 	 * When index_key is not set for a particular item, push the value
 	 * to the end of the stack. This is how array_column() behaves.
 	 */
-	$newlist = array();
+	$newlist = [];
 	foreach ( $list as $value ) {
 		// Get index. @since 3.2.0 this supports a callback.
-		if ( is_callable( array( $value, $index_key ) ) ) {
+		if ( is_callable( [ $value, $index_key ] ) ) {
 			$newlist[ $value->{$index_key}() ] = $value->{$callback_or_field}();
 		} elseif ( isset( $value->$index_key ) ) {
 			$newlist[ $value->$index_key ] = $value->{$callback_or_field}();
@@ -2166,16 +2166,16 @@ function wc_list_pluck( $list, $callback_or_field, $index_key = null ) {
  * @return array
  */
 function wc_get_permalink_structure() {
-	$saved_permalinks = (array) get_option( 'woocommerce_permalinks', array() );
+	$saved_permalinks = (array) get_option( 'woocommerce_permalinks', [] );
 	$permalinks       = wp_parse_args(
 		array_filter( $saved_permalinks ),
-		array(
+		[
 			'product_base'           => _x( 'product', 'slug', 'woocommerce' ),
 			'category_base'          => _x( 'product-category', 'slug', 'woocommerce' ),
 			'tag_base'               => _x( 'product-tag', 'slug', 'woocommerce' ),
 			'attribute_base'         => '',
 			'use_verbose_page_rules' => false,
-		)
+		]
 	);
 
 	if ( $saved_permalinks !== $permalinks ) {
@@ -2371,7 +2371,7 @@ add_action( 'woocommerce_installed', 'wc_delete_expired_transients' );
  * @return string
  */
 function wc_get_relative_url( $url ) {
-	return wc_is_external_resource( $url ) ? $url : str_replace( array( 'http://', 'https://' ), '//', $url );
+	return wc_is_external_resource( $url ) ? $url : str_replace( [ 'http://', 'https://' ], '//', $url );
 }
 
 /**
@@ -2382,7 +2382,7 @@ function wc_get_relative_url( $url ) {
  * @return bool
  */
 function wc_is_external_resource( $url ) {
-	$wp_base = str_replace( array( 'http://', 'https://' ), '//', get_home_url( null, '/', 'http' ) );
+	$wp_base = str_replace( [ 'http://', 'https://' ], '//', get_home_url( null, '/', 'http' ) );
 
 	return strstr( $url, '://' ) && ! strstr( $url, $wp_base );
 }
@@ -2405,7 +2405,7 @@ function wc_is_active_theme( $theme ) {
  */
 function wc_is_wp_default_theme_active() {
 	return wc_is_active_theme(
-		array(
+		[
 			'twentytwentytwo',
 			'twentytwentyone',
 			'twentytwenty',
@@ -2418,7 +2418,7 @@ function wc_is_wp_default_theme_active() {
 			'twentyeleven',
 			'twentytwelve',
 			'twentyten',
-		)
+		]
 	);
 }
 
@@ -2431,7 +2431,7 @@ function wc_cleanup_session_data() {
 	$session_class = apply_filters( 'woocommerce_session_handler', 'WC_Session_Handler' );
 	$session       = new $session_class();
 
-	if ( is_callable( array( $session, 'cleanup_sessions' ) ) ) {
+	if ( is_callable( [ $session, 'cleanup_sessions' ] ) ) {
 		$session->cleanup_sessions();
 	}
 }
@@ -2451,7 +2451,7 @@ function wc_decimal_to_fraction( $decimal ) {
 	}
 
 	if ( 0 === $decimal ) {
-		return array( 0, 1 );
+		return [ 0, 1 ];
 	}
 
 	$tolerance   = 1.e-4;
@@ -2473,7 +2473,7 @@ function wc_decimal_to_fraction( $decimal ) {
 		$b           = $b - $a;
 	} while ( abs( $decimal - $numerator / $denominator ) > $decimal * $tolerance );
 
-	return array( $numerator, $denominator );
+	return [ $numerator, $denominator ];
 }
 
 /**
@@ -2522,10 +2522,10 @@ function wc_get_server_database_version() {
 	global $wpdb;
 
 	if ( empty( $wpdb->is_mysql ) ) {
-		return array(
+		return [
 			'string' => '',
 			'number' => '',
-		);
+		];
 	}
 
 	// phpcs:disable WordPress.DB.RestrictedFunctions, PHPCompatibility.Extensions.RemovedExtensions.mysql_DeprecatedRemoved
@@ -2536,10 +2536,10 @@ function wc_get_server_database_version() {
 	}
 	// phpcs:enable WordPress.DB.RestrictedFunctions, PHPCompatibility.Extensions.RemovedExtensions.mysql_DeprecatedRemoved
 
-	return array(
+	return [
 		'string' => $server_info,
 		'number' => preg_replace( '/([^\d.]+).*/', '', $server_info ),
-	);
+	];
 }
 
 /**
@@ -2587,7 +2587,7 @@ function wc_cache_get_multiple( $keys, $group = '', $force = false ) {
 	if ( function_exists( 'wp_cache_get_multiple' ) ) {
 		return wp_cache_get_multiple( $keys, $group, $force );
 	}
-	$values = array();
+	$values = [];
 	foreach ( $keys as $key ) {
 		$values[ $key ] = wp_cache_get( $key, $group, $force );
 	}

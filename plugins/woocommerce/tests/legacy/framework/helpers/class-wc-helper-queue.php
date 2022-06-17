@@ -18,11 +18,11 @@ class WC_Helper_Queue {
 	 */
 	public static function get_all_pending() {
 		$jobs = WC()->queue()->search(
-			array(
+			[
 				'per_page' => -1,
 				'status'   => 'pending',
 				'claimed'  => false,
-			)
+			]
 		);
 
 		return $jobs;
@@ -56,7 +56,7 @@ class WC_Helper_Queue {
 		// Delete actions for Action Scheduler >= 3.0.
 		$store = ActionScheduler_Store::instance();
 
-		if ( is_callable( array( $store, 'cancel_actions_by_group' ) ) ) {
+		if ( is_callable( [ $store, 'cancel_actions_by_group' ] ) ) {
 			$store->cancel_actions_by_group( 'wc-admin-data' );
 		}
 	}

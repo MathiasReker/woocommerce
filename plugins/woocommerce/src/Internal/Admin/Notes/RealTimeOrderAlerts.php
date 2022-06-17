@@ -47,7 +47,7 @@ class RealTimeOrderAlerts {
 		$note = new Note();
 		$note->set_title( __( 'Get real-time order alerts anywhere', 'woocommerce' ) );
 		$note->set_content( $content );
-		$note->set_content_data( (object) array() );
+		$note->set_content_data( (object) [] );
 		$note->set_type( Note::E_WC_ADMIN_NOTE_INFORMATIONAL );
 		$note->set_name( self::NOTE_NAME );
 		$note->set_source( 'woocommerce-admin' );

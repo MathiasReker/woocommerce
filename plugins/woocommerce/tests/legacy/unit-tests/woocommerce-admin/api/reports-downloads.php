@@ -24,9 +24,9 @@ class WC_Admin_Tests_API_Reports_Downloads extends WC_REST_Unit_Test_Case {
 		parent::setUp();
 
 		$this->user = $this->factory->user->create(
-			array(
+			[
 				'role' => 'administrator',
-			)
+			]
 		);
 	}
 
@@ -55,7 +55,7 @@ class WC_Admin_Tests_API_Reports_Downloads extends WC_REST_Unit_Test_Case {
 		$product = new WC_Product_Simple();
 		$product->set_name( 'Test Product' );
 		$product->set_downloadable( 'yes' );
-		$product->set_downloads( array( $prod_download ) );
+		$product->set_downloads( [ $prod_download ] );
 		$product->set_regular_price( 25 );
 		$product->save();
 
@@ -112,7 +112,7 @@ class WC_Admin_Tests_API_Reports_Downloads extends WC_REST_Unit_Test_Case {
 		$product = new WC_Product_Simple();
 		$product->set_name( 'Test Product' );
 		$product->set_downloadable( 'yes' );
-		$product->set_downloads( array( $prod_download ) );
+		$product->set_downloads( [ $prod_download ] );
 		$product->set_regular_price( 25 );
 		$product->save();
 		$product_1 = $product->get_id();
@@ -144,7 +144,7 @@ class WC_Admin_Tests_API_Reports_Downloads extends WC_REST_Unit_Test_Case {
 		$product = new WC_Product_Simple();
 		$product->set_name( 'Test Product 2' );
 		$product->set_downloadable( 'yes' );
-		$product->set_downloads( array( $prod_download ) );
+		$product->set_downloads( [ $prod_download ] );
 		$product->set_regular_price( 10 );
 		$product->save();
 		$product_2 = $product->get_id();
@@ -171,13 +171,13 @@ class WC_Admin_Tests_API_Reports_Downloads extends WC_REST_Unit_Test_Case {
 
 		WC_Helper_Queue::run_all_pending();
 
-		return array(
+		return [
 			'time'      => $time,
 			'product_1' => $product_1,
 			'product_2' => $product_2,
 			'order_1'   => $order_1,
 			'order_2'   => $order_2,
-		);
+		];
 	}
 
 	/**
@@ -195,10 +195,10 @@ class WC_Admin_Tests_API_Reports_Downloads extends WC_REST_Unit_Test_Case {
 		// Test date filtering.
 		$request = new WP_REST_Request( 'GET', $this->endpoint );
 		$request->set_query_params(
-			array(
+			[
 				'before' => gmdate( 'Y-m-d H:00:00', $test_info['time'] + DAY_IN_SECONDS ),
 				'after'  => gmdate( 'Y-m-d H:00:00', $test_info['time'] - DAY_IN_SECONDS ),
-			)
+			]
 		);
 		$response        = $this->server->dispatch( $request );
 		$reports         = $response->get_data();
@@ -224,9 +224,9 @@ class WC_Admin_Tests_API_Reports_Downloads extends WC_REST_Unit_Test_Case {
 		// Test includes filtering.
 		$request = new WP_REST_Request( 'GET', $this->endpoint );
 		$request->set_query_params(
-			array(
+			[
 				'product_includes' => $test_info['product_1'],
-			)
+			]
 		);
 		$response        = $this->server->dispatch( $request );
 		$reports         = $response->get_data();
@@ -239,9 +239,9 @@ class WC_Admin_Tests_API_Reports_Downloads extends WC_REST_Unit_Test_Case {
 		// Test excludes filtering.
 		$request = new WP_REST_Request( 'GET', $this->endpoint );
 		$request->set_query_params(
-			array(
+			[
 				'product_excludes' => $test_info['product_1'],
-			)
+			]
 		);
 		$response        = $this->server->dispatch( $request );
 		$reports         = $response->get_data();
@@ -267,9 +267,9 @@ class WC_Admin_Tests_API_Reports_Downloads extends WC_REST_Unit_Test_Case {
 		// Test includes filtering.
 		$request = new WP_REST_Request( 'GET', $this->endpoint );
 		$request->set_query_params(
-			array(
+			[
 				'order_includes' => $test_info['order_1'],
-			)
+			]
 		);
 		$response        = $this->server->dispatch( $request );
 		$reports         = $response->get_data();
@@ -282,9 +282,9 @@ class WC_Admin_Tests_API_Reports_Downloads extends WC_REST_Unit_Test_Case {
 		// Test excludes filtering.
 		$request = new WP_REST_Request( 'GET', $this->endpoint );
 		$request->set_query_params(
-			array(
+			[
 				'order_excludes' => $test_info['order_1'],
-			)
+			]
 		);
 		$response        = $this->server->dispatch( $request );
 		$reports         = $response->get_data();
@@ -312,9 +312,9 @@ class WC_Admin_Tests_API_Reports_Downloads extends WC_REST_Unit_Test_Case {
 		// Test includes filtering.
 		$request = new WP_REST_Request( 'GET', $this->endpoint );
 		$request->set_query_params(
-			array(
+			[
 				'customer_includes' => $customer_id,
-			)
+			]
 		);
 		$response        = $this->server->dispatch( $request );
 		$reports         = $response->get_data();
@@ -328,9 +328,9 @@ class WC_Admin_Tests_API_Reports_Downloads extends WC_REST_Unit_Test_Case {
 		// Test excludes filtering.
 		$request = new WP_REST_Request( 'GET', $this->endpoint );
 		$request->set_query_params(
-			array(
+			[
 				'customer_excludes' => $customer_id,
-			)
+			]
 		);
 		$response        = $this->server->dispatch( $request );
 		$reports         = $response->get_data();
@@ -351,9 +351,9 @@ class WC_Admin_Tests_API_Reports_Downloads extends WC_REST_Unit_Test_Case {
 		// Test includes filtering.
 		$request = new WP_REST_Request( 'GET', $this->endpoint );
 		$request->set_query_params(
-			array(
+			[
 				'ip_address_includes' => '1.2.3.4',
-			)
+			]
 		);
 		$response        = $this->server->dispatch( $request );
 		$reports         = $response->get_data();
@@ -366,9 +366,9 @@ class WC_Admin_Tests_API_Reports_Downloads extends WC_REST_Unit_Test_Case {
 		// Test excludes filtering.
 		$request = new WP_REST_Request( 'GET', $this->endpoint );
 		$request->set_query_params(
-			array(
+			[
 				'ip_address_excludes' => '1.2.3.4',
-			)
+			]
 		);
 		$response        = $this->server->dispatch( $request );
 		$reports         = $response->get_data();

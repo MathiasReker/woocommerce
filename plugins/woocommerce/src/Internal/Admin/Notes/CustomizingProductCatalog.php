@@ -35,13 +35,13 @@ class CustomizingProductCatalog {
 	 */
 	public static function get_note() {
 		$query = new \WC_Product_Query(
-			array(
+			[
 				'limit'    => 1,
 				'paginate' => true,
-				'status'   => array( 'publish' ),
+				'status'   => [ 'publish' ],
 				'orderby'  => 'post_date',
 				'order'    => 'DESC',
-			)
+			]
 		);
 
 		$products = $query->get_products();
@@ -70,7 +70,7 @@ class CustomizingProductCatalog {
 		$note->set_content( __( 'You want your product catalog and images to look great and align with your brand. This guide will give you all the tips you need to get your products looking great in your store.', 'woocommerce' ) );
 		$note->set_type( Note::E_WC_ADMIN_NOTE_INFORMATIONAL );
 		$note->set_name( self::NOTE_NAME );
-		$note->set_content_data( (object) array() );
+		$note->set_content_data( (object) [] );
 		$note->set_source( 'woocommerce-admin' );
 		$note->add_action(
 			'day-after-first-product',

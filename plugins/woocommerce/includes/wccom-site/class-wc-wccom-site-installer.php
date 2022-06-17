@@ -27,18 +27,18 @@ class WC_WCCOM_Site_Installer {
 	 *
 	 * @var array
 	 */
-	private static $default_state = array(
+	private static $default_state = [
 		'status'       => 'idle',
-		'steps'        => array(),
+		'steps'        => [],
 		'current_step' => null,
-	);
+	];
 
 	/**
 	 * Represents product step state.
 	 *
 	 * @var array
 	 */
-	private static $default_step_state = array(
+	private static $default_step_state = [
 		'download_url'   => '',
 		'product_type'   => '',
 		'last_step'      => '',
@@ -47,7 +47,7 @@ class WC_WCCOM_Site_Installer {
 		'unpacked_path'  => '',
 		'installed_path' => '',
 		'activate'       => false,
-	);
+	];
 
 	/**
 	 * Product install steps. Each step is a method name in this class that
@@ -55,13 +55,13 @@ class WC_WCCOM_Site_Installer {
 	 *
 	 * @var array
 	 */
-	private static $install_steps = array(
+	private static $install_steps = [
 		'get_product_info',
 		'download_product',
 		'unpack_product',
 		'move_product',
 		'activate_product',
-	);
+	];
 
 	/**
 	 * Get the product install state.
@@ -100,7 +100,7 @@ class WC_WCCOM_Site_Installer {
 	 * @since 3.7.0
 	 * @param array $products List of product IDs.
 	 */
-	public static function reset_state( $products = array() ) {
+	public static function reset_state( $products = [] ) {
 		WC()->queue()->cancel_all( 'woocommerce_wccom_install_products' );
 		WC_Helper_Options::update( 'product_install', self::$default_state );
 	}
@@ -126,9 +126,9 @@ class WC_WCCOM_Site_Installer {
 
 		self::update_state( 'current_step', null );
 
-		$args = array(
+		$args = [
 			'products' => $products,
-		);
+		];
 
 		// Clear the cache of customer's subscription before asking for them.
 		// Thus, they will be re-fetched from WooCommerce.com after a purchase.
@@ -233,13 +233,13 @@ class WC_WCCOM_Site_Installer {
 
 		self::update_state(
 			'current_step',
-			array(
+			[
 				'product_id' => $product_id,
 				'step'       => $step,
-			)
+			]
 		);
 
-		$result = call_user_func( array( __CLASS__, $step ), $product_id, $upgrader );
+		$result = call_user_func( [ __CLASS__, $step ], $product_id, $upgrader );
 		if ( is_wp_error( $result ) ) {
 			$state_steps[ $product_id ]['last_error'] = $result->get_error_message();
 		} else {
@@ -258,10 +258,10 @@ class WC_WCCOM_Site_Installer {
 				case 'move_product':
 					$state_steps[ $product_id ]['installed_path'] = $result['destination'];
 					if ( isset( $result[ self::$folder_exists ] ) ) {
-						$state_steps[ $product_id ]['warning'] = array(
+						$state_steps[ $product_id ]['warning'] = [
 							'message'     => self::$folder_exists,
 							'plugin_info' => self::get_plugin_info( $state_steps[ $product_id ]['installed_path'] ),
-						);
+						];
 					}
 					break;
 			}
@@ -278,20 +278,20 @@ class WC_WCCOM_Site_Installer {
 	 * @return array|\WP_Error
 	 */
 	private static function get_product_info( $product_id ) {
-		$product_info = array(
+		$product_info = [
 			'download_url' => '',
 			'product_type' => '',
-		);
+		];
 
 		// Get product info from woocommerce.com.
 		$request = WC_Helper_API::get(
 			add_query_arg(
-				array( 'product_id' => absint( $product_id ) ),
+				[ 'product_id' => absint( $product_id ) ],
 				'info'
 			),
-			array(
+			[
 				'authenticated' => true,
-			)
+			]
 		);
 
 		if ( 200 !== wp_remote_retrieve_response_code( $request ) ) {
@@ -374,15 +374,15 @@ class WC_WCCOM_Site_Installer {
 			? WP_PLUGIN_DIR
 			: get_theme_root();
 
-		$package = array(
+		$package = [
 			'source'        => $steps[ $product_id ]['unpacked_path'],
 			'destination'   => $destination,
 			'clear_working' => true,
-			'hook_extra'    => array(
+			'hook_extra'    => [
 				'type'   => $steps[ $product_id ]['product_type'],
 				'action' => 'install',
-			),
-		);
+			],
+		];
 
 		$result = $upgrader->install_package( $package );
 
@@ -390,10 +390,10 @@ class WC_WCCOM_Site_Installer {
 		 * If install package returns error 'folder_exists' threat as success.
 		 */
 		if ( is_wp_error( $result ) && array_key_exists( self::$folder_exists, $result->errors ) ) {
-			return array(
+			return [
 				self::$folder_exists => true,
 				'destination'        => $result->error_data[ self::$folder_exists ],
-			);
+			];
 		}
 		return $result;
 	}
@@ -438,9 +438,9 @@ class WC_WCCOM_Site_Installer {
 		if ( false === $filename ) {
 			$plugins = wp_list_filter(
 				WC_Helper::get_local_woo_plugins(),
-				array(
+				[
 					'_product_id' => $product_id,
-				)
+				]
 			);
 
 			$filename = is_array( $plugins ) && ! empty( $plugins ) ? key( $plugins ) : '';
@@ -474,9 +474,9 @@ class WC_WCCOM_Site_Installer {
 		if ( false === $theme_slug ) {
 			$themes = wp_list_filter(
 				WC_Helper::get_local_woo_themes(),
-				array(
+				[
 					'_product_id' => $product_id,
-				)
+				]
 			);
 
 			$theme_slug = is_array( $themes ) && ! empty( $themes ) ? dirname( key( $themes ) ) : '';
@@ -566,11 +566,11 @@ class WC_WCCOM_Site_Installer {
 		if ( 1 === count( $related_plugins ) ) {
 			$plugin_key  = array_keys( $related_plugins )[0];
 			$plugin_data = $plugins[ $plugin_key ];
-			return array(
+			return [
 				'name'    => $plugin_data['Name'],
 				'version' => $plugin_data['Version'],
 				'active'  => is_plugin_active( $plugin_key ),
-			);
+			];
 		}
 		return false;
 	}

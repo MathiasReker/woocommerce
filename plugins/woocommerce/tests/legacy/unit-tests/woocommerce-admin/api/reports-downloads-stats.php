@@ -24,9 +24,9 @@ class WC_Admin_Tests_API_Reports_Downloads_Stats extends WC_REST_Unit_Test_Case 
 		parent::setUp();
 
 		$this->user = $this->factory->user->create(
-			array(
+			[
 				'role' => 'administrator',
-			)
+			]
 		);
 	}
 
@@ -55,7 +55,7 @@ class WC_Admin_Tests_API_Reports_Downloads_Stats extends WC_REST_Unit_Test_Case 
 		$product = new WC_Product_Simple();
 		$product->set_name( 'Test Product' );
 		$product->set_downloadable( 'yes' );
-		$product->set_downloads( array( $prod_download ) );
+		$product->set_downloads( [ $prod_download ] );
 		$product->set_regular_price( 25 );
 		$product->save();
 
@@ -80,32 +80,32 @@ class WC_Admin_Tests_API_Reports_Downloads_Stats extends WC_REST_Unit_Test_Case 
 		$time    = time();
 		$request = new WP_REST_Request( 'GET', $this->endpoint );
 		$request->set_query_params(
-			array(
+			[
 				'before'   => gmdate( 'Y-m-d 23:59:59', $time ),
 				'after'    => gmdate( 'Y-m-d H:00:00', $time - ( 7 * DAY_IN_SECONDS ) ),
 				'interval' => 'day',
-			)
+			]
 		);
 		$response = $this->server->dispatch( $request );
 		$reports  = $response->get_data();
 
 		$this->assertEquals( 200, $response->get_status() );
 
-		$totals = array(
+		$totals = [
 			'download_count' => 1,
-		);
+		];
 		$this->assertEquals( $totals, $reports['totals'] );
 
-		$today_interval = array(
+		$today_interval = [
 			'interval'       => gmdate( 'Y-m-d', $time ),
 			'date_start'     => gmdate( 'Y-m-d 00:00:00', $time ),
 			'date_start_gmt' => gmdate( 'Y-m-d 00:00:00', $time ),
 			'date_end'       => gmdate( 'Y-m-d 23:59:59', $time ),
 			'date_end_gmt'   => gmdate( 'Y-m-d 23:59:59', $time ),
-			'subtotals'      => (object) array(
+			'subtotals'      => (object) [
 				'download_count' => 1,
-			),
-		);
+			],
+		];
 		$this->assertEquals( $today_interval, $reports['intervals'][0] );
 
 		$this->assertEquals( 8, count( $reports['intervals'] ) );
@@ -114,12 +114,12 @@ class WC_Admin_Tests_API_Reports_Downloads_Stats extends WC_REST_Unit_Test_Case 
 		// Test sorting by download_count.
 		$request = new WP_REST_Request( 'GET', $this->endpoint );
 		$request->set_query_params(
-			array(
+			[
 				'before'   => gmdate( 'Y-m-d 23:59:59', $time ),
 				'after'    => gmdate( 'Y-m-d H:00:00', $time - ( 7 * DAY_IN_SECONDS ) ),
 				'interval' => 'day',
 				'orderby'  => 'download_count',
-			)
+			]
 		);
 		$response = $this->server->dispatch( $request );
 		$reports  = $response->get_data();
@@ -142,7 +142,7 @@ class WC_Admin_Tests_API_Reports_Downloads_Stats extends WC_REST_Unit_Test_Case 
 		$product = new WC_Product_Simple();
 		$product->set_name( 'Test Product' );
 		$product->set_downloadable( 'yes' );
-		$product->set_downloads( array( $prod_download ) );
+		$product->set_downloads( [ $prod_download ] );
 		$product->set_regular_price( 25 );
 		$product->save();
 
@@ -197,9 +197,9 @@ class WC_Admin_Tests_API_Reports_Downloads_Stats extends WC_REST_Unit_Test_Case 
 		// Test includes filtering.
 		$request = new WP_REST_Request( 'GET', $this->endpoint );
 		$request->set_query_params(
-			array(
+			[
 				'customer_includes' => $customer_id,
-			)
+			]
 		);
 		$response = $this->server->dispatch( $request );
 		$reports  = $response->get_data();
@@ -210,9 +210,9 @@ class WC_Admin_Tests_API_Reports_Downloads_Stats extends WC_REST_Unit_Test_Case 
 		// Test excludes filtering.
 		$request = new WP_REST_Request( 'GET', $this->endpoint );
 		$request->set_query_params(
-			array(
+			[
 				'customer_excludes' => $customer_id,
-			)
+			]
 		);
 		$response = $this->server->dispatch( $request );
 		$reports  = $response->get_data();
@@ -237,7 +237,7 @@ class WC_Admin_Tests_API_Reports_Downloads_Stats extends WC_REST_Unit_Test_Case 
 		$product = new WC_Product_Simple();
 		$product->set_name( 'Test Product' );
 		$product->set_downloadable( 'yes' );
-		$product->set_downloads( array( $prod_download ) );
+		$product->set_downloads( [ $prod_download ] );
 		$product->set_regular_price( 25 );
 		$product->save();
 
@@ -286,12 +286,12 @@ class WC_Admin_Tests_API_Reports_Downloads_Stats extends WC_REST_Unit_Test_Case 
 		// Test sorting by download_count.
 		$request = new WP_REST_Request( 'GET', $this->endpoint );
 		$request->set_query_params(
-			array(
+			[
 				'before'   => gmdate( 'Y-m-d 23:59:59', $time ),
 				'after'    => gmdate( 'Y-m-d H:00:00', $seven_days_ago ),
 				'interval' => 'day',
 				'orderby'  => 'download_count',
-			)
+			]
 		);
 		$response = $this->server->dispatch( $request );
 		$reports  = $response->get_data();
@@ -305,13 +305,13 @@ class WC_Admin_Tests_API_Reports_Downloads_Stats extends WC_REST_Unit_Test_Case 
 		// Test sorting by date.
 		$request = new WP_REST_Request( 'GET', $this->endpoint );
 		$request->set_query_params(
-			array(
+			[
 				'before'   => gmdate( 'Y-m-d 23:59:59', $time ),
 				'after'    => gmdate( 'Y-m-d H:00:00', $seven_days_ago ),
 				'interval' => 'day',
 				'orderby'  => 'date',
 				'order'    => 'asc',
-			)
+			]
 		);
 		$response = $this->server->dispatch( $request );
 		$reports  = $response->get_data();

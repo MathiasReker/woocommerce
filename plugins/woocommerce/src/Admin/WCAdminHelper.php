@@ -18,27 +18,27 @@ class WCAdminHelper {
 	 */
 	const WC_ADMIN_TIMESTAMP_OPTION = 'woocommerce_admin_install_timestamp';
 
-	const WC_ADMIN_STORE_AGE_RANGES = array(
-		'week-1'    => array(
+	const WC_ADMIN_STORE_AGE_RANGES = [
+		'week-1'    => [
 			'start' => 0,
 			'end'   => WEEK_IN_SECONDS,
-		),
-		'week-1-4'  => array(
+		],
+		'week-1-4'  => [
 			'start' => WEEK_IN_SECONDS,
 			'end'   => WEEK_IN_SECONDS * 4,
-		),
-		'month-1-3' => array(
+		],
+		'month-1-3' => [
 			'start' => MONTH_IN_SECONDS,
 			'end'   => MONTH_IN_SECONDS * 3,
-		),
-		'month-3-6' => array(
+		],
+		'month-3-6' => [
 			'start' => MONTH_IN_SECONDS * 3,
 			'end'   => MONTH_IN_SECONDS * 6,
-		),
-		'month-6+'  => array(
+		],
+		'month-6+'  => [
 			'start' => MONTH_IN_SECONDS * 6,
-		),
-	);
+		],
+	];
 
 	/**
 	 * Get the number of seconds that the store has been active.

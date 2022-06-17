@@ -79,10 +79,10 @@ class Cache {
 	 */
 	public static function set( $key, $value ) {
 		$transient_version = self::get_version();
-		$transient_value   = array(
+		$transient_value   = [
 			'version' => $transient_version,
 			'value'   => $value,
-		);
+		];
 
 		$result = set_transient( $key, $transient_value, HOUR_IN_SECONDS );
 

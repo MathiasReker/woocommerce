@@ -34,9 +34,9 @@ class WC_Regenerate_Images {
 	 * Init function
 	 */
 	public static function init() {
-		add_action( 'image_get_intermediate_size', array( __CLASS__, 'filter_image_get_intermediate_size' ), 10, 3 );
-		add_filter( 'wp_generate_attachment_metadata', array( __CLASS__, 'add_uncropped_metadata' ) );
-		add_filter( 'wp_get_attachment_image_src', array( __CLASS__, 'maybe_resize_image' ), 10, 4 );
+		add_action( 'image_get_intermediate_size', [ __CLASS__, 'filter_image_get_intermediate_size' ], 10, 3 );
+		add_filter( 'wp_generate_attachment_metadata', [ __CLASS__, 'add_uncropped_metadata' ] );
+		add_filter( 'wp_get_attachment_image_src', [ __CLASS__, 'maybe_resize_image' ], 10, 4 );
 
 		// Not required when Jetpack Photon is in use.
 		if ( method_exists( 'Jetpack', 'is_module_active' ) && Jetpack::is_module_active( 'photon' ) ) {
@@ -48,13 +48,13 @@ class WC_Regenerate_Images {
 
 			self::$background_process = new WC_Regenerate_Images_Request();
 
-			add_action( 'admin_init', array( __CLASS__, 'regenerating_notice' ) );
-			add_action( 'woocommerce_hide_regenerating_thumbnails_notice', array( __CLASS__, 'dismiss_regenerating_notice' ) );
+			add_action( 'admin_init', [ __CLASS__, 'regenerating_notice' ] );
+			add_action( 'woocommerce_hide_regenerating_thumbnails_notice', [ __CLASS__, 'dismiss_regenerating_notice' ] );
 
 			// Regenerate thumbnails in the background after settings changes. Not ran on multisite to avoid multiple simultanious jobs.
 			if ( ! is_multisite() ) {
-				add_action( 'customize_save_after', array( __CLASS__, 'maybe_regenerate_images' ) );
-				add_action( 'after_switch_theme', array( __CLASS__, 'maybe_regenerate_images' ) );
+				add_action( 'customize_save_after', [ __CLASS__, 'maybe_regenerate_images' ] );
+				add_action( 'after_switch_theme', [ __CLASS__, 'maybe_regenerate_images' ] );
 			}
 		}
 	}
@@ -68,7 +68,7 @@ class WC_Regenerate_Images {
 	 * @return array
 	 */
 	public static function filter_image_get_intermediate_size( $data, $attachment_id, $size ) {
-		if ( ! is_string( $size ) || ! in_array( $size, apply_filters( 'woocommerce_image_sizes_to_resize', array( 'woocommerce_thumbnail', 'woocommerce_gallery_thumbnail', 'woocommerce_single', 'shop_thumbnail', 'shop_catalog', 'shop_single' ) ), true ) ) {
+		if ( ! is_string( $size ) || ! in_array( $size, apply_filters( 'woocommerce_image_sizes_to_resize', [ 'woocommerce_thumbnail', 'woocommerce_gallery_thumbnail', 'woocommerce_single', 'shop_thumbnail', 'shop_catalog', 'shop_single' ] ), true ) ) {
 			return $data;
 		}
 
@@ -85,7 +85,7 @@ class WC_Regenerate_Images {
 			} else {
 				// If we get here, Jetpack is not running and we don't have the correct image sized stored. Try to return closest match.
 				$size_data = wc_get_image_size( $size );
-				return image_get_intermediate_size( $attachment_id, array( absint( $size_data['width'] ), absint( $size_data['height'] ) ) );
+				return image_get_intermediate_size( $attachment_id, [ absint( $size_data['width'] ), absint( $size_data['height'] ) ] );
 			}
 		}
 		return $data;
@@ -159,9 +159,9 @@ class WC_Regenerate_Images {
 			$log = wc_get_logger();
 			$log->info(
 				__( 'Cancelled product image regeneration job.', 'woocommerce' ),
-				array(
+				[
 					'source' => 'wc-image-regeneration',
-				)
+				]
 			);
 		}
 		WC_Admin_Notices::remove_notice( 'regenerating_thumbnails' );
@@ -175,11 +175,11 @@ class WC_Regenerate_Images {
 	public static function maybe_regenerate_images() {
 		$size_hash = md5(
 			wp_json_encode(
-				array(
+				[
 					wc_get_image_size( 'thumbnail' ),
 					wc_get_image_size( 'single' ),
 					wc_get_image_size( 'gallery_thumbnail' ),
-				)
+				]
 			)
 		);
 
@@ -204,7 +204,7 @@ class WC_Regenerate_Images {
 		}
 
 		// List of sizes we want to resize. Ignore others.
-		if ( ! $image || ! in_array( $size, apply_filters( 'woocommerce_image_sizes_to_resize', array( 'woocommerce_thumbnail', 'woocommerce_gallery_thumbnail', 'woocommerce_single', 'shop_thumbnail', 'shop_catalog', 'shop_single' ) ), true ) ) {
+		if ( ! $image || ! in_array( $size, apply_filters( 'woocommerce_image_sizes_to_resize', [ 'woocommerce_thumbnail', 'woocommerce_gallery_thumbnail', 'woocommerce_single', 'shop_thumbnail', 'shop_catalog', 'shop_single' ] ), true ) ) {
 			return $image;
 		}
 
@@ -264,7 +264,7 @@ class WC_Regenerate_Images {
 		$imagedata = wp_get_attachment_metadata( $attachment_id );
 
 		if ( ! $imagedata ) {
-			return array();
+			return [];
 		}
 
 		if ( ! isset( $imagedata['file'] ) && isset( $imagedata['sizes']['full'] ) ) {
@@ -272,10 +272,10 @@ class WC_Regenerate_Images {
 			$imagedata['width']  = $imagedata['sizes']['full']['width'];
 		}
 
-		return array(
+		return [
 			'width'  => $imagedata['width'],
 			'height' => $imagedata['height'],
-		);
+		];
 	}
 
 	/**
@@ -303,7 +303,7 @@ class WC_Regenerate_Images {
 	 * @return array
 	 */
 	public static function adjust_intermediate_image_sizes( $sizes ) {
-		return array( self::$regenerate_size );
+		return [ self::$regenerate_size ];
 	}
 
 	/**
@@ -333,11 +333,11 @@ class WC_Regenerate_Images {
 		$suffix                        = "{$dst_w}x{$dst_h}";
 		$file_ext                      = strtolower( pathinfo( $fullsizepath, PATHINFO_EXTENSION ) );
 
-		return array(
+		return [
 			'filename' => $editor->generate_filename( $suffix, null, $file_ext ),
 			'width'    => $dst_w,
 			'height'   => $dst_h,
-		);
+		];
 	}
 
 	/**
@@ -380,11 +380,11 @@ class WC_Regenerate_Images {
 				$wp_uploads_dir = $wp_uploads['basedir'];
 				$wp_uploads_url = $wp_uploads['baseurl'];
 
-				return array(
+				return [
 					0 => str_replace( $wp_uploads_dir, $wp_uploads_url, $thumbnail['filename'] ),
 					1 => $thumbnail['width'],
 					2 => $thumbnail['height'],
-				);
+				];
 			}
 		}
 
@@ -392,17 +392,17 @@ class WC_Regenerate_Images {
 
 		// Fix for images with no metadata.
 		if ( ! is_array( $metadata ) ) {
-			$metadata = array();
+			$metadata = [];
 		}
 
 		// We only want to regen a specific image size.
-		add_filter( 'intermediate_image_sizes', array( __CLASS__, 'adjust_intermediate_image_sizes' ) );
+		add_filter( 'intermediate_image_sizes', [ __CLASS__, 'adjust_intermediate_image_sizes' ] );
 
 		// This function will generate the new image sizes.
 		$new_metadata = wp_generate_attachment_metadata( $attachment_id, $fullsizepath );
 
 		// Remove custom filter.
-		remove_filter( 'intermediate_image_sizes', array( __CLASS__, 'adjust_intermediate_image_sizes' ) );
+		remove_filter( 'intermediate_image_sizes', [ __CLASS__, 'adjust_intermediate_image_sizes' ] );
 
 		// If something went wrong lets just return the original image.
 		if ( is_wp_error( $new_metadata ) || empty( $new_metadata ) ) {
@@ -428,11 +428,11 @@ class WC_Regenerate_Images {
 	 * @return string New image URL.
 	 */
 	private static function unfiltered_image_downsize( $attachment_id, $size ) {
-		remove_action( 'image_get_intermediate_size', array( __CLASS__, 'filter_image_get_intermediate_size' ), 10, 3 );
+		remove_action( 'image_get_intermediate_size', [ __CLASS__, 'filter_image_get_intermediate_size' ], 10, 3 );
 
 		$return = image_downsize( $attachment_id, $size );
 
-		add_action( 'image_get_intermediate_size', array( __CLASS__, 'filter_image_get_intermediate_size' ), 10, 3 );
+		add_action( 'image_get_intermediate_size', [ __CLASS__, 'filter_image_get_intermediate_size' ], 10, 3 );
 
 		return $return;
 	}
@@ -457,9 +457,9 @@ class WC_Regenerate_Images {
 		);
 		foreach ( $images as $image ) {
 			self::$background_process->push_to_queue(
-				array(
+				[
 					'attachment_id' => $image->ID,
-				)
+				]
 			);
 		}
 
@@ -468,4 +468,4 @@ class WC_Regenerate_Images {
 	}
 }
 
-add_action( 'init', array( 'WC_Regenerate_Images', 'init' ) );
+add_action( 'init', [ 'WC_Regenerate_Images', 'init' ] );

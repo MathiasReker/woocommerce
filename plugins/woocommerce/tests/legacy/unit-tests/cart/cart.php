@@ -30,7 +30,7 @@ class WC_Tests_Cart extends WC_Unit_Test_Case {
 
 		WC()->cart->empty_cart();
 
-		$tax_rate    = array(
+		$tax_rate    = [
 			'tax_rate_country'  => '',
 			'tax_rate_state'    => '',
 			'tax_rate'          => '20.0000',
@@ -40,7 +40,7 @@ class WC_Tests_Cart extends WC_Unit_Test_Case {
 			'tax_rate_shipping' => '0',
 			'tax_rate_order'    => '1',
 			'tax_rate_class'    => '20percent',
-		);
+		];
 		$tax_rate_20 = WC_Tax::_insert_tax_rate( $tax_rate );
 
 		// Create product with price 19.
@@ -50,24 +50,24 @@ class WC_Tests_Cart extends WC_Unit_Test_Case {
 		$product->set_tax_class( '20percent' );
 		$product->save();
 
-		$coupon = WC_Helper_Coupon::create_coupon( 'off5', array( 'coupon_amount' => 5 ) );
+		$coupon = WC_Helper_Coupon::create_coupon( 'off5', [ 'coupon_amount' => 5 ] );
 
 		// Create a flat rate method.
-		$flat_rate_settings = array(
+		$flat_rate_settings = [
 			'enabled'      => 'yes',
 			'title'        => 'Flat rate',
 			'availability' => 'all',
 			'countries'    => '',
 			'tax_status'   => 'taxable',
 			'cost'         => '9.59',
-		);
+		];
 		update_option( 'woocommerce_flat_rate_settings', $flat_rate_settings );
 
 		WC_Helper_Shipping::force_customer_us_address();
 
 		WC()->cart->add_to_cart( $product->get_id(), 1 );
 		WC()->cart->add_discount( $coupon->get_code() );
-		WC()->session->set( 'chosen_shipping_methods', array( 'flat_rate' ) );
+		WC()->session->set( 'chosen_shipping_methods', [ 'flat_rate' ] );
 
 		WC()->cart->calculate_totals();
 
@@ -95,7 +95,7 @@ class WC_Tests_Cart extends WC_Unit_Test_Case {
 
 		// Add taxes.
 		$tax_rate_025 = WC_Tax::_insert_tax_rate(
-			array(
+			[
 				'tax_rate_country'  => '',
 				'tax_rate_state'    => '',
 				'tax_rate'          => '0.2500',
@@ -105,11 +105,11 @@ class WC_Tests_Cart extends WC_Unit_Test_Case {
 				'tax_rate_shipping' => '1',
 				'tax_rate_order'    => '1',
 				'tax_rate_class'    => '',
-			)
+			]
 		);
 
 		$tax_rate_06 = WC_Tax::_insert_tax_rate(
-			array(
+			[
 				'tax_rate_country'  => '',
 				'tax_rate_state'    => '',
 				'tax_rate'          => '6.0000',
@@ -119,11 +119,11 @@ class WC_Tests_Cart extends WC_Unit_Test_Case {
 				'tax_rate_shipping' => '1',
 				'tax_rate_order'    => '1',
 				'tax_rate_class'    => '',
-			)
+			]
 		);
 
 		$tax_rate_015 = WC_Tax::_insert_tax_rate(
-			array(
+			[
 				'tax_rate_country'  => '',
 				'tax_rate_state'    => '',
 				'tax_rate'          => '1.5000',
@@ -133,11 +133,11 @@ class WC_Tests_Cart extends WC_Unit_Test_Case {
 				'tax_rate_shipping' => '1',
 				'tax_rate_order'    => '1',
 				'tax_rate_class'    => '',
-			)
+			]
 		);
 
 		$tax_rate_01 = WC_Tax::_insert_tax_rate(
-			array(
+			[
 				'tax_rate_country'  => '',
 				'tax_rate_state'    => '',
 				'tax_rate'          => '1.000',
@@ -147,7 +147,7 @@ class WC_Tests_Cart extends WC_Unit_Test_Case {
 				'tax_rate_shipping' => '1',
 				'tax_rate_order'    => '1',
 				'tax_rate_class'    => '',
-			)
+			]
 		);
 
 		// Add product to cart x1, calc and test.
@@ -180,7 +180,7 @@ class WC_Tests_Cart extends WC_Unit_Test_Case {
 		WC_Tax::create_tax_class( '23percent' );
 		WC_Tax::create_tax_class( '5percent' );
 
-		$tax_rate    = array(
+		$tax_rate    = [
 			'tax_rate_country'  => '',
 			'tax_rate_state'    => '',
 			'tax_rate'          => '23.0000',
@@ -190,10 +190,10 @@ class WC_Tests_Cart extends WC_Unit_Test_Case {
 			'tax_rate_shipping' => '1',
 			'tax_rate_order'    => '1',
 			'tax_rate_class'    => '23percent',
-		);
+		];
 		$tax_rate_23 = WC_Tax::_insert_tax_rate( $tax_rate );
 
-		$tax_rate   = array(
+		$tax_rate   = [
 			'tax_rate_country'  => '',
 			'tax_rate_state'    => '',
 			'tax_rate'          => '5.0000',
@@ -203,7 +203,7 @@ class WC_Tests_Cart extends WC_Unit_Test_Case {
 			'tax_rate_shipping' => '0',
 			'tax_rate_order'    => '1',
 			'tax_rate_class'    => '5percent',
-		);
+		];
 		$tax_rate_5 = WC_Tax::_insert_tax_rate( $tax_rate );
 
 		// Create product with price 19.
@@ -221,33 +221,33 @@ class WC_Tests_Cart extends WC_Unit_Test_Case {
 		$product2->save();
 
 		// Create a flat rate method.
-		$flat_rate_settings = array(
+		$flat_rate_settings = [
 			'enabled'      => 'yes',
 			'title'        => 'Flat rate',
 			'availability' => 'all',
 			'countries'    => '',
 			'tax_status'   => 'taxable',
 			'cost'         => '8.05',
-		);
+		];
 		update_option( 'woocommerce_flat_rate_settings', $flat_rate_settings );
-		update_option( 'woocommerce_flat_rate', array() );
+		update_option( 'woocommerce_flat_rate', [] );
 		WC_Cache_Helper::get_transient_version( 'shipping', true );
 		WC()->shipping->load_shipping_methods();
 
 		WC()->cart->empty_cart();
 
 		// Set the flat_rate shipping method.
-		WC()->session->set( 'chosen_shipping_methods', array( 'flat_rate' ) );
+		WC()->session->set( 'chosen_shipping_methods', [ 'flat_rate' ] );
 
 		// Add product to cart x1, calc and test.
 		WC()->cart->add_to_cart( $product->get_id(), 1 );
-		WC()->session->set( 'chosen_shipping_methods', array( 'flat_rate' ) );
+		WC()->session->set( 'chosen_shipping_methods', [ 'flat_rate' ] );
 		WC()->cart->calculate_totals();
 		$this->assertEquals( 27.05, WC()->cart->total );
 
 		// Add product2 to cart.
 		WC()->cart->add_to_cart( $product2->get_id(), 1 );
-		WC()->session->set( 'chosen_shipping_methods', array( 'flat_rate' ) );
+		WC()->session->set( 'chosen_shipping_methods', [ 'flat_rate' ] );
 		WC()->cart->calculate_totals();
 		$this->assertEquals( 87.9, WC()->cart->total );
 
@@ -268,7 +268,7 @@ class WC_Tests_Cart extends WC_Unit_Test_Case {
 		update_option( 'woocommerce_calc_taxes', 'yes' );
 		update_option( 'woocommerce_tax_round_at_subtotal', 'yes' );
 
-		$tax_rate = array(
+		$tax_rate = [
 			'tax_rate_country'  => '',
 			'tax_rate_state'    => '',
 			'tax_rate'          => '24.0000',
@@ -278,10 +278,10 @@ class WC_Tests_Cart extends WC_Unit_Test_Case {
 			'tax_rate_shipping' => '0',
 			'tax_rate_order'    => '1',
 			'tax_rate_class'    => 'tax_1',
-		);
+		];
 		WC_Tax::_insert_tax_rate( $tax_rate );
 
-		$tax_rate = array(
+		$tax_rate = [
 			'tax_rate_country'  => '',
 			'tax_rate_state'    => '',
 			'tax_rate'          => '24.0000',
@@ -291,7 +291,7 @@ class WC_Tests_Cart extends WC_Unit_Test_Case {
 			'tax_rate_shipping' => '0',
 			'tax_rate_order'    => '1',
 			'tax_rate_class'    => 'tax_2',
-		);
+		];
 		WC_Tax::_insert_tax_rate( $tax_rate );
 
 		// Create a product with price 599.
@@ -344,10 +344,10 @@ class WC_Tests_Cart extends WC_Unit_Test_Case {
 	 * Ticket: https://github.com/woocommerce/woocommerce/issues/11626
 	 */
 	public function test_cart_get_discounted_price_issue_11626() {
-		$expected_values = array(
+		$expected_values = [
 			1 => '13.90', // Tax exempt customer: all the prices without tax, then halved, i.e. sum = 33.09, sum_w/o_tax = 27.807, halved = 13.9035.
 			0 => '16.55', // Normal customer: all the prices halved, i.e. sum = 33.09, halved = 16.545.
-		);
+		];
 
 		// Create dummy coupon - fixed cart, 1 value.
 		$coupon = WC_Helper_Coupon::create_coupon();
@@ -358,7 +358,7 @@ class WC_Tests_Cart extends WC_Unit_Test_Case {
 		update_option( 'woocommerce_prices_include_tax', 'yes' );
 		update_option( 'woocommerce_calc_taxes', 'yes' );
 
-		$tax_rate = array(
+		$tax_rate = [
 			'tax_rate_country'  => '',
 			'tax_rate_state'    => '',
 			'tax_rate'          => '19.0000',
@@ -368,11 +368,11 @@ class WC_Tests_Cart extends WC_Unit_Test_Case {
 			'tax_rate_shipping' => '1',
 			'tax_rate_order'    => '1',
 			'tax_rate_class'    => '',
-		);
+		];
 		WC_Tax::_insert_tax_rate( $tax_rate );
 
-		$product_ids   = array();
-		$products_data = array(
+		$product_ids   = [];
+		$products_data = [
 			'5.17',
 			'3.32',
 			'1.25',
@@ -381,7 +381,7 @@ class WC_Tests_Cart extends WC_Unit_Test_Case {
 			'3.34',
 			'5.99',
 			'5.51',
-		);
+		];
 
 		foreach ( $expected_values as $customer_tax_exempt => $value ) {
 			WC()->customer->set_is_vat_exempt( $customer_tax_exempt );
@@ -418,7 +418,7 @@ class WC_Tests_Cart extends WC_Unit_Test_Case {
 		update_post_meta( $coupon->get_id(), 'coupon_amount', '10' );
 		update_option( 'woocommerce_prices_include_tax', 'yes' );
 		update_option( 'woocommerce_calc_taxes', 'yes' );
-		$tax_rate = array(
+		$tax_rate = [
 			'tax_rate_country'  => '',
 			'tax_rate_state'    => '',
 			'tax_rate'          => '10.0000',
@@ -428,7 +428,7 @@ class WC_Tests_Cart extends WC_Unit_Test_Case {
 			'tax_rate_shipping' => '1',
 			'tax_rate_order'    => '1',
 			'tax_rate_class'    => '',
-		);
+		];
 		WC_Tax::_insert_tax_rate( $tax_rate );
 		$product = wc_get_product( $product->get_id() );
 
@@ -447,10 +447,10 @@ class WC_Tests_Cart extends WC_Unit_Test_Case {
 	 * @since 3.2
 	 */
 	public function test_discount_cart_rounding() {
-		$expected_values = array(
-			1 => array( '31.12', '31.12' ), // Tax exempt customer: Total and Total + tax are the same.
-			0 => array( '31.12', '33.69' ), // Normal customer: Total, then Total + tax.
-		);
+		$expected_values = [
+			1 => [ '31.12', '31.12' ], // Tax exempt customer: Total and Total + tax are the same.
+			0 => [ '31.12', '33.69' ], // Normal customer: Total, then Total + tax.
+		];
 
 		// Test with no taxes.
 		$product = new WC_Product_Simple();
@@ -463,7 +463,7 @@ class WC_Tests_Cart extends WC_Unit_Test_Case {
 		$coupon->set_amount( 40 );
 		$coupon->save();
 
-		$tax_rate = array(
+		$tax_rate = [
 			'tax_rate_country'  => '',
 			'tax_rate_state'    => '',
 			'tax_rate'          => '8.2500',
@@ -473,7 +473,7 @@ class WC_Tests_Cart extends WC_Unit_Test_Case {
 			'tax_rate_shipping' => '1',
 			'tax_rate_order'    => '1',
 			'tax_rate_class'    => '',
-		);
+		];
 		WC_Tax::_insert_tax_rate( $tax_rate );
 
 		foreach ( $expected_values as $customer_tax_exempt => $values ) {
@@ -524,7 +524,7 @@ class WC_Tests_Cart extends WC_Unit_Test_Case {
 		update_option( 'woocommerce_tax_based_on', 'shipping' );
 
 		// 20% tax for GB.
-		$tax_rate = array(
+		$tax_rate = [
 			'tax_rate_country'  => 'GB',
 			'tax_rate_state'    => '',
 			'tax_rate'          => '20.0000',
@@ -534,11 +534,11 @@ class WC_Tests_Cart extends WC_Unit_Test_Case {
 			'tax_rate_shipping' => '0',
 			'tax_rate_order'    => '1',
 			'tax_rate_class'    => '',
-		);
+		];
 		WC_Tax::_insert_tax_rate( $tax_rate );
 
 		// 20% tax everywhere else.
-		$tax_rate = array(
+		$tax_rate = [
 			'tax_rate_country'  => '',
 			'tax_rate_state'    => '',
 			'tax_rate'          => '20.0000',
@@ -548,7 +548,7 @@ class WC_Tests_Cart extends WC_Unit_Test_Case {
 			'tax_rate_shipping' => '0',
 			'tax_rate_order'    => '1',
 			'tax_rate_class'    => '',
-		);
+		];
 		WC_Tax::_insert_tax_rate( $tax_rate );
 
 		// Create product.
@@ -575,8 +575,8 @@ class WC_Tests_Cart extends WC_Unit_Test_Case {
 		$full_coupon->set_amount( 100 );
 		$full_coupon->save();
 
-		add_filter( 'woocommerce_customer_get_shipping_country', array( $this, 'force_customer_gb_country' ) );
-		add_filter( 'woocommerce_customer_get_shipping_postcode', array( $this, 'force_customer_gb_postcode' ) );
+		add_filter( 'woocommerce_customer_get_shipping_country', [ $this, 'force_customer_gb_country' ] );
+		add_filter( 'woocommerce_customer_get_shipping_postcode', [ $this, 'force_customer_gb_postcode' ] );
 		WC()->cart->add_to_cart( $product->get_id(), 1 );
 
 		// Test in store location with no coupon.
@@ -613,8 +613,8 @@ class WC_Tests_Cart extends WC_Unit_Test_Case {
 		WC()->cart->remove_coupons();
 
 		WC()->cart->empty_cart();
-		remove_filter( 'woocommerce_customer_get_shipping_country', array( $this, 'force_customer_gb_country' ) );
-		remove_filter( 'woocommerce_customer_get_shipping_postcode', array( $this, 'force_customer_gb_postcode' ) );
+		remove_filter( 'woocommerce_customer_get_shipping_country', [ $this, 'force_customer_gb_country' ] );
+		remove_filter( 'woocommerce_customer_get_shipping_postcode', [ $this, 'force_customer_gb_postcode' ] );
 		WC_Helper_Shipping::force_customer_us_address();
 		WC()->cart->add_to_cart( $product->get_id(), 1 );
 
@@ -669,7 +669,7 @@ class WC_Tests_Cart extends WC_Unit_Test_Case {
 		update_option( 'woocommerce_tax_based_on', 'shipping' );
 
 		// 20% tax for GB.
-		$tax_rate = array(
+		$tax_rate = [
 			'tax_rate_country'  => 'GB',
 			'tax_rate_state'    => '',
 			'tax_rate'          => '20.0000',
@@ -679,11 +679,11 @@ class WC_Tests_Cart extends WC_Unit_Test_Case {
 			'tax_rate_shipping' => '0',
 			'tax_rate_order'    => '1',
 			'tax_rate_class'    => '',
-		);
+		];
 		WC_Tax::_insert_tax_rate( $tax_rate );
 
 		// 20% tax everywhere else.
-		$tax_rate = array(
+		$tax_rate = [
 			'tax_rate_country'  => '',
 			'tax_rate_state'    => '',
 			'tax_rate'          => '20.0000',
@@ -693,7 +693,7 @@ class WC_Tests_Cart extends WC_Unit_Test_Case {
 			'tax_rate_shipping' => '0',
 			'tax_rate_order'    => '1',
 			'tax_rate_class'    => '',
-		);
+		];
 		WC_Tax::_insert_tax_rate( $tax_rate );
 
 		// Create product.
@@ -720,8 +720,8 @@ class WC_Tests_Cart extends WC_Unit_Test_Case {
 		$full_coupon->set_amount( 100 );
 		$full_coupon->save();
 
-		add_filter( 'woocommerce_customer_get_shipping_country', array( $this, 'force_customer_gb_country' ) );
-		add_filter( 'woocommerce_customer_get_shipping_postcode', array( $this, 'force_customer_gb_postcode' ) );
+		add_filter( 'woocommerce_customer_get_shipping_country', [ $this, 'force_customer_gb_country' ] );
+		add_filter( 'woocommerce_customer_get_shipping_postcode', [ $this, 'force_customer_gb_postcode' ] );
 		WC()->cart->add_to_cart( $product->get_id(), 1 );
 
 		// Test in store location with no coupon.
@@ -758,8 +758,8 @@ class WC_Tests_Cart extends WC_Unit_Test_Case {
 		WC()->cart->remove_coupons();
 
 		WC()->cart->empty_cart();
-		remove_filter( 'woocommerce_customer_get_shipping_country', array( $this, 'force_customer_gb_country' ) );
-		remove_filter( 'woocommerce_customer_get_shipping_postcode', array( $this, 'force_customer_gb_postcode' ) );
+		remove_filter( 'woocommerce_customer_get_shipping_country', [ $this, 'force_customer_gb_country' ] );
+		remove_filter( 'woocommerce_customer_get_shipping_postcode', [ $this, 'force_customer_gb_postcode' ] );
 		WC_Helper_Shipping::force_customer_us_address();
 		WC()->cart->add_to_cart( $product->get_id(), 1 );
 
@@ -812,7 +812,7 @@ class WC_Tests_Cart extends WC_Unit_Test_Case {
 		update_option( 'woocommerce_tax_based_on', 'shipping' );
 
 		// 20% tax for GB.
-		$tax_rate = array(
+		$tax_rate = [
 			'tax_rate_country'  => 'GB',
 			'tax_rate_state'    => '',
 			'tax_rate'          => '20.0000',
@@ -822,11 +822,11 @@ class WC_Tests_Cart extends WC_Unit_Test_Case {
 			'tax_rate_shipping' => '0',
 			'tax_rate_order'    => '1',
 			'tax_rate_class'    => '',
-		);
+		];
 		WC_Tax::_insert_tax_rate( $tax_rate );
 
 		// 0% tax everywhere else.
-		$tax_rate = array(
+		$tax_rate = [
 			'tax_rate_country'  => '',
 			'tax_rate_state'    => '',
 			'tax_rate'          => '0.0000',
@@ -836,7 +836,7 @@ class WC_Tests_Cart extends WC_Unit_Test_Case {
 			'tax_rate_shipping' => '0',
 			'tax_rate_order'    => '1',
 			'tax_rate_class'    => '',
-		);
+		];
 		WC_Tax::_insert_tax_rate( $tax_rate );
 
 		// Create product.
@@ -962,16 +962,16 @@ class WC_Tests_Cart extends WC_Unit_Test_Case {
 	 * @since 3.2.6
 	 */
 	public function test_inclusive_tax_rounding() {
-		$expected_values = array(
-			1 => array( // Tax exempt customer.
+		$expected_values = [
+			1 => [ // Tax exempt customer.
 				'total'     => '129.45', // Price -> price w/o tax, then + shipping, i.e. 149.14 -> 125.3277 + 4.12 = 129.45.
 				'total_tax' => '0.00',   // No tax.
-			),
-			0 => array( // Normal customer.
+			],
+			0 => [ // Normal customer.
 				'total'     => '154.04', // Price + shipping + shipping tax, i.e. 149.14 + 4.12 * 1.19 = 154.04.
 				'total_tax' => '24.59',  // Tax = price tax + shipping tax.
-			),
-		);
+			],
+		];
 
 		// Store is set to enter product prices inclusive tax.
 		update_option( 'woocommerce_prices_include_tax', 'yes' );
@@ -981,7 +981,7 @@ class WC_Tests_Cart extends WC_Unit_Test_Case {
 		WC_Helper_Shipping::force_customer_us_address();
 
 		// 19% tax.
-		$tax_rate = array(
+		$tax_rate = [
 			'tax_rate_country'  => '',
 			'tax_rate_state'    => '',
 			'tax_rate'          => '19.0000',
@@ -991,20 +991,20 @@ class WC_Tests_Cart extends WC_Unit_Test_Case {
 			'tax_rate_shipping' => '1',
 			'tax_rate_order'    => '1',
 			'tax_rate_class'    => '',
-		);
+		];
 		WC_Tax::_insert_tax_rate( $tax_rate );
 
 		// Create a flat rate method.
-		$flat_rate_settings = array(
+		$flat_rate_settings = [
 			'enabled'      => 'yes',
 			'title'        => 'Flat rate',
 			'availability' => 'all',
 			'countries'    => '',
 			'tax_status'   => 'taxable',
 			'cost'         => '4.12',
-		);
+		];
 		update_option( 'woocommerce_flat_rate_settings', $flat_rate_settings );
-		update_option( 'woocommerce_flat_rate', array() );
+		update_option( 'woocommerce_flat_rate', [] );
 		WC_Cache_Helper::get_transient_version( 'shipping', true );
 		WC()->shipping()->load_shipping_methods();
 
@@ -1019,7 +1019,7 @@ class WC_Tests_Cart extends WC_Unit_Test_Case {
 			WC()->cart->add_to_cart( $product->get_id(), 1 );
 
 			// Set the flat_rate shipping method.
-			WC()->session->set( 'chosen_shipping_methods', array( 'flat_rate' ) );
+			WC()->session->set( 'chosen_shipping_methods', [ 'flat_rate' ] );
 
 			WC()->cart->calculate_totals();
 			$this->assertEquals( $values['total'], wc_format_decimal( WC()->cart->get_total( 'edit' ), 2 ) );
@@ -1043,7 +1043,7 @@ class WC_Tests_Cart extends WC_Unit_Test_Case {
 		update_option( 'woocommerce_price_decimal_sep', ',' );
 
 		// 22% tax.
-		$tax_rate = array(
+		$tax_rate = [
 			'tax_rate_country'  => '',
 			'tax_rate_state'    => '',
 			'tax_rate'          => '22.0000',
@@ -1053,7 +1053,7 @@ class WC_Tests_Cart extends WC_Unit_Test_Case {
 			'tax_rate_shipping' => '1',
 			'tax_rate_order'    => '1',
 			'tax_rate_class'    => '',
-		);
+		];
 		WC_Tax::_insert_tax_rate( $tax_rate );
 
 		// Create products and add them to cart.
@@ -1117,17 +1117,17 @@ class WC_Tests_Cart extends WC_Unit_Test_Case {
 	 * @since 3.2.6
 	 */
 	public function test_exclusive_tax_rounding() {
-		$expected_values = array(
+		$expected_values = [
 			1 => '95.84',  // Tax exempt customer: Total = simple sum of prices w/o tax.
 			0 => '115.00', // Normal customer: Total = sum of prices with tax added.
-		);
+		];
 
 		// Store is set to enter product prices excluding tax.
 		update_option( 'woocommerce_prices_include_tax', 'no' );
 		update_option( 'woocommerce_calc_taxes', 'yes' );
 
 		// 20% tax.
-		$tax_rate = array(
+		$tax_rate = [
 			'tax_rate_country'  => '',
 			'tax_rate_state'    => '',
 			'tax_rate'          => '20.0000',
@@ -1137,7 +1137,7 @@ class WC_Tests_Cart extends WC_Unit_Test_Case {
 			'tax_rate_shipping' => '0',
 			'tax_rate_order'    => '1',
 			'tax_rate_class'    => '',
-		);
+		];
 		WC_Tax::_insert_tax_rate( $tax_rate );
 
 		// Add 2 products whose retail prices (inc tax) are: £65, £50.
@@ -1170,37 +1170,37 @@ class WC_Tests_Cart extends WC_Unit_Test_Case {
 	 * @since 3.2.6
 	 */
 	public function test_exclusive_tax_rounding_and_totals() {
-		$expected_values = array(
-			1 => array( // Tax exempt customer.
+		$expected_values = [
+			1 => [ // Tax exempt customer.
 				'total_tax'           => '0.00',
 				'cart_contents_tax'   => '0.00',
 				'cart_contents_total' => '44.17',
 				'total'               => '44.17',
-			),
-			0 => array( // Normal customer.
+			],
+			0 => [ // Normal customer.
 				'total_tax'           => '2.44',
 				'cart_contents_tax'   => '2.44',
 				'cart_contents_total' => '44.17',
 				'total'               => '46.61',
-			),
-		);
+			],
+		];
 
-		$product_data = array(
+		$product_data = [
 			// price, quantity.
-			array( 2.13, 1 ),
-			array( 2.55, 0.5 ),
-			array( 39, 1 ),
-			array( 1.76, 1 ),
-		);
+			[ 2.13, 1 ],
+			[ 2.55, 0.5 ],
+			[ 39, 1 ],
+			[ 1.76, 1 ],
+		];
 
 		foreach ( $product_data as $data ) {
 			$product = new WC_Product_Simple();
 			$product->set_regular_price( $data[0] );
 			$product->save();
-			$products[] = array( $product, $data[1] );
+			$products[] = [ $product, $data[1] ];
 		}
 
-		$tax_rate = array(
+		$tax_rate = [
 			'tax_rate_country'  => '',
 			'tax_rate_state'    => '',
 			'tax_rate'          => '5.5',
@@ -1210,7 +1210,7 @@ class WC_Tests_Cart extends WC_Unit_Test_Case {
 			'tax_rate_shipping' => '1',
 			'tax_rate_order'    => '1',
 			'tax_rate_class'    => '',
-		);
+		];
 
 		WC_Tax::_insert_tax_rate( $tax_rate );
 
@@ -1302,10 +1302,10 @@ class WC_Tests_Cart extends WC_Unit_Test_Case {
 			$product->get_id(),
 			1,
 			$variation['variation_id'],
-			array(
+			[
 				'attribute_pa_colour' => 'red', // Set a value since this is an 'any' attribute.
 				'attribute_pa_number' => '2', // Set a value since this is an 'any' attribute.
-			)
+			]
 		);
 		$this->assertNotFalse( $result );
 
@@ -1360,19 +1360,19 @@ class WC_Tests_Cart extends WC_Unit_Test_Case {
 		// Setup data.
 		$product_id     = 1;
 		$variation_id   = 2;
-		$variation      = array( 'Testing' => 'yup' );
-		$cart_item_data = array(
+		$variation      = [ 'Testing' => 'yup' ];
+		$cart_item_data = [
 			'string_val' => 'The string I was talking about',
-			'array_val'  => array(
+			'array_val'  => [
 				'this',
 				'is',
 				'an',
 				'array',
-			),
-		);
+			],
+		];
 
 		// Manually generate ID.
-		$id_parts = array( $product_id );
+		$id_parts = [ $product_id ];
 
 		if ( $variation_id && 0 != $variation_id ) {
 			$id_parts[] = $variation_id;
@@ -1401,7 +1401,7 @@ class WC_Tests_Cart extends WC_Unit_Test_Case {
 
 		$manual_cart_id = md5( implode( '_', $id_parts ) );
 
-		$this->assertEquals( $manual_cart_id, WC()->cart->generate_cart_id( $product_id, $variation_id, array( 'Testing' => 'yup' ), $cart_item_data ) );
+		$this->assertEquals( $manual_cart_id, WC()->cart->generate_cart_id( $product_id, $variation_id, [ 'Testing' => 'yup' ], $cart_item_data ) );
 
 	}
 
@@ -1468,20 +1468,20 @@ class WC_Tests_Cart extends WC_Unit_Test_Case {
 	 * @since 2.3
 	 */
 	public function test_get_total_ex_tax() {
-		$expected_values = array(
-			1 => array( // Tax exempt customer.
+		$expected_values = [
+			1 => [ // Tax exempt customer.
 				'total'        => 20,
 				'total_ex_tax' => 20,
-			),
-			0 => array( // Normal customer.
+			],
+			0 => [ // Normal customer.
 				'total'        => 22,
 				'total_ex_tax' => 20,
-			),
-		);
+			],
+		];
 
 		// Set calc taxes option.
 		update_option( 'woocommerce_calc_taxes', 'yes' );
-		$tax_rate = array(
+		$tax_rate = [
 			'tax_rate_country'  => '',
 			'tax_rate_state'    => '',
 			'tax_rate'          => '10.0000',
@@ -1491,7 +1491,7 @@ class WC_Tests_Cart extends WC_Unit_Test_Case {
 			'tax_rate_shipping' => '1',
 			'tax_rate_order'    => '1',
 			'tax_rate_class'    => '',
-		);
+		];
 		WC_Tax::_insert_tax_rate( $tax_rate );
 
 		// Create dummy product.
@@ -1548,7 +1548,7 @@ class WC_Tests_Cart extends WC_Unit_Test_Case {
 		WC_Helper_Shipping::force_customer_us_address();
 
 		// Set the flat_rate shipping method.
-		WC()->session->set( 'chosen_shipping_methods', array( 'flat_rate' ) );
+		WC()->session->set( 'chosen_shipping_methods', [ 'flat_rate' ] );
 		WC()->cart->calculate_totals();
 
 		// Test if the shipping total amount is equal 20.
@@ -1566,7 +1566,7 @@ class WC_Tests_Cart extends WC_Unit_Test_Case {
 		update_option( 'woocommerce_calc_taxes', 'yes' );
 		update_option( 'woocommerce_tax_round_at_subtotal', 'yes' );
 
-		$tax_rate = array(
+		$tax_rate = [
 			'tax_rate_country'  => '',
 			'tax_rate_state'    => '',
 			'tax_rate'          => '25.0000',
@@ -1576,7 +1576,7 @@ class WC_Tests_Cart extends WC_Unit_Test_Case {
 			'tax_rate_shipping' => '1',
 			'tax_rate_order'    => '1',
 			'tax_rate_class'    => 'standard',
-		);
+		];
 		WC_Tax::_insert_tax_rate( $tax_rate );
 
 		$product = WC_Helper_Product::create_simple_product();
@@ -1589,7 +1589,7 @@ class WC_Tests_Cart extends WC_Unit_Test_Case {
 
 		WC()->cart->empty_cart();
 		WC()->cart->add_to_cart( $product->get_id(), 1 );
-		WC()->session->set( 'chosen_shipping_methods', array( 'flat_rate' ) );
+		WC()->session->set( 'chosen_shipping_methods', [ 'flat_rate' ] );
 		WC()->cart->calculate_totals();
 
 		$this->assertEquals( 18.775, WC()->cart->get_shipping_tax() );
@@ -1644,14 +1644,14 @@ class WC_Tests_Cart extends WC_Unit_Test_Case {
 	 * @since 3.2
 	 */
 	public function test_cart_fee_taxes() {
-		$expected_values = array(
+		$expected_values = [
 			1 => 20, // Tax exempt customer.
 			0 => 22, // Normal customer.
-		);
+		];
 
 		// Set up taxes.
 		update_option( 'woocommerce_calc_taxes', 'yes' );
-		$tax_rate = array(
+		$tax_rate = [
 			'tax_rate_country'  => '',
 			'tax_rate_state'    => '',
 			'tax_rate'          => '10.0000',
@@ -1661,7 +1661,7 @@ class WC_Tests_Cart extends WC_Unit_Test_Case {
 			'tax_rate_shipping' => '1',
 			'tax_rate_order'    => '1',
 			'tax_rate_class'    => '',
-		);
+		];
 		WC_Tax::_insert_tax_rate( $tax_rate );
 
 		// Create product.
@@ -1712,14 +1712,14 @@ class WC_Tests_Cart extends WC_Unit_Test_Case {
 	 * @since 3.2
 	 */
 	public function test_cart_negative_fee_taxes() {
-		$expected_values = array(
+		$expected_values = [
 			1 => 5.00, // Tax exempt customer.
 			0 => 5.50, // Normal customer: cart total amount is equal 5.50 ($15 item - $10 negative fee + 10% tax).
-		);
+		];
 
 		// Set up taxes.
 		update_option( 'woocommerce_calc_taxes', 'yes' );
-		$tax_rate = array(
+		$tax_rate = [
 			'tax_rate_country'  => '',
 			'tax_rate_state'    => '',
 			'tax_rate'          => '10.0000',
@@ -1729,7 +1729,7 @@ class WC_Tests_Cart extends WC_Unit_Test_Case {
 			'tax_rate_shipping' => '1',
 			'tax_rate_order'    => '1',
 			'tax_rate_class'    => '',
-		);
+		];
 		WC_Tax::_insert_tax_rate( $tax_rate );
 
 		// Create product.
@@ -1946,7 +1946,7 @@ class WC_Tests_Cart extends WC_Unit_Test_Case {
 		// Create dummy product.
 		$product = WC_Helper_Product::create_simple_product();
 		WC()->cart->add_to_cart( $product->get_id(), 1 );
-		$this->assertEquals( array(), WC()->cart->get_cross_sells() );
+		$this->assertEquals( [], WC()->cart->get_cross_sells() );
 	}
 
 	/**
@@ -1955,7 +1955,7 @@ class WC_Tests_Cart extends WC_Unit_Test_Case {
 	public function test_get_tax_totals() {
 		// Set calc taxes option.
 		update_option( 'woocommerce_calc_taxes', 'yes' );
-		$tax_rate = array(
+		$tax_rate = [
 			'tax_rate_country'  => '',
 			'tax_rate_state'    => '',
 			'tax_rate'          => '10.0000',
@@ -1965,7 +1965,7 @@ class WC_Tests_Cart extends WC_Unit_Test_Case {
 			'tax_rate_shipping' => '1',
 			'tax_rate_order'    => '1',
 			'tax_rate_class'    => '',
-		);
+		];
 		WC_Tax::_insert_tax_rate( $tax_rate );
 
 		// Create dummy product.
@@ -1993,7 +1993,7 @@ class WC_Tests_Cart extends WC_Unit_Test_Case {
 
 		// Check.
 		$tax_totals = WC()->cart->get_tax_totals();
-		$this->assertEquals( array(), $tax_totals );
+		$this->assertEquals( [], $tax_totals );
 	}
 
 	/**
@@ -2002,10 +2002,10 @@ class WC_Tests_Cart extends WC_Unit_Test_Case {
 	 * @return void
 	 */
 	public function test_is_coupon_emails_allowed() {
-		$this->assertEquals( true, WC()->cart->is_coupon_emails_allowed( array( 'customer@wc.local' ), array( '*.local' ) ) );
-		$this->assertEquals( false, WC()->cart->is_coupon_emails_allowed( array( 'customer@wc.local' ), array( '*.test' ) ) );
-		$this->assertEquals( true, WC()->cart->is_coupon_emails_allowed( array( 'customer@wc.local' ), array( 'customer@wc.local' ) ) );
-		$this->assertEquals( false, WC()->cart->is_coupon_emails_allowed( array( 'customer@wc.local' ), array( 'customer2@wc.local' ) ) );
+		$this->assertEquals( true, WC()->cart->is_coupon_emails_allowed( [ 'customer@wc.local' ], [ '*.local' ] ) );
+		$this->assertEquals( false, WC()->cart->is_coupon_emails_allowed( [ 'customer@wc.local' ], [ '*.test' ] ) );
+		$this->assertEquals( true, WC()->cart->is_coupon_emails_allowed( [ 'customer@wc.local' ], [ 'customer@wc.local' ] ) );
+		$this->assertEquals( false, WC()->cart->is_coupon_emails_allowed( [ 'customer@wc.local' ], [ 'customer2@wc.local' ] ) );
 	}
 
 	/**
@@ -2017,7 +2017,7 @@ class WC_Tests_Cart extends WC_Unit_Test_Case {
 		update_option( 'woocommerce_calc_taxes', 'yes' );
 
 		// 5% tax.
-		$tax_rate = array(
+		$tax_rate = [
 			'tax_rate_country'  => '',
 			'tax_rate_state'    => '',
 			'tax_rate'          => '5.0000',
@@ -2027,11 +2027,11 @@ class WC_Tests_Cart extends WC_Unit_Test_Case {
 			'tax_rate_shipping' => '1',
 			'tax_rate_order'    => '1',
 			'tax_rate_class'    => '',
-		);
+		];
 		WC_Tax::_insert_tax_rate( $tax_rate );
 
 		// 20% tax.
-		$tax_rate = array(
+		$tax_rate = [
 			'tax_rate_country'  => '',
 			'tax_rate_state'    => '',
 			'tax_rate'          => '20.0000',
@@ -2041,7 +2041,7 @@ class WC_Tests_Cart extends WC_Unit_Test_Case {
 			'tax_rate_shipping' => '1',
 			'tax_rate_order'    => '1',
 			'tax_rate_class'    => 'reduced-rate',
-		);
+		];
 		WC_Tax::_insert_tax_rate( $tax_rate );
 
 		// Create products and add them to cart.
@@ -2055,15 +2055,15 @@ class WC_Tests_Cart extends WC_Unit_Test_Case {
 		$this->assertEquals( '5.71', WC()->cart->get_subtotal() );
 		$this->assertEquals( '6.00', WC()->cart->get_total( 'edit' ) );
 
-		add_filter( 'woocommerce_product_get_tax_class', array( $this, 'change_tax_class_filter' ) );
-		add_filter( 'woocommerce_product_variation_get_tax_class', array( $this, 'change_tax_class_filter' ) );
+		add_filter( 'woocommerce_product_get_tax_class', [ $this, 'change_tax_class_filter' ] );
+		add_filter( 'woocommerce_product_variation_get_tax_class', [ $this, 'change_tax_class_filter' ] );
 
 		WC()->cart->calculate_totals();
 		$this->assertEquals( '5.71', WC()->cart->get_subtotal() );
 		$this->assertEquals( '6.85', WC()->cart->get_total( 'edit' ) );
 
-		remove_filter( 'woocommerce_product_get_tax_class', array( $this, 'change_tax_class_filter' ) );
-		remove_filter( 'woocommerce_product_variation_get_tax_class', array( $this, 'change_tax_class_filter' ) );
+		remove_filter( 'woocommerce_product_get_tax_class', [ $this, 'change_tax_class_filter' ] );
+		remove_filter( 'woocommerce_product_variation_get_tax_class', [ $this, 'change_tax_class_filter' ] );
 	}
 
 	/**
@@ -2075,7 +2075,7 @@ class WC_Tests_Cart extends WC_Unit_Test_Case {
 		update_option( 'woocommerce_tax_round_at_subtotal', 'yes' );
 
 		WC()->cart->empty_cart();
-		$tax_rate = array(
+		$tax_rate = [
 			'tax_rate_country'  => '',
 			'tax_rate_state'    => '',
 			'tax_rate'          => '10.0000',
@@ -2084,7 +2084,7 @@ class WC_Tests_Cart extends WC_Unit_Test_Case {
 			'tax_rate_compound' => '0',
 			'tax_rate_shipping' => '1',
 			'tax_rate_order'    => '1',
-		);
+		];
 		WC_Tax::_insert_tax_rate( $tax_rate );
 
 		$product = WC_Helper_Product::create_simple_product();
@@ -2093,17 +2093,17 @@ class WC_Tests_Cart extends WC_Unit_Test_Case {
 
 		WC_Helper_Coupon::create_coupon(
 			'3percent',
-			array(
+			[
 				'discount_type' => 'percent',
 				'coupon_amount' => 3,
-			)
+			]
 		);
 
-		add_action( 'woocommerce_cart_calculate_fees', array( $this, 'add_fee_1_5_to_cart' ) );
+		add_action( 'woocommerce_cart_calculate_fees', [ $this, 'add_fee_1_5_to_cart' ] );
 		WC()->cart->add_to_cart( $product->get_id(), 1 );
 		WC()->cart->apply_coupon( '3percent' );
 		WC()->cart->calculate_totals();
-		remove_action( 'woocommerce_cart_calculate_fees', array( $this, 'add_fee_1_5_to_cart' ) );
+		remove_action( 'woocommerce_cart_calculate_fees', [ $this, 'add_fee_1_5_to_cart' ] );
 
 		$this->assertEquals( 70.86, WC()->cart->get_total( 'edit' ) );
 	}
@@ -2132,7 +2132,7 @@ class WC_Tests_Cart extends WC_Unit_Test_Case {
 		// Add variation with add_to_cart_action.
 		$_REQUEST['add-to-cart'] = $variation['variation_id'];
 		WC_Form_Handler::add_to_cart_action( false );
-		$notices = WC()->session->get( 'wc_notices', array() );
+		$notices = WC()->session->get( 'wc_notices', [] );
 
 		// Reset filter / REQUEST variables.
 		unset( $_REQUEST['add-to-cart'] );
@@ -2150,13 +2150,13 @@ class WC_Tests_Cart extends WC_Unit_Test_Case {
 			$product->get_id(),
 			1,
 			$variation['variation_id'],
-			array(
+			[
 				'attribute_pa_size'   => 'huge',
 				'attribute_pa_colour' => 'red',
 				'attribute_pa_number' => '2',
-			)
+			]
 		);
-		$notices = WC()->session->get( 'wc_notices', array() );
+		$notices = WC()->session->get( 'wc_notices', [] );
 
 		// Check that the second add to cart call increases the quantity of the existing cart-item.
 		$this->assertCount( 1, WC()->cart->get_cart_contents() );
@@ -2184,7 +2184,7 @@ class WC_Tests_Cart extends WC_Unit_Test_Case {
 		$_REQUEST['add-to-cart']         = $variation['variation_id'];
 		$_REQUEST['attribute_pa_colour'] = 'green';
 		WC_Form_Handler::add_to_cart_action( false );
-		$notices = WC()->session->get( 'wc_notices', array() );
+		$notices = WC()->session->get( 'wc_notices', [] );
 
 		// Reset filter / REQUEST variables.
 		unset( $_REQUEST['add-to-cart'] );
@@ -2216,7 +2216,7 @@ class WC_Tests_Cart extends WC_Unit_Test_Case {
 		$_REQUEST['attribute_pa_colour'] = 'red';
 		$_REQUEST['attribute_pa_number'] = '1';
 		WC_Form_Handler::add_to_cart_action( false );
-		$notices = WC()->session->get( 'wc_notices', array() );
+		$notices = WC()->session->get( 'wc_notices', [] );
 
 		// Reset filter / REQUEST variables.
 		unset( $_REQUEST['add-to-cart'] );
@@ -2249,7 +2249,7 @@ class WC_Tests_Cart extends WC_Unit_Test_Case {
 		$_REQUEST['add-to-cart']         = $variation['variation_id'];
 		$_REQUEST['attribute_pa_number'] = '';
 		WC_Form_Handler::add_to_cart_action( false );
-		$notices = WC()->session->get( 'wc_notices', array() );
+		$notices = WC()->session->get( 'wc_notices', [] );
 
 		// Reset filter / REQUEST variables.
 		unset( $_REQUEST['add-to-cart'] );

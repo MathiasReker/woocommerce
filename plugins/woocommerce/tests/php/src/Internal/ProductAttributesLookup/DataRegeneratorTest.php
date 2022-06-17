@@ -49,7 +49,7 @@ class DataRegeneratorTest extends \WC_Unit_Test_Case {
 
 		// phpcs:disable Squiz.Commenting
 		$this->lookup_data_store = new class() extends LookupDataStore {
-			public $passed_products = array();
+			public $passed_products = [];
 
 			public function create_data_for_product( $product ) {
 				$this->passed_products[] = $product;
@@ -66,9 +66,9 @@ class DataRegeneratorTest extends \WC_Unit_Test_Case {
 		$this->sut = $container->get( DataRegenerator::class );
 
 		$this->register_legacy_proxy_class_mocks(
-			array(
+			[
 				\WC_Queue::class => new FakeQueue(),
-			)
+			]
 		);
 		$this->queue = $this->get_legacy_instance_of( \WC_Queue::class );
 	}
@@ -108,14 +108,14 @@ class DataRegeneratorTest extends \WC_Unit_Test_Case {
 	 */
 	public function test_initiate_regeneration_initializes_temporary_options_and_enqueues_regeneration_step() {
 		$this->register_legacy_proxy_function_mocks(
-			array(
+			[
 				'wc_get_products' => function( $args ) {
-					return array( 100 );
+					return [ 100 ];
 				},
 				'time'            => function() {
 					return 1000;
 				},
-			)
+			]
 		);
 
 		$this->sut->initiate_regeneration();
@@ -124,13 +124,13 @@ class DataRegeneratorTest extends \WC_Unit_Test_Case {
 		$this->assertEquals( 0, get_option( 'woocommerce_attribute_lookup_processed_count' ) );
 		$this->assertFalse( get_option( 'woocommerce_attribute_lookup_enabled' ) );
 
-		$expected_enqueued = array(
+		$expected_enqueued = [
 			'method'    => 'schedule_single',
-			'args'      => array(),
+			'args'      => [],
 			'timestamp' => 1001,
 			'hook'      => 'woocommerce_run_product_attribute_lookup_regeneration_callback',
 			'group'     => 'woocommerce-db-updates',
-		);
+		];
 		$actual_enqueued   = current( $this->queue->get_methods_called() );
 
 		$this->assertEquals( sort( $expected_enqueued ), sort( $actual_enqueued ) );
@@ -146,11 +146,11 @@ class DataRegeneratorTest extends \WC_Unit_Test_Case {
 	 */
 	public function test_initiate_regeneration_does_not_enqueues_regeneration_step_when_no_products( $get_products_result ) {
 		$this->register_legacy_proxy_function_mocks(
-			array(
+			[
 				'wc_get_products' => function( $args ) use ( $get_products_result ) {
 					return $get_products_result;
 				},
-			)
+			]
 		);
 
 		$this->sut->initiate_regeneration();
@@ -165,22 +165,22 @@ class DataRegeneratorTest extends \WC_Unit_Test_Case {
 	 * @testdox `initiate_regeneration` processes one chunk of products IDs and enqueues next step if there are more products available.
 	 */
 	public function test_initiate_regeneration_correctly_processes_ids_and_enqueues_next_step() {
-		$requested_products_offsets = array();
+		$requested_products_offsets = [];
 
 		$this->register_legacy_proxy_function_mocks(
-			array(
+			[
 				'wc_get_products' => function( $args ) use ( &$requested_products_offsets ) {
 					if ( 'DESC' === current( $args['orderby'] ) ) {
-						return array( 100 );
+						return [ 100 ];
 					} else {
 						$requested_products_offsets[] = $args['offset'];
-						return array( 1, 2, 3 );
+						return [ 1, 2, 3 ];
 					}
 				},
 				'time'            => function() {
 					return 1000;
 				},
-			)
+			]
 		);
 
 		$this->sut->initiate_regeneration();
@@ -190,17 +190,17 @@ class DataRegeneratorTest extends \WC_Unit_Test_Case {
 
 		do_action( 'woocommerce_run_product_attribute_lookup_regeneration_callback' );
 
-		$this->assertEquals( array( 1, 2, 3 ), $this->lookup_data_store->passed_products );
-		$this->assertEquals( array( 7 ), $requested_products_offsets );
+		$this->assertEquals( [ 1, 2, 3 ], $this->lookup_data_store->passed_products );
+		$this->assertEquals( [ 7 ], $requested_products_offsets );
 		$this->assertEquals( 7 + count( $this->lookup_data_store->passed_products ), get_option( 'woocommerce_attribute_lookup_processed_count' ) );
 
-		$expected_enqueued = array(
+		$expected_enqueued = [
 			'method'    => 'schedule_single',
-			'args'      => array(),
+			'args'      => [],
 			'timestamp' => 1001,
 			'hook'      => 'woocommerce_run_product_attribute_lookup_regeneration_callback',
 			'group'     => 'woocommerce-db-updates',
-		);
+		];
 		$actual_enqueued   = current( $this->queue->get_methods_called() );
 		$this->assertEquals( sort( $expected_enqueued ), sort( $actual_enqueued ) );
 	}
@@ -214,7 +214,7 @@ class DataRegeneratorTest extends \WC_Unit_Test_Case {
 	 * @param bool $set_filter Whether to use the filter to change the processing group size or not.
 	 */
 	public function test_regeneration_uses_the_woocommerce_attribute_lookup_regeneration_step_size_filter( bool $set_filter ) {
-		$requested_step_sizes = array();
+		$requested_step_sizes = [];
 
 		if ( $set_filter ) {
 			\add_filter(
@@ -226,16 +226,16 @@ class DataRegeneratorTest extends \WC_Unit_Test_Case {
 		}
 
 		$this->register_legacy_proxy_function_mocks(
-			array(
+			[
 				'wc_get_products' => function( $args ) use ( &$requested_step_sizes ) {
 					if ( 'DESC' === current( $args['orderby'] ) ) {
-						return array( 100 );
+						return [ 100 ];
 					} else {
 						$requested_step_sizes[] = $args['limit'];
-						return array( 1, 2, 3 );
+						return [ 1, 2, 3 ];
 					}
 				},
-			)
+			]
 		);
 
 		$this->sut->initiate_regeneration();
@@ -246,7 +246,7 @@ class DataRegeneratorTest extends \WC_Unit_Test_Case {
 		remove_all_filters( ' woocommerce_attribute_lookup_regeneration_step_size' );
 
 		$expected_limit_value = $set_filter ? 100 : DataRegenerator::PRODUCTS_PER_GENERATION_STEP;
-		$this->assertEquals( array( $expected_limit_value ), $requested_step_sizes );
+		$this->assertEquals( [ $expected_limit_value ], $requested_step_sizes );
 	}
 
 	/**
@@ -260,15 +260,15 @@ class DataRegeneratorTest extends \WC_Unit_Test_Case {
 	 */
 	public function test_initiate_regeneration_finishes_when_no_more_products_available( $product_ids ) {
 		$this->register_legacy_proxy_function_mocks(
-			array(
+			[
 				'wc_get_products' => function( $args ) use ( &$requested_products_offsets, $product_ids ) {
 					if ( 'DESC' === current( $args['orderby'] ) ) {
-						return array( 100 );
+						return [ 100 ];
 					} else {
 						return $product_ids;
 					}
 				},
-			)
+			]
 		);
 
 		$this->sut->initiate_regeneration();

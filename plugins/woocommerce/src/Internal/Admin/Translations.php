@@ -35,14 +35,14 @@ class Translations {
 	 * Hooks added here should be removed in `wc_admin_initialize` via the feature plugin.
 	 */
 	public function __construct() {
-		add_action( 'admin_enqueue_scripts', array( $this, 'potentially_load_translation_script_file' ), 15 );
+		add_action( 'admin_enqueue_scripts', [ $this, 'potentially_load_translation_script_file' ], 15 );
 
 		// Combine JSON translation files (from chunks) when language packs are updated.
-		add_action( 'upgrader_process_complete', array( $this, 'combine_translation_chunk_files' ), 10, 2 );
+		add_action( 'upgrader_process_complete', [ $this, 'combine_translation_chunk_files' ], 10, 2 );
 
 		// Handler for WooCommerce and WooCommerce Admin plugin activation.
-		add_action( 'woocommerce_activated_plugin', array( $this, 'potentially_generate_translation_strings' ) );
-		add_action( 'activated_plugin', array( $this, 'potentially_generate_translation_strings' ) );
+		add_action( 'woocommerce_activated_plugin', [ $this, 'potentially_generate_translation_strings' ] );
+		add_action( 'activated_plugin', [ $this, 'potentially_generate_translation_strings' ] );
 	}
 
 	/**
@@ -53,7 +53,7 @@ class Translations {
 	 * @return string Filename.
 	 */
 	private function get_combined_translation_filename( $domain, $locale ) {
-		$filename = implode( '-', array( $domain, $locale, WC_ADMIN_APP ) ) . '.json';
+		$filename = implode( '-', [ $domain, $locale, WC_ADMIN_APP ] ) . '.json';
 
 		return $filename;
 	}
@@ -75,7 +75,7 @@ class Translations {
 
 		// Grab all JSON files in the current language pack.
 		$json_i18n_filenames       = glob( $lang_dir . $domain . '-' . $locale . '-*.json' );
-		$combined_translation_data = array();
+		$combined_translation_data = [];
 
 		if ( false === $json_i18n_filenames ) {
 			return $combined_translation_data;
@@ -191,7 +191,7 @@ class Translations {
 		}
 
 		// Grab translation strings from Webpack-generated chunks.
-		add_filter( 'load_script_translation_file', array( $this, 'load_script_translation_file' ), 10, 3 );
+		add_filter( 'load_script_translation_file', [ $this, 'load_script_translation_file' ], 10, 3 );
 	}
 
 	/**
@@ -258,7 +258,7 @@ class Translations {
 
 		// Make sure we're handing the correct domain (could be woocommerce or woocommerce-admin).
 		$plugin_domain = explode( '/', plugin_basename( __FILE__ ) )[0];
-		$locales       = array();
+		$locales       = [];
 		$language_dir  = WP_LANG_DIR . '/plugins/';
 
 		// Gather the locales that were updated in this operation.

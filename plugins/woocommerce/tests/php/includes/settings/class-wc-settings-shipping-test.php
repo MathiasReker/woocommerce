@@ -19,7 +19,7 @@ class WC_Settings_Shipping_Test extends WC_Settings_Unit_Test_Case {
 	 * @testDox 'get_sections' returns a fixed set of sections, plus one section for each shipping method having settings.
 	 */
 	public function test_get_sections_returns_fixed_sections_and_one_section_per_shipping_method_with_settings() {
-		$methods = array(
+		$methods = [
 			//phpcs:disable Squiz.Commenting
 			new class() {
 				public $id;
@@ -60,10 +60,10 @@ class WC_Settings_Shipping_Test extends WC_Settings_Unit_Test_Case {
 				}
 			},
 			//phpcs:enable
-		);
+		];
 
 		$sut = $this->getMockBuilder( WC_Settings_Shipping::class )
-					->setMethods( array( 'get_shipping_methods', 'wc_is_installing' ) )
+					->setMethods( [ 'get_shipping_methods', 'wc_is_installing' ] )
 					->getMock();
 
 		$sut->method( 'get_shipping_methods' )->willReturn( $methods );
@@ -71,13 +71,13 @@ class WC_Settings_Shipping_Test extends WC_Settings_Unit_Test_Case {
 
 		$sections = $sut->get_sections();
 
-		$expected = array(
+		$expected = [
 			''            => 'Shipping zones',
 			'options'     => 'Shipping options',
 			'classes'     => 'Shipping classes',
 			'method_1_id' => 'Method_1_id',
 			'method_2_id' => 'method_2_title',
-		);
+		];
 		$this->assertEquals( $expected, $sections );
 	}
 
@@ -95,13 +95,13 @@ class WC_Settings_Shipping_Test extends WC_Settings_Unit_Test_Case {
 		$settings               = $sut->get_settings_for_section( $section_name );
 		$settings_ids_and_types = $this->get_ids_and_types( $settings );
 
-		$expected = array(
-			'shipping_options'                           => array( 'title', 'sectionend' ),
+		$expected = [
+			'shipping_options'                           => [ 'title', 'sectionend' ],
 			'woocommerce_enable_shipping_calc'           => 'checkbox',
 			'woocommerce_shipping_cost_requires_address' => 'checkbox',
 			'woocommerce_ship_to_destination'            => 'radio',
 			'woocommerce_shipping_debug_mode'            => 'checkbox',
-		);
+		];
 
 		$this->assertEquals( $expected, $settings_ids_and_types );
 	}
@@ -122,10 +122,10 @@ class WC_Settings_Shipping_Test extends WC_Settings_Unit_Test_Case {
 		$method_invoked = null;
 
 		$sut = $this->getMockBuilder( WC_Settings_Shipping::class )
-					->setMethods( array( 'get_shipping_methods', 'output_zones_screen', 'output_fields', 'output_shipping_class_screen' ) )
+					->setMethods( [ 'get_shipping_methods', 'output_zones_screen', 'output_fields', 'output_shipping_class_screen' ] )
 					->getMock();
 
-		$sut->method( 'get_shipping_methods' )->willReturn( array() );
+		$sut->method( 'get_shipping_methods' )->willReturn( [] );
 		$sut->method( 'output_zones_screen' )->will(
 			$this->returnCallback(
 				function() use ( &$method_invoked ) {
@@ -176,10 +176,10 @@ class WC_Settings_Shipping_Test extends WC_Settings_Unit_Test_Case {
 		//phpcs:enable
 
 		$sut = $this->getMockBuilder( WC_Settings_Shipping::class )
-					->setMethods( array( 'get_shipping_methods' ) )
+					->setMethods( [ 'get_shipping_methods' ] )
 					->getMock();
 
-		$sut->method( 'get_shipping_methods' )->willReturn( array( $method ) );
+		$sut->method( 'get_shipping_methods' )->willReturn( [ $method ] );
 
 		$sut->output();
 
@@ -201,13 +201,13 @@ class WC_Settings_Shipping_Test extends WC_Settings_Unit_Test_Case {
 		$output_fields_in_admin_settings_invoked = false;
 
 		StaticMockerHack::add_method_mocks(
-			array(
-				'WC_Admin_Settings' => array(
+			[
+				'WC_Admin_Settings' => [
 					'output_fields' => function( $settings ) use ( &$output_fields_in_admin_settings_invoked ) {
 						$output_fields_in_admin_settings_invoked = true;
 					},
-				),
-			)
+				],
+			]
 		);
 
 		//phpcs:disable Squiz.Commenting
@@ -233,10 +233,10 @@ class WC_Settings_Shipping_Test extends WC_Settings_Unit_Test_Case {
 		//phpcs:enable
 
 		$sut = $this->getMockBuilder( WC_Settings_Shipping::class )
-					->setMethods( array( 'get_shipping_methods' ) )
+					->setMethods( [ 'get_shipping_methods' ] )
 					->getMock();
 
-		$sut->method( 'get_shipping_methods' )->willReturn( array( $method ) );
+		$sut->method( 'get_shipping_methods' )->willReturn( [ $method ] );
 
 		$sut->output();
 
@@ -262,10 +262,10 @@ class WC_Settings_Shipping_Test extends WC_Settings_Unit_Test_Case {
 		$save_settings_for_current_section_invoked = false;
 
 		$sut = $this->getMockBuilder( WC_Settings_Shipping::class )
-					->setMethods( array( 'get_shipping_methods', 'save_settings_for_current_section' ) )
+					->setMethods( [ 'get_shipping_methods', 'save_settings_for_current_section' ] )
 					->getMock();
 
-		$sut->method( 'get_shipping_methods' )->willReturn( array() );
+		$sut->method( 'get_shipping_methods' )->willReturn( [] );
 		$sut->method( 'save_settings_for_current_section' )->will(
 			$this->returnCallback(
 				function() use ( &$save_settings_for_current_section_invoked ) {
@@ -305,10 +305,10 @@ class WC_Settings_Shipping_Test extends WC_Settings_Unit_Test_Case {
 		//phpcs:enable
 
 		$sut = $this->getMockBuilder( WC_Settings_Shipping::class )
-					->setMethods( array( 'get_shipping_methods' ) )
+					->setMethods( [ 'get_shipping_methods' ] )
 					->getMock();
 
-		$sut->method( 'get_shipping_methods' )->willReturn( array( $method ) );
+		$sut->method( 'get_shipping_methods' )->willReturn( [ $method ] );
 
 		$sut->save();
 

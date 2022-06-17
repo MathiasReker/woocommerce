@@ -37,7 +37,7 @@ class FirstProduct {
 			return;
 		}
 
-		$onboarding_profile = get_option( 'woocommerce_onboarding_profile', array() );
+		$onboarding_profile = get_option( 'woocommerce_onboarding_profile', [] );
 
 		// Confirm that $onboarding_profile is set.
 		if ( empty( $onboarding_profile ) ) {
@@ -55,12 +55,12 @@ class FirstProduct {
 
 		// Don't show if there are products.
 		$query    = new \WC_Product_Query(
-			array(
+			[
 				'limit'    => 1,
 				'paginate' => true,
 				'return'   => 'ids',
-				'status'   => array( 'publish' ),
-			)
+				'status'   => [ 'publish' ],
+			]
 		);
 		$products = $query->get_products();
 		$count    = $products->total;
@@ -73,7 +73,7 @@ class FirstProduct {
 		$note->set_content( __( 'This video tutorial will help you go through the process of adding your first product in WooCommerce.', 'woocommerce' ) );
 		$note->set_type( Note::E_WC_ADMIN_NOTE_INFORMATIONAL );
 		$note->set_name( self::NOTE_NAME );
-		$note->set_content_data( (object) array() );
+		$note->set_content_data( (object) [] );
 		$note->set_source( 'woocommerce-admin' );
 		$note->add_action(
 			'first-product-watch-tutorial',

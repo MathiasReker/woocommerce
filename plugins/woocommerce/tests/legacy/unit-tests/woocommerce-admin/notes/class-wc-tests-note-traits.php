@@ -62,7 +62,7 @@ class WC_Admin_Tests_NoteTraits extends WC_Unit_Test_Case {
 	 * @return void
 	 */
 	public function test_possibly_convert_object_to_array() {
-		$this->assertEquals( self::possibly_convert_object_to_array( new stdClass() ), array() );
+		$this->assertEquals( self::possibly_convert_object_to_array( new stdClass() ), [] );
 		$this->assertEquals( self::possibly_convert_object_to_array( 1 ), 1 );
 		$this->assertEquals( self::possibly_convert_object_to_array( 'string' ), 'string' );
 	}
@@ -84,43 +84,43 @@ class WC_Admin_Tests_NoteTraits extends WC_Unit_Test_Case {
 	 * @return array[]
 	 */
 	public function methods_causing_exception_if_data_store_cannot_be_loaded_provider() {
-		return array(
-			array(
+		return [
+			[
 				function () {
 					self::note_exists();
 				},
-			),
-			array(
+			],
+			[
 				function () {
 					self::can_be_added();
 				},
-			),
-			array(
+			],
+			[
 				function () {
 					self::possibly_add_note();
 				},
-			),
-			array(
+			],
+			[
 				function () {
 					self::add_note();
 				},
-			),
-			array(
+			],
+			[
 				function () {
 					self::possibly_delete_note();
 				},
-			),
-			array(
+			],
+			[
 				function () {
 					self::possibly_update_note();
 				},
-			),
-			array(
+			],
+			[
 				function () {
 					self::has_note_been_actioned();
 				},
-			),
-		);
+			],
+		];
 	}
 
 	/**
@@ -146,8 +146,8 @@ class WC_Admin_Tests_NoteTraits extends WC_Unit_Test_Case {
 		$this->assertTrue( self::update_note_field_if_changed( $note1, $note2, 'name' ) );
 
 		// Test actions are the same as note1.
-		$actions1 = array(
-			(object) array(
+		$actions1 = [
+			(object) [
 				'id'            => '1',
 				'name'          => 'action1',
 				'label'         => 'wca',
@@ -156,8 +156,8 @@ class WC_Admin_Tests_NoteTraits extends WC_Unit_Test_Case {
 				'actioned_text' => '',
 				'nonce_name'    => 0,
 				'nonce_action'  => 0,
-			),
-			(object) array(
+			],
+			(object) [
 				'id'            => '2',
 				'name'          => 'action2',
 				'label'         => 'wca',
@@ -166,11 +166,11 @@ class WC_Admin_Tests_NoteTraits extends WC_Unit_Test_Case {
 				'actioned_text' => 'text',
 				'nonce_name'    => 0,
 				'nonce_action'  => 0,
-			),
-		);
+			],
+		];
 
-		$actions2 = array(
-			(object) array(
+		$actions2 = [
+			(object) [
 				'name'          => 'action1',
 				'label'         => 'wca',
 				'query'         => '?query',
@@ -178,8 +178,8 @@ class WC_Admin_Tests_NoteTraits extends WC_Unit_Test_Case {
 				'actioned_text' => '',
 				'nonce_name'    => null,
 				'nonce_action'  => null,
-			),
-			(object) array(
+			],
+			(object) [
 				'name'          => 'new action',
 				'label'         => 'wca',
 				'query'         => '?query',
@@ -187,8 +187,8 @@ class WC_Admin_Tests_NoteTraits extends WC_Unit_Test_Case {
 				'actioned_text' => 'text',
 				'nonce_name'    => null,
 				'nonce_action'  => null,
-			),
-		);
+			],
+		];
 
 		$note1->expects( $this->once() )
 			->method( 'get_actions' )
@@ -228,8 +228,8 @@ class WC_Admin_Tests_NoteTraits extends WC_Unit_Test_Case {
 		$this->assertFalse( self::update_note_field_if_changed( $note1, $note2, 'name' ) );
 
 		// Test actions are the same as note1.
-		$actions1 = array(
-			(object) array(
+		$actions1 = [
+			(object) [
 				'id'            => '1',
 				'name'          => 'action1',
 				'label'         => 'wca',
@@ -238,8 +238,8 @@ class WC_Admin_Tests_NoteTraits extends WC_Unit_Test_Case {
 				'actioned_text' => '',
 				'nonce_name'    => 0,
 				'nonce_action'  => 0,
-			),
-			(object) array(
+			],
+			(object) [
 				'id'            => '2',
 				'name'          => 'action2',
 				'label'         => 'wca',
@@ -248,11 +248,11 @@ class WC_Admin_Tests_NoteTraits extends WC_Unit_Test_Case {
 				'actioned_text' => 'text',
 				'nonce_name'    => 0,
 				'nonce_action'  => 0,
-			),
-		);
+			],
+		];
 
-		$actions2 = array(
-			(object) array(
+		$actions2 = [
+			(object) [
 				'name'          => 'action1',
 				'label'         => 'wca',
 				'query'         => '?query',
@@ -260,8 +260,8 @@ class WC_Admin_Tests_NoteTraits extends WC_Unit_Test_Case {
 				'actioned_text' => '',
 				'nonce_name'    => null,
 				'nonce_action'  => null,
-			),
-			(object) array(
+			],
+			(object) [
 				'name'          => 'action2',
 				'label'         => 'wca',
 				'query'         => '?query',
@@ -269,8 +269,8 @@ class WC_Admin_Tests_NoteTraits extends WC_Unit_Test_Case {
 				'actioned_text' => 'text',
 				'nonce_name'    => null,
 				'nonce_action'  => null,
-			),
-		);
+			],
+		];
 
 		$note1->expects( $this->once() )
 			->method( 'get_actions' )
@@ -294,13 +294,13 @@ class WC_Admin_Tests_NoteTraits extends WC_Unit_Test_Case {
 	 * @return array[]
 	 */
 	public function methods_never_causing_exception_provider() {
-		return array(
-			array(
+		return [
+			[
 				function () {
 					self::wc_admin_active_for( 123 );
 				},
-			),
-		);
+			],
+		];
 	}
 
 }

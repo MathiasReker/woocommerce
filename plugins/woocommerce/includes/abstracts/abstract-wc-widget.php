@@ -60,18 +60,18 @@ abstract class WC_Widget extends WP_Widget {
 	 * Constructor.
 	 */
 	public function __construct() {
-		$widget_ops = array(
+		$widget_ops = [
 			'classname'                   => $this->widget_cssclass,
 			'description'                 => $this->widget_description,
 			'customize_selective_refresh' => true,
 			'show_instance_in_rest'       => true,
-		);
+		];
 
 		parent::__construct( $this->widget_id, $this->widget_name, $widget_ops );
 
-		add_action( 'save_post', array( $this, 'flush_widget_cache' ) );
-		add_action( 'deleted_post', array( $this, 'flush_widget_cache' ) );
-		add_action( 'switch_theme', array( $this, 'flush_widget_cache' ) );
+		add_action( 'save_post', [ $this, 'flush_widget_cache' ] );
+		add_action( 'deleted_post', [ $this, 'flush_widget_cache' ] );
+		add_action( 'switch_theme', [ $this, 'flush_widget_cache' ] );
 	}
 
 	/**
@@ -89,7 +89,7 @@ abstract class WC_Widget extends WP_Widget {
 		$cache = wp_cache_get( $this->get_widget_id_for_cache( $this->widget_id ), 'widget' );
 
 		if ( ! is_array( $cache ) ) {
-			$cache = array();
+			$cache = [];
 		}
 
 		if ( isset( $cache[ $this->get_widget_id_for_cache( $args['widget_id'] ) ] ) ) {
@@ -116,7 +116,7 @@ abstract class WC_Widget extends WP_Widget {
 		$cache = wp_cache_get( $this->get_widget_id_for_cache( $this->widget_id ), 'widget' );
 
 		if ( ! is_array( $cache ) ) {
-			$cache = array();
+			$cache = [];
 		}
 
 		$cache[ $this->get_widget_id_for_cache( $args['widget_id'] ) ] = $content;
@@ -130,7 +130,7 @@ abstract class WC_Widget extends WP_Widget {
 	 * Flush the cache.
 	 */
 	public function flush_widget_cache() {
-		foreach ( array( 'https', 'http' ) as $scheme ) {
+		foreach ( [ 'https', 'http' ] as $scheme ) {
 			wp_cache_delete( $this->get_widget_id_for_cache( $this->widget_id, $scheme ), 'widget' );
 		}
 	}

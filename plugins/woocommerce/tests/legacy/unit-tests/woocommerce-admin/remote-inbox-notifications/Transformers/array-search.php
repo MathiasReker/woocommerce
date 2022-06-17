@@ -16,7 +16,7 @@ class WC_Admin_Tests_RemoteInboxNotifications_Transformers_ArraySearch extends W
 	 */
 	public function test_validate_returns_false_when_value_argument_is_missing() {
 		$array_column = new ArraySearch();
-		$result       = $array_column->validate( (object) array() );
+		$result       = $array_column->validate( (object) [] );
 		$this->assertFalse( false, $result );
 	}
 
@@ -24,8 +24,8 @@ class WC_Admin_Tests_RemoteInboxNotifications_Transformers_ArraySearch extends W
 	 * Test it returns null if value is not found.
 	 */
 	public function test_it_returns_null_if_value_is_not_found() {
-		$items        = array( 'item1', 'item2' );
-		$arguments    = (object) array( 'value' => 'item3' );
+		$items        = [ 'item1', 'item2' ];
+		$arguments    = (object) [ 'value' => 'item3' ];
 		$array_column = new ArraySearch();
 		$result       = $array_column->transform( $items, $arguments );
 		$this->assertEquals( null, $result );
@@ -35,8 +35,8 @@ class WC_Admin_Tests_RemoteInboxNotifications_Transformers_ArraySearch extends W
 	 * Test it returns value by array value.
 	 */
 	public function test_it_returns_value_by_array_value() {
-		$items        = array( 'item1', 'item2' );
-		$arguments    = (object) array( 'value' => 'item2' );
+		$items        = [ 'item1', 'item2' ];
+		$arguments    = (object) [ 'value' => 'item2' ];
 		$array_column = new ArraySearch();
 		$result       = $array_column->transform( $items, $arguments );
 		$this->assertEquals( 'item2', $result );

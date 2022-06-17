@@ -4,7 +4,7 @@
  */
 
 function wc_beta_tester_setting_list() {
-	$settings_list = array(
+	$settings_list = [
 		'date_format',
 		'gmt_offset',
 		'permalink_structure',
@@ -123,6 +123,6 @@ function wc_beta_tester_setting_list() {
 		'woocommerce_unforce_ssl_checkout',
 		'woocommerce_version',
 		'woocommerce_weight_unit'
-	);
+	];
 	return apply_filters( 'wc_beta_tester_setting_list', $settings_list );
 }

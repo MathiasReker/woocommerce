@@ -36,8 +36,8 @@ class OrdersScheduler extends ImportScheduler {
 		\Automattic\WooCommerce\Admin\Overrides\OrderRefund::add_filters();
 
 		// Order and refund data must be run on these hooks to ensure meta data is set.
-		add_action( 'save_post', array( __CLASS__, 'possibly_schedule_import' ) );
-		add_action( 'woocommerce_refund_created', array( __CLASS__, 'possibly_schedule_import' ) );
+		add_action( 'save_post', [ __CLASS__, 'possibly_schedule_import' ] );
+		add_action( 'woocommerce_refund_created', [ __CLASS__, 'possibly_schedule_import' ] );
 
 		OrdersStatsDataStore::init();
 		CouponsDataStore::init();
@@ -54,9 +54,9 @@ class OrdersScheduler extends ImportScheduler {
 	 * @return array
 	 */
 	public static function get_dependencies() {
-		return array(
+		return [
 			'import_batch_init' => \Automattic\WooCommerce\Internal\Admin\Schedulers\CustomersScheduler::get_action( 'import_batch_init' ),
-		);
+		];
 	}
 
 	/**
@@ -104,12 +104,12 @@ class OrdersScheduler extends ImportScheduler {
 				$limit,
 				$offset
 			)
-		) : array(); // phpcs:ignore unprepared SQL ok.
+		) : []; // phpcs:ignore unprepared SQL ok.
 
-		return (object) array(
+		return (object) [
 			'total' => absint( $count ),
 			'ids'   => $order_ids,
-		);
+		];
 	}
 
 	/**
@@ -133,7 +133,7 @@ class OrdersScheduler extends ImportScheduler {
 			return;
 		}
 
-		self::schedule_action( 'import', array( $post_id ) );
+		self::schedule_action( 'import', [ $post_id ] );
 	}
 
 	/**
@@ -164,13 +164,13 @@ class OrdersScheduler extends ImportScheduler {
 			return;
 		}
 
-		$results = array(
+		$results = [
 			OrdersStatsDataStore::sync_order( $order_id ),
 			ProductsDataStore::sync_order_products( $order_id ),
 			CouponsDataStore::sync_order_coupons( $order_id ),
 			TaxesDataStore::sync_order_taxes( $order_id ),
 			CustomersDataStore::sync_order_customer( $order_id ),
-		);
+		];
 
 		if ( 'shop_order' === $type ) {
 			$order_refunds = $order->get_refunds();

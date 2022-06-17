@@ -73,7 +73,7 @@ function wc_get_attribute_taxonomies() {
 	$raw_attribute_taxonomies = (array) array_filter( apply_filters( 'woocommerce_attribute_taxonomies', $raw_attribute_taxonomies ) );
 
 	// Index by ID for easier lookups.
-	$attribute_taxonomies = array();
+	$attribute_taxonomies = [];
 
 	foreach ( $raw_attribute_taxonomies as $result ) {
 		$attribute_taxonomies[ 'id:' . $result->attribute_id ] = $result;
@@ -192,7 +192,7 @@ function wc_attribute_label( $name, $product = '' ) {
 		if ( $product->is_type( 'variation' ) ) {
 			$product = wc_get_product( $product->get_parent_id() );
 		}
-		$attributes = array();
+		$attributes = [];
 
 		if ( false !== $product ) {
 			$attributes = $product->get_attributes();
@@ -231,7 +231,7 @@ function wc_attribute_orderby( $name ) {
  * @return array
  */
 function wc_get_attribute_taxonomy_names() {
-	$taxonomy_names       = array();
+	$taxonomy_names       = [];
 	$attribute_taxonomies = wc_get_attribute_taxonomies();
 	if ( ! empty( $attribute_taxonomies ) ) {
 		foreach ( $attribute_taxonomies as $tax ) {
@@ -250,9 +250,9 @@ function wc_get_attribute_taxonomy_names() {
 function wc_get_attribute_types() {
 	return (array) apply_filters(
 		'product_attributes_type_selector',
-		array(
+		[
 			'select' => __( 'Select', 'woocommerce' ),
-		)
+		]
 	);
 }
 
@@ -291,7 +291,7 @@ function wc_get_attribute_type_label( $type ) {
  */
 function wc_check_if_attribute_name_is_reserved( $attribute_name ) {
 	// Forbidden attribute names.
-	$reserved_terms = array(
+	$reserved_terms = [
 		'attachment',
 		'attachment_id',
 		'author',
@@ -366,7 +366,7 @@ function wc_check_if_attribute_name_is_reserved( $attribute_name ) {
 		'withcomments',
 		'withoutcomments',
 		'year',
-	);
+	];
 
 	return in_array( $attribute_name, $reserved_terms, true );
 }
@@ -468,11 +468,11 @@ function wc_create_attribute( $args ) {
 
 	$args   = wp_unslash( $args );
 	$id     = ! empty( $args['id'] ) ? intval( $args['id'] ) : 0;
-	$format = array( '%s', '%s', '%s', '%s', '%d' );
+	$format = [ '%s', '%s', '%s', '%s', '%d' ];
 
 	// Name is required.
 	if ( empty( $args['name'] ) ) {
-		return new WP_Error( 'missing_attribute_name', __( 'Please, provide an attribute name.', 'woocommerce' ), array( 'status' => 400 ) );
+		return new WP_Error( 'missing_attribute_name', __( 'Please, provide an attribute name.', 'woocommerce' ), [ 'status' => 400 ] );
 	}
 
 	// Set the attribute slug.
@@ -485,13 +485,13 @@ function wc_create_attribute( $args ) {
 	// Validate slug.
 	if ( strlen( $slug ) > 28 ) {
 		/* translators: %s: attribute slug */
-		return new WP_Error( 'invalid_product_attribute_slug_too_long', sprintf( __( 'Slug "%s" is too long (28 characters max). Shorten it, please.', 'woocommerce' ), $slug ), array( 'status' => 400 ) );
+		return new WP_Error( 'invalid_product_attribute_slug_too_long', sprintf( __( 'Slug "%s" is too long (28 characters max). Shorten it, please.', 'woocommerce' ), $slug ), [ 'status' => 400 ] );
 	} elseif ( wc_check_if_attribute_name_is_reserved( $slug ) ) {
 		/* translators: %s: attribute slug */
-		return new WP_Error( 'invalid_product_attribute_slug_reserved_name', sprintf( __( 'Slug "%s" is not allowed because it is a reserved term. Change it, please.', 'woocommerce' ), $slug ), array( 'status' => 400 ) );
+		return new WP_Error( 'invalid_product_attribute_slug_reserved_name', sprintf( __( 'Slug "%s" is not allowed because it is a reserved term. Change it, please.', 'woocommerce' ), $slug ), [ 'status' => 400 ] );
 	} elseif ( ( 0 === $id && taxonomy_exists( wc_attribute_taxonomy_name( $slug ) ) ) || ( isset( $args['old_slug'] ) && $args['old_slug'] !== $slug && taxonomy_exists( wc_attribute_taxonomy_name( $slug ) ) ) ) {
 		/* translators: %s: attribute slug */
-		return new WP_Error( 'invalid_product_attribute_slug_already_exists', sprintf( __( 'Slug "%s" is already in use. Change it, please.', 'woocommerce' ), $slug ), array( 'status' => 400 ) );
+		return new WP_Error( 'invalid_product_attribute_slug_already_exists', sprintf( __( 'Slug "%s" is already in use. Change it, please.', 'woocommerce' ), $slug ), [ 'status' => 400 ] );
 	}
 
 	// Validate type.
@@ -500,17 +500,17 @@ function wc_create_attribute( $args ) {
 	}
 
 	// Validate order by.
-	if ( empty( $args['order_by'] ) || ! in_array( $args['order_by'], array( 'menu_order', 'name', 'name_num', 'id' ), true ) ) {
+	if ( empty( $args['order_by'] ) || ! in_array( $args['order_by'], [ 'menu_order', 'name', 'name_num', 'id' ], true ) ) {
 		$args['order_by'] = 'menu_order';
 	}
 
-	$data = array(
+	$data = [
 		'attribute_label'   => $args['name'],
 		'attribute_name'    => $slug,
 		'attribute_type'    => $args['type'],
 		'attribute_orderby' => $args['order_by'],
 		'attribute_public'  => isset( $args['has_archives'] ) ? (int) $args['has_archives'] : 0,
-	);
+	];
 
 	// Create or update.
 	if ( 0 === $id ) {
@@ -521,7 +521,7 @@ function wc_create_attribute( $args ) {
 		);
 
 		if ( is_wp_error( $results ) ) {
-			return new WP_Error( 'cannot_create_attribute', $results->get_error_message(), array( 'status' => 400 ) );
+			return new WP_Error( 'cannot_create_attribute', $results->get_error_message(), [ 'status' => 400 ] );
 		}
 
 		$id = $wpdb->insert_id;
@@ -537,13 +537,13 @@ function wc_create_attribute( $args ) {
 		$results = $wpdb->update(
 			$wpdb->prefix . 'woocommerce_attribute_taxonomies',
 			$data,
-			array( 'attribute_id' => $id ),
+			[ 'attribute_id' => $id ],
 			$format,
-			array( '%d' )
+			[ '%d' ]
 		);
 
 		if ( false === $results ) {
-			return new WP_Error( 'cannot_update_attribute', __( 'Could not update the attribute.', 'woocommerce' ), array( 'status' => 400 ) );
+			return new WP_Error( 'cannot_update_attribute', __( 'Could not update the attribute.', 'woocommerce' ), [ 'status' => 400 ] );
 		}
 
 		// Set old slug to check for database changes.
@@ -562,15 +562,15 @@ function wc_create_attribute( $args ) {
 			// Update taxonomies in the wp term taxonomy table.
 			$wpdb->update(
 				$wpdb->term_taxonomy,
-				array( 'taxonomy' => wc_attribute_taxonomy_name( $data['attribute_name'] ) ),
-				array( 'taxonomy' => 'pa_' . $old_slug )
+				[ 'taxonomy' => wc_attribute_taxonomy_name( $data['attribute_name'] ) ],
+				[ 'taxonomy' => 'pa_' . $old_slug ]
 			);
 
 			// Update taxonomy ordering term meta.
 			$wpdb->update(
 				$wpdb->termmeta,
-				array( 'meta_key' => 'order_pa_' . sanitize_title( $data['attribute_name'] ) ), // WPCS: slow query ok.
-				array( 'meta_key' => 'order_pa_' . sanitize_title( $old_slug ) ) // WPCS: slow query ok.
+				[ 'meta_key' => 'order_pa_' . sanitize_title( $data['attribute_name'] ) ], // WPCS: slow query ok.
+				[ 'meta_key' => 'order_pa_' . sanitize_title( $old_slug ) ] // WPCS: slow query ok.
 			);
 
 			// Update product attributes which use this taxonomy.
@@ -602,8 +602,8 @@ function wc_create_attribute( $args ) {
 			// Update variations which use this taxonomy.
 			$wpdb->update(
 				$wpdb->postmeta,
-				array( 'meta_key' => 'attribute_pa_' . sanitize_title( $data['attribute_name'] ) ), // WPCS: slow query ok.
-				array( 'meta_key' => 'attribute_pa_' . sanitize_title( $old_slug ) ) // WPCS: slow query ok.
+				[ 'meta_key' => 'attribute_pa_' . sanitize_title( $data['attribute_name'] ) ], // WPCS: slow query ok.
+				[ 'meta_key' => 'attribute_pa_' . sanitize_title( $old_slug ) ] // WPCS: slow query ok.
 			);
 		}
 	}

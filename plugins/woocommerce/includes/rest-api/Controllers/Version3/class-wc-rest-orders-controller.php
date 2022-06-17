@@ -40,7 +40,7 @@ class WC_REST_Orders_Controller extends WC_REST_Orders_V2_Controller {
 
 		// Validate input and at the same time store the processed coupon codes to apply.
 
-		$coupon_codes = array();
+		$coupon_codes = [];
 		$discounts    = new WC_Discounts( $order );
 
 		$current_order_coupons      = array_values( $order->get_coupons() );
@@ -103,7 +103,7 @@ class WC_REST_Orders_Controller extends WC_REST_Orders_V2_Controller {
 		$id        = isset( $request['id'] ) ? absint( $request['id'] ) : 0;
 		$order     = new WC_Order( $id );
 		$schema    = $this->get_item_schema();
-		$data_keys = array_keys( array_filter( $schema['properties'], array( $this, 'filter_writable_props' ) ) );
+		$data_keys = array_keys( array_filter( $schema['properties'], [ $this, 'filter_writable_props' ] ) );
 
 		// Handle all writable props.
 		foreach ( $data_keys as $key ) {
@@ -142,7 +142,7 @@ class WC_REST_Orders_Controller extends WC_REST_Orders_V2_Controller {
 						}
 						break;
 					default:
-						if ( is_callable( array( $order, "set_{$key}" ) ) ) {
+						if ( is_callable( [ $order, "set_{$key}" ] ) ) {
 							$order->{"set_{$key}"}( $value );
 						}
 						break;
@@ -227,7 +227,7 @@ class WC_REST_Orders_Controller extends WC_REST_Orders_V2_Controller {
 		} catch ( WC_Data_Exception $e ) {
 			return new WP_Error( $e->getErrorCode(), $e->getMessage(), $e->getErrorData() );
 		} catch ( WC_REST_Exception $e ) {
-			return new WP_Error( $e->getErrorCode(), $e->getMessage(), array( 'status' => $e->getCode() ) );
+			return new WP_Error( $e->getErrorCode(), $e->getMessage(), [ 'status' => $e->getCode() ] );
 		}
 	}
 
@@ -244,7 +244,7 @@ class WC_REST_Orders_Controller extends WC_REST_Orders_V2_Controller {
 		unset( $request['status'] );
 		$args = parent::prepare_objects_query( $request );
 
-		$args['post_status'] = array();
+		$args['post_status'] = [];
 		foreach ( $statuses as $status ) {
 			if ( in_array( $status, $this->get_order_statuses(), true ) ) {
 				$args['post_status'][] = 'wc-' . $status;
@@ -284,16 +284,16 @@ class WC_REST_Orders_Controller extends WC_REST_Orders_V2_Controller {
 	public function get_collection_params() {
 		$params = parent::get_collection_params();
 
-		$params['status'] = array(
+		$params['status'] = [
 			'default'           => 'any',
 			'description'       => __( 'Limit result set to orders which have specific statuses.', 'woocommerce' ),
 			'type'              => 'array',
-			'items'             => array(
+			'items'             => [
 				'type' => 'string',
-				'enum' => array_merge( array( 'any', 'trash' ), $this->get_order_statuses() ),
-			),
+				'enum' => array_merge( [ 'any', 'trash' ], $this->get_order_statuses() ),
+			],
 			'validate_callback' => 'rest_validate_request_arg',
-		);
+		];
 
 		return $params;
 	}

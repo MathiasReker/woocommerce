@@ -22,7 +22,7 @@ class WC_Shortcode_Order_Tracking {
 	 * @return string
 	 */
 	public static function get( $atts ) {
-		return WC_Shortcodes::shortcode_wrapper( array( __CLASS__, 'output' ), $atts );
+		return WC_Shortcodes::shortcode_wrapper( [ __CLASS__, 'output' ], $atts );
 	}
 
 	/**
@@ -36,7 +36,7 @@ class WC_Shortcode_Order_Tracking {
 			return;
 		}
 
-		$atts        = shortcode_atts( array(), $atts, 'woocommerce_order_tracking' );
+		$atts        = shortcode_atts( [], $atts, 'woocommerce_order_tracking' );
 		$nonce_value = wc_get_var( $_REQUEST['woocommerce-order-tracking-nonce'], wc_get_var( $_REQUEST['_wpnonce'], '' ) ); // @codingStandardsIgnoreLine.
 
 		if ( isset( $_REQUEST['orderid'] ) && wp_verify_nonce( $nonce_value, 'woocommerce-order_tracking' ) ) { // WPCS: input var ok.
@@ -55,9 +55,9 @@ class WC_Shortcode_Order_Tracking {
 					do_action( 'woocommerce_track_order', $order->get_id() );
 					wc_get_template(
 						'order/tracking.php',
-						array(
+						[
 							'order' => $order,
-						)
+						]
 					);
 					return;
 				} else {

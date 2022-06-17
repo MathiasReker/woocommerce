@@ -40,16 +40,16 @@ class FeatureContext extends BehatContext implements ClosuredContextInterface {
 
 	private static $cache_dir, $suite_cache_dir;
 
-	private static $db_settings = array(
+	private static $db_settings = [
 		'dbname' => 'wp_cli_test',
 		'dbuser' => 'wp_cli_test',
 		'dbpass' => 'password1',
 		'dbhost' => '127.0.0.1',
-	);
+	];
 
-	private $running_procs = array();
+	private $running_procs = [];
 
-	public $variables = array();
+	public $variables = [];
 
 	/**
 	 * Get the environment variables required for launched `wp` processes
@@ -58,11 +58,11 @@ class FeatureContext extends BehatContext implements ClosuredContextInterface {
 	private static function get_process_env_variables() {
 		// Ensure we're using the expected `wp` binary
 		$bin_dir = getenv( 'WP_CLI_BIN_DIR' ) ?: realpath( __DIR__ . "/../../bin" );
-		$env = array(
+		$env = [
 			'PATH' =>  $bin_dir . ':' . getenv( 'PATH' ),
 			'BEHAT_RUN' => 1,
 			'HOME' => '/tmp/wp-cli-home',
-		);
+		];
 		if ( $config_path = getenv( 'WP_CLI_CONFIG_PATH' ) ) {
 			$env['WP_CLI_CONFIG_PATH'] = $config_path;
 		}
@@ -175,11 +175,11 @@ class FeatureContext extends BehatContext implements ClosuredContextInterface {
 	}
 
 	public function getHookDefinitionResources() {
-		return array();
+		return [];
 	}
 
 	public function replace_variables( $str ) {
-		return preg_replace_callback( '/\{([A-Z_]+)\}/', array( $this, '_replace_var' ), $str );
+		return preg_replace_callback( '/\{([A-Z_]+)\}/', [ $this, '_replace_var' ], $str );
 	}
 
 	private function _replace_var( $matches ) {
@@ -217,12 +217,12 @@ class FeatureContext extends BehatContext implements ClosuredContextInterface {
 	}
 
 	private static function run_sql( $sql ) {
-		Utils\run_mysql_command( 'mysql --no-defaults', array(
+		Utils\run_mysql_command( 'mysql --no-defaults', [
 			'execute' => $sql,
 			'host' => self::$db_settings['dbhost'],
 			'user' => self::$db_settings['dbuser'],
 			'pass' => self::$db_settings['dbpass'],
-		) );
+		] );
 	}
 
 	public function create_db() {
@@ -235,7 +235,7 @@ class FeatureContext extends BehatContext implements ClosuredContextInterface {
 		self::run_sql( "DROP DATABASE IF EXISTS $dbname" );
 	}
 
-	public function proc( $command, $assoc_args = array(), $path = '' ) {
+	public function proc( $command, $assoc_args = [], $path = '' ) {
 		if ( !empty( $assoc_args ) )
 			$command .= Utils\assoc_args_to_str( $assoc_args );
 
@@ -257,11 +257,11 @@ class FeatureContext extends BehatContext implements ClosuredContextInterface {
 	 * Start a background process. Will automatically be closed when the tests finish.
 	 */
 	public function background_proc( $cmd ) {
-		$descriptors = array(
+		$descriptors = [
 			0 => STDIN,
-			1 => array( 'pipe', 'w' ),
-			2 => array( 'pipe', 'w' ),
-		);
+			1 => [ 'pipe', 'w' ],
+			2 => [ 'pipe', 'w' ],
+		];
 
 		$proc = proc_open( $cmd, $descriptors, $pipes, $this->variables['RUN_DIR'], self::get_process_env_variables() );
 
@@ -316,15 +316,15 @@ class FeatureContext extends BehatContext implements ClosuredContextInterface {
 
 		$this->create_config( $subdir );
 
-		$install_args = array(
+		$install_args = [
 			'url' => 'http://example.com',
 			'title' => 'WP CLI Site',
 			'admin_user' => 'admin',
 			'admin_email' => 'admin@example.com',
 			'admin_password' => 'password1'
-		);
+		];
 
 		$this->proc( 'wp core install', $install_args, $subdir )->run_check();
-		$this->proc( 'wp plugin activate woocommerce', array(), $subdir )->run_check();
+		$this->proc( 'wp plugin activate woocommerce', [], $subdir )->run_check();
 	}
 }

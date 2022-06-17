@@ -38,16 +38,16 @@ class WC_Gateway_COD extends WC_Payment_Gateway {
 		$this->title              = $this->get_option( 'title' );
 		$this->description        = $this->get_option( 'description' );
 		$this->instructions       = $this->get_option( 'instructions' );
-		$this->enable_for_methods = $this->get_option( 'enable_for_methods', array() );
+		$this->enable_for_methods = $this->get_option( 'enable_for_methods', [] );
 		$this->enable_for_virtual = $this->get_option( 'enable_for_virtual', 'yes' ) === 'yes';
 
 		// Actions.
-		add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array( $this, 'process_admin_options' ) );
-		add_action( 'woocommerce_thankyou_' . $this->id, array( $this, 'thankyou_page' ) );
-		add_filter( 'woocommerce_payment_complete_order_status', array( $this, 'change_payment_complete_order_status' ), 10, 3 );
+		add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, [ $this, 'process_admin_options' ] );
+		add_action( 'woocommerce_thankyou_' . $this->id, [ $this, 'thankyou_page' ] );
+		add_filter( 'woocommerce_payment_complete_order_status', [ $this, 'change_payment_complete_order_status' ], 10, 3 );
 
 		// Customer Emails.
-		add_action( 'woocommerce_email_before_order_table', array( $this, 'email_instructions' ), 10, 3 );
+		add_action( 'woocommerce_email_before_order_table', [ $this, 'email_instructions' ], 10, 3 );
 	}
 
 	/**
@@ -65,36 +65,36 @@ class WC_Gateway_COD extends WC_Payment_Gateway {
 	 * Initialise Gateway Settings Form Fields.
 	 */
 	public function init_form_fields() {
-		$this->form_fields = array(
-			'enabled'            => array(
+		$this->form_fields = [
+			'enabled'            => [
 				'title'       => __( 'Enable/Disable', 'woocommerce' ),
 				'label'       => __( 'Enable cash on delivery', 'woocommerce' ),
 				'type'        => 'checkbox',
 				'description' => '',
 				'default'     => 'no',
-			),
-			'title'              => array(
+			],
+			'title'              => [
 				'title'       => __( 'Title', 'woocommerce' ),
 				'type'        => 'safe_text',
 				'description' => __( 'Payment method description that the customer will see on your checkout.', 'woocommerce' ),
 				'default'     => __( 'Cash on delivery', 'woocommerce' ),
 				'desc_tip'    => true,
-			),
-			'description'        => array(
+			],
+			'description'        => [
 				'title'       => __( 'Description', 'woocommerce' ),
 				'type'        => 'textarea',
 				'description' => __( 'Payment method description that the customer will see on your website.', 'woocommerce' ),
 				'default'     => __( 'Pay with cash upon delivery.', 'woocommerce' ),
 				'desc_tip'    => true,
-			),
-			'instructions'       => array(
+			],
+			'instructions'       => [
 				'title'       => __( 'Instructions', 'woocommerce' ),
 				'type'        => 'textarea',
 				'description' => __( 'Instructions that will be added to the thank you page.', 'woocommerce' ),
 				'default'     => __( 'Pay with cash upon delivery.', 'woocommerce' ),
 				'desc_tip'    => true,
-			),
-			'enable_for_methods' => array(
+			],
+			'enable_for_methods' => [
 				'title'             => __( 'Enable for shipping methods', 'woocommerce' ),
 				'type'              => 'multiselect',
 				'class'             => 'wc-enhanced-select',
@@ -103,17 +103,17 @@ class WC_Gateway_COD extends WC_Payment_Gateway {
 				'description'       => __( 'If COD is only available for certain methods, set it up here. Leave blank to enable for all methods.', 'woocommerce' ),
 				'options'           => $this->load_shipping_method_options(),
 				'desc_tip'          => true,
-				'custom_attributes' => array(
+				'custom_attributes' => [
 					'data-placeholder' => __( 'Select shipping methods', 'woocommerce' ),
-				),
-			),
-			'enable_for_virtual' => array(
+				],
+			],
+			'enable_for_virtual' => [
 				'title'   => __( 'Accept for virtual orders', 'woocommerce' ),
 				'label'   => __( 'Accept COD if the order is virtual', 'woocommerce' ),
 				'type'    => 'checkbox',
 				'default' => 'yes',
-			),
-		);
+			],
+		];
 	}
 
 	/**
@@ -210,7 +210,7 @@ class WC_Gateway_COD extends WC_Payment_Gateway {
 	private function load_shipping_method_options() {
 		// Since this is expensive, we only want to do it if we're actually on the settings page.
 		if ( ! $this->is_accessing_settings() ) {
-			return array();
+			return [];
 		}
 
 		$data_store = WC_Data_Store::load( 'shipping-zone' );
@@ -222,10 +222,10 @@ class WC_Gateway_COD extends WC_Payment_Gateway {
 
 		$zones[] = new WC_Shipping_Zone( 0 );
 
-		$options = array();
+		$options = [];
 		foreach ( WC()->shipping()->load_shipping_methods() as $method ) {
 
-			$options[ $method->get_method_title() ] = array();
+			$options[ $method->get_method_title() ] = [];
 
 			// Translators: %1$s shipping method name.
 			$options[ $method->get_method_title() ][ $method->id ] = sprintf( __( 'Any &quot;%1$s&quot; method', 'woocommerce' ), $method->get_method_title() );
@@ -266,7 +266,7 @@ class WC_Gateway_COD extends WC_Payment_Gateway {
 	 */
 	private function get_canonical_order_shipping_item_rate_ids( $order_shipping_items ) {
 
-		$canonical_rate_ids = array();
+		$canonical_rate_ids = [];
 
 		foreach ( $order_shipping_items as $order_shipping_item ) {
 			$canonical_rate_ids[] = $order_shipping_item->get_method_id() . ':' . $order_shipping_item->get_instance_id();
@@ -286,7 +286,7 @@ class WC_Gateway_COD extends WC_Payment_Gateway {
 	private function get_canonical_package_rate_ids( $chosen_package_rate_ids ) {
 
 		$shipping_packages  = WC()->shipping()->get_packages();
-		$canonical_rate_ids = array();
+		$canonical_rate_ids = [];
 
 		if ( ! empty( $chosen_package_rate_ids ) && is_array( $chosen_package_rate_ids ) ) {
 			foreach ( $chosen_package_rate_ids as $package_key => $chosen_package_rate_id ) {
@@ -333,10 +333,10 @@ class WC_Gateway_COD extends WC_Payment_Gateway {
 		WC()->cart->empty_cart();
 
 		// Return thankyou redirect.
-		return array(
+		return [
 			'result'   => 'success',
 			'redirect' => $this->get_return_url( $order ),
-		);
+		];
 	}
 
 	/**

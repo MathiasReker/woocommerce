@@ -16,14 +16,14 @@ class Table extends WP_List_Table {
 	 */
 	public function __construct() {
 		parent::__construct(
-			array(
+			[
 				'singular' => 'url',
 				'plural'   => 'urls',
 				'ajax'     => false,
-			)
+			]
 		);
 
-		add_filter( 'manage_woocommerce_page_wc-settings_columns', array( $this, 'get_columns' ) );
+		add_filter( 'manage_woocommerce_page_wc-settings_columns', [ $this, 'get_columns' ] );
 		$this->items_per_page();
 		set_screen_options();
 	}
@@ -34,13 +34,13 @@ class Table extends WP_List_Table {
 	private function items_per_page() {
 		add_screen_option(
 			'per_page',
-			array(
+			[
 				'default' => 20,
 				'option'  => 'edit_approved_directories_per_page',
-			)
+			]
 		);
 
-		add_filter( 'set_screen_option_edit_approved_directories_per_page', array( $this, 'set_items_per_page' ), 10, 3 );
+		add_filter( 'set_screen_option_edit_approved_directories_per_page', [ $this, 'set_items_per_page' ], 10, 3 );
 	}
 
 	/**
@@ -117,11 +117,11 @@ class Table extends WP_List_Table {
 			$disabled_count
 		);
 
-		$views = array(
+		$views = [
 			'all'      => "<a href='{$all_url}' {$all_class}>{$all_text}</a>",
 			'enabled'  => "<a href='{$enabled_url}' {$enabled_class}>{$enabled_text}</a>",
 			'disabled' => "<a href='{$disabled_url}' {$disabled_class}>{$disabled_text}</a>",
-		);
+		];
 
 		$this->screen->render_screen_reader_content( 'heading_views' );
 
@@ -140,11 +140,11 @@ class Table extends WP_List_Table {
 	 * @return array
 	 */
 	public function get_columns() {
-		return array(
+		return [
 			'cb'    => '<input type="checkbox" />',
 			'title' => _x( 'URL', 'Approved product download directories', 'woocommerce' ),
 			'enabled' => _x( 'Enabled', 'Approved product download directories', 'woocommerce' ),
-		);
+		];
 	}
 
 	/**
@@ -209,11 +209,11 @@ class Table extends WP_List_Table {
 	 * @return array
 	 */
 	protected function get_bulk_actions() {
-		return array(
+		return [
 			'enable'  => __( 'Enable rule', 'woocommerce' ),
 			'disable' => __( 'Disable rule', 'woocommerce' ),
 			'delete'  => __( 'Delete permanently', 'woocommerce' ),
-		);
+		];
 	}
 
 	/**
@@ -227,11 +227,11 @@ class Table extends WP_List_Table {
 	 */
 	public function get_action_url( string $action, int $id, string $nonce_action = 'modify_approved_directories' ): string {
 		return add_query_arg(
-			array(
+			[
 				'check'  => wp_create_nonce( $nonce_action ),
 				'action' => $action,
 				'url'    => $id,
-			),
+			],
 			$this->get_base_url()
 		);
 	}
@@ -243,11 +243,11 @@ class Table extends WP_List_Table {
 	 */
 	public function get_base_url(): string {
 		return add_query_arg(
-			array(
+			[
 				'page'    => 'wc-settings',
 				'tab'     => 'products',
 				'section' => 'download_urls',
-			),
+			],
 			admin_url( 'admin.php' )
 		);
 	}
@@ -308,23 +308,23 @@ class Table extends WP_List_Table {
 		// phpcs:enable
 
 		$approved_directories = wc_get_container()->get( Register::class )->list(
-			array(
+			[
 				'page'     => $current_page,
 				'per_page' => $per_page,
 				'search'   => $search,
 				'enabled'  => $enabled,
-			)
+			]
 		);
 
 		$this->items = $approved_directories['approved_directories'];
 
 		// Set the pagination.
 		$this->set_pagination_args(
-			array(
+			[
 				'total_items' => $approved_directories['total_urls'],
 				'total_pages' => $approved_directories['total_pages'],
 				'per_page'    => $per_page,
-			)
+			]
 		);
 	}
 }

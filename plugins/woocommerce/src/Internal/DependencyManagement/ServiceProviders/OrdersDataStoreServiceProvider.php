@@ -25,13 +25,13 @@ class OrdersDataStoreServiceProvider extends AbstractServiceProvider {
 	 *
 	 * @var array
 	 */
-	protected $provides = array(
+	protected $provides = [
 		DataSynchronizer::class,
 		CustomOrdersTableController::class,
 		OrdersTableDataStore::class,
 		CLIRunner::class,
 		OrdersTableDataStoreMeta::class,
-	);
+	];
 
 	/**
 	 * Register the classes.
@@ -40,12 +40,12 @@ class OrdersDataStoreServiceProvider extends AbstractServiceProvider {
 		$this->share( OrdersTableDataStoreMeta::class );
 		$this->share( OrdersTableDataStoreHelper::class );
 
-		$this->share( OrdersTableDataStore::class )->addArguments( array( OrdersTableDataStoreMeta::class, DatabaseUtil::class ) );
-		$this->share( DataSynchronizer::class )->addArguments( array( OrdersTableDataStore::class, DatabaseUtil::class, PostsToOrdersMigrationController::class ) );
-		$this->share( CustomOrdersTableController::class )->addArguments( array( OrdersTableDataStore::class, DataSynchronizer::class ) );
+		$this->share( OrdersTableDataStore::class )->addArguments( [ OrdersTableDataStoreMeta::class, DatabaseUtil::class ] );
+		$this->share( DataSynchronizer::class )->addArguments( [ OrdersTableDataStore::class, DatabaseUtil::class, PostsToOrdersMigrationController::class ] );
+		$this->share( CustomOrdersTableController::class )->addArguments( [ OrdersTableDataStore::class, DataSynchronizer::class ] );
 		$this->share( OrdersTableDataStore::class );
 		if ( Constants::is_defined( 'WP_CLI' ) && WP_CLI ) {
-			$this->share( CLIRunner::class )->addArguments( array( CustomOrdersTableController::class, DataSynchronizer::class, PostsToOrdersMigrationController::class ) );
+			$this->share( CLIRunner::class )->addArguments( [ CustomOrdersTableController::class, DataSynchronizer::class, PostsToOrdersMigrationController::class ] );
 		}
 	}
 }

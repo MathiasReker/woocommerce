@@ -16,10 +16,10 @@ class DeprecatedOptions {
 	 * Initialize.
 	 */
 	public static function init() {
-		add_filter( 'pre_option_woocommerce_task_list_hidden', array( __CLASS__, 'get_deprecated_options' ), 10, 2 );
-		add_filter( 'pre_option_woocommerce_extended_task_list_hidden', array( __CLASS__, 'get_deprecated_options' ), 10, 2 );
-		add_action( 'pre_update_option_woocommerce_task_list_hidden', array( __CLASS__, 'update_deprecated_options' ), 10, 3 );
-		add_action( 'pre_update_option_woocommerce_extended_task_list_hidden', array( __CLASS__, 'update_deprecated_options' ), 10, 3 );
+		add_filter( 'pre_option_woocommerce_task_list_hidden', [ __CLASS__, 'get_deprecated_options' ], 10, 2 );
+		add_filter( 'pre_option_woocommerce_extended_task_list_hidden', [ __CLASS__, 'get_deprecated_options' ], 10, 2 );
+		add_action( 'pre_update_option_woocommerce_task_list_hidden', [ __CLASS__, 'update_deprecated_options' ], 10, 3 );
+		add_action( 'pre_update_option_woocommerce_extended_task_list_hidden', [ __CLASS__, 'update_deprecated_options' ], 10, 3 );
 	}
 
 	/**
@@ -34,7 +34,7 @@ class DeprecatedOptions {
 			return $pre_option;
 		}
 
-		$hidden = get_option( 'woocommerce_task_list_hidden_lists', array() );
+		$hidden = get_option( 'woocommerce_task_list_hidden_lists', [] );
 		switch ( $option ) {
 			case 'woocommerce_task_list_hidden':
 				return in_array( 'setup', $hidden, true ) ? 'yes' : 'no';

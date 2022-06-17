@@ -23,10 +23,10 @@ class WC_API extends WC_Legacy_API {
 	 */
 	public function init() {
 		parent::init();
-		add_action( 'init', array( $this, 'add_endpoint' ), 0 );
-		add_filter( 'query_vars', array( $this, 'add_query_vars' ), 0 );
-		add_action( 'parse_request', array( $this, 'handle_api_requests' ), 0 );
-		add_action( 'rest_api_init', array( $this, 'register_wp_admin_settings' ) );
+		add_action( 'init', [ $this, 'add_endpoint' ], 0 );
+		add_filter( 'query_vars', [ $this, 'add_query_vars' ], 0 );
+		add_action( 'parse_request', [ $this, 'handle_api_requests' ], 0 );
+		add_action( 'rest_api_init', [ $this, 'register_wp_admin_settings' ] );
 	}
 
 	/**
@@ -86,7 +86,7 @@ class WC_API extends WC_Legacy_API {
 	 * @param array  $params Params to pass with request.
 	 * @return array|\WP_Error
 	 */
-	public function get_endpoint_data( $endpoint, $params = array() ) {
+	public function get_endpoint_data( $endpoint, $params = [] ) {
 		if ( ! $this->is_rest_api_loaded() ) {
 			return new WP_Error( 'rest_api_unavailable', __( 'The Rest API is unavailable.', 'woocommerce' ) );
 		}

@@ -36,15 +36,15 @@ class WC_Settings_Page_Test extends WC_Unit_Test_Case {
 	 * Test for add_settings_page.
 	 */
 	public function test_add_settings_page() {
-		$pages = array( 'foo' => 'bar' );
+		$pages = [ 'foo' => 'bar' ];
 
 		$sut    = new WC_Settings_Example();
 		$actual = $sut->add_settings_page( $pages );
 
-		$expected = array(
+		$expected = [
 			'foo'     => 'bar',
 			'example' => 'Example',
-		);
+		];
 		$this->assertEquals( $expected, $actual );
 	}
 
@@ -56,7 +56,7 @@ class WC_Settings_Page_Test extends WC_Unit_Test_Case {
 
 		$actual = $sut->get_settings_for_section( '' );
 
-		$expected = array( 'key' => 'value' );
+		$expected = [ 'key' => 'value' ];
 		$this->assertEquals( $expected, $actual );
 	}
 
@@ -68,7 +68,7 @@ class WC_Settings_Page_Test extends WC_Unit_Test_Case {
 
 		$actual = $sut->get_settings_for_section( '' );
 
-		$expected = array( 'key' => 'value' );
+		$expected = [ 'key' => 'value' ];
 		$this->assertEquals( $expected, $actual );
 	}
 
@@ -80,7 +80,7 @@ class WC_Settings_Page_Test extends WC_Unit_Test_Case {
 
 		$actual = $sut->get_settings( 'foobar' );
 
-		$expected = array( 'foo' => 'bar' );
+		$expected = [ 'foo' => 'bar' ];
 		$this->assertEquals( $expected, $actual );
 	}
 
@@ -92,7 +92,7 @@ class WC_Settings_Page_Test extends WC_Unit_Test_Case {
 
 		$actual = $sut->get_settings_for_section( 'foobar' );
 
-		$expected = array( 'foo' => 'bar' );
+		$expected = [ 'foo' => 'bar' ];
 		$this->assertEquals( $expected, $actual );
 	}
 
@@ -104,7 +104,7 @@ class WC_Settings_Page_Test extends WC_Unit_Test_Case {
 
 		$actual = $sut->get_settings_for_section( 'fizzbuzz' );
 
-		$expected = array( 'fizzbuzz_key' => 'fizzbuzz_value' );
+		$expected = [ 'fizzbuzz_key' => 'fizzbuzz_value' ];
 		$this->assertEquals( $expected, $actual );
 	}
 
@@ -130,7 +130,7 @@ class WC_Settings_Page_Test extends WC_Unit_Test_Case {
 		remove_all_filters( 'woocommerce_get_settings_example' );
 
 		$expected_section  = 'foobar';
-		$expected_settings = array( 'foo' => 'bar' );
+		$expected_settings = [ 'foo' => 'bar' ];
 		$this->assertEquals( $expected_section, $actual_section );
 		$this->assertEquals( $expected_settings, $actual_settings );
 	}
@@ -142,10 +142,10 @@ class WC_Settings_Page_Test extends WC_Unit_Test_Case {
 		$sut    = new WC_Settings_Example();
 		$actual = $sut->get_sections();
 
-		$expected = array(
+		$expected = [
 			''            => 'General',
 			'new_section' => 'New Section',
-		);
+		];
 
 		$this->assertEquals( $expected, $actual );
 	}
@@ -169,10 +169,10 @@ class WC_Settings_Page_Test extends WC_Unit_Test_Case {
 		$sut->get_sections();
 		remove_all_filters( 'woocommerce_get_sections_example' );
 
-		$expected_sections = array(
+		$expected_sections = [
 			''            => 'General',
 			'new_section' => 'New Section',
-		);
+		];
 		$this->assertEquals( $expected_sections, $actual_sections );
 	}
 
@@ -192,7 +192,7 @@ class WC_Settings_Page_Test extends WC_Unit_Test_Case {
 			<br class="clear" />
 HTML;
 
-		$this->assertOutputsHTML( $expected, array( $sut, 'output_sections' ) );
+		$this->assertOutputsHTML( $expected, [ $sut, 'output_sections' ] );
 	}
 
 	/**
@@ -204,13 +204,13 @@ HTML;
 		$actual = null;
 
 		StaticMockerHack::add_method_mocks(
-			array(
-				'WC_Admin_Settings' => array(
+			[
+				'WC_Admin_Settings' => [
 					'output_fields' => function( $settings ) use ( &$actual ) {
 						$actual = $settings;
 					},
-				),
-			)
+				],
+			]
 		);
 
 		$sut = new WC_Settings_Example();
@@ -218,7 +218,7 @@ HTML;
 		$current_section = 'foobar';
 		$sut->output();
 
-		$expected = array( 'foo' => 'bar' );
+		$expected = [ 'foo' => 'bar' ];
 		$this->assertEquals( $expected, $actual );
 	}
 
@@ -231,13 +231,13 @@ HTML;
 		$actual = null;
 
 		StaticMockerHack::add_method_mocks(
-			array(
-				'WC_Admin_Settings' => array(
+			[
+				'WC_Admin_Settings' => [
 					'output_fields' => function( $settings ) use ( &$actual ) {
 						$actual = $settings;
 					},
-				),
-			)
+				],
+			]
 		);
 
 		$sut = new WC_Legacy_Settings_Example();
@@ -245,7 +245,7 @@ HTML;
 		$current_section = 'foobar';
 		$sut->output();
 
-		$expected = array( 'foo' => 'bar' );
+		$expected = [ 'foo' => 'bar' ];
 		$this->assertEquals( $expected, $actual );
 	}
 
@@ -258,13 +258,13 @@ HTML;
 		$actual = null;
 
 		StaticMockerHack::add_method_mocks(
-			array(
-				'WC_Admin_Settings' => array(
+			[
+				'WC_Admin_Settings' => [
 					'save_fields' => function( $settings ) use ( &$actual ) {
 						$actual = $settings;
 					},
-				),
-			)
+				],
+			]
 		);
 
 		$sut = new WC_Settings_Example();
@@ -272,7 +272,7 @@ HTML;
 		$current_section = 'foobar';
 		$sut->save();
 
-		$expected = array( 'foo' => 'bar' );
+		$expected = [ 'foo' => 'bar' ];
 		$this->assertEquals( $expected, $actual );
 	}
 
@@ -285,13 +285,13 @@ HTML;
 		$actual = null;
 
 		StaticMockerHack::add_method_mocks(
-			array(
-				'WC_Admin_Settings' => array(
+			[
+				'WC_Admin_Settings' => [
 					'save_fields' => function( $settings ) use ( &$actual ) {
 						$actual = $settings;
 					},
-				),
-			)
+				],
+			]
 		);
 
 		$sut = new WC_Legacy_Settings_Example();
@@ -299,7 +299,7 @@ HTML;
 		$current_section = 'foobar';
 		$sut->save();
 
-		$expected = array( 'foo' => 'bar' );
+		$expected = [ 'foo' => 'bar' ];
 		$this->assertEquals( $expected, $actual );
 	}
 

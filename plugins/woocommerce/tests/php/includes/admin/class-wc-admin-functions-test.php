@@ -96,18 +96,18 @@ class WC_Admin_Functions_Test extends \WC_Unit_Test_Case {
 		$product = wc_get_product( $product->get_id() );
 		$this->assertEquals( 90, $product->get_stock_quantity() );
 
-		$args = array(
+		$args = [
 			'amount'     => 10,
 			'order_id'   => $order->get_id(),
-			'line_items' => array(
-				$order_item_id => array(
+			'line_items' => [
+				$order_item_id => [
 					'qty'          => 10,
 					'refund_total' => 0,
-				),
-			),
+				],
+			],
 			'refund_payment' => false,
 			'restock_items'  => true,
-		);
+		];
 
 		wc_create_refund( $args );
 
@@ -151,18 +151,18 @@ class WC_Admin_Functions_Test extends \WC_Unit_Test_Case {
 		$product = wc_get_product( $product->get_id() );
 		$this->assertEquals( 90, $product->get_stock_quantity() );
 
-		$args = array(
+		$args = [
 			'amount'     => 10,
 			'order_id'   => $order->get_id(),
-			'line_items' => array(
-				$order_item_id => array(
+			'line_items' => [
+				$order_item_id => [
 					'qty'          => 10,
 					'refund_total' => 0,
-				),
-			),
+				],
+			],
 			'refund_payment' => false,
 			'restock_items'  => false,
-		);
+		];
 
 		wc_create_refund( $args );
 
@@ -204,18 +204,18 @@ class WC_Admin_Functions_Test extends \WC_Unit_Test_Case {
 		$product = wc_get_product( $product->get_id() );
 		$this->assertEquals( 90, $product->get_stock_quantity() );
 
-		$args = array(
+		$args = [
 			'amount'     => 10,
 			'order_id'   => $order->get_id(),
-			'line_items' => array(
-				$order_item_id => array(
+			'line_items' => [
+				$order_item_id => [
 					'qty'          => 5,
 					'refund_total' => 0,
-				),
-			),
+				],
+			],
 			'refund_payment' => false,
 			'restock_items'  => true,
-		);
+		];
 
 		wc_create_refund( $args );
 
@@ -259,18 +259,18 @@ class WC_Admin_Functions_Test extends \WC_Unit_Test_Case {
 		$product = wc_get_product( $product->get_id() );
 		$this->assertEquals( 90, $product->get_stock_quantity() );
 
-		$args = array(
+		$args = [
 			'amount'     => 10,
 			'order_id'   => $order->get_id(),
-			'line_items' => array(
-				$order_item_id => array(
+			'line_items' => [
+				$order_item_id => [
 					'qty'          => 5,
 					'refund_total' => 0,
-				),
-			),
+				],
+			],
 			'refund_payment' => false,
 			'restock_items'  => false,
-		);
+		];
 
 		wc_create_refund( $args );
 
@@ -315,18 +315,18 @@ class WC_Admin_Functions_Test extends \WC_Unit_Test_Case {
 		$product = wc_get_product( $product->get_id() );
 		$this->assertEquals( 90, $product->get_stock_quantity() );
 
-		$args = array(
+		$args = [
 			'amount'     => 10,
 			'order_id'   => $order->get_id(),
-			'line_items' => array(
-				$order_item_id => array(
+			'line_items' => [
+				$order_item_id => [
 					'qty'          => 5,
 					'refund_total' => 0,
-				),
-			),
+				],
+			],
 			'refund_payment' => false,
 			'restock_items'  => true,
-		);
+		];
 
 		wc_create_refund( $args );
 
@@ -374,18 +374,18 @@ class WC_Admin_Functions_Test extends \WC_Unit_Test_Case {
 		$product = wc_get_product( $product->get_id() );
 		$this->assertEquals( 90, $product->get_stock_quantity() );
 
-		$args = array(
+		$args = [
 			'amount'     => 10,
 			'order_id'   => $order->get_id(),
-			'line_items' => array(
-				$order_item_id => array(
+			'line_items' => [
+				$order_item_id => [
 					'qty'          => 5,
 					'refund_total' => 0,
-				),
-			),
+				],
+			],
 			'refund_payment' => false,
 			'restock_items'  => false,
-		);
+		];
 
 		wc_create_refund( $args );
 

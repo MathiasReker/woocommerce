@@ -26,7 +26,7 @@ class WC_Shipping_Zones {
 	public static function get_zones( $context = 'admin' ) {
 		$data_store = WC_Data_Store::load( 'shipping-zone' );
 		$raw_zones  = $data_store->get_zones();
-		$zones      = array();
+		$zones      = [];
 
 		foreach ( $raw_zones as $raw_zone ) {
 			$zone                                = new WC_Shipping_Zone( $raw_zone );

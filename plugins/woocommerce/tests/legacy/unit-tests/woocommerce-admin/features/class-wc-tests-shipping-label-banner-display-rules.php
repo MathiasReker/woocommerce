@@ -24,12 +24,12 @@ class WC_Admin_Tests_Shipping_Label_Banner_Display_Rules extends WC_Unit_Test_Ca
 	 *
 	 * @var array
 	 */
-	private static $modified_options = array(
+	private static $modified_options = [
 		'woocommerce_default_country'              => null,
 		'woocommerce_currency'                     => null,
 		'woocommerce_shipping_prompt_ab'           => null,
 		'woocommerce_shipping_dismissed_timestamp' => null,
-	);
+	];
 
 	/**
 	 * Setup for every single test.
@@ -230,11 +230,11 @@ class WC_Admin_Tests_Shipping_Label_Banner_Display_Rules extends WC_Unit_Test_Ca
 	 */
 	private function create_order() {
 		$product = WC_Helper_Product::create_simple_product();
-		$product->set_props( array( 'virtual' => true ) );
+		$product->set_props( [ 'virtual' => true ] );
 
 		$order      = new WC_Order();
 		$order_item = new WC_Order_Item_Product();
-		$order_item->set_props( array( 'product' => $product ) );
+		$order_item->set_props( [ 'product' => $product ] );
 		$order->add_item( $order_item );
 		$order->save();
 

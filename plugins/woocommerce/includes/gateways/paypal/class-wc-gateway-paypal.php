@@ -45,10 +45,10 @@ class WC_Gateway_Paypal extends WC_Payment_Gateway {
 		$this->method_title      = __( 'PayPal Standard', 'woocommerce' );
 		/* translators: %s: Link to WC system status page */
 		$this->method_description = __( 'PayPal Standard redirects customers to PayPal to enter their payment information.', 'woocommerce' );
-		$this->supports           = array(
+		$this->supports           = [
 			'products',
 			'refunds',
-		);
+		];
 
 		// Load the settings.
 		$this->init_form_fields();
@@ -71,10 +71,10 @@ class WC_Gateway_Paypal extends WC_Payment_Gateway {
 		}
 
 		// Actions.
-		add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array( $this, 'process_admin_options' ) );
-		add_action( 'woocommerce_order_status_processing', array( $this, 'capture_payment' ) );
-		add_action( 'woocommerce_order_status_completed', array( $this, 'capture_payment' ) );
-		add_action( 'admin_enqueue_scripts', array( $this, 'admin_scripts' ) );
+		add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, [ $this, 'process_admin_options' ] );
+		add_action( 'woocommerce_order_status_processing', [ $this, 'capture_payment' ] );
+		add_action( 'woocommerce_order_status_completed', [ $this, 'capture_payment' ] );
+		add_action( 'admin_enqueue_scripts', [ $this, 'admin_scripts' ] );
 
 		if ( ! $this->is_valid_for_use() ) {
 			$this->enabled = 'no';
@@ -90,7 +90,7 @@ class WC_Gateway_Paypal extends WC_Payment_Gateway {
 		}
 
 		if ( 'yes' === $this->enabled ) {
-			add_filter( 'woocommerce_thankyou_order_received_text', array( $this, 'order_received_text' ), 10, 2 );
+			add_filter( 'woocommerce_thankyou_order_received_text', [ $this, 'order_received_text' ], 10, 2 );
 		}
 	}
 
@@ -119,7 +119,7 @@ class WC_Gateway_Paypal extends WC_Payment_Gateway {
 			if ( empty( self::$log ) ) {
 				self::$log = wc_get_logger();
 			}
-			self::$log->log( $level, $message, array( 'source' => 'paypal' ) );
+			self::$log->log( $level, $message, [ 'source' => 'paypal' ] );
 		}
 	}
 
@@ -174,8 +174,8 @@ class WC_Gateway_Paypal extends WC_Payment_Gateway {
 	 */
 	protected function get_icon_url( $country ) {
 		$url           = 'https://www.paypal.com/' . strtolower( $country );
-		$home_counties = array( 'BE', 'CZ', 'DK', 'HU', 'IT', 'JP', 'NL', 'NO', 'ES', 'SE', 'TR', 'IN' );
-		$countries     = array( 'DZ', 'AU', 'BH', 'BQ', 'BW', 'CA', 'CN', 'CW', 'FI', 'FR', 'DE', 'GR', 'HK', 'ID', 'JO', 'KE', 'KW', 'LU', 'MY', 'MA', 'OM', 'PH', 'PL', 'PT', 'QA', 'IE', 'RU', 'BL', 'SX', 'MF', 'SA', 'SG', 'SK', 'KR', 'SS', 'TW', 'TH', 'AE', 'GB', 'US', 'VN' );
+		$home_counties = [ 'BE', 'CZ', 'DK', 'HU', 'IT', 'JP', 'NL', 'NO', 'ES', 'SE', 'TR', 'IN' ];
+		$countries     = [ 'DZ', 'AU', 'BH', 'BQ', 'BW', 'CA', 'CN', 'CW', 'FI', 'FR', 'DE', 'GR', 'HK', 'ID', 'JO', 'KE', 'KW', 'LU', 'MY', 'MA', 'OM', 'PH', 'PL', 'PT', 'QA', 'IE', 'RU', 'BL', 'SX', 'MF', 'SA', 'SG', 'SK', 'KR', 'SS', 'TW', 'TH', 'AE', 'GB', 'US', 'VN' ];
 
 		if ( in_array( $country, $home_counties, true ) ) {
 			return $url . '/webapps/mpp/home';
@@ -208,10 +208,10 @@ class WC_Gateway_Paypal extends WC_Payment_Gateway {
 				$icon = 'https://www.paypalobjects.com/webstatic/mktg/Logo/AM_mc_vs_ms_ae_UK.png';
 				break;
 			case 'MX':
-				$icon = array(
+				$icon = [
 					'https://www.paypal.com/es_XC/Marketing/i/banner/paypal_visa_mastercard_amex.png',
 					'https://www.paypal.com/es_XC/Marketing/i/banner/paypal_debit_card_275x60.gif',
-				);
+				];
 				break;
 			case 'FR':
 				$icon = 'https://www.paypalobjects.com/webstatic/mktg/logo-center/logo_paypal_moyens_paiement_fr.jpg';
@@ -266,7 +266,7 @@ class WC_Gateway_Paypal extends WC_Payment_Gateway {
 			get_woocommerce_currency(),
 			apply_filters(
 				'woocommerce_paypal_supported_currencies',
-				array( 'AUD', 'BRL', 'CAD', 'MXN', 'NZD', 'HKD', 'SGD', 'USD', 'EUR', 'JPY', 'TRY', 'NOK', 'CZK', 'DKK', 'HUF', 'ILS', 'MYR', 'PHP', 'PLN', 'SEK', 'CHF', 'TWD', 'THB', 'GBP', 'RMB', 'RUB', 'INR' )
+				[ 'AUD', 'BRL', 'CAD', 'MXN', 'NZD', 'HKD', 'SGD', 'USD', 'EUR', 'JPY', 'TRY', 'NOK', 'CZK', 'DKK', 'HUF', 'ILS', 'MYR', 'PHP', 'PLN', 'SEK', 'CHF', 'TWD', 'THB', 'GBP', 'RMB', 'RUB', 'INR' ]
 			),
 			true
 		);
@@ -326,10 +326,10 @@ class WC_Gateway_Paypal extends WC_Payment_Gateway {
 		$order          = wc_get_order( $order_id );
 		$paypal_request = new WC_Gateway_Paypal_Request( $this );
 
-		return array(
+		return [
 			'result'   => 'success',
 			'redirect' => $paypal_request->get_request_url( $order, $this->testmode ),
-		);
+		];
 	}
 
 	/**
@@ -457,7 +457,7 @@ class WC_Gateway_Paypal extends WC_Payment_Gateway {
 		$suffix  = Constants::is_true( 'SCRIPT_DEBUG' ) ? '' : '.min';
 		$version = Constants::get_constant( 'WC_VERSION' );
 
-		wp_enqueue_script( 'woocommerce_paypal_admin', WC()->plugin_url() . '/includes/gateways/paypal/assets/js/paypal-admin' . $suffix . '.js', array(), $version, true );
+		wp_enqueue_script( 'woocommerce_paypal_admin', WC()->plugin_url() . '/includes/gateways/paypal/assets/js/paypal-admin' . $suffix . '.js', [], $version, true );
 	}
 
 	/**

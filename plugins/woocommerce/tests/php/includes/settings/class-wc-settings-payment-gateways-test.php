@@ -23,9 +23,9 @@ class WC_Settings_Payment_Gateways_Test extends WC_Settings_Unit_Test_Case {
 
 		$section_names = array_keys( $sut->get_sections() );
 
-		$expected = array(
+		$expected = [
 			'',
-		);
+		];
 
 		$this->assertEquals( $expected, $section_names );
 	}
@@ -70,10 +70,10 @@ class WC_Settings_Payment_Gateways_Test extends WC_Settings_Unit_Test_Case {
 		$settings               = $sut->get_settings_for_section( '' );
 		$settings_ids_and_types = $this->get_ids_and_types( $settings );
 
-		$expected = array(
+		$expected = [
 			'payment_gateways_options' => 'sectionend',
-			''                         => array( 'title', 'payment_gateways_banner', 'payment_gateways' ),
-		);
+			''                         => [ 'title', 'payment_gateways_banner', 'payment_gateways' ],
+		];
 
 		$this->assertEquals( $expected, $settings_ids_and_types );
 	}
@@ -94,7 +94,7 @@ class WC_Settings_Payment_Gateways_Test extends WC_Settings_Unit_Test_Case {
 		$actual_gateway        = null;
 
 		$sut = $this->getMockBuilder( WC_Settings_Payment_Gateways::class )
-					->setMethods( array( 'run_gateway_admin_options' ) )
+					->setMethods( [ 'run_gateway_admin_options' ] )
 					->getMock();
 
 		$sut->method( 'run_gateway_admin_options' )
@@ -133,7 +133,7 @@ class WC_Settings_Payment_Gateways_Test extends WC_Settings_Unit_Test_Case {
 		$gateway = WC_Payment_Gateways::instance()->payment_gateways()['bacs'];
 
 		$payment_gateways = $this->getMockBuilder( WC_Payment_Gateways::class )
-								 ->setMethods( array( 'process_admin_options', 'init', 'payment_gateways' ) )
+								 ->setMethods( [ 'process_admin_options', 'init', 'payment_gateways' ] )
 								 ->getMock();
 
 		$payment_gateways->method( 'process_admin_options' )
@@ -155,16 +155,16 @@ class WC_Settings_Payment_Gateways_Test extends WC_Settings_Unit_Test_Case {
 						);
 
 		$payment_gateways->method( 'payment_gateways' )
-						 ->willReturn( array( $gateway ) );
+						 ->willReturn( [ $gateway ] );
 
 		StaticMockerHack::add_method_mocks(
-			array(
-				'WC_Payment_Gateways' => array(
+			[
+				'WC_Payment_Gateways' => [
 					'instance' => function() use ( $payment_gateways ) {
 						return $payment_gateways;
 					},
-				),
-			)
+				],
+			]
 		);
 
 		$sut = new WC_Settings_Payment_Gateways();

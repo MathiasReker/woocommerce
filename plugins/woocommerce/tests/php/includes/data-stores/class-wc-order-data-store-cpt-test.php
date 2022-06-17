@@ -12,21 +12,21 @@ class WC_Order_Data_Store_CPT_Test extends WC_Unit_Test_Case {
 		$order = WC_Helper_Order::create_order();
 
 		$refund = wc_create_refund(
-			array(
+			[
 				'order_id' => $order->get_id(),
 				'reason'   => 'testing',
 				'amount'   => 1,
-			)
+			]
 		);
 
 		$this->assertNotWPError( $refund );
 
 		// Prime cache.
 		$fetched_order = wc_get_orders(
-			array(
-				'post__in' => array( $order->get_id() ),
+			[
+				'post__in' => [ $order->get_id() ],
 				'type'     => 'shop_order',
-			)
+			]
 		)[0];
 
 		$refund_cache_key = WC_Cache_Helper::get_cache_prefix( 'orders' ) . 'refunds' . $order->get_id();

@@ -28,7 +28,7 @@ class WC_Tests_Customer_Functions extends WC_Unit_Test_Case {
 	 * @return array
 	 */
 	public function setup_illegal_user_logins( $logins ) {
-		return array( 'test' );
+		return [ 'test' ];
 	}
 
 	/**
@@ -77,10 +77,10 @@ class WC_Tests_Customer_Functions extends WC_Unit_Test_Case {
 			'john.doe@example.com',
 			'',
 			'testpassword',
-			array(
+			[
 				'first_name' => 'John',
 				'last_name'  => 'Doe',
-			)
+			]
 		);
 		$userdata = get_userdata( $id );
 		$this->assertEquals( 'John Doe', $userdata->display_name );
@@ -101,26 +101,26 @@ class WC_Tests_Customer_Functions extends WC_Unit_Test_Case {
 	 */
 	public function test_wc_create_new_customer_username() {
 		// Test getting name from email.
-		$this->assertEquals( 'mike', wc_create_new_customer_username( 'mike@fakemail.com', array() ) );
+		$this->assertEquals( 'mike', wc_create_new_customer_username( 'mike@fakemail.com', [] ) );
 
 		// Test getting name if username exists.
 		wc_create_new_customer( 'mike@fakemail.com', '', 'testpassword' );
-		$username = wc_create_new_customer_username( 'mike@fakemail.com', array() );
+		$username = wc_create_new_customer_username( 'mike@fakemail.com', [] );
 		$this->assertNotEquals( 'mike', $username, $username );
 		$this->assertStringContainsString( 'mike', $username, $username );
 
 		// Test common email prefix avoidance.
-		$this->assertEquals( 'somecompany.com', wc_create_new_customer_username( 'info@somecompany.com', array() ) );
+		$this->assertEquals( 'somecompany.com', wc_create_new_customer_username( 'info@somecompany.com', [] ) );
 
 		// Test first/last name generation.
 		$this->assertEquals(
 			'bob.bobson',
 			wc_create_new_customer_username(
 				'bob@bobbobson.com',
-				array(
+				[
 					'first_name' => 'Bob',
 					'last_name'  => 'Bobson',
-				)
+				]
 			)
 		);
 
@@ -129,22 +129,22 @@ class WC_Tests_Customer_Functions extends WC_Unit_Test_Case {
 			'unicode',
 			wc_create_new_customer_username(
 				'unicode@unicode.com',
-				array(
+				[
 					'first_name' => 'こんにちは',
 					'last_name'  => 'こんにちは',
-				)
+				]
 			)
 		);
 
 		// Test username generation triggered by illegal_user_logins filter.
-		add_filter( 'illegal_user_logins', array( $this, 'setup_illegal_user_logins' ) );
+		add_filter( 'illegal_user_logins', [ $this, 'setup_illegal_user_logins' ] );
 
 		$this->assertStringStartsWith(
 			'woo_user_',
 			wc_create_new_customer_username( 'test@test.com' )
 		);
 
-		remove_filter( 'illegal_user_logins', array( $this, 'setup_illegal_user_logins' ) );
+		remove_filter( 'illegal_user_logins', [ $this, 'setup_illegal_user_logins' ] );
 	}
 
 	/**
@@ -168,16 +168,16 @@ class WC_Tests_Customer_Functions extends WC_Unit_Test_Case {
 
 		$product = new WC_Product_Simple();
 		$product->set_downloadable( 'yes' );
-		$product->set_downloads( array( $prod_download ) );
+		$product->set_downloads( [ $prod_download ] );
 		$product->save();
 
 		$order3 = new WC_Order();
 		$item   = new WC_Order_Item_Product();
 		$item->set_props(
-			array(
+			[
 				'product'  => $product,
 				'quantity' => 1,
-			)
+			]
 		);
 		$order3->set_billing_email( 'test@example.com' );
 		$order3->set_status( 'completed' );
@@ -217,19 +217,19 @@ class WC_Tests_Customer_Functions extends WC_Unit_Test_Case {
 		$order1->save();
 
 		wp_update_user(
-			array(
+			[
 				'ID'         => $customer_id,
 				'user_email' => 'invalid',
-			)
+			]
 		);
 		$linked = wc_update_new_customer_past_orders( $customer_id );
 		$this->assertEquals( 0, $linked );
 
 		wp_update_user(
-			array(
+			[
 				'ID'         => $customer_id,
 				'user_email' => 'new@example.com',
-			)
+			]
 		);
 		$linked = wc_update_new_customer_past_orders( $customer_id );
 		$this->assertEquals( 0, $linked );
@@ -309,39 +309,39 @@ class WC_Tests_Customer_Functions extends WC_Unit_Test_Case {
 		$order->save();
 
 		// Can view same user's order.
-		$allcaps = wc_customer_has_capability( array(), array( 'view_order' ), array( 'view_order', $customer_id, $order->get_id() ) );
+		$allcaps = wc_customer_has_capability( [], [ 'view_order' ], [ 'view_order', $customer_id, $order->get_id() ] );
 		$this->assertTrue( $allcaps['view_order'] );
 
 		// Can't view other user's order.
-		$allcaps = wc_customer_has_capability( array(), array( 'view_order' ), array( 'view_order', 99, $order->get_id() ) );
+		$allcaps = wc_customer_has_capability( [], [ 'view_order' ], [ 'view_order', 99, $order->get_id() ] );
 		$this->assertTrue( empty( $allcaps['view_order'] ) );
 
 		// Can pay same user's order.
-		$allcaps = wc_customer_has_capability( array(), array( 'pay_for_order' ), array( 'pay_for_order', $customer_id, $order->get_id() ) );
+		$allcaps = wc_customer_has_capability( [], [ 'pay_for_order' ], [ 'pay_for_order', $customer_id, $order->get_id() ] );
 		$this->assertTrue( $allcaps['pay_for_order'] );
 
 		// Can't pay other user's order.
-		$allcaps = wc_customer_has_capability( array(), array( 'pay_for_order' ), array( 'pay_for_order', 99, $order->get_id() ) );
+		$allcaps = wc_customer_has_capability( [], [ 'pay_for_order' ], [ 'pay_for_order', 99, $order->get_id() ] );
 		$this->assertTrue( empty( $allcaps['pay_for_order'] ) );
 
 		// Can pay new order.
-		$allcaps = wc_customer_has_capability( array(), array( 'pay_for_order' ), array( 'pay_for_order', $customer_id, null ) );
+		$allcaps = wc_customer_has_capability( [], [ 'pay_for_order' ], [ 'pay_for_order', $customer_id, null ] );
 		$this->assertTrue( $allcaps['pay_for_order'] );
 
 		// Can order user's order again.
-		$allcaps = wc_customer_has_capability( array(), array( 'order_again' ), array( 'order_again', $customer_id, $order->get_id() ) );
+		$allcaps = wc_customer_has_capability( [], [ 'order_again' ], [ 'order_again', $customer_id, $order->get_id() ] );
 		$this->assertTrue( $allcaps['order_again'] );
 
 		// Can't order other user's order again.
-		$allcaps = wc_customer_has_capability( array(), array( 'order_again' ), array( 'order_again', 99, $order->get_id() ) );
+		$allcaps = wc_customer_has_capability( [], [ 'order_again' ], [ 'order_again', 99, $order->get_id() ] );
 		$this->assertTrue( empty( $allcaps['order_again'] ) );
 
 		// Can cancel order.
-		$allcaps = wc_customer_has_capability( array(), array( 'cancel_order' ), array( 'cancel_order', $customer_id, $order->get_id() ) );
+		$allcaps = wc_customer_has_capability( [], [ 'cancel_order' ], [ 'cancel_order', $customer_id, $order->get_id() ] );
 		$this->assertTrue( $allcaps['cancel_order'] );
 
 		// Can't cancel other user's order.
-		$allcaps = wc_customer_has_capability( array(), array( 'cancel_order' ), array( 'cancel_order', 99, $order->get_id() ) );
+		$allcaps = wc_customer_has_capability( [], [ 'cancel_order' ], [ 'cancel_order', 99, $order->get_id() ] );
 		$this->assertTrue( empty( $allcaps['cancel_order'] ) );
 
 		$download = new WC_Customer_Download();
@@ -349,11 +349,11 @@ class WC_Tests_Customer_Functions extends WC_Unit_Test_Case {
 		$download->save();
 
 		// Can download.
-		$allcaps = wc_customer_has_capability( array(), array( 'download_file' ), array( 'download_file', $customer_id, $download ) );
+		$allcaps = wc_customer_has_capability( [], [ 'download_file' ], [ 'download_file', $customer_id, $download ] );
 		$this->assertTrue( $allcaps['download_file'] );
 
 		// Can't download other user's download.
-		$allcaps = wc_customer_has_capability( array(), array( 'download_file' ), array( 'download_file', 99, $download ) );
+		$allcaps = wc_customer_has_capability( [], [ 'download_file' ], [ 'download_file', 99, $download ] );
 		$this->assertTrue( empty( $allcaps['download_file'] ) );
 	}
 
@@ -398,7 +398,7 @@ class WC_Tests_Customer_Functions extends WC_Unit_Test_Case {
 
 		$product = new WC_Product_Simple();
 		$product->set_downloadable( 'yes' );
-		$product->set_downloads( array( $prod_download ) );
+		$product->set_downloads( [ $prod_download ] );
 		$product->save();
 
 		$cust_download = new WC_Customer_Download();

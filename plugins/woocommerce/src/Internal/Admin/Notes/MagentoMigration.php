@@ -31,15 +31,15 @@ class MagentoMigration {
 	 * Attach hooks.
 	 */
 	public function __construct() {
-		add_action( 'update_option_' . OnboardingProfile::DATA_OPTION, array( __CLASS__, 'possibly_add_note' ) );
-		add_action( 'woocommerce_admin_magento_migration_note', array( __CLASS__, 'save_note' ) );
+		add_action( 'update_option_' . OnboardingProfile::DATA_OPTION, [ __CLASS__, 'possibly_add_note' ] );
+		add_action( 'woocommerce_admin_magento_migration_note', [ __CLASS__, 'save_note' ] );
 	}
 
 	/**
 	 * Add the note if it passes predefined conditions.
 	 */
 	public static function possibly_add_note() {
-		$onboarding_profile = get_option( OnboardingProfile::DATA_OPTION, array() );
+		$onboarding_profile = get_option( OnboardingProfile::DATA_OPTION, [] );
 
 		if ( empty( $onboarding_profile ) ) {
 			return;
@@ -85,7 +85,7 @@ class MagentoMigration {
 
 		$note->set_title( __( 'How to Migrate from Magento to WooCommerce', 'woocommerce' ) );
 		$note->set_content( __( 'Changing platforms might seem like a big hurdle to overcome, but it is easier than you might think to move your products, customers, and orders to WooCommerce. This article will help you with going through this process.', 'woocommerce' ) );
-		$note->set_content_data( (object) array() );
+		$note->set_content_data( (object) [] );
 		$note->set_type( Note::E_WC_ADMIN_NOTE_INFORMATIONAL );
 		$note->set_name( self::NOTE_NAME );
 		$note->set_source( 'woocommerce-admin' );

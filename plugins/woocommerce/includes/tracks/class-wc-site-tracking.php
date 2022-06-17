@@ -50,7 +50,7 @@ class WC_Site_Tracking {
 	 * Register scripts required to record events from javascript.
 	 */
 	public static function register_scripts() {
-		wp_register_script( 'woo-tracks', 'https://stats.wp.com/w.js', array( 'wp-hooks' ), gmdate( 'YW' ), false );
+		wp_register_script( 'woo-tracks', 'https://stats.wp.com/w.js', [ 'wp-hooks' ], gmdate( 'YW' ), false );
 	}
 
 	/**
@@ -69,7 +69,7 @@ class WC_Site_Tracking {
 		 *
 		 * @since 6.5.0
 		 */
-		$filtered_properties = apply_filters( 'woocommerce_tracks_event_properties', array(), false );
+		$filtered_properties = apply_filters( 'woocommerce_tracks_event_properties', [], false );
 		?>
 		<!-- WooCommerce Tracks -->
 		<script type="text/javascript">
@@ -146,14 +146,14 @@ class WC_Site_Tracking {
 	 * Init tracking.
 	 */
 	public static function init() {
-		add_filter( 'woocommerce_tracks_event_properties', array( __CLASS__, 'add_global_properties' ), 10, 2 );
+		add_filter( 'woocommerce_tracks_event_properties', [ __CLASS__, 'add_global_properties' ], 10, 2 );
 
 		// Define window.wcTracks.recordEvent in case it is enabled client-side.
 		self::register_scripts();
-		add_filter( 'admin_footer', array( __CLASS__, 'add_tracking_function' ), 24 );
+		add_filter( 'admin_footer', [ __CLASS__, 'add_tracking_function' ], 24 );
 
 		if ( ! self::is_tracking_enabled() ) {
-			add_filter( 'admin_footer', array( __CLASS__, 'add_enable_tracking_function' ), 24 );
+			add_filter( 'admin_footer', [ __CLASS__, 'add_enable_tracking_function' ], 24 );
 			return;
 		}
 
@@ -171,7 +171,7 @@ class WC_Site_Tracking {
 		include_once WC_ABSPATH . 'includes/tracks/events/class-wc-coupon-tracking.php';
 		include_once WC_ABSPATH . 'includes/tracks/events/class-wc-theme-tracking.php';
 
-		$tracking_classes = array(
+		$tracking_classes = [
 			'WC_Extensions_Tracking',
 			'WC_Importer_Tracking',
 			'WC_Products_Tracking',
@@ -182,11 +182,11 @@ class WC_Site_Tracking {
 			'WC_Order_Tracking',
 			'WC_Coupon_Tracking',
 			'WC_Theme_Tracking',
-		);
+		];
 
 		foreach ( $tracking_classes as $tracking_class ) {
 			$tracker_instance    = new $tracking_class();
-			$tracker_init_method = array( $tracker_instance, 'init' );
+			$tracker_init_method = [ $tracker_instance, 'init' ];
 
 			if ( is_callable( $tracker_init_method ) ) {
 				call_user_func( $tracker_init_method );
@@ -213,13 +213,13 @@ class WC_Site_Tracking {
 	public static function get_blog_details( $user_id ) {
 		$blog_details = get_transient( 'wc_tracks_blog_details' );
 		if ( false === $blog_details ) {
-			$blog_details = array(
+			$blog_details = [
 				'url'            => home_url(),
 				'blog_lang'      => get_user_locale( $user_id ),
 				'blog_id'        => class_exists( 'Jetpack_Options' ) ? Jetpack_Options::get_option( 'id' ) : null,
 				'products_count' => self::get_products_count(),
 				'wc_version'     => WC()->version,
-			);
+			];
 			set_transient( 'wc_tracks_blog_details', $blog_details, DAY_IN_SECONDS );
 		}
 		return $blog_details;
@@ -231,7 +231,7 @@ class WC_Site_Tracking {
 	 * @return array Server details.
 	 */
 	public static function get_server_details() {
-		$data = array();
+		$data = [];
 
 		$data['_via_ua'] = isset( $_SERVER['HTTP_USER_AGENT'] ) ? wc_clean( wp_unslash( $_SERVER['HTTP_USER_AGENT'] ) ) : '';
 		$data['_via_ip'] = isset( $_SERVER['REMOTE_ADDR'] ) ? wc_clean( wp_unslash( $_SERVER['REMOTE_ADDR'] ) ) : '';
@@ -255,11 +255,11 @@ class WC_Site_Tracking {
 	public static function add_global_properties( $properties, $event_name = null ) {
 		$user = wp_get_current_user();
 		$data = $event_name
-			? array(
+			? [
 				'_en' => $event_name,
 				'_ts' => WC_Tracks_Client::build_timestamp(),
-			)
-			: array();
+			]
+			: [];
 
 		$server_details = self::get_server_details();
 		$identity       = WC_Tracks_Client::get_identity( $user->ID );

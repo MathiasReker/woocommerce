@@ -13,7 +13,7 @@
 
 $phase = getenv( 'WC_ADMIN_PHASE' );
 
-if ( ! in_array( $phase, array( 'development', 'core' ), true ) ) {
+if ( ! in_array( $phase, [ 'development', 'core' ], true ) ) {
 	$phase = 'core'; // Default to core when running `pnpm run build`.
 }
 $config_json = file_get_contents( __DIR__ . '/../client/admin/config/' . $phase . '.json' );

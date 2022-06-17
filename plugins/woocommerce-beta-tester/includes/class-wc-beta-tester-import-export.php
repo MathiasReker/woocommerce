@@ -52,14 +52,14 @@ class WC_Beta_Tester_Import_Export {
 	 * Hook into WordPress.
 	 */
 	public function add_hooks() {
-		add_action( 'admin_menu', array( $this, 'add_to_menu' ), 55 );
-		add_action( 'wp_ajax_' . static::AJAX_HOOK, array( $this, 'export_settings' ) );
+		add_action( 'admin_menu', [ $this, 'add_to_menu' ], 55 );
+		add_action( 'wp_ajax_' . static::AJAX_HOOK, [ $this, 'export_settings' ] );
 	}
 	/**
 	 * Add options page to menu
 	 */
 	public function add_to_menu() {
-		add_submenu_page( 'plugins.php', __( 'WC Beta Tester Import/Export', 'woocommerce-beta-tester' ), __( 'WC Import/Export', 'woocommerce-beta-tester' ), static::IMPORT_CAP, 'wc-beta-tester-settings', array( $this, 'settings_page_html' ) );
+		add_submenu_page( 'plugins.php', __( 'WC Beta Tester Import/Export', 'woocommerce-beta-tester' ), __( 'WC Import/Export', 'woocommerce-beta-tester' ), static::IMPORT_CAP, 'wc-beta-tester-settings', [ $this, 'settings_page_html' ] );
 	}
 
 	/**
@@ -177,7 +177,7 @@ class WC_Beta_Tester_Import_Export {
 	 * Get an array of the WooCommerce related settings.
 	 */
 	protected function get_settings() {
-		$settings = array();
+		$settings = [];
 		if ( current_user_can( 'manage_woocommerce' ) ) {
 			foreach ( $this->get_setting_list() as $option_name ) {
 				$setting = get_option( $option_name );
@@ -197,10 +197,10 @@ class WC_Beta_Tester_Import_Export {
 	 * @param string $type Message type. Optional. Default 'error'.
 	 */
 	protected function add_message( $message, $type = 'error' ) {
-		$this->message = array(
+		$this->message = [
 			'message' => $message,
 			'type'    => $type
-		);
+		];
 	}
 
 	/**

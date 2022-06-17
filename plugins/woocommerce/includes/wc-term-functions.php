@@ -28,7 +28,7 @@ function wc_change_get_terms_defaults( $defaults, $taxonomies ) {
 
 	if ( taxonomy_is_product_attribute( $taxonomy ) ) {
 		$orderby = wc_attribute_orderby( $taxonomy );
-	} elseif ( in_array( $taxonomy, apply_filters( 'woocommerce_sortable_taxonomies', array( 'product_cat' ) ), true ) ) {
+	} elseif ( in_array( $taxonomy, apply_filters( 'woocommerce_sortable_taxonomies', [ 'product_cat' ] ), true ) ) {
 		$orderby = 'menu_order';
 	}
 
@@ -133,7 +133,7 @@ function wc_get_object_terms( $object_id, $taxonomy, $field = null, $index_key =
 	$terms = get_the_terms( $object_id, $taxonomy );
 
 	if ( ! $terms || is_wp_error( $terms ) ) {
-		return array();
+		return [];
 	}
 
 	return is_null( $field ) ? $terms : wp_list_pluck( $terms, $field, $index_key );
@@ -149,7 +149,7 @@ function wc_get_object_terms( $object_id, $taxonomy, $field = null, $index_key =
  * @param  array  $args       Query arguments.
  * @return array
  */
-function _wc_get_cached_product_terms( $product_id, $taxonomy, $args = array() ) {
+function _wc_get_cached_product_terms( $product_id, $taxonomy, $args = [] ) {
 	$cache_key   = 'wc_' . $taxonomy . md5( wp_json_encode( $args ) );
 	$cache_group = WC_Cache_Helper::get_cache_prefix( 'product_' . $product_id ) . $product_id;
 	$terms       = wp_cache_get( $cache_key, $cache_group );
@@ -173,9 +173,9 @@ function _wc_get_cached_product_terms( $product_id, $taxonomy, $args = array() )
  * @param  array  $args       Query arguments.
  * @return array
  */
-function wc_get_product_terms( $product_id, $taxonomy, $args = array() ) {
+function wc_get_product_terms( $product_id, $taxonomy, $args = [] ) {
 	if ( ! taxonomy_exists( $taxonomy ) ) {
-		return array();
+		return [];
 	}
 
 	return apply_filters( 'woocommerce_get_product_terms', _wc_get_cached_product_terms( $product_id, $taxonomy, $args ), $product_id, $taxonomy, $args );
@@ -218,12 +218,12 @@ function _wc_get_product_terms_parent_usort_callback( $a, $b ) {
  *
  * @param array $args Args to control display of dropdown.
  */
-function wc_product_dropdown_categories( $args = array() ) {
+function wc_product_dropdown_categories( $args = [] ) {
 	global $wp_query;
 
 	$args = wp_parse_args(
 		$args,
-		array(
+		[
 			'pad_counts'         => 1,
 			'show_count'         => 1,
 			'hierarchical'       => 1,
@@ -237,7 +237,7 @@ function wc_product_dropdown_categories( $args = array() ) {
 			'taxonomy'           => 'product_cat',
 			'name'               => 'product_cat',
 			'class'              => 'dropdown_product_cat',
-		)
+		]
 	);
 
 	if ( 'order' === $args['orderby'] ) {
@@ -410,7 +410,7 @@ function _wc_term_recount( $terms, $taxonomy, $callback = true, $terms_are_term_
 		_update_post_term_count( $terms, $taxonomy );
 	}
 
-	$exclude_term_ids            = array();
+	$exclude_term_ids            = [];
 	$product_visibility_term_ids = wc_get_product_visibility_term_ids();
 
 	if ( $product_visibility_term_ids['exclude-from-catalog'] ) {
@@ -421,7 +421,7 @@ function _wc_term_recount( $terms, $taxonomy, $callback = true, $terms_are_term_
 		$exclude_term_ids[] = $product_visibility_term_ids['outofstock'];
 	}
 
-	$query = array(
+	$query = [
 		'fields' => "
 			SELECT COUNT( DISTINCT ID ) FROM {$wpdb->posts} p
 		",
@@ -432,7 +432,7 @@ function _wc_term_recount( $terms, $taxonomy, $callback = true, $terms_are_term_
 			AND p.post_type = 'product'
 
 		",
-	);
+	];
 
 	if ( count( $exclude_term_ids ) ) {
 		$query['join']  .= " LEFT JOIN ( SELECT object_id FROM {$wpdb->term_relationships} WHERE term_taxonomy_id IN ( " . implode( ',', array_map( 'absint', $exclude_term_ids ) ) . ' ) ) AS exclude_join ON exclude_join.object_id = p.ID';
@@ -446,7 +446,7 @@ function _wc_term_recount( $terms, $taxonomy, $callback = true, $terms_are_term_
 	} else {
 		// If we have term taxonomy IDs we need to get the term ID.
 		$term_taxonomy_ids = $terms;
-		$terms             = array();
+		$terms             = [];
 		foreach ( $term_taxonomy_ids as $term_taxonomy_id ) {
 			$term    = get_term_by( 'term_taxonomy_id', $term_taxonomy_id, $taxonomy->name );
 			$terms[] = $term->term_id;
@@ -470,7 +470,7 @@ function _wc_term_recount( $terms, $taxonomy, $callback = true, $terms_are_term_
 
 	// Count the terms.
 	foreach ( $terms as $term_id ) {
-		$terms_to_count = array( absint( $term_id ) );
+		$terms_to_count = [ absint( $term_id ) ];
 
 		if ( is_taxonomy_hierarchical( $taxonomy->name ) ) {
 			// We need to get the $term's hierarchy so we can count its children too.
@@ -524,7 +524,7 @@ function wc_change_term_counts( $terms, $taxonomies ) {
 		return $terms;
 	}
 
-	if ( ! isset( $taxonomies[0] ) || ! in_array( $taxonomies[0], apply_filters( 'woocommerce_change_term_counts', array( 'product_cat', 'product_tag' ) ), true ) ) {
+	if ( ! isset( $taxonomies[0] ) || ! in_array( $taxonomies[0], apply_filters( 'woocommerce_change_term_counts', [ 'product_cat', 'product_tag' ] ), true ) ) {
 		return $terms;
 	}
 
@@ -599,22 +599,22 @@ add_action( 'set_object_terms', 'wc_clear_term_product_ids', 10, 6 );
 function wc_get_product_visibility_term_ids() {
 	if ( ! taxonomy_exists( 'product_visibility' ) ) {
 		wc_doing_it_wrong( __FUNCTION__, 'wc_get_product_visibility_term_ids should not be called before taxonomies are registered (woocommerce_after_register_post_type action).', '3.1' );
-		return array();
+		return [];
 	}
 	return array_map(
 		'absint',
 		wp_parse_args(
 			wp_list_pluck(
 				get_terms(
-					array(
+					[
 						'taxonomy'   => 'product_visibility',
 						'hide_empty' => false,
-					)
+					]
 				),
 				'term_taxonomy_id',
 				'name'
 			),
-			array(
+			[
 				'exclude-from-catalog' => 0,
 				'exclude-from-search'  => 0,
 				'featured'             => 0,
@@ -624,7 +624,7 @@ function wc_get_product_visibility_term_ids() {
 				'rated-3'              => 0,
 				'rated-4'              => 0,
 				'rated-5'              => 0,
-			)
+			]
 		)
 	);
 }
@@ -638,18 +638,18 @@ function wc_get_product_visibility_term_ids() {
 function wc_recount_all_terms() {
 	$product_cats = get_terms(
 		'product_cat',
-		array(
+		[
 			'hide_empty' => false,
 			'fields'     => 'id=>parent',
-		)
+		]
 	);
 	_wc_term_recount( $product_cats, get_taxonomy( 'product_cat' ), true, false );
 	$product_tags = get_terms(
 		'product_tag',
-		array(
+		[
 			'hide_empty' => false,
 			'fields'     => 'id=>parent',
-		)
+		]
 	);
 	_wc_term_recount( $product_tags, get_taxonomy( 'product_tag' ), true, false );
 }
@@ -669,7 +669,7 @@ function _wc_recount_terms_by_product( $product_id = '' ) {
 	$product_terms = get_the_terms( $product_id, 'product_cat' );
 
 	if ( $product_terms ) {
-		$product_cats = array();
+		$product_cats = [];
 
 		foreach ( $product_terms as $term ) {
 			$product_cats[ $term->term_id ] = $term->parent;
@@ -681,7 +681,7 @@ function _wc_recount_terms_by_product( $product_id = '' ) {
 	$product_terms = get_the_terms( $product_id, 'product_tag' );
 
 	if ( $product_terms ) {
-		$product_tags = array();
+		$product_tags = [];
 
 		foreach ( $product_terms as $term ) {
 			$product_tags[ $term->term_id ] = $term->parent;

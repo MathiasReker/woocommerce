@@ -33,17 +33,17 @@ class WC_Payment_Tokens {
 	public static function get_tokens( $args ) {
 		$args = wp_parse_args(
 			$args,
-			array(
+			[
 				'token_id'   => '',
 				'user_id'    => '',
 				'gateway_id' => '',
 				'type'       => '',
-			)
+			]
 		);
 
 		$data_store    = WC_Data_Store::load( 'payment-token' );
 		$token_results = $data_store->get_tokens( $args );
-		$tokens        = array();
+		$tokens        = [];
 
 		if ( ! empty( $token_results ) ) {
 			foreach ( $token_results as $token_result ) {
@@ -67,14 +67,14 @@ class WC_Payment_Tokens {
 	 */
 	public static function get_customer_tokens( $customer_id, $gateway_id = '' ) {
 		if ( $customer_id < 1 ) {
-			return array();
+			return [];
 		}
 
 		$tokens = self::get_tokens(
-			array(
+			[
 				'user_id'    => $customer_id,
 				'gateway_id' => $gateway_id,
-			)
+			]
 		);
 
 		return apply_filters( 'woocommerce_get_customer_payment_tokens', $tokens, $customer_id, $gateway_id );
@@ -113,19 +113,19 @@ class WC_Payment_Tokens {
 		$order = wc_get_order( $order_id );
 
 		if ( ! $order ) {
-			return array();
+			return [];
 		}
 
 		$token_ids = $order->get_payment_tokens();
 
 		if ( empty( $token_ids ) ) {
-			return array();
+			return [];
 		}
 
 		$tokens = self::get_tokens(
-			array(
+			[
 				'token_id' => $token_ids,
-			)
+			]
 		);
 
 		return apply_filters( 'woocommerce_get_order_payment_tokens', $tokens, $order_id );
@@ -155,7 +155,7 @@ class WC_Payment_Tokens {
 
 		if ( class_exists( $token_class ) ) {
 			$meta        = $data_store->get_metadata( $token_id );
-			$passed_meta = array();
+			$passed_meta = [];
 			if ( ! empty( $meta ) ) {
 				foreach ( $meta as $meta_key => $meta_value ) {
 					$passed_meta[ $meta_key ] = $meta_value[0];

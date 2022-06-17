@@ -17,10 +17,10 @@ class WC_Order_Functions_Test extends \WC_Unit_Test_Case {
 		// Create a product, with stock management enabled.
 		$product = WC_Helper_Product::create_simple_product(
 			true,
-			array(
+			[
 				'manage_stock'   => true,
 				'stock_quantity' => 10,
-			)
+			]
 		);
 
 		// Place an order for the product, qty 2.
@@ -39,10 +39,10 @@ class WC_Order_Functions_Test extends \WC_Unit_Test_Case {
 		$line_item = reset( $items );
 
 		// Force a restock of one item.
-		$refunded_items = array();
-		$refunded_items[ $line_item->get_id() ] = array(
+		$refunded_items = [];
+		$refunded_items[ $line_item->get_id() ] = [
 			'qty' => 1,
-		);
+		];
 		wc_restock_refunded_items( $order, $refunded_items );
 
 		// Verify metadata.

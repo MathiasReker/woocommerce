@@ -6,30 +6,30 @@ const OPTION_NAME_PREFIX = 'wc_admin_helper_feature_values';
 register_woocommerce_admin_test_helper_rest_route(
 	'/features/(?P<feature_name>[a-z0-9_\-]+)/toggle',
 	'toggle_feature',
-    array(
+    [
 		'methods' => 'POST',
-	)
+	]
 );
 
 register_woocommerce_admin_test_helper_rest_route(
 	'/features',
 	'get_features',
-	array(
+	[
 		'methods' => 'GET',
-	)
+	]
 );
 
 register_woocommerce_admin_test_helper_rest_route(
 	'/features/reset',
 	'reset_features',
-	array(
+	[
 		'methods' => 'POST',
-	)
+	]
 );
 
 function toggle_feature( $request ) {
     $features = get_features();
-    $custom_feature_values = get_option( OPTION_NAME_PREFIX, array() );
+    $custom_feature_values = get_option( OPTION_NAME_PREFIX, [] );
     $feature_name = $request->get_param( 'feature_name' );
 
     if ( ! isset( $features[$feature_name ]) ) {
@@ -55,5 +55,5 @@ function get_features() {
     if ( function_exists( 'wc_admin_get_feature_config' ) ) {
         return apply_filters( 'woocommerce_admin_get_feature_config', wc_admin_get_feature_config() );
     }
-    return array();
+    return [];
 }

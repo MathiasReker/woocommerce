@@ -16,12 +16,12 @@ defined( 'ABSPATH' ) || exit;
 			sprintf(
 				$msg . '<p><a href="%s" class="button button-primary">' . __( 'Learn how to upgrade', 'woocommerce' ) . '</a></p>',
 				add_query_arg(
-					array(
+					[
 						'utm_source'   => 'wpphpupdatebanner',
 						'utm_medium'   => 'product',
 						'utm_campaign' => 'woocommerceplugin',
 						'utm_content'  => 'docs',
-					),
+					],
 					'https://docs.woocommerce.com/document/update-php-wordpress/'
 				)
 			)

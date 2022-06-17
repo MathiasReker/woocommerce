@@ -19,10 +19,10 @@ class ProxiesServiceProvider extends AbstractServiceProvider {
 	 *
 	 * @var array
 	 */
-	protected $provides = array(
+	protected $provides = [
 		LegacyProxy::class,
 		ActionsProxy::class,
-	);
+	];
 
 	/**
 	 * Register the classes.

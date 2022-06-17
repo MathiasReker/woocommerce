@@ -19,27 +19,27 @@ class WC_Settings_Tax_Test extends WC_Settings_Unit_Test_Case {
 	 * @testDox 'get_sections' returns the predefined sections as well as one section per existing tax class.
 	 */
 	public function test_get_sections_returns_predefined_sections_and_one_section_per_tax_class() {
-		 $tax_classes = array( 'tax_class_1', 'tax_class_2' );
+		 $tax_classes = [ 'tax_class_1', 'tax_class_2' ];
 
 		StaticMockerHack::add_method_mocks(
-			array(
-				WC_Tax::class => array(
+			[
+				WC_Tax::class => [
 					'get_tax_classes' => function() use ( $tax_classes ) {
 						return $tax_classes;
 					},
-				),
-			)
+				],
+			]
 		);
 
 		$sut      = new WC_Settings_Tax();
 		$sections = $sut->get_sections();
 
-		$expected = array(
+		$expected = [
 			''            => 'Tax options',
 			'standard'    => 'Standard rates',
 			'tax_class_1' => 'tax_class_1 rates',
 			'tax_class_2' => 'tax_class_2 rates',
-		);
+		];
 
 		$this->assertEquals( $expected, $sections );
 	}
@@ -53,8 +53,8 @@ class WC_Settings_Tax_Test extends WC_Settings_Unit_Test_Case {
 		$settings               = $sut->get_settings_for_section( '' );
 		$settings_ids_and_types = $this->get_ids_and_types( $settings );
 
-		$expected = array(
-			'tax_options'                       => array( 'title', 'sectionend' ),
+		$expected = [
+			'tax_options'                       => [ 'title', 'sectionend' ],
 			'woocommerce_prices_include_tax'    => 'radio',
 			'woocommerce_tax_based_on'          => 'select',
 			'woocommerce_shipping_tax_class'    => 'select',
@@ -64,7 +64,7 @@ class WC_Settings_Tax_Test extends WC_Settings_Unit_Test_Case {
 			'woocommerce_tax_display_cart'      => 'select',
 			'woocommerce_price_display_suffix'  => 'text',
 			'woocommerce_tax_total_display'     => 'select',
-		);
+		];
 
 		$this->assertEquals( $expected, $settings_ids_and_types );
 	}
@@ -84,17 +84,17 @@ class WC_Settings_Tax_Test extends WC_Settings_Unit_Test_Case {
 		$output_tax_rates_invoked = false;
 
 		StaticMockerHack::add_method_mocks(
-			array(
-				'WC_Tax' => array(
+			[
+				'WC_Tax' => [
 					'get_tax_class_slugs' => function() {
-						return array( 'tax_class_slug' );
+						return [ 'tax_class_slug' ];
 					},
-				),
-			)
+				],
+			]
 		);
 
 		$sut = $this->getMockBuilder( WC_Settings_Tax::class )
-					->setMethods( array( 'output_tax_rates' ) )
+					->setMethods( [ 'output_tax_rates' ] )
 					->getMock();
 
 		$sut->method( 'output_tax_rates' )->will(
@@ -120,18 +120,18 @@ class WC_Settings_Tax_Test extends WC_Settings_Unit_Test_Case {
 		$output_fields_in_admin_settings_invoked = false;
 
 		StaticMockerHack::add_method_mocks(
-			array(
-				'WC_Admin_Settings' => array(
+			[
+				'WC_Admin_Settings' => [
 					'output_fields' => function( $settings ) use ( &$output_fields_in_admin_settings_invoked ) {
 						$output_fields_in_admin_settings_invoked = true;
 					},
-				),
-				'WC_Tax'            => array(
+				],
+				'WC_Tax'            => [
 					'get_tax_class_slugs' => function() {
-						return array( 'tax_class_slug' );
+						return [ 'tax_class_slug' ];
 					},
-				),
-			)
+				],
+			]
 		);
 
 		$sut = new WC_Settings_Tax();
@@ -145,14 +145,14 @@ class WC_Settings_Tax_Test extends WC_Settings_Unit_Test_Case {
 	 * @testDox 'save_tax_classes' appropriately creates or deletes the tax classes.
 	 */
 	public function test_save_tax_classes() {
-		$created = array();
-		$deleted = array();
+		$created = [];
+		$deleted = [];
 
 		StaticMockerHack::add_method_mocks(
-			array(
-				'WC_Tax' => array(
+			[
+				'WC_Tax' => [
 					'get_tax_classes'     => function() {
-						return array( 'tax_1', 'tax_2', 'tax_3' );
+						return [ 'tax_1', 'tax_2', 'tax_3' ];
 					},
 					'delete_tax_class_by' => function( $field, $name ) use ( &$deleted ) {
 						$deleted[] = $name;
@@ -160,15 +160,15 @@ class WC_Settings_Tax_Test extends WC_Settings_Unit_Test_Case {
 					'create_tax_class'    => function( $name ) use ( &$created ) {
 						$created[] = $name;
 					},
-				),
-			)
+				],
+			]
 		);
 
 		$sut = new WC_Settings_Tax();
 
 		$sut->save_tax_classes( "tax_2\ntax_3\ntax_4" );
 
-		$this->assertEquals( array( 'tax_1' ), $deleted );
-		$this->assertEquals( array( 'tax_4' ), $created );
+		$this->assertEquals( [ 'tax_1' ], $deleted );
+		$this->assertEquals( [ 'tax_4' ], $created );
 	}
 }

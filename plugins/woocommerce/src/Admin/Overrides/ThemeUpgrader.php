@@ -24,38 +24,38 @@ class ThemeUpgrader extends \Theme_Upgrader {
 	 *
 	 * @return bool|WP_Error True if the installation was successful, false or a WP_Error object otherwise.
 	 */
-	public function install( $package, $args = array() ) {
-		$defaults    = array(
+	public function install( $package, $args = [] ) {
+		$defaults    = [
 			'clear_update_cache' => true,
-		);
+		];
 		$parsed_args = wp_parse_args( $args, $defaults );
 
 		$this->init();
 		$this->install_strings();
 
-		add_filter( 'upgrader_source_selection', array( $this, 'check_package' ) );
-		add_filter( 'upgrader_post_install', array( $this, 'check_parent_theme_filter' ), 10, 3 );
+		add_filter( 'upgrader_source_selection', [ $this, 'check_package' ] );
+		add_filter( 'upgrader_post_install', [ $this, 'check_parent_theme_filter' ], 10, 3 );
 		if ( $parsed_args['clear_update_cache'] ) {
 			// Clear cache so wp_update_themes() knows about the new theme.
 			add_action( 'upgrader_process_complete', 'wp_clean_themes_cache', 9, 0 );
 		}
 
 		$result = $this->run(
-			array(
+			[
 				'package'           => $package,
 				'destination'       => get_theme_root(),
 				'clear_destination' => false, // Do not overwrite files.
 				'clear_working'     => true,
-				'hook_extra'        => array(
+				'hook_extra'        => [
 					'type'   => 'theme',
 					'action' => 'install',
-				),
-			)
+				],
+			]
 		);
 
 		remove_action( 'upgrader_process_complete', 'wp_clean_themes_cache', 9 );
-		remove_filter( 'upgrader_source_selection', array( $this, 'check_package' ) );
-		remove_filter( 'upgrader_post_install', array( $this, 'check_parent_theme_filter' ) );
+		remove_filter( 'upgrader_source_selection', [ $this, 'check_package' ] );
+		remove_filter( 'upgrader_post_install', [ $this, 'check_parent_theme_filter' ] );
 
 		if ( $result && ! is_wp_error( $result ) ) {
 			// Refresh the Theme Update information.

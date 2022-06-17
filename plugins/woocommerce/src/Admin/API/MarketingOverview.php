@@ -41,35 +41,35 @@ class MarketingOverview extends \WC_REST_Data_Controller {
 		register_rest_route(
 			$this->namespace,
 			'/' . $this->rest_base . '/activate-plugin',
-			array(
-				array(
+			[
+				[
 					'methods'             => \WP_REST_Server::EDITABLE,
-					'callback'            => array( $this, 'activate_plugin' ),
-					'permission_callback' => array( $this, 'install_plugins_permissions_check' ),
-					'args'                => array(
-						'plugin' => array(
+					'callback'            => [ $this, 'activate_plugin' ],
+					'permission_callback' => [ $this, 'install_plugins_permissions_check' ],
+					'args'                => [
+						'plugin' => [
 							'required'          => true,
 							'type'              => 'string',
 							'validate_callback' => 'rest_validate_request_arg',
 							'sanitize_callback' => 'sanitize_title_with_dashes',
-						),
-					),
-				),
-				'schema' => array( $this, 'get_item_schema' ),
-			)
+						],
+					],
+				],
+				'schema' => [ $this, 'get_item_schema' ],
+			]
 		);
 
 		register_rest_route(
 			$this->namespace,
 			'/' . $this->rest_base . '/installed-plugins',
-			array(
-				array(
+			[
+				[
 					'methods'             => \WP_REST_Server::READABLE,
-					'callback'            => array( $this, 'get_installed_plugins' ),
-					'permission_callback' => array( $this, 'get_items_permissions_check' ),
-				),
-				'schema' => array( $this, 'get_public_item_schema' ),
-			)
+					'callback'            => [ $this, 'get_installed_plugins' ],
+					'permission_callback' => [ $this, 'get_items_permissions_check' ],
+				],
+				'schema' => [ $this, 'get_public_item_schema' ],
+			]
 		);
 	}
 
@@ -96,9 +96,9 @@ class MarketingOverview extends \WC_REST_Data_Controller {
 		// IMPORTANT - Don't return the active plugins data here.
 		// Instead we will get that data in a separate request to ensure they are loaded.
 		return rest_ensure_response(
-			array(
+			[
 				'status' => 'success',
-			)
+			]
 		);
 	}
 
@@ -111,7 +111,7 @@ class MarketingOverview extends \WC_REST_Data_Controller {
 	 */
 	public function install_plugins_permissions_check( $request ) {
 		if ( ! current_user_can( 'install_plugins' ) ) {
-			return new \WP_Error( 'woocommerce_rest_cannot_update', __( 'Sorry, you cannot manage plugins.', 'woocommerce' ), array( 'status' => rest_authorization_required_code() ) );
+			return new \WP_Error( 'woocommerce_rest_cannot_update', __( 'Sorry, you cannot manage plugins.', 'woocommerce' ), [ 'status' => rest_authorization_required_code() ] );
 		}
 
 		return true;

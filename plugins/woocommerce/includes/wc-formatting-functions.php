@@ -289,7 +289,7 @@ function wc_format_refund_total( $amount ) {
  */
 function wc_format_decimal( $number, $dp = false, $trim_zeros = false ) {
 	$locale   = localeconv();
-	$decimals = array( wc_get_price_decimal_separator(), $locale['decimal_point'], $locale['mon_decimal_point'] );
+	$decimals = [ wc_get_price_decimal_separator(), $locale['decimal_point'], $locale['mon_decimal_point'] ];
 
 	// Remove locale from string.
 	if ( ! is_float( $number ) ) {
@@ -433,17 +433,17 @@ function wc_sanitize_tooltip( $var ) {
 	return htmlspecialchars(
 		wp_kses(
 			html_entity_decode( $var ),
-			array(
-				'br'     => array(),
-				'em'     => array(),
-				'strong' => array(),
-				'small'  => array(),
-				'span'   => array(),
-				'ul'     => array(),
-				'li'     => array(),
-				'ol'     => array(),
-				'p'      => array(),
-			)
+			[
+				'br'     => [],
+				'em'     => [],
+				'strong' => [],
+				'small'  => [],
+				'span'   => [],
+				'ul'     => [],
+				'li'     => [],
+				'ol'     => [],
+				'p'      => [],
+			]
 		)
 	);
 }
@@ -560,19 +560,19 @@ function wc_get_price_decimals() {
  * }
  * @return string
  */
-function wc_price( $price, $args = array() ) {
+function wc_price( $price, $args = [] ) {
 	$args = apply_filters(
 		'wc_price_args',
 		wp_parse_args(
 			$args,
-			array(
+			[
 				'ex_tax_label'       => false,
 				'currency'           => '',
 				'decimal_separator'  => wc_get_price_decimal_separator(),
 				'thousand_separator' => wc_get_price_thousand_separator(),
 				'decimals'           => wc_get_price_decimals(),
 				'price_format'       => get_woocommerce_price_format(),
-			)
+			]
 		)
 	);
 
@@ -833,7 +833,7 @@ if ( ! function_exists( 'wc_rgb_from_hex' ) ) {
 		// Convert shorthand colors to full format, e.g. "FFF" -> "FFFFFF".
 		$color = preg_replace( '~^(.)(.)(.)$~', '$1$1$2$2$3$3', $color );
 
-		$rgb      = array();
+		$rgb      = [];
 		$rgb['R'] = hexdec( $color[0] . $color[1] );
 		$rgb['G'] = hexdec( $color[2] . $color[3] );
 		$rgb['B'] = hexdec( $color[4] . $color[5] );
@@ -1115,9 +1115,9 @@ function wc_format_product_short_description( $content ) {
 		return wpautop(
 			$markdown->transform(
 				$content,
-				array(
+				[
 					'unslash' => false,
-				)
+				]
 			)
 		);
 	}
@@ -1200,9 +1200,9 @@ if ( ! function_exists( 'wc_make_numeric_postcode' ) ) {
 	 * @return string
 	 */
 	function wc_make_numeric_postcode( $postcode ) {
-		$postcode           = str_replace( array( ' ', '-' ), '', $postcode );
+		$postcode           = str_replace( [ ' ', '-' ], '', $postcode );
 		$postcode_length    = strlen( $postcode );
-		$letters_to_numbers = array_merge( array( 0 ), range( 'A', 'Z' ) );
+		$letters_to_numbers = array_merge( [ 0 ], range( 'A', 'Z' ) );
 		$letters_to_numbers = array_flip( $letters_to_numbers );
 		$numeric_postcode   = '';
 
@@ -1442,7 +1442,7 @@ function wc_array_merge_recursive_numeric() {
  * @return string
  */
 function wc_implode_html_attributes( $raw_attributes ) {
-	$attributes = array();
+	$attributes = [];
 	foreach ( $raw_attributes as $name => $value ) {
 		$attributes[] = esc_attr( $name ) . '="' . esc_attr( $value ) . '"';
 	}
@@ -1474,19 +1474,19 @@ function wc_esc_json( $json, $html = false ) {
  * @return array Nicely formatted array with number and unit values.
  */
 function wc_parse_relative_date_option( $raw_value ) {
-	$periods = array(
+	$periods = [
 		'days'   => __( 'Day(s)', 'woocommerce' ),
 		'weeks'  => __( 'Week(s)', 'woocommerce' ),
 		'months' => __( 'Month(s)', 'woocommerce' ),
 		'years'  => __( 'Year(s)', 'woocommerce' ),
-	);
+	];
 
 	$value = wp_parse_args(
 		(array) $raw_value,
-		array(
+		[
 			'number' => '',
 			'unit'   => 'days',
-		)
+		]
 	);
 
 	$value['number'] = ! empty( $value['number'] ) ? absint( $value['number'] ) : '';

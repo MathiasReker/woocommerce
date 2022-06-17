@@ -15,37 +15,37 @@ use Automattic\WooCommerce\Admin\Features\Features;
  */
 function wc_admin_get_core_pages_to_connect() {
 	$all_reports = WC_Admin_Reports::get_reports();
-	$report_tabs = array();
+	$report_tabs = [];
 
 	foreach ( $all_reports as $report_id => $report_data ) {
 		$report_tabs[ $report_id ] = $report_data['title'];
 	}
 
-	return array(
-		'wc-addons'   => array(
+	return [
+		'wc-addons'   => [
 			'title' => __( 'Extensions', 'woocommerce' ),
-			'tabs'  => array(),
-		),
-		'wc-reports'  => array(
+			'tabs'  => [],
+		],
+		'wc-reports'  => [
 			'title' => __( 'Reports', 'woocommerce' ),
 			'tabs'  => $report_tabs,
-		),
-		'wc-settings' => array(
+		],
+		'wc-settings' => [
 			'title' => __( 'Settings', 'woocommerce' ),
-			'tabs'  => apply_filters( 'woocommerce_settings_tabs_array', array() ),
-		),
-		'wc-status'   => array(
+			'tabs'  => apply_filters( 'woocommerce_settings_tabs_array', [] ),
+		],
+		'wc-status'   => [
 			'title' => __( 'Status', 'woocommerce' ),
 			'tabs'  => apply_filters(
 				'woocommerce_admin_status_tabs',
-				array(
+				[
 					'status' => __( 'System status', 'woocommerce' ),
 					'tools'  => __( 'Tools', 'woocommerce' ),
 					'logs'   => __( 'Logs', 'woocommerce' ),
-				)
+				]
 			),
-		),
-	);
+		],
+	];
 }
 
 /**
@@ -57,26 +57,26 @@ function wc_admin_get_core_pages_to_connect() {
 function wc_admin_filter_core_page_breadcrumbs( $breadcrumbs ) {
 	$screen_id              = PageController::get_instance()->get_current_screen_id();
 	$pages_to_connect       = wc_admin_get_core_pages_to_connect();
-	$woocommerce_breadcrumb = array(
+	$woocommerce_breadcrumb = [
 		'admin.php?page=wc-admin',
 		__( 'WooCommerce', 'woocommerce' ),
-	);
+	];
 
 	foreach ( $pages_to_connect as $page_id => $page_data ) {
 		if ( preg_match( "/^woocommerce_page_{$page_id}\-/", $screen_id ) ) {
 			if ( empty( $page_data['tabs'] ) ) {
-				$new_breadcrumbs = array(
+				$new_breadcrumbs = [
 					$woocommerce_breadcrumb,
 					$page_data['title'],
-				);
+				];
 			} else {
-				$new_breadcrumbs = array(
+				$new_breadcrumbs = [
 					$woocommerce_breadcrumb,
-					array(
+					[
 						add_query_arg( 'page', $page_id, 'admin.php' ),
 						$page_data['title'],
-					),
-				);
+					],
+				];
 
 				// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 				if ( isset( $_GET['tab'] ) ) {
@@ -126,181 +126,181 @@ $posttype_list_base = 'edit.php';
 
 // WooCommerce > Orders.
 wc_admin_connect_page(
-	array(
+	[
 		'id'        => 'woocommerce-orders',
 		'screen_id' => 'edit-shop_order',
 		'title'     => __( 'Orders', 'woocommerce' ),
 		'path'      => add_query_arg( 'post_type', 'shop_order', $posttype_list_base ),
-	)
+	]
 );
 
 // WooCommerce > Orders (COT)
 wc_admin_connect_page(
-	array(
+	[
 		'id'        => 'woocommerce-custom-orders',
 		'screen_id' => 'woocommerce_page_wc-orders',
 		'title'     => __( 'Orders', 'woocommerce' ),
 		'path'      => 'admin.php?page=wc-orders',
-	)
+	]
 );
 
 // WooCommerce > Orders > Add New.
 wc_admin_connect_page(
-	array(
+	[
 		'id'        => 'woocommerce-add-order',
 		'parent'    => 'woocommerce-orders',
 		'screen_id' => 'shop_order-add',
 		'title'     => __( 'Add New', 'woocommerce' ),
-	)
+	]
 );
 
 // WooCommerce > Orders > Edit Order.
 wc_admin_connect_page(
-	array(
+	[
 		'id'        => 'woocommerce-edit-order',
 		'parent'    => 'woocommerce-orders',
 		'screen_id' => 'shop_order',
 		'title'     => __( 'Edit Order', 'woocommerce' ),
-	)
+	]
 );
 
 // WooCommerce > Coupons.
 wc_admin_connect_page(
-	array(
+	[
 		'id'        => 'woocommerce-coupons',
 		'parent'    => Features::is_enabled( 'coupons' ) ? 'woocommerce-marketing' : null,
 		'screen_id' => 'edit-shop_coupon',
 		'title'     => __( 'Coupons', 'woocommerce' ),
 		'path'      => add_query_arg( 'post_type', 'shop_coupon', $posttype_list_base ),
-	)
+	]
 );
 
 // WooCommerce > Coupons > Add New.
 wc_admin_connect_page(
-	array(
+	[
 		'id'        => 'woocommerce-add-coupon',
 		'parent'    => 'woocommerce-coupons',
 		'screen_id' => 'shop_coupon-add',
 		'title'     => __( 'Add New', 'woocommerce' ),
-	)
+	]
 );
 
 // WooCommerce > Coupons > Edit Coupon.
 wc_admin_connect_page(
-	array(
+	[
 		'id'        => 'woocommerce-edit-coupon',
 		'parent'    => 'woocommerce-coupons',
 		'screen_id' => 'shop_coupon',
 		'title'     => __( 'Edit Coupon', 'woocommerce' ),
-	)
+	]
 );
 
 // WooCommerce > Products.
 wc_admin_connect_page(
-	array(
+	[
 		'id'        => 'woocommerce-products',
 		'screen_id' => 'edit-product',
 		'title'     => __( 'Products', 'woocommerce' ),
 		'path'      => add_query_arg( 'post_type', 'product', $posttype_list_base ),
-	)
+	]
 );
 
 // WooCommerce > Products > Add New.
 wc_admin_connect_page(
-	array(
+	[
 		'id'        => 'woocommerce-add-product',
 		'parent'    => 'woocommerce-products',
 		'screen_id' => 'product-add',
 		'title'     => __( 'Add New', 'woocommerce' ),
-	)
+	]
 );
 
 // WooCommerce > Products > Edit Order.
 wc_admin_connect_page(
-	array(
+	[
 		'id'        => 'woocommerce-edit-product',
 		'parent'    => 'woocommerce-products',
 		'screen_id' => 'product',
 		'title'     => __( 'Edit Product', 'woocommerce' ),
-	)
+	]
 );
 
 // WooCommerce > Products > Import Products.
 wc_admin_connect_page(
-	array(
+	[
 		'id'        => 'woocommerce-import-products',
 		'parent'    => 'woocommerce-products',
 		'screen_id' => 'product_page_product_importer',
 		'title'     => __( 'Import Products', 'woocommerce' ),
-	)
+	]
 );
 
 // WooCommerce > Products > Export Products.
 wc_admin_connect_page(
-	array(
+	[
 		'id'        => 'woocommerce-export-products',
 		'parent'    => 'woocommerce-products',
 		'screen_id' => 'product_page_product_exporter',
 		'title'     => __( 'Export Products', 'woocommerce' ),
-	)
+	]
 );
 
 // WooCommerce > Products > Product categories.
 wc_admin_connect_page(
-	array(
+	[
 		'id'        => 'woocommerce-product-categories',
 		'parent'    => 'woocommerce-products',
 		'screen_id' => 'edit-product_cat',
 		'title'     => __( 'Product categories', 'woocommerce' ),
-	)
+	]
 );
 
 // WooCommerce > Products > Edit category.
 wc_admin_connect_page(
-	array(
+	[
 		'id'        => 'woocommerce-product-edit-category',
 		'parent'    => 'woocommerce-products',
 		'screen_id' => 'product_cat',
 		'title'     => __( 'Edit category', 'woocommerce' ),
-	)
+	]
 );
 
 // WooCommerce > Products > Product tags.
 wc_admin_connect_page(
-	array(
+	[
 		'id'        => 'woocommerce-product-tags',
 		'parent'    => 'woocommerce-products',
 		'screen_id' => 'edit-product_tag',
 		'title'     => __( 'Product tags', 'woocommerce' ),
-	)
+	]
 );
 
 // WooCommerce > Products > Edit tag.
 wc_admin_connect_page(
-	array(
+	[
 		'id'        => 'woocommerce-product-edit-tag',
 		'parent'    => 'woocommerce-products',
 		'screen_id' => 'product_tag',
 		'title'     => __( 'Edit tag', 'woocommerce' ),
-	)
+	]
 );
 
 // WooCommerce > Products > Attributes.
 wc_admin_connect_page(
-	array(
+	[
 		'id'        => 'woocommerce-product-attributes',
 		'parent'    => 'woocommerce-products',
 		'screen_id' => 'product_page_product_attributes',
 		'title'     => __( 'Attributes', 'woocommerce' ),
-	)
+	]
 );
 
 // WooCommerce > Products > Edit attribute.
 wc_admin_connect_page(
-	array(
+	[
 		'id'        => 'woocommerce-product-edit-attribute',
 		'parent'    => 'woocommerce-products',
 		'screen_id' => 'product_page_product_attribute-edit',
 		'title'     => __( 'Edit attribute', 'woocommerce' ),
-	)
+	]
 );

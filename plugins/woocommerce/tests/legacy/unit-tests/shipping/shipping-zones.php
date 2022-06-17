@@ -96,40 +96,40 @@ class WC_Tests_Shipping_Zones extends WC_Unit_Test_Case {
 	public function test_get_zone_matching_package() {
 		// Test.
 		$zone1 = WC_Shipping_Zones::get_zone_matching_package(
-			array(
-				'destination' => array(
+			[
+				'destination' => [
 					'country'  => 'GB',
 					'state'    => 'Cambs',
 					'postcode' => 'CB23 1GG',
-				),
-			)
+				],
+			]
 		);
 		$zone2 = WC_Shipping_Zones::get_zone_matching_package(
-			array(
-				'destination' => array(
+			[
+				'destination' => [
 					'country'  => 'GB',
 					'state'    => 'Cambs',
 					'postcode' => 'PE12 1BG',
-				),
-			)
+				],
+			]
 		);
 		$zone3 = WC_Shipping_Zones::get_zone_matching_package(
-			array(
-				'destination' => array(
+			[
+				'destination' => [
 					'country'  => 'US',
 					'state'    => 'CA',
 					'postcode' => '90210',
-				),
-			)
+				],
+			]
 		);
 		$zone4 = WC_Shipping_Zones::get_zone_matching_package(
-			array(
-				'destination' => array(
+			[
+				'destination' => [
 					'country'  => 'US',
 					'state'    => 'AL',
 					'postcode' => '12345',
-				),
-			)
+				],
+			]
 		);
 
 		// Assert.

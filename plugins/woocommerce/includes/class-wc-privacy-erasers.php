@@ -21,12 +21,12 @@ class WC_Privacy_Erasers {
 	 * @return array An array of personal data in name value pairs
 	 */
 	public static function customer_data_eraser( $email_address, $page ) {
-		$response = array(
+		$response = [
 			'items_removed'  => false,
 			'items_retained' => false,
-			'messages'       => array(),
+			'messages'       => [],
 			'done'           => true,
-		);
+		];
 
 		$user = get_user_by( 'email', $email_address ); // Check if user has an ID in the DB to load stored personal data.
 
@@ -42,7 +42,7 @@ class WC_Privacy_Erasers {
 
 		$props_to_erase = apply_filters(
 			'woocommerce_privacy_erase_customer_personal_data_props',
-			array(
+			[
 				'billing_first_name'  => __( 'Billing First Name', 'woocommerce' ),
 				'billing_last_name'   => __( 'Billing Last Name', 'woocommerce' ),
 				'billing_company'     => __( 'Billing Company', 'woocommerce' ),
@@ -64,14 +64,14 @@ class WC_Privacy_Erasers {
 				'shipping_state'      => __( 'Shipping State', 'woocommerce' ),
 				'shipping_country'    => __( 'Shipping Country / Region', 'woocommerce' ),
 				'shipping_phone'      => __( 'Shipping Phone Number', 'woocommerce' ),
-			),
+			],
 			$customer
 		);
 
 		foreach ( $props_to_erase as $prop => $label ) {
 			$erased = false;
 
-			if ( is_callable( array( $customer, 'get_' . $prop ) ) && is_callable( array( $customer, 'set_' . $prop ) ) ) {
+			if ( is_callable( [ $customer, 'get_' . $prop ] ) && is_callable( [ $customer, 'set_' . $prop ] ) ) {
 				$value = $customer->{"get_$prop"}( 'edit' );
 
 				if ( $value ) {
@@ -115,18 +115,18 @@ class WC_Privacy_Erasers {
 		$page            = (int) $page;
 		$user            = get_user_by( 'email', $email_address ); // Check if user has an ID in the DB to load stored personal data.
 		$erasure_enabled = wc_string_to_bool( get_option( 'woocommerce_erasure_request_removes_order_data', 'no' ) );
-		$response        = array(
+		$response        = [
 			'items_removed'  => false,
 			'items_retained' => false,
-			'messages'       => array(),
+			'messages'       => [],
 			'done'           => true,
-		);
+		];
 
-		$order_query = array(
+		$order_query = [
 			'limit'    => 10,
 			'page'     => $page,
-			'customer' => array( $email_address ),
-		);
+			'customer' => [ $email_address ],
+		];
 
 		if ( $user instanceof WP_User ) {
 			$order_query['customer'][] = (int) $user->ID;
@@ -168,18 +168,18 @@ class WC_Privacy_Erasers {
 		$page            = (int) $page;
 		$user            = get_user_by( 'email', $email_address ); // Check if user has an ID in the DB to load stored personal data.
 		$erasure_enabled = wc_string_to_bool( get_option( 'woocommerce_erasure_request_removes_download_data', 'no' ) );
-		$response        = array(
+		$response        = [
 			'items_removed'  => false,
 			'items_retained' => false,
-			'messages'       => array(),
+			'messages'       => [],
 			'done'           => true,
-		);
+		];
 
-		$downloads_query = array(
+		$downloads_query = [
 			'limit'  => -1,
 			'page'   => $page,
 			'return' => 'ids',
-		);
+		];
 
 		if ( $user instanceof WP_User ) {
 			$downloads_query['user_id'] = (int) $user->ID;
@@ -216,7 +216,7 @@ class WC_Privacy_Erasers {
 	 * @param WC_Order $order Order object.
 	 */
 	public static function remove_order_personal_data( $order ) {
-		$anonymized_data = array();
+		$anonymized_data = [];
 
 		/**
 		 * Allow extensions to remove their own personal data for this order first, so order data is still available.
@@ -235,7 +235,7 @@ class WC_Privacy_Erasers {
 		 */
 		$props_to_remove = apply_filters(
 			'woocommerce_privacy_remove_order_personal_data_props',
-			array(
+			[
 				'customer_ip_address' => 'ip',
 				'customer_user_agent' => 'text',
 				'billing_first_name'  => 'text',
@@ -261,7 +261,7 @@ class WC_Privacy_Erasers {
 				'shipping_phone'      => 'phone',
 				'customer_id'         => 'numeric_id',
 				'transaction_id'      => 'numeric_id',
-			),
+			],
 			$order
 		);
 
@@ -297,12 +297,12 @@ class WC_Privacy_Erasers {
 		// Remove meta data.
 		$meta_to_remove = apply_filters(
 			'woocommerce_privacy_remove_order_personal_data_meta',
-			array(
+			[
 				'Payer first name'     => 'text',
 				'Payer last name'      => 'text',
 				'Payer PayPal address' => 'email',
 				'Transaction ID'       => 'numeric_id',
-			)
+			]
 		);
 
 		if ( ! empty( $meta_to_remove ) && is_array( $meta_to_remove ) ) {
@@ -341,9 +341,9 @@ class WC_Privacy_Erasers {
 
 		// Delete order notes which can contain PII.
 		$notes = wc_get_order_notes(
-			array(
+			[
 				'order_id' => $order->get_id(),
-			)
+			]
 		);
 
 		foreach ( $notes as $note ) {
@@ -371,12 +371,12 @@ class WC_Privacy_Erasers {
 	 * @return array An array of personal data in name value pairs
 	 */
 	public static function customer_tokens_eraser( $email_address, $page ) {
-		$response = array(
+		$response = [
 			'items_removed'  => false,
 			'items_retained' => false,
-			'messages'       => array(),
+			'messages'       => [],
 			'done'           => true,
-		);
+		];
 
 		$user = get_user_by( 'email', $email_address ); // Check if user has an ID in the DB to load stored personal data.
 
@@ -385,9 +385,9 @@ class WC_Privacy_Erasers {
 		}
 
 		$tokens = WC_Payment_Tokens::get_tokens(
-			array(
+			[
 				'user_id' => $user->ID,
-			)
+			]
 		);
 
 		if ( empty( $tokens ) ) {

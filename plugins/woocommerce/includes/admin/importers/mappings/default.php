@@ -38,7 +38,7 @@ function wc_importer_default_english_mappings( $mappings ) {
 
 	$weight_unit    = get_option( 'woocommerce_weight_unit' );
 	$dimension_unit = get_option( 'woocommerce_dimension_unit' );
-	$new_mappings   = array(
+	$new_mappings   = [
 		'ID'                                      => 'id',
 		'Type'                                    => 'type',
 		'SKU'                                     => 'sku',
@@ -78,7 +78,7 @@ function wc_importer_default_english_mappings( $mappings ) {
 		'External URL'                            => 'product_url',
 		'Button text'                             => 'button_text',
 		'Position'                                => 'menu_order',
-	);
+	];
 
 	return array_merge( $mappings, $new_mappings );
 }
@@ -96,7 +96,7 @@ function wc_importer_default_special_english_mappings( $mappings ) {
 		return $mappings;
 	}
 
-	$new_mappings = array(
+	$new_mappings = [
 		'Attribute %d name'     => 'attributes:name',
 		'Attribute %d value(s)' => 'attributes:value',
 		'Attribute %d visible'  => 'attributes:visible',
@@ -106,7 +106,7 @@ function wc_importer_default_special_english_mappings( $mappings ) {
 		'Download %d name'      => 'downloads:name',
 		'Download %d URL'       => 'downloads:url',
 		'Meta: %s'              => 'meta:',
-	);
+	];
 
 	return array_merge( $mappings, $new_mappings );
 }

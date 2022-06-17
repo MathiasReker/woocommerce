@@ -22,7 +22,7 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 	 * @return array Array of counts.
 	 */
 	public function get_data( $query ) {
-		$report_data              = array();
+		$report_data              = [];
 		$cache_expire             = DAY_IN_SECONDS * 30;
 		$low_stock_transient_name = 'wc_admin_stock_count_lowstock';
 		$low_stock_count          = get_transient( $low_stock_transient_name );
@@ -129,8 +129,8 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 	 * @return int Product count.
 	 */
 	private function get_product_count() {
-		$query_args              = array();
-		$query_args['post_type'] = array( 'product', 'product_variation' );
+		$query_args              = [];
+		$query_args['post_type'] = [ 'product', 'product_variation' ];
 		$query                   = new \WP_Query();
 		$query->query( $query_args );
 		return intval( $query->found_posts );

@@ -42,7 +42,7 @@ abstract class WC_Log_Levels {
 	 *
 	 * @var array
 	 */
-	protected static $level_to_severity = array(
+	protected static $level_to_severity = [
 		self::EMERGENCY => 800,
 		self::ALERT     => 700,
 		self::CRITICAL  => 600,
@@ -51,7 +51,7 @@ abstract class WC_Log_Levels {
 		self::NOTICE    => 300,
 		self::INFO      => 200,
 		self::DEBUG     => 100,
-	);
+	];
 
 	/**
 	 * Severity integers mapped to level strings.
@@ -60,7 +60,7 @@ abstract class WC_Log_Levels {
 	 *
 	 * @var array
 	 */
-	protected static $severity_to_level = array(
+	protected static $severity_to_level = [
 		800 => self::EMERGENCY,
 		700 => self::ALERT,
 		600 => self::CRITICAL,
@@ -69,7 +69,7 @@ abstract class WC_Log_Levels {
 		300 => self::NOTICE,
 		200 => self::INFO,
 		100 => self::DEBUG,
-	);
+	];
 
 
 	/**

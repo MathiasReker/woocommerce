@@ -17,7 +17,7 @@ class WC_Tests_Payment_Gateway extends WC_Unit_Test_Case {
 		$wc_payment_gateways = WC_Payment_Gateways::instance();
 		$wc_payment_gateways->init();
 		foreach ( $wc_payment_gateways->payment_gateways() as $name => $gateway ) {
-			if ( in_array( $name, array( 'cod', 'bacs' ) ) ) {
+			if ( in_array( $name, [ 'cod', 'bacs' ] ) ) {
 				$gateway->enabled = 'yes';
 			}
 		}

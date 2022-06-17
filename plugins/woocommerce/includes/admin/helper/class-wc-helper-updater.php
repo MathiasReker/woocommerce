@@ -22,10 +22,10 @@ class WC_Helper_Updater {
 	 * Loads the class, runs on init.
 	 */
 	public static function load() {
-		add_action( 'pre_set_site_transient_update_plugins', array( __CLASS__, 'transient_update_plugins' ), 21, 1 );
-		add_action( 'pre_set_site_transient_update_themes', array( __CLASS__, 'transient_update_themes' ), 21, 1 );
-		add_action( 'upgrader_process_complete', array( __CLASS__, 'upgrader_process_complete' ) );
-		add_action( 'upgrader_pre_download', array( __CLASS__, 'block_expired_updates' ), 10, 2 );
+		add_action( 'pre_set_site_transient_update_plugins', [ __CLASS__, 'transient_update_plugins' ], 21, 1 );
+		add_action( 'pre_set_site_transient_update_themes', [ __CLASS__, 'transient_update_themes' ], 21, 1 );
+		add_action( 'upgrader_process_complete', [ __CLASS__, 'upgrader_process_complete' ] );
+		add_action( 'upgrader_pre_download', [ __CLASS__, 'block_expired_updates' ], 10, 2 );
 	}
 
 	/**
@@ -47,7 +47,7 @@ class WC_Helper_Updater {
 			$data     = $update_data[ $plugin['_product_id'] ];
 			$filename = $plugin['_filename'];
 
-			$item = array(
+			$item = [
 				'id'             => 'woocommerce-com-' . $plugin['_product_id'],
 				'slug'           => 'woocommerce-com-' . $data['slug'],
 				'plugin'         => $filename,
@@ -55,7 +55,7 @@ class WC_Helper_Updater {
 				'url'            => $data['url'],
 				'package'        => $data['package'],
 				'upgrade_notice' => $data['upgrade_notice'],
-			);
+			];
 
 			if ( isset( $data['requires_php'] ) ) {
 				$item['requires_php'] = $data['requires_php'];
@@ -78,7 +78,7 @@ class WC_Helper_Updater {
 		}
 
 		$translations = self::get_translations_update_data();
-		$transient->translations = array_merge( isset( $transient->translations ) ? $transient->translations : array(), $translations );
+		$transient->translations = array_merge( isset( $transient->translations ) ? $transient->translations : [], $translations );
 
 		return $transient;
 	}
@@ -102,12 +102,12 @@ class WC_Helper_Updater {
 			$data = $update_data[ $theme['_product_id'] ];
 			$slug = $theme['_stylesheet'];
 
-			$item = array(
+			$item = [
 				'theme'       => $slug,
 				'new_version' => $data['version'],
 				'url'         => $data['url'],
 				'package'     => '',
-			);
+			];
 
 			if ( self::_has_active_subscription( $theme['_product_id'] ) ) {
 				$item['package'] = $data['package'];
@@ -134,22 +134,22 @@ class WC_Helper_Updater {
 	 * @return array Update data {product_id => data}
 	 */
 	public static function get_update_data() {
-		$payload = array();
+		$payload = [];
 
 		// Scan subscriptions.
 		foreach ( WC_Helper::get_subscriptions() as $subscription ) {
-			$payload[ $subscription['product_id'] ] = array(
+			$payload[ $subscription['product_id'] ] = [
 				'product_id' => $subscription['product_id'],
 				'file_id'    => '',
-			);
+			];
 		}
 
 		// Scan local plugins which may or may not have a subscription.
 		foreach ( WC_Helper::get_local_woo_plugins() as $data ) {
 			if ( ! isset( $payload[ $data['_product_id'] ] ) ) {
-				$payload[ $data['_product_id'] ] = array(
+				$payload[ $data['_product_id'] ] = [
 					'product_id' => $data['_product_id'],
-				);
+				];
 			}
 
 			$payload[ $data['_product_id'] ]['file_id'] = $data['_file_id'];
@@ -158,9 +158,9 @@ class WC_Helper_Updater {
 		// Scan local themes.
 		foreach ( WC_Helper::get_local_woo_themes() as $data ) {
 			if ( ! isset( $payload[ $data['_product_id'] ] ) ) {
-				$payload[ $data['_product_id'] ] = array(
+				$payload[ $data['_product_id'] ] = [
 					'product_id' => $data['_product_id'],
-				);
+				];
 			}
 
 			$payload[ $data['_product_id'] ]['file_id'] = $data['_file_id'];
@@ -179,7 +179,7 @@ class WC_Helper_Updater {
 	 * @return array Update data {product_id => data}
 	 */
 	public static function get_translations_update_data() {
-		$payload = array();
+		$payload = [];
 
 		$installed_translations = wp_get_installed_translations( 'plugins' );
 
@@ -197,12 +197,12 @@ class WC_Helper_Updater {
 
 		// No locales, the respone will be empty, we can return now.
 		if ( empty( $locales ) ) {
-			return array();
+			return [];
 		}
 
 		// Scan local plugins which may or may not have a subscription.
 		$plugins                 = WC_Helper::get_local_woo_plugins();
-		$active_woo_plugins      = array_intersect( array_keys( $plugins ), get_option( 'active_plugins', array() ) );
+		$active_woo_plugins      = array_intersect( array_keys( $plugins ), get_option( 'active_plugins', [] ) );
 
 		/*
 		* Use only plugins that are subscribed to the automatic translations updates.
@@ -216,7 +216,7 @@ class WC_Helper_Updater {
 
 		// Nothing to check for, exit.
 		if ( empty( $active_for_translations ) ) {
-			return array();
+			return [];
 		}
 
 		if ( wp_doing_cron() ) {
@@ -226,39 +226,39 @@ class WC_Helper_Updater {
 			$timeout = 3 + (int) ( count( $active_for_translations ) / 10 );
 		}
 
-		$request_body = array(
+		$request_body = [
 			'locales' => $locales,
-			'plugins' => array(),
-		);
+			'plugins' => [],
+		];
 
 		foreach ( $active_for_translations as $active_plugin ) {
 			$plugin = $plugins[ $active_plugin ];
-			$request_body['plugins'][ $plugin['slug'] ] = array( 'version' => $plugin['Version'] );
+			$request_body['plugins'][ $plugin['slug'] ] = [ 'version' => $plugin['Version'] ];
 		}
 
 		$raw_response = wp_remote_post(
 			'https://translate.wordpress.com/api/translations-updates/woocommerce',
-			array(
+			[
 				'body'        => json_encode( $request_body ),
-				'headers'     => array( 'Content-Type: application/json' ),
+				'headers'     => [ 'Content-Type: application/json' ],
 				'timeout'     => $timeout,
-			)
+			]
 		);
 
 		// Something wrong happened on the translate server side.
 		$response_code = wp_remote_retrieve_response_code( $raw_response );
 		if ( 200 !== $response_code ) {
-			return array();
+			return [];
 		}
 
 		$response = json_decode( wp_remote_retrieve_body( $raw_response ), true );
 
 		// API error, api returned but something was wrong.
 		if ( array_key_exists( 'success', $response ) && false === $response['success'] ) {
-			return array();
+			return [];
 		}
 
-		$translations = array();
+		$translations = [];
 
 		foreach ( $response['data'] as $plugin_name => $language_packs ) {
 			foreach ( $language_packs as $language_pack ) {
@@ -271,7 +271,7 @@ class WC_Helper_Updater {
 						continue;
 					}
 				}
-				$translations[] = array(
+				$translations[] = [
 					'type'       => 'plugin',
 					'slug'       => $plugin_name,
 					'language'   => $language_pack['wp_locale'],
@@ -279,7 +279,7 @@ class WC_Helper_Updater {
 					'updated'    => $language_pack['last_modified'],
 					'package'    => $language_pack['package'],
 					'autoupdate' => true,
-				);
+				];
 			}
 		}
 
@@ -307,19 +307,19 @@ class WC_Helper_Updater {
 			}
 		}
 
-		$data = array(
+		$data = [
 			'hash'     => $hash,
 			'updated'  => time(),
-			'products' => array(),
-			'errors'   => array(),
-		);
+			'products' => [],
+			'errors'   => [],
+		];
 
 		$request = WC_Helper_API::post(
 			'update-check',
-			array(
-				'body'          => wp_json_encode( array( 'products' => $payload ) ),
+			[
+				'body'          => wp_json_encode( [ 'products' => $payload ] ),
 				'authenticated' => true,
-			)
+			]
 		);
 
 		if ( wp_remote_retrieve_response_code( $request ) !== 200 ) {

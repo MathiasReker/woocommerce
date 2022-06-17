@@ -22,7 +22,7 @@ class WC_Admin_Pointers {
 	 * Constructor.
 	 */
 	public function __construct() {
-		add_action( 'admin_enqueue_scripts', array( $this, 'setup_pointers_for_screen' ) );
+		add_action( 'admin_enqueue_scripts', [ $this, 'setup_pointers_for_screen' ] );
 	}
 
 	/**
@@ -83,7 +83,7 @@ class WC_Admin_Pointers {
 			wp_enqueue_script(
 				'product-tutorial',
 				WCAdminAssets::get_url( 'wp-admin-scripts/product-tour', 'js' ),
-				array_merge( array( WC_ADMIN_APP ), $script_assets ['dependencies'] ),
+				array_merge( [ WC_ADMIN_APP ], $script_assets ['dependencies'] ),
 				WC_VERSION,
 				true
 			);
@@ -91,181 +91,181 @@ class WC_Admin_Pointers {
 		}
 
 		// These pointers will chain - they will not be shown at once.
-		$pointers = array(
-			'pointers' => array(
-				'title'          => array(
+		$pointers = [
+			'pointers' => [
+				'title'          => [
 					'target'       => '#title',
 					'next'         => 'content',
-					'next_trigger' => array(
+					'next_trigger' => [
 						'target' => '#title',
 						'event'  => 'input',
-					),
-					'options'      => array(
+					],
+					'options'      => [
 						'step_name' => 'old-product-name',
 						'content'  => '<h3>' . esc_html__( 'Product name', 'woocommerce' ) . '</h3>' .
 										'<p>' . esc_html__( 'Give your new product a name here. This is a required field and will be what your customers will see in your store.', 'woocommerce' ) . '</p>',
-						'position' => array(
+						'position' => [
 							'edge'  => 'top',
 							'align' => 'left',
-						),
-					),
-				),
-				'content'        => array(
+						],
+					],
+				],
+				'content'        => [
 					'target'       => '#wp-content-editor-container',
 					'next'         => 'product-type',
-					'next_trigger' => array(),
-					'options'      => array(
+					'next_trigger' => [],
+					'options'      => [
 						'step_name' => 'old-product-description',
 						'content'  => '<h3>' . esc_html__( 'Product description', 'woocommerce' ) . '</h3>' .
 										'<p>' . esc_html__( 'This is your products main body of content. Here you should describe your product in detail.', 'woocommerce' ) . '</p>',
-						'position' => array(
+						'position' => [
 							'edge'  => 'bottom',
 							'align' => 'middle',
-						),
-					),
-				),
-				'product-type'   => array(
+						],
+					],
+				],
+				'product-type'   => [
 					'target'       => '#product-type',
 					'next'         => 'virtual',
-					'next_trigger' => array(
+					'next_trigger' => [
 						'target' => '#product-type',
 						'event'  => 'change blur click',
-					),
-					'options'      => array(
+					],
+					'options'      => [
 						'step_name' => 'old-product-type',
 						'content'  => '<h3>' . esc_html__( 'Choose product type', 'woocommerce' ) . '</h3>' .
 										'<p>' . esc_html__( 'Choose a type for this product. Simple is suitable for most physical goods and services (we recommend setting up a simple product for now).', 'woocommerce' ) . '</p>' .
 										'<p>' . esc_html__( 'Variable is for more complex products such as t-shirts with multiple sizes.', 'woocommerce' ) . '</p>' .
 										'<p>' . esc_html__( 'Grouped products are for grouping several simple products into one.', 'woocommerce' ) . '</p>' .
 										'<p>' . esc_html__( 'Finally, external products are for linking off-site.', 'woocommerce' ) . '</p>',
-						'position' => array(
+						'position' => [
 							'edge'  => 'bottom',
 							'align' => 'middle',
-						),
-					),
-				),
-				'virtual'        => array(
+						],
+					],
+				],
+				'virtual'        => [
 					'target'       => '#_virtual',
 					'next'         => 'downloadable',
-					'next_trigger' => array(
+					'next_trigger' => [
 						'target' => '#_virtual',
 						'event'  => 'change',
-					),
-					'options'      => array(
+					],
+					'options'      => [
 						'step_name' => 'old-virtual-product',
 						'content'  => '<h3>' . esc_html__( 'Virtual products', 'woocommerce' ) . '</h3>' .
 										'<p>' . esc_html__( 'Check the "Virtual" box if this is a non-physical item, for example a service, which does not need shipping.', 'woocommerce' ) . '</p>',
-						'position' => array(
+						'position' => [
 							'edge'  => 'bottom',
 							'align' => 'middle',
-						),
-					),
-				),
-				'downloadable'   => array(
+						],
+					],
+				],
+				'downloadable'   => [
 					'target'       => '#_downloadable',
 					'next'         => 'regular_price',
-					'next_trigger' => array(
+					'next_trigger' => [
 						'target' => '#_downloadable',
 						'event'  => 'change',
-					),
-					'options'      => array(
+					],
+					'options'      => [
 						'step_name' => 'old-downloadable-product',
 						'content'  => '<h3>' . esc_html__( 'Downloadable products', 'woocommerce' ) . '</h3>' .
 										'<p>' . esc_html__( 'If purchasing this product gives a customer access to a downloadable file, e.g. software, check this box.', 'woocommerce' ) . '</p>',
-						'position' => array(
+						'position' => [
 							'edge'  => 'bottom',
 							'align' => 'middle',
-						),
-					),
-				),
-				'regular_price'  => array(
+						],
+					],
+				],
+				'regular_price'  => [
 					'target'       => '#_regular_price',
 					'next'         => 'postexcerpt',
-					'next_trigger' => array(
+					'next_trigger' => [
 						'target' => '#_regular_price',
 						'event'  => 'input',
-					),
-					'options'      => array(
+					],
+					'options'      => [
 						'step_name' => 'old-product-price',
 						'content'  => '<h3>' . esc_html__( 'Prices', 'woocommerce' ) . '</h3>' .
 										'<p>' . esc_html__( 'Next you need to give your product a price.', 'woocommerce' ) . '</p>',
-						'position' => array(
+						'position' => [
 							'edge'  => 'bottom',
 							'align' => 'middle',
-						),
-					),
-				),
-				'postexcerpt'    => array(
+						],
+					],
+				],
+				'postexcerpt'    => [
 					'target'       => '#postexcerpt',
 					'next'         => 'postimagediv',
-					'next_trigger' => array(
+					'next_trigger' => [
 						'target' => '#postexcerpt',
 						'event'  => 'input',
-					),
-					'options'      => array(
+					],
+					'options'      => [
 						'step_name' => 'old-product-short-description',
 						'content'  => '<h3>' . esc_html__( 'Product short description', 'woocommerce' ) . '</h3>' .
 										'<p>' . esc_html__( 'Add a quick summary for your product here. This will appear on the product page under the product name.', 'woocommerce' ) . '</p>',
-						'position' => array(
+						'position' => [
 							'edge'  => 'bottom',
 							'align' => 'middle',
-						),
-					),
-				),
-				'postimagediv'   => array(
+						],
+					],
+				],
+				'postimagediv'   => [
 					'target'  => '#postimagediv',
 					'next'    => 'product_tag',
-					'options' => array(
+					'options' => [
 						'step_name' => 'old-product-image',
 						'content'  => '<h3>' . esc_html__( 'Product images', 'woocommerce' ) . '</h3>' .
 										'<p>' . esc_html__( "Upload or assign an image to your product here. This image will be shown in your store's catalog.", 'woocommerce' ) . '</p>',
-						'position' => array(
+						'position' => [
 							'edge'  => 'right',
 							'align' => 'middle',
-						),
-					),
-				),
-				'product_tag'    => array(
+						],
+					],
+				],
+				'product_tag'    => [
 					'target'  => '#tagsdiv-product_tag',
 					'next'    => 'product_catdiv',
-					'options' => array(
+					'options' => [
 						'step_name' => 'old-product-tags',
 						'content'  => '<h3>' . esc_html__( 'Product tags', 'woocommerce' ) . '</h3>' .
 										'<p>' . esc_html__( 'You can optionally "tag" your products here. Tags are a method of labeling your products to make them easier for customers to find.', 'woocommerce' ) . '</p>',
-						'position' => array(
+						'position' => [
 							'edge'  => 'right',
 							'align' => 'middle',
-						),
-					),
-				),
-				'product_catdiv' => array(
+						],
+					],
+				],
+				'product_catdiv' => [
 					'target'  => '#product_catdiv',
 					'next'    => 'submitdiv',
-					'options' => array(
+					'options' => [
 						'step_name' => 'old-product-categories',
 						'content'  => '<h3>' . esc_html__( 'Product categories', 'woocommerce' ) . '</h3>' .
 										'<p>' . esc_html__( 'Optionally assign categories to your products to make them easier to browse through and find in your store.', 'woocommerce' ) . '</p>',
-						'position' => array(
+						'position' => [
 							'edge'  => 'right',
 							'align' => 'middle',
-						),
-					),
-				),
-				'submitdiv'      => array(
+						],
+					],
+				],
+				'submitdiv'      => [
 					'target'  => '#submitdiv',
 					'next'    => '',
-					'options' => array(
+					'options' => [
 						'step_name' => 'old-publish',
 						'content'  => '<h3>' . esc_html__( 'Publish your product!', 'woocommerce' ) . '</h3>' .
 										'<p>' . esc_html__( 'When you are finished editing your product, hit the "Publish" button to publish your product to your store.', 'woocommerce' ) . '</p>',
-						'position' => array(
+						'position' => [
 							'edge'  => 'right',
 							'align' => 'middle',
-						),
-					),
-				),
-			),
-		);
+						],
+					],
+				],
+			],
+		];
 
 		$this->enqueue_pointers( $pointers );
 	}

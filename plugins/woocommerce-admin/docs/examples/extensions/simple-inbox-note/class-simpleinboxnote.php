@@ -72,9 +72,9 @@ class SimpleInboxNote {
 		// that is just one use. You can store other data here too. This
 		// is backed by a longtext column in the database.
 		$note->set_content_data(
-			(object) array(
+			(object) [
 				'getting_started' => true,
-			)
+			]
 		);
 
 		// Set the type of the note. Note types are defined as enum-style

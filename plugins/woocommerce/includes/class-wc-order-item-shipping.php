@@ -20,16 +20,16 @@ class WC_Order_Item_Shipping extends WC_Order_Item {
 	 * @since 3.0.0
 	 * @var array
 	 */
-	protected $extra_data = array(
+	protected $extra_data = [
 		'method_title' => '',
 		'method_id'    => '',
 		'instance_id'  => '',
 		'total'        => 0,
 		'total_tax'    => 0,
-		'taxes'        => array(
-			'total' => array(),
-		),
-	);
+		'taxes'        => [
+			'total' => [],
+		],
+	];
 
 	/**
 	 * Calculate item taxes.
@@ -38,14 +38,14 @@ class WC_Order_Item_Shipping extends WC_Order_Item {
 	 * @param  array $calculate_tax_for Location data to get taxes for. Required.
 	 * @return bool  True if taxes were calculated.
 	 */
-	public function calculate_taxes( $calculate_tax_for = array() ) {
+	public function calculate_taxes( $calculate_tax_for = [] ) {
 		if ( ! isset( $calculate_tax_for['country'], $calculate_tax_for['state'], $calculate_tax_for['postcode'], $calculate_tax_for['city'], $calculate_tax_for['tax_class'] ) ) {
 			return false;
 		}
 		if ( wc_tax_enabled() ) {
 			$tax_rates = WC_Tax::find_shipping_rates( $calculate_tax_for );
 			$taxes     = WC_Tax::calc_tax( $this->get_total(), $tax_rates, false );
-			$this->set_taxes( array( 'total' => $taxes ) );
+			$this->set_taxes( [ 'total' => $taxes ] );
 		} else {
 			$this->set_taxes( false );
 		}
@@ -132,9 +132,9 @@ class WC_Order_Item_Shipping extends WC_Order_Item {
 	 */
 	public function set_taxes( $raw_tax_data ) {
 		$raw_tax_data = maybe_unserialize( $raw_tax_data );
-		$tax_data     = array(
-			'total' => array(),
-		);
+		$tax_data     = [
+			'total' => [],
+		];
 		if ( isset( $raw_tax_data['total'] ) ) {
 			$tax_data['total'] = array_map( 'wc_format_decimal', $raw_tax_data['total'] );
 		} elseif ( ! empty( $raw_tax_data ) && is_array( $raw_tax_data ) ) {
@@ -311,7 +311,7 @@ class WC_Order_Item_Shipping extends WC_Order_Item {
 	 */
 	#[\ReturnTypeWillChange]
 	public function offsetExists( $offset ) {
-		if ( in_array( $offset, array( 'cost' ), true ) ) {
+		if ( in_array( $offset, [ 'cost' ], true ) ) {
 			return true;
 		}
 		return parent::offsetExists( $offset );

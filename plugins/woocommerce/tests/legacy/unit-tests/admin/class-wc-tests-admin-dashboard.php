@@ -16,13 +16,13 @@ class WC_Tests_Admin_Dashboard extends WC_Unit_Test_Case {
 	public function setUp(): void {
 		parent::setUp();
 		$this->user = $this->factory->user->create(
-			array(
+			[
 				'role' => 'administrator',
-			)
+			]
 		);
 
 		// Mock http request to performance endpoint.
-		add_filter( 'rest_pre_dispatch', array( $this, 'mock_rest_responses' ), 10, 3 );
+		add_filter( 'rest_pre_dispatch', [ $this, 'mock_rest_responses' ], 10, 3 );
 	}
 
 	/**
@@ -30,7 +30,7 @@ class WC_Tests_Admin_Dashboard extends WC_Unit_Test_Case {
 	 */
 	public function tearDown(): void {
 		parent::tearDown();
-		remove_filter( 'rest_pre_dispatch', array( $this, 'mock_rest_responses' ), 10 );
+		remove_filter( 'rest_pre_dispatch', [ $this, 'mock_rest_responses' ], 10 );
 	}
 
 	/**
@@ -90,28 +90,28 @@ class WC_Tests_Admin_Dashboard extends WC_Unit_Test_Case {
 	public function mock_rest_responses( $response, $rest_server, $request ) {
 		if ( '/wc-analytics/reports/performance-indicators' === $request->get_route() ) {
 			$response = new WP_REST_Response(
-				array(
+				[
 					'status' => 200,
-				)
+				]
 			);
 			$response->set_data(
-				array(
-					array(
+				[
+					[
 						'chart' => 'net_revenue',
 						'value' => 98765.0,
-					),
-				)
+					],
+				]
 			);
 		} elseif ( '/wc-analytics/reports/revenue/stats' === $request->get_route() ) {
 			$response = new WP_REST_Response(
-				array(
+				[
 					'status' => 200,
-				)
+				]
 			);
 			$response->set_data(
-				array(
-					'intervals' => array(),
-				)
+				[
+					'intervals' => [],
+				]
 			);
 		}
 

@@ -109,7 +109,7 @@ class WC_Geo_IP {
 	 *
 	 * @var array
 	 */
-	public $GEOIP_COUNTRY_CODES = array(
+	public $GEOIP_COUNTRY_CODES = [
 		'',
 		'AP',
 		'EU',
@@ -366,14 +366,14 @@ class WC_Geo_IP {
 		'BQ',
 		'SS',
 		'O1',
-	);
+	];
 
 	/**
 	 * 3 letters country codes.
 	 *
 	 * @var array
 	 */
-	public $GEOIP_COUNTRY_CODES3 = array(
+	public $GEOIP_COUNTRY_CODES3 = [
 		'',
 		'AP',
 		'EU',
@@ -630,14 +630,14 @@ class WC_Geo_IP {
 		'BES',
 		'SSD',
 		'O1',
-	);
+	];
 
 	/**
 	 * Contry names.
 	 *
 	 * @var array
 	 */
-	public $GEOIP_COUNTRY_NAMES = array(
+	public $GEOIP_COUNTRY_NAMES = [
 		'',
 		'Asia/Pacific Region',
 		'Europe',
@@ -894,14 +894,14 @@ class WC_Geo_IP {
 		'Bonaire, Saint Eustatius and Saba',
 		'South Sudan',
 		'Other',
-	);
+	];
 
 	/**
 	 * 2 letters continent codes.
 	 *
 	 * @var array
 	 */
-	public $GEOIP_CONTINENT_CODES = array(
+	public $GEOIP_CONTINENT_CODES = [
 		'--',
 		'AS',
 		'EU',
@@ -1158,7 +1158,7 @@ class WC_Geo_IP {
 		'NA',
 		'AF',
 		'--',
-	);
+	];
 
 	/** @var WC_Logger Logger instance */
 	public static $log = false;
@@ -1174,7 +1174,7 @@ class WC_Geo_IP {
 		if ( empty( self::$log ) ) {
 			self::$log = wc_get_logger();
 		}
-		self::$log->log( $level, $message, array( 'source' => 'geoip' ) );
+		self::$log->log( $level, $message, [ 'source' => 'geoip' ] );
 	}
 
 	/**
@@ -1530,7 +1530,7 @@ class WC_Geo_IP {
 
 				$buf = fread( $this->filehandle, 2 * $this->record_length );
 			}
-			$x = array( 0, 0 );
+			$x = [ 0, 0 ];
 			for ( $i = 0; $i < 2; ++$i ) {
 				for ( $j = 0; $j < $this->record_length; ++$j ) {
 					$x[ $i ] += ord( $buf[ $this->record_length * $i + $j ] ) << ( $j * 8 );
@@ -1587,7 +1587,7 @@ class WC_Geo_IP {
 				$buf = fread( $this->filehandle, 2 * $this->record_length );
 			}
 
-			$x = array( 0, 0 );
+			$x = [ 0, 0 ];
 			for ( $i = 0; $i < 2; ++$i ) {
 				for ( $j = 0; $j < $this->record_length; ++$j ) {
 					$x[ $i ] += ord( $buf[ $this->record_length * $i + $j ] ) << ( $j * 8 );

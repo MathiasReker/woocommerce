@@ -31,16 +31,16 @@ class WC_Privacy extends WC_Abstract_Privacy {
 		parent::__construct();
 
 		// Initialize data exporters and erasers.
-		add_action( 'plugins_loaded', array( $this, 'register_erasers_exporters' ) );
+		add_action( 'plugins_loaded', [ $this, 'register_erasers_exporters' ] );
 
 		// Cleanup orders daily - this is a callback on a daily cron event.
-		add_action( 'woocommerce_cleanup_personal_data', array( $this, 'queue_cleanup_personal_data' ) );
+		add_action( 'woocommerce_cleanup_personal_data', [ $this, 'queue_cleanup_personal_data' ] );
 
 		// Handles custom anonymization types not included in core.
-		add_filter( 'wp_privacy_anonymize_data', array( $this, 'anonymize_custom_data_types' ), 10, 3 );
+		add_filter( 'wp_privacy_anonymize_data', [ $this, 'anonymize_custom_data_types' ], 10, 3 );
 
 		// When this is fired, data is removed in a given order. Called from bulk actions.
-		add_action( 'woocommerce_remove_order_personal_data', array( 'WC_Privacy_Erasers', 'remove_order_personal_data' ) );
+		add_action( 'woocommerce_remove_order_personal_data', [ 'WC_Privacy_Erasers', 'remove_order_personal_data' ] );
 	}
 
 	/**
@@ -60,16 +60,16 @@ class WC_Privacy extends WC_Abstract_Privacy {
 		include_once __DIR__ . '/class-wc-privacy-exporters.php';
 
 		// This hook registers WooCommerce data exporters.
-		$this->add_exporter( 'woocommerce-customer-data', __( 'WooCommerce Customer Data', 'woocommerce' ), array( 'WC_Privacy_Exporters', 'customer_data_exporter' ) );
-		$this->add_exporter( 'woocommerce-customer-orders', __( 'WooCommerce Customer Orders', 'woocommerce' ), array( 'WC_Privacy_Exporters', 'order_data_exporter' ) );
-		$this->add_exporter( 'woocommerce-customer-downloads', __( 'WooCommerce Customer Downloads', 'woocommerce' ), array( 'WC_Privacy_Exporters', 'download_data_exporter' ) );
-		$this->add_exporter( 'woocommerce-customer-tokens', __( 'WooCommerce Customer Payment Tokens', 'woocommerce' ), array( 'WC_Privacy_Exporters', 'customer_tokens_exporter' ) );
+		$this->add_exporter( 'woocommerce-customer-data', __( 'WooCommerce Customer Data', 'woocommerce' ), [ 'WC_Privacy_Exporters', 'customer_data_exporter' ] );
+		$this->add_exporter( 'woocommerce-customer-orders', __( 'WooCommerce Customer Orders', 'woocommerce' ), [ 'WC_Privacy_Exporters', 'order_data_exporter' ] );
+		$this->add_exporter( 'woocommerce-customer-downloads', __( 'WooCommerce Customer Downloads', 'woocommerce' ), [ 'WC_Privacy_Exporters', 'download_data_exporter' ] );
+		$this->add_exporter( 'woocommerce-customer-tokens', __( 'WooCommerce Customer Payment Tokens', 'woocommerce' ), [ 'WC_Privacy_Exporters', 'customer_tokens_exporter' ] );
 
 		// This hook registers WooCommerce data erasers.
-		$this->add_eraser( 'woocommerce-customer-data', __( 'WooCommerce Customer Data', 'woocommerce' ), array( 'WC_Privacy_Erasers', 'customer_data_eraser' ) );
-		$this->add_eraser( 'woocommerce-customer-orders', __( 'WooCommerce Customer Orders', 'woocommerce' ), array( 'WC_Privacy_Erasers', 'order_data_eraser' ) );
-		$this->add_eraser( 'woocommerce-customer-downloads', __( 'WooCommerce Customer Downloads', 'woocommerce' ), array( 'WC_Privacy_Erasers', 'download_data_eraser' ) );
-		$this->add_eraser( 'woocommerce-customer-tokens', __( 'WooCommerce Customer Payment Tokens', 'woocommerce' ), array( 'WC_Privacy_Erasers', 'customer_tokens_eraser' ) );
+		$this->add_eraser( 'woocommerce-customer-data', __( 'WooCommerce Customer Data', 'woocommerce' ), [ 'WC_Privacy_Erasers', 'customer_data_eraser' ] );
+		$this->add_eraser( 'woocommerce-customer-orders', __( 'WooCommerce Customer Orders', 'woocommerce' ), [ 'WC_Privacy_Erasers', 'order_data_eraser' ] );
+		$this->add_eraser( 'woocommerce-customer-downloads', __( 'WooCommerce Customer Downloads', 'woocommerce' ), [ 'WC_Privacy_Erasers', 'download_data_eraser' ] );
+		$this->add_eraser( 'woocommerce-customer-tokens', __( 'WooCommerce Customer Payment Tokens', 'woocommerce' ), [ 'WC_Privacy_Erasers', 'customer_tokens_eraser' ] );
 	}
 
 	/**
@@ -134,11 +134,11 @@ class WC_Privacy extends WC_Abstract_Privacy {
 	 * Spawn events for order cleanup.
 	 */
 	public function queue_cleanup_personal_data() {
-		self::$background_process->push_to_queue( array( 'task' => 'trash_pending_orders' ) );
-		self::$background_process->push_to_queue( array( 'task' => 'trash_failed_orders' ) );
-		self::$background_process->push_to_queue( array( 'task' => 'trash_cancelled_orders' ) );
-		self::$background_process->push_to_queue( array( 'task' => 'anonymize_completed_orders' ) );
-		self::$background_process->push_to_queue( array( 'task' => 'delete_inactive_accounts' ) );
+		self::$background_process->push_to_queue( [ 'task' => 'trash_pending_orders' ] );
+		self::$background_process->push_to_queue( [ 'task' => 'trash_failed_orders' ] );
+		self::$background_process->push_to_queue( [ 'task' => 'trash_cancelled_orders' ] );
+		self::$background_process->push_to_queue( [ 'task' => 'anonymize_completed_orders' ] );
+		self::$background_process->push_to_queue( [ 'task' => 'delete_inactive_accounts' ] );
 		self::$background_process->save()->dispatch();
 	}
 
@@ -183,12 +183,12 @@ class WC_Privacy extends WC_Abstract_Privacy {
 		return self::trash_orders_query(
 			apply_filters(
 				'woocommerce_trash_pending_orders_query_args',
-				array(
+				[
 					'date_created' => '<' . strtotime( '-' . $option['number'] . ' ' . $option['unit'] ),
 					'limit'        => $limit, // Batches of 20.
 					'status'       => 'wc-pending',
 					'type'         => 'shop_order',
-				)
+				]
 			)
 		);
 	}
@@ -210,12 +210,12 @@ class WC_Privacy extends WC_Abstract_Privacy {
 		return self::trash_orders_query(
 			apply_filters(
 				'woocommerce_trash_failed_orders_query_args',
-				array(
+				[
 					'date_created' => '<' . strtotime( '-' . $option['number'] . ' ' . $option['unit'] ),
 					'limit'        => $limit, // Batches of 20.
 					'status'       => 'wc-failed',
 					'type'         => 'shop_order',
-				)
+				]
 			)
 		);
 	}
@@ -237,12 +237,12 @@ class WC_Privacy extends WC_Abstract_Privacy {
 		return self::trash_orders_query(
 			apply_filters(
 				'woocommerce_trash_cancelled_orders_query_args',
-				array(
+				[
 					'date_created' => '<' . strtotime( '-' . $option['number'] . ' ' . $option['unit'] ),
 					'limit'        => $limit, // Batches of 20.
 					'status'       => 'wc-cancelled',
 					'type'         => 'shop_order',
-				)
+				]
 			)
 		);
 	}
@@ -285,13 +285,13 @@ class WC_Privacy extends WC_Abstract_Privacy {
 		return self::anonymize_orders_query(
 			apply_filters(
 				'woocommerce_anonymize_completed_orders_query_args',
-				array(
+				[
 					'date_created' => '<' . strtotime( '-' . $option['number'] . ' ' . $option['unit'] ),
 					'limit'        => $limit, // Batches of 20.
 					'status'       => 'wc-completed',
 					'anonymized'   => false,
 					'type'         => 'shop_order',
-				)
+				]
 			)
 		);
 	}
@@ -345,32 +345,32 @@ class WC_Privacy extends WC_Abstract_Privacy {
 	protected static function delete_inactive_accounts_query( $timestamp, $limit = 20 ) {
 		$count      = 0;
 		$user_query = new WP_User_Query(
-			array(
+			[
 				'fields'     => 'ID',
 				'number'     => $limit,
 				'role__in'   => apply_filters(
 					'woocommerce_delete_inactive_account_roles',
-					array(
+					[
 						'Customer',
 						'Subscriber',
-					)
+					]
 				),
-				'meta_query' => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
+				'meta_query' => [ // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
 					'relation' => 'AND',
-					array(
+					[
 						'key'     => 'wc_last_active',
 						'value'   => (string) $timestamp,
 						'compare' => '<',
 						'type'    => 'NUMERIC',
-					),
-					array(
+					],
+					[
 						'key'     => 'wc_last_active',
 						'value'   => '0',
 						'compare' => '>',
 						'type'    => 'NUMERIC',
-					),
-				),
-			)
+					],
+				],
+			]
 		);
 
 		$user_ids = $user_query->get_results();

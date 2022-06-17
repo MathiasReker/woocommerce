@@ -38,14 +38,14 @@ class WC_Shipping {
 	 *
 	 * @var array
 	 */
-	public $shipping_classes = array();
+	public $shipping_classes = [];
 
 	/**
 	 * Stores packages to ship and to get quotes for.
 	 *
 	 * @var array
 	 */
-	public $packages = array();
+	public $packages = [];
 
 	/**
 	 * The single instance of the class
@@ -129,14 +129,14 @@ class WC_Shipping {
 	 */
 	public function get_shipping_method_class_names() {
 		// Unique Method ID => Method Class name.
-		$shipping_methods = array(
+		$shipping_methods = [
 			'flat_rate'     => 'WC_Shipping_Flat_Rate',
 			'free_shipping' => 'WC_Shipping_Free_Shipping',
 			'local_pickup'  => 'WC_Shipping_Local_Pickup',
-		);
+		];
 
 		// For backwards compatibility with 2.5.x we load any ENABLED legacy shipping methods here.
-		$maybe_load_legacy_methods = array( 'flat_rate', 'free_shipping', 'international_delivery', 'local_delivery', 'local_pickup' );
+		$maybe_load_legacy_methods = [ 'flat_rate', 'free_shipping', 'international_delivery', 'local_delivery', 'local_pickup' ];
 
 		foreach ( $maybe_load_legacy_methods as $method ) {
 			$options = get_option( 'woocommerce_' . $method . '_settings' );
@@ -155,7 +155,7 @@ class WC_Shipping {
 	 * @param array $package Package information.
 	 * @return WC_Shipping_Method[]
 	 */
-	public function load_shipping_methods( $package = array() ) {
+	public function load_shipping_methods( $package = [] ) {
 		if ( ! empty( $package ) ) {
 			$debug_mode             = 'yes' === get_option( 'woocommerce_shipping_debug_mode', 'no' );
 			$shipping_zone          = WC_Shipping_Zones::get_zone_matching_package( $package );
@@ -169,7 +169,7 @@ class WC_Shipping {
 				wc_add_notice( $matched_zone_notice );
 			}
 		} else {
-			$this->shipping_methods = array();
+			$this->shipping_methods = [];
 		}
 
 		// For the settings in the backend, and for non-shipping zone methods, we still need to load any registered classes here.
@@ -199,7 +199,7 @@ class WC_Shipping {
 			$method = new $method();
 		}
 		if ( is_null( $this->shipping_methods ) ) {
-			$this->shipping_methods = array();
+			$this->shipping_methods = [];
 		}
 		$this->shipping_methods[ $method->id ] = $method;
 	}
@@ -232,12 +232,12 @@ class WC_Shipping {
 		if ( empty( $this->shipping_classes ) ) {
 			$classes                = get_terms(
 				'product_shipping_class',
-				array(
+				[
 					'hide_empty' => '0',
 					'orderby'    => 'name',
-				)
+				]
 			);
-			$this->shipping_classes = ! is_wp_error( $classes ) ? $classes : array();
+			$this->shipping_classes = ! is_wp_error( $classes ) ? $classes : [];
 		}
 		return apply_filters( 'woocommerce_get_shipping_classes', $this->shipping_classes );
 	}
@@ -248,11 +248,11 @@ class WC_Shipping {
 	 * @param array $packages multi-dimensional array of cart items to calc shipping for.
 	 * @return array Array of calculated packages.
 	 */
-	public function calculate_shipping( $packages = array() ) {
-		$this->packages = array();
+	public function calculate_shipping( $packages = [] ) {
+		$this->packages = [];
 
 		if ( ! $this->enabled || empty( $packages ) ) {
-			return array();
+			return [];
 		}
 
 		// Calculate costs for passed packages.
@@ -304,13 +304,13 @@ class WC_Shipping {
 	 *
 	 * @return array|bool
 	 */
-	public function calculate_shipping_for_package( $package = array(), $package_key = 0 ) {
+	public function calculate_shipping_for_package( $package = [], $package_key = 0 ) {
 		// If shipping is disabled or the package is invalid, return false.
 		if ( ! $this->enabled || empty( $package ) ) {
 			return false;
 		}
 
-		$package['rates'] = array();
+		$package['rates'] = [];
 
 		// If the package is not shippable, e.g. trying to ship to an invalid country, do not calculate rates.
 		if ( ! $this->is_package_shippable( $package ) ) {
@@ -370,10 +370,10 @@ class WC_Shipping {
 			// Store in session to avoid recalculation.
 			WC()->session->set(
 				$wc_session_key,
-				array(
+				[
 					'package_hash' => $package_hash,
 					'rates'        => $package['rates'],
-				)
+				]
 			);
 		} else {
 			$package['rates'] = $stored_rates['rates'];
@@ -398,7 +398,7 @@ class WC_Shipping {
 	 */
 	public function reset_shipping() {
 		unset( WC()->session->chosen_shipping_methods );
-		$this->packages = array();
+		$this->packages = [];
 	}
 
 	/**

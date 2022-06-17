@@ -18,9 +18,9 @@ class AssignDefaultCategoryServiceProvider extends AbstractServiceProvider {
 	 *
 	 * @var array
 	 */
-	protected $provides = array(
+	protected $provides = [
 		AssignDefaultCategory::class,
-	);
+	];
 
 	/**
 	 * Register the classes.

@@ -51,11 +51,11 @@ class ClassThatDependsOnLegacyCodeTest extends \WC_Unit_Test_Case {
 	 */
 	public function test_function_mocks_can_be_used_via_injected_legacy_proxy_and_woocommerce_object( $method_to_use ) {
 		$this->register_legacy_proxy_function_mocks(
-			array(
+			[
 				'hexdec' => function( $hex_string ) {
 					return "Mocked hexdec for $hex_string";
 				},
-			)
+			]
 		);
 		$this->assertEquals( 'Mocked hexdec for FF', $this->sut->$method_to_use( 'hexdec', 'FF' ) );
 	}
@@ -83,13 +83,13 @@ class ClassThatDependsOnLegacyCodeTest extends \WC_Unit_Test_Case {
 	 */
 	public function test_static_mocks_can_be_used_via_injected_legacy_proxy_and_woocommerce_object( $method_to_use ) {
 		$this->register_legacy_proxy_static_mocks(
-			array(
-				DependencyClass::class => array(
+			[
+				DependencyClass::class => [
 					'concat' => function( ...$parts ) {
 						return "I'm returning concat of these parts: " . join( ' ', $parts );
 					},
-				),
-			)
+				],
+			]
 		);
 
 		$expected = "I'm returning concat of these parts: foo bar fizz";
@@ -120,7 +120,7 @@ class ClassThatDependsOnLegacyCodeTest extends \WC_Unit_Test_Case {
 	 */
 	public function test_class_mocks_can_be_used_via_injected_legacy_proxy_and_woocommerce_object( $method_to_use ) {
 		$mock = new \stdClass();
-		$this->register_legacy_proxy_class_mocks( array( \WC_Query::class => $mock ) );
+		$this->register_legacy_proxy_class_mocks( [ \WC_Query::class => $mock ] );
 		$this->assertSame( $mock, $this->sut->$method_to_use( \WC_Query::class ) );
 	}
 }

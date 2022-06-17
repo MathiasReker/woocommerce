@@ -69,7 +69,7 @@ class StoreDetails extends Task {
 	 * @return bool
 	 */
 	public function is_complete() {
-		$profiler_data = get_option( OnboardingProfile::DATA_OPTION, array() );
+		$profiler_data = get_option( OnboardingProfile::DATA_OPTION, [] );
 		return isset( $profiler_data['completed'] ) && true === $profiler_data['completed'];
 	}
 }

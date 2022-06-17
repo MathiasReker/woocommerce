@@ -20,7 +20,7 @@ class WC_Customer extends WC_Legacy_Customer {
 	 *
 	 * @var array
 	 */
-	protected $data = array(
+	protected $data = [
 		'date_created'       => null,
 		'date_modified'      => null,
 		'email'              => '',
@@ -29,7 +29,7 @@ class WC_Customer extends WC_Legacy_Customer {
 		'display_name'       => '',
 		'role'               => 'customer',
 		'username'           => '',
-		'billing'            => array(
+		'billing'            => [
 			'first_name' => '',
 			'last_name'  => '',
 			'company'    => '',
@@ -41,8 +41,8 @@ class WC_Customer extends WC_Legacy_Customer {
 			'state'      => '',
 			'email'      => '',
 			'phone'      => '',
-		),
-		'shipping'           => array(
+		],
+		'shipping'           => [
 			'first_name' => '',
 			'last_name'  => '',
 			'company'    => '',
@@ -53,9 +53,9 @@ class WC_Customer extends WC_Legacy_Customer {
 			'country'    => '',
 			'state'      => '',
 			'phone'      => '',
-		),
+		],
 		'is_paying_customer' => false,
-	);
+	];
 
 	/**
 	 * Stores a password if this needs to be changed. Write-only and hidden from _data.
@@ -137,10 +137,10 @@ class WC_Customer extends WC_Legacy_Customer {
 		if ( $this->data_store ) {
 			$this->data_store->delete(
 				$this,
-				array(
+				[
 					'force_delete' => true,
 					'reassign'     => $reassign,
-				)
+				]
 			);
 			$this->set_id( 0 );
 			return true;
@@ -186,7 +186,7 @@ class WC_Customer extends WC_Legacy_Customer {
 		$tax_based_on = get_option( 'woocommerce_tax_based_on' );
 
 		// Check shipping method at this point to see if we need special handling.
-		if ( true === apply_filters( 'woocommerce_apply_base_tax_for_local_pickup', true ) && count( array_intersect( wc_get_chosen_shipping_method_ids(), apply_filters( 'woocommerce_local_pickup_methods', array( 'legacy_local_pickup', 'local_pickup' ) ) ) ) > 0 ) {
+		if ( true === apply_filters( 'woocommerce_apply_base_tax_for_local_pickup', true ) && count( array_intersect( wc_get_chosen_shipping_method_ids(), apply_filters( 'woocommerce_local_pickup_methods', [ 'legacy_local_pickup', 'local_pickup' ] ) ) ) > 0 ) {
 			$tax_based_on = 'base';
 		}
 
@@ -207,7 +207,7 @@ class WC_Customer extends WC_Legacy_Customer {
 			$city     = $this->get_shipping_city();
 		}
 
-		return apply_filters( 'woocommerce_customer_taxable_address', array( $country, $state, $postcode, $city ) );
+		return apply_filters( 'woocommerce_customer_taxable_address', [ $country, $state, $postcode, $city ] );
 	}
 
 	/**
@@ -216,7 +216,7 @@ class WC_Customer extends WC_Legacy_Customer {
 	 * @return array Array of downloadable products
 	 */
 	public function get_downloadable_products() {
-		$downloads = array();
+		$downloads = [];
 		if ( $this->get_id() ) {
 			$downloads = wc_get_customer_available_downloads( $this->get_id() );
 		}
@@ -473,7 +473,7 @@ class WC_Customer extends WC_Legacy_Customer {
 		$prop  = 'billing';
 
 		if ( array_key_exists( $prop, $this->data ) ) {
-			$changes = array_key_exists( $prop, $this->changes ) ? $this->changes[ $prop ] : array();
+			$changes = array_key_exists( $prop, $this->changes ) ? $this->changes[ $prop ] : [];
 			$value   = array_merge( $this->data[ $prop ], $changes );
 
 			if ( 'view' === $context ) {
@@ -616,7 +616,7 @@ class WC_Customer extends WC_Legacy_Customer {
 		$prop  = 'shipping';
 
 		if ( array_key_exists( $prop, $this->data ) ) {
-			$changes = array_key_exists( $prop, $this->changes ) ? $this->changes[ $prop ] : array();
+			$changes = array_key_exists( $prop, $this->changes ) ? $this->changes[ $prop ] : [];
 			$value   = array_merge( $this->data[ $prop ], $changes );
 
 			if ( 'view' === $context ) {

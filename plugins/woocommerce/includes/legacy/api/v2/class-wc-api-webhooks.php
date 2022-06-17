@@ -29,32 +29,32 @@ class WC_API_Webhooks extends WC_API_Resource {
 	public function register_routes( $routes ) {
 
 		# GET|POST /webhooks
-		$routes[ $this->base ] = array(
-			array( array( $this, 'get_webhooks' ),     WC_API_Server::READABLE ),
-			array( array( $this, 'create_webhook' ),   WC_API_Server::CREATABLE | WC_API_Server::ACCEPT_DATA ),
-		);
+		$routes[ $this->base ] = [
+			[ [ $this, 'get_webhooks' ],     WC_API_Server::READABLE ],
+			[ [ $this, 'create_webhook' ],   WC_API_Server::CREATABLE | WC_API_Server::ACCEPT_DATA ],
+		];
 
 		# GET /webhooks/count
-		$routes[ $this->base . '/count' ] = array(
-			array( array( $this, 'get_webhooks_count' ), WC_API_Server::READABLE ),
-		);
+		$routes[ $this->base . '/count' ] = [
+			[ [ $this, 'get_webhooks_count' ], WC_API_Server::READABLE ],
+		];
 
 		# GET|PUT|DELETE /webhooks/<id>
-		$routes[ $this->base . '/(?P<id>\d+)' ] = array(
-			array( array( $this, 'get_webhook' ),  WC_API_Server::READABLE ),
-			array( array( $this, 'edit_webhook' ), WC_API_Server::EDITABLE | WC_API_Server::ACCEPT_DATA ),
-			array( array( $this, 'delete_webhook' ), WC_API_Server::DELETABLE ),
-		);
+		$routes[ $this->base . '/(?P<id>\d+)' ] = [
+			[ [ $this, 'get_webhook' ],  WC_API_Server::READABLE ],
+			[ [ $this, 'edit_webhook' ], WC_API_Server::EDITABLE | WC_API_Server::ACCEPT_DATA ],
+			[ [ $this, 'delete_webhook' ], WC_API_Server::DELETABLE ],
+		];
 
 		# GET /webhooks/<id>/deliveries
-		$routes[ $this->base . '/(?P<webhook_id>\d+)/deliveries' ] = array(
-			array( array( $this, 'get_webhook_deliveries' ), WC_API_Server::READABLE ),
-		);
+		$routes[ $this->base . '/(?P<webhook_id>\d+)/deliveries' ] = [
+			[ [ $this, 'get_webhook_deliveries' ], WC_API_Server::READABLE ],
+		];
 
 		# GET /webhooks/<webhook_id>/deliveries/<id>
-		$routes[ $this->base . '/(?P<webhook_id>\d+)/deliveries/(?P<id>\d+)' ] = array(
-			array( array( $this, 'get_webhook_delivery' ), WC_API_Server::READABLE ),
-		);
+		$routes[ $this->base . '/(?P<webhook_id>\d+)/deliveries/(?P<id>\d+)' ] = [
+			[ [ $this, 'get_webhook_delivery' ], WC_API_Server::READABLE ],
+		];
 
 		return $routes;
 	}
@@ -71,7 +71,7 @@ class WC_API_Webhooks extends WC_API_Resource {
 	 *
 	 * @return array
 	 */
-	public function get_webhooks( $fields = null, $filter = array(), $status = null, $page = 1 ) {
+	public function get_webhooks( $fields = null, $filter = [], $status = null, $page = 1 ) {
 
 		if ( ! empty( $status ) ) {
 			$filter['status'] = $status;
@@ -81,7 +81,7 @@ class WC_API_Webhooks extends WC_API_Resource {
 
 		$query = $this->query_webhooks( $filter );
 
-		$webhooks = array();
+		$webhooks = [];
 
 		foreach ( $query['results'] as $webhook_id ) {
 			$webhooks[] = current( $this->get_webhook( $webhook_id, $fields ) );
@@ -89,7 +89,7 @@ class WC_API_Webhooks extends WC_API_Resource {
 
 		$this->server->add_pagination_headers( $query['headers'] );
 
-		return array( 'webhooks' => $webhooks );
+		return [ 'webhooks' => $webhooks ];
 	}
 
 	/**
@@ -111,7 +111,7 @@ class WC_API_Webhooks extends WC_API_Resource {
 
 		$webhook = wc_get_webhook( $id );
 
-		$webhook_data = array(
+		$webhook_data = [
 			'id'           => $webhook->get_id(),
 			'name'         => $webhook->get_name(),
 			'status'       => $webhook->get_status(),
@@ -122,9 +122,9 @@ class WC_API_Webhooks extends WC_API_Resource {
 			'delivery_url' => $webhook->get_delivery_url(),
 			'created_at'   => $this->server->format_datetime( $webhook->get_date_created() ? $webhook->get_date_created()->getTimestamp() : 0, false, false ), // API gives UTC times.
 			'updated_at'   => $this->server->format_datetime( $webhook->get_date_modified() ? $webhook->get_date_modified()->getTimestamp() : 0, false, false ), // API gives UTC times.
-		);
+		];
 
-		return array( 'webhook' => apply_filters( 'woocommerce_api_webhook_response', $webhook_data, $webhook, $fields, $this ) );
+		return [ 'webhook' => apply_filters( 'woocommerce_api_webhook_response', $webhook_data, $webhook, $fields, $this ) ];
 	}
 
 	/**
@@ -137,7 +137,7 @@ class WC_API_Webhooks extends WC_API_Resource {
 	 *
 	 * @return array|WP_Error
 	 */
-	public function get_webhooks_count( $status = null, $filter = array() ) {
+	public function get_webhooks_count( $status = null, $filter = [] ) {
 		try {
 			if ( ! current_user_can( 'manage_woocommerce' ) ) {
 				throw new WC_API_Exception( 'woocommerce_api_user_cannot_read_webhooks_count', __( 'You do not have permission to read the webhooks count', 'woocommerce' ), 401 );
@@ -149,9 +149,9 @@ class WC_API_Webhooks extends WC_API_Resource {
 
 			$query = $this->query_webhooks( $filter );
 
-			return array( 'count' => $query['headers']->total );
+			return [ 'count' => $query['headers']->total ];
 		} catch ( WC_API_Exception $e ) {
-			return new WP_Error( $e->getErrorCode(), $e->getMessage(), array( 'status' => $e->getCode() ) );
+			return new WP_Error( $e->getErrorCode(), $e->getMessage(), [ 'status' => $e->getCode() ] );
 		}
 	}
 
@@ -190,14 +190,14 @@ class WC_API_Webhooks extends WC_API_Resource {
 				throw new WC_API_Exception( 'woocommerce_api_invalid_webhook_delivery_url', __( 'Webhook delivery URL must be a valid URL starting with http:// or https://', 'woocommerce' ), 400 );
 			}
 
-			$webhook_data = apply_filters( 'woocommerce_new_webhook_data', array(
+			$webhook_data = apply_filters( 'woocommerce_new_webhook_data', [
 				'post_type'     => 'shop_webhook',
 				'post_status'   => 'publish',
 				'ping_status'   => 'closed',
 				'post_author'   => get_current_user_id(),
 				'post_password' => 'webhook_' . wp_generate_password(),
 				'post_title'    => ! empty( $data['name'] ) ? $data['name'] : sprintf( __( 'Webhook created on %s', 'woocommerce' ), strftime( _x( '%b %d, %Y @ %I:%M %p', 'Webhook created on date parsed by strftime', 'woocommerce' ) ) ),
-			), $data, $this );
+			], $data, $this );
 
 			$webhook = new WC_Webhook();
 
@@ -221,7 +221,7 @@ class WC_API_Webhooks extends WC_API_Resource {
 
 		} catch ( WC_API_Exception $e ) {
 
-			return new WP_Error( $e->getErrorCode(), $e->getMessage(), array( 'status' => $e->getCode() ) );
+			return new WP_Error( $e->getErrorCode(), $e->getMessage(), [ 'status' => $e->getCode() ] );
 		}
 	}
 
@@ -300,7 +300,7 @@ class WC_API_Webhooks extends WC_API_Resource {
 
 		} catch ( WC_API_Exception $e ) {
 
-			return new WP_Error( $e->getErrorCode(), $e->getMessage(), array( 'status' => $e->getCode() ) );
+			return new WP_Error( $e->getErrorCode(), $e->getMessage(), [ 'status' => $e->getCode() ] );
 		}
 	}
 
@@ -334,7 +334,7 @@ class WC_API_Webhooks extends WC_API_Resource {
 	 * @return array
 	 */
 	private function query_webhooks( $args ) {
-		$args = $this->merge_query_args( array(), $args );
+		$args = $this->merge_query_args( [], $args );
 
 		$args['limit'] = isset( $args['posts_per_page'] ) ? intval( $args['posts_per_page'] ) : intval( get_option( 'posts_per_page' ) );
 
@@ -388,10 +388,10 @@ class WC_API_Webhooks extends WC_API_Resource {
 		$headers->is_single   = $args['limit'] > $headers->total;
 		$headers->total_pages = $results->max_num_pages;
 
-		return array(
+		return [
 			'results' => $results->webhooks,
 			'headers' => $headers,
-		);
+		];
 	}
 
 	/**
@@ -412,7 +412,7 @@ class WC_API_Webhooks extends WC_API_Resource {
 			return $webhook_id;
 		}
 
-		return array( 'webhook_deliveries' => array() );
+		return [ 'webhook_deliveries' => [] ];
 	}
 
 	/**
@@ -449,9 +449,9 @@ class WC_API_Webhooks extends WC_API_Resource {
 				throw new WC_API_Exception( 'woocommerce_api_invalid_webhook_delivery_id', __( 'Invalid webhook delivery.', 'woocommerce' ), 400 );
 			}
 
-			return array( 'webhook_delivery' => apply_filters( 'woocommerce_api_webhook_delivery_response', array(), $id, $fields, $log, $webhook_id, $this ) );
+			return [ 'webhook_delivery' => apply_filters( 'woocommerce_api_webhook_delivery_response', [], $id, $fields, $log, $webhook_id, $this ) ];
 		} catch ( WC_API_Exception $e ) {
-			return new WP_Error( $e->getErrorCode(), $e->getMessage(), array( 'status' => $e->getCode() ) );
+			return new WP_Error( $e->getErrorCode(), $e->getMessage(), [ 'status' => $e->getCode() ] );
 		}
 	}
 
@@ -473,13 +473,13 @@ class WC_API_Webhooks extends WC_API_Resource {
 
 		// Validate ID.
 		if ( empty( $id ) ) {
-			return new WP_Error( "woocommerce_api_invalid_webhook_id", sprintf( __( 'Invalid %s ID', 'woocommerce' ), $type ), array( 'status' => 404 ) );
+			return new WP_Error( "woocommerce_api_invalid_webhook_id", sprintf( __( 'Invalid %s ID', 'woocommerce' ), $type ), [ 'status' => 404 ] );
 		}
 
 		$webhook = wc_get_webhook( $id );
 
 		if ( null === $webhook ) {
-			return new WP_Error( "woocommerce_api_no_webhook_found", sprintf( __( 'No %1$s found with the ID equal to %2$s', 'woocommerce' ), 'webhook', $id ), array( 'status' => 404 ) );
+			return new WP_Error( "woocommerce_api_no_webhook_found", sprintf( __( 'No %1$s found with the ID equal to %2$s', 'woocommerce' ), 'webhook', $id ), [ 'status' => 404 ] );
 		}
 
 		// Validate permissions.
@@ -487,19 +487,19 @@ class WC_API_Webhooks extends WC_API_Resource {
 
 			case 'read':
 				if ( ! current_user_can( 'manage_woocommerce' ) ) {
-					return new WP_Error( "woocommerce_api_user_cannot_read_webhook", sprintf( __( 'You do not have permission to read this %s', 'woocommerce' ), 'webhook' ), array( 'status' => 401 ) );
+					return new WP_Error( "woocommerce_api_user_cannot_read_webhook", sprintf( __( 'You do not have permission to read this %s', 'woocommerce' ), 'webhook' ), [ 'status' => 401 ] );
 				}
 				break;
 
 			case 'edit':
 				if ( ! current_user_can( 'manage_woocommerce' ) ) {
-					return new WP_Error( "woocommerce_api_user_cannot_edit_webhook", sprintf( __( 'You do not have permission to edit this %s', 'woocommerce' ), 'webhook' ), array( 'status' => 401 ) );
+					return new WP_Error( "woocommerce_api_user_cannot_edit_webhook", sprintf( __( 'You do not have permission to edit this %s', 'woocommerce' ), 'webhook' ), [ 'status' => 401 ] );
 				}
 				break;
 
 			case 'delete':
 				if ( ! current_user_can( 'manage_woocommerce' ) ) {
-					return new WP_Error( "woocommerce_api_user_cannot_delete_webhook", sprintf( __( 'You do not have permission to delete this %s', 'woocommerce' ), 'webhook' ), array( 'status' => 401 ) );
+					return new WP_Error( "woocommerce_api_user_cannot_delete_webhook", sprintf( __( 'You do not have permission to delete this %s', 'woocommerce' ), 'webhook' ), [ 'status' => 401 ] );
 				}
 				break;
 		}

@@ -22,7 +22,7 @@ class WC_Tests_Totals extends WC_Unit_Test_Case {
 	 *
 	 * @var array
 	 */
-	protected $ids = array();
+	protected $ids = [];
 
 	/**
 	 * Setup the cart for totals calculation.
@@ -37,9 +37,9 @@ class WC_Tests_Totals extends WC_Unit_Test_Case {
 
 		WC()->cart->empty_cart();
 
-		$this->ids = array();
+		$this->ids = [];
 
-		$tax_rate    = array(
+		$tax_rate    = [
 			'tax_rate_country'  => '',
 			'tax_rate_state'    => '',
 			'tax_rate'          => '20.0000',
@@ -49,7 +49,7 @@ class WC_Tests_Totals extends WC_Unit_Test_Case {
 			'tax_rate_shipping' => '1',
 			'tax_rate_order'    => '1',
 			'tax_rate_class'    => '',
-		);
+		];
 		$tax_rate_id = WC_Tax::_insert_tax_rate( $tax_rate );
 
 		update_option( 'woocommerce_calc_taxes', 'yes' );
@@ -70,7 +70,7 @@ class WC_Tests_Totals extends WC_Unit_Test_Case {
 		}
 
 		WC_Helper_Shipping::create_simple_flat_rate();
-		WC()->session->set( 'chosen_shipping_methods', array( 'flat_rate' ) );
+		WC()->session->set( 'chosen_shipping_methods', [ 'flat_rate' ] );
 
 		$coupon = new WC_Coupon();
 		$coupon->set_code( 'test-coupon-10' );
@@ -92,15 +92,15 @@ class WC_Tests_Totals extends WC_Unit_Test_Case {
 			$product3->get_id(),
 			1,
 			$variation['variation_id'],
-			array(
+			[
 				'attribute_pa_colour' => 'red', // Set a value since this is an 'any' attribute.
 				'attribute_pa_number' => '2', // Set a value since this is an 'any' attribute.
-			)
+			]
 		);
 
 		WC()->cart->add_discount( $coupon->get_code() );
 
-		add_action( 'woocommerce_cart_calculate_fees', array( $this, 'add_cart_fees_callback' ) );
+		add_action( 'woocommerce_cart_calculate_fees', [ $this, 'add_cart_fees_callback' ] );
 	}
 
 	/**
@@ -117,9 +117,9 @@ class WC_Tests_Totals extends WC_Unit_Test_Case {
 	 */
 	public function tearDown(): void {
 		WC()->cart->empty_cart();
-		WC()->session->set( 'chosen_shipping_methods', array() );
+		WC()->session->set( 'chosen_shipping_methods', [] );
 		WC_Helper_Shipping::delete_simple_flat_rate();
-		remove_action( 'woocommerce_cart_calculate_fees', array( $this, 'add_cart_fees_callback' ) );
+		remove_action( 'woocommerce_cart_calculate_fees', [ $this, 'add_cart_fees_callback' ] );
 
 		WC()->customer->set_is_vat_exempt( false );
 
@@ -134,7 +134,7 @@ class WC_Tests_Totals extends WC_Unit_Test_Case {
 		$this->totals = new WC_Cart_Totals( WC()->cart );
 
 		$this->assertEquals(
-			array(
+			[
 				'fees_total'          => 40.00,
 				'fees_total_tax'      => 6.00,
 				'items_subtotal'      => 40.00,
@@ -146,7 +146,7 @@ class WC_Tests_Totals extends WC_Unit_Test_Case {
 				'shipping_tax_total'  => 2,
 				'discounts_total'     => 4.00,
 				'discounts_tax_total' => 0.80,
-			),
+			],
 			$this->totals->get_totals()
 		);
 	}
@@ -159,7 +159,7 @@ class WC_Tests_Totals extends WC_Unit_Test_Case {
 		$this->totals = new WC_Cart_Totals( WC()->cart );
 
 		$this->assertEquals(
-			array(
+			[
 				'fees_total'          => 40.00,
 				'fees_total_tax'      => 0.00,
 				'items_subtotal'      => 40.00,
@@ -171,7 +171,7 @@ class WC_Tests_Totals extends WC_Unit_Test_Case {
 				'shipping_tax_total'  => 0.00,
 				'discounts_total'     => 4.00,
 				'discounts_tax_total' => 0.00,
-			),
+			],
 			$this->totals->get_totals()
 		);
 	}

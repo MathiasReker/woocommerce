@@ -30,14 +30,14 @@ abstract class WC_Abstract_Privacy {
 	 *
 	 * @var array
 	 */
-	protected $exporters = array();
+	protected $exporters = [];
 
 	/**
 	 * This is a list of erasers.
 	 *
 	 * @var array
 	 */
-	protected $erasers = array();
+	protected $erasers = [];
 
 	/**
 	 * This is a priority for the wp_privacy_personal_data_exporters filter
@@ -71,10 +71,10 @@ abstract class WC_Abstract_Privacy {
 	 * Hook in events.
 	 */
 	protected function init() {
-		add_action( 'admin_init', array( $this, 'add_privacy_message' ) );
+		add_action( 'admin_init', [ $this, 'add_privacy_message' ] );
 		// We set priority to 5 to help WooCommerce's findings appear before those from extensions in exported items.
-		add_filter( 'wp_privacy_personal_data_exporters', array( $this, 'register_exporters' ), $this->export_priority );
-		add_filter( 'wp_privacy_personal_data_erasers', array( $this, 'register_erasers' ), $this->erase_priority );
+		add_filter( 'wp_privacy_personal_data_exporters', [ $this, 'register_exporters' ], $this->export_priority );
+		add_filter( 'wp_privacy_personal_data_erasers', [ $this, 'register_erasers' ], $this->erase_priority );
 	}
 
 	/**
@@ -106,7 +106,7 @@ abstract class WC_Abstract_Privacy {
 	 * @param array $exporters List of exporter callbacks.
 	 * @return array
 	 */
-	public function register_exporters( $exporters = array() ) {
+	public function register_exporters( $exporters = [] ) {
 		foreach ( $this->exporters as $id => $exporter ) {
 			$exporters[ $id ] = $exporter;
 		}
@@ -119,7 +119,7 @@ abstract class WC_Abstract_Privacy {
 	 * @param array $erasers List of eraser callbacks.
 	 * @return array
 	 */
-	public function register_erasers( $erasers = array() ) {
+	public function register_erasers( $erasers = [] ) {
 		foreach ( $this->erasers as $id => $eraser ) {
 			$erasers[ $id ] = $eraser;
 		}
@@ -136,10 +136,10 @@ abstract class WC_Abstract_Privacy {
 	 * @return array
 	 */
 	public function add_exporter( $id, $name, $callback ) {
-		$this->exporters[ $id ] = array(
+		$this->exporters[ $id ] = [
 			'exporter_friendly_name' => $name,
 			'callback'               => $callback,
-		);
+		];
 		return $this->exporters;
 	}
 
@@ -153,10 +153,10 @@ abstract class WC_Abstract_Privacy {
 	 * @return array
 	 */
 	public function add_eraser( $id, $name, $callback ) {
-		$this->erasers[ $id ] = array(
+		$this->erasers[ $id ] = [
 			'eraser_friendly_name' => $name,
 			'callback'             => $callback,
-		);
+		];
 		return $this->erasers;
 	}
 }

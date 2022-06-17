@@ -21,10 +21,10 @@ class COTMigrationServiceProvider extends AbstractServiceProvider {
 	 *
 	 * @var string[]
 	 */
-	protected $provides = array(
+	protected $provides = [
 		PostsToOrdersMigrationController::class,
 		CLIRunner::class,
-	);
+	];
 
 	/**
 	 * Use the register method to register items with the container via the

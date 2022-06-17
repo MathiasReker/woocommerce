@@ -31,13 +31,13 @@ class Query extends ReportsQuery {
 	 * @return array
 	 */
 	protected function get_default_query_vars() {
-		return array(
+		return [
 			'per_page' => get_option( 'posts_per_page' ), // not sure if this should be the default.
 			'page'     => 1,
 			'order'    => 'DESC',
 			'orderby'  => 'date_registered',
 			'fields'   => '*', // @todo Needed?
-		);
+		];
 	}
 
 	/**

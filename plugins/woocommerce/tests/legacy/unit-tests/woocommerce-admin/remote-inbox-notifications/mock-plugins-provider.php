@@ -23,7 +23,7 @@ class MockPluginsProvider implements PluginsProviderInterface {
 	 */
 	public function __construct(
 		$active_plugin_slugs,
-		$get_plugins_data = array()
+		$get_plugins_data = []
 	) {
 		$this->active_plugin_slugs = $active_plugin_slugs;
 		$this->get_plugins_data    = $get_plugins_data;

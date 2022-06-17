@@ -19,18 +19,18 @@ class WC_Template_Cache extends WC_Unit_Test_Case {
 		// Prevent template being loaded.
 		add_filter( 'wc_get_template_part', '__return_false' );
 		// Use content-* templates.
-		$templates = array();
+		$templates = [];
 		foreach ( glob( dirname( WC_PLUGIN_FILE ) . '/templates/content*.php' ) as $template ) {
 			$name                    = preg_replace( '|content-(.*)\.php|', '$1', basename( $template ) );
 			$cache_key               = sanitize_key(
 				implode(
 					'-',
-					array(
+					[
 						'template-part',
 						'content',
 						$name,
 						WC_VERSION,
-					)
+					]
 				)
 			);
 			$templates[ $cache_key ] = $template;

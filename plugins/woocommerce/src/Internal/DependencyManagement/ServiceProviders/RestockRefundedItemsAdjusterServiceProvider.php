@@ -18,9 +18,9 @@ class RestockRefundedItemsAdjusterServiceProvider extends AbstractServiceProvide
 	 *
 	 * @var array
 	 */
-	protected $provides = array(
+	protected $provides = [
 		RestockRefundedItemsAdjuster::class,
-	);
+	];
 
 	/**
 	 * Register the classes.

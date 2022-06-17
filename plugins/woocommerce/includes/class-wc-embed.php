@@ -23,16 +23,16 @@ class WC_Embed {
 	public static function init() {
 
 		// Filter all of the content that's going to be embedded.
-		add_filter( 'the_excerpt_embed', array( __CLASS__, 'the_excerpt' ), 10 );
+		add_filter( 'the_excerpt_embed', [ __CLASS__, 'the_excerpt' ], 10 );
 
 		// Make sure no comments display. Doesn't make sense for products.
-		add_action( 'embed_content_meta', array( __CLASS__, 'remove_comments_button' ), 5 );
+		add_action( 'embed_content_meta', [ __CLASS__, 'remove_comments_button' ], 5 );
 
 		// In the comments place let's display the product rating.
-		add_action( 'embed_content_meta', array( __CLASS__, 'get_ratings' ), 5 );
+		add_action( 'embed_content_meta', [ __CLASS__, 'get_ratings' ], 5 );
 
 		// Add some basic styles.
-		add_action( 'embed_head', array( __CLASS__, 'print_embed_styles' ) );
+		add_action( 'embed_head', [ __CLASS__, 'print_embed_styles' ] );
 	}
 
 	/**
@@ -96,7 +96,7 @@ class WC_Embed {
 	 */
 	public static function product_buttons() {
 		$_product = wc_get_product( get_the_ID() );
-		$buttons  = array();
+		$buttons  = [];
 		$button   = '<a href="%s" class="wp-embed-more wc-embed-button">%s</a>';
 
 		if ( $_product->is_type( 'simple' ) && $_product->is_purchasable() && $_product->is_in_stock() ) {

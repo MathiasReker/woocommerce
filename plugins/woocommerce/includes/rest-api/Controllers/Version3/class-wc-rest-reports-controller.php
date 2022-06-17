@@ -34,38 +34,38 @@ class WC_REST_Reports_Controller extends WC_REST_Reports_V2_Controller {
 	protected function get_reports() {
 		$reports = parent::get_reports();
 
-		$reports[] = array(
+		$reports[] = [
 			'slug'        => 'orders/totals',
 			'description' => __( 'Orders totals.', 'woocommerce' ),
-		);
-		$reports[] = array(
+		];
+		$reports[] = [
 			'slug'        => 'products/totals',
 			'description' => __( 'Products totals.', 'woocommerce' ),
-		);
-		$reports[] = array(
+		];
+		$reports[] = [
 			'slug'        => 'customers/totals',
 			'description' => __( 'Customers totals.', 'woocommerce' ),
-		);
-		$reports[] = array(
+		];
+		$reports[] = [
 			'slug'        => 'coupons/totals',
 			'description' => __( 'Coupons totals.', 'woocommerce' ),
-		);
-		$reports[] = array(
+		];
+		$reports[] = [
 			'slug'        => 'reviews/totals',
 			'description' => __( 'Reviews totals.', 'woocommerce' ),
-		);
-		$reports[] = array(
+		];
+		$reports[] = [
 			'slug'        => 'categories/totals',
 			'description' => __( 'Categories totals.', 'woocommerce' ),
-		);
-		$reports[] = array(
+		];
+		$reports[] = [
 			'slug'        => 'tags/totals',
 			'description' => __( 'Tags totals.', 'woocommerce' ),
-		);
-		$reports[] = array(
+		];
+		$reports[] = [
 			'slug'        => 'attributes/totals',
 			'description' => __( 'Attributes totals.', 'woocommerce' ),
-		);
+		];
 
 		return $reports;
 	}

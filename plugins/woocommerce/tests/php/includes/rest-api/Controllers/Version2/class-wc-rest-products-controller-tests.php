@@ -13,9 +13,9 @@ class WC_REST_Products_V2_Controller_Test extends WC_REST_Unit_Test_Case {
 		parent::setUp();
 		$this->endpoint = new WC_REST_Products_V2_Controller();
 		$this->user     = $this->factory->user->create(
-			array(
+			[
 				'role' => 'administrator',
-			)
+			]
 		);
 	}
 
@@ -23,7 +23,7 @@ class WC_REST_Products_V2_Controller_Test extends WC_REST_Unit_Test_Case {
 	 * Get all expected fields.
 	 */
 	public function get_expected_response_fields() {
-		return array(
+		return [
 			'id',
 			'name',
 			'slug',
@@ -89,7 +89,7 @@ class WC_REST_Products_V2_Controller_Test extends WC_REST_Unit_Test_Case {
 			'grouped_products',
 			'menu_order',
 			'meta_data',
-		);
+		];
 	}
 
 	/**

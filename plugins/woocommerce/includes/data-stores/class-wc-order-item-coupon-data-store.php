@@ -22,7 +22,7 @@ class WC_Order_Item_Coupon_Data_Store extends Abstract_WC_Order_Item_Type_Data_S
 	 * @since 3.0.0
 	 * @var array
 	 */
-	protected $internal_meta_keys = array( 'discount_amount', 'discount_amount_tax' );
+	protected $internal_meta_keys = [ 'discount_amount', 'discount_amount_tax' ];
 
 	/**
 	 * Read/populate data properties specific to this order item.
@@ -34,10 +34,10 @@ class WC_Order_Item_Coupon_Data_Store extends Abstract_WC_Order_Item_Type_Data_S
 		parent::read( $item );
 		$id = $item->get_id();
 		$item->set_props(
-			array(
+			[
 				'discount'     => get_metadata( 'order_item', $id, 'discount_amount', true ),
 				'discount_tax' => get_metadata( 'order_item', $id, 'discount_amount_tax', true ),
-			)
+			]
 		);
 		$item->set_object_read( true );
 	}
@@ -51,10 +51,10 @@ class WC_Order_Item_Coupon_Data_Store extends Abstract_WC_Order_Item_Type_Data_S
 	 */
 	public function save_item_data( &$item ) {
 		$id          = $item->get_id();
-		$save_values = array(
+		$save_values = [
 			'discount_amount'     => $item->get_discount( 'edit' ),
 			'discount_amount_tax' => $item->get_discount_tax( 'edit' ),
-		);
+		];
 		foreach ( $save_values as $key => $value ) {
 			update_metadata( 'order_item', $id, $key, $value );
 		}

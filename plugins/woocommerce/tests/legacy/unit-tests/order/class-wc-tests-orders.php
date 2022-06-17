@@ -20,7 +20,7 @@ class WC_Tests_Orders extends WC_Unit_Test_Case {
 		update_option( 'woocommerce_calc_taxes', 'yes' );
 		update_option( 'woocommerce_tax_round_at_subtotal', 'yes' );
 
-		$tax_rate = array(
+		$tax_rate = [
 			'tax_rate_country'  => '',
 			'tax_rate_state'    => '',
 			'tax_rate'          => '7.0000',
@@ -30,7 +30,7 @@ class WC_Tests_Orders extends WC_Unit_Test_Case {
 			'tax_rate_shipping' => '0',
 			'tax_rate_order'    => '1',
 			'tax_rate_class'    => 'tax_1',
-		);
+		];
 		WC_Tax::_insert_tax_rate( $tax_rate );
 
 		$product1 = WC_Helper_Product::create_simple_product();
@@ -62,7 +62,7 @@ class WC_Tests_Orders extends WC_Unit_Test_Case {
 		update_option( 'woocommerce_calc_taxes', 'yes' );
 		update_option( 'woocommerce_tax_round_at_subtotal', 'yes' );
 
-		$tax_rate = array(
+		$tax_rate = [
 			'tax_rate_country'  => '',
 			'tax_rate_state'    => '',
 			'tax_rate'          => '21.0000',
@@ -71,22 +71,22 @@ class WC_Tests_Orders extends WC_Unit_Test_Case {
 			'tax_rate_compound' => '0',
 			'tax_rate_shipping' => '1',
 			'tax_rate_order'    => '1',
-		);
+		];
 		WC_Tax::_insert_tax_rate( $tax_rate );
 
 		$product = WC_Helper_Product::create_simple_product();
 		$product->set_regular_price( 23.85 );
 		$product->save();
 
-		$shipping_rate   = new WC_Shipping_Rate( 'flat_rate_shipping', 'Flat rate shipping', '9.5', array(), 'flat_rate' );
+		$shipping_rate   = new WC_Shipping_Rate( 'flat_rate_shipping', 'Flat rate shipping', '9.5', [], 'flat_rate' );
 		$shipping_item   = new WC_Order_Item_Shipping();
 		$shipping_item->set_props(
-			array(
+			[
 				'method_title' => $shipping_rate->label,
 				'method_id'    => $shipping_rate->id,
 				'total'        => wc_format_decimal( $shipping_rate->cost ),
 				'taxes'        => $shipping_rate->taxes,
-			)
+			]
 		);
 
 		foreach ( $shipping_rate->get_meta_data() as $key => $value ) {
@@ -113,7 +113,7 @@ class WC_Tests_Orders extends WC_Unit_Test_Case {
 		update_option( 'woocommerce_calc_taxes', 'yes' );
 		update_option( 'woocommerce_tax_round_at_subtotal', 'yes' );
 
-		$tax_rate1 = array(
+		$tax_rate1 = [
 			'tax_rate_country'  => '',
 			'tax_rate_state'    => '',
 			'tax_rate'          => '7.0000',
@@ -122,10 +122,10 @@ class WC_Tests_Orders extends WC_Unit_Test_Case {
 			'tax_rate_compound' => '0',
 			'tax_rate_shipping' => '1',
 			'tax_rate_order'    => '1',
-		);
+		];
 		WC_Tax::_insert_tax_rate( $tax_rate1 );
 
-		$tax_rate2 = array(
+		$tax_rate2 = [
 			'tax_rate_country'  => '',
 			'tax_rate_state'    => '',
 			'tax_rate'          => '2.2500',
@@ -134,7 +134,7 @@ class WC_Tests_Orders extends WC_Unit_Test_Case {
 			'tax_rate_compound' => '0',
 			'tax_rate_shipping' => '1',
 			'tax_rate_order'    => '1',
-		);
+		];
 		WC_Tax::_insert_tax_rate( $tax_rate2 );
 
 		$product = WC_Helper_Product::create_simple_product();
@@ -147,7 +147,7 @@ class WC_Tests_Orders extends WC_Unit_Test_Case {
 		WC()->customer->set_is_vat_exempt( false );
 
 		WC()->cart->add_to_cart( $product->get_id(), 1 );
-		WC()->session->set( 'chosen_shipping_method', array( 'flat_rate' ) );
+		WC()->session->set( 'chosen_shipping_method', [ 'flat_rate' ] );
 		WC()->cart->calculate_totals();
 
 		$checkout = WC_Checkout::instance();

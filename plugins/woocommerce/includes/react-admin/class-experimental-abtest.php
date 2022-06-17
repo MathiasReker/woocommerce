@@ -46,7 +46,7 @@ final class Experimental_Abtest {
 	 *
 	 * @var array
 	 */
-	private $tests = array();
+	private $tests = [];
 
 	/**
 	 * ExPlat Anonymous ID.
@@ -184,12 +184,12 @@ final class Experimental_Abtest {
 		}
 
 		// Make the request to the WP.com API.
-		$args = array(
+		$args = [
 			'experiment_name'               => $test_name,
 			'anon_id'                       => rawurlencode( $this->anon_id ),
 			'woo_country_code'              => rawurlencode( get_option( 'woocommerce_default_country', 'US:CA' ) ),
 			'woo_wcadmin_install_timestamp' => rawurlencode( get_option( WCAdminHelper::WC_ADMIN_TIMESTAMP_OPTION ) ),
-		);
+		];
 
 		/**
 		 * Get additional request args.

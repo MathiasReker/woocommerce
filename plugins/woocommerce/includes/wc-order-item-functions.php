@@ -26,10 +26,10 @@ function wc_add_order_item( $order_id, $item_array ) {
 		return false;
 	}
 
-	$defaults = array(
+	$defaults = [
 		'order_item_name' => '',
 		'order_item_type' => 'line_item',
-	);
+	];
 
 	$item_array = wp_parse_args( $item_array, $defaults );
 	$data_store = WC_Data_Store::load( 'order-item' );

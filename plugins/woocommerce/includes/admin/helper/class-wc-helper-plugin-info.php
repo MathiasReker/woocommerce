@@ -21,7 +21,7 @@ class WC_Helper_Plugin_Info {
 	 * Loads the class, runs on init.
 	 */
 	public static function load() {
-		add_filter( 'plugins_api', array( __CLASS__, 'plugins_api' ), 20, 3 );
+		add_filter( 'plugins_api', [ __CLASS__, 'plugins_api' ], 20, 3 );
 	}
 
 	/**
@@ -51,7 +51,7 @@ class WC_Helper_Plugin_Info {
 
 		// Look through update data by slug.
 		$update_data = WC_Helper_Updater::get_update_data();
-		$products    = wp_list_filter( $update_data, array( 'slug' => $clean_slug ) );
+		$products    = wp_list_filter( $update_data, [ 'slug' => $clean_slug ] );
 
 		if ( empty( $products ) ) {
 			return $response;
@@ -63,12 +63,12 @@ class WC_Helper_Plugin_Info {
 		// Fetch the product information from the Helper API.
 		$request = WC_Helper_API::get(
 			add_query_arg(
-				array(
+				[
 					'product_id' => absint( $product_id ),
-				),
+				],
 				'info'
 			),
-			array( 'authenticated' => true )
+			[ 'authenticated' => true ]
 		);
 
 		$results = json_decode( wp_remote_retrieve_body( $request ), true );

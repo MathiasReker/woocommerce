@@ -52,7 +52,7 @@ if ( defined( 'WC_REMOVE_ALL_DATA' ) && true === WC_REMOVE_ALL_DATA ) {
 	if ( $wpdb->get_var( "SHOW TABLES LIKE '{$wpdb->prefix}woocommerce_attribute_taxonomies';" ) ) {
 		$wc_attributes = array_filter( (array) $wpdb->get_col( "SELECT attribute_name FROM {$wpdb->prefix}woocommerce_attribute_taxonomies;" ) );
 	} else {
-		$wc_attributes = array();
+		$wc_attributes = [];
 	}
 
 	// Tables.
@@ -78,12 +78,12 @@ if ( defined( 'WC_REMOVE_ALL_DATA' ) && true === WC_REMOVE_ALL_DATA ) {
 	// Delete terms if > WP 4.2 (term splitting was added in 4.2).
 	if ( version_compare( $wp_version, '4.2', '>=' ) ) {
 		// Delete term taxonomies.
-		foreach ( array( 'product_cat', 'product_tag', 'product_shipping_class', 'product_type' ) as $_taxonomy ) {
+		foreach ( [ 'product_cat', 'product_tag', 'product_shipping_class', 'product_type' ] as $_taxonomy ) {
 			$wpdb->delete(
 				$wpdb->term_taxonomy,
-				array(
+				[
 					'taxonomy' => $_taxonomy,
-				)
+				]
 			);
 		}
 
@@ -91,9 +91,9 @@ if ( defined( 'WC_REMOVE_ALL_DATA' ) && true === WC_REMOVE_ALL_DATA ) {
 		foreach ( $wc_attributes as $_taxonomy ) {
 			$wpdb->delete(
 				$wpdb->term_taxonomy,
-				array(
+				[
 					'taxonomy' => 'pa_' . $_taxonomy,
-				)
+				]
 			);
 		}
 

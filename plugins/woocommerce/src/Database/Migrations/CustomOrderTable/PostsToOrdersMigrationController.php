@@ -40,7 +40,7 @@ class PostsToOrdersMigrationController {
 	 */
 	public function __construct() {
 
-		$this->all_migrators   = array();
+		$this->all_migrators   = [];
 		$this->all_migrators[] = new PostToOrderTableMigrator();
 		$this->all_migrators[] = new PostToOrderAddressTableMigrator( 'billing' );
 		$this->all_migrators[] = new PostToOrderAddressTableMigrator( 'shipping' );
@@ -55,7 +55,7 @@ class PostsToOrdersMigrationController {
 	 * @return string[] Array of meta keys.
 	 */
 	public function get_migrated_meta_keys() {
-		$migrated_meta_keys = array();
+		$migrated_meta_keys = [];
 		foreach ( $this->all_migrators as $migrator ) {
 			if ( method_exists( $migrator, 'get_meta_column_config' ) ) {
 				$migrated_meta_keys = array_merge( $migrated_meta_keys, $migrator->get_meta_column_config() );
@@ -160,10 +160,10 @@ class PostsToOrdersMigrationController {
 			$exception_class = get_class( $exception );
 			$this->error_logger->error(
 				"PostsToOrdersMigrationController: when executing $query: ($exception_class) {$exception->getMessage()}, {$exception->getTraceAsString()}",
-				array(
+				[
 					'source'    => self::LOGS_SOURCE_NAME,
 					'exception' => $exception,
-				)
+				]
 			);
 			return false;
 		}
@@ -172,10 +172,10 @@ class PostsToOrdersMigrationController {
 		if ( '' !== $error ) {
 			$this->error_logger->error(
 				"PostsToOrdersMigrationController: when executing $query: $error",
-				array(
+				[
 					'source' => self::LOGS_SOURCE_NAME,
 					'error'  => $error,
-				)
+				]
 			);
 			return false;
 		}
@@ -207,22 +207,22 @@ class PostsToOrdersMigrationController {
 			$exception_class = get_class( $exception );
 			$this->error_logger->error(
 				"$migration_class_name: when processing ids $batch: ($exception_class) {$exception->getMessage()}, {$exception->getTraceAsString()}",
-				array(
+				[
 					'source'    => self::LOGS_SOURCE_NAME,
 					'ids'       => $order_post_ids,
 					'exception' => $exception,
-				)
+				]
 			);
 		}
 
 		foreach ( $errors as $error ) {
 			$this->error_logger->error(
 				"$migration_class_name: when processing ids $batch: $error",
-				array(
+				[
 					'source' => self::LOGS_SOURCE_NAME,
 					'ids'    => $order_post_ids,
 					'error'  => $error,
-				)
+				]
 			);
 		}
 
@@ -237,7 +237,7 @@ class PostsToOrdersMigrationController {
 	 * @return array Array of failed IDs along with columns.
 	 */
 	public function verify_migrated_orders( array $order_post_ids ): array {
-		$errors = array();
+		$errors = [];
 		foreach ( $this->all_migrators as $migrator ) {
 			if ( method_exists( $migrator, 'verify_migrated_data' ) ) {
 				$errors = $errors + $migrator->verify_migrated_data( $order_post_ids );
@@ -252,6 +252,6 @@ class PostsToOrdersMigrationController {
 	 * @param int $order_post_id Post ID of the order to migrate.
 	 */
 	public function migrate_order( int $order_post_id ): void {
-		$this->migrate_orders( array( $order_post_id ) );
+		$this->migrate_orders( [ $order_post_id ] );
 	}
 }

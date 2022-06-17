@@ -17,7 +17,7 @@ class WC_Tests_Order_Coupons extends WC_Unit_Test_Case {
 	 *
 	 * @var array
 	 */
-	protected $objects = array();
+	protected $objects = [];
 
 	/**
 	 * Setup an order.
@@ -46,12 +46,12 @@ class WC_Tests_Order_Coupons extends WC_Unit_Test_Case {
 		$coupon2->save();
 
 		$order = wc_create_order(
-			array(
+			[
 				'status'        => 'pending',
 				'customer_id'   => 1,
 				'customer_note' => '',
 				'total'         => '',
-			)
+			]
 		);
 
 		// Add order products.
@@ -61,49 +61,49 @@ class WC_Tests_Order_Coupons extends WC_Unit_Test_Case {
 
 		if ( get_option( 'woocommerce_prices_include_tax', 'no' ) === 'yes' && get_option( 'woocommerce_calc_taxes', 'no' ) === 'yes' ) {
 			$product_item->set_props(
-				array(
+				[
 					'product'  => $product,
 					'quantity' => 1,
 					'subtotal' => 909.09, // Ex tax 10%.
 					'total'    => 726.36,
-				)
+				]
 			);
 			$coupon_item_1->set_props(
-				array(
+				[
 					'code'         => 'test-coupon-1',
 					'discount'     => 0.91,
 					'discount_tax' => 0.09,
-				)
+				]
 			);
 			$coupon_item_2->set_props(
-				array(
+				[
 					'code'         => 'this-is-a-virtal-coupon',
 					'discount'     => 181.82,
 					'discount_tax' => 18.18,
-				)
+				]
 			);
 		} else {
 			$product_item->set_props(
-				array(
+				[
 					'product'  => $product,
 					'quantity' => 1,
 					'subtotal' => 1000, // Ex tax.
 					'total'    => 799,
-				)
+				]
 			);
 			$coupon_item_1->set_props(
-				array(
+				[
 					'code'         => 'test-coupon-1',
 					'discount'     => 1,
 					'discount_tax' => get_option( 'woocommerce_calc_taxes', 'no' ) === 'yes' ? 0.1 : 0,
-				)
+				]
 			);
 			$coupon_item_2->set_props(
-				array(
+				[
 					'code'         => 'this-is-a-virtal-coupon',
 					'discount'     => 200,
 					'discount_tax' => get_option( 'woocommerce_calc_taxes', 'no' ) === 'yes' ? 20 : 0,
-				)
+				]
 			);
 		}
 
@@ -120,7 +120,7 @@ class WC_Tests_Order_Coupons extends WC_Unit_Test_Case {
 		$this->objects['products'][]     = $product;
 		$this->objects['order']          = $order;
 		$this->objects['tax_rate_ids'][] = WC_Tax::_insert_tax_rate(
-			array(
+			[
 				'tax_rate_country'  => '',
 				'tax_rate_state'    => '',
 				'tax_rate'          => '10.0000',
@@ -130,7 +130,7 @@ class WC_Tests_Order_Coupons extends WC_Unit_Test_Case {
 				'tax_rate_shipping' => '1',
 				'tax_rate_order'    => '1',
 				'tax_rate_class'    => '',
-			)
+			]
 		);
 
 		$order->calculate_totals( true );
@@ -376,7 +376,7 @@ class WC_Tests_Order_Coupons extends WC_Unit_Test_Case {
 		update_option( 'woocommerce_tax_round_at_subtotal', 'yes' );
 
 		WC_Tax::_insert_tax_rate(
-			array(
+			[
 				'tax_rate_country'  => '',
 				'tax_rate_state'    => '',
 				'tax_rate'          => '20.0000',
@@ -386,11 +386,11 @@ class WC_Tests_Order_Coupons extends WC_Unit_Test_Case {
 				'tax_rate_shipping' => '1',
 				'tax_rate_order'    => '1',
 				'tax_rate_class'    => '',
-			)
+			]
 		);
 
 		WC_Tax::_insert_tax_rate(
-			array(
+			[
 				'tax_rate_country'  => '',
 				'tax_rate_state'    => '',
 				'tax_rate'          => '5.0000',
@@ -400,7 +400,7 @@ class WC_Tests_Order_Coupons extends WC_Unit_Test_Case {
 				'tax_rate_shipping' => '1',
 				'tax_rate_order'    => '1',
 				'tax_rate_class'    => '',
-			)
+			]
 		);
 
 		$product_1 = WC_Helper_Product::create_simple_product();
@@ -426,12 +426,12 @@ class WC_Tests_Order_Coupons extends WC_Unit_Test_Case {
 		$coupon->save();
 
 		$order = wc_create_order(
-			array(
+			[
 				'status'        => 'pending',
 				'customer_id'   => 1,
 				'customer_note' => '',
 				'total'         => '',
-			)
+			]
 		);
 
 		$order->add_product( $product_1 );

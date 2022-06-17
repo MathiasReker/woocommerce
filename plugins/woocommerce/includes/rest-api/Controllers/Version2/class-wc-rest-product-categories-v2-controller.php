@@ -39,7 +39,7 @@ class WC_REST_Product_Categories_V2_Controller extends WC_REST_Product_Categorie
 		// Get category order.
 		$menu_order = get_term_meta( $item->term_id, 'order', true );
 
-		$data = array(
+		$data = [
 			'id'          => (int) $item->term_id,
 			'name'        => $item->name,
 			'slug'        => $item->slug,
@@ -49,14 +49,14 @@ class WC_REST_Product_Categories_V2_Controller extends WC_REST_Product_Categorie
 			'image'       => null,
 			'menu_order'  => (int) $menu_order,
 			'count'       => (int) $item->count,
-		);
+		];
 
 		// Get category image.
 		$image_id = get_term_meta( $item->term_id, 'thumbnail_id', true );
 		if ( $image_id ) {
 			$attachment = get_post( $image_id );
 
-			$data['image'] = array(
+			$data['image'] = [
 				'id'                => (int) $image_id,
 				'date_created'      => wc_rest_prepare_date_response( $attachment->post_date ),
 				'date_created_gmt'  => wc_rest_prepare_date_response( $attachment->post_date_gmt ),
@@ -65,7 +65,7 @@ class WC_REST_Product_Categories_V2_Controller extends WC_REST_Product_Categorie
 				'src'               => wp_get_attachment_url( $image_id ),
 				'title'             => get_the_title( $attachment ),
 				'alt'               => get_post_meta( $image_id, '_wp_attachment_image_alt', true ),
-			);
+			];
 		}
 
 		$context = ! empty( $request['context'] ) ? $request['context'] : 'view';
@@ -94,118 +94,118 @@ class WC_REST_Product_Categories_V2_Controller extends WC_REST_Product_Categorie
 	 * @return array
 	 */
 	public function get_item_schema() {
-		$schema = array(
+		$schema = [
 			'$schema'    => 'http://json-schema.org/draft-04/schema#',
 			'title'      => $this->taxonomy,
 			'type'       => 'object',
-			'properties' => array(
-				'id'          => array(
+			'properties' => [
+				'id'          => [
 					'description' => __( 'Unique identifier for the resource.', 'woocommerce' ),
 					'type'        => 'integer',
-					'context'     => array( 'view', 'edit' ),
+					'context'     => [ 'view', 'edit' ],
 					'readonly'    => true,
-				),
-				'name'        => array(
+				],
+				'name'        => [
 					'description' => __( 'Category name.', 'woocommerce' ),
 					'type'        => 'string',
-					'context'     => array( 'view', 'edit' ),
-					'arg_options' => array(
+					'context'     => [ 'view', 'edit' ],
+					'arg_options' => [
 						'sanitize_callback' => 'sanitize_text_field',
-					),
-				),
-				'slug'        => array(
+					],
+				],
+				'slug'        => [
 					'description' => __( 'An alphanumeric identifier for the resource unique to its type.', 'woocommerce' ),
 					'type'        => 'string',
-					'context'     => array( 'view', 'edit' ),
-					'arg_options' => array(
+					'context'     => [ 'view', 'edit' ],
+					'arg_options' => [
 						'sanitize_callback' => 'sanitize_title',
-					),
-				),
-				'parent'      => array(
+					],
+				],
+				'parent'      => [
 					'description' => __( 'The ID for the parent of the resource.', 'woocommerce' ),
 					'type'        => 'integer',
-					'context'     => array( 'view', 'edit' ),
-				),
-				'description' => array(
+					'context'     => [ 'view', 'edit' ],
+				],
+				'description' => [
 					'description' => __( 'HTML description of the resource.', 'woocommerce' ),
 					'type'        => 'string',
-					'context'     => array( 'view', 'edit' ),
-					'arg_options' => array(
+					'context'     => [ 'view', 'edit' ],
+					'arg_options' => [
 						'sanitize_callback' => 'wp_filter_post_kses',
-					),
-				),
-				'display'     => array(
+					],
+				],
+				'display'     => [
 					'description' => __( 'Category archive display type.', 'woocommerce' ),
 					'type'        => 'string',
 					'default'     => 'default',
-					'enum'        => array( 'default', 'products', 'subcategories', 'both' ),
-					'context'     => array( 'view', 'edit' ),
-				),
-				'image'       => array(
+					'enum'        => [ 'default', 'products', 'subcategories', 'both' ],
+					'context'     => [ 'view', 'edit' ],
+				],
+				'image'       => [
 					'description' => __( 'Image data.', 'woocommerce' ),
 					'type'        => 'object',
-					'context'     => array( 'view', 'edit' ),
-					'properties'  => array(
-						'id'                => array(
+					'context'     => [ 'view', 'edit' ],
+					'properties'  => [
+						'id'                => [
 							'description' => __( 'Image ID.', 'woocommerce' ),
 							'type'        => 'integer',
-							'context'     => array( 'view', 'edit' ),
-						),
-						'date_created'      => array(
+							'context'     => [ 'view', 'edit' ],
+						],
+						'date_created'      => [
 							'description' => __( "The date the image was created, in the site's timezone.", 'woocommerce' ),
 							'type'        => 'date-time',
-							'context'     => array( 'view', 'edit' ),
+							'context'     => [ 'view', 'edit' ],
 							'readonly'    => true,
-						),
-						'date_created_gmt'  => array(
+						],
+						'date_created_gmt'  => [
 							'description' => __( 'The date the image was created, as GMT.', 'woocommerce' ),
 							'type'        => 'date-time',
-							'context'     => array( 'view', 'edit' ),
+							'context'     => [ 'view', 'edit' ],
 							'readonly'    => true,
-						),
-						'date_modified'     => array(
+						],
+						'date_modified'     => [
 							'description' => __( "The date the image was last modified, in the site's timezone.", 'woocommerce' ),
 							'type'        => 'date-time',
-							'context'     => array( 'view', 'edit' ),
+							'context'     => [ 'view', 'edit' ],
 							'readonly'    => true,
-						),
-						'date_modified_gmt' => array(
+						],
+						'date_modified_gmt' => [
 							'description' => __( 'The date the image was last modified, as GMT.', 'woocommerce' ),
 							'type'        => 'date-time',
-							'context'     => array( 'view', 'edit' ),
+							'context'     => [ 'view', 'edit' ],
 							'readonly'    => true,
-						),
-						'src'               => array(
+						],
+						'src'               => [
 							'description' => __( 'Image URL.', 'woocommerce' ),
 							'type'        => 'string',
 							'format'      => 'uri',
-							'context'     => array( 'view', 'edit' ),
-						),
-						'title'             => array(
+							'context'     => [ 'view', 'edit' ],
+						],
+						'title'             => [
 							'description' => __( 'Image name.', 'woocommerce' ),
 							'type'        => 'string',
-							'context'     => array( 'view', 'edit' ),
-						),
-						'alt'               => array(
+							'context'     => [ 'view', 'edit' ],
+						],
+						'alt'               => [
 							'description' => __( 'Image alternative text.', 'woocommerce' ),
 							'type'        => 'string',
-							'context'     => array( 'view', 'edit' ),
-						),
-					),
-				),
-				'menu_order'  => array(
+							'context'     => [ 'view', 'edit' ],
+						],
+					],
+				],
+				'menu_order'  => [
 					'description' => __( 'Menu order, used to custom sort the resource.', 'woocommerce' ),
 					'type'        => 'integer',
-					'context'     => array( 'view', 'edit' ),
-				),
-				'count'       => array(
+					'context'     => [ 'view', 'edit' ],
+				],
+				'count'       => [
 					'description' => __( 'Number of published products for the resource.', 'woocommerce' ),
 					'type'        => 'integer',
-					'context'     => array( 'view', 'edit' ),
+					'context'     => [ 'view', 'edit' ],
 					'readonly'    => true,
-				),
-			),
-		);
+				],
+			],
+		];
 
 		return $this->add_additional_fields_schema( $schema );
 	}

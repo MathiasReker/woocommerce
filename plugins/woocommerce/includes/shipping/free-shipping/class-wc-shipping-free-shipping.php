@@ -46,11 +46,11 @@ class WC_Shipping_Free_Shipping extends WC_Shipping_Method {
 		$this->instance_id        = absint( $instance_id );
 		$this->method_title       = __( 'Free shipping', 'woocommerce' );
 		$this->method_description = __( 'Free shipping is a special method which can be triggered with coupons and minimum spends.', 'woocommerce' );
-		$this->supports           = array(
+		$this->supports           = [
 			'shipping-zones',
 			'instance-settings',
 			'instance-settings-modal',
-		);
+		];
 
 		$this->init();
 	}
@@ -70,52 +70,52 @@ class WC_Shipping_Free_Shipping extends WC_Shipping_Method {
 		$this->ignore_discounts = $this->get_option( 'ignore_discounts' );
 
 		// Actions.
-		add_action( 'woocommerce_update_options_shipping_' . $this->id, array( $this, 'process_admin_options' ) );
-		add_action( 'admin_footer', array( 'WC_Shipping_Free_Shipping', 'enqueue_admin_js' ), 10 ); // Priority needs to be higher than wc_print_js (25).
+		add_action( 'woocommerce_update_options_shipping_' . $this->id, [ $this, 'process_admin_options' ] );
+		add_action( 'admin_footer', [ 'WC_Shipping_Free_Shipping', 'enqueue_admin_js' ], 10 ); // Priority needs to be higher than wc_print_js (25).
 	}
 
 	/**
 	 * Init form fields.
 	 */
 	public function init_form_fields() {
-		$this->instance_form_fields = array(
-			'title'            => array(
+		$this->instance_form_fields = [
+			'title'            => [
 				'title'       => __( 'Title', 'woocommerce' ),
 				'type'        => 'text',
 				'description' => __( 'This controls the title which the user sees during checkout.', 'woocommerce' ),
 				'default'     => $this->method_title,
 				'desc_tip'    => true,
-			),
-			'requires'         => array(
+			],
+			'requires'         => [
 				'title'   => __( 'Free shipping requires...', 'woocommerce' ),
 				'type'    => 'select',
 				'class'   => 'wc-enhanced-select',
 				'default' => '',
-				'options' => array(
+				'options' => [
 					''           => __( 'N/A', 'woocommerce' ),
 					'coupon'     => __( 'A valid free shipping coupon', 'woocommerce' ),
 					'min_amount' => __( 'A minimum order amount', 'woocommerce' ),
 					'either'     => __( 'A minimum order amount OR a coupon', 'woocommerce' ),
 					'both'       => __( 'A minimum order amount AND a coupon', 'woocommerce' ),
-				),
-			),
-			'min_amount'       => array(
+				],
+			],
+			'min_amount'       => [
 				'title'       => __( 'Minimum order amount', 'woocommerce' ),
 				'type'        => 'price',
 				'placeholder' => wc_format_localized_price( 0 ),
 				'description' => __( 'Users will need to spend this amount to get free shipping (if enabled above).', 'woocommerce' ),
 				'default'     => '0',
 				'desc_tip'    => true,
-			),
-			'ignore_discounts' => array(
+			],
+			'ignore_discounts' => [
 				'title'       => __( 'Coupons discounts', 'woocommerce' ),
 				'label'       => __( 'Apply minimum order rule before coupon discount', 'woocommerce' ),
 				'type'        => 'checkbox',
 				'description' => __( 'If checked, free shipping would be available based on pre-discount order amount.', 'woocommerce' ),
 				'default'     => 'no',
 				'desc_tip'    => true,
-			),
-		);
+			],
+		];
 	}
 
 	/**
@@ -137,7 +137,7 @@ class WC_Shipping_Free_Shipping extends WC_Shipping_Method {
 		$has_coupon         = false;
 		$has_met_min_amount = false;
 
-		if ( in_array( $this->requires, array( 'coupon', 'either', 'both' ), true ) ) {
+		if ( in_array( $this->requires, [ 'coupon', 'either', 'both' ], true ) ) {
 			$coupons = WC()->cart->get_coupons();
 
 			if ( $coupons ) {
@@ -150,7 +150,7 @@ class WC_Shipping_Free_Shipping extends WC_Shipping_Method {
 			}
 		}
 
-		if ( in_array( $this->requires, array( 'min_amount', 'either', 'both' ), true ) ) {
+		if ( in_array( $this->requires, [ 'min_amount', 'either', 'both' ], true ) ) {
 			$total = WC()->cart->get_displayed_subtotal();
 
 			if ( WC()->cart->display_prices_including_tax() ) {
@@ -196,14 +196,14 @@ class WC_Shipping_Free_Shipping extends WC_Shipping_Method {
 	 *
 	 * @param array $package Shipping package.
 	 */
-	public function calculate_shipping( $package = array() ) {
+	public function calculate_shipping( $package = [] ) {
 		$this->add_rate(
-			array(
+			[
 				'label'   => $this->title,
 				'cost'    => 0,
 				'taxes'   => false,
 				'package' => $package,
-			)
+			]
 		);
 	}
 

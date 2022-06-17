@@ -30,9 +30,9 @@ class WC_Admin_Tests_API_Reports_Variations extends WC_REST_Unit_Test_Case {
 		$this->product->save();
 
 		$this->user = $this->factory->user->create(
-			array(
+			[
 				'role' => 'administrator',
-			)
+			]
 		);
 	}
 
@@ -61,7 +61,7 @@ class WC_Admin_Tests_API_Reports_Variations extends WC_REST_Unit_Test_Case {
 		$variation->set_parent_id( $this->product->get_id() );
 		$variation->set_name( 'Test Variation' );
 		$variation->set_regular_price( 25 );
-		$variation->set_attributes( array( 'color' => 'green' ) );
+		$variation->set_attributes( [ 'color' => 'green' ] );
 		$variation->save();
 
 		$order = WC_Helper_Order::create_order( 1, $variation );
@@ -102,14 +102,14 @@ class WC_Admin_Tests_API_Reports_Variations extends WC_REST_Unit_Test_Case {
 		$variation->set_parent_id( $this->product->get_id() );
 		$variation->set_name( 'Test Variation' );
 		$variation->set_regular_price( 25 );
-		$variation->set_attributes( array( 'color' => 'green' ) );
+		$variation->set_attributes( [ 'color' => 'green' ] );
 		$variation->save();
 
 		$variation_2 = new WC_Product_Variation();
 		$variation_2->set_parent_id( $this->product->get_id() );
 		$variation_2->set_name( 'Test Variation 2' );
 		$variation_2->set_regular_price( 100 );
-		$variation_2->set_attributes( array( 'color' => 'red' ) );
+		$variation_2->set_attributes( [ 'color' => 'red' ] );
 		$variation_2->save();
 
 		$order = WC_Helper_Order::create_order( 1, $variation );
@@ -121,10 +121,10 @@ class WC_Admin_Tests_API_Reports_Variations extends WC_REST_Unit_Test_Case {
 
 		$request = new WP_REST_Request( 'GET', $this->endpoint );
 		$request->set_query_params(
-			array(
+			[
 				'product_includes' => $variation->get_parent_id(),
 				'variations'       => $variation->get_id() . ',' . $variation_2->get_id(),
-			)
+			]
 		);
 		$response = $this->server->dispatch( $request );
 		$reports  = $response->get_data();

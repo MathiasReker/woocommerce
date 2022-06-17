@@ -41,7 +41,7 @@ class Controller extends ReportsController implements ExportableInterface {
 	 * @return array
 	 */
 	protected function prepare_reports_query( $request ) {
-		$args                        = array();
+		$args                        = [];
 		$args['before']              = $request['before'];
 		$args['after']               = $request['after'];
 		$args['interval']            = $request['interval'];
@@ -74,10 +74,10 @@ class Controller extends ReportsController implements ExportableInterface {
 		}
 
 		if ( ! isset( $report_data->data ) || ! isset( $report_data->page_no ) || ! isset( $report_data->pages ) ) {
-			return new \WP_Error( 'woocommerce_rest_reports_categories_invalid_response', __( 'Invalid response from data store.', 'woocommerce' ), array( 'status' => 500 ) );
+			return new \WP_Error( 'woocommerce_rest_reports_categories_invalid_response', __( 'Invalid response from data store.', 'woocommerce' ), [ 'status' => 500 ] );
 		}
 
-		$out_data = array();
+		$out_data = [];
 
 		foreach ( $report_data->data as $datum ) {
 			$item       = $this->prepare_item_for_response( $datum, $request );
@@ -145,11 +145,11 @@ class Controller extends ReportsController implements ExportableInterface {
 	 * @return array
 	 */
 	protected function prepare_links( $object ) {
-		$links = array(
-			'category' => array(
+		$links = [
+			'category' => [
 				'href' => rest_url( sprintf( '/%s/products/categories/%d', $this->namespace, $object['category_id'] ) ),
-			),
-		);
+			],
+		];
 
 		return $links;
 	}
@@ -160,51 +160,51 @@ class Controller extends ReportsController implements ExportableInterface {
 	 * @return array
 	 */
 	public function get_item_schema() {
-		$schema = array(
+		$schema = [
 			'$schema'    => 'http://json-schema.org/draft-04/schema#',
 			'title'      => 'report_categories',
 			'type'       => 'object',
-			'properties' => array(
-				'category_id'    => array(
+			'properties' => [
+				'category_id'    => [
 					'description' => __( 'Category ID.', 'woocommerce' ),
 					'type'        => 'integer',
-					'context'     => array( 'view', 'edit' ),
+					'context'     => [ 'view', 'edit' ],
 					'readonly'    => true,
-				),
-				'items_sold'     => array(
+				],
+				'items_sold'     => [
 					'description' => __( 'Amount of items sold.', 'woocommerce' ),
 					'type'        => 'integer',
-					'context'     => array( 'view', 'edit' ),
+					'context'     => [ 'view', 'edit' ],
 					'readonly'    => true,
-				),
-				'net_revenue'    => array(
+				],
+				'net_revenue'    => [
 					'description' => __( 'Total sales.', 'woocommerce' ),
 					'type'        => 'number',
-					'context'     => array( 'view', 'edit' ),
+					'context'     => [ 'view', 'edit' ],
 					'readonly'    => true,
-				),
-				'orders_count'   => array(
+				],
+				'orders_count'   => [
 					'description' => __( 'Number of orders.', 'woocommerce' ),
 					'type'        => 'integer',
-					'context'     => array( 'view', 'edit' ),
+					'context'     => [ 'view', 'edit' ],
 					'readonly'    => true,
-				),
-				'products_count' => array(
+				],
+				'products_count' => [
 					'description' => __( 'Amount of products.', 'woocommerce' ),
 					'type'        => 'integer',
-					'context'     => array( 'view', 'edit' ),
+					'context'     => [ 'view', 'edit' ],
 					'readonly'    => true,
-				),
-				'extended_info'  => array(
-					'name' => array(
+				],
+				'extended_info'  => [
+					'name' => [
 						'type'        => 'string',
 						'readonly'    => true,
-						'context'     => array( 'view', 'edit' ),
+						'context'     => [ 'view', 'edit' ],
 						'description' => __( 'Category name.', 'woocommerce' ),
-					),
-				),
-			),
-		);
+					],
+				],
+			],
+		];
 
 		return $this->add_additional_fields_schema( $schema );
 	}
@@ -215,17 +215,17 @@ class Controller extends ReportsController implements ExportableInterface {
 	 * @return array
 	 */
 	public function get_collection_params() {
-		$params                  = array();
-		$params['context']       = $this->get_context_param( array( 'default' => 'view' ) );
-		$params['page']          = array(
+		$params                  = [];
+		$params['context']       = $this->get_context_param( [ 'default' => 'view' ] );
+		$params['page']          = [
 			'description'       => __( 'Current page of the collection.', 'woocommerce' ),
 			'type'              => 'integer',
 			'default'           => 1,
 			'sanitize_callback' => 'absint',
 			'validate_callback' => 'rest_validate_request_arg',
 			'minimum'           => 1,
-		);
-		$params['per_page']      = array(
+		];
+		$params['per_page']      = [
 			'description'       => __( 'Maximum number of items to be returned in result set.', 'woocommerce' ),
 			'type'              => 'integer',
 			'default'           => 10,
@@ -233,96 +233,96 @@ class Controller extends ReportsController implements ExportableInterface {
 			'maximum'           => 100,
 			'sanitize_callback' => 'absint',
 			'validate_callback' => 'rest_validate_request_arg',
-		);
-		$params['after']         = array(
+		];
+		$params['after']         = [
 			'description'       => __( 'Limit response to resources published after a given ISO8601 compliant date.', 'woocommerce' ),
 			'type'              => 'string',
 			'format'            => 'date-time',
 			'validate_callback' => 'rest_validate_request_arg',
-		);
-		$params['before']        = array(
+		];
+		$params['before']        = [
 			'description'       => __( 'Limit response to resources published before a given ISO8601 compliant date.', 'woocommerce' ),
 			'type'              => 'string',
 			'format'            => 'date-time',
 			'validate_callback' => 'rest_validate_request_arg',
-		);
-		$params['order']         = array(
+		];
+		$params['order']         = [
 			'description'       => __( 'Order sort attribute ascending or descending.', 'woocommerce' ),
 			'type'              => 'string',
 			'default'           => 'desc',
-			'enum'              => array( 'asc', 'desc' ),
+			'enum'              => [ 'asc', 'desc' ],
 			'validate_callback' => 'rest_validate_request_arg',
-		);
-		$params['orderby']       = array(
+		];
+		$params['orderby']       = [
 			'description'       => __( 'Sort collection by object attribute.', 'woocommerce' ),
 			'type'              => 'string',
 			'default'           => 'category_id',
-			'enum'              => array(
+			'enum'              => [
 				'category_id',
 				'items_sold',
 				'net_revenue',
 				'orders_count',
 				'products_count',
 				'category',
-			),
+			],
 			'validate_callback' => 'rest_validate_request_arg',
-		);
-		$params['interval']      = array(
+		];
+		$params['interval']      = [
 			'description'       => __( 'Time interval to use for buckets in the returned data.', 'woocommerce' ),
 			'type'              => 'string',
 			'default'           => 'week',
-			'enum'              => array(
+			'enum'              => [
 				'hour',
 				'day',
 				'week',
 				'month',
 				'quarter',
 				'year',
-			),
+			],
 			'validate_callback' => 'rest_validate_request_arg',
-		);
-		$params['status_is']     = array(
+		];
+		$params['status_is']     = [
 			'description'       => __( 'Limit result set to items that have the specified order status.', 'woocommerce' ),
 			'type'              => 'array',
 			'sanitize_callback' => 'wp_parse_slug_list',
 			'validate_callback' => 'rest_validate_request_arg',
-			'items'             => array(
+			'items'             => [
 				'enum' => self::get_order_statuses(),
 				'type' => 'string',
-			),
-		);
-		$params['status_is_not'] = array(
+			],
+		];
+		$params['status_is_not'] = [
 			'description'       => __( 'Limit result set to items that don\'t have the specified order status.', 'woocommerce' ),
 			'type'              => 'array',
 			'sanitize_callback' => 'wp_parse_slug_list',
 			'validate_callback' => 'rest_validate_request_arg',
-			'items'             => array(
+			'items'             => [
 				'enum' => self::get_order_statuses(),
 				'type' => 'string',
-			),
-		);
-		$params['categories']    = array(
+			],
+		];
+		$params['categories']    = [
 			'description'       => __( 'Limit result set to all items that have the specified term assigned in the categories taxonomy.', 'woocommerce' ),
 			'type'              => 'array',
 			'sanitize_callback' => 'wp_parse_id_list',
 			'validate_callback' => 'rest_validate_request_arg',
-			'items'             => array(
+			'items'             => [
 				'type' => 'integer',
-			),
-		);
-		$params['extended_info'] = array(
+			],
+		];
+		$params['extended_info'] = [
 			'description'       => __( 'Add additional piece of info about each category to the report.', 'woocommerce' ),
 			'type'              => 'boolean',
 			'default'           => false,
 			'sanitize_callback' => 'wc_string_to_bool',
 			'validate_callback' => 'rest_validate_request_arg',
-		);
-		$params['force_cache_refresh'] = array(
+		];
+		$params['force_cache_refresh'] = [
 			'description'       => __( 'Force retrieval of fresh data instead of from the cache.', 'woocommerce' ),
 			'type'              => 'boolean',
 			'sanitize_callback' => 'wp_validate_boolean',
 			'validate_callback' => 'rest_validate_request_arg',
-		);
+		];
 
 		return $params;
 	}
@@ -333,13 +333,13 @@ class Controller extends ReportsController implements ExportableInterface {
 	 * @return array Key value pair of Column ID => Label.
 	 */
 	public function get_export_columns() {
-		$export_columns = array(
+		$export_columns = [
 			'category'       => __( 'Category', 'woocommerce' ),
 			'items_sold'     => __( 'Items sold', 'woocommerce' ),
 			'net_revenue'    => __( 'Net Revenue', 'woocommerce' ),
 			'products_count' => __( 'Products', 'woocommerce' ),
 			'orders_count'   => __( 'Orders', 'woocommerce' ),
-		);
+		];
 
 		/**
 		 * Filter to add or remove column names from the categories report for
@@ -360,13 +360,13 @@ class Controller extends ReportsController implements ExportableInterface {
 	 * @return array Key value pair of Column ID => Row Value.
 	 */
 	public function prepare_item_for_export( $item ) {
-		$export_item = array(
+		$export_item = [
 			'category'       => $item['extended_info']['name'],
 			'items_sold'     => $item['items_sold'],
 			'net_revenue'    => $item['net_revenue'],
 			'products_count' => $item['products_count'],
 			'orders_count'   => $item['orders_count'],
-		);
+		];
 
 		/**
 		 * Filter to prepare extra columns in the export item for the

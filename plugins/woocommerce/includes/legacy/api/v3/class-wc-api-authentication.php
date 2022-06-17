@@ -23,7 +23,7 @@ class WC_API_Authentication {
 	public function __construct() {
 
 		// To disable authentication, hook into this filter at a later priority and return a valid WP_User
-		add_filter( 'woocommerce_api_check_authentication', array( $this, 'authenticate' ), 0 );
+		add_filter( 'woocommerce_api_check_authentication', [ $this, 'authenticate' ], 0 );
 	}
 
 	/**
@@ -55,7 +55,7 @@ class WC_API_Authentication {
 			$this->update_api_key_last_access( $keys['key_id'] );
 
 		} catch ( Exception $e ) {
-			$user = new WP_Error( 'woocommerce_api_authentication_error', $e->getMessage(), array( 'status' => $e->getCode() ) );
+			$user = new WP_Error( 'woocommerce_api_authentication_error', $e->getMessage(), [ 'status' => $e->getCode() ] );
 		}
 
 		return $user;
@@ -134,7 +134,7 @@ class WC_API_Authentication {
 
 		$params = WC()->api->server->params['GET'];
 
-		$param_names = array( 'oauth_consumer_key', 'oauth_timestamp', 'oauth_nonce', 'oauth_signature', 'oauth_signature_method' );
+		$param_names = [ 'oauth_consumer_key', 'oauth_timestamp', 'oauth_nonce', 'oauth_signature', 'oauth_signature_method' ];
 
 		// Check for required OAuth parameters
 		foreach ( $param_names as $param_name ) {
@@ -244,7 +244,7 @@ class WC_API_Authentication {
 
 		// Normalize parameter key/values
 		$params = $this->normalize_parameters( $params );
-		$query_parameters = array();
+		$query_parameters = [];
 		foreach ( $params as $param_key => $param_value ) {
 			if ( is_array( $param_value ) ) {
 				foreach ( $param_value as $param_key_inner => $param_value_inner ) {
@@ -308,7 +308,7 @@ class WC_API_Authentication {
 	 */
 	public static function urlencode_rfc3986( $value ) {
 		if ( is_array( $value ) ) {
-			return array_map( array( 'WC_API_Authentication', 'urlencode_rfc3986' ), $value );
+			return array_map( [ 'WC_API_Authentication', 'urlencode_rfc3986' ], $value );
 		} else {
 			// Percent symbols (%) must be double-encoded
 			return str_replace( '%', '%25', rawurlencode( rawurldecode( $value ) ) );
@@ -339,7 +339,7 @@ class WC_API_Authentication {
 		$used_nonces = maybe_unserialize( $keys['nonces'] );
 
 		if ( empty( $used_nonces ) ) {
-			$used_nonces = array();
+			$used_nonces = [];
 		}
 
 		if ( in_array( $nonce, $used_nonces ) ) {
@@ -359,10 +359,10 @@ class WC_API_Authentication {
 
 		$wpdb->update(
 			$wpdb->prefix . 'woocommerce_api_keys',
-			array( 'nonces' => $used_nonces ),
-			array( 'key_id' => $keys['key_id'] ),
-			array( '%s' ),
-			array( '%d' )
+			[ 'nonces' => $used_nonces ],
+			[ 'key_id' => $keys['key_id'] ],
+			[ '%s' ],
+			[ '%d' ]
 		);
 	}
 
@@ -405,10 +405,10 @@ class WC_API_Authentication {
 
 		$wpdb->update(
 			$wpdb->prefix . 'woocommerce_api_keys',
-			array( 'last_access' => current_time( 'mysql' ) ),
-			array( 'key_id' => $key_id ),
-			array( '%s' ),
-			array( '%d' )
+			[ 'last_access' => current_time( 'mysql' ) ],
+			[ 'key_id' => $key_id ],
+			[ '%s' ],
+			[ '%d' ]
 		);
 	}
 }

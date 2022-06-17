@@ -41,7 +41,7 @@ class WC_Data_Store_WP {
 	 *
 	 * @var array
 	 */
-	protected $internal_meta_keys = array();
+	protected $internal_meta_keys = [];
 
 	/**
 	 * Meta data which should exist in the DB, even if empty.
@@ -50,7 +50,7 @@ class WC_Data_Store_WP {
 	 *
 	 * @var array
 	 */
-	protected $must_exist_meta_keys = array();
+	protected $must_exist_meta_keys = [];
 
 	/**
 	 * Get and store terms from a taxonomy.
@@ -68,7 +68,7 @@ class WC_Data_Store_WP {
 		}
 		$terms = get_the_terms( $object_id, $taxonomy );
 		if ( false === $terms || is_wp_error( $terms ) ) {
-			return array();
+			return [];
 		}
 		return wp_list_pluck( $terms, 'term_id' );
 	}
@@ -108,8 +108,8 @@ class WC_Data_Store_WP {
 	 * @return mixed|void
 	 */
 	public function filter_raw_meta_data( &$object, $raw_meta_data ) {
-		$this->internal_meta_keys = array_merge( array_map( array( $this, 'prefix_key' ), $object->get_data_keys() ), $this->internal_meta_keys );
-		$meta_data                = array_filter( $raw_meta_data, array( $this, 'exclude_internal_meta_keys' ) );
+		$this->internal_meta_keys = array_merge( array_map( [ $this, 'prefix_key' ], $object->get_data_keys() ), $this->internal_meta_keys );
+		$meta_data                = array_filter( $raw_meta_data, [ $this, 'exclude_internal_meta_keys' ] );
 		return apply_filters( "woocommerce_data_store_wp_{$this->meta_type}_read_meta", $meta_data, $object, $this );
 	}
 
@@ -160,7 +160,7 @@ class WC_Data_Store_WP {
 		$table         = $wpdb->prefix;
 
 		// If we are dealing with a type of metadata that is not a core type, the table should be prefixed.
-		if ( ! in_array( $this->meta_type, array( 'post', 'user', 'comment', 'term' ), true ) ) {
+		if ( ! in_array( $this->meta_type, [ 'post', 'user', 'comment', 'term' ], true ) ) {
 			$table .= 'woocommerce_';
 		}
 
@@ -177,11 +177,11 @@ class WC_Data_Store_WP {
 			$object_id_field = $this->object_id_field_for_meta;
 		}
 
-		return array(
+		return [
 			'table'           => $table,
 			'object_id_field' => $object_id_field,
 			'meta_id_field'   => $meta_id_field,
-		);
+		];
 	}
 
 	/**
@@ -217,7 +217,7 @@ class WC_Data_Store_WP {
 	 * @return array                        A mapping of meta keys => prop names, filtered by ones that should be updated.
 	 */
 	protected function get_props_to_update( $object, $meta_key_to_props, $meta_type = 'post' ) {
-		$props_to_update = array();
+		$props_to_update = [];
 		$changed_props   = $object->get_changes();
 
 		// Props should be updated if they are a part of the $changed array or don't exist yet.
@@ -248,7 +248,7 @@ class WC_Data_Store_WP {
 	 * @return bool True if updated/deleted.
 	 */
 	protected function update_or_delete_post_meta( $object, $meta_key, $meta_value ) {
-		if ( in_array( $meta_value, array( array(), '' ), true ) && ! in_array( $meta_key, $this->must_exist_meta_keys, true ) ) {
+		if ( in_array( $meta_value, [ [], '' ], true ) && ! in_array( $meta_key, $this->must_exist_meta_keys, true ) ) {
 			$updated = delete_post_meta( $object->get_id(), $meta_key );
 		} else {
 			$updated = update_post_meta( $object->get_id(), $meta_key, $meta_value );
@@ -266,11 +266,11 @@ class WC_Data_Store_WP {
 	 */
 	protected function get_wp_query_args( $query_vars ) {
 
-		$skipped_values = array( '', array(), null );
-		$wp_query_args  = array(
-			'errors'     => array(),
-			'meta_query' => array(), // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
-		);
+		$skipped_values = [ '', [], null ];
+		$wp_query_args  = [
+			'errors'     => [],
+			'meta_query' => [], // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
+		];
 
 		foreach ( $query_vars as $key => $value ) {
 			if ( in_array( $value, $skipped_values, true ) || 'meta_query' === $key ) {
@@ -281,33 +281,33 @@ class WC_Data_Store_WP {
 			if ( in_array( '_' . $key, $this->internal_meta_keys, true ) ) {
 				// Check for existing values if wildcard is used.
 				if ( '*' === $value ) {
-					$wp_query_args['meta_query'][] = array(
-						array(
+					$wp_query_args['meta_query'][] = [
+						[
 							'key'     => '_' . $key,
 							'compare' => 'EXISTS',
-						),
-						array(
+						],
+						[
 							'key'     => '_' . $key,
 							'value'   => '',
 							'compare' => '!=',
-						),
-					);
+						],
+					];
 				} else {
-					$wp_query_args['meta_query'][] = array(
+					$wp_query_args['meta_query'][] = [
 						'key'     => '_' . $key,
 						'value'   => $value,
 						'compare' => is_array( $value ) ? 'IN' : '=',
-					);
+					];
 				}
 			} else { // Other vars get mapped to wp_query args or just left alone.
-				$key_mapping = array(
+				$key_mapping = [
 					'parent'         => 'post_parent',
 					'parent_exclude' => 'post_parent__not_in',
 					'exclude'        => 'post__not_in',
 					'limit'          => 'posts_per_page',
 					'type'           => 'post_type',
 					'return'         => 'fields',
-				);
+				];
 
 				if ( isset( $key_mapping[ $key ] ) ) {
 					$wp_query_args[ $key_mapping[ $key ] ] = $value;
@@ -331,14 +331,14 @@ class WC_Data_Store_WP {
 	 * @param array  $wp_query_args WP_Query args.
 	 * @return array Modified $wp_query_args
 	 */
-	public function parse_date_for_wp_query( $query_var, $key, $wp_query_args = array() ) {
+	public function parse_date_for_wp_query( $query_var, $key, $wp_query_args = [] ) {
 		$query_parse_regex = '/([^.<>]*)(>=|<=|>|<|\.\.\.)([^.<>]+)/';
-		$valid_operators   = array( '>', '>=', '=', '<=', '<', '...' );
+		$valid_operators   = [ '>', '>=', '=', '<=', '<', '...' ];
 
 		// YYYY-MM-DD queries have 'day' precision. Timestamp/WC_DateTime queries have 'second' precision.
 		$precision = 'second';
 
-		$dates    = array();
+		$dates    = [];
 		$operator = '=';
 
 		try {
@@ -374,16 +374,16 @@ class WC_Data_Store_WP {
 		// Build date query for 'post_date' or 'post_modified' keys.
 		if ( 'post_date' === $key || 'post_modified' === $key ) {
 			if ( ! isset( $wp_query_args['date_query'] ) ) {
-				$wp_query_args['date_query'] = array();
+				$wp_query_args['date_query'] = [];
 			}
 
-			$query_arg = array(
+			$query_arg = [
 				'column'    => 'day' === $precision ? $key : $key . '_gmt',
 				'inclusive' => '>' !== $operator && '<' !== $operator,
-			);
+			];
 
 			// Add 'before'/'after' query args.
-			$comparisons = array();
+			$comparisons = [];
 			if ( '>' === $operator || '>=' === $operator || '...' === $operator ) {
 				$comparisons[] = 'after';
 			}
@@ -427,7 +427,7 @@ class WC_Data_Store_WP {
 
 		// Build meta query for unrecognized keys.
 		if ( ! isset( $wp_query_args['meta_query'] ) ) {
-			$wp_query_args['meta_query'] = array(); // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
+			$wp_query_args['meta_query'] = []; // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
 		}
 
 		// Meta dates are stored as timestamps in the db.
@@ -438,50 +438,50 @@ class WC_Data_Store_WP {
 			switch ( $operator ) {
 				case '>':
 				case '<=':
-					$wp_query_args['meta_query'][] = array(
+					$wp_query_args['meta_query'][] = [
 						'key'     => $key,
 						'value'   => $end_timestamp,
 						'compare' => $operator,
-					);
+					];
 					break;
 				case '<':
 				case '>=':
-					$wp_query_args['meta_query'][] = array(
+					$wp_query_args['meta_query'][] = [
 						'key'     => $key,
 						'value'   => $start_timestamp,
 						'compare' => $operator,
-					);
+					];
 					break;
 				default:
-					$wp_query_args['meta_query'][] = array(
+					$wp_query_args['meta_query'][] = [
 						'key'     => $key,
 						'value'   => $start_timestamp,
 						'compare' => '>=',
-					);
-					$wp_query_args['meta_query'][] = array(
+					];
+					$wp_query_args['meta_query'][] = [
 						'key'     => $key,
 						'value'   => $end_timestamp,
 						'compare' => '<=',
-					);
+					];
 			}
 		} else {
 			if ( '...' !== $operator ) {
-				$wp_query_args['meta_query'][] = array(
+				$wp_query_args['meta_query'][] = [
 					'key'     => $key,
 					'value'   => $dates[0]->getTimestamp(),
 					'compare' => $operator,
-				);
+				];
 			} else {
-				$wp_query_args['meta_query'][] = array(
+				$wp_query_args['meta_query'][] = [
 					'key'     => $key,
 					'value'   => $dates[0]->getTimestamp(),
 					'compare' => '>=',
-				);
-				$wp_query_args['meta_query'][] = array(
+				];
+				$wp_query_args['meta_query'][] = [
 					'key'     => $key,
 					'value'   => $dates[1]->getTimestamp(),
 					'compare' => '<=',
-				);
+				];
 			}
 		}
 
@@ -510,7 +510,7 @@ class WC_Data_Store_WP {
 	 * @return array Terms that are not stopwords.
 	 */
 	protected function get_valid_search_terms( $terms ) {
-		$valid_terms = array();
+		$valid_terms = [];
 		$stopwords   = $this->get_search_stopwords();
 
 		foreach ( $terms as $term ) {
@@ -571,7 +571,7 @@ class WC_Data_Store_WP {
 	 * @return array
 	 */
 	protected function get_data_for_lookup_table( $id, $table ) {
-		return array();
+		return [];
 	}
 
 	/**
@@ -637,9 +637,9 @@ class WC_Data_Store_WP {
 
 		$wpdb->delete(
 			$wpdb->$table,
-			array(
+			[
 				$pk => $id,
-			)
+			]
 		);
 		wp_cache_delete( 'lookup_table', 'object_' . $id );
 	}

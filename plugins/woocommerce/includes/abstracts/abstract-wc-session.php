@@ -28,7 +28,7 @@ abstract class WC_Session {
 	 *
 	 * @var array $_data Data array.
 	 */
-	protected $_data = array();
+	protected $_data = [];
 
 	/**
 	 * Dirty when the session needs saving.

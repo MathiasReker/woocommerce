@@ -22,7 +22,7 @@ class My_Simple_Gateway extends WC_Payment_Gateway {
 		$this->init_form_fields();
 		$this->init_settings();
 
-		add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array( $this, 'process_admin_options' ) );
+		add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, [ $this, 'process_admin_options' ] );
 	}
 
 	/**
@@ -38,26 +38,26 @@ class My_Simple_Gateway extends WC_Payment_Gateway {
 	 * Initialise Gateway Settings Form Fields.
 	 */
 	public function init_form_fields() {
-		$this->form_fields = array(
-			'enabled' => array(
+		$this->form_fields = [
+			'enabled' => [
 				'title'   => __( 'Enabled', 'woocommerce-admin' ),
 				'type'    => 'checkbox',
 				'label'   => '',
 				'default' => 'no',
-			),
-			'api_key' => array(
+			],
+			'api_key' => [
 				'title'   => __( 'API Key', 'woocommerce-admin' ),
 				'type'    => 'text',
 				'default' => '',
-			),
-		);
+			],
+		];
 	}
 
 	/**
 	 * Determine if the gateway requires further setup.
 	 */
 	public function needs_setup() {
-		$settings = get_option( 'woocommerce_my-simple-gateway_settings', array() );
+		$settings = get_option( 'woocommerce_my-simple-gateway_settings', [] );
 		return ! isset( $settings['api_key'] ) || empty( $settings['api_key'] );
 	}
 
@@ -76,7 +76,7 @@ class My_Simple_Gateway extends WC_Payment_Gateway {
 	 * @return array
 	 */
 	public function get_required_settings_keys() {
-		return array( 'api_key' );
+		return [ 'api_key' ];
 	}
 }
 

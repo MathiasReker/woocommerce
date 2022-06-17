@@ -57,11 +57,11 @@ class Marketing {
 			return;
 		}
 
-		add_action( 'admin_menu', array( $this, 'register_pages' ), 5 );
-		add_action( 'admin_menu', array( $this, 'add_parent_menu_item' ), 6 );
+		add_action( 'admin_menu', [ $this, 'register_pages' ], 5 );
+		add_action( 'admin_menu', [ $this, 'add_parent_menu_item' ], 6 );
 
-		add_filter( 'woocommerce_admin_preload_options', array( $this, 'preload_options' ) );
-		add_filter( 'woocommerce_admin_shared_settings', array( $this, 'component_settings' ), 30 );
+		add_filter( 'woocommerce_admin_preload_options', [ $this, 'preload_options' ] );
+		add_filter( 'woocommerce_admin_shared_settings', [ $this, 'component_settings' ], 30 );
 	}
 
 	/**
@@ -137,10 +137,10 @@ class Marketing {
 				'title'    => __( 'Overview', 'woocommerce' ),
 				'path'     => 'wc-admin&path=/marketing',
 				'parent'   => 'woocommerce-marketing',
-				'nav_args' => array(
+				'nav_args' => [
 					'parent' => 'woocommerce-marketing',
 					'order'  => 10,
-				),
+				],
 			]
 		);
 
@@ -224,10 +224,10 @@ class Marketing {
 
 		$kb_transient = self::KNOWLEDGE_BASE_TRANSIENT;
 
-		$categories = array(
+		$categories = [
 			'marketing' => 1744,
 			'coupons'   => 25202,
-		);
+		];
 
 		// Default to marketing category (if no category set on the kb component).
 		if ( ! empty( $category ) && array_key_exists( $category, $categories ) ) {
@@ -241,12 +241,12 @@ class Marketing {
 
 		if ( false === $posts ) {
 			$request_url = add_query_arg(
-				array(
+				[
 					'categories' => $category_id,
 					'page'       => 1,
 					'per_page'   => 8,
 					'_embed'     => 1,
-				),
+				],
 				'https://woocommerce.com/wp-json/wp/v2/posts?utm_medium=product'
 			);
 
@@ -269,10 +269,10 @@ class Marketing {
 					if ( count( $featured_media ) > 0 ) {
 						$image         = current( $featured_media );
 						$post['image'] = add_query_arg(
-							array(
+							[
 								'resize' => '650,340',
 								'crop'   => 1,
-							),
+							],
 							$image['source_url']
 						);
 					}

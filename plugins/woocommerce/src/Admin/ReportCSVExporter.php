@@ -49,7 +49,7 @@ class ReportCSVExporter extends \WC_CSV_Batch_Exporter {
 	 * @param string $type Report type. E.g. 'customers'.
 	 * @param array  $args Report parameters.
 	 */
-	public function __construct( $type = false, $args = array() ) {
+	public function __construct( $type = false, $args = [] ) {
 		parent::__construct();
 
 		self::maybe_create_directory();
@@ -70,18 +70,18 @@ class ReportCSVExporter extends \WC_CSV_Batch_Exporter {
 	public static function maybe_create_directory() {
 		$reports_dir = self::get_reports_directory();
 
-		$files = array(
-			array(
+		$files = [
+			[
 				'base'    => $reports_dir,
 				'file'    => '.htaccess',
 				'content' => 'DirectoryIndex index.php index.html' . PHP_EOL . 'deny from all',
-			),
-			array(
+			],
+			[
 				'base'    => $reports_dir,
 				'file'    => 'index.html',
 				'content' => '',
-			),
-		);
+			],
+		];
 
 		foreach ( $files as $file ) {
 			if ( ! file_exists( trailingslashit( $file['base'] ) ) ) {
@@ -138,10 +138,10 @@ class ReportCSVExporter extends \WC_CSV_Batch_Exporter {
 		// Use our own internal limit and include all extended info.
 		$report_args = array_merge(
 			$args,
-			array(
+			[
 				'per_page'      => $this->get_limit(),
 				'extended_info' => true,
-			)
+			]
 		);
 
 		// Should this happen externally?
@@ -159,7 +159,7 @@ class ReportCSVExporter extends \WC_CSV_Batch_Exporter {
 	 */
 	protected function map_report_controller() {
 		// @todo - Add filter to this list.
-		$controller_map = array(
+		$controller_map = [
 			'products'   => 'Automattic\WooCommerce\Admin\API\Reports\Products\Controller',
 			'variations' => 'Automattic\WooCommerce\Admin\API\Reports\Variations\Controller',
 			'orders'     => 'Automattic\WooCommerce\Admin\API\Reports\Orders\Controller',
@@ -170,7 +170,7 @@ class ReportCSVExporter extends \WC_CSV_Batch_Exporter {
 			'downloads'  => 'Automattic\WooCommerce\Admin\API\Reports\Downloads\Controller',
 			'customers'  => 'Automattic\WooCommerce\Admin\API\Reports\Customers\Controller',
 			'revenue'    => 'Automattic\WooCommerce\Admin\API\Reports\Revenue\Stats\Controller',
-		);
+		];
 
 		if ( isset( $controller_map[ $this->report_type ] ) ) {
 			// Load the controllers if accessing outside the REST API.
@@ -193,7 +193,7 @@ class ReportCSVExporter extends \WC_CSV_Batch_Exporter {
 		}
 
 		// Fallback to generating columns from the report schema.
-		$report_columns = array();
+		$report_columns = [];
 		$report_schema  = $this->controller->get_item_schema();
 
 		if ( isset( $report_schema['properties'] ) ) {
@@ -201,7 +201,7 @@ class ReportCSVExporter extends \WC_CSV_Batch_Exporter {
 				// Expand extended info columns into export.
 				if ( 'extended_info' === $column_name ) {
 					// Remove columns with questionable CSV values, like markup.
-					$extended_info  = array_diff( array_keys( $column_info ), array( 'image' ) );
+					$extended_info  = array_diff( array_keys( $column_info ), [ 'image' ] );
 					$report_columns = array_merge( $report_columns, $extended_info );
 				} else {
 					$report_columns[] = $column_name;
@@ -238,7 +238,7 @@ class ReportCSVExporter extends \WC_CSV_Batch_Exporter {
 	public function prepare_data_to_export() {
 		$request  = new \WP_REST_Request( 'GET', "/wc-analytics/reports/{$this->report_type}" );
 		$params   = $this->controller->get_collection_params();
-		$defaults = array();
+		$defaults = [];
 
 		foreach ( $params as $arg => $options ) {
 			if ( isset( $options['default'] ) ) {
@@ -246,14 +246,14 @@ class ReportCSVExporter extends \WC_CSV_Batch_Exporter {
 			}
 		}
 
-		$request->set_attributes( array( 'args' => $params ) );
+		$request->set_attributes( [ 'args' => $params ] );
 		$request->set_default_params( $defaults );
 		$request->set_query_params( $this->report_args );
 		$request->sanitize_params();
 
 		// Does the controller have an export-specific item retrieval method?
 		// @todo - Potentially revisit. This is only for /revenue/stats/.
-		if ( is_callable( array( $this->controller, 'get_export_items' ) ) ) {
+		if ( is_callable( [ $this->controller, 'get_export_items' ] ) ) {
 			$response = $this->controller->get_export_items( $request );
 		} else {
 			$response = $this->controller->get_items( $request );
@@ -267,7 +267,7 @@ class ReportCSVExporter extends \WC_CSV_Batch_Exporter {
 
 		$report_meta      = $response->get_headers();
 		$this->total_rows = $report_meta['X-WP-Total'];
-		$this->row_data   = array_map( array( $this, 'generate_row_data' ), $report_data );
+		$this->row_data   = array_map( [ $this, 'generate_row_data' ], $report_data );
 	}
 
 	/**
@@ -278,7 +278,7 @@ class ReportCSVExporter extends \WC_CSV_Batch_Exporter {
 	 */
 	protected function get_raw_row_data( $item ) {
 		$columns = $this->get_column_names();
-		$row     = array();
+		$row     = [];
 
 		// Expand extended info.
 		if ( isset( $item['extended_info'] ) ) {
@@ -297,7 +297,7 @@ class ReportCSVExporter extends \WC_CSV_Batch_Exporter {
 				// Filter for 3rd parties.
 				$value = apply_filters( "woocommerce_export_{$this->export_type}_column_{$column_name}", '', $item );
 
-			} elseif ( is_callable( array( $this, "get_column_value_{$column_name}" ) ) ) {
+			} elseif ( is_callable( [ $this, "get_column_value_{$column_name}" ] ) ) {
 				// Handle special columns which don't map 1:1 to item data.
 				$value = $this->{"get_column_value_{$column_name}"}( $item, $this->export_type );
 

@@ -24,13 +24,13 @@ class Segmenter extends ReportsSegmenter {
 	 * @return array Column => SELECT query mapping.
 	 */
 	protected function get_segment_selections_product_level( $products_table ) {
-		$columns_mapping = array(
+		$columns_mapping = [
 			'items_sold'       => "SUM($products_table.product_qty) as items_sold",
 			'net_revenue'      => "SUM($products_table.product_net_revenue ) AS net_revenue",
 			'orders_count'     => "COUNT( DISTINCT $products_table.order_id ) AS orders_count",
 			'products_count'   => "COUNT( DISTINCT $products_table.product_id ) AS products_count",
 			'variations_count' => "COUNT( DISTINCT $products_table.variation_id ) AS variations_count",
-		);
+		];
 
 		return $columns_mapping;
 	}
@@ -74,7 +74,7 @@ class Segmenter extends ReportsSegmenter {
 			ARRAY_A
 		); // WPCS: cache ok, DB call ok, unprepared SQL ok.
 
-		$totals_segments = $this->merge_segment_totals_results( $segmenting_dimension_name, $segments_products, array() );
+		$totals_segments = $this->merge_segment_totals_results( $segmenting_dimension_name, $segments_products, [] );
 		return $totals_segments;
 	}
 
@@ -126,7 +126,7 @@ class Segmenter extends ReportsSegmenter {
 			ARRAY_A
 		); // WPCS: cache ok, DB call ok, unprepared SQL ok.
 
-		$intervals_segments = $this->merge_segment_intervals_results( $segmenting_dimension_name, $segments_products, array() );
+		$intervals_segments = $this->merge_segment_intervals_results( $segmenting_dimension_name, $segments_products, [] );
 		return $intervals_segments;
 	}
 
@@ -143,7 +143,7 @@ class Segmenter extends ReportsSegmenter {
 	protected function get_segments( $type, $query_params, $table_name ) {
 		global $wpdb;
 		if ( ! isset( $this->query_args['segmentby'] ) || '' === $this->query_args['segmentby'] ) {
-			return array();
+			return [];
 		}
 
 		$product_segmenting_table = $wpdb->prefix . 'wc_order_product_lookup';
@@ -155,9 +155,9 @@ class Segmenter extends ReportsSegmenter {
 		// This also means that segment selections need to be calculated differently.
 		if ( 'product' === $this->query_args['segmentby'] ) {
 			$product_level_columns     = $this->get_segment_selections_product_level( $product_segmenting_table );
-			$segmenting_selections     = array(
+			$segmenting_selections     = [
 				'product_level' => $this->prepare_selections( $product_level_columns ),
-			);
+			];
 			$this->report_columns      = $product_level_columns;
 			$segmenting_from           = '';
 			$segmenting_groupby        = $product_segmenting_table . '.product_id';
@@ -170,9 +170,9 @@ class Segmenter extends ReportsSegmenter {
 			}
 
 			$product_level_columns     = $this->get_segment_selections_product_level( $product_segmenting_table );
-			$segmenting_selections     = array(
+			$segmenting_selections     = [
 				'product_level' => $this->prepare_selections( $product_level_columns ),
-			);
+			];
 			$this->report_columns      = $product_level_columns;
 			$segmenting_from           = '';
 			$segmenting_where          = "AND $product_segmenting_table.product_id = {$this->query_args['product_includes'][0]}";
@@ -182,9 +182,9 @@ class Segmenter extends ReportsSegmenter {
 			$segments = $this->get_product_related_segments( $type, $segmenting_selections, $segmenting_from, $segmenting_where, $segmenting_groupby, $segmenting_dimension_name, $table_name, $query_params, $unique_orders_table );
 		} elseif ( 'category' === $this->query_args['segmentby'] ) {
 			$product_level_columns     = $this->get_segment_selections_product_level( $product_segmenting_table );
-			$segmenting_selections     = array(
+			$segmenting_selections     = [
 				'product_level' => $this->prepare_selections( $product_level_columns ),
-			);
+			];
 			$this->report_columns      = $product_level_columns;
 			$segmenting_from           = "
 			LEFT JOIN {$wpdb->term_relationships} ON {$product_segmenting_table}.product_id = {$wpdb->term_relationships}.object_id

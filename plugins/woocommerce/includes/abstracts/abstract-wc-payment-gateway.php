@@ -110,7 +110,7 @@ abstract class WC_Payment_Gateway extends WC_Settings_API {
 	 *
 	 * @var array
 	 */
-	public $supports = array( 'products' );
+	public $supports = [ 'products' ];
 
 	/**
 	 * Maximum transaction amount, zero does not define a maximum.
@@ -146,7 +146,7 @@ abstract class WC_Payment_Gateway extends WC_Settings_API {
 	 *
 	 * @var array
 	 */
-	protected $tokens = array();
+	protected $tokens = [];
 
 	/**
 	 * Returns a users saved tokens for this gateway.
@@ -364,7 +364,7 @@ abstract class WC_Payment_Gateway extends WC_Settings_API {
 	 * @return array
 	 */
 	public function process_payment( $order_id ) {
-		return array();
+		return [];
 	}
 
 	/**
@@ -440,7 +440,7 @@ abstract class WC_Payment_Gateway extends WC_Settings_API {
 	 * @param  array $args Arguments.
 	 * @param  array $fields Fields.
 	 */
-	public function credit_card_form( $args = array(), $fields = array() ) {
+	public function credit_card_form( $args = [], $fields = [] ) {
 		wc_deprecated_function( 'credit_card_form', '2.6', 'WC_Payment_Gateway_CC->form' );
 		$cc_form           = new WC_Payment_Gateway_CC();
 		$cc_form->id       = $this->id;
@@ -457,17 +457,17 @@ abstract class WC_Payment_Gateway extends WC_Settings_API {
 		wp_enqueue_script(
 			'woocommerce-tokenization-form',
 			plugins_url( '/assets/js/frontend/tokenization-form' . ( Constants::is_true( 'SCRIPT_DEBUG' ) ? '' : '.min' ) . '.js', WC_PLUGIN_FILE ),
-			array( 'jquery' ),
+			[ 'jquery' ],
 			WC()->version
 		);
 
 		wp_localize_script(
 			'woocommerce-tokenization-form',
 			'wc_tokenization_form_params',
-			array(
+			[
 				'is_registration_required' => WC()->checkout()->is_registration_required(),
 				'is_logged_in'             => is_user_logged_in(),
-			)
+			]
 		);
 	}
 
@@ -556,9 +556,9 @@ abstract class WC_Payment_Gateway extends WC_Settings_API {
 	 * @return array
 	 */
 	public function add_payment_method() {
-		return array(
+		return [
 			'result'   => 'failure',
 			'redirect' => wc_get_endpoint_url( 'payment-methods' ),
-		);
+		];
 	}
 }

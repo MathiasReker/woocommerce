@@ -20,8 +20,8 @@ class Appearance extends Task {
 	 */
 	public function __construct( $task_list ) {
 		parent::__construct( $task_list );
-		add_action( 'admin_enqueue_scripts', array( $this, 'add_media_scripts' ) );
-		add_action( 'admin_enqueue_scripts', array( $this, 'possibly_add_return_notice_script' ) );
+		add_action( 'admin_enqueue_scripts', [ $this, 'add_media_scripts' ] );
+		add_action( 'admin_enqueue_scripts', [ $this, 'possibly_add_return_notice_script' ] );
 	}
 
 	/**
@@ -81,12 +81,12 @@ class Appearance extends Task {
 	 * @return array
 	 */
 	public function get_additional_data() {
-		return array(
+		return [
 			'has_homepage' => self::has_homepage(),
 			'has_products' => Products::has_products(),
 			'stylesheet'   => get_option( 'stylesheet' ),
 			'theme_mods'   => get_theme_mods(),
-		);
+		];
 	}
 
 	/**
@@ -123,7 +123,7 @@ class Appearance extends Task {
 		wp_enqueue_script(
 			'onboarding-homepage-notice',
 			WCAdminAssets::get_url( 'wp-admin-scripts/onboarding-homepage-notice', 'js' ),
-			array_merge( array( WC_ADMIN_APP ), $script_assets ['dependencies'] ),
+			array_merge( [ WC_ADMIN_APP ], $script_assets ['dependencies'] ),
 			WC_VERSION,
 			true
 		);

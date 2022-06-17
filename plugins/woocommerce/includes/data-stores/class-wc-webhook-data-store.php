@@ -39,7 +39,7 @@ class WC_Webhook_Data_Store implements WC_Webhook_Data_Store_Interface {
 			$webhook->set_pending_delivery( true );
 		}
 
-		$data = array(
+		$data = [
 			'status'           => $webhook->get_status( 'edit' ),
 			'name'             => $webhook->get_name( 'edit' ),
 			'user_id'          => $webhook->get_user_id( 'edit' ),
@@ -51,7 +51,7 @@ class WC_Webhook_Data_Store implements WC_Webhook_Data_Store_Interface {
 			'api_version'      => $this->get_api_version_number( $webhook->get_api_version( 'edit' ) ),
 			'failure_count'    => $webhook->get_failure_count( 'edit' ),
 			'pending_delivery' => $webhook->get_pending_delivery( 'edit' ),
-		);
+		];
 
 		$wpdb->insert( $wpdb->prefix . 'wc_webhooks', $data ); // WPCS: DB call ok.
 
@@ -84,7 +84,7 @@ class WC_Webhook_Data_Store implements WC_Webhook_Data_Store_Interface {
 
 		if ( is_array( $data ) ) {
 			$webhook->set_props(
-				array(
+				[
 					'id'               => $data['webhook_id'],
 					'status'           => $data['status'],
 					'name'             => $data['name'],
@@ -97,7 +97,7 @@ class WC_Webhook_Data_Store implements WC_Webhook_Data_Store_Interface {
 					'api_version'      => $data['api_version'],
 					'failure_count'    => $data['failure_count'],
 					'pending_delivery' => $data['pending_delivery'],
-				)
+				]
 			);
 			$webhook->set_object_read( true );
 
@@ -128,7 +128,7 @@ class WC_Webhook_Data_Store implements WC_Webhook_Data_Store_Interface {
 			$webhook->set_date_modified( $date_modified );
 		}
 
-		$data = array(
+		$data = [
 			'status'            => $webhook->get_status( 'edit' ),
 			'name'              => $webhook->get_name( 'edit' ),
 			'user_id'           => $webhook->get_user_id( 'edit' ),
@@ -140,14 +140,14 @@ class WC_Webhook_Data_Store implements WC_Webhook_Data_Store_Interface {
 			'api_version'       => $this->get_api_version_number( $webhook->get_api_version( 'edit' ) ),
 			'failure_count'     => $webhook->get_failure_count( 'edit' ),
 			'pending_delivery'  => $webhook->get_pending_delivery( 'edit' ),
-		);
+		];
 
 		$wpdb->update(
 			$wpdb->prefix . 'wc_webhooks',
 			$data,
-			array(
+			[
 				'webhook_id' => $webhook->get_id(),
-			)
+			]
 		); // WPCS: DB call ok.
 
 		$webhook->apply_changes();
@@ -177,10 +177,10 @@ class WC_Webhook_Data_Store implements WC_Webhook_Data_Store_Interface {
 
 		$wpdb->delete(
 			$wpdb->prefix . 'wc_webhooks',
-			array(
+			[
 				'webhook_id' => $webhook->get_id(),
-			),
-			array( '%d' )
+			],
+			[ '%d' ]
 		); // WPCS: cache ok, DB call ok.
 
 		$this->delete_transients( 'all' );
@@ -217,10 +217,10 @@ class WC_Webhook_Data_Store implements WC_Webhook_Data_Store_Interface {
 
 		if ( false === $ids ) {
 			$ids = $this->search_webhooks(
-				array(
+				[
 					'limit'  => -1,
 					'status' => $status,
-				)
+				]
 			);
 			$ids = array_map( 'absint', $ids );
 			set_transient( $this->get_transient_key( $status ), $ids );
@@ -240,24 +240,24 @@ class WC_Webhook_Data_Store implements WC_Webhook_Data_Store_Interface {
 
 		$args = wp_parse_args(
 			$args,
-			array(
+			[
 				'limit'    => 10,
 				'offset'   => 0,
 				'order'    => 'DESC',
 				'orderby'  => 'id',
 				'paginate' => false,
-			)
+			]
 		);
 
 		// Map post statuses.
-		$statuses = array(
+		$statuses = [
 			'publish' => 'active',
 			'draft'   => 'paused',
 			'pending' => 'disabled',
-		);
+		];
 
 		// Map orderby to support a few post keys.
-		$orderby_mapping = array(
+		$orderby_mapping = [
 			'ID'            => 'webhook_id',
 			'id'            => 'webhook_id',
 			'name'          => 'name',
@@ -270,7 +270,7 @@ class WC_Webhook_Data_Store implements WC_Webhook_Data_Store_Interface {
 			'date_modified' => 'date_modified_gmt',
 			'modified'      => 'date_modified_gmt',
 			'post_modified' => 'date_modified_gmt',
-		);
+		];
 		$orderby         = isset( $orderby_mapping[ $args['orderby'] ] ) ? $orderby_mapping[ $args['orderby'] ] : 'webhook_id';
 		$sort            = 'ASC' === strtoupper( $args['order'] ) ? 'ASC' : 'DESC';
 		$order           = "ORDER BY {$orderby} {$sort}";
@@ -333,11 +333,11 @@ class WC_Webhook_Data_Store implements WC_Webhook_Data_Store_Interface {
 
 			$webhook_ids  = wp_parse_id_list( $wpdb->get_col( $query ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 			$total        = (int) $wpdb->get_var( 'SELECT FOUND_ROWS();' );
-			$return_value = (object) array(
+			$return_value = (object) [
 				'webhooks'      => $webhook_ids,
 				'total'         => $total,
 				'max_num_pages' => $args['limit'] > 1 ? ceil( $total / $args['limit'] ) : 1,
-			);
+			];
 		} else {
 			$query = trim(
 				"SELECT webhook_id
@@ -391,7 +391,7 @@ class WC_Webhook_Data_Store implements WC_Webhook_Data_Store_Interface {
 	 */
 	public function get_count_webhooks_by_status() {
 		$statuses = array_keys( wc_get_webhook_statuses() );
-		$counts   = array();
+		$counts   = [];
 
 		foreach ( $statuses as $status ) {
 			$counts[ $status ] = $this->get_webhook_count( $status );

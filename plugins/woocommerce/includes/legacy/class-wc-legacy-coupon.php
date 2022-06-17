@@ -23,7 +23,7 @@ abstract class WC_Legacy_Coupon extends WC_Data {
 	 * @return bool
 	 */
 	public function __isset( $key ) {
-		$legacy_keys = array(
+		$legacy_keys = [
 			'id',
 			'exists',
 			'coupon_custom_fields',
@@ -45,7 +45,7 @@ abstract class WC_Legacy_Coupon extends WC_Data {
 			'minimum_amount',
 			'maximum_amount',
 			'customer_email',
-		);
+		];
 		if ( in_array( $key, $legacy_keys ) ) {
 			return true;
 		}
@@ -68,8 +68,8 @@ abstract class WC_Legacy_Coupon extends WC_Data {
 				$value = $this->get_id() > 0;
 			break;
 			case 'coupon_custom_fields' :
-				$legacy_custom_fields = array();
-				$custom_fields = $this->get_id() ? $this->get_meta_data() : array();
+				$legacy_custom_fields = [];
+				$custom_fields = $this->get_id() ? $this->get_meta_data() : [];
 				if ( ! empty( $custom_fields ) ) {
 					foreach ( $custom_fields as  $cf_value ) {
 						// legacy only supports 1 key

@@ -47,10 +47,10 @@ class WC_Integration_MaxMind_Geolocation extends WC_Integration {
 		$this->init_settings();
 
 		// Bind to the save action for the settings.
-		add_action( 'woocommerce_update_options_integration_' . $this->id, array( $this, 'process_admin_options' ) );
+		add_action( 'woocommerce_update_options_integration_' . $this->id, [ $this, 'process_admin_options' ] );
 
 		// Trigger notice if license key is missing.
-		add_action( 'update_option_woocommerce_default_customer_address', array( $this, 'display_missing_license_key_notice' ), 1000, 2 );
+		add_action( 'update_option_woocommerce_default_customer_address', [ $this, 'display_missing_license_key_notice' ], 1000, 2 );
 
 		/**
 		 * Allows for the automatic database update to be disabled.
@@ -60,7 +60,7 @@ class WC_Integration_MaxMind_Geolocation extends WC_Integration {
 		 */
 		$bind_updater = apply_filters_deprecated(
 			'woocommerce_geolocation_update_database_periodically',
-			array( true ),
+			[ true ],
 			'3.9.0',
 			'woocommerce_maxmind_geolocation_update_database_periodically'
 		);
@@ -76,11 +76,11 @@ class WC_Integration_MaxMind_Geolocation extends WC_Integration {
 
 		// Bind to the scheduled updater action.
 		if ( $bind_updater ) {
-			add_action( 'woocommerce_geoip_updater', array( $this, 'update_database' ) );
+			add_action( 'woocommerce_geoip_updater', [ $this, 'update_database' ] );
 		}
 
 		// Bind to the geolocation filter for MaxMind database lookups.
-		add_filter( 'woocommerce_get_geolocation', array( $this, 'get_geolocation' ), 10, 2 );
+		add_filter( 'woocommerce_get_geolocation', [ $this, 'get_geolocation' ], 10, 2 );
 	}
 
 	/**
@@ -96,8 +96,8 @@ class WC_Integration_MaxMind_Geolocation extends WC_Integration {
 	 * Initializes the settings fields.
 	 */
 	public function init_form_fields() {
-		$this->form_fields = array(
-			'license_key' => array(
+		$this->form_fields = [
+			'license_key' => [
 				'title'       => __( 'MaxMind License Key', 'woocommerce' ),
 				'type'        => 'password',
 				'description' => sprintf(
@@ -110,8 +110,8 @@ class WC_Integration_MaxMind_Geolocation extends WC_Integration {
 				),
 				'desc_tip'    => false,
 				'default'     => '',
-			),
-		);
+			],
+		];
 	}
 
 	/**
@@ -197,7 +197,7 @@ class WC_Integration_MaxMind_Geolocation extends WC_Integration {
 
 			$tmp_database_path = $this->database_service->download_database( $license_key );
 			if ( is_wp_error( $tmp_database_path ) ) {
-				wc_get_logger()->notice( $tmp_database_path->get_error_message(), array( 'source' => 'maxmind-geolocation' ) );
+				wc_get_logger()->notice( $tmp_database_path->get_error_message(), [ 'source' => 'maxmind-geolocation' ] );
 				return;
 			}
 		}
@@ -226,12 +226,12 @@ class WC_Integration_MaxMind_Geolocation extends WC_Integration {
 
 		$country_code = $this->database_service->get_iso_country_code_for_ip( $ip_address );
 
-		return array(
+		return [
 			'country'  => $country_code,
 			'state'    => '',
 			'city'     => '',
 			'postcode' => '',
-		);
+		];
 	}
 
 	/**
@@ -280,7 +280,7 @@ class WC_Integration_MaxMind_Geolocation extends WC_Integration {
 			return;
 		}
 
-		if ( ! in_array( $new_value, array( 'geolocation', 'geolocation_ajax' ), true ) ) {
+		if ( ! in_array( $new_value, [ 'geolocation', 'geolocation_ajax' ], true ) ) {
 			$this->remove_missing_license_key_notice();
 			return;
 		}

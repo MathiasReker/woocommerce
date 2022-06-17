@@ -31,16 +31,16 @@ final class ProductsLowInStock extends \WC_REST_Products_Controller {
 		register_rest_route(
 			$this->namespace,
 			'products/low-in-stock',
-			array(
-				'args'   => array(),
-				array(
+			[
+				'args'   => [],
+				[
 					'methods'             => \WP_REST_Server::READABLE,
-					'callback'            => array( $this, 'get_items' ),
-					'permission_callback' => array( $this, 'get_items_permissions_check' ),
+					'callback'            => [ $this, 'get_items' ],
+					'permission_callback' => [ $this, 'get_items_permissions_check' ],
 					'args'                => $this->get_collection_params(),
-				),
-				'schema' => array( $this, 'get_public_item_schema' ),
-			)
+				],
+				'schema' => [ $this, 'get_public_item_schema' ],
+			]
 		);
 	}
 
@@ -73,7 +73,7 @@ final class ProductsLowInStock extends \WC_REST_Products_Controller {
 		$query_results['results'] = $this->set_last_order_date( $query_results['results'] );
 
 		// convert the post data to the expected API response for the backward compatibility.
-		$query_results['results'] = array_map( array( $this, 'transform_post_to_api_response' ), $query_results['results'] );
+		$query_results['results'] = array_map( [ $this, 'transform_post_to_api_response' ], $query_results['results'] );
 
 		$response = rest_ensure_response( array_values( $query_results['results'] ) );
 		$response->header( 'X-WP-Total', $query_results['total'] );
@@ -89,13 +89,13 @@ final class ProductsLowInStock extends \WC_REST_Products_Controller {
 	 *
 	 * @return mixed
 	 */
-	protected function set_last_order_date( $results = array() ) {
+	protected function set_last_order_date( $results = [] ) {
 		global $wpdb;
 		if ( 0 === count( $results ) ) {
 			return $results;
 		}
 
-		$wheres = array();
+		$wheres = [];
 		foreach ( $results as $result ) {
 			'product_variation' === $result->post_type ?
 				array_push( $wheres, "(product_id={$result->post_parent} and variation_id={$result->ID})" )
@@ -118,7 +118,7 @@ final class ProductsLowInStock extends \WC_REST_Products_Controller {
 
 		// phpcs:ignore -- ignore prepare() warning as we're not using any user input here.
 		$last_order_dates = $wpdb->get_results( $query_string );
-		$last_order_dates_index = array();
+		$last_order_dates_index = [];
 		// Make an index with product_id_variation_id as a key
 		// so that it can be referenced back without looping the whole array.
 		foreach ( $last_order_dates as $last_order_date ) {
@@ -163,11 +163,11 @@ final class ProductsLowInStock extends \WC_REST_Products_Controller {
 
 		$total_results = $wpdb->get_var( 'SELECT FOUND_ROWS()' );
 
-		return array(
+		return [
 			'results' => $query_results,
 			'total'   => (int) $total_results,
 			'pages'   => (int) ceil( $total_results / (int) $per_page ),
-		);
+		];
 	}
 
 	/**
@@ -199,7 +199,7 @@ final class ProductsLowInStock extends \WC_REST_Products_Controller {
 			$query_result->last_order_date = null;
 		}
 
-		return array(
+		return [
 			'id'               => (int) $query_result->ID,
 			'images'           => $query_result->images,
 			'attributes'       => $query_result->attributes,
@@ -209,7 +209,7 @@ final class ProductsLowInStock extends \WC_REST_Products_Controller {
 			'parent_id'        => (int) $query_result->post_parent,
 			'stock_quantity'   => (int) $query_result->stock_quantity,
 			'type'             => 'product_variation' === $query_result->post_type ? 'variation' : 'simple',
-		);
+		];
 	}
 
 	/**
@@ -240,11 +240,11 @@ final class ProductsLowInStock extends \WC_REST_Products_Controller {
 			limit %d, %d
 		";
 
-		$postmeta = array(
+		$postmeta = [
 			'select' => '',
 			'join'   => '',
 			'wheres' => 'AND wc_product_meta_lookup.stock_quantity <= %d',
-		);
+		];
 
 		if ( ! $siteside_only ) {
 			$postmeta['select'] = 'meta.meta_value AS low_stock_amount,';
@@ -269,11 +269,11 @@ final class ProductsLowInStock extends \WC_REST_Products_Controller {
 
 		return strtr(
 			$query,
-			array(
+			[
 				':postmeta_select' => $postmeta['select'],
 				':postmeta_join'   => $postmeta['join'],
 				':postmeta_wheres' => $postmeta['wheres'],
-			)
+			]
 		);
 	}
 
@@ -283,19 +283,19 @@ final class ProductsLowInStock extends \WC_REST_Products_Controller {
 	 * @return array
 	 */
 	public function get_collection_params() {
-		$params                       = array();
+		$params                       = [];
 		$params['context']            = $this->get_context_param();
 		$params['context']['default'] = 'view';
 
-		$params['page']     = array(
+		$params['page']     = [
 			'description'       => __( 'Current page of the collection.', 'woocommerce' ),
 			'type'              => 'integer',
 			'default'           => 1,
 			'sanitize_callback' => 'absint',
 			'validate_callback' => 'rest_validate_request_arg',
 			'minimum'           => 1,
-		);
-		$params['per_page'] = array(
+		];
+		$params['per_page'] = [
 			'description'       => __( 'Maximum number of items to be returned in result set.', 'woocommerce' ),
 			'type'              => 'integer',
 			'default'           => 10,
@@ -303,16 +303,16 @@ final class ProductsLowInStock extends \WC_REST_Products_Controller {
 			'maximum'           => 100,
 			'sanitize_callback' => 'absint',
 			'validate_callback' => 'rest_validate_request_arg',
-		);
+		];
 
-		$params['status'] = array(
+		$params['status'] = [
 			'default'           => 'publish',
 			'description'       => __( 'Limit result set to products assigned a specific status.', 'woocommerce' ),
 			'type'              => 'string',
-			'enum'              => array_merge( array_keys( get_post_statuses() ), array( 'future' ) ),
+			'enum'              => array_merge( array_keys( get_post_statuses() ), [ 'future' ] ),
 			'sanitize_callback' => 'sanitize_key',
 			'validate_callback' => 'rest_validate_request_arg',
-		);
+		];
 
 		return $params;
 	}

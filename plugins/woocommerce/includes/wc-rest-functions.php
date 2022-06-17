@@ -47,14 +47,14 @@ function wc_rest_prepare_date_response( $date, $utc = true ) {
 function wc_rest_allowed_image_mime_types() {
 	return apply_filters(
 		'woocommerce_rest_allowed_image_mime_types',
-		array(
+		[
 			'jpg|jpeg|jpe' => 'image/jpeg',
 			'gif'          => 'image/gif',
 			'png'          => 'image/png',
 			'bmp'          => 'image/bmp',
 			'tiff|tif'     => 'image/tiff',
 			'ico'          => 'image/x-icon',
-		)
+		]
 	);
 }
 
@@ -71,7 +71,7 @@ function wc_rest_upload_image_from_url( $image_url ) {
 	// Check parsed URL.
 	if ( ! $parsed_url || ! is_array( $parsed_url ) ) {
 		/* translators: %s: image URL */
-		return new WP_Error( 'woocommerce_rest_invalid_image_url', sprintf( __( 'Invalid URL %s.', 'woocommerce' ), $image_url ), array( 'status' => 400 ) );
+		return new WP_Error( 'woocommerce_rest_invalid_image_url', sprintf( __( 'Invalid URL %s.', 'woocommerce' ), $image_url ), [ 'status' => 400 ] );
 	}
 
 	// Ensure url is valid.
@@ -82,7 +82,7 @@ function wc_rest_upload_image_from_url( $image_url ) {
 		include_once ABSPATH . 'wp-admin/includes/file.php';
 	}
 
-	$file_array         = array();
+	$file_array         = [];
 	$file_array['name'] = basename( current( explode( '?', $image_url ) ) );
 
 	// Download file to temp location.
@@ -96,17 +96,17 @@ function wc_rest_upload_image_from_url( $image_url ) {
 			sprintf( __( 'Error getting remote image %s.', 'woocommerce' ), $image_url ) . ' '
 			/* translators: %s: error message */
 			. sprintf( __( 'Error: %s', 'woocommerce' ), $file_array['tmp_name']->get_error_message() ),
-			array( 'status' => 400 )
+			[ 'status' => 400 ]
 		);
 	}
 
 	// Do the validation and storage stuff.
 	$file = wp_handle_sideload(
 		$file_array,
-		array(
+		[
 			'test_form' => false,
 			'mimes'     => wc_rest_allowed_image_mime_types(),
-		),
+		],
 		current_time( 'Y/m' )
 	);
 
@@ -114,7 +114,7 @@ function wc_rest_upload_image_from_url( $image_url ) {
 		@unlink( $file_array['tmp_name'] ); // @codingStandardsIgnoreLine.
 
 		/* translators: %s: error message */
-		return new WP_Error( 'woocommerce_rest_invalid_image', sprintf( __( 'Invalid image: %s', 'woocommerce' ), $file['error'] ), array( 'status' => 400 ) );
+		return new WP_Error( 'woocommerce_rest_invalid_image', sprintf( __( 'Invalid image: %s', 'woocommerce' ), $file['error'] ), [ 'status' => 400 ] );
 	}
 
 	do_action( 'woocommerce_rest_api_uploaded_image_from_url', $file, $image_url );
@@ -149,13 +149,13 @@ function wc_rest_set_uploaded_image_as_attachment( $upload, $id = 0 ) {
 		}
 	}
 
-	$attachment = array(
+	$attachment = [
 		'post_mime_type' => $info['type'],
 		'guid'           => $upload['url'],
 		'post_parent'    => $id,
 		'post_title'     => $title ? $title : basename( $upload['file'] ),
 		'post_content'   => $content,
-	);
+	];
 
 	$attachment_id = wp_insert_attachment( $attachment, $upload['file'], $id );
 	if ( ! is_wp_error( $attachment_id ) ) {
@@ -211,7 +211,7 @@ function wc_rest_urlencode_rfc3986( $value ) {
 		return array_map( 'wc_rest_urlencode_rfc3986', $value );
 	}
 
-	return str_replace( array( '+', '%7E' ), array( ' ', '~' ), rawurlencode( $value ) );
+	return str_replace( [ '+', '%7E' ], [ ' ', '~' ], rawurlencode( $value ) );
 }
 
 /**
@@ -224,13 +224,13 @@ function wc_rest_urlencode_rfc3986( $value ) {
  * @return bool
  */
 function wc_rest_check_post_permissions( $post_type, $context = 'read', $object_id = 0 ) {
-	$contexts = array(
+	$contexts = [
 		'read'   => 'read_private_posts',
 		'create' => 'publish_posts',
 		'edit'   => 'edit_post',
 		'delete' => 'delete_post',
 		'batch'  => 'edit_others_posts',
-	);
+	];
 
 	if ( 'revision' === $post_type ) {
 		$permission = false;
@@ -252,19 +252,19 @@ function wc_rest_check_post_permissions( $post_type, $context = 'read', $object_
  * @return bool
  */
 function wc_rest_check_user_permissions( $context = 'read', $object_id = 0 ) {
-	$contexts = array(
+	$contexts = [
 		'read'   => 'list_users',
 		'create' => 'promote_users', // Check if current user can create users, shop managers are not allowed to create users.
 		'edit'   => 'edit_users',
 		'delete' => 'delete_users',
 		'batch'  => 'promote_users',
-	);
+	];
 
 	// Check to allow shop_managers to manage only customers.
-	if ( in_array( $context, array( 'edit', 'delete' ), true ) && wc_current_user_has_role( 'shop_manager' ) ) {
+	if ( in_array( $context, [ 'edit', 'delete' ], true ) && wc_current_user_has_role( 'shop_manager' ) ) {
 		$permission                  = false;
 		$user_data                   = get_userdata( $object_id );
-		$shop_manager_editable_roles = apply_filters( 'woocommerce_shop_manager_editable_roles', array( 'customer' ) );
+		$shop_manager_editable_roles = apply_filters( 'woocommerce_shop_manager_editable_roles', [ 'customer' ] );
 
 		if ( isset( $user_data->roles ) ) {
 			$can_manage_users = array_intersect( $user_data->roles, array_unique( $shop_manager_editable_roles ) );
@@ -291,13 +291,13 @@ function wc_rest_check_user_permissions( $context = 'read', $object_id = 0 ) {
  * @return bool
  */
 function wc_rest_check_product_term_permissions( $taxonomy, $context = 'read', $object_id = 0 ) {
-	$contexts = array(
+	$contexts = [
 		'read'   => 'manage_terms',
 		'create' => 'edit_terms',
 		'edit'   => 'edit_terms',
 		'delete' => 'delete_terms',
 		'batch'  => 'edit_terms',
-	);
+	];
 
 	$cap             = $contexts[ $context ];
 	$taxonomy_object = get_taxonomy( $taxonomy );
@@ -315,7 +315,7 @@ function wc_rest_check_product_term_permissions( $taxonomy, $context = 'read', $
  * @return bool
  */
 function wc_rest_check_manager_permissions( $object, $context = 'read' ) {
-	$objects = array(
+	$objects = [
 		'reports'          => 'view_woocommerce_reports',
 		'settings'         => 'manage_woocommerce',
 		'system_status'    => 'manage_woocommerce',
@@ -323,7 +323,7 @@ function wc_rest_check_manager_permissions( $object, $context = 'read' ) {
 		'shipping_methods' => 'manage_woocommerce',
 		'payment_gateways' => 'manage_woocommerce',
 		'webhooks'         => 'manage_woocommerce',
-	);
+	];
 
 	$permission = current_user_can( $objects[ $object ] );
 
@@ -340,13 +340,13 @@ function wc_rest_check_manager_permissions( $object, $context = 'read' ) {
  */
 function wc_rest_check_product_reviews_permissions( $context = 'read', $object_id = 0 ) {
 	$permission = false;
-	$contexts   = array(
+	$contexts   = [
 		'read'   => 'moderate_comments',
 		'create' => 'edit_products',
 		'edit'   => 'edit_products',
 		'delete' => 'edit_products',
 		'batch'  => 'edit_products',
-	);
+	];
 
 	if ( $object_id > 0 ) {
 		$object = get_comment( $object_id );

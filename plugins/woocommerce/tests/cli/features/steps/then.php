@@ -45,7 +45,7 @@ $steps->Then( '/^STDOUT should be a table containing rows:$/',
 		$output      = $world->result->stdout;
 		$actual_rows = explode( "\n", rtrim( $output, "\n" ) );
 
-		$expected_rows = array();
+		$expected_rows = [];
 		foreach ( $expected->getRows() as $row ) {
 			$expected_rows[] = $world->replace_variables( implode( "\t", $row ) );
 		}
@@ -59,7 +59,7 @@ $steps->Then( '/^STDOUT should end with a table containing rows:$/',
 		$output      = $world->result->stdout;
 		$actual_rows = explode( "\n", rtrim( $output, "\n" ) );
 
-		$expected_rows = array();
+		$expected_rows = [];
 		foreach ( $expected->getRows() as $row ) {
 			$expected_rows[] = $world->replace_variables( implode( "\t", $row ) );
 		}

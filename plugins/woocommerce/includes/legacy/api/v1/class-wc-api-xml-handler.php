@@ -28,10 +28,10 @@ class WC_API_XML_Handler implements WC_API_Handler {
 	public function __construct() {
 
 		// tweak sales report response data
-		add_filter( 'woocommerce_api_report_response', array( $this, 'format_sales_report_data' ), 100 );
+		add_filter( 'woocommerce_api_report_response', [ $this, 'format_sales_report_data' ], 100 );
 
 		// tweak product response data
-		add_filter( 'woocommerce_api_product_response', array( $this, 'format_product_data' ), 100 );
+		add_filter( 'woocommerce_api_product_response', [ $this, 'format_product_data' ], 100 );
 	}
 
 	/**
@@ -81,27 +81,27 @@ class WC_API_XML_Handler implements WC_API_Handler {
 		switch ( $root_element ) {
 
 			case 'orders':
-				$data = array( 'order' => $data );
+				$data = [ 'order' => $data ];
 				break;
 
 			case 'order_notes':
-				$data = array( 'order_note' => $data );
+				$data = [ 'order_note' => $data ];
 				break;
 
 			case 'customers':
-				$data = array( 'customer' => $data );
+				$data = [ 'customer' => $data ];
 				break;
 
 			case 'coupons':
-				$data = array( 'coupon' => $data );
+				$data = [ 'coupon' => $data ];
 				break;
 
 			case 'products':
-				$data = array( 'product' => $data );
+				$data = [ 'product' => $data ];
 				break;
 
 			case 'product_reviews':
-				$data = array( 'product_review' => $data );
+				$data = [ 'product_review' => $data ];
 				break;
 
 			default:
@@ -125,7 +125,7 @@ class WC_API_XML_Handler implements WC_API_Handler {
 	 * @param string|array $element_value - value for element, e.g. 1234
 	 * @return string - generated XML
 	 */
-	private function array_to_xml( $element_key, $element_value = array() ) {
+	private function array_to_xml( $element_key, $element_value = [] ) {
 
 		if ( is_array( $element_value ) ) {
 
@@ -209,7 +209,7 @@ class WC_API_XML_Handler implements WC_API_Handler {
 
 				unset( $data['totals'][ $date ] );
 
-				$data['totals'][] = array_merge( array( '@attributes' => array( 'date' => $date ) ), $totals );
+				$data['totals'][] = array_merge( [ '@attributes' => [ 'date' => $date ] ], $totals );
 			}
 		}
 
@@ -239,7 +239,7 @@ class WC_API_XML_Handler implements WC_API_Handler {
 
 						unset( $data['attributes'][ $attribute_key ]['options'][ $option_key ] );
 
-						$data['attributes'][ $attribute_key ]['options']['option'][] = array( $option );
+						$data['attributes'][ $attribute_key ]['options']['option'][] = [ $option ];
 					}
 				}
 			}
@@ -247,13 +247,13 @@ class WC_API_XML_Handler implements WC_API_Handler {
 
 		// simple arrays are fine for JSON, but XML requires a child element name, so this adjusts the data
 		// array to define a child element name for each field
-		$fields_to_fix = array(
+		$fields_to_fix = [
 			'related_ids'    => 'related_id',
 			'upsell_ids'     => 'upsell_id',
 			'cross_sell_ids' => 'cross_sell_id',
 			'categories'     => 'category',
 			'tags'           => 'tag',
-		);
+		];
 
 		foreach ( $fields_to_fix as $parent_field_name => $child_field_name ) {
 
@@ -263,7 +263,7 @@ class WC_API_XML_Handler implements WC_API_Handler {
 
 					unset( $data[ $parent_field_name ][ $field_key ] );
 
-					$data[ $parent_field_name ][ $child_field_name ][] = array( $field );
+					$data[ $parent_field_name ][ $child_field_name ][] = [ $field ];
 				}
 			}
 		}
@@ -282,7 +282,7 @@ class WC_API_XML_Handler implements WC_API_Handler {
 
 							unset( $data['parent']['attributes'][ $attribute_key ]['options'][ $option_key ] );
 
-							$data['parent']['attributes'][ $attribute_key ]['options']['option'][] = array( $option );
+							$data['parent']['attributes'][ $attribute_key ]['options']['option'][] = [ $option ];
 						}
 					}
 				}
@@ -297,7 +297,7 @@ class WC_API_XML_Handler implements WC_API_Handler {
 
 						unset( $data['parent'][ $parent_field_name ][ $field_key ] );
 
-						$data['parent'][ $parent_field_name ][ $child_field_name ][] = array( $field );
+						$data['parent'][ $parent_field_name ][ $child_field_name ][] = [ $field ];
 					}
 				}
 			}

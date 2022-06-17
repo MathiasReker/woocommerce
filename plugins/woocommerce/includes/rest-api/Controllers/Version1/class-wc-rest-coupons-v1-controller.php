@@ -47,80 +47,80 @@ class WC_REST_Coupons_V1_Controller extends WC_REST_Posts_Controller {
 	 * Coupons actions.
 	 */
 	public function __construct() {
-		add_filter( "woocommerce_rest_{$this->post_type}_query", array( $this, 'query_args' ), 10, 2 );
+		add_filter( "woocommerce_rest_{$this->post_type}_query", [ $this, 'query_args' ], 10, 2 );
 	}
 
 	/**
 	 * Register the routes for coupons.
 	 */
 	public function register_routes() {
-		register_rest_route( $this->namespace, '/' . $this->rest_base, array(
-			array(
+		register_rest_route( $this->namespace, '/' . $this->rest_base, [
+			[
 				'methods'             => WP_REST_Server::READABLE,
-				'callback'            => array( $this, 'get_items' ),
-				'permission_callback' => array( $this, 'get_items_permissions_check' ),
+				'callback'            => [ $this, 'get_items' ],
+				'permission_callback' => [ $this, 'get_items_permissions_check' ],
 				'args'                => $this->get_collection_params(),
-			),
-			array(
+			],
+			[
 				'methods'             => WP_REST_Server::CREATABLE,
-				'callback'            => array( $this, 'create_item' ),
-				'permission_callback' => array( $this, 'create_item_permissions_check' ),
-				'args'                => array_merge( $this->get_endpoint_args_for_item_schema( WP_REST_Server::CREATABLE ), array(
-					'code' => array(
+				'callback'            => [ $this, 'create_item' ],
+				'permission_callback' => [ $this, 'create_item_permissions_check' ],
+				'args'                => array_merge( $this->get_endpoint_args_for_item_schema( WP_REST_Server::CREATABLE ), [
+					'code' => [
 						'description' => __( 'Coupon code.', 'woocommerce' ),
 						'required'    => true,
 						'type'        => 'string',
-					),
-				) ),
-			),
-			'schema' => array( $this, 'get_public_item_schema' ),
-		) );
+					],
+				] ),
+			],
+			'schema' => [ $this, 'get_public_item_schema' ],
+		] );
 
-		register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<id>[\d]+)', array(
-			'args' => array(
-				'id' => array(
+		register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<id>[\d]+)', [
+			'args' => [
+				'id' => [
 					'description' => __( 'Unique identifier for the resource.', 'woocommerce' ),
 					'type'        => 'integer',
-				),
-			),
-			array(
+				],
+			],
+			[
 				'methods'             => WP_REST_Server::READABLE,
-				'callback'            => array( $this, 'get_item' ),
-				'permission_callback' => array( $this, 'get_item_permissions_check' ),
-				'args'                => array(
-					'context'         => $this->get_context_param( array( 'default' => 'view' ) ),
-				),
-			),
-			array(
+				'callback'            => [ $this, 'get_item' ],
+				'permission_callback' => [ $this, 'get_item_permissions_check' ],
+				'args'                => [
+					'context'         => $this->get_context_param( [ 'default' => 'view' ] ),
+				],
+			],
+			[
 				'methods'         => WP_REST_Server::EDITABLE,
-				'callback'        => array( $this, 'update_item' ),
-				'permission_callback' => array( $this, 'update_item_permissions_check' ),
+				'callback'        => [ $this, 'update_item' ],
+				'permission_callback' => [ $this, 'update_item_permissions_check' ],
 				'args'            => $this->get_endpoint_args_for_item_schema( WP_REST_Server::EDITABLE ),
-			),
-			array(
+			],
+			[
 				'methods'             => WP_REST_Server::DELETABLE,
-				'callback'            => array( $this, 'delete_item' ),
-				'permission_callback' => array( $this, 'delete_item_permissions_check' ),
-				'args'                => array(
-					'force' => array(
+				'callback'            => [ $this, 'delete_item' ],
+				'permission_callback' => [ $this, 'delete_item_permissions_check' ],
+				'args'                => [
+					'force' => [
 						'default'     => false,
 						'type'        => 'boolean',
 						'description' => __( 'Whether to bypass trash and force deletion.', 'woocommerce' ),
-					),
-				),
-			),
-			'schema' => array( $this, 'get_public_item_schema' ),
-		) );
+					],
+				],
+			],
+			'schema' => [ $this, 'get_public_item_schema' ],
+		] );
 
-		register_rest_route( $this->namespace, '/' . $this->rest_base . '/batch', array(
-			array(
+		register_rest_route( $this->namespace, '/' . $this->rest_base . '/batch', [
+			[
 				'methods'             => WP_REST_Server::EDITABLE,
-				'callback'            => array( $this, 'batch_items' ),
-				'permission_callback' => array( $this, 'batch_items_permissions_check' ),
+				'callback'            => [ $this, 'batch_items' ],
+				'permission_callback' => [ $this, 'batch_items_permissions_check' ],
 				'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::EDITABLE ),
-			),
-			'schema' => array( $this, 'get_public_batch_schema' ),
-		) );
+			],
+			'schema' => [ $this, 'get_public_batch_schema' ],
+		] );
 	}
 
 	/**
@@ -133,7 +133,7 @@ class WC_REST_Coupons_V1_Controller extends WC_REST_Posts_Controller {
 	public function query_args( $args, $request ) {
 		if ( ! empty( $request['code'] ) ) {
 			$id = wc_get_coupon_id_by_code( $request['code'] );
-			$args['post__in'] = array( $id );
+			$args['post__in'] = [ $id ];
 		}
 
 		return $args;
@@ -150,10 +150,10 @@ class WC_REST_Coupons_V1_Controller extends WC_REST_Posts_Controller {
 		$coupon = new WC_Coupon( (int) $post->ID );
 		$_data  = $coupon->get_data();
 
-		$format_decimal  = array( 'amount', 'minimum_amount', 'maximum_amount' );
-		$format_date     = array( 'date_created', 'date_modified' );
-		$format_date_utc = array( 'date_expires' );
-		$format_null     = array( 'usage_limit', 'usage_limit_per_user' );
+		$format_decimal  = [ 'amount', 'minimum_amount', 'maximum_amount' ];
+		$format_date     = [ 'date_created', 'date_modified' ];
+		$format_date_utc = [ 'date_expires' ];
+		$format_null     = [ 'usage_limit', 'usage_limit_per_user' ];
 
 		// Format decimal values.
 		foreach ( $format_decimal as $key ) {
@@ -173,7 +173,7 @@ class WC_REST_Coupons_V1_Controller extends WC_REST_Posts_Controller {
 			$_data[ $key ] = $_data[ $key ] ? $_data[ $key ] : null;
 		}
 
-		$data = array(
+		$data = [
 			'id'                          => $_data['id'],
 			'code'                        => $_data['code'],
 			'date_created'                => $_data['date_created'],
@@ -197,7 +197,7 @@ class WC_REST_Coupons_V1_Controller extends WC_REST_Posts_Controller {
 			'maximum_amount'              => $_data['maximum_amount'],
 			'email_restrictions'          => $_data['email_restrictions'],
 			'used_by'                     => $_data['used_by'],
-		);
+		];
 
 		$context  = ! empty( $request['context'] ) ? $request['context'] : 'view';
 		$data     = $this->add_additional_fields_to_object( $data, $request );
@@ -237,7 +237,7 @@ class WC_REST_Coupons_V1_Controller extends WC_REST_Posts_Controller {
 		$id        = isset( $request['id'] ) ? absint( $request['id'] ) : 0;
 		$coupon    = new WC_Coupon( $id );
 		$schema    = $this->get_item_schema();
-		$data_keys = array_keys( array_filter( $schema['properties'], array( $this, 'filter_writable_props' ) ) );
+		$data_keys = array_keys( array_filter( $schema['properties'], [ $this, 'filter_writable_props' ] ) );
 
 		// Update to schema to make compatible with CRUD schema.
 		if ( $request['exclude_product_ids'] ) {
@@ -250,7 +250,7 @@ class WC_REST_Coupons_V1_Controller extends WC_REST_Posts_Controller {
 		// Validate required POST fields.
 		if ( 'POST' === $request->get_method() && 0 === $coupon->get_id() ) {
 			if ( empty( $request['code'] ) ) {
-				return new WP_Error( 'woocommerce_rest_empty_coupon_code', sprintf( __( 'The coupon code cannot be empty.', 'woocommerce' ), 'code' ), array( 'status' => 400 ) );
+				return new WP_Error( 'woocommerce_rest_empty_coupon_code', sprintf( __( 'The coupon code cannot be empty.', 'woocommerce' ), 'code' ), [ 'status' => 400 ] );
 			}
 		}
 
@@ -266,7 +266,7 @@ class WC_REST_Coupons_V1_Controller extends WC_REST_Posts_Controller {
 						$id_from_code = wc_get_coupon_id_by_code( $coupon_code, $id );
 
 						if ( $id_from_code ) {
-							return new WP_Error( 'woocommerce_rest_coupon_code_already_exists', __( 'The coupon code already exists', 'woocommerce' ), array( 'status' => 400 ) );
+							return new WP_Error( 'woocommerce_rest_coupon_code_already_exists', __( 'The coupon code already exists', 'woocommerce' ), [ 'status' => 400 ] );
 						}
 
 						$coupon->set_code( $coupon_code );
@@ -278,7 +278,7 @@ class WC_REST_Coupons_V1_Controller extends WC_REST_Posts_Controller {
 						$coupon->set_date_expires( $value );
 						break;
 					default :
-						if ( is_callable( array( $coupon, "set_{$key}" ) ) ) {
+						if ( is_callable( [ $coupon, "set_{$key}" ] ) ) {
 							$coupon->{"set_{$key}"}( $value );
 						}
 						break;
@@ -307,7 +307,7 @@ class WC_REST_Coupons_V1_Controller extends WC_REST_Posts_Controller {
 	public function create_item( $request ) {
 		if ( ! empty( $request['id'] ) ) {
 			/* translators: %s: post type */
-			return new WP_Error( "woocommerce_rest_{$this->post_type}_exists", sprintf( __( 'Cannot create existing %s.', 'woocommerce' ), $this->post_type ), array( 'status' => 400 ) );
+			return new WP_Error( "woocommerce_rest_{$this->post_type}_exists", sprintf( __( 'Cannot create existing %s.', 'woocommerce' ), $this->post_type ), [ 'status' => 400 ] );
 		}
 
 		$coupon_id = $this->save_coupon( $request );
@@ -348,7 +348,7 @@ class WC_REST_Coupons_V1_Controller extends WC_REST_Posts_Controller {
 			$post_id = (int) $request['id'];
 
 			if ( empty( $post_id ) || get_post_type( $post_id ) !== $this->post_type ) {
-				return new WP_Error( "woocommerce_rest_{$this->post_type}_invalid_id", __( 'ID is invalid.', 'woocommerce' ), array( 'status' => 400 ) );
+				return new WP_Error( "woocommerce_rest_{$this->post_type}_invalid_id", __( 'ID is invalid.', 'woocommerce' ), [ 'status' => 400 ] );
 			}
 
 			$coupon_id = $this->save_coupon( $request );
@@ -372,7 +372,7 @@ class WC_REST_Coupons_V1_Controller extends WC_REST_Posts_Controller {
 			return rest_ensure_response( $response );
 
 		} catch ( Exception $e ) {
-			return new WP_Error( $e->getErrorCode(), $e->getMessage(), array( 'status' => $e->getCode() ) );
+			return new WP_Error( $e->getErrorCode(), $e->getMessage(), [ 'status' => $e->getCode() ] );
 		}
 	}
 
@@ -396,7 +396,7 @@ class WC_REST_Coupons_V1_Controller extends WC_REST_Posts_Controller {
 		} catch ( WC_Data_Exception $e ) {
 			return new WP_Error( $e->getErrorCode(), $e->getMessage(), $e->getErrorData() );
 		} catch ( WC_REST_Exception $e ) {
-			return new WP_Error( $e->getErrorCode(), $e->getMessage(), array( 'status' => $e->getCode() ) );
+			return new WP_Error( $e->getErrorCode(), $e->getMessage(), [ 'status' => $e->getCode() ] );
 		}
 	}
 
@@ -406,156 +406,156 @@ class WC_REST_Coupons_V1_Controller extends WC_REST_Posts_Controller {
 	 * @return array
 	 */
 	public function get_item_schema() {
-		$schema = array(
+		$schema = [
 			'$schema'    => 'http://json-schema.org/draft-04/schema#',
 			'title'      => $this->post_type,
 			'type'       => 'object',
-			'properties' => array(
-				'id' => array(
+			'properties' => [
+				'id' => [
 					'description' => __( 'Unique identifier for the object.', 'woocommerce' ),
 					'type'        => 'integer',
-					'context'     => array( 'view', 'edit' ),
+					'context'     => [ 'view', 'edit' ],
 					'readonly'    => true,
-				),
-				'code' => array(
+				],
+				'code' => [
 					'description' => __( 'Coupon code.', 'woocommerce' ),
 					'type'        => 'string',
-					'context'     => array( 'view', 'edit' ),
-				),
-				'date_created' => array(
+					'context'     => [ 'view', 'edit' ],
+				],
+				'date_created' => [
 					'description' => __( "The date the coupon was created, in the site's timezone.", 'woocommerce' ),
 					'type'        => 'date-time',
-					'context'     => array( 'view', 'edit' ),
+					'context'     => [ 'view', 'edit' ],
 					'readonly'    => true,
-				),
-				'date_modified' => array(
+				],
+				'date_modified' => [
 					'description' => __( "The date the coupon was last modified, in the site's timezone.", 'woocommerce' ),
 					'type'        => 'date-time',
-					'context'     => array( 'view', 'edit' ),
+					'context'     => [ 'view', 'edit' ],
 					'readonly'    => true,
-				),
-				'description' => array(
+				],
+				'description' => [
 					'description' => __( 'Coupon description.', 'woocommerce' ),
 					'type'        => 'string',
-					'context'     => array( 'view', 'edit' ),
-				),
-				'discount_type' => array(
+					'context'     => [ 'view', 'edit' ],
+				],
+				'discount_type' => [
 					'description' => __( 'Determines the type of discount that will be applied.', 'woocommerce' ),
 					'type'        => 'string',
 					'default'     => 'fixed_cart',
 					'enum'        => array_keys( wc_get_coupon_types() ),
-					'context'     => array( 'view', 'edit' ),
-				),
-				'amount' => array(
+					'context'     => [ 'view', 'edit' ],
+				],
+				'amount' => [
 					'description' => __( 'The amount of discount. Should always be numeric, even if setting a percentage.', 'woocommerce' ),
 					'type'        => 'string',
-					'context'     => array( 'view', 'edit' ),
-				),
-				'expiry_date' => array(
+					'context'     => [ 'view', 'edit' ],
+				],
+				'expiry_date' => [
 					'description' => __( 'UTC DateTime when the coupon expires.', 'woocommerce' ),
 					'type'        => 'date-time',
-					'context'     => array( 'view', 'edit' ),
-				),
-				'usage_count' => array(
+					'context'     => [ 'view', 'edit' ],
+				],
+				'usage_count' => [
 					'description' => __( 'Number of times the coupon has been used already.', 'woocommerce' ),
 					'type'        => 'integer',
-					'context'     => array( 'view', 'edit' ),
+					'context'     => [ 'view', 'edit' ],
 					'readonly'    => true,
-				),
-				'individual_use' => array(
+				],
+				'individual_use' => [
 					'description' => __( 'If true, the coupon can only be used individually. Other applied coupons will be removed from the cart.', 'woocommerce' ),
 					'type'        => 'boolean',
 					'default'     => false,
-					'context'     => array( 'view', 'edit' ),
-				),
-				'product_ids' => array(
+					'context'     => [ 'view', 'edit' ],
+				],
+				'product_ids' => [
 					'description' => __( "List of product IDs the coupon can be used on.", 'woocommerce' ),
 					'type'        => 'array',
-					'items'       => array(
+					'items'       => [
 						'type'    => 'integer',
-					),
-					'context'     => array( 'view', 'edit' ),
-				),
-				'exclude_product_ids' => array(
+					],
+					'context'     => [ 'view', 'edit' ],
+				],
+				'exclude_product_ids' => [
 					'description' => __( "List of product IDs the coupon cannot be used on.", 'woocommerce' ),
 					'type'        => 'array',
-					'items'       => array(
+					'items'       => [
 						'type'    => 'integer',
-					),
-					'context'     => array( 'view', 'edit' ),
-				),
-				'usage_limit' => array(
+					],
+					'context'     => [ 'view', 'edit' ],
+				],
+				'usage_limit' => [
 					'description' => __( 'How many times the coupon can be used in total.', 'woocommerce' ),
 					'type'        => 'integer',
-					'context'     => array( 'view', 'edit' ),
-				),
-				'usage_limit_per_user' => array(
+					'context'     => [ 'view', 'edit' ],
+				],
+				'usage_limit_per_user' => [
 					'description' => __( 'How many times the coupon can be used per customer.', 'woocommerce' ),
 					'type'        => 'integer',
-					'context'     => array( 'view', 'edit' ),
-				),
-				'limit_usage_to_x_items' => array(
+					'context'     => [ 'view', 'edit' ],
+				],
+				'limit_usage_to_x_items' => [
 					'description' => __( 'Max number of items in the cart the coupon can be applied to.', 'woocommerce' ),
 					'type'        => 'integer',
-					'context'     => array( 'view', 'edit' ),
-				),
-				'free_shipping' => array(
+					'context'     => [ 'view', 'edit' ],
+				],
+				'free_shipping' => [
 					'description' => __( 'If true and if the free shipping method requires a coupon, this coupon will enable free shipping.', 'woocommerce' ),
 					'type'        => 'boolean',
 					'default'     => false,
-					'context'     => array( 'view', 'edit' ),
-				),
-				'product_categories' => array(
+					'context'     => [ 'view', 'edit' ],
+				],
+				'product_categories' => [
 					'description' => __( "List of category IDs the coupon applies to.", 'woocommerce' ),
 					'type'        => 'array',
-					'items'       => array(
+					'items'       => [
 						'type'    => 'integer',
-					),
-					'context'     => array( 'view', 'edit' ),
-				),
-				'excluded_product_categories' => array(
+					],
+					'context'     => [ 'view', 'edit' ],
+				],
+				'excluded_product_categories' => [
 					'description' => __( "List of category IDs the coupon does not apply to.", 'woocommerce' ),
 					'type'        => 'array',
-					'items'       => array(
+					'items'       => [
 						'type'    => 'integer',
-					),
-					'context'     => array( 'view', 'edit' ),
-				),
-				'exclude_sale_items' => array(
+					],
+					'context'     => [ 'view', 'edit' ],
+				],
+				'exclude_sale_items' => [
 					'description' => __( 'If true, this coupon will not be applied to items that have sale prices.', 'woocommerce' ),
 					'type'        => 'boolean',
 					'default'     => false,
-					'context'     => array( 'view', 'edit' ),
-				),
-				'minimum_amount' => array(
+					'context'     => [ 'view', 'edit' ],
+				],
+				'minimum_amount' => [
 					'description' => __( 'Minimum order amount that needs to be in the cart before coupon applies.', 'woocommerce' ),
 					'type'        => 'string',
-					'context'     => array( 'view', 'edit' ),
-				),
-				'maximum_amount' => array(
+					'context'     => [ 'view', 'edit' ],
+				],
+				'maximum_amount' => [
 					'description' => __( 'Maximum order amount allowed when using the coupon.', 'woocommerce' ),
 					'type'        => 'string',
-					'context'     => array( 'view', 'edit' ),
-				),
-				'email_restrictions' => array(
+					'context'     => [ 'view', 'edit' ],
+				],
+				'email_restrictions' => [
 					'description' => __( 'List of email addresses that can use this coupon.', 'woocommerce' ),
 					'type'        => 'array',
-					'items'       => array(
+					'items'       => [
 						'type'    => 'string',
-					),
-					'context'     => array( 'view', 'edit' ),
-				),
-				'used_by' => array(
+					],
+					'context'     => [ 'view', 'edit' ],
+				],
+				'used_by' => [
 					'description' => __( 'List of user IDs (or guest email addresses) that have used the coupon.', 'woocommerce' ),
 					'type'        => 'array',
-					'items'       => array(
+					'items'       => [
 						'type'    => 'integer',
-					),
-					'context'     => array( 'view', 'edit' ),
+					],
+					'context'     => [ 'view', 'edit' ],
 					'readonly'    => true,
-				),
-			),
-		);
+				],
+			],
+		];
 
 		return $this->add_additional_fields_schema( $schema );
 	}
@@ -568,12 +568,12 @@ class WC_REST_Coupons_V1_Controller extends WC_REST_Posts_Controller {
 	public function get_collection_params() {
 		$params = parent::get_collection_params();
 
-		$params['code'] = array(
+		$params['code'] = [
 			'description'       => __( 'Limit result set to resources with a specific code.', 'woocommerce' ),
 			'type'              => 'string',
 			'sanitize_callback' => 'sanitize_text_field',
 			'validate_callback' => 'rest_validate_request_arg',
-		);
+		];
 
 		return $params;
 	}

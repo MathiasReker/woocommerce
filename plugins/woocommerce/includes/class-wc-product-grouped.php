@@ -20,9 +20,9 @@ class WC_Product_Grouped extends WC_Product {
 	 *
 	 * @var array
 	 */
-	protected $extra_data = array(
-		'children' => array(),
-	);
+	protected $extra_data = [
+		'children' => [],
+	];
 
 	/**
 	 * Get internal type.
@@ -90,7 +90,7 @@ class WC_Product_Grouped extends WC_Product {
 	 */
 	public function get_price_html( $price = '' ) {
 		$tax_display_mode = get_option( 'woocommerce_tax_display_shop' );
-		$child_prices     = array();
+		$child_prices     = [];
 		$children         = array_filter( array_map( 'wc_get_product', $this->get_children() ), 'wc_products_array_filter_visible_grouped' );
 
 		foreach ( $children as $child ) {

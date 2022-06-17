@@ -23,16 +23,16 @@ class WC_Order_Item_Fee extends WC_Order_Item {
 	 * @since 3.0.0
 	 * @var array
 	 */
-	protected $extra_data = array(
+	protected $extra_data = [
 		'tax_class'  => '',
 		'tax_status' => 'taxable',
 		'amount'     => '',
 		'total'      => '',
 		'total_tax'  => '',
-		'taxes'      => array(
-			'total' => array(),
-		),
-	);
+		'taxes'      => [
+			'total' => [],
+		],
+	];
 
 	/**
 	 * Get item costs grouped by tax class.
@@ -46,7 +46,7 @@ class WC_Order_Item_Fee extends WC_Order_Item {
 		$costs                  = array_fill_keys( $order_item_tax_classes, 0 );
 		$costs['non-taxable']   = 0;
 
-		foreach ( $order->get_items( array( 'line_item', 'fee', 'shipping' ) ) as $item ) {
+		foreach ( $order->get_items( [ 'line_item', 'fee', 'shipping' ] ) as $item ) {
 			if ( 0 > $item->get_total() ) {
 				continue;
 			}
@@ -69,7 +69,7 @@ class WC_Order_Item_Fee extends WC_Order_Item {
 	 * @param  array $calculate_tax_for Location data to get taxes for. Required.
 	 * @return bool  True if taxes were calculated.
 	 */
-	public function calculate_taxes( $calculate_tax_for = array() ) {
+	public function calculate_taxes( $calculate_tax_for = [] ) {
 		if ( ! isset( $calculate_tax_for['country'], $calculate_tax_for['state'], $calculate_tax_for['postcode'], $calculate_tax_for['city'] ) ) {
 			return false;
 		}
@@ -83,7 +83,7 @@ class WC_Order_Item_Fee extends WC_Order_Item {
 			$order           = $this->get_order();
 			$tax_class_costs = $this->get_tax_class_costs( $order );
 			$total_costs     = array_sum( $tax_class_costs );
-			$discount_taxes  = array();
+			$discount_taxes  = [];
 			if ( $total_costs ) {
 				foreach ( $tax_class_costs as $tax_class => $tax_class_cost ) {
 					if ( 'non-taxable' === $tax_class ) {
@@ -96,7 +96,7 @@ class WC_Order_Item_Fee extends WC_Order_Item {
 					$discount_taxes                 = wc_array_merge_recursive_numeric( $discount_taxes, WC_Tax::calc_tax( $cart_discount_proportion, $tax_rates ) );
 				}
 			}
-			$this->set_taxes( array( 'total' => $discount_taxes ) );
+			$this->set_taxes( [ 'total' => $discount_taxes ] );
 		} else {
 			$this->set_taxes( false );
 		}
@@ -139,7 +139,7 @@ class WC_Order_Item_Fee extends WC_Order_Item {
 	 * @param string $value Tax status.
 	 */
 	public function set_tax_status( $value ) {
-		if ( in_array( $value, array( 'taxable', 'none' ), true ) ) {
+		if ( in_array( $value, [ 'taxable', 'none' ], true ) ) {
 			$this->set_prop( 'tax_status', $value );
 		} else {
 			$this->set_prop( 'tax_status', 'taxable' );
@@ -173,9 +173,9 @@ class WC_Order_Item_Fee extends WC_Order_Item {
 	 */
 	public function set_taxes( $raw_tax_data ) {
 		$raw_tax_data = maybe_unserialize( $raw_tax_data );
-		$tax_data     = array(
-			'total' => array(),
-		);
+		$tax_data     = [
+			'total' => [],
+		];
 		if ( ! empty( $raw_tax_data['total'] ) ) {
 			$tax_data['total'] = array_map( 'wc_format_decimal', $raw_tax_data['total'] );
 		}
@@ -333,7 +333,7 @@ class WC_Order_Item_Fee extends WC_Order_Item {
 	 */
 	#[\ReturnTypeWillChange]
 	public function offsetExists( $offset ) {
-		if ( in_array( $offset, array( 'line_total', 'line_tax', 'line_tax_data' ), true ) ) {
+		if ( in_array( $offset, [ 'line_total', 'line_tax', 'line_tax_data' ], true ) ) {
 			return true;
 		}
 		return parent::offsetExists( $offset );

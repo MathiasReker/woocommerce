@@ -36,12 +36,12 @@ add_action( 'admin_enqueue_scripts', 'table_column_register_script' );
  * @return array Filtered schema.
  */
 function add_product_extended_attributes_schema( $properties ) {
-	$properties['extended_info']['average_rating'] = array(
+	$properties['extended_info']['average_rating'] = [
 		'type'        => 'number',
 		'readonly'    => true,
-		'context'     => array( 'view', 'edit' ),
+		'context'     => [ 'view', 'edit' ],
 		'description' => 'Average product rating.',
-	);
+	];
 
 	return $properties;
 }

@@ -33,15 +33,15 @@ class WC_REST_Network_Orders_V2_Controller extends WC_REST_Orders_V2_Controller 
 			register_rest_route(
 				$this->namespace,
 				'/' . $this->rest_base . '/network',
-				array(
-					array(
+				[
+					[
 						'methods'             => WP_REST_Server::READABLE,
-						'callback'            => array( $this, 'network_orders' ),
-						'permission_callback' => array( $this, 'network_orders_permissions_check' ),
+						'callback'            => [ $this, 'network_orders' ],
+						'permission_callback' => [ $this, 'network_orders_permissions_check' ],
 						'args'                => $this->get_collection_params(),
-					),
-					'schema' => array( $this, 'get_public_item_schema' ),
-				)
+					],
+					'schema' => [ $this, 'get_public_item_schema' ],
+				]
 			);
 		}
 	}
@@ -54,36 +54,36 @@ class WC_REST_Network_Orders_V2_Controller extends WC_REST_Orders_V2_Controller 
 	public function get_public_item_schema() {
 		$schema = parent::get_public_item_schema();
 
-		$schema['properties']['blog']              = array(
+		$schema['properties']['blog']              = [
 			'description' => __( 'Blog id of the record on the multisite.', 'woocommerce' ),
 			'type'        => 'integer',
-			'context'     => array( 'view' ),
+			'context'     => [ 'view' ],
 			'readonly'    => true,
-		);
-		$schema['properties']['edit_url']          = array(
+		];
+		$schema['properties']['edit_url']          = [
 			'description' => __( 'URL to edit the order', 'woocommerce' ),
 			'type'        => 'string',
-			'context'     => array( 'view' ),
+			'context'     => [ 'view' ],
 			'readonly'    => true,
-		);
-		$schema['properties']['customer'][]        = array(
+		];
+		$schema['properties']['customer'][]        = [
 			'description' => __( 'Name of the customer for the order', 'woocommerce' ),
 			'type'        => 'string',
-			'context'     => array( 'view' ),
+			'context'     => [ 'view' ],
 			'readonly'    => true,
-		);
-		$schema['properties']['status_name'][]     = array(
+		];
+		$schema['properties']['status_name'][]     = [
 			'description' => __( 'Order Status', 'woocommerce' ),
 			'type'        => 'string',
-			'context'     => array( 'view' ),
+			'context'     => [ 'view' ],
 			'readonly'    => true,
-		);
-		$schema['properties']['formatted_total'][] = array(
+		];
+		$schema['properties']['formatted_total'][] = [
 			'description' => __( 'Order total formatted for locale', 'woocommerce' ),
 			'type'        => 'string',
-			'context'     => array( 'view' ),
+			'context'     => [ 'view' ],
 			'readonly'    => true,
-		);
+		];
 
 		return $schema;
 	}
@@ -118,8 +118,8 @@ class WC_REST_Network_Orders_V2_Controller extends WC_REST_Orders_V2_Controller 
 	public function network_orders( $request ) {
 		$blog_id = $request->get_param( 'blog_id' );
 		$blog_id = ! empty( $blog_id ) ? $blog_id : get_current_blog_id();
-		$active_plugins = get_blog_option( $blog_id, 'active_plugins', array() );
-		$network_active_plugins = array_keys( get_site_option( 'active_sitewide_plugins', array() ) );
+		$active_plugins = get_blog_option( $blog_id, 'active_plugins', [] );
+		$network_active_plugins = array_keys( get_site_option( 'active_sitewide_plugins', [] ) );
 
 		$plugins = array_merge( $active_plugins, $network_active_plugins );
 		$wc_active = false;
@@ -131,14 +131,14 @@ class WC_REST_Network_Orders_V2_Controller extends WC_REST_Orders_V2_Controller 
 
 		// If WooCommerce not active for site, return an empty response.
 		if ( ! $wc_active ) {
-			$response = rest_ensure_response( array() );
+			$response = rest_ensure_response( [] );
 			return $response;
 		}
 
 		switch_to_blog( $blog_id );
-		add_filter( 'woocommerce_rest_orders_prepare_object_query', array( $this, 'network_orders_filter_args' ) );
+		add_filter( 'woocommerce_rest_orders_prepare_object_query', [ $this, 'network_orders_filter_args' ] );
 		$items = $this->get_items( $request );
-		remove_filter( 'woocommerce_rest_orders_prepare_object_query', array( $this, 'network_orders_filter_args' ) );
+		remove_filter( 'woocommerce_rest_orders_prepare_object_query', [ $this, 'network_orders_filter_args' ] );
 
 		foreach ( $items->data as &$current_order ) {
 			$order = wc_get_order( $current_order['id'] );
@@ -164,10 +164,10 @@ class WC_REST_Network_Orders_V2_Controller extends WC_REST_Orders_V2_Controller 
 	 * @return array
 	 */
 	public function network_orders_filter_args( $args ) {
-		$args['post_status'] = array(
+		$args['post_status'] = [
 			'wc-on-hold',
 			'wc-processing',
-		);
+		];
 
 		return $args;
 	}

@@ -33,8 +33,8 @@ class WC_Install {
 	 *
 	 * @var array
 	 */
-	private static $db_updates = array(
-		'2.0.0' => array(
+	private static $db_updates = [
+		'2.0.0' => [
 			'wc_update_200_file_paths',
 			'wc_update_200_permalinks',
 			'wc_update_200_subcat_display',
@@ -42,70 +42,70 @@ class WC_Install {
 			'wc_update_200_line_items',
 			'wc_update_200_images',
 			'wc_update_200_db_version',
-		),
-		'2.0.9' => array(
+		],
+		'2.0.9' => [
 			'wc_update_209_brazillian_state',
 			'wc_update_209_db_version',
-		),
-		'2.1.0' => array(
+		],
+		'2.1.0' => [
 			'wc_update_210_remove_pages',
 			'wc_update_210_file_paths',
 			'wc_update_210_db_version',
-		),
-		'2.2.0' => array(
+		],
+		'2.2.0' => [
 			'wc_update_220_shipping',
 			'wc_update_220_order_status',
 			'wc_update_220_variations',
 			'wc_update_220_attributes',
 			'wc_update_220_db_version',
-		),
-		'2.3.0' => array(
+		],
+		'2.3.0' => [
 			'wc_update_230_options',
 			'wc_update_230_db_version',
-		),
-		'2.4.0' => array(
+		],
+		'2.4.0' => [
 			'wc_update_240_options',
 			'wc_update_240_shipping_methods',
 			'wc_update_240_api_keys',
 			'wc_update_240_refunds',
 			'wc_update_240_db_version',
-		),
-		'2.4.1' => array(
+		],
+		'2.4.1' => [
 			'wc_update_241_variations',
 			'wc_update_241_db_version',
-		),
-		'2.5.0' => array(
+		],
+		'2.5.0' => [
 			'wc_update_250_currency',
 			'wc_update_250_db_version',
-		),
-		'2.6.0' => array(
+		],
+		'2.6.0' => [
 			'wc_update_260_options',
 			'wc_update_260_termmeta',
 			'wc_update_260_zones',
 			'wc_update_260_zone_methods',
 			'wc_update_260_refunds',
 			'wc_update_260_db_version',
-		),
-		'3.0.0' => array(
+		],
+		'3.0.0' => [
 			'wc_update_300_grouped_products',
 			'wc_update_300_settings',
 			'wc_update_300_product_visibility',
 			'wc_update_300_db_version',
-		),
-		'3.1.0' => array(
+		],
+		'3.1.0' => [
 			'wc_update_310_downloadable_products',
 			'wc_update_310_old_comments',
 			'wc_update_310_db_version',
-		),
-		'3.1.2' => array(
+		],
+		'3.1.2' => [
 			'wc_update_312_shop_manager_capabilities',
 			'wc_update_312_db_version',
-		),
-		'3.2.0' => array(
+		],
+		'3.2.0' => [
 			'wc_update_320_mexican_states',
 			'wc_update_320_db_version',
-		),
-		'3.3.0' => array(
+		],
+		'3.3.0' => [
 			'wc_update_330_image_options',
 			'wc_update_330_webhooks',
 			'wc_update_330_product_stock_status',
@@ -113,49 +113,49 @@ class WC_Install {
 			'wc_update_330_clear_transients',
 			'wc_update_330_set_paypal_sandbox_credentials',
 			'wc_update_330_db_version',
-		),
-		'3.4.0' => array(
+		],
+		'3.4.0' => [
 			'wc_update_340_states',
 			'wc_update_340_state',
 			'wc_update_340_last_active',
 			'wc_update_340_db_version',
-		),
-		'3.4.3' => array(
+		],
+		'3.4.3' => [
 			'wc_update_343_cleanup_foreign_keys',
 			'wc_update_343_db_version',
-		),
-		'3.4.4' => array(
+		],
+		'3.4.4' => [
 			'wc_update_344_recreate_roles',
 			'wc_update_344_db_version',
-		),
-		'3.5.0' => array(
+		],
+		'3.5.0' => [
 			'wc_update_350_reviews_comment_type',
 			'wc_update_350_db_version',
-		),
-		'3.5.2' => array(
+		],
+		'3.5.2' => [
 			'wc_update_352_drop_download_log_fk',
-		),
-		'3.5.4' => array(
+		],
+		'3.5.4' => [
 			'wc_update_354_modify_shop_manager_caps',
 			'wc_update_354_db_version',
-		),
-		'3.6.0' => array(
+		],
+		'3.6.0' => [
 			'wc_update_360_product_lookup_tables',
 			'wc_update_360_term_meta',
 			'wc_update_360_downloadable_product_permissions_index',
 			'wc_update_360_db_version',
-		),
-		'3.7.0' => array(
+		],
+		'3.7.0' => [
 			'wc_update_370_tax_rate_classes',
 			'wc_update_370_mro_std_currency',
 			'wc_update_370_db_version',
-		),
-		'3.9.0' => array(
+		],
+		'3.9.0' => [
 			'wc_update_390_move_maxmind_database',
 			'wc_update_390_change_geolocation_database_update_cron',
 			'wc_update_390_db_version',
-		),
-		'4.0.0' => array(
+		],
+		'4.0.0' => [
 			'wc_update_product_lookup_tables',
 			'wc_update_400_increase_size_of_column',
 			'wc_update_400_reset_action_scheduler_migration_status',
@@ -163,28 +163,28 @@ class WC_Install {
 			'wc_admin_update_0230_rename_gross_total',
 			'wc_admin_update_0251_remove_unsnooze_action',
 			'wc_update_400_db_version',
-		),
-		'4.4.0' => array(
+		],
+		'4.4.0' => [
 			'wc_update_440_insert_attribute_terms_for_variable_products',
 			'wc_admin_update_110_remove_facebook_note',
 			'wc_admin_update_130_remove_dismiss_action_from_tracking_opt_in_note',
 			'wc_update_440_db_version',
-		),
-		'4.5.0' => array(
+		],
+		'4.5.0' => [
 			'wc_update_450_sanitize_coupons_code',
 			'wc_update_450_db_version',
-		),
-		'5.0.0' => array(
+		],
+		'5.0.0' => [
 			'wc_update_500_fix_product_review_count',
 			'wc_admin_update_160_remove_facebook_note',
 			'wc_admin_update_170_homescreen_layout',
 			'wc_update_500_db_version',
-		),
-		'5.6.0' => array(
+		],
+		'5.6.0' => [
 			'wc_update_560_create_refund_returns_page',
 			'wc_update_560_db_version',
-		),
-		'6.0.0' => array(
+		],
+		'6.0.0' => [
 			'wc_update_600_migrate_rate_limit_options',
 			'wc_admin_update_270_delete_report_downloads',
 			'wc_admin_update_271_update_task_list_options',
@@ -192,45 +192,45 @@ class WC_Install {
 			'wc_admin_update_290_update_apperance_task_option',
 			'wc_admin_update_290_delete_default_homepage_layout_option',
 			'wc_update_600_db_version',
-		),
-		'6.3.0' => array(
+		],
+		'6.3.0' => [
 			'wc_update_630_create_product_attributes_lookup_table',
 			'wc_admin_update_300_update_is_read_from_last_read',
 			'wc_update_630_db_version',
-		),
-		'6.4.0' => array(
+		],
+		'6.4.0' => [
 			'wc_update_640_add_primary_key_to_product_attributes_lookup_table',
 			'wc_admin_update_340_remove_is_primary_from_note_action',
 			'wc_update_640_db_version',
-		),
-		'6.5.0' => array(
+		],
+		'6.5.0' => [
 			'wc_update_650_approved_download_directories',
-		),
-		'6.5.1' => array(
+		],
+		'6.5.1' => [
 			'wc_update_651_approved_download_directories',
-		),
-		'6.7.0' => array(
+		],
+		'6.7.0' => [
 			'wc_update_670_purge_comments_count_cache',
 			'wc_update_670_delete_deprecated_remote_inbox_notifications_option',
-		),
-	);
+		],
+	];
 
 	/**
 	 * Hook in tabs.
 	 */
 	public static function init() {
-		add_action( 'init', array( __CLASS__, 'check_version' ), 5 );
-		add_action( 'init', array( __CLASS__, 'manual_database_update' ), 20 );
-		add_action( 'admin_init', array( __CLASS__, 'wc_admin_db_update_notice' ) );
-		add_action( 'admin_init', array( __CLASS__, 'add_admin_note_after_page_created' ) );
-		add_action( 'woocommerce_run_update_callback', array( __CLASS__, 'run_update_callback' ) );
-		add_action( 'woocommerce_update_db_to_current_version', array( __CLASS__, 'update_db_version' ) );
-		add_action( 'admin_init', array( __CLASS__, 'install_actions' ) );
-		add_action( 'woocommerce_page_created', array( __CLASS__, 'page_created' ), 10, 2 );
-		add_filter( 'plugin_action_links_' . WC_PLUGIN_BASENAME, array( __CLASS__, 'plugin_action_links' ) );
-		add_filter( 'plugin_row_meta', array( __CLASS__, 'plugin_row_meta' ), 10, 2 );
-		add_filter( 'wpmu_drop_tables', array( __CLASS__, 'wpmu_drop_tables' ) );
-		add_filter( 'cron_schedules', array( __CLASS__, 'cron_schedules' ) );
+		add_action( 'init', [ __CLASS__, 'check_version' ], 5 );
+		add_action( 'init', [ __CLASS__, 'manual_database_update' ], 20 );
+		add_action( 'admin_init', [ __CLASS__, 'wc_admin_db_update_notice' ] );
+		add_action( 'admin_init', [ __CLASS__, 'add_admin_note_after_page_created' ] );
+		add_action( 'woocommerce_run_update_callback', [ __CLASS__, 'run_update_callback' ] );
+		add_action( 'woocommerce_update_db_to_current_version', [ __CLASS__, 'update_db_version' ] );
+		add_action( 'admin_init', [ __CLASS__, 'install_actions' ] );
+		add_action( 'woocommerce_page_created', [ __CLASS__, 'page_created' ], 10, 2 );
+		add_filter( 'plugin_action_links_' . WC_PLUGIN_BASENAME, [ __CLASS__, 'plugin_action_links' ] );
+		add_filter( 'plugin_row_meta', [ __CLASS__, 'plugin_row_meta' ], 10, 2 );
+		add_filter( 'wpmu_drop_tables', [ __CLASS__, 'wpmu_drop_tables' ] );
+		add_filter( 'cron_schedules', [ __CLASS__, 'cron_schedules' ] );
 	}
 
 	/**
@@ -250,7 +250,7 @@ class WC_Install {
 			 * @since 2.2.0
 			 */
 			do_action( 'woocommerce_updated' );
-			do_action_deprecated( 'woocommerce_admin_updated', array(), $wc_code_version, 'woocommerce_updated' );
+			do_action_deprecated( 'woocommerce_admin_updated', [], $wc_code_version, 'woocommerce_updated' );
 			// If there is no woocommerce_version option, consider it as a new install.
 			if ( ! $wc_version ) {
 				/**
@@ -259,7 +259,7 @@ class WC_Install {
 				 * @since 6.5.0
 				 */
 				do_action( 'woocommerce_newly_installed' );
-				do_action_deprecated( 'woocommerce_admin_newly_installed', array(), $wc_code_version, 'woocommerce_newly_installed' );
+				do_action_deprecated( 'woocommerce_admin_newly_installed', [], $wc_code_version, 'woocommerce_newly_installed' );
 			}
 		}
 	}
@@ -272,7 +272,7 @@ class WC_Install {
 	public static function manual_database_update() {
 		$blog_id = get_current_blog_id();
 
-		add_action( 'wp_' . $blog_id . '_wc_updater_cron', array( __CLASS__, 'run_manual_database_update' ) );
+		add_action( 'wp_' . $blog_id . '_wc_updater_cron', [ __CLASS__, 'run_manual_database_update' ] );
 	}
 
 	/**
@@ -334,9 +334,9 @@ class WC_Install {
 		if ( $result ) {
 			WC()->queue()->add(
 				'woocommerce_run_update_callback',
-				array(
+				[
 					'update_callback' => $callback,
-				),
+				],
 				'woocommerce-db-updates'
 			);
 		}
@@ -573,9 +573,9 @@ class WC_Install {
 					WC()->queue()->schedule_single(
 						time() + $loop,
 						'woocommerce_run_update_callback',
-						array(
+						[
 							'update_callback' => $update_callback,
-						),
+						],
 						'woocommerce-db-updates'
 					);
 					$loop++;
@@ -590,9 +590,9 @@ class WC_Install {
 			WC()->queue()->schedule_single(
 				time() + $loop,
 				'woocommerce_update_db_to_current_version',
-				array(
+				[
 					'version' => $current_wc_version,
-				),
+				],
 				'woocommerce-db-updates'
 			);
 		}
@@ -615,14 +615,14 @@ class WC_Install {
 	 * @return array
 	 */
 	public static function cron_schedules( $schedules ) {
-		$schedules['monthly']     = array(
+		$schedules['monthly']     = [
 			'interval' => 2635200,
 			'display'  => __( 'Monthly', 'woocommerce' ),
-		);
-		$schedules['fifteendays'] = array(
+		];
+		$schedules['fifteendays'] = [
 			'interval' => 1296000,
 			'display'  => __( 'Every 15 Days', 'woocommerce' ),
-		);
+		];
 		return $schedules;
 	}
 
@@ -721,34 +721,34 @@ class WC_Install {
 		 */
 		$pages = apply_filters(
 			'woocommerce_create_pages',
-			array(
-				'shop'           => array(
+			[
+				'shop'           => [
 					'name'    => _x( 'shop', 'Page slug', 'woocommerce' ),
 					'title'   => _x( 'Shop', 'Page title', 'woocommerce' ),
 					'content' => '',
-				),
-				'cart'           => array(
+				],
+				'cart'           => [
 					'name'    => _x( 'cart', 'Page slug', 'woocommerce' ),
 					'title'   => _x( 'Cart', 'Page title', 'woocommerce' ),
 					'content' => '<!-- wp:shortcode -->[' . $cart_shortcode . ']<!-- /wp:shortcode -->',
-				),
-				'checkout'       => array(
+				],
+				'checkout'       => [
 					'name'    => _x( 'checkout', 'Page slug', 'woocommerce' ),
 					'title'   => _x( 'Checkout', 'Page title', 'woocommerce' ),
 					'content' => '<!-- wp:shortcode -->[' . $checkout_shortcode . ']<!-- /wp:shortcode -->',
-				),
-				'myaccount'      => array(
+				],
+				'myaccount'      => [
 					'name'    => _x( 'my-account', 'Page slug', 'woocommerce' ),
 					'title'   => _x( 'My account', 'Page title', 'woocommerce' ),
 					'content' => '<!-- wp:shortcode -->[' . $my_account_shortcode . ']<!-- /wp:shortcode -->',
-				),
-				'refund_returns' => array(
+				],
+				'refund_returns' => [
 					'name'        => _x( 'refund_returns', 'Page slug', 'woocommerce' ),
 					'title'       => _x( 'Refund and Returns Policy', 'Page title', 'woocommerce' ),
 					'content'     => self::get_refunds_return_policy_page_content(),
 					'post_status' => 'draft',
-				),
-			)
+				],
+			]
 		);
 
 		foreach ( $pages as $key => $page ) {
@@ -778,7 +778,7 @@ class WC_Install {
 			if ( ! is_a( $section, 'WC_Settings_Page' ) || ! method_exists( $section, 'get_settings' ) ) {
 				continue;
 			}
-			$subsections = array_unique( array_merge( array( '' ), array_keys( $section->get_sections() ) ) );
+			$subsections = array_unique( array_merge( [ '' ], array_keys( $section->get_sections() ) ) );
 
 			/**
 			 * We are using 'WC_Settings_Page::get_settings' on purpose even thought it's deprecated.
@@ -816,7 +816,7 @@ class WC_Install {
 	 */
 	public static function delete_obsolete_notes() {
 		global $wpdb;
-		$obsolete_notes_names = array(
+		$obsolete_notes_names = [
 			'wc-admin-welcome-note',
 			'wc-admin-store-notice-setting-moved',
 			'wc-admin-store-notice-giving-feedback',
@@ -839,7 +839,7 @@ class WC_Install {
 			'wc-admin-navigation-feedback-follow-up',
 			'wc-admin-set-up-additional-payment-types',
 			'wc-admin-deactivate-plugin',
-		);
+		];
 
 		/**
 		 * An array of deprecated notes to delete on update.
@@ -848,7 +848,7 @@ class WC_Install {
 		 */
 		$additional_obsolete_notes_names = apply_filters(
 			'woocommerce_admin_obsolete_notes_names',
-			array()
+			[]
 		);
 
 		if ( is_array( $additional_obsolete_notes_names ) ) {
@@ -859,8 +859,8 @@ class WC_Install {
 		}
 
 		foreach ( $obsolete_notes_names as $obsolete_notes_name ) {
-			$wpdb->delete( $wpdb->prefix . 'wc_admin_notes', array( 'name' => $obsolete_notes_name ) );
-			$wpdb->delete( $wpdb->prefix . 'wc_admin_note_actions', array( 'name' => $obsolete_notes_name ) );
+			$wpdb->delete( $wpdb->prefix . 'wc_admin_notes', [ 'name' => $obsolete_notes_name ] );
+			$wpdb->delete( $wpdb->prefix . 'wc_admin_note_actions', [ 'name' => $obsolete_notes_name ] );
 		}
 	}
 
@@ -869,7 +869,7 @@ class WC_Install {
 	 */
 	public static function migrate_options() {
 
-		$migrated_options = array(
+		$migrated_options = [
 			'woocommerce_onboarding_profile'           => 'wc_onboarding_profile',
 			'woocommerce_admin_install_timestamp'      => 'wc_admin_install_timestamp',
 			'woocommerce_onboarding_opt_in'            => 'wc_onboarding_opt_in',
@@ -882,7 +882,7 @@ class WC_Install {
 			'woocommerce_task_list_hidden'             => 'woocommerce_task_list_hidden',
 			'woocommerce_extended_task_list_complete'  => 'woocommerce_extended_task_list_complete',
 			'woocommerce_extended_task_list_hidden'    => 'woocommerce_extended_task_list_hidden',
-		);
+		];
 
 		wc_maybe_define_constant( 'WC_ADMIN_MIGRATING_OPTIONS', true );
 
@@ -910,14 +910,14 @@ class WC_Install {
 	 * Add the default terms for WC taxonomies - product types and order statuses. Modify this at your own risk.
 	 */
 	public static function create_terms() {
-		$taxonomies = array(
-			'product_type'       => array(
+		$taxonomies = [
+			'product_type'       => [
 				'simple',
 				'grouped',
 				'variable',
 				'external',
-			),
-			'product_visibility' => array(
+			],
+			'product_visibility' => [
 				'exclude-from-search',
 				'exclude-from-catalog',
 				'featured',
@@ -927,8 +927,8 @@ class WC_Install {
 				'rated-3',
 				'rated-4',
 				'rated-5',
-			),
-		);
+			],
+		];
 
 		foreach ( $taxonomies as $taxonomy => $terms ) {
 			foreach ( $terms as $term ) {
@@ -948,7 +948,7 @@ class WC_Install {
 			if ( $default_product_cat ) {
 				$default_product_cat_id = absint( $default_product_cat->term_taxonomy_id );
 			} else {
-				$result = wp_insert_term( _x( 'Uncategorized', 'Default category slug', 'woocommerce' ), 'product_cat', array( 'slug' => $default_product_cat_slug ) );
+				$result = wp_insert_term( _x( 'Uncategorized', 'Default category slug', 'woocommerce' ), 'product_cat', [ 'slug' => $default_product_cat_slug ] );
 
 				if ( ! is_wp_error( $result ) && ! empty( $result['term_taxonomy_id'] ) ) {
 					$default_product_cat_id = absint( $result['term_taxonomy_id'] );
@@ -1440,7 +1440,7 @@ CREATE TABLE {$wpdb->prefix}wc_category_lookup (
 	public static function get_tables() {
 		global $wpdb;
 
-		$tables = array(
+		$tables = [
 			"{$wpdb->prefix}wc_download_log",
 			"{$wpdb->prefix}wc_product_download_directories",
 			"{$wpdb->prefix}wc_product_meta_lookup",
@@ -1473,7 +1473,7 @@ CREATE TABLE {$wpdb->prefix}wc_category_lookup (
 			"{$wpdb->prefix}wc_admin_note_actions",
 			"{$wpdb->prefix}wc_customer_lookup",
 			"{$wpdb->prefix}wc_category_lookup",
-		);
+		];
 
 		/**
 		 * Filter the list of known WooCommerce tables.
@@ -1538,16 +1538,16 @@ CREATE TABLE {$wpdb->prefix}wc_category_lookup (
 		add_role(
 			'customer',
 			'Customer',
-			array(
+			[
 				'read' => true,
-			)
+			]
 		);
 
 		// Shop manager role.
 		add_role(
 			'shop_manager',
 			'Shop manager',
-			array(
+			[
 				'level_9'                => true,
 				'level_8'                => true,
 				'level_7'                => true,
@@ -1587,7 +1587,7 @@ CREATE TABLE {$wpdb->prefix}wc_category_lookup (
 				'import'                 => true,
 				'list_users'             => true,
 				'edit_theme_options'     => true,
-			)
+			]
 		);
 
 		$capabilities = self::get_core_capabilities();
@@ -1606,18 +1606,18 @@ CREATE TABLE {$wpdb->prefix}wc_category_lookup (
 	 * @return array
 	 */
 	public static function get_core_capabilities() {
-		$capabilities = array();
+		$capabilities = [];
 
-		$capabilities['core'] = array(
+		$capabilities['core'] = [
 			'manage_woocommerce',
 			'view_woocommerce_reports',
-		);
+		];
 
-		$capability_types = array( 'product', 'shop_order', 'shop_coupon' );
+		$capability_types = [ 'product', 'shop_order', 'shop_coupon' ];
 
 		foreach ( $capability_types as $capability_type ) {
 
-			$capabilities[ $capability_type ] = array(
+			$capabilities[ $capability_type ] = [
 				// Post type.
 				"edit_{$capability_type}",
 				"read_{$capability_type}",
@@ -1638,7 +1638,7 @@ CREATE TABLE {$wpdb->prefix}wc_category_lookup (
 				"edit_{$capability_type}_terms",
 				"delete_{$capability_type}_terms",
 				"assign_{$capability_type}_terms",
-			);
+			];
 		}
 
 		return $capabilities;
@@ -1688,28 +1688,28 @@ CREATE TABLE {$wpdb->prefix}wc_category_lookup (
 		$upload_dir      = wp_get_upload_dir();
 		$download_method = get_option( 'woocommerce_file_download_method', 'force' );
 
-		$files = array(
-			array(
+		$files = [
+			[
 				'base'    => $upload_dir['basedir'] . '/woocommerce_uploads',
 				'file'    => 'index.html',
 				'content' => '',
-			),
-			array(
+			],
+			[
 				'base'    => WC_LOG_DIR,
 				'file'    => '.htaccess',
 				'content' => 'deny from all',
-			),
-			array(
+			],
+			[
 				'base'    => WC_LOG_DIR,
 				'file'    => 'index.html',
 				'content' => '',
-			),
-			array(
+			],
+			[
 				'base'    => $upload_dir['basedir'] . '/woocommerce_uploads',
 				'file'    => '.htaccess',
 				'content' => 'redirect' === $download_method ? 'Options -Indexes' : 'deny from all',
-			),
-		);
+			],
+		];
 
 		foreach ( $files as $file ) {
 			if ( wp_mkdir_p( $file['base'] ) && ! file_exists( trailingslashit( $file['base'] ) . $file['file'] ) ) {
@@ -1756,13 +1756,13 @@ CREATE TABLE {$wpdb->prefix}wc_category_lookup (
 		}
 
 		$filetype   = wp_check_filetype( basename( $filename ), null );
-		$attachment = array(
+		$attachment = [
 			'guid'           => $upload_dir['url'] . '/' . basename( $filename ),
 			'post_mime_type' => $filetype['type'],
 			'post_title'     => preg_replace( '/\.[^.]+$/', '', basename( $filename ) ),
 			'post_content'   => '',
 			'post_status'    => 'inherit',
-		);
+		];
 
 		$attach_id = wp_insert_attachment( $attachment, $filename );
 		if ( is_wp_error( $attach_id ) ) {
@@ -1788,9 +1788,9 @@ CREATE TABLE {$wpdb->prefix}wc_category_lookup (
 	 * @return array
 	 */
 	public static function plugin_action_links( $links ) {
-		$action_links = array(
+		$action_links = [
 			'settings' => '<a href="' . admin_url( 'admin.php?page=wc-settings' ) . '" aria-label="' . esc_attr__( 'View WooCommerce settings', 'woocommerce' ) . '">' . esc_html__( 'Settings', 'woocommerce' ) . '</a>',
-		);
+		];
 
 		return array_merge( $action_links, $links );
 	}
@@ -1836,11 +1836,11 @@ CREATE TABLE {$wpdb->prefix}wc_category_lookup (
 		 */
 		$support_url = apply_filters( 'woocommerce_support_url', 'https://woocommerce.com/my-account/create-a-ticket/' );
 
-		$row_meta = array(
+		$row_meta = [
 			'docs'    => '<a href="' . esc_url( $docs_url ) . '" aria-label="' . esc_attr__( 'View WooCommerce documentation', 'woocommerce' ) . '">' . esc_html__( 'Docs', 'woocommerce' ) . '</a>',
 			'apidocs' => '<a href="' . esc_url( $api_docs_url ) . '" aria-label="' . esc_attr__( 'View WooCommerce API docs', 'woocommerce' ) . '">' . esc_html__( 'API docs', 'woocommerce' ) . '</a>',
 			'support' => '<a href="' . esc_url( $community_support_url ) . '" aria-label="' . esc_attr__( 'Visit community forums', 'woocommerce' ) . '">' . esc_html__( 'Community support', 'woocommerce' ) . '</a>',
-		);
+		];
 
 		if ( WCConnectionHelper::is_connected() ) {
 			$row_meta['premium_support'] = '<a href="' . esc_url( $support_url ) . '" aria-label="' . esc_attr__( 'Visit premium customer support', 'woocommerce' ) . '">' . esc_html__( 'Premium support', 'woocommerce' ) . '</a>';
@@ -1886,9 +1886,9 @@ CREATE TABLE {$wpdb->prefix}wc_category_lookup (
 
 			$skin              = new Automatic_Upgrader_Skin();
 			$upgrader          = new WP_Upgrader( $skin );
-			$installed_plugins = array_reduce( array_keys( get_plugins() ), array( __CLASS__, 'associate_plugin_file' ) );
+			$installed_plugins = array_reduce( array_keys( get_plugins() ), [ __CLASS__, 'associate_plugin_file' ] );
 			if ( empty( $installed_plugins ) ) {
-				$installed_plugins = array();
+				$installed_plugins = [];
 			}
 			$plugin_slug = $plugin_to_install['repo-slug'];
 			$plugin_file = isset( $plugin_to_install['file'] ) ? $plugin_to_install['file'] : $plugin_slug . '.php';
@@ -1909,9 +1909,9 @@ CREATE TABLE {$wpdb->prefix}wc_category_lookup (
 				try {
 					$plugin_information = plugins_api(
 						'plugin_information',
-						array(
+						[
 							'slug'   => $plugin_slug,
-							'fields' => array(
+							'fields' => [
 								'short_description' => false,
 								'sections'          => false,
 								'requires'          => false,
@@ -1925,8 +1925,8 @@ CREATE TABLE {$wpdb->prefix}wc_category_lookup (
 								'donate_link'       => false,
 								'author_profile'    => false,
 								'author'            => false,
-							),
-						)
+							],
+						]
 					);
 
 					if ( is_wp_error( $plugin_information ) ) {
@@ -1947,17 +1947,17 @@ CREATE TABLE {$wpdb->prefix}wc_category_lookup (
 					}
 
 					$result = $upgrader->install_package(
-						array(
+						[
 							'source'                      => $working_dir,
 							'destination'                 => WP_PLUGIN_DIR,
 							'clear_destination'           => false,
 							'abort_if_destination_exists' => false,
 							'clear_working'               => true,
-							'hook_extra'                  => array(
+							'hook_extra'                  => [
 								'type'   => 'plugin',
 								'action' => 'install',
-							),
-						)
+							],
+						]
 					);
 
 					if ( is_wp_error( $result ) ) {
@@ -1988,7 +1988,7 @@ CREATE TABLE {$wpdb->prefix}wc_category_lookup (
 			// Activate this thing.
 			if ( $activate ) {
 				try {
-					add_action( 'add_option_mailchimp_woocommerce_plugin_do_activation_redirect', array( __CLASS__, 'remove_mailchimps_redirect' ), 10, 2 );
+					add_action( 'add_option_mailchimp_woocommerce_plugin_do_activation_redirect', [ __CLASS__, 'remove_mailchimps_redirect' ], 10, 2 );
 					$result = activate_plugin( $installed ? $installed_plugins[ $plugin_file ] : $plugin_slug . '/' . $plugin_file );
 
 					if ( is_wp_error( $result ) ) {
@@ -2017,7 +2017,7 @@ CREATE TABLE {$wpdb->prefix}wc_category_lookup (
 	 */
 	public static function remove_mailchimps_redirect( $option, $value ) {
 		// Remove this action to prevent infinite looping.
-		remove_action( 'add_option_mailchimp_woocommerce_plugin_do_activation_redirect', array( __CLASS__, 'remove_mailchimps_redirect' ) );
+		remove_action( 'add_option_mailchimp_woocommerce_plugin_do_activation_redirect', [ __CLASS__, 'remove_mailchimps_redirect' ] );
 
 		// Update redirect back to false.
 		update_option( 'mailchimp_woocommerce_plugin_do_activation_redirect', false );
@@ -2053,10 +2053,10 @@ CREATE TABLE {$wpdb->prefix}wc_category_lookup (
 					$upgrader = new Theme_Upgrader( $skin );
 					$api      = themes_api(
 						'theme_information',
-						array(
+						[
 							'slug'   => $theme_slug,
-							'fields' => array( 'sections' => false ),
-						)
+							'fields' => [ 'sections' => false ],
+						]
 					);
 					$result   = $upgrader->install( $api->download_link );
 

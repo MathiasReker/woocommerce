@@ -40,13 +40,13 @@ class HtmlSanitizerTest extends WC_Unit_Test_Case {
 	 * @return string[][]
 	 */
 	public function expectations_for_trimmed_balanced_low_html_no_links_rule() {
-		return array(
-			array( 'Simple Text', 'Simple Text', 'Plain text without HTML tags passes through unchanged.' ),
-			array( ' Leading/trailing whitespace ', ' Leading/trailing whitespace ', 'Leading and trailing whitespace will be maintained.' ),
-			array( '<p>Paragraph</p>', '<p>Paragraph</p>', 'Paragraph tags are allowed' ),
-			array( '<div><p><i>Paragraph</i></p></div>', '<p>Paragraph</p>', 'Disallowed tags are removed, allowed tags remain.' ),
-			array( '</p> <p><img src="http://bar/icon.png" /> Purchase</p>', ' <p><img src="http://bar/icon.png" /> Purchase</p>', 'Unbalanced tags are removed.' ),
-		);
+		return [
+			[ 'Simple Text', 'Simple Text', 'Plain text without HTML tags passes through unchanged.' ],
+			[ ' Leading/trailing whitespace ', ' Leading/trailing whitespace ', 'Leading and trailing whitespace will be maintained.' ],
+			[ '<p>Paragraph</p>', '<p>Paragraph</p>', 'Paragraph tags are allowed' ],
+			[ '<div><p><i>Paragraph</i></p></div>', '<p>Paragraph</p>', 'Disallowed tags are removed, allowed tags remain.' ],
+			[ '</p> <p><img src="http://bar/icon.png" /> Purchase</p>', ' <p><img src="http://bar/icon.png" /> Purchase</p>', 'Unbalanced tags are removed.' ],
+		];
 	}
 
 	/**
@@ -57,16 +57,16 @@ class HtmlSanitizerTest extends WC_Unit_Test_Case {
 
 		$output = $this->sut->sanitize(
 			'Test string',
-			array(
-				'pre_processors' => array(
+			[
+				'pre_processors' => [
 					'strtoupper',
 					'invalid_callback_1',
-				),
-				'post_processors' => array(
+				],
+				'post_processors' => [
 					'invalid_callback_2',
 					'strrev',
-				),
-			)
+				],
+			]
 		);
 
 		$this->assertEquals( '', $output, 'When invalid callbacks are provided, an empty string will be returned.' );
@@ -76,6 +76,6 @@ class HtmlSanitizerTest extends WC_Unit_Test_Case {
 	 * @testdox An empty ruleset is equivalent to asking that all HTML elements be removed.
 	 */
 	public function test_no_kses_rules_specified() {
-		$this->assertEquals( 'foo', $this->sut->sanitize( '<p>foo</p>', array() ) );
+		$this->assertEquals( 'foo', $this->sut->sanitize( '<p>foo</p>', [] ) );
 	}
 }

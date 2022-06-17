@@ -7,7 +7,7 @@
  * @package WooCommerce Tests
  */
 
-return array(
+return [
 	'current_user_can',
 	'get_bloginfo',
 	'get_woocommerce_currencies',
@@ -16,4 +16,4 @@ return array(
 	'wc_get_shipping_method_count',
 	'wc_prices_include_tax',
 	'wc_site_is_https',
-);
+];

@@ -111,8 +111,8 @@ function wc_admin_update_270_delete_report_downloads() {
 	$upload_dir = wp_upload_dir();
 	$base_dir   = trailingslashit( $upload_dir['basedir'] );
 
-	$failed_files   = array();
-	$exports_status = get_option( ReportExporter::EXPORT_STATUS_OPTION, array() );
+	$failed_files   = [];
+	$exports_status = get_option( ReportExporter::EXPORT_STATUS_OPTION, [] );
 	$has_failure    = false;
 
 	if ( ! is_array( $exports_status ) ) {
@@ -155,7 +155,7 @@ function wc_admin_update_270_delete_report_downloads() {
 	 * a time in the past.
 	 */
 	foreach ( $potential_exports as $potential_export ) {
-		$matches = array();
+		$matches = [];
 		// See if the filename matches an unfiltered export pattern.
 		if ( ! preg_match( "/wc-{$reports_pattern}-report-export-(?P<export_id>\d{11,14})\.csv\$/", $potential_export, $matches ) ) {
 			$has_failure = true;
@@ -193,7 +193,7 @@ function wc_admin_update_270_delete_report_downloads() {
  * Update the old task list options.
  */
 function wc_admin_update_271_update_task_list_options() {
-	$hidden_lists         = get_option( 'woocommerce_task_list_hidden_lists', array() );
+	$hidden_lists         = get_option( 'woocommerce_task_list_hidden_lists', [] );
 	$setup_list_hidden    = get_option( 'woocommerce_task_list_hidden', 'no' );
 	$extended_list_hidden = get_option( 'woocommerce_extended_task_list_hidden', 'no' );
 	if ( 'yes' === $setup_list_hidden ) {

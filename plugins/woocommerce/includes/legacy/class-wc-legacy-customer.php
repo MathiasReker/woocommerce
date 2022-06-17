@@ -19,7 +19,7 @@ abstract class WC_Legacy_Customer extends WC_Data {
 	 * @return bool
 	 */
 	public function __isset( $key ) {
-		$legacy_keys = array(
+		$legacy_keys = [
 			'id',
 			'country',
 			'state',
@@ -37,7 +37,7 @@ abstract class WC_Legacy_Customer extends WC_Data {
 			'shipping_address_2',
 			'is_vat_exempt',
 			'calculated_shipping',
-		);
+		];
 		$key = $this->filter_legacy_key( $key );
 		return in_array( $key, $legacy_keys );
 	}
@@ -50,10 +50,10 @@ abstract class WC_Legacy_Customer extends WC_Data {
 	public function __get( $key ) {
 		wc_doing_it_wrong( $key, 'Customer properties should not be accessed directly.', '3.0' );
 		$key = $this->filter_legacy_key( $key );
-		if ( in_array( $key, array( 'country', 'state', 'postcode', 'city', 'address_1', 'address', 'address_2' ) ) ) {
+		if ( in_array( $key, [ 'country', 'state', 'postcode', 'city', 'address_1', 'address', 'address_2' ] ) ) {
 			$key = 'billing_' . $key;
 		}
-		return is_callable( array( $this, "get_{$key}" ) ) ? $this->{"get_{$key}"}() : '';
+		return is_callable( [ $this, "get_{$key}" ] ) ? $this->{"get_{$key}"}() : '';
 	}
 
 	/**
@@ -66,7 +66,7 @@ abstract class WC_Legacy_Customer extends WC_Data {
 		wc_doing_it_wrong( $key, 'Customer properties should not be set directly.', '3.0' );
 		$key = $this->filter_legacy_key( $key );
 
-		if ( is_callable( array( $this, "set_{$key}" ) ) ) {
+		if ( is_callable( [ $this, "set_{$key}" ] ) ) {
 			$this->{"set_{$key}"}( $value );
 		}
 	}

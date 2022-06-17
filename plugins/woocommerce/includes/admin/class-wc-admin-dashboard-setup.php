@@ -51,7 +51,7 @@ if ( ! class_exists( 'WC_Admin_Dashboard_Setup', false ) ) :
 				add_meta_box(
 					'wc_admin_dashboard_setup',
 					__( 'WooCommerce Setup', 'woocommerce' ),
-					array( $this, 'render' ),
+					[ $this, 'render' ],
 					'dashboard',
 					'normal',
 					'high'
@@ -64,7 +64,7 @@ if ( ! class_exists( 'WC_Admin_Dashboard_Setup', false ) ) :
 		 */
 		public function render() {
 			$version = Constants::get_constant( 'WC_VERSION' );
-			wp_enqueue_style( 'wc-dashboard-setup', WC()->plugin_url() . '/assets/css/dashboard-setup.css', array(), $version );
+			wp_enqueue_style( 'wc-dashboard-setup', WC()->plugin_url() . '/assets/css/dashboard-setup.css', [], $version );
 
 			$task = $this->get_next_task();
 			if ( ! $task ) {

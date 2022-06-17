@@ -24,7 +24,7 @@ defined( 'ABSPATH' ) || exit;
  *                             paginate is true, or just an array of values.
  */
 function wc_get_orders( $args ) {
-	$map_legacy = array(
+	$map_legacy = [
 		'numberposts'    => 'limit',
 		'post_type'      => 'type',
 		'post_status'    => 'status',
@@ -33,7 +33,7 @@ function wc_get_orders( $args ) {
 		'email'          => 'billing_email',
 		'posts_per_page' => 'limit',
 		'paged'          => 'page',
-	);
+	];
 
 	foreach ( $map_legacy as $from => $to ) {
 		if ( isset( $args[ $from ] ) ) {
@@ -91,7 +91,7 @@ function wc_get_order( $the_order = false ) {
  * @return array
  */
 function wc_get_order_statuses() {
-	$order_statuses = array(
+	$order_statuses = [
 		'wc-pending'    => _x( 'Pending payment', 'Order status', 'woocommerce' ),
 		'wc-processing' => _x( 'Processing', 'Order status', 'woocommerce' ),
 		'wc-on-hold'    => _x( 'On hold', 'Order status', 'woocommerce' ),
@@ -99,7 +99,7 @@ function wc_get_order_statuses() {
 		'wc-cancelled'  => _x( 'Cancelled', 'Order status', 'woocommerce' ),
 		'wc-refunded'   => _x( 'Refunded', 'Order status', 'woocommerce' ),
 		'wc-failed'     => _x( 'Failed', 'Order status', 'woocommerce' ),
-	);
+	];
 	return apply_filters( 'wc_order_statuses', $order_statuses );
 }
 
@@ -121,7 +121,7 @@ function wc_is_order_status( $maybe_status ) {
  * @return array
  */
 function wc_get_is_paid_statuses() {
-	return apply_filters( 'woocommerce_order_is_paid_statuses', array( 'processing', 'completed' ) );
+	return apply_filters( 'woocommerce_order_is_paid_statuses', [ 'processing', 'completed' ] );
 }
 
 /**
@@ -131,7 +131,7 @@ function wc_get_is_paid_statuses() {
  * @return array
  */
 function wc_get_is_pending_statuses() {
-	return apply_filters( 'woocommerce_order_is_pending_statuses', array( 'pending' ) );
+	return apply_filters( 'woocommerce_order_is_pending_statuses', [ 'pending' ] );
 }
 
 /**
@@ -187,10 +187,10 @@ function wc_get_order_types( $for = '' ) {
 	global $wc_order_types;
 
 	if ( ! is_array( $wc_order_types ) ) {
-		$wc_order_types = array();
+		$wc_order_types = [];
 	}
 
-	$order_types = array();
+	$order_types = [];
 
 	switch ( $for ) {
 		case 'order-count':
@@ -281,7 +281,7 @@ function wc_get_order_type( $type ) {
  * @param  array  $args An array of arguments.
  * @return bool Success or failure
  */
-function wc_register_order_type( $type, $args = array() ) {
+function wc_register_order_type( $type, $args = [] ) {
 	if ( post_type_exists( $type ) ) {
 		return false;
 	}
@@ -289,7 +289,7 @@ function wc_register_order_type( $type, $args = array() ) {
 	global $wc_order_types;
 
 	if ( ! is_array( $wc_order_types ) ) {
-		$wc_order_types = array();
+		$wc_order_types = [];
 	}
 
 	// Register as a post type.
@@ -298,7 +298,7 @@ function wc_register_order_type( $type, $args = array() ) {
 	}
 
 	// Register for WC usage.
-	$order_type_args = array(
+	$order_type_args = [
 		'exclude_from_orders_screen'       => false,
 		'add_order_meta_boxes'             => true,
 		'exclude_from_order_count'         => false,
@@ -307,7 +307,7 @@ function wc_register_order_type( $type, $args = array() ) {
 		'exclude_from_order_reports'       => false,
 		'exclude_from_order_sales_reports' => false,
 		'class_name'                       => 'WC_Order',
-	);
+	];
 
 	$args                    = array_intersect_key( $args, $order_type_args );
 	$args                    = wp_parse_args( $args, $order_type_args );
@@ -443,9 +443,9 @@ function wc_delete_shop_order_transients( $order = 0 ) {
 		$order = wc_get_order( $order );
 	}
 	$reports             = WC_Admin_Reports::get_reports();
-	$transients_to_clear = array(
+	$transients_to_clear = [
 		'wc_admin_report',
-	);
+	];
 
 	foreach ( $reports as $report_group ) {
 		foreach ( $report_group['reports'] as $report_key => $report ) {
@@ -495,16 +495,16 @@ function wc_ship_to_billing_address_only() {
  * @param array $args New refund arguments.
  * @return WC_Order_Refund|WP_Error
  */
-function wc_create_refund( $args = array() ) {
-	$default_args = array(
+function wc_create_refund( $args = [] ) {
+	$default_args = [
 		'amount'         => 0,
 		'reason'         => null,
 		'order_id'       => 0,
 		'refund_id'      => 0,
-		'line_items'     => array(),
+		'line_items'     => [],
 		'refund_payment' => false,
 		'restock_items'  => false,
-	);
+	];
 
 	try {
 		$args  = wp_parse_args( $args, $default_args );
@@ -535,7 +535,7 @@ function wc_create_refund( $args = array() ) {
 
 		// Negative line items.
 		if ( count( $args['line_items'] ) > 0 ) {
-			$items = $order->get_items( array( 'line_item', 'fee', 'shipping' ) );
+			$items = $order->get_items( [ 'line_item', 'fee', 'shipping' ] );
 
 			foreach ( $items as $item_id => $item ) {
 				if ( ! isset( $args['line_items'][ $item_id ] ) ) {
@@ -544,7 +544,7 @@ function wc_create_refund( $args = array() ) {
 
 				$qty          = isset( $args['line_items'][ $item_id ]['qty'] ) ? $args['line_items'][ $item_id ]['qty'] : 0;
 				$refund_total = $args['line_items'][ $item_id ]['refund_total'];
-				$refund_tax   = isset( $args['line_items'][ $item_id ]['refund_tax'] ) ? array_filter( (array) $args['line_items'][ $item_id ]['refund_tax'] ) : array();
+				$refund_tax   = isset( $args['line_items'][ $item_id ]['refund_tax'] ) ? array_filter( (array) $args['line_items'][ $item_id ]['refund_tax'] ) : [];
 
 				if ( empty( $qty ) && empty( $refund_total ) && empty( $args['line_items'][ $item_id ]['refund_tax'] ) ) {
 					continue;
@@ -556,17 +556,17 @@ function wc_create_refund( $args = array() ) {
 				$refunded_item->add_meta_data( '_refunded_item_id', $item_id, true );
 				$refunded_item->set_total( wc_format_refund_total( $refund_total ) );
 				$refunded_item->set_taxes(
-					array(
+					[
 						'total'    => array_map( 'wc_format_refund_total', $refund_tax ),
 						'subtotal' => array_map( 'wc_format_refund_total', $refund_tax ),
-					)
+					]
 				);
 
-				if ( is_callable( array( $refunded_item, 'set_subtotal' ) ) ) {
+				if ( is_callable( [ $refunded_item, 'set_subtotal' ] ) ) {
 					$refunded_item->set_subtotal( wc_format_refund_total( $refund_total ) );
 				}
 
-				if ( is_callable( array( $refunded_item, 'set_quantity' ) ) ) {
+				if ( is_callable( [ $refunded_item, 'set_quantity' ] ) ) {
 					$refunded_item->set_quantity( $qty * -1 );
 				}
 
@@ -778,7 +778,7 @@ function wc_get_payment_gateway_by_order( $order ) {
 	if ( WC()->payment_gateways() ) {
 		$payment_gateways = WC()->payment_gateways()->payment_gateways();
 	} else {
-		$payment_gateways = array();
+		$payment_gateways = [];
 	}
 
 	if ( ! is_object( $order ) ) {
@@ -808,12 +808,12 @@ function wc_order_fully_refunded( $order_id ) {
 	// Create the refund object.
 	wc_switch_to_site_locale();
 	wc_create_refund(
-		array(
+		[
 			'amount'     => $max_refund,
 			'reason'     => __( 'Order fully refunded.', 'woocommerce' ),
 			'order_id'   => $order_id,
-			'line_items' => array(),
-		)
+			'line_items' => [],
+		]
 	);
 	wc_restore_locale();
 
@@ -992,13 +992,13 @@ function wc_get_order_note( $data ) {
 
 	return (object) apply_filters(
 		'woocommerce_get_order_note',
-		array(
+		[
 			'id'            => (int) $data->comment_ID,
 			'date_created'  => wc_string_to_datetime( $data->comment_date ),
 			'content'       => $data->comment_content,
 			'customer_note' => (bool) get_comment_meta( $data->comment_ID, 'is_customer_note', true ),
 			'added_by'      => __( 'WooCommerce', 'woocommerce' ) === $data->comment_author ? 'system' : $data->comment_author,
-		),
+		],
 		$data
 	);
 }
@@ -1031,12 +1031,12 @@ function wc_get_order_note( $data ) {
  * @return stdClass[]              Array of stdClass objects with order notes details.
  */
 function wc_get_order_notes( $args ) {
-	$key_mapping = array(
+	$key_mapping = [
 		'limit'         => 'number',
 		'order_id'      => 'post_id',
 		'order__in'     => 'post__in',
 		'order__not_in' => 'post__not_in',
-	);
+	];
 
 	foreach ( $key_mapping as $query_key => $db_key ) {
 		if ( isset( $args[ $query_key ] ) ) {
@@ -1046,30 +1046,30 @@ function wc_get_order_notes( $args ) {
 	}
 
 	// Define orderby.
-	$orderby_mapping = array(
+	$orderby_mapping = [
 		'date_created'     => 'comment_date',
 		'date_created_gmt' => 'comment_date_gmt',
 		'id'               => 'comment_ID',
-	);
+	];
 
-	$args['orderby'] = ! empty( $args['orderby'] ) && in_array( $args['orderby'], array( 'date_created', 'date_created_gmt', 'id' ), true ) ? $orderby_mapping[ $args['orderby'] ] : 'comment_ID';
+	$args['orderby'] = ! empty( $args['orderby'] ) && in_array( $args['orderby'], [ 'date_created', 'date_created_gmt', 'id' ], true ) ? $orderby_mapping[ $args['orderby'] ] : 'comment_ID';
 
 	// Set WooCommerce order type.
 	if ( isset( $args['type'] ) && 'customer' === $args['type'] ) {
-		$args['meta_query'] = array( // WPCS: slow query ok.
-			array(
+		$args['meta_query'] = [ // WPCS: slow query ok.
+			[
 				'key'     => 'is_customer_note',
 				'value'   => 1,
 				'compare' => '=',
-			),
-		);
+			],
+		];
 	} elseif ( isset( $args['type'] ) && 'internal' === $args['type'] ) {
-		$args['meta_query'] = array( // WPCS: slow query ok.
-			array(
+		$args['meta_query'] = [ // WPCS: slow query ok.
+			[
 				'key'     => 'is_customer_note',
 				'compare' => 'NOT EXISTS',
-			),
-		);
+			],
+		];
 	}
 
 	// Set correct comment type.
@@ -1081,11 +1081,11 @@ function wc_get_order_notes( $args ) {
 	// Does not support 'count' or 'fields'.
 	unset( $args['count'], $args['fields'] );
 
-	remove_filter( 'comments_clauses', array( 'WC_Comments', 'exclude_order_comments' ), 10, 1 );
+	remove_filter( 'comments_clauses', [ 'WC_Comments', 'exclude_order_comments' ], 10, 1 );
 
 	$notes = get_comments( $args );
 
-	add_filter( 'comments_clauses', array( 'WC_Comments', 'exclude_order_comments' ), 10, 1 );
+	add_filter( 'comments_clauses', [ 'WC_Comments', 'exclude_order_comments' ], 10, 1 );
 
 	return array_filter( array_map( 'wc_get_order_note', $notes ) );
 }
@@ -1104,7 +1104,7 @@ function wc_create_order_note( $order_id, $note, $is_customer_note = false, $add
 	$order = wc_get_order( $order_id );
 
 	if ( ! $order ) {
-		return new WP_Error( 'invalid_order_id', __( 'Invalid order ID.', 'woocommerce' ), array( 'status' => 400 ) );
+		return new WP_Error( 'invalid_order_id', __( 'Invalid order ID.', 'woocommerce' ), [ 'status' => 400 ] );
 	}
 
 	return $order->add_order_note( $note, (int) $is_customer_note, $added_by_user );

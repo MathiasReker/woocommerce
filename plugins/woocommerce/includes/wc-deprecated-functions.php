@@ -89,7 +89,7 @@ function wc_deprecated_hook( $hook, $version, $replacement = null, $message = nu
  * @param string    $function The function which threw exception.
  * @param array     $args The args passed to the function.
  */
-function wc_caught_exception( $exception_object, $function = '', $args = array() ) {
+function wc_caught_exception( $exception_object, $function = '', $args = [] ) {
 	// @codingStandardsIgnoreStart
 	$message  = $exception_object->getMessage();
 	$message .= '. Args: ' . print_r( $args, true ) . '.';
@@ -231,7 +231,7 @@ add_action( 'init', 'woocommerce_legacy_paypal_ipn' );
 /**
  * @deprecated 3.0
  */
-function get_product( $the_product = false, $args = array() ) {
+function get_product( $the_product = false, $args = [] ) {
 	wc_deprecated_function( __FUNCTION__, '3.0', 'wc_get_product' );
 	return wc_get_product( $the_product, $args );
 }
@@ -335,7 +335,7 @@ function woocommerce_get_template_part( $slug, $name = '' ) {
 /**
  * @deprecated 3.0
  */
-function woocommerce_get_template( $template_name, $args = array(), $template_path = '', $default_path = '' ) {
+function woocommerce_get_template( $template_name, $args = [], $template_path = '', $default_path = '' ) {
 	wc_deprecated_function( __FUNCTION__, '3.0', 'wc_get_template' );
 	wc_get_template( $template_name, $args, $template_path, $default_path );
 }
@@ -487,7 +487,7 @@ function woocommerce_array_overlay( $a1, $a2 ) {
 /**
  * @deprecated 3.0
  */
-function woocommerce_price( $price, $args = array() ) {
+function woocommerce_price( $price, $args = [] ) {
 	wc_deprecated_function( __FUNCTION__, '3.0', 'wc_price' );
 	return wc_price( $price, $args );
 }
@@ -721,7 +721,7 @@ function woocommerce_list_pages( $pages ) {
 /**
  * @deprecated 3.0
  */
-function woocommerce_product_dropdown_categories( $args = array(), $deprecated_hierarchical = 1, $deprecated_show_uncategorized = 1, $deprecated_orderby = '' ) {
+function woocommerce_product_dropdown_categories( $args = [], $deprecated_hierarchical = 1, $deprecated_show_uncategorized = 1, $deprecated_orderby = '' ) {
 	wc_deprecated_function( __FUNCTION__, '3.0', 'wc_product_dropdown_categories' );
 	return wc_product_dropdown_categories( $args, $deprecated_hierarchical, $deprecated_show_uncategorized, $deprecated_orderby );
 }
@@ -817,7 +817,7 @@ function woocommerce_get_featured_product_ids() {
  */
 function woocommerce_get_product_terms( $object_id, $taxonomy, $fields = 'all' ) {
 	wc_deprecated_function( __FUNCTION__, '3.0', 'wc_get_product_terms' );
-	return wc_get_product_terms( $object_id, $taxonomy, array( 'fields' => $fields ) );
+	return wc_get_product_terms( $object_id, $taxonomy, [ 'fields' => $fields ] );
 }
 
 /**
@@ -1011,7 +1011,7 @@ function wc_get_customer_avatar_url( $email ) {
  */
 function wc_get_core_supported_themes() {
 	wc_deprecated_function( 'wc_get_core_supported_themes()', '3.3' );
-	return array( 'twentyseventeen', 'twentysixteen', 'twentyfifteen', 'twentyfourteen', 'twentythirteen', 'twentyeleven', 'twentytwelve', 'twentyten' );
+	return [ 'twentyseventeen', 'twentysixteen', 'twentyfifteen', 'twentyfourteen', 'twentythirteen', 'twentyeleven', 'twentytwelve', 'twentyten' ];
 }
 
 /**
@@ -1030,12 +1030,12 @@ function wc_get_min_max_price_meta_query( $args ) {
 
 	return apply_filters(
 		'woocommerce_get_min_max_price_meta_query',
-		array(
+		[
 			'key'     => '_price',
-			'value'   => array( $current_min_price, $current_max_price ),
+			'value'   => [ $current_min_price, $current_max_price ],
 			'compare' => 'BETWEEN',
 			'type'    => 'DECIMAL(10,' . wc_get_price_decimals() . ')',
-		),
+		],
 		$args
 	);
 }

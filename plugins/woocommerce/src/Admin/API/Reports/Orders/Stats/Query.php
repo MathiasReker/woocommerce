@@ -32,8 +32,8 @@ class Query extends ReportsQuery {
 	 * @return array
 	 */
 	protected function get_default_query_vars() {
-		return array(
-			'fields' => array(
+		return [
+			'fields' => [
 				'net_revenue',
 				'avg_order_value',
 				'orders_count',
@@ -42,8 +42,8 @@ class Query extends ReportsQuery {
 				'coupons',
 				'coupons_count',
 				'total_customers',
-			),
-		);
+			],
+		];
 	}
 
 	/**

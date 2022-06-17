@@ -20,7 +20,7 @@ class DataStore extends CouponsDataStore implements DataStoreInterface {
 	 *
 	 * @var array
 	 */
-	protected $column_types = array(
+	protected $column_types = [
 		'date_start'     => 'strval',
 		'date_end'       => 'strval',
 		'date_start_gmt' => 'strval',
@@ -28,7 +28,7 @@ class DataStore extends CouponsDataStore implements DataStoreInterface {
 		'amount'         => 'floatval',
 		'coupons_count'  => 'intval',
 		'orders_count'   => 'intval',
-	);
+	];
 
 	/**
 	 * SQL columns to select in the db query.
@@ -56,11 +56,11 @@ class DataStore extends CouponsDataStore implements DataStoreInterface {
 	 */
 	protected function assign_report_columns() {
 		$table_name           = self::get_db_table_name();
-		$this->report_columns = array(
+		$this->report_columns = [
 			'amount'        => 'SUM(discount_amount) as amount',
 			'coupons_count' => 'COUNT(DISTINCT coupon_id) as coupons_count',
 			'orders_count'  => "COUNT(DISTINCT {$table_name}.order_id) as orders_count",
-		);
+		];
 	}
 
 	/**
@@ -71,10 +71,10 @@ class DataStore extends CouponsDataStore implements DataStoreInterface {
 	protected function update_sql_query_params( $query_args ) {
 		global $wpdb;
 
-		$clauses = array(
+		$clauses = [
 			'where' => '',
 			'join'  => '',
-		);
+		];
 
 		$order_coupon_lookup_table = self::get_db_table_name();
 
@@ -98,7 +98,7 @@ class DataStore extends CouponsDataStore implements DataStoreInterface {
 		$this->interval_query->add_sql_clause( 'select', $this->get_sql_clause( 'select' ) );
 		$this->interval_query->add_sql_clause( 'select', 'AS time_interval' );
 
-		foreach ( array( 'join', 'where_time', 'where' ) as $clause ) {
+		foreach ( [ 'join', 'where_time', 'where' ] as $clause ) {
 			$this->interval_query->add_sql_clause( $clause, $clauses[ $clause ] );
 			$this->total_query->add_sql_clause( $clause, $clauses[ $clause ] );
 		}
@@ -117,7 +117,7 @@ class DataStore extends CouponsDataStore implements DataStoreInterface {
 		$table_name = self::get_db_table_name();
 
 		// These defaults are only partially applied when used via REST API, as that has its own defaults.
-		$defaults   = array(
+		$defaults   = [
 			'per_page' => get_option( 'posts_per_page' ),
 			'page'     => 1,
 			'order'    => 'DESC',
@@ -126,8 +126,8 @@ class DataStore extends CouponsDataStore implements DataStoreInterface {
 			'after'    => TimeInterval::default_after(),
 			'fields'   => '*',
 			'interval' => 'week',
-			'coupons'  => array(),
-		);
+			'coupons'  => [],
+		];
 		$query_args = wp_parse_args( $query_args, $defaults );
 		$this->normalize_timezones( $query_args, $defaults );
 
@@ -141,16 +141,16 @@ class DataStore extends CouponsDataStore implements DataStoreInterface {
 		if ( false === $data ) {
 			$this->initialize_queries();
 
-			$data = (object) array(
-				'data'    => array(),
+			$data = (object) [
+				'data'    => [],
 				'total'   => 0,
 				'pages'   => 0,
 				'page_no' => 0,
-			);
+			];
 
 			$selections      = $this->selected_columns( $query_args );
-			$totals_query    = array();
-			$intervals_query = array();
+			$totals_query    = [];
+			$intervals_query = [];
 			$limit_params    = $this->get_limit_sql_params( $query_args );
 			$this->update_sql_query_params( $query_args, $totals_query, $intervals_query );
 
@@ -176,18 +176,18 @@ class DataStore extends CouponsDataStore implements DataStoreInterface {
 			}
 
 			// @todo remove these assignements when refactoring segmenter classes to use query objects.
-			$totals_query          = array(
+			$totals_query          = [
 				'from_clause'       => $this->total_query->get_sql_clause( 'join' ),
 				'where_time_clause' => $this->total_query->get_sql_clause( 'where_time' ),
 				'where_clause'      => $this->total_query->get_sql_clause( 'where' ),
-			);
-			$intervals_query       = array(
+			];
+			$intervals_query       = [
 				'select_clause'     => $this->get_sql_clause( 'select' ),
 				'from_clause'       => $this->interval_query->get_sql_clause( 'join' ),
 				'where_time_clause' => $this->interval_query->get_sql_clause( 'where_time' ),
 				'where_clause'      => $this->interval_query->get_sql_clause( 'where' ),
 				'limit'             => $this->get_sql_clause( 'limit' ),
-			);
+			];
 			$segmenter             = new Segmenter( $query_args, $this->report_columns );
 			$totals[0]['segments'] = $segmenter->get_totals_segments( $totals_query, $table_name );
 			$totals                = (object) $this->cast_numbers( $totals[0] );
@@ -209,13 +209,13 @@ class DataStore extends CouponsDataStore implements DataStoreInterface {
 				return $data;
 			}
 
-			$data = (object) array(
+			$data = (object) [
 				'totals'    => $totals,
 				'intervals' => $intervals,
 				'total'     => $expected_interval_count,
 				'pages'     => $total_pages,
 				'page_no'   => (int) $query_args['page'],
-			);
+			];
 
 			if ( TimeInterval::intervals_missing( $expected_interval_count, $db_interval_count, $limit_params['per_page'], $query_args['page'], $query_args['order'], $query_args['orderby'], count( $intervals ) ) ) {
 				$this->fill_in_missing_intervals( $db_intervals, $query_args['adj_after'], $query_args['adj_before'], $query_args['interval'], $data );

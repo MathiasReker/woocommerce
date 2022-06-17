@@ -142,7 +142,7 @@ class WC_Tests_Coupon extends WC_Unit_Test_Case {
 		WC()->cart->add_discount( $coupon->get_code() );
 
 		// Set the flat_rate shipping method.
-		WC()->session->set( 'chosen_shipping_methods', array( 'flat_rate' ) );
+		WC()->session->set( 'chosen_shipping_methods', [ 'flat_rate' ] );
 		WC()->cart->calculate_totals();
 
 		// Test if the cart total amount is equal 15.
@@ -179,7 +179,7 @@ class WC_Tests_Coupon extends WC_Unit_Test_Case {
 		WC()->cart->add_discount( $coupon->get_code() );
 
 		// Set the flat_rate shipping method.
-		WC()->session->set( 'chosen_shipping_methods', array( 'flat_rate' ) );
+		WC()->session->set( 'chosen_shipping_methods', [ 'flat_rate' ] );
 		WC()->cart->calculate_totals();
 
 		// Test if the cart total amount is equal 25.
@@ -216,7 +216,7 @@ class WC_Tests_Coupon extends WC_Unit_Test_Case {
 		WC()->cart->add_discount( $coupon->get_code() );
 
 		// Set the flat_rate shipping method.
-		WC()->session->set( 'chosen_shipping_methods', array( 'flat_rate' ) );
+		WC()->session->set( 'chosen_shipping_methods', [ 'flat_rate' ] );
 		WC()->cart->calculate_totals();
 
 		// Test if the cart total amount is equal 29.5.
@@ -254,7 +254,7 @@ class WC_Tests_Coupon extends WC_Unit_Test_Case {
 		WC()->cart->add_discount( $coupon_2->get_code() );
 
 		// Set the flat_rate shipping method.
-		WC()->session->set( 'chosen_shipping_methods', array( 'flat_rate' ) );
+		WC()->session->set( 'chosen_shipping_methods', [ 'flat_rate' ] );
 		WC()->cart->calculate_totals();
 
 		// Test if the cart total amount is equal 29.5.
@@ -295,11 +295,11 @@ class WC_Tests_Coupon extends WC_Unit_Test_Case {
 		// Create coupon.
 		$coupon = WC_Helper_Coupon::create_coupon(
 			'dummycoupon',
-			array(
+			[
 				'discount_type'          => 'percent',
 				'coupon_amount'          => '5',
 				'limit_usage_to_x_items' => 1,
-			)
+			]
 		);
 
 		// We need this to have the calculate_totals() method calculate totals.
@@ -331,11 +331,11 @@ class WC_Tests_Coupon extends WC_Unit_Test_Case {
 		// Create coupon.
 		$coupon = WC_Helper_Coupon::create_coupon(
 			'dummycoupon',
-			array(
+			[
 				'discount_type'          => __FUNCTION__,
 				'coupon_amount'          => '5',
 				'limit_usage_to_x_items' => 1,
-			)
+			]
 		);
 
 		// Add 4 products and coupon to cart.

@@ -19,7 +19,7 @@ class WC_Legacy_Settings_Example extends WC_Settings_Page {
 	}
 
 	public function get_settings() {
-		return array( 'foo' => 'bar' );
+		return [ 'foo' => 'bar' ];
 	}
 
 	// phpcs:enable Squiz.Commenting.FunctionComment.Missing

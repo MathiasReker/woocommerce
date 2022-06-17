@@ -68,6 +68,6 @@ class WC_Admin_Meta_Boxes_Test extends WC_Unit_Test_Case {
 	private function simulate_shutdown() {
 		// Previously (prior to 6.5.0), $this->sut->save_errors() would have been called during shutdown.
 		$this->sut->append_to_error_store();
-		WC_Admin_Meta_Boxes::$meta_box_errors = array();
+		WC_Admin_Meta_Boxes::$meta_box_errors = [];
 	}
 }

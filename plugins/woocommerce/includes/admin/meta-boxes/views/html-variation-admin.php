@@ -72,7 +72,7 @@ defined( 'ABSPATH' ) || exit;
 			<?php
 			if ( wc_product_sku_enabled() ) {
 				woocommerce_wp_text_input(
-					array(
+					[
 						'id'            => "variable_sku{$loop}",
 						'name'          => "variable_sku[{$loop}]",
 						'value'         => $variation_object->get_sku( 'edit' ),
@@ -81,14 +81,14 @@ defined( 'ABSPATH' ) || exit;
 						'desc_tip'      => true,
 						'description'   => __( 'SKU refers to a Stock-keeping unit, a unique identifier for each distinct product and service that can be purchased.', 'woocommerce' ),
 						'wrapper_class' => 'form-row form-row-last',
-					)
+					]
 				);
 			}
 			?>
 			<p class="form-row form-row-full options">
 				<label>
 					<?php esc_html_e( 'Enabled', 'woocommerce' ); ?>
-					<input type="checkbox" class="checkbox" name="variable_enabled[<?php echo esc_attr( $loop ); ?>]" <?php checked( in_array( $variation_object->get_status( 'edit' ), array( 'publish', false ), true ), true ); ?> />
+					<input type="checkbox" class="checkbox" name="variable_enabled[<?php echo esc_attr( $loop ); ?>]" <?php checked( in_array( $variation_object->get_status( 'edit' ), [ 'publish', false ], true ), true ); ?> />
 				</label>
 				<label class="tips" data-tip="<?php esc_attr_e( 'Enable this option if access is given to a downloadable file upon purchase of a product', 'woocommerce' ); ?>">
 					<?php esc_html_e( 'Downloadable', 'woocommerce' ); ?>
@@ -118,7 +118,7 @@ defined( 'ABSPATH' ) || exit;
 				);
 
 				woocommerce_wp_text_input(
-					array(
+					[
 						'id'            => "variable_regular_price_{$loop}",
 						'name'          => "variable_regular_price[{$loop}]",
 						'value'         => wc_format_localized_price( $variation_object->get_regular_price( 'edit' ) ),
@@ -126,7 +126,7 @@ defined( 'ABSPATH' ) || exit;
 						'data_type'     => 'price',
 						'wrapper_class' => 'form-row form-row-first',
 						'placeholder'   => __( 'Variation price (required)', 'woocommerce' ),
-					)
+					]
 				);
 
 				$label = sprintf(
@@ -136,14 +136,14 @@ defined( 'ABSPATH' ) || exit;
 				);
 
 				woocommerce_wp_text_input(
-					array(
+					[
 						'id'            => "variable_sale_price{$loop}",
 						'name'          => "variable_sale_price[{$loop}]",
 						'value'         => wc_format_localized_price( $variation_object->get_sale_price( 'edit' ) ),
 						'data_type'     => 'price',
 						'label'         => $label . ' <a href="#" class="sale_schedule">' . esc_html__( 'Schedule', 'woocommerce' ) . '</a><a href="#" class="cancel_sale_schedule hidden">' . esc_html__( 'Cancel schedule', 'woocommerce' ) . '</a>',
 						'wrapper_class' => 'form-row form-row-last',
-					)
+					]
 				);
 
 				$sale_price_dates_from_timestamp = $variation_object->get_date_on_sale_from( 'edit' ) ? $variation_object->get_date_on_sale_from( 'edit' )->getOffsetTimestamp() : false;
@@ -180,7 +180,7 @@ defined( 'ABSPATH' ) || exit;
 				<div class="show_if_variation_manage_stock" style="display: none;">
 					<?php
 					woocommerce_wp_text_input(
-						array(
+						[
 							'id'                => "variable_stock{$loop}",
 							'name'              => "variable_stock[{$loop}]",
 							'value'             => wc_stock_amount( $variation_object->get_stock_quantity( 'edit' ) ),
@@ -188,18 +188,18 @@ defined( 'ABSPATH' ) || exit;
 							'desc_tip'          => true,
 							'description'       => __( "Enter a number to set stock quantity at the variation level. Use a variation's 'Manage stock?' check box above to enable/disable stock management at the variation level.", 'woocommerce' ),
 							'type'              => 'number',
-							'custom_attributes' => array(
+							'custom_attributes' => [
 								'step' => 'any',
-							),
+							],
 							'data_type'         => 'stock',
 							'wrapper_class'     => 'form-row form-row-first',
-						)
+						]
 					);
 
 					echo '<input type="hidden" name="variable_original_stock[' . esc_attr( $loop ) . ']" value="' . esc_attr( wc_stock_amount( $variation_object->get_stock_quantity( 'edit' ) ) ) . '" />';
 
 					woocommerce_wp_select(
-						array(
+						[
 							'id'            => "variable_backorders{$loop}",
 							'name'          => "variable_backorders[{$loop}]",
 							'value'         => $variation_object->get_backorders( 'edit' ),
@@ -208,7 +208,7 @@ defined( 'ABSPATH' ) || exit;
 							'desc_tip'      => true,
 							'description'   => __( 'If managing stock, this controls whether or not backorders are allowed. If enabled, stock quantity can go below 0.', 'woocommerce' ),
 							'wrapper_class' => 'form-row form-row-last',
-						)
+						]
 					);
 
 					$low_stock_placeholder = ( $product_object->get_manage_stock() && '' !== $product_object->get_low_stock_amount() )
@@ -224,7 +224,7 @@ defined( 'ABSPATH' ) || exit;
 						);
 
 					woocommerce_wp_text_input(
-						array(
+						[
 							'id'                => "variable_low_stock_amount{$loop}",
 							'name'              => "variable_low_stock_amount[{$loop}]",
 							'value'             => $variation_object->get_low_stock_amount( 'edit' ),
@@ -233,11 +233,11 @@ defined( 'ABSPATH' ) || exit;
 							'desc_tip'          => true,
 							'description'       => __( 'When variation stock reaches this amount you will be notified by email. The default value for all variations can be set in the product Inventory tab. The shop default value can be set in Settings > Products > Inventory.', 'woocommerce' ),
 							'type'              => 'number',
-							'custom_attributes' => array(
+							'custom_attributes' => [
 								'step' => 'any',
-							),
+							],
 							'wrapper_class' => 'form-row',
-						)
+						]
 					);
 
 					/**
@@ -257,7 +257,7 @@ defined( 'ABSPATH' ) || exit;
 			<div>
 				<?php
 				woocommerce_wp_select(
-					array(
+					[
 						'id'            => "variable_stock_status{$loop}",
 						'name'          => "variable_stock_status[{$loop}]",
 						'value'         => $variation_object->get_stock_status( 'edit' ),
@@ -266,7 +266,7 @@ defined( 'ABSPATH' ) || exit;
 						'desc_tip'      => true,
 						'description'   => __( 'Controls whether or not the product is listed as "in stock" or "out of stock" on the frontend.', 'woocommerce' ),
 						'wrapper_class' => 'form-row form-row-full variable_stock_status',
-					)
+					]
 				);
 
 				if ( wc_product_weight_enabled() ) {
@@ -277,7 +277,7 @@ defined( 'ABSPATH' ) || exit;
 					);
 
 					woocommerce_wp_text_input(
-						array(
+						[
 							'id'            => "variable_weight{$loop}",
 							'name'          => "variable_weight[{$loop}]",
 							'value'         => wc_format_localized_decimal( $variation_object->get_weight( 'edit' ) ),
@@ -288,7 +288,7 @@ defined( 'ABSPATH' ) || exit;
 							'type'          => 'text',
 							'data_type'     => 'decimal',
 							'wrapper_class' => 'form-row form-row-first hide_if_variation_virtual',
-						)
+						]
 					);
 				}
 
@@ -336,14 +336,14 @@ defined( 'ABSPATH' ) || exit;
 					<label><?php esc_html_e( 'Shipping class', 'woocommerce' ); ?></label>
 					<?php
 					wp_dropdown_categories(
-						array(
+						[
 							'taxonomy'         => 'product_shipping_class',
 							'hide_empty'       => 0,
 							'show_option_none' => __( 'Same as parent', 'woocommerce' ),
 							'name'             => 'variable_shipping_class[' . $loop . ']',
 							'id'               => '',
 							'selected'         => $variation_object->get_shipping_class_id( 'edit' ),
-						)
+						]
 					);
 					?>
 				</p>
@@ -351,16 +351,16 @@ defined( 'ABSPATH' ) || exit;
 				<?php
 				if ( wc_tax_enabled() ) {
 					woocommerce_wp_select(
-						array(
+						[
 							'id'            => "variable_tax_class{$loop}",
 							'name'          => "variable_tax_class[{$loop}]",
 							'value'         => $variation_object->get_tax_class( 'edit' ),
 							'label'         => __( 'Tax class', 'woocommerce' ),
-							'options'       => array( 'parent' => __( 'Same as parent', 'woocommerce' ) ) + wc_get_product_tax_class_options(),
+							'options'       => [ 'parent' => __( 'Same as parent', 'woocommerce' ) ] + wc_get_product_tax_class_options(),
 							'desc_tip'      => 'true',
 							'description'   => __( 'Choose a tax class for this product. Tax classes are used to apply different tax rates specific to certain types of product.', 'woocommerce' ),
 							'wrapper_class' => 'form-row form-row-full',
-						)
+						]
 					);
 
 					/**
@@ -379,7 +379,7 @@ defined( 'ABSPATH' ) || exit;
 			<div>
 				<?php
 				woocommerce_wp_textarea_input(
-					array(
+					[
 						'id'            => "variable_description{$loop}",
 						'name'          => "variable_description[{$loop}]",
 						'value'         => $variation_object->get_description( 'edit' ),
@@ -387,7 +387,7 @@ defined( 'ABSPATH' ) || exit;
 						'desc_tip'      => true,
 						'description'   => __( 'Enter an optional description for this variation.', 'woocommerce' ),
 						'wrapper_class' => 'form-row form-row-full',
-					)
+					]
 				);
 				?>
 			</div>
@@ -422,10 +422,10 @@ defined( 'ABSPATH' ) || exit;
 									<a href="#" class="button insert" data-row="
 									<?php
 									$key  = '';
-									$file = array(
+									$file = [
 										'file' => '',
 										'name' => '',
-									);
+									];
 									$disabled_download = false;
 									ob_start();
 									require __DIR__ . '/html-product-variation-download.php';
@@ -454,7 +454,7 @@ defined( 'ABSPATH' ) || exit;
 			<div class="show_if_variation_downloadable" style="display: none;">
 				<?php
 				woocommerce_wp_text_input(
-					array(
+					[
 						'id'                => "variable_download_limit{$loop}",
 						'name'              => "variable_download_limit[{$loop}]",
 						'value'             => $variation_object->get_download_limit( 'edit' ) < 0 ? '' : $variation_object->get_download_limit( 'edit' ),
@@ -463,16 +463,16 @@ defined( 'ABSPATH' ) || exit;
 						'description'       => __( 'Leave blank for unlimited re-downloads.', 'woocommerce' ),
 						'type'              => 'number',
 						'desc_tip'          => true,
-						'custom_attributes' => array(
+						'custom_attributes' => [
 							'step' => '1',
 							'min'  => '0',
-						),
+						],
 						'wrapper_class'     => 'form-row form-row-first',
-					)
+					]
 				);
 
 				woocommerce_wp_text_input(
-					array(
+					[
 						'id'                => "variable_download_expiry{$loop}",
 						'name'              => "variable_download_expiry[{$loop}]",
 						'value'             => $variation_object->get_download_expiry( 'edit' ) < 0 ? '' : $variation_object->get_download_expiry( 'edit' ),
@@ -481,12 +481,12 @@ defined( 'ABSPATH' ) || exit;
 						'description'       => __( 'Enter the number of days before a download link expires, or leave blank.', 'woocommerce' ),
 						'type'              => 'number',
 						'desc_tip'          => true,
-						'custom_attributes' => array(
+						'custom_attributes' => [
 							'step' => '1',
 							'min'  => '0',
-						),
+						],
 						'wrapper_class'     => 'form-row form-row-last',
-					)
+					]
 				);
 
 				/**

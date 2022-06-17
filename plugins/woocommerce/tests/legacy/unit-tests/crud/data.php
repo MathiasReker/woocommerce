@@ -70,19 +70,19 @@ class WC_Tests_CRUD_Data extends WC_Unit_Test_Case {
 	 */
 	public function test_set_props() {
 		$object      = new WC_Mock_WC_Data();
-		$data_to_set = array(
+		$data_to_set = [
 			'content'    => 'I am a fish',
 			'bool_value' => true,
-		);
+		];
 		$result      = $object->set_props( $data_to_set );
 		$this->assertFalse( is_wp_error( $result ) );
 		$this->assertEquals( 'I am a fish', $object->get_content() );
 		$this->assertTrue( $object->get_bool_value() );
 
-		$data_to_set = array(
+		$data_to_set = [
 			'content'    => 'I am also a fish',
 			'bool_value' => 'thisisinvalid',
-		);
+		];
 		$result      = $object->set_props( $data_to_set );
 		$this->assertTrue( is_wp_error( $result ) );
 		$this->assertEquals( 'I am also a fish', $object->get_content() );
@@ -154,7 +154,7 @@ class WC_Tests_CRUD_Data extends WC_Unit_Test_Case {
 	 */
 	public function test_get_meta_data_cache_invalidation_array_to_scalar() {
 		$object = new WC_Order();
-		$object->add_meta_data( 'test_meta_key', array( 'val1' ), true );
+		$object->add_meta_data( 'test_meta_key', [ 'val1' ], true );
 		$object->add_meta_data( 'test_multi_meta_key', 'val2' );
 		$object->add_meta_data( 'test_multi_meta_key', 'val3' );
 		$object->save();
@@ -224,7 +224,7 @@ class WC_Tests_CRUD_Data extends WC_Unit_Test_Case {
 		$single_off = $object->get_meta( 'also-doesnt-exist', false );
 
 		$this->assertEquals( '', $single_on );
-		$this->assertEquals( array(), $single_off );
+		$this->assertEquals( [], $single_off );
 	}
 
 	/**
@@ -238,7 +238,7 @@ class WC_Tests_CRUD_Data extends WC_Unit_Test_Case {
 		add_metadata( 'post', $object_id, 'test_meta_key_2', 'val2', true );
 		$object = new WC_Mock_WC_Data( $object_id );
 
-		$metadata     = array();
+		$metadata     = [];
 		$raw_metadata = $wpdb->get_results(
 			$wpdb->prepare(
 				"
@@ -251,11 +251,11 @@ class WC_Tests_CRUD_Data extends WC_Unit_Test_Case {
 		);
 
 		foreach ( $raw_metadata as $meta ) {
-			$metadata[] = (object) array(
+			$metadata[] = (object) [
 				'id'    => $meta->meta_id,
 				'key'   => $meta->meta_key,
 				'value' => $meta->meta_value,
-			);
+			];
 		}
 
 		$object = new WC_Mock_WC_Data();
@@ -293,7 +293,7 @@ class WC_Tests_CRUD_Data extends WC_Unit_Test_Case {
 
 		$this->assertEquals( 'val1', $object->get_meta( 'test_meta_key' ) );
 
-		$metadata = array();
+		$metadata = [];
 		$meta_id  = $wpdb->get_var(
 			$wpdb->prepare(
 				"
@@ -511,15 +511,15 @@ class WC_Tests_CRUD_Data extends WC_Unit_Test_Case {
 	 * Test applying changes.
 	 */
 	public function test_apply_changes() {
-		$data = array(
+		$data = [
 			'prop1' => 'value1',
 			'prop2' => 'value2',
-		);
+		];
 
-		$changes = array(
+		$changes = [
 			'prop1' => 'new_value1',
 			'prop3' => 'value3',
-		);
+		];
 
 		$object = new WC_Mock_WC_Data();
 		$object->set_data( $data );
@@ -539,20 +539,20 @@ class WC_Tests_CRUD_Data extends WC_Unit_Test_Case {
 	 * Test applying changes with a nested array.
 	 */
 	public function test_apply_changes_nested() {
-		$data = array(
+		$data = [
 			'prop1' => 'value1',
-			'prop2' => array(
+			'prop2' => [
 				'subprop1' => 1,
 				'subprop2' => 2,
-			),
-		);
+			],
+		];
 
-		$changes = array(
-			'prop2' => array(
+		$changes = [
+			'prop2' => [
 				'subprop1' => 1000,
 				'subprop3' => 3,
-			),
-		);
+			],
+		];
 
 		$object = new WC_Mock_WC_Data();
 		$object->set_data( $data );

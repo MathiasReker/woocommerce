@@ -57,7 +57,7 @@ class LegacyProxyTest extends \WC_Unit_Test_Case {
 
 		$instance = $this->sut->get_instance_of( \ClassWithSingleton::class, 'foo', 'bar' );
 		$this->assertSame( \ClassWithSingleton::$instance, $instance );
-		$this->assertEquals( array( 'foo', 'bar' ), \ClassWithSingleton::$instance_args );
+		$this->assertEquals( [ 'foo', 'bar' ], \ClassWithSingleton::$instance_args );
 	}
 
 	/**
@@ -69,7 +69,7 @@ class LegacyProxyTest extends \WC_Unit_Test_Case {
 
 		$loaded = $this->sut->get_instance_of( \ClassWithLoadMethod::class, 'foo', 'bar' );
 		$this->assertSame( \ClassWithLoadMethod::$loaded, $loaded );
-		$this->assertEquals( array( 'foo', 'bar' ), \ClassWithLoadMethod::$loaded_args );
+		$this->assertEquals( [ 'foo', 'bar' ], \ClassWithLoadMethod::$loaded_args );
 	}
 
 	/**

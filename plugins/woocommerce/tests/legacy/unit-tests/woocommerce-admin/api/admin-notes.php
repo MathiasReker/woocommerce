@@ -29,9 +29,9 @@ class WC_Admin_Tests_API_Admin_Notes extends WC_REST_Unit_Test_Case {
 		parent::setUp();
 
 		$this->user = $this->factory->user->create(
-			array(
+			[
 				'role' => 'administrator',
-			)
+			]
 		);
 
 		WC_Helper_Admin_Notes::reset_notes_dbs();
@@ -178,9 +178,9 @@ class WC_Admin_Tests_API_Admin_Notes extends WC_REST_Unit_Test_Case {
 
 		$request = new WP_REST_Request( 'PUT', $this->endpoint . '/1' );
 		$request->set_body_params(
-			array(
+			[
 				'status' => 'actioned',
-			)
+			]
 		);
 
 		$response = $this->server->dispatch( $request );
@@ -195,9 +195,9 @@ class WC_Admin_Tests_API_Admin_Notes extends WC_REST_Unit_Test_Case {
 	public function test_update_note_without_permission() {
 		$request = new WP_REST_Request( 'PUT', $this->endpoint . '/1' );
 		$request->set_body_params(
-			array(
+			[
 				'status' => 'actioned',
-			)
+			]
 		);
 		$response = $this->server->dispatch( $request );
 		$this->assertEquals( 401, $response->get_status() );
@@ -239,10 +239,10 @@ class WC_Admin_Tests_API_Admin_Notes extends WC_REST_Unit_Test_Case {
 		// When.
 		$request = new WP_REST_Request( 'GET', $this->endpoint );
 		$request->set_query_params(
-			array(
+			[
 				'page'     => '1',
 				'per_page' => '3',
-			)
+			]
 		);
 		$response = $this->server->dispatch( $request );
 		$notes    = $response->get_data();
@@ -276,10 +276,10 @@ class WC_Admin_Tests_API_Admin_Notes extends WC_REST_Unit_Test_Case {
 		// When.
 		$request = new WP_REST_Request( 'GET', $this->endpoint );
 		$request->set_query_params(
-			array(
+			[
 				'page'     => '1',
 				'per_page' => '3',
-			)
+			]
 		);
 		$response = $this->server->dispatch( $request );
 		$notes    = $response->get_data();
@@ -300,7 +300,7 @@ class WC_Admin_Tests_API_Admin_Notes extends WC_REST_Unit_Test_Case {
 		wp_set_current_user( $this->user );
 
 		$request = new WP_REST_Request( 'GET', $this->endpoint );
-		$request->set_query_params( array( 'type' => 'warning' ) );
+		$request->set_query_params( [ 'type' => 'warning' ] );
 		$response = $this->server->dispatch( $request );
 		$notes    = $response->get_data();
 
@@ -318,7 +318,7 @@ class WC_Admin_Tests_API_Admin_Notes extends WC_REST_Unit_Test_Case {
 		wp_set_current_user( $this->user );
 
 		$request = new WP_REST_Request( 'GET', $this->endpoint );
-		$request->set_query_params( array( 'status' => 'actioned' ) );
+		$request->set_query_params( [ 'status' => 'actioned' ] );
 		$response = $this->server->dispatch( $request );
 		$notes    = $response->get_data();
 
@@ -327,7 +327,7 @@ class WC_Admin_Tests_API_Admin_Notes extends WC_REST_Unit_Test_Case {
 		$this->assertEquals( $notes[0]['title'], 'PHPUNIT_TEST_NOTE_2_TITLE' );
 
 		$request = new WP_REST_Request( 'GET', $this->endpoint );
-		$request->set_query_params( array( 'status' => 'invalid' ) );
+		$request->set_query_params( [ 'status' => 'invalid' ] );
 		$response = $this->server->dispatch( $request );
 		$notes    = $response->get_data();
 
@@ -342,7 +342,7 @@ class WC_Admin_Tests_API_Admin_Notes extends WC_REST_Unit_Test_Case {
 		wp_set_current_user( $this->user );
 
 		$request = new WP_REST_Request( 'GET', $this->endpoint );
-		$request->set_query_params( array( 'status' => 'snoozed' ) );
+		$request->set_query_params( [ 'status' => 'snoozed' ] );
 		$response = $this->server->dispatch( $request );
 		$notes    = $response->get_data();
 
@@ -374,7 +374,7 @@ class WC_Admin_Tests_API_Admin_Notes extends WC_REST_Unit_Test_Case {
 		$note->save();
 
 		$request = new WP_REST_Request( 'GET', $this->endpoint );
-		$request->set_query_params( array( 'source' => 'a-source' ) );
+		$request->set_query_params( [ 'source' => 'a-source' ] );
 		$response = $this->server->dispatch( $request );
 		$notes    = $response->get_data();
 
@@ -403,7 +403,7 @@ class WC_Admin_Tests_API_Admin_Notes extends WC_REST_Unit_Test_Case {
 		$note->save();
 
 		$request = new WP_REST_Request( 'GET', $this->endpoint );
-		$request->set_query_params( array( 'source' => 'source-1,source-2' ) );
+		$request->set_query_params( [ 'source' => 'source-1,source-2' ] );
 		$response = $this->server->dispatch( $request );
 		$notes    = $response->get_data();
 
@@ -421,10 +421,10 @@ class WC_Admin_Tests_API_Admin_Notes extends WC_REST_Unit_Test_Case {
 
 		$request = new WP_REST_Request( 'GET', $this->endpoint );
 		$request->set_query_params(
-			array(
+			[
 				'orderby' => 'title',
 				'order'   => 'asc',
-			)
+			]
 		);
 		$response = $this->server->dispatch( $request );
 		$notes    = $response->get_data();
@@ -438,10 +438,10 @@ class WC_Admin_Tests_API_Admin_Notes extends WC_REST_Unit_Test_Case {
 
 		$request = new WP_REST_Request( 'GET', $this->endpoint );
 		$request->set_query_params(
-			array(
+			[
 				'orderby' => 'status',
 				'order'   => 'desc',
-			)
+			]
 		);
 		$response = $this->server->dispatch( $request );
 		$notes    = $response->get_data();
@@ -541,9 +541,9 @@ class WC_Admin_Tests_API_Admin_Notes extends WC_REST_Unit_Test_Case {
 
 		$request = new WP_REST_Request( 'PUT', $this->endpoint . '/3' );
 		$request->set_body_params(
-			array(
+			[
 				'is_deleted' => '0',
-			)
+			]
 		);
 
 		$response = $this->server->dispatch( $request );
@@ -575,9 +575,9 @@ class WC_Admin_Tests_API_Admin_Notes extends WC_REST_Unit_Test_Case {
 		// It deletes only unactioned notes.
 		$request = new WP_REST_Request( 'DELETE', $this->endpoint . '/delete/all' );
 		$request->set_query_params(
-			array(
+			[
 				'status' => 'unactioned',
-			)
+			]
 		);
 		$response = $this->server->dispatch( $request );
 		$notes    = $response->get_data();
@@ -608,10 +608,10 @@ class WC_Admin_Tests_API_Admin_Notes extends WC_REST_Unit_Test_Case {
 
 		$request = new WP_REST_Request( 'PUT', $this->endpoint . '/update' );
 		$request->set_body_params(
-			array(
-				'noteIds'    => array( '1', '4' ),
+			[
+				'noteIds'    => [ '1', '4' ],
 				'is_deleted' => '1',
-			)
+			]
 		);
 
 		$response = $this->server->dispatch( $request );

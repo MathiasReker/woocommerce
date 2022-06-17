@@ -53,35 +53,35 @@ class Menu {
 	/**
 	 * Array of usable menu IDs.
 	 */
-	const MENU_IDS = array(
+	const MENU_IDS = [
 		'primary',
 		'favorites',
 		'plugins',
 		'secondary',
-	);
+	];
 
 	/**
 	 * Store menu items.
 	 *
 	 * @var array
 	 */
-	protected static $menu_items = array();
+	protected static $menu_items = [];
 
 	/**
 	 * Store categories with menu item IDs.
 	 *
 	 * @var array
 	 */
-	protected static $categories = array(
-		'woocommerce' => array(),
-	);
+	protected static $categories = [
+		'woocommerce' => [],
+	];
 
 	/**
 	 * Registered callbacks or URLs with migration boolean as key value pairs.
 	 *
 	 * @var array
 	 */
-	protected static $callbacks = array();
+	protected static $callbacks = [];
 
 	/**
 	 * Get class instance.
@@ -97,11 +97,11 @@ class Menu {
 	 * Init.
 	 */
 	public function init() {
-		add_action( 'admin_menu', array( $this, 'add_core_items' ), 100 );
-		add_filter( 'admin_enqueue_scripts', array( $this, 'enqueue_data' ), 20 );
+		add_action( 'admin_menu', [ $this, 'add_core_items' ], 100 );
+		add_filter( 'admin_enqueue_scripts', [ $this, 'enqueue_data' ], 20 );
 
-		add_filter( 'admin_menu', array( $this, 'migrate_core_child_items' ), PHP_INT_MAX - 1 );
-		add_filter( 'admin_menu', array( $this, 'migrate_menu_items' ), PHP_INT_MAX - 2 );
+		add_filter( 'admin_menu', [ $this, 'migrate_core_child_items' ], PHP_INT_MAX - 1 );
+		add_filter( 'admin_menu', [ $this, 'migrate_menu_items' ], PHP_INT_MAX - 2 );
 	}
 
 	/**
@@ -171,14 +171,14 @@ class Menu {
 			return;
 		}
 
-		$defaults           = array(
+		$defaults           = [
 			'id'         => '',
 			'title'      => '',
 			'order'      => 100,
 			'migrate'    => true,
 			'menuId'     => 'primary',
 			'isCategory' => true,
-		);
+		];
 		$menu_item          = wp_parse_args( $args, $defaults );
 		$menu_item['title'] = wp_strip_all_tags( wp_specialchars_decode( $menu_item['title'] ) );
 		unset( $menu_item['url'] );
@@ -193,7 +193,7 @@ class Menu {
 		}
 
 		self::$menu_items[ $menu_item['id'] ]       = $menu_item;
-		self::$categories[ $menu_item['id'] ]       = array();
+		self::$categories[ $menu_item['id'] ]       = [];
 		self::$categories[ $menu_item['parent'] ][] = $menu_item['id'];
 
 		if ( isset( $args['url'] ) ) {
@@ -233,7 +233,7 @@ class Menu {
 			return;
 		}
 
-		$defaults           = array(
+		$defaults           = [
 			'id'         => '',
 			'title'      => '',
 			'capability' => 'manage_woocommerce',
@@ -241,7 +241,7 @@ class Menu {
 			'order'      => 100,
 			'migrate'    => true,
 			'menuId'     => 'primary',
-		);
+		];
 		$menu_item          = wp_parse_args( $args, $defaults );
 		$menu_item['title'] = wp_strip_all_tags( wp_specialchars_decode( $menu_item['title'] ) );
 		$menu_item['url']   = self::get_callback_url( $menu_item['url'] );
@@ -297,9 +297,9 @@ class Menu {
 	public static function add_plugin_category( $args ) {
 		$category_args = array_merge(
 			$args,
-			array(
+			[
 				'menuId' => 'plugins',
-			)
+			]
 		);
 
 		if ( ! isset( $category_args['parent'] ) ) {
@@ -307,7 +307,7 @@ class Menu {
 		}
 
 		$menu_id = self::get_item_menu_id( $category_args );
-		if ( ! in_array( $menu_id, array( 'plugins', 'favorites' ), true ) ) {
+		if ( ! in_array( $menu_id, [ 'plugins', 'favorites' ], true ) ) {
 			return;
 		}
 
@@ -338,9 +338,9 @@ class Menu {
 
 		$item_args = array_merge(
 			$args,
-			array(
+			[
 				'menuId' => 'plugins',
-			)
+			]
 		);
 
 		$menu_id = self::get_item_menu_id( $item_args );
@@ -379,10 +379,10 @@ class Menu {
 
 		$item_args = array_merge(
 			$args,
-			array(
+			[
 				'menuId' => 'secondary',
 				'parent' => 'woocommerce-settings',
-			)
+			]
 		);
 
 		self::add_item( $item_args );
@@ -397,7 +397,7 @@ class Menu {
 	 * @param array  $menu_args Arguments merged with the returned menu items.
 	 * @return array
 	 */
-	public static function get_post_type_items( $post_type, $menu_args = array() ) {
+	public static function get_post_type_items( $post_type, $menu_args = [] ) {
 		$post_type_object = get_post_type_object( $post_type );
 
 		if ( ! $post_type_object || ! $post_type_object->show_in_menu ) {
@@ -409,39 +409,39 @@ class Menu {
 			? '(edit.php|post.php)'
 			: null;
 
-		return array(
+		return [
 			'default' => array_merge(
-				array(
+				[
 					'title'           => esc_attr( $post_type_object->labels->menu_name ),
 					'capability'      => $post_type_object->cap->edit_posts,
 					'id'              => $parent . $post_type,
 					'url'             => "edit.php?post_type={$post_type}",
 					'matchExpression' => $match_expression,
-				),
+				],
 				$menu_args
 			),
 			'all'     => array_merge(
-				array(
+				[
 					'title'           => esc_attr( $post_type_object->labels->all_items ),
 					'capability'      => $post_type_object->cap->edit_posts,
 					'id'              => "{$parent}{$post_type}-all-items",
 					'url'             => "edit.php?post_type={$post_type}",
 					'order'           => 10,
 					'matchExpression' => $match_expression,
-				),
+				],
 				$menu_args
 			),
 			'new'     => array_merge(
-				array(
+				[
 					'title'      => esc_attr( $post_type_object->labels->add_new ),
 					'capability' => $post_type_object->cap->create_posts,
 					'id'         => "{$parent}{$post_type}-add-new",
 					'url'        => "post-new.php?post_type={$post_type}",
 					'order'      => 20,
-				),
+				],
 				$menu_args
 			),
-		);
+		];
 	}
 
 	/**
@@ -451,7 +451,7 @@ class Menu {
 	 * @param array  $menu_args Arguments merged with the returned menu items.
 	 * @return array
 	 */
-	public static function get_taxonomy_items( $taxonomy, $menu_args = array() ) {
+	public static function get_taxonomy_items( $taxonomy, $menu_args = [] ) {
 		$taxonomy_object = get_taxonomy( $taxonomy );
 
 		if ( ! $taxonomy_object || ! $taxonomy_object->show_in_menu ) {
@@ -468,30 +468,30 @@ class Menu {
 		$match_expression  .= 'edit-tags.php';                          // Match edit-tags.php pages.
 		$match_expression  .= "(?=.*[?|&]taxonomy=${taxonomy}(&|$|#))"; // Lookahead to match a taxonomy URL param.
 
-		return array(
+		return [
 			'default' => array_merge(
-				array(
+				[
 					'title'           => esc_attr( $taxonomy_object->labels->menu_name ),
 					'capability'      => $taxonomy_object->cap->edit_terms,
 					'id'              => $parent . $taxonomy,
 					'url'             => "edit-tags.php?taxonomy={$taxonomy}{$product_type_query}",
 					'matchExpression' => $match_expression,
-				),
+				],
 				$menu_args
 			),
 			'all'     => array_merge(
-				array(
+				[
 					'title'           => esc_attr( $taxonomy_object->labels->all_items ),
 					'capability'      => $taxonomy_object->cap->edit_terms,
 					'id'              => "{$parent}{$taxonomy}-all-items",
 					'url'             => "edit-tags.php?taxonomy={$taxonomy}{$product_type_query}",
 					'matchExpression' => $match_expression,
 					'order'           => 10,
-				),
+				],
 				$menu_args
 			),
 
-		);
+		];
 	}
 
 	/**
@@ -532,17 +532,17 @@ class Menu {
 		}
 
 		// Don't add these Product submenus because they are added elsewhere.
-		if ( in_array( $menu_item[2], array( 'product_importer', 'product_exporter', 'product_attributes' ), true ) ) {
+		if ( in_array( $menu_item[2], [ 'product_importer', 'product_exporter', 'product_attributes' ], true ) ) {
 			return;
 		}
 
 		self::add_plugin_item(
-			array(
+			[
 				'title'      => $menu_item[0],
 				'capability' => $menu_item[1],
 				'id'         => sanitize_title( $menu_item[0] ),
 				'url'        => $menu_item[2],
-			)
+			]
 		);
 
 		// Determine if migrated items are a taxonomy or post_type. If they are, register them.
@@ -550,7 +550,7 @@ class Menu {
 		$query_string = isset( $parsed_url['query'] ) ? $parsed_url['query'] : false;
 
 		if ( $query_string ) {
-			$query = array();
+			$query = [];
 			parse_str( $query_string, $query );
 
 			if ( isset( $query['taxonomy'] ) ) {
@@ -574,8 +574,8 @@ class Menu {
 			return $menu;
 		}
 
-		$main_items    = isset( $submenu['woocommerce'] ) ? $submenu['woocommerce'] : array();
-		$product_items = isset( $submenu['edit.php?post_type=product'] ) ? $submenu['edit.php?post_type=product'] : array();
+		$main_items    = isset( $submenu['woocommerce'] ) ? $submenu['woocommerce'] : [];
+		$product_items = isset( $submenu['edit.php?post_type=product'] ) ? $submenu['edit.php?post_type=product'] : [];
 
 		foreach ( $main_items as $key => $menu_item ) {
 			self::add_item_and_taxonomy( $menu_item );
@@ -715,12 +715,12 @@ class Menu {
 	 */
 	public static function get_category_items( $category ) {
 		if ( ! isset( self::$categories[ $category ] ) ) {
-			return array();
+			return [];
 		}
 
 		$menu_item_ids = self::$categories[ $category ];
 
-		$category_menu_items = array();
+		$category_menu_items = [];
 		foreach ( $menu_item_ids as $id ) {
 			if ( isset( self::$menu_items[ $id ] ) ) {
 				$category_menu_items[] = self::$menu_items[ $id ];
@@ -746,7 +746,7 @@ class Menu {
 	 */
 	public static function get_mapped_menu_items() {
 		$menu_items   = self::get_items();
-		$mapped_items = array();
+		$mapped_items = [];
 
 		// Sort the items by order and title.
 		$order     = array_column( $menu_items, 'order' );
@@ -757,9 +757,9 @@ class Menu {
 			$category_id = $menu_item[ 'parent' ];
 			$menu_id     = $menu_item[ 'menuId' ];
 			if ( ! isset( $mapped_items[ $category_id ] ) ) {
-				$mapped_items[ $category_id ] = array();
+				$mapped_items[ $category_id ] = [];
 				foreach ( self::MENU_IDS as $available_menu_id ) {
-					$mapped_items[ $category_id ][ $available_menu_id ] = array();
+					$mapped_items[ $category_id ][ $available_menu_id ] = [];
 				}
 			}
 
@@ -786,10 +786,10 @@ class Menu {
 	 * @return array
 	 */
 	public function enqueue_data( $menu ) {
-		$data = array(
+		$data = [
 			'menuItems'     => array_values( self::get_items() ),
 			'rootBackUrl'   => get_dashboard_url(),
-		);
+		];
 
 		wp_add_inline_script( WC_ADMIN_APP, 'window.wcNavigation = ' . wp_json_encode( $data ), 'before' );
 	}

@@ -34,7 +34,7 @@ class WC_REST_Legacy_Coupons_Controller extends WC_REST_CRUD_Controller {
 	public function query_args( $args, $request ) {
 		if ( ! empty( $request['code'] ) ) {
 			$id = wc_get_coupon_id_by_code( $request['code'] );
-			$args['post__in'] = array( $id );
+			$args['post__in'] = [ $id ];
 		}
 
 		return $args;
@@ -53,9 +53,9 @@ class WC_REST_Legacy_Coupons_Controller extends WC_REST_CRUD_Controller {
 		$coupon = new WC_Coupon( (int) $post->ID );
 		$data   = $coupon->get_data();
 
-		$format_decimal = array( 'amount', 'minimum_amount', 'maximum_amount' );
-		$format_date    = array( 'date_created', 'date_modified', 'date_expires' );
-		$format_null    = array( 'usage_limit', 'usage_limit_per_user', 'limit_usage_to_x_items' );
+		$format_decimal = [ 'amount', 'minimum_amount', 'maximum_amount' ];
+		$format_date    = [ 'date_created', 'date_modified', 'date_expires' ];
+		$format_null    = [ 'usage_limit', 'usage_limit_per_user', 'limit_usage_to_x_items' ];
 
 		// Format decimal values.
 		foreach ( $format_decimal as $key ) {
@@ -105,12 +105,12 @@ class WC_REST_Legacy_Coupons_Controller extends WC_REST_CRUD_Controller {
 		$id        = isset( $request['id'] ) ? absint( $request['id'] ) : 0;
 		$coupon    = new WC_Coupon( $id );
 		$schema    = $this->get_item_schema();
-		$data_keys = array_keys( array_filter( $schema['properties'], array( $this, 'filter_writable_props' ) ) );
+		$data_keys = array_keys( array_filter( $schema['properties'], [ $this, 'filter_writable_props' ] ) );
 
 		// Validate required POST fields.
 		if ( 'POST' === $request->get_method() && 0 === $coupon->get_id() ) {
 			if ( empty( $request['code'] ) ) {
-				return new WP_Error( 'woocommerce_rest_empty_coupon_code', sprintf( __( 'The coupon code cannot be empty.', 'woocommerce' ), 'code' ), array( 'status' => 400 ) );
+				return new WP_Error( 'woocommerce_rest_empty_coupon_code', sprintf( __( 'The coupon code cannot be empty.', 'woocommerce' ), 'code' ), [ 'status' => 400 ] );
 			}
 		}
 
@@ -126,7 +126,7 @@ class WC_REST_Legacy_Coupons_Controller extends WC_REST_CRUD_Controller {
 						$id_from_code = wc_get_coupon_id_by_code( $coupon_code, $id );
 
 						if ( $id_from_code ) {
-							return new WP_Error( 'woocommerce_rest_coupon_code_already_exists', __( 'The coupon code already exists', 'woocommerce' ), array( 'status' => 400 ) );
+							return new WP_Error( 'woocommerce_rest_coupon_code_already_exists', __( 'The coupon code already exists', 'woocommerce' ), [ 'status' => 400 ] );
 						}
 
 						$coupon->set_code( $coupon_code );
@@ -142,7 +142,7 @@ class WC_REST_Legacy_Coupons_Controller extends WC_REST_CRUD_Controller {
 						$coupon->set_description( wp_filter_post_kses( $value ) );
 						break;
 					default :
-						if ( is_callable( array( $coupon, "set_{$key}" ) ) ) {
+						if ( is_callable( [ $coupon, "set_{$key}" ] ) ) {
 							$coupon->{"set_{$key}"}( $value );
 						}
 						break;

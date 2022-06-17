@@ -22,7 +22,7 @@ class WC_Order_Data_Store_CPT extends Abstract_WC_Order_Data_Store_CPT implement
 	 * @since 3.0.0
 	 * @var array
 	 */
-	protected $internal_meta_keys = array(
+	protected $internal_meta_keys = [
 		'_customer_user',
 		'_order_key',
 		'_order_currency',
@@ -74,20 +74,20 @@ class WC_Order_Data_Store_CPT extends Abstract_WC_Order_Data_Store_CPT implement
 		'_recorded_coupon_usage_counts',
 		'_download_permissions_granted',
 		'_order_stock_reduced',
-	);
+	];
 
 	/**
 	 * Getters for internal key in data stores.
 	 *
 	 * @var string[]
 	 */
-	protected $internal_data_store_key_getters = array(
+	protected $internal_data_store_key_getters = [
 		'_download_permissions_granted' => 'download_permissions_granted',
 		'_recorded_sales'               => 'recorded_sales',
 		'_recorded_coupon_usage_counts' => 'recorded_coupon_usage_counts',
 		'_order_stock_reduced'          => 'stock_reduced',
 		'_new_order_email_sent'         => 'email_sent',
-	);
+	];
 
 	/**
 	 * Return internal key getters name.
@@ -133,7 +133,7 @@ class WC_Order_Data_Store_CPT extends Abstract_WC_Order_Data_Store_CPT implement
 		}
 
 		$order->set_props(
-			array(
+			[
 				'order_key'            => get_post_meta( $id, '_order_key', true ),
 				'customer_id'          => get_post_meta( $id, '_customer_user', true ),
 				'billing_first_name'   => get_post_meta( $id, '_billing_first_name', true ),
@@ -167,7 +167,7 @@ class WC_Order_Data_Store_CPT extends Abstract_WC_Order_Data_Store_CPT implement
 				'date_paid'            => $date_paid,
 				'cart_hash'            => get_post_meta( $id, '_cart_hash', true ),
 				'customer_note'        => $post_object->post_excerpt,
-			)
+			]
 		);
 	}
 
@@ -191,7 +191,7 @@ class WC_Order_Data_Store_CPT extends Abstract_WC_Order_Data_Store_CPT implement
 		// Fire a hook depending on the status - this should be considered a creation if it was previously draft status.
 		$new_status = $order->get_status( 'edit' );
 
-		if ( $new_status !== $previous_status && in_array( $previous_status, array( 'new', 'auto-draft', 'draft' ), true ) ) {
+		if ( $new_status !== $previous_status && in_array( $previous_status, [ 'new', 'auto-draft', 'draft' ], true ) ) {
 			do_action( 'woocommerce_new_order', $order->get_id(), $order );
 		} else {
 			do_action( 'woocommerce_update_order', $order->get_id(), $order );
@@ -205,9 +205,9 @@ class WC_Order_Data_Store_CPT extends Abstract_WC_Order_Data_Store_CPT implement
 	 * @since 3.0.0
 	 */
 	protected function update_post_meta( &$order ) {
-		$updated_props     = array();
+		$updated_props     = [];
 		$id                = $order->get_id();
-		$meta_key_to_props = array(
+		$meta_key_to_props = [
 			'_order_key'            => 'order_key',
 			'_customer_user'        => 'customer_id',
 			'_payment_method'       => 'payment_method',
@@ -219,7 +219,7 @@ class WC_Order_Data_Store_CPT extends Abstract_WC_Order_Data_Store_CPT implement
 			'_date_completed'       => 'date_completed',
 			'_date_paid'            => 'date_paid',
 			'_cart_hash'            => 'cart_hash',
-		);
+		];
 
 		$props_to_update = $this->get_props_to_update( $order, $meta_key_to_props );
 
@@ -240,8 +240,8 @@ class WC_Order_Data_Store_CPT extends Abstract_WC_Order_Data_Store_CPT implement
 			}
 		}
 
-		$address_props = array(
-			'billing'  => array(
+		$address_props = [
+			'billing'  => [
 				'_billing_first_name' => 'billing_first_name',
 				'_billing_last_name'  => 'billing_last_name',
 				'_billing_company'    => 'billing_company',
@@ -253,8 +253,8 @@ class WC_Order_Data_Store_CPT extends Abstract_WC_Order_Data_Store_CPT implement
 				'_billing_country'    => 'billing_country',
 				'_billing_email'      => 'billing_email',
 				'_billing_phone'      => 'billing_phone',
-			),
-			'shipping' => array(
+			],
+			'shipping' => [
 				'_shipping_first_name' => 'shipping_first_name',
 				'_shipping_last_name'  => 'shipping_last_name',
 				'_shipping_company'    => 'shipping_company',
@@ -265,8 +265,8 @@ class WC_Order_Data_Store_CPT extends Abstract_WC_Order_Data_Store_CPT implement
 				'_shipping_postcode'   => 'shipping_postcode',
 				'_shipping_country'    => 'shipping_country',
 				'_shipping_phone'      => 'shipping_phone',
-			),
-		);
+			],
+		];
 
 		foreach ( $address_props as $props_key => $props ) {
 			$props_to_update = $this->get_props_to_update( $order, $props );
@@ -332,7 +332,7 @@ class WC_Order_Data_Store_CPT extends Abstract_WC_Order_Data_Store_CPT implement
 		}
 		$this->update_order_meta_from_object( $order );
 		return wp_update_post(
-			array(
+			[
 				'ID'            => $order->get_id(),
 				'post_date'     => gmdate( 'Y-m-d H:i:s', $order->get_date_created( 'edit' )->getOffsetTimestamp() ),
 				'post_date_gmt' => gmdate( 'Y-m-d H:i:s', $order->get_date_created( 'edit' )->getTimestamp() ),
@@ -340,7 +340,7 @@ class WC_Order_Data_Store_CPT extends Abstract_WC_Order_Data_Store_CPT implement
 				'post_parent'   => $order->get_parent_id(),
 				'post_excerpt'  => $this->get_post_excerpt( $order ),
 				'post_type'     => 'shop_order',
-			)
+			]
 		);
 	}
 
@@ -498,7 +498,7 @@ class WC_Order_Data_Store_CPT extends Abstract_WC_Order_Data_Store_CPT implement
 	 *
 	 * @return array|object
 	 */
-	public function get_orders( $args = array() ) {
+	public function get_orders( $args = [] ) {
 		wc_deprecated_function( 'WC_Order_Data_Store_CPT::get_orders', '3.1.0', 'Use wc_get_orders instead.' );
 		return wc_get_orders( $args );
 	}
@@ -511,19 +511,19 @@ class WC_Order_Data_Store_CPT extends Abstract_WC_Order_Data_Store_CPT implement
 	 * @return array
 	 */
 	private function get_orders_generate_customer_meta_query( $values, $relation = 'or' ) {
-		$meta_query = array(
+		$meta_query = [
 			'relation'        => strtoupper( $relation ),
-			'customer_emails' => array(
+			'customer_emails' => [
 				'key'     => '_billing_email',
-				'value'   => array(),
+				'value'   => [],
 				'compare' => 'IN',
-			),
-			'customer_ids'    => array(
+			],
+			'customer_ids'    => [
 				'key'     => '_customer_user',
-				'value'   => array(),
+				'value'   => [],
 				'compare' => 'IN',
-			),
-		);
+			],
+		];
 		foreach ( $values as $value ) {
 			if ( is_array( $value ) ) {
 				$query_part = $this->get_orders_generate_customer_meta_query( $value, 'and' );
@@ -598,15 +598,15 @@ class WC_Order_Data_Store_CPT extends Abstract_WC_Order_Data_Store_CPT implement
 			'wc_clean',
 			apply_filters(
 				'woocommerce_shop_order_search_fields',
-				array(
+				[
 					'_billing_address_index',
 					'_shipping_address_index',
 					'_billing_last_name',
 					'_billing_email',
-				)
+				]
 			)
 		);
-		$order_ids     = array();
+		$order_ids     = [];
 
 		if ( is_numeric( $term ) ) {
 			$order_ids[] = absint( $term );
@@ -851,7 +851,7 @@ class WC_Order_Data_Store_CPT extends Abstract_WC_Order_Data_Store_CPT implement
 	protected function get_wp_query_args( $query_vars ) {
 
 		// Map query vars to ones that get_wp_query_args or WP_Query recognize.
-		$key_mapping = array(
+		$key_mapping = [
 			'customer_id'    => 'customer_user',
 			'status'         => 'post_status',
 			'currency'       => 'order_currency',
@@ -863,7 +863,7 @@ class WC_Order_Data_Store_CPT extends Abstract_WC_Order_Data_Store_CPT implement
 			'cart_tax'       => 'order_tax',
 			'total'          => 'order_total',
 			'page'           => 'paged',
-		);
+		];
 
 		foreach ( $key_mapping as $query_key => $db_key ) {
 			if ( isset( $query_vars[ $query_key ] ) ) {
@@ -886,18 +886,18 @@ class WC_Order_Data_Store_CPT extends Abstract_WC_Order_Data_Store_CPT implement
 		$wp_query_args = parent::get_wp_query_args( $query_vars );
 
 		if ( ! isset( $wp_query_args['date_query'] ) ) {
-			$wp_query_args['date_query'] = array();
+			$wp_query_args['date_query'] = [];
 		}
 		if ( ! isset( $wp_query_args['meta_query'] ) ) {
-			$wp_query_args['meta_query'] = array();
+			$wp_query_args['meta_query'] = [];
 		}
 
-		$date_queries = array(
+		$date_queries = [
 			'date_created'   => 'post_date',
 			'date_modified'  => 'post_modified',
 			'date_completed' => '_date_completed',
 			'date_paid'      => '_date_paid',
-		);
+		];
 		foreach ( $date_queries as $query_var_key => $db_key ) {
 			if ( isset( $query_vars[ $query_var_key ] ) && '' !== $query_vars[ $query_var_key ] ) {
 
@@ -912,8 +912,8 @@ class WC_Order_Data_Store_CPT extends Abstract_WC_Order_Data_Store_CPT implement
 			}
 		}
 
-		if ( isset( $query_vars['customer'] ) && '' !== $query_vars['customer'] && array() !== $query_vars['customer'] ) {
-			$values         = is_array( $query_vars['customer'] ) ? $query_vars['customer'] : array( $query_vars['customer'] );
+		if ( isset( $query_vars['customer'] ) && '' !== $query_vars['customer'] && [] !== $query_vars['customer'] ) {
+			$values         = is_array( $query_vars['customer'] ) ? $query_vars['customer'] : [ $query_vars['customer'] ];
 			$customer_query = $this->get_orders_generate_customer_meta_query( $values );
 			if ( is_wp_error( $customer_query ) ) {
 				$wp_query_args['errors'][] = $customer_query;
@@ -924,15 +924,15 @@ class WC_Order_Data_Store_CPT extends Abstract_WC_Order_Data_Store_CPT implement
 
 		if ( isset( $query_vars['anonymized'] ) ) {
 			if ( $query_vars['anonymized'] ) {
-				$wp_query_args['meta_query'][] = array(
+				$wp_query_args['meta_query'][] = [
 					'key'   => '_anonymized',
 					'value' => 'yes',
-				);
+				];
 			} else {
-				$wp_query_args['meta_query'][] = array(
+				$wp_query_args['meta_query'][] = [
 					'key'     => '_anonymized',
 					'compare' => 'NOT EXISTS',
-				);
+				];
 			}
 		}
 
@@ -956,11 +956,11 @@ class WC_Order_Data_Store_CPT extends Abstract_WC_Order_Data_Store_CPT implement
 		$args = $this->get_wp_query_args( $query_vars );
 
 		if ( ! empty( $args['errors'] ) ) {
-			$query = (object) array(
-				'posts'         => array(),
+			$query = (object) [
+				'posts'         => [],
 				'found_posts'   => 0,
 				'max_num_pages' => 0,
-			);
+			];
 		} else {
 			$query = new WP_Query( $args );
 		}
@@ -974,11 +974,11 @@ class WC_Order_Data_Store_CPT extends Abstract_WC_Order_Data_Store_CPT implement
 		}
 
 		if ( isset( $query_vars['paginate'] ) && $query_vars['paginate'] ) {
-			return (object) array(
+			return (object) [
 				'orders'        => $orders,
 				'total'         => $query->found_posts,
 				'max_num_pages' => $query->max_num_pages,
-			);
+			];
 		}
 
 		return $orders;
@@ -995,9 +995,9 @@ class WC_Order_Data_Store_CPT extends Abstract_WC_Order_Data_Store_CPT implement
 	 */
 	private function compile_orders( $order_ids, $query_vars, $query ) {
 		if ( empty( $order_ids ) ) {
-			return array();
+			return [];
 		}
-		$orders = array();
+		$orders = [];
 
 		// Lets do some cache hydrations so that we don't have to fetch data from DB for every order.
 		$this->prime_raw_meta_cache_for_orders( $order_ids, $query_vars );
@@ -1033,11 +1033,11 @@ class WC_Order_Data_Store_CPT extends Abstract_WC_Order_Data_Store_CPT implement
 				return;
 			}
 		}
-		$cache_keys_mapping = array();
+		$cache_keys_mapping = [];
 		foreach ( $order_ids as $order_id ) {
 			$cache_keys_mapping[ $order_id ] = WC_Cache_Helper::get_cache_prefix( 'orders' ) . 'refunds' . $order_id;
 		}
-		$non_cached_ids = array();
+		$non_cached_ids = [];
 		$cache_values   = wc_cache_get_multiple( array_values( $cache_keys_mapping ), 'orders' );
 		foreach ( $order_ids as $order_id ) {
 			if ( false === $cache_values[ $cache_keys_mapping[ $order_id ] ] ) {
@@ -1049,25 +1049,25 @@ class WC_Order_Data_Store_CPT extends Abstract_WC_Order_Data_Store_CPT implement
 		}
 
 		$refunds       = wc_get_orders(
-			array(
+			[
 				'type'            => 'shop_order_refund',
 				'post_parent__in' => $non_cached_ids,
 				'limit'           => - 1,
-			)
+			]
 		);
 		$order_refunds = array_reduce(
 			$refunds,
 			function ( $order_refunds_array, WC_Order_Refund $refund ) {
 				if ( ! isset( $order_refunds_array[ $refund->get_parent_id() ] ) ) {
-					$order_refunds_array[ $refund->get_parent_id() ] = array();
+					$order_refunds_array[ $refund->get_parent_id() ] = [];
 				}
 				$order_refunds_array[ $refund->get_parent_id() ][] = $refund;
 				return $order_refunds_array;
 			},
-			array()
+			[]
 		);
 		foreach ( $non_cached_ids as $order_id ) {
-			$refunds = array();
+			$refunds = [];
 			if ( isset( $order_refunds[ $order_id ] ) ) {
 				$refunds = $order_refunds[ $order_id ];
 			}
@@ -1087,12 +1087,12 @@ class WC_Order_Data_Store_CPT extends Abstract_WC_Order_Data_Store_CPT implement
 	private function prime_order_item_caches_for_orders( $order_ids, $query_vars ) {
 		global $wpdb;
 		if ( isset( $query_vars['fields'] ) && 'all' !== $query_vars['fields'] ) {
-			$line_items = array(
+			$line_items = [
 				'line_items',
 				'shipping_lines',
 				'fee_lines',
 				'coupon_lines',
-			);
+			];
 
 			if ( is_array( $query_vars['fields'] ) && 0 === count( array_intersect( $line_items, $query_vars['fields'] ) ) ) {
 				return;
@@ -1105,7 +1105,7 @@ class WC_Order_Data_Store_CPT extends Abstract_WC_Order_Data_Store_CPT implement
 			$order_ids
 		);
 		$cache_values   = wc_cache_get_multiple( $cache_keys, 'orders' );
-		$non_cached_ids = array();
+		$non_cached_ids = [];
 		foreach ( $order_ids as $order_id ) {
 			if ( false === $cache_values[ 'order-items-' . $order_id ] ) {
 				$non_cached_ids[] = $order_id;
@@ -1129,7 +1129,7 @@ class WC_Order_Data_Store_CPT extends Abstract_WC_Order_Data_Store_CPT implement
 			$order_items,
 			function ( $order_items_collection, $order_item ) {
 				if ( ! isset( $order_items_collection[ $order_item->order_id ] ) ) {
-					$order_items_collection[ $order_item->order_id ] = array();
+					$order_items_collection[ $order_item->order_id ] = [];
 				}
 				$order_items_collection[ $order_item->order_id ][] = $order_item;
 				return $order_items_collection;
@@ -1160,12 +1160,12 @@ class WC_Order_Data_Store_CPT extends Abstract_WC_Order_Data_Store_CPT implement
 			}
 		}
 
-		$cache_keys_mapping = array();
+		$cache_keys_mapping = [];
 		foreach ( $order_ids as $order_id ) {
 			$cache_keys_mapping[ $order_id ] = WC_Order::generate_meta_cache_key( $order_id, 'orders' );
 		}
 		$cache_values   = wc_cache_get_multiple( array_values( $cache_keys_mapping ), 'orders' );
-		$non_cached_ids = array();
+		$non_cached_ids = [];
 		foreach ( $order_ids as $order_id ) {
 			if ( false === $cache_values[ $cache_keys_mapping[ $order_id ] ] ) {
 				$non_cached_ids[] = $order_id;
@@ -1188,12 +1188,12 @@ class WC_Order_Data_Store_CPT extends Abstract_WC_Order_Data_Store_CPT implement
 			$raw_meta_data_array,
 			function ( $collection, $raw_meta_data ) {
 				if ( ! isset( $collection[ $raw_meta_data->object_id ] ) ) {
-					$collection[ $raw_meta_data->object_id ] = array();
+					$collection[ $raw_meta_data->object_id ] = [];
 				}
 				$collection[ $raw_meta_data->object_id ][] = $raw_meta_data;
 				return $collection;
 			},
-			array()
+			[]
 		);
 		WC_Order::prime_raw_meta_data_cache( $raw_meta_data_collection, 'orders' );
 	}

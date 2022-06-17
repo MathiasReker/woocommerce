@@ -28,7 +28,7 @@ class WC_Background_Emailer extends WC_Background_Process {
 		$this->action = 'wc_emailer';
 
 		// Dispatch queue after shutdown.
-		add_action( 'shutdown', array( $this, 'dispatch_queue' ), 100 );
+		add_action( 'shutdown', [ $this, 'dispatch_queue' ], 100 );
 
 		parent::__construct();
 	}
@@ -115,25 +115,25 @@ class WC_Background_Emailer extends WC_Background_Process {
 		}
 
 		// Pass cookies through with the request so nonces function.
-		$cookies = array();
+		$cookies = [];
 
 		foreach ( $_COOKIE as $name => $value ) { // WPCS: input var ok.
 			if ( 'PHPSESSID' === $name ) {
 				continue;
 			}
-			$cookies[] = new WP_Http_Cookie( array(
+			$cookies[] = new WP_Http_Cookie( [
 				'name'  => $name,
 				'value' => $value,
-			) );
+			] );
 		}
 
-		return array(
+		return [
 			'timeout'   => 0.01,
 			'blocking'  => false,
 			'body'      => $this->data,
 			'cookies'   => $cookies,
 			'sslverify' => apply_filters( 'https_local_ssl_verify', false ),
-		);
+		];
 	}
 
 	/**

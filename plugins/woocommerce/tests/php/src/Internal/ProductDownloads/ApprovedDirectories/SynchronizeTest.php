@@ -58,7 +58,7 @@ class SynchronizeTest extends WC_Unit_Test_Case {
 	 * @testdox Verify expected logging and clean-up take place during and following synchronization of download directories.
 	 */
 	public function test_sync_process() {
-		$logged_messages = array();
+		$logged_messages = [];
 
 		$log_watcher = function ( string $logged_message ) use ( &$logged_messages ) {
 			$logged_messages[] = $logged_message;

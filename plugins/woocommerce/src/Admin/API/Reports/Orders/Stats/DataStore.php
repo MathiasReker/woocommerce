@@ -43,7 +43,7 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 	 *
 	 * @var array
 	 */
-	protected $column_types = array(
+	protected $column_types = [
 		'orders_count'        => 'intval',
 		'num_items_sold'      => 'intval',
 		'gross_sales'         => 'floatval',
@@ -59,7 +59,7 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 		'total_customers'     => 'intval',
 		'products'            => 'intval',
 		'segment_id'          => 'intval',
-	);
+	];
 
 	/**
 	 * Data store context used to pass to filters.
@@ -83,7 +83,7 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 			" + {$refunds}" .
 			' ) as gross_sales';
 
-		$this->report_columns = array(
+		$this->report_columns = [
 			'orders_count'        => "SUM( CASE WHEN {$table_name}.parent_id = 0 THEN 1 ELSE 0 END ) as orders_count",
 			'num_items_sold'      => "SUM({$table_name}.num_items_sold) as num_items_sold",
 			'gross_sales'         => $gross_sales,
@@ -97,14 +97,14 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 			'avg_items_per_order' => "SUM( {$table_name}.num_items_sold ) / SUM( CASE WHEN {$table_name}.parent_id = 0 THEN 1 ELSE 0 END ) AS avg_items_per_order",
 			'avg_order_value'     => "SUM( {$table_name}.net_total ) / SUM( CASE WHEN {$table_name}.parent_id = 0 THEN 1 ELSE 0 END ) AS avg_order_value",
 			'total_customers'     => "COUNT( DISTINCT( {$table_name}.customer_id ) ) as total_customers",
-		);
+		];
 	}
 
 	/**
 	 * Set up all the hooks for maintaining and populating table data.
 	 */
 	public static function init() {
-		add_action( 'delete_post', array( __CLASS__, 'delete_order' ) );
+		add_action( 'delete_post', [ __CLASS__, 'delete_order' ] );
 	}
 
 	/**
@@ -123,7 +123,7 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 		$tax_rate_lookup    = $wpdb->prefix . 'wc_order_tax_lookup';
 		$operator           = $this->get_match_operator( $query_args );
 
-		$where_filters = array();
+		$where_filters = [];
 
 		// Products filters.
 		$where_filters[] = $this->get_object_where_filter(
@@ -236,7 +236,7 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 			if ( empty( $query_args['status_is'] ) && empty( $query_args['status_is_not'] ) ) {
 				$operator = 'AND';
 			}
-			$where_subclause = implode( " $operator ", array_filter( array( $where_subclause, $order_status_filter ) ) );
+			$where_subclause = implode( " $operator ", array_filter( [ $where_subclause, $order_status_filter ] ) );
 		}
 
 		// To avoid requesting the subqueries twice, the result is applied to all queries passed to the method.
@@ -260,7 +260,7 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 		$table_name = self::get_db_table_name();
 
 		// These defaults are only applied when not using REST API, as the API has its own defaults that overwrite these for most values (except before, after, etc).
-		$defaults   = array(
+		$defaults   = [
 			'per_page'          => get_option( 'posts_per_page' ),
 			'page'              => 1,
 			'order'             => 'DESC',
@@ -272,17 +272,17 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 			'segmentby'         => '',
 
 			'match'             => 'all',
-			'status_is'         => array(),
-			'status_is_not'     => array(),
-			'product_includes'  => array(),
-			'product_excludes'  => array(),
-			'coupon_includes'   => array(),
-			'coupon_excludes'   => array(),
-			'tax_rate_includes' => array(),
-			'tax_rate_excludes' => array(),
+			'status_is'         => [],
+			'status_is_not'     => [],
+			'product_includes'  => [],
+			'product_excludes'  => [],
+			'coupon_includes'   => [],
+			'coupon_excludes'   => [],
+			'tax_rate_includes' => [],
+			'tax_rate_excludes' => [],
 			'customer_type'     => '',
-			'category_includes' => array(),
-		);
+			'category_includes' => [],
+		];
 		$query_args = wp_parse_args( $query_args, $defaults );
 		$this->normalize_timezones( $query_args, $defaults );
 
@@ -296,13 +296,13 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 		if ( false === $data ) {
 			$this->initialize_queries();
 
-			$data = (object) array(
-				'totals'    => (object) array(),
-				'intervals' => (object) array(),
+			$data = (object) [
+				'totals'    => (object) [],
+				'intervals' => (object) [],
 				'total'     => 0,
 				'pages'     => 0,
 				'page_no'   => 0,
-			);
+			];
 
 			$selections = $this->selected_columns( $query_args );
 			$this->add_time_period_sql_params( $query_args, $table_name );
@@ -336,18 +336,18 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 			}
 
 			// @todo Remove these assignements when refactoring segmenter classes to use query objects.
-			$totals_query    = array(
+			$totals_query    = [
 				'from_clause'       => $this->total_query->get_sql_clause( 'join' ),
 				'where_time_clause' => $where_time,
 				'where_clause'      => $this->total_query->get_sql_clause( 'where' ),
-			);
-			$intervals_query = array(
+			];
+			$intervals_query = [
 				'select_clause'     => $this->get_sql_clause( 'select' ),
 				'from_clause'       => $this->interval_query->get_sql_clause( 'join' ),
 				'where_time_clause' => $where_time,
 				'where_clause'      => $this->interval_query->get_sql_clause( 'where' ),
 				'limit'             => $this->get_sql_clause( 'limit' ),
-			);
+			];
 
 			$unique_products            = $this->get_unique_product_count( $totals_query['from_clause'], $totals_query['where_time_clause'], $totals_query['where_clause'] );
 			$totals[0]['products']      = $unique_products;
@@ -393,13 +393,13 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 				$intervals[0]['coupons_count'] = $unique_coupons;
 			}
 
-			$data = (object) array(
+			$data = (object) [
 				'totals'    => $totals,
 				'intervals' => $intervals,
 				'total'     => $expected_interval_count,
 				'pages'     => $total_pages,
 				'page_no'   => (int) $query_args['page'],
-			);
+			];
 
 			if ( TimeInterval::intervals_missing( $expected_interval_count, $db_interval_count, $params['per_page'], $query_args['page'], $query_args['order'], $query_args['orderby'], count( $intervals ) ) ) {
 				$this->fill_in_missing_intervals( $db_intervals, $query_args['adj_after'], $query_args['adj_before'], $query_args['interval'], $data );
@@ -508,7 +508,7 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 		 */
 		$data = apply_filters(
 			'woocommerce_analytics_update_order_stats_data',
-			array(
+			[
 				'order_id'           => $order->get_id(),
 				'parent_id'          => $order->get_parent_id(),
 				'date_created'       => $order->get_date_created()->date( 'Y-m-d H:i:s' ),
@@ -521,11 +521,11 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 				'status'             => self::normalize_order_status( $order->get_status() ),
 				'customer_id'        => $order->get_report_customer_id(),
 				'returning_customer' => $order->is_returning_customer(),
-			),
+			],
 			$order
 		);
 
-		$format = array(
+		$format = [
 			'%d',
 			'%d',
 			'%s',
@@ -538,7 +538,7 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 			'%s',
 			'%d',
 			'%d',
-		);
+		];
 
 		if ( 'shop_order_refund' === $order->get_type() ) {
 			$parent_order = wc_get_order( $order->get_parent_id() );
@@ -580,7 +580,7 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 		$customer_id = absint( CustomersDataStore::get_existing_customer_id_from_order( $order ) );
 
 		// Delete the order.
-		$wpdb->delete( self::get_db_table_name(), array( 'order_id' => $order_id ) );
+		$wpdb->delete( self::get_db_table_name(), [ 'order_id' => $order_id ] );
 		/**
 		 * Fires when orders stats are deleted.
 		 *

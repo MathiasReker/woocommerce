@@ -69,10 +69,10 @@ class WC_Admin_Tests_Notes_Data_Store extends WC_Unit_Test_Case {
 		// Make sure that empty content_data does not break the note.
 		$wpdb->update(
 			$wpdb->prefix . 'wc_admin_notes',
-			array(
+			[
 				'content_data' => '',
-			),
-			array( 'note_id' => $note->get_id() )
+			],
+			[ 'note_id' => $note->get_id() ]
 		);
 		$data_store->read( $note );
 
@@ -82,10 +82,10 @@ class WC_Admin_Tests_Notes_Data_Store extends WC_Unit_Test_Case {
 		// We also want to make sure an empty array does not break the content.
 		$wpdb->update(
 			$wpdb->prefix . 'wc_admin_notes',
-			array(
+			[
 				'content_data' => '[]',
-			),
-			array( 'note_id' => $note->get_id() )
+			],
+			[ 'note_id' => $note->get_id() ]
 		);
 		$data_store->read( $note );
 
@@ -100,10 +100,10 @@ class WC_Admin_Tests_Notes_Data_Store extends WC_Unit_Test_Case {
 	public function test_delete_notes_with_single_name() {
 		$note_name_to_delete = 'PHPUNIT_TEST_NOTE_TO_DELETE_' . gmdate( 'U' );
 		$note_name_to_keep   = 'PHPUNIT_TEST_NOTE_TO_KEEP_' . gmdate( 'U' );
-		$note_names          = array(
+		$note_names          = [
 			$note_name_to_delete,
 			$note_name_to_keep,
-		);
+		];
 
 		$data_store = WC_Data_Store::load( 'admin-note' );
 
@@ -151,11 +151,11 @@ class WC_Admin_Tests_Notes_Data_Store extends WC_Unit_Test_Case {
 		$note_name_to_delete_1 = 'PHPUNIT_TEST_NOTE_TO_DELETE_1_' . gmdate( 'U' );
 		$note_name_to_delete_2 = 'PHPUNIT_TEST_NOTE_TO_DELETE_2_' . gmdate( 'U' );
 		$note_name_to_keep     = 'PHPUNIT_TEST_NOTE_TO_KEEP_' . gmdate( 'U' );
-		$note_names            = array(
+		$note_names            = [
 			$note_name_to_delete_1,
 			$note_name_to_delete_2,
 			$note_name_to_keep,
-		);
+		];
 
 		$data_store = WC_Data_Store::load( 'admin-note' );
 
@@ -187,10 +187,10 @@ class WC_Admin_Tests_Notes_Data_Store extends WC_Unit_Test_Case {
 
 		// Delete the notes.
 		Notes::delete_notes_with_name(
-			array(
+			[
 				$note_name_to_delete_1,
 				$note_name_to_delete_2,
-			)
+			]
 		);
 
 		// Make sure the notes were deleted.
@@ -224,7 +224,7 @@ class WC_Admin_Tests_Notes_Data_Store extends WC_Unit_Test_Case {
 
 		// Sub in a mock datastore that throws an error on read().
 		$mock_datastore = $this->getMockBuilder( \Automattic\WooCommerce\Admin\Notes\DataStore::class )
-			->setMethods( array( 'read' ) )
+			->setMethods( [ 'read' ] )
 			->getMock();
 		$mock_datastore->method( 'read' )->will( $this->throwException( new \Exception() ) );
 
@@ -258,13 +258,13 @@ class WC_Admin_Tests_Notes_Data_Store extends WC_Unit_Test_Case {
 
 		// Attempt to pass a nonstandard direction.
 		// It should be replaced with the default: DESC.
-		$data_store->get_notes( array( 'order' => 'increasing' ) );
+		$data_store->get_notes( [ 'order' => 'increasing' ] );
 		$this->assertFalse( stripos( 'increasing', $wpdb->last_query ) );
 		$this->assertTrue( stripos( 'DESC', $wpdb->last_query ) >= 0 );
 
 		// Attempt to pass a standard direction in lowercase.
 		// It should be replaced with the all-caps equivalent.
-		$data_store->get_notes( array( 'order' => 'asc' ) );
+		$data_store->get_notes( [ 'order' => 'asc' ] );
 		$this->assertFalse( strpos( 'asc', $wpdb->last_query ) );
 		$this->assertTrue( strpos( 'ASC', $wpdb->last_query ) >= 0 );
 
@@ -274,7 +274,7 @@ class WC_Admin_Tests_Notes_Data_Store extends WC_Unit_Test_Case {
 		$wpdb->hide_errors();
 		$this->assertTrue( '' === $wpdb->last_error );
 
-		$data_store->get_notes( array( 'orderby' => '`name`;select 1;' ) );
+		$data_store->get_notes( [ 'orderby' => '`name`;select 1;' ] );
 
 		$this->assertFalse( stripos( '`name`;select', $wpdb->last_query ) );
 		$this->assertTrue( stripos( '`name;select 1;`', $wpdb->last_query ) >= 0 );
@@ -294,13 +294,13 @@ class WC_Admin_Tests_Notes_Data_Store extends WC_Unit_Test_Case {
 
 		// Attempt to pass a nonstandard direction.
 		// It should be replaced with the default: DESC.
-		$data_store->lookup_notes( array( 'order' => 'increasing' ) );
+		$data_store->lookup_notes( [ 'order' => 'increasing' ] );
 		$this->assertFalse( stripos( 'increasing', $wpdb->last_query ) );
 		$this->assertTrue( stripos( 'DESC', $wpdb->last_query ) >= 0 );
 
 		// Attempt to pass a standard direction in lowercase.
 		// It should be replaced with the all-caps equivalent.
-		$data_store->lookup_notes( array( 'order' => 'asc' ) );
+		$data_store->lookup_notes( [ 'order' => 'asc' ] );
 		$this->assertFalse( strpos( 'asc', $wpdb->last_query ) );
 		$this->assertTrue( strpos( 'ASC', $wpdb->last_query ) >= 0 );
 
@@ -310,7 +310,7 @@ class WC_Admin_Tests_Notes_Data_Store extends WC_Unit_Test_Case {
 		$wpdb->hide_errors();
 		$this->assertTrue( '' === $wpdb->last_error );
 
-		$data_store->lookup_notes( array( 'orderby' => '`name`;select 1;' ) );
+		$data_store->lookup_notes( [ 'orderby' => '`name`;select 1;' ] );
 
 		$this->assertFalse( stripos( '`name`;select', $wpdb->last_query ) );
 		$this->assertTrue( stripos( '`name;select 1;`', $wpdb->last_query ) >= 0 );
@@ -327,9 +327,9 @@ class WC_Admin_Tests_Notes_Data_Store extends WC_Unit_Test_Case {
 		$data_store = WC_Data_Store::load( 'admin-note' );
 
 		$where_clause = $data_store->get_notes_where_clauses(
-			array(
-				'source' => array( 'source', 'another-source' ),
-			)
+			[
+				'source' => [ 'source', 'another-source' ],
+			]
 		);
 		$this->assertEquals( " AND source IN ('source','another-source') AND is_deleted = 0", $where_clause );
 	}
@@ -341,9 +341,9 @@ class WC_Admin_Tests_Notes_Data_Store extends WC_Unit_Test_Case {
 		$data_store = WC_Data_Store::load( 'admin-note' );
 
 		$where_clause = $data_store->get_notes_where_clauses(
-			array(
-				'type' => array( 'random', Note::E_WC_ADMIN_NOTE_MARKETING ),
-			)
+			[
+				'type' => [ 'random', Note::E_WC_ADMIN_NOTE_MARKETING ],
+			]
 		);
 		$this->assertEquals(
 			sprintf( " AND type IN ('%s') AND is_deleted = 0", Note::E_WC_ADMIN_NOTE_MARKETING ),
@@ -386,11 +386,11 @@ class WC_Admin_Tests_Notes_Data_Store extends WC_Unit_Test_Case {
 		// Retrieve test notes by lookup_notes and get_notes.
 		$data_store = WC_Data_Store::load( 'admin-note' );
 
-		$args = array(
-			'source'   => array( 'PHPUNIT_TEST' ),
-			'name'     => array( 'PHPUNIT_PAGING_TEST_NOTE_NAME' ),
+		$args = [
+			'source'   => [ 'PHPUNIT_TEST' ],
+			'name'     => [ 'PHPUNIT_PAGING_TEST_NOTE_NAME' ],
 			'per_page' => 1, // lookup_notes should ignore this.
-		);
+		];
 
 		$lookup_result = $data_store->lookup_notes( $args );
 		$get_result    = $data_store->get_notes( $args );
@@ -429,7 +429,7 @@ class WC_Admin_Tests_Notes_Data_Store extends WC_Unit_Test_Case {
 		$context_name        = 'PHP_UNIT_IN_CONTEXT_TEST_NOTE';
 		$out_of_context_name = 'PHP_UNIT_OUT_OF_CONTEXT_TEST_NOTE';
 
-		foreach ( array( $context_name, $out_of_context_name ) as $note_name ) {
+		foreach ( [ $context_name, $out_of_context_name ] as $note_name ) {
 			$note = new Note();
 			$note->set_name( $note_name );
 			$note->set_title( 'PHPUNIT_CONTEXT_TEST_NOTE' );
@@ -476,8 +476,8 @@ class WC_Admin_Tests_Notes_Data_Store extends WC_Unit_Test_Case {
 		add_filter( 'woocommerce_note_where_clauses', $no_context_filter_callback, 10, 3 );
 
 		// Get note counts.
-		$no_context_note_count   = $data_store->get_notes_count( array( Note::E_WC_ADMIN_NOTE_INFORMATIONAL ), array() );
-		$test_context_note_count = $data_store->get_notes_count( array( Note::E_WC_ADMIN_NOTE_INFORMATIONAL ), array(), $test_context );
+		$no_context_note_count   = $data_store->get_notes_count( [ Note::E_WC_ADMIN_NOTE_INFORMATIONAL ], [] );
+		$test_context_note_count = $data_store->get_notes_count( [ Note::E_WC_ADMIN_NOTE_INFORMATIONAL ], [], $test_context );
 
 		// The no context filter should have been hit twice, the context filter once.
 		$this->assertEquals( 2, $no_context_filter_hit_count );
@@ -490,8 +490,8 @@ class WC_Admin_Tests_Notes_Data_Store extends WC_Unit_Test_Case {
 		$this->assertGreaterThan( 1, $no_context_note_count );
 
 		// Same tests with get_notes().
-		$no_context_get_notes   = $data_store->get_notes( array( 'type' => array( Note::E_WC_ADMIN_NOTE_INFORMATIONAL ) ) );
-		$test_context_get_notes = $data_store->get_notes( array( 'type' => array( Note::E_WC_ADMIN_NOTE_INFORMATIONAL ) ), $test_context );
+		$no_context_get_notes   = $data_store->get_notes( [ 'type' => [ Note::E_WC_ADMIN_NOTE_INFORMATIONAL ] ] );
+		$test_context_get_notes = $data_store->get_notes( [ 'type' => [ Note::E_WC_ADMIN_NOTE_INFORMATIONAL ] ], $test_context );
 
 		// There should only be one note in the context result set.
 		$this->assertEquals( 1, count( $test_context_get_notes ) );

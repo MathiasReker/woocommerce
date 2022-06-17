@@ -15,27 +15,27 @@
  * @return array
  */
 function payment_gateway_suggestions_mock_install_activate_response( $response, $handler, $request ) {
-	$plugins          = array( 'my-slot-filled-gateway-wporg-slug', 'my-simple-gateway-wporg-slug' );
+	$plugins          = [ 'my-slot-filled-gateway-wporg-slug', 'my-simple-gateway-wporg-slug' ];
 	$params           = $request->get_params();
 	$requested_plugin = isset( $params['plugins'] ) ? $params['plugins'] : null;
 
 	if ( '/wc-admin/plugins/install' === $request->get_route() && in_array( $requested_plugin, $plugins, true ) ) {
-		$response['data']    = array(
-			'installed' => array( $requested_plugin ),
-		);
-		$response['errors']  = array(
-			'errors' => array(),
-		);
+		$response['data']    = [
+			'installed' => [ $requested_plugin ],
+		];
+		$response['errors']  = [
+			'errors' => [],
+		];
 		$response['success'] = true;
 		$response['message'] = __( 'Plugins were successfully installed.', 'woocommerce-admin' );
 	}
 
 	if ( '/wc-admin/plugins/activate' === $request->get_route() && in_array( $requested_plugin, $plugins, true ) ) {
-		$response['data']['activated'] = array( $requested_plugin );
-		$response['data']['active']    = array_merge( $response['data']['active'], array( $requested_plugin ) );
-		$response['errors']            = array(
-			'errors' => array(),
-		);
+		$response['data']['activated'] = [ $requested_plugin ];
+		$response['data']['active']    = array_merge( $response['data']['active'], [ $requested_plugin ] );
+		$response['errors']            = [
+			'errors' => [],
+		];
 		$response['success']           = true;
 		$response['message']           = __( 'Plugins were successfully activated.', 'woocommerce-admin' );
 	}

@@ -57,10 +57,10 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 		$order->save();
 
 		$refund = wc_create_refund(
-			array(
+			[
 				'amount'   => 12,
 				'order_id' => $order->get_id(),
-			)
+			]
 		);
 
 		WC_Helper_Queue::run_all_pending();
@@ -70,13 +70,13 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 		$start_time = gmdate( 'Y-m-d H:00:00', $order->get_date_created()->getOffsetTimestamp() );
 		$end_time   = gmdate( 'Y-m-d H:59:59', $order->get_date_created()->getOffsetTimestamp() );
 
-		$args           = array(
+		$args           = [
 			'interval' => 'hour',
 			'after'    => $start_time,
 			'before'   => $end_time,
-		);
-		$expected_stats = array(
-			'totals'    => array(
+		];
+		$expected_stats = [
+			'totals'    => [
 				'orders_count'        => 1,
 				'num_items_sold'      => 4,
 				'avg_items_per_order' => 4,
@@ -91,16 +91,16 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 				'net_revenue'         => 68,
 				'total_customers'     => 1,
 				'products'            => 1,
-				'segments'            => array(),
-			),
-			'intervals' => array(
-				array(
+				'segments'            => [],
+			],
+			'intervals' => [
+				[
 					'interval'       => gmdate( 'Y-m-d H', $order->get_date_created()->getOffsetTimestamp() ),
 					'date_start'     => $start_time,
 					'date_start_gmt' => $start_time,
 					'date_end'       => $end_time,
 					'date_end_gmt'   => $end_time,
-					'subtotals'      => array(
+					'subtotals'      => [
 						'total_sales'         => 85,
 						'gross_sales'         => 100,
 						'net_revenue'         => 68,
@@ -114,22 +114,22 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 						'avg_items_per_order' => 4,
 						'avg_order_value'     => 68,
 						'total_customers'     => 1,
-						'segments'            => array(),
-					),
-				),
-			),
+						'segments'            => [],
+					],
+				],
+			],
 			'total'     => 1,
 			'pages'     => 1,
 			'page_no'   => 1,
-		);
+		];
 
 		// Test retrieving the stats from the data store.
 		$this->assertEquals( $expected_stats, json_decode( wp_json_encode( $data_store->get_data( $args ) ), true ) );
 
 		// Test retrieving the stats through the query class.
 		$query          = new OrdersStatsQuery( $args );
-		$expected_stats = array(
-			'totals'    => array(
+		$expected_stats = [
+			'totals'    => [
 				'net_revenue'         => 68,
 				'avg_order_value'     => 68,
 				'orders_count'        => 1,
@@ -139,16 +139,16 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 				'coupons_count'       => 1,
 				'total_customers'     => 1,
 				'products'            => '1',
-				'segments'            => array(),
-			),
-			'intervals' => array(
-				array(
+				'segments'            => [],
+			],
+			'intervals' => [
+				[
 					'interval'       => gmdate( 'Y-m-d H', $order->get_date_created()->getOffsetTimestamp() ),
 					'date_start'     => $start_time,
 					'date_start_gmt' => $start_time,
 					'date_end'       => $end_time,
 					'date_end_gmt'   => $end_time,
-					'subtotals'      => array(
+					'subtotals'      => [
 						'net_revenue'         => 68,
 						'avg_order_value'     => 68,
 						'orders_count'        => 1,
@@ -157,14 +157,14 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 						'coupons'             => 20,
 						'coupons_count'       => 1,
 						'total_customers'     => 1,
-						'segments'            => array(),
-					),
-				),
-			),
+						'segments'            => [],
+					],
+				],
+			],
 			'total'     => 1,
 			'pages'     => 1,
 			'page_no'   => 1,
-		);
+		];
 		$this->assertEquals( $expected_stats, json_decode( wp_json_encode( $query->get_data() ), true ) );
 	}
 
@@ -180,20 +180,20 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 		$product->set_regular_price( 25 );
 		$product->save();
 
-		$order_types = array(
-			array(
+		$order_types = [
+			[
 				'status' => 'refunded',
 				'total'  => 50,
-			),
-			array(
+			],
+			[
 				'status' => 'completed',
 				'total'  => 100,
-			),
-			array(
+			],
+			[
 				'status' => 'failed',
 				'total'  => 75,
-			),
-		);
+			],
+		];
 
 		foreach ( $order_types as $order_type ) {
 			$order = WC_Helper_Order::create_order( 1, $product );
@@ -212,13 +212,13 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 		$end_time   = gmdate( 'Y-m-d H:59:59', $order->get_date_created()->getOffsetTimestamp() );
 
 		// Query default statuses that should not include excluded or refunded order statuses.
-		$args           = array(
+		$args           = [
 			'interval' => 'hour',
 			'after'    => $start_time,
 			'before'   => $end_time,
-		);
-		$expected_stats = array(
-			'totals'    => array(
+		];
+		$expected_stats = [
+			'totals'    => [
 				'orders_count'        => 2,
 				'num_items_sold'      => 8,
 				'avg_items_per_order' => 4,
@@ -233,16 +233,16 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 				'net_revenue'         => 100,
 				'total_customers'     => 1,
 				'products'            => 1,
-				'segments'            => array(),
-			),
-			'intervals' => array(
-				array(
+				'segments'            => [],
+			],
+			'intervals' => [
+				[
 					'interval'       => gmdate( 'Y-m-d H', $order->get_date_created()->getOffsetTimestamp() ),
 					'date_start'     => $start_time,
 					'date_start_gmt' => $start_time,
 					'date_end'       => $end_time,
 					'date_end_gmt'   => $end_time,
-					'subtotals'      => array(
+					'subtotals'      => [
 						'total_sales'         => 100,
 						'gross_sales'         => 150,
 						'net_revenue'         => 100,
@@ -256,26 +256,26 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 						'avg_items_per_order' => 4,
 						'avg_order_value'     => 50,
 						'total_customers'     => 1,
-						'segments'            => array(),
-					),
-				),
-			),
+						'segments'            => [],
+					],
+				],
+			],
 			'total'     => 1,
 			'pages'     => 1,
 			'page_no'   => 1,
-		);
+		];
 
 		$this->assertEquals( $expected_stats, json_decode( wp_json_encode( $data_store->get_data( $args ) ), true ) );
 
 		// Query an excluded status which should still return orders with the queried status.
-		$args           = array(
+		$args           = [
 			'interval'  => 'hour',
 			'after'     => $start_time,
 			'before'    => $end_time,
-			'status_is' => array( 'failed' ),
-		);
-		$expected_stats = array(
-			'totals'    => array(
+			'status_is' => [ 'failed' ],
+		];
+		$expected_stats = [
+			'totals'    => [
 				'orders_count'        => 1,
 				'num_items_sold'      => 4,
 				'avg_items_per_order' => 4,
@@ -290,16 +290,16 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 				'net_revenue'         => 75,
 				'total_customers'     => 1,
 				'products'            => 1,
-				'segments'            => array(),
-			),
-			'intervals' => array(
-				array(
+				'segments'            => [],
+			],
+			'intervals' => [
+				[
 					'interval'       => gmdate( 'Y-m-d H', $order->get_date_created()->getOffsetTimestamp() ),
 					'date_start'     => $start_time,
 					'date_start_gmt' => $start_time,
 					'date_end'       => $end_time,
 					'date_end_gmt'   => $end_time,
-					'subtotals'      => array(
+					'subtotals'      => [
 						'total_sales'         => 75,
 						'gross_sales'         => 75,
 						'net_revenue'         => 75,
@@ -313,14 +313,14 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 						'avg_items_per_order' => 4,
 						'avg_order_value'     => 75,
 						'total_customers'     => 1,
-						'segments'            => array(),
-					),
-				),
-			),
+						'segments'            => [],
+					],
+				],
+			],
 			'total'     => 1,
 			'pages'     => 1,
 			'page_no'   => 1,
-		);
+		];
 
 		$this->assertEquals( $expected_stats, json_decode( wp_json_encode( $data_store->get_data( $args ) ), true ) );
 	}
@@ -337,20 +337,20 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 		$product->set_regular_price( 25 );
 		$product->save();
 
-		$order_types = array(
-			array(
+		$order_types = [
+			[
 				'status' => 'refunded',
 				'total'  => 50,
-			),
-			array(
+			],
+			[
 				'status' => 'completed',
 				'total'  => 100,
-			),
-			array(
+			],
+			[
 				'status' => 'completed',
 				'total'  => 75,
-			),
-		);
+			],
+		];
 
 		foreach ( $order_types as $order_type ) {
 			$order = WC_Helper_Order::create_order( 1, $product );
@@ -363,10 +363,10 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 
 		// Add a partial refund on the last order.
 		$refund = wc_create_refund(
-			array(
+			[
 				'amount'   => 10,
 				'order_id' => $order->get_id(),
-			)
+			]
 		);
 
 		WC_Helper_Queue::run_all_pending();
@@ -377,14 +377,14 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 		$end_time   = gmdate( 'Y-m-d H:59:59', $order->get_date_created()->getOffsetTimestamp() );
 
 		// Query all refunds.
-		$args           = array(
+		$args           = [
 			'interval' => 'hour',
 			'after'    => $start_time,
 			'before'   => $end_time,
 			'refunds'  => 'all',
-		);
-		$expected_stats = array(
-			'totals'    => array(
+		];
+		$expected_stats = [
+			'totals'    => [
 				'orders_count'        => 0,
 				'num_items_sold'      => 0,
 				'avg_items_per_order' => 0,
@@ -399,16 +399,16 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 				'net_revenue'         => -60,
 				'total_customers'     => 1,
 				'products'            => 0,
-				'segments'            => array(),
-			),
-			'intervals' => array(
-				array(
+				'segments'            => [],
+			],
+			'intervals' => [
+				[
 					'interval'       => gmdate( 'Y-m-d H', $order->get_date_created()->getOffsetTimestamp() ),
 					'date_start'     => $start_time,
 					'date_start_gmt' => $start_time,
 					'date_end'       => $end_time,
 					'date_end_gmt'   => $end_time,
-					'subtotals'      => array(
+					'subtotals'      => [
 						'total_sales'         => -60,
 						'gross_sales'         => 0,
 						'net_revenue'         => -60,
@@ -422,26 +422,26 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 						'avg_items_per_order' => 0,
 						'avg_order_value'     => 0,
 						'total_customers'     => 1,
-						'segments'            => array(),
-					),
-				),
-			),
+						'segments'            => [],
+					],
+				],
+			],
 			'total'     => 1,
 			'pages'     => 1,
 			'page_no'   => 1,
-		);
+		];
 
 		$this->assertEquals( $expected_stats, json_decode( wp_json_encode( $data_store->get_data( $args ) ), true ) );
 
 		// Query all non-refunds.
-		$args           = array(
+		$args           = [
 			'interval' => 'hour',
 			'after'    => $start_time,
 			'before'   => $end_time,
 			'refunds'  => 'none',
-		);
-		$expected_stats = array(
-			'totals'    => array(
+		];
+		$expected_stats = [
+			'totals'    => [
 				'orders_count'        => 3,
 				'num_items_sold'      => 12,
 				'avg_items_per_order' => 4,
@@ -456,16 +456,16 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 				'net_revenue'         => 225,
 				'total_customers'     => 1,
 				'products'            => 1,
-				'segments'            => array(),
-			),
-			'intervals' => array(
-				array(
+				'segments'            => [],
+			],
+			'intervals' => [
+				[
 					'interval'       => gmdate( 'Y-m-d H', $order->get_date_created()->getOffsetTimestamp() ),
 					'date_start'     => $start_time,
 					'date_start_gmt' => $start_time,
 					'date_end'       => $end_time,
 					'date_end_gmt'   => $end_time,
-					'subtotals'      => array(
+					'subtotals'      => [
 						'total_sales'         => 225,
 						'gross_sales'         => 225,
 						'net_revenue'         => 225,
@@ -479,26 +479,26 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 						'avg_items_per_order' => 4,
 						'avg_order_value'     => 75,
 						'total_customers'     => 1,
-						'segments'            => array(),
-					),
-				),
-			),
+						'segments'            => [],
+					],
+				],
+			],
 			'total'     => 1,
 			'pages'     => 1,
 			'page_no'   => 1,
-		);
+		];
 
 		$this->assertEquals( $expected_stats, json_decode( wp_json_encode( $data_store->get_data( $args ) ), true ) );
 
 		// Query partial refunds.
-		$args           = array(
+		$args           = [
 			'interval' => 'hour',
 			'after'    => $start_time,
 			'before'   => $end_time,
 			'refunds'  => 'partial',
-		);
-		$expected_stats = array(
-			'totals'    => array(
+		];
+		$expected_stats = [
+			'totals'    => [
 				'orders_count'        => 0,
 				'num_items_sold'      => 0,
 				'avg_items_per_order' => 0,
@@ -513,16 +513,16 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 				'net_revenue'         => -10,
 				'total_customers'     => 1,
 				'products'            => 0,
-				'segments'            => array(),
-			),
-			'intervals' => array(
-				array(
+				'segments'            => [],
+			],
+			'intervals' => [
+				[
 					'interval'       => gmdate( 'Y-m-d H', $order->get_date_created()->getOffsetTimestamp() ),
 					'date_start'     => $start_time,
 					'date_start_gmt' => $start_time,
 					'date_end'       => $end_time,
 					'date_end_gmt'   => $end_time,
-					'subtotals'      => array(
+					'subtotals'      => [
 						'total_sales'         => -10,
 						'gross_sales'         => 0,
 						'net_revenue'         => -10,
@@ -536,26 +536,26 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 						'avg_items_per_order' => 0,
 						'avg_order_value'     => 0,
 						'total_customers'     => 1,
-						'segments'            => array(),
-					),
-				),
-			),
+						'segments'            => [],
+					],
+				],
+			],
 			'total'     => 1,
 			'pages'     => 1,
 			'page_no'   => 1,
-		);
+		];
 
 		$this->assertEquals( $expected_stats, json_decode( wp_json_encode( $data_store->get_data( $args ) ), true ) );
 
 		// Query full refunds.
-		$args           = array(
+		$args           = [
 			'interval' => 'hour',
 			'after'    => $start_time,
 			'before'   => $end_time,
 			'refunds'  => 'full',
-		);
-		$expected_stats = array(
-			'totals'    => array(
+		];
+		$expected_stats = [
+			'totals'    => [
 				'orders_count'        => 0,
 				'num_items_sold'      => 0,
 				'avg_items_per_order' => 0,
@@ -570,16 +570,16 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 				'net_revenue'         => -50,       // @todo - does this value make sense?
 				'total_customers'     => 1,
 				'products'            => 0,
-				'segments'            => array(),
-			),
-			'intervals' => array(
-				array(
+				'segments'            => [],
+			],
+			'intervals' => [
+				[
 					'interval'       => gmdate( 'Y-m-d H', $order->get_date_created()->getOffsetTimestamp() ),
 					'date_start'     => $start_time,
 					'date_start_gmt' => $start_time,
 					'date_end'       => $end_time,
 					'date_end_gmt'   => $end_time,
-					'subtotals'      => array(
+					'subtotals'      => [
 						'total_sales'         => -50,
 						'gross_sales'         => 0,
 						'net_revenue'         => -50,
@@ -593,14 +593,14 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 						'avg_items_per_order' => 0,
 						'avg_order_value'     => 0,
 						'total_customers'     => 1,
-						'segments'            => array(),
-					),
-				),
-			),
+						'segments'            => [],
+					],
+				],
+			],
 			'total'     => 1,
 			'pages'     => 1,
 			'page_no'   => 1,
-		);
+		];
 
 		$this->assertEquals( $expected_stats, json_decode( wp_json_encode( $data_store->get_data( $args ) ), true ) );
 	}
@@ -621,7 +621,7 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 		$product->save();
 
 		// create 3 coupons valued 1,2,3.
-		$coupons = array();
+		$coupons = [];
 		foreach ( range( 1, 3 ) as $amount ) {
 			$coupon = WC_Helper_Coupon::create_coupon( 'coupon_' . $amount );
 			$coupon->set_amount( $amount );
@@ -636,7 +636,7 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 		$applied_coupons   = 0;
 		$applied_amount    = 0;
 		$orders_total      = 0;
-		$orders            = array();
+		$orders            = [];
 
 		foreach ( range( 1, 3 ) as $order_number ) {
 			$order = WC_Helper_Order::create_order( $customer->get_id(), $product );
@@ -669,11 +669,11 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 		$current_hour_end = new DateTime();
 		$current_hour_end->setTimestamp( $report_start_time + HOUR_IN_SECONDS - 1 );
 
-		$query_args = array(
+		$query_args = [
 			'after'    => $current_hour_start->format( TimeInterval::$sql_datetime_format ),
 			'before'   => $current_hour_end->format( TimeInterval::$sql_datetime_format ),
 			'interval' => 'hour',
-		);
+		];
 
 		$order_shipping  = 10; // Hardcoded in WC_Helper_Order::create_order.
 		$qty_per_product = 4; // Hardcoded in WC_Helper_Order::create_order.
@@ -684,7 +684,7 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 		$shipping        = $orders_count * $order_shipping;
 		$net_revenue     = $orders_total - $shipping;
 		$gross_sales     = $product_price * $num_items_sold;
-		$subtotals       = array(
+		$subtotals       = [
 			'orders_count'        => $orders_count,
 			'num_items_sold'      => $num_items_sold,
 			'total_sales'         => $orders_total,
@@ -698,26 +698,26 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 			'avg_items_per_order' => $num_items_sold / $orders_count,
 			'avg_order_value'     => $net_revenue / $orders_count,
 			'total_customers'     => $total_customers,
-			'segments'            => array(),
-		);
-		$totals          = array_merge( $subtotals, array( 'products' => 1 ) );
+			'segments'            => [],
+		];
+		$totals          = array_merge( $subtotals, [ 'products' => 1 ] );
 
-		$expected_stats = array(
+		$expected_stats = [
 			'totals'    => $totals,
-			'intervals' => array(
-				array(
+			'intervals' => [
+				[
 					'interval'       => $current_hour_start->format( 'Y-m-d H' ),
 					'date_start'     => $current_hour_start->format( 'Y-m-d H:i:s' ),
 					'date_start_gmt' => $current_hour_start->format( 'Y-m-d H:i:s' ),
 					'date_end'       => $current_hour_end->format( 'Y-m-d H:i:s' ),
 					'date_end_gmt'   => $current_hour_end->format( 'Y-m-d H:i:s' ),
 					'subtotals'      => $subtotals,
-				),
-			),
+				],
+			],
 			'total'     => 1,
 			'pages'     => 1,
 			'page_no'   => 1,
-		);
+		];
 
 		$this->assertEquals( $expected_stats, json_decode( wp_json_encode( $data_store->get_data( $query_args ) ), true ), 'Query args: ' . $this->return_print_r( $query_args ) . "; query: {$wpdb->last_query}" );
 	}
@@ -777,11 +777,11 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 		// One more order needs to fit into the same hour, but also be one second later than this one.
 		$order_2_time = $order_1_time + 1;
 
-		$this_['hour']  = array( 1, 2 );
-		$this_['day']   = array( 1, 2 );
-		$this_['week']  = array( 1, 2 );
-		$this_['month'] = array( 1, 2 );
-		$this_['year']  = array( 1, 2 );
+		$this_['hour']  = [ 1, 2 ];
+		$this_['day']   = [ 1, 2 ];
+		$this_['week']  = [ 1, 2 ];
+		$this_['month'] = [ 1, 2 ];
+		$this_['year']  = [ 1, 2 ];
 
 		$order[1]['year']  = (int) $order_1_datetime->format( 'Y' );
 		$order[1]['month'] = (int) $order_1_datetime->format( 'm' );
@@ -834,7 +834,7 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 		$order[7]['week']  = (int) $order_7_datetime->format( 'W' );
 		$order[7]['day']   = (int) $order_7_datetime->format( 'd' );
 
-		foreach ( array( 3, 4, 5, 6, 7 ) as $order_no ) {
+		foreach ( [ 3, 4, 5, 6, 7 ] as $order_no ) {
 			if ( $order[ $order_no ]['day'] === $order[1]['day'] && $order[ $order_no ]['month'] === $order[1]['month'] && $order[ $order_no ]['year'] === $order[1]['year'] ) {
 				$this_['day'][] = $order_no;
 			}
@@ -849,20 +849,20 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 			}
 		}
 
-		$orders = array();
+		$orders = [];
 		// 2 different order statuses, plus new vs returning customer
 		$qty_per_product = 4; // Hardcoded in WC_Helper_Order::create_order.
 		$iterations      = 1;
 
-		foreach ( array( $product_1, $product_2, $product_3 ) as $product ) {
-			foreach ( array( null, $coupon_1, $coupon_2 ) as $coupon ) {
-				foreach ( array( $order_status_1, $order_status_2 ) as $order_status ) {
-					foreach ( array( $customer_1, $customer_2 ) as $customer ) {
+		foreach ( [ $product_1, $product_2, $product_3 ] as $product ) {
+			foreach ( [ null, $coupon_1, $coupon_2 ] as $coupon ) {
+				foreach ( [ $order_status_1, $order_status_2 ] as $order_status ) {
+					foreach ( [ $customer_1, $customer_2 ] as $customer ) {
 						foreach (
-							array(
+							[
 								$order_1_time,
 								$order_2_time,
-							) as $order_time
+							] as $order_time
 						) { // As there are no tests for different timeframes, ignore these for now: $order_3_time, $order_4_time, $order_5_time, $order_6_time, $order_7_time
 							// One order with only 1 product.
 							$order = WC_Helper_Order::create_order( $customer->get_id(), $product );
@@ -883,12 +883,12 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 
 							$item = new WC_Order_Item_Product();
 							$item->set_props(
-								array(
+								[
 									'product'  => $product,
 									'quantity' => 4,
-									'subtotal' => wc_get_price_excluding_tax( $product, array( 'qty' => 4 ) ),
-									'total'    => wc_get_price_excluding_tax( $product, array( 'qty' => 4 ) ),
-								)
+									'subtotal' => wc_get_price_excluding_tax( $product, [ 'qty' => 4 ] ),
+									'total'    => wc_get_price_excluding_tax( $product, [ 'qty' => 4 ] ),
+								]
 							);
 							$item->save();
 							$order_2->add_item( $item );
@@ -928,11 +928,11 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 		// 72 orders in one batch (3 products * 3 coupon options * 2 order statuses * 2 customers * 2 orders), 4 items of each product per order
 		// 24 orders without coupons, 48 with coupons: 24 with $1 coupon and 24 with $2 coupon.
 		// shipping is $10 per order.
-		$query_args = array(
+		$query_args = [
 			'after'    => $current_hour_start->format( TimeInterval::$sql_datetime_format ),
 			'before'   => $current_hour_end->format( TimeInterval::$sql_datetime_format ),
 			'interval' => 'hour',
-		);
+		];
 
 		$order_permutations     = 72;
 		$order_w_coupon_1_perms = 24;
@@ -954,8 +954,8 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 		$gross_sales     = $net_revenue + $coupons;
 		$total_customers = 2;
 
-		$expected_stats = array(
-			'totals'    => array(
+		$expected_stats = [
+			'totals'    => [
 				'orders_count'        => $orders_count,
 				'num_items_sold'      => $num_items_sold,
 				'total_sales'         => $total_sales,
@@ -970,16 +970,16 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 				'avg_order_value'     => $net_revenue / $orders_count,
 				'total_customers'     => $total_customers,
 				'products'            => 4,
-				'segments'            => array(),
-			),
-			'intervals' => array(
-				array(
+				'segments'            => [],
+			],
+			'intervals' => [
+				[
 					'interval'       => $current_hour_start->format( 'Y-m-d H' ),
 					'date_start'     => $current_hour_start->format( 'Y-m-d H:i:s' ),
 					'date_start_gmt' => $current_hour_start->format( 'Y-m-d H:i:s' ),
 					'date_end'       => $current_hour_end->format( 'Y-m-d H:i:s' ),
 					'date_end_gmt'   => $current_hour_end->format( 'Y-m-d H:i:s' ),
-					'subtotals'      => array(
+					'subtotals'      => [
 						'orders_count'        => $orders_count,
 						'num_items_sold'      => $num_items_sold,
 						'total_sales'         => $total_sales,
@@ -993,39 +993,39 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 						'avg_items_per_order' => $num_items_sold / $orders_count,
 						'avg_order_value'     => $net_revenue / $orders_count,
 						'total_customers'     => $total_customers,
-						'segments'            => array(),
-					),
-				),
-			),
+						'segments'            => [],
+					],
+				],
+			],
 			'total'     => 1,
 			'pages'     => 1,
 			'page_no'   => 1,
-		);
+		];
 		$this->assertEquals( $expected_stats, json_decode( wp_json_encode( $data_store->get_data( $query_args ) ), true ), 'Query args: ' . $this->return_print_r( $query_args ) . "; query: {$wpdb->last_query}" );
 
 		// * Order status filter
 		// ** Status is, positive filter for 2 statuses, i.e. all orders.
-		$query_args = array(
+		$query_args = [
 			'after'     => $current_hour_start->format( TimeInterval::$sql_datetime_format ),
 			'before'    => $current_hour_end->format( TimeInterval::$sql_datetime_format ),
 			'interval'  => 'hour',
-			'status_is' => array(
+			'status_is' => [
 				$order_status_1,
 				$order_status_2,
-			),
-		);
+			],
+		];
 
 		$this->assertEquals( $expected_stats, json_decode( wp_json_encode( $data_store->get_data( $query_args ) ), true ), 'Query args: ' . $this->return_print_r( $query_args ) . "; query: {$wpdb->last_query}" );
 
 		// ** Status is, positive filter for 1 status -> half orders.
-		$query_args = array(
+		$query_args = [
 			'after'     => $current_hour_start->format( TimeInterval::$sql_datetime_format ),
 			'before'    => $current_hour_end->format( TimeInterval::$sql_datetime_format ),
 			'interval'  => 'hour',
-			'status_is' => array(
+			'status_is' => [
 				$order_status_1,
-			),
-		);
+			],
+		];
 
 		$order_permutations     = 36;
 		$order_w_coupon_1_perms = 12;
@@ -1047,8 +1047,8 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 		$total_sales    = $net_revenue + $shipping;
 		$gross_sales    = $net_revenue + $coupons;
 
-		$expected_stats = array(
-			'totals'    => array(
+		$expected_stats = [
+			'totals'    => [
 				'orders_count'        => $orders_count,
 				'num_items_sold'      => $num_items_sold,
 				'total_sales'         => $total_sales,
@@ -1063,16 +1063,16 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 				'avg_order_value'     => $net_revenue / $orders_count,
 				'total_customers'     => $total_customers,
 				'products'            => 4,
-				'segments'            => array(),
-			),
-			'intervals' => array(
-				array(
+				'segments'            => [],
+			],
+			'intervals' => [
+				[
 					'interval'       => $current_hour_start->format( 'Y-m-d H' ),
 					'date_start'     => $current_hour_start->format( 'Y-m-d H:i:s' ),
 					'date_start_gmt' => $current_hour_start->format( 'Y-m-d H:i:s' ),
 					'date_end'       => $current_hour_end->format( 'Y-m-d H:i:s' ),
 					'date_end_gmt'   => $current_hour_end->format( 'Y-m-d H:i:s' ),
-					'subtotals'      => array(
+					'subtotals'      => [
 						'orders_count'        => $orders_count,
 						'num_items_sold'      => $num_items_sold,
 						'total_sales'         => $total_sales,
@@ -1086,25 +1086,25 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 						'avg_items_per_order' => $num_items_sold / $orders_count,
 						'avg_order_value'     => $net_revenue / $orders_count,
 						'total_customers'     => $total_customers,
-						'segments'            => array(),
-					),
-				),
-			),
+						'segments'            => [],
+					],
+				],
+			],
 			'total'     => 1,
 			'pages'     => 1,
 			'page_no'   => 1,
-		);
+		];
 		$this->assertEquals( $expected_stats, json_decode( wp_json_encode( $data_store->get_data( $query_args ) ), true ), 'Query args: ' . $this->return_print_r( $query_args ) . "; query: {$wpdb->last_query}" );
 
 		// ** Status is not, negative filter for 1 status -> half orders.
-		$query_args = array(
+		$query_args = [
 			'after'         => $current_hour_start->format( TimeInterval::$sql_datetime_format ),
 			'before'        => $current_hour_end->format( TimeInterval::$sql_datetime_format ),
 			'interval'      => 'hour',
-			'status_is_not' => array(
+			'status_is_not' => [
 				$order_status_2,
-			),
-		);
+			],
+		];
 
 		$order_permutations     = 36;
 		$order_w_coupon_1_perms = 12;
@@ -1126,8 +1126,8 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 		$total_sales    = $net_revenue + $shipping;
 		$gross_sales    = $net_revenue + $coupons;
 
-		$expected_stats = array(
-			'totals'    => array(
+		$expected_stats = [
+			'totals'    => [
 				'orders_count'        => $orders_count,
 				'num_items_sold'      => $num_items_sold,
 				'total_sales'         => $total_sales,
@@ -1142,16 +1142,16 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 				'avg_order_value'     => $net_revenue / $orders_count,
 				'total_customers'     => $total_customers,
 				'products'            => 4,
-				'segments'            => array(),
-			),
-			'intervals' => array(
-				array(
+				'segments'            => [],
+			],
+			'intervals' => [
+				[
 					'interval'       => $current_hour_start->format( 'Y-m-d H' ),
 					'date_start'     => $current_hour_start->format( 'Y-m-d H:i:s' ),
 					'date_start_gmt' => $current_hour_start->format( 'Y-m-d H:i:s' ),
 					'date_end'       => $current_hour_end->format( 'Y-m-d H:i:s' ),
 					'date_end_gmt'   => $current_hour_end->format( 'Y-m-d H:i:s' ),
-					'subtotals'      => array(
+					'subtotals'      => [
 						'orders_count'        => $orders_count,
 						'num_items_sold'      => $num_items_sold,
 						'total_sales'         => $total_sales,
@@ -1165,29 +1165,29 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 						'avg_items_per_order' => $num_items_sold / $orders_count,
 						'avg_order_value'     => $net_revenue / $orders_count,
 						'total_customers'     => $total_customers,
-						'segments'            => array(),
-					),
-				),
-			),
+						'segments'            => [],
+					],
+				],
+			],
 			'total'     => 1,
 			'pages'     => 1,
 			'page_no'   => 1,
-		);
+		];
 		$this->assertEquals( $expected_stats, json_decode( wp_json_encode( $data_store->get_data( $query_args ) ), true ), 'Query args: ' . $this->return_print_r( $query_args ) . "; query: {$wpdb->last_query}" );
 
 		// ** Status is not, negative filter for 2 statuses -> no orders.
-		$query_args = array(
+		$query_args = [
 			'after'         => $current_hour_start->format( TimeInterval::$sql_datetime_format ),
 			'before'        => $current_hour_end->format( TimeInterval::$sql_datetime_format ),
 			'interval'      => 'hour',
-			'status_is_not' => array(
+			'status_is_not' => [
 				$order_status_1,
 				$order_status_2,
-			),
-		);
+			],
+		];
 
-		$expected_stats = array(
-			'totals'    => array(
+		$expected_stats = [
+			'totals'    => [
 				'orders_count'        => 0,
 				'num_items_sold'      => 0,
 				'total_sales'         => 0,
@@ -1202,16 +1202,16 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 				'avg_order_value'     => 0,
 				'total_customers'     => 0,
 				'products'            => 0,
-				'segments'            => array(),
-			),
-			'intervals' => array(
-				array(
+				'segments'            => [],
+			],
+			'intervals' => [
+				[
 					'interval'       => $current_hour_start->format( 'Y-m-d H' ),
 					'date_start'     => $current_hour_start->format( 'Y-m-d H:i:s' ),
 					'date_start_gmt' => $current_hour_start->format( 'Y-m-d H:i:s' ),
 					'date_end'       => $current_hour_end->format( 'Y-m-d H:i:s' ),
 					'date_end_gmt'   => $current_hour_end->format( 'Y-m-d H:i:s' ),
-					'subtotals'      => array(
+					'subtotals'      => [
 						'orders_count'        => 0,
 						'num_items_sold'      => 0,
 						'total_sales'         => 0,
@@ -1225,29 +1225,29 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 						'avg_items_per_order' => 0,
 						'avg_order_value'     => 0,
 						'total_customers'     => 0,
-						'segments'            => array(),
-					),
-				),
-			),
+						'segments'            => [],
+					],
+				],
+			],
 			'total'     => 1,
 			'pages'     => 1,
 			'page_no'   => 1,
-		);
+		];
 		$this->assertEquals( $expected_stats, json_decode( wp_json_encode( $data_store->get_data( $query_args ) ), true ), 'Query args: ' . $this->return_print_r( $query_args ) . "; query: {$wpdb->last_query}" );
 
 		// ** Status is + Status is not, positive filter for 2 statuses, negative for 1 -> half of orders.
-		$query_args = array(
+		$query_args = [
 			'after'         => $current_hour_start->format( TimeInterval::$sql_datetime_format ),
 			'before'        => $current_hour_end->format( TimeInterval::$sql_datetime_format ),
 			'interval'      => 'hour',
-			'status_is'     => array(
+			'status_is'     => [
 				$order_status_1,
 				$order_status_2,
-			),
-			'status_is_not' => array(
+			],
+			'status_is_not' => [
 				$order_status_2,
-			),
-		);
+			],
+		];
 
 		$order_permutations     = 36;
 		$order_w_coupon_1_perms = 12;
@@ -1269,8 +1269,8 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 		$total_sales    = $net_revenue + $shipping;
 		$gross_sales    = $net_revenue + $coupons;
 
-		$expected_stats = array(
-			'totals'    => array(
+		$expected_stats = [
+			'totals'    => [
 				'orders_count'        => $orders_count,
 				'num_items_sold'      => $num_items_sold,
 				'total_sales'         => $total_sales,
@@ -1285,16 +1285,16 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 				'avg_order_value'     => $net_revenue / $orders_count,
 				'total_customers'     => $total_customers,
 				'products'            => 4,
-				'segments'            => array(),
-			),
-			'intervals' => array(
-				array(
+				'segments'            => [],
+			],
+			'intervals' => [
+				[
 					'interval'       => $current_hour_start->format( 'Y-m-d H' ),
 					'date_start'     => $current_hour_start->format( 'Y-m-d H:i:s' ),
 					'date_start_gmt' => $current_hour_start->format( 'Y-m-d H:i:s' ),
 					'date_end'       => $current_hour_end->format( 'Y-m-d H:i:s' ),
 					'date_end_gmt'   => $current_hour_end->format( 'Y-m-d H:i:s' ),
-					'subtotals'      => array(
+					'subtotals'      => [
 						'orders_count'        => $orders_count,
 						'num_items_sold'      => $num_items_sold,
 						'total_sales'         => $total_sales,
@@ -1308,27 +1308,27 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 						'avg_items_per_order' => $num_items_sold / $orders_count,
 						'avg_order_value'     => $net_revenue / $orders_count,
 						'total_customers'     => $total_customers,
-						'segments'            => array(),
-					),
-				),
-			),
+						'segments'            => [],
+					],
+				],
+			],
 			'total'     => 1,
 			'pages'     => 1,
 			'page_no'   => 1,
-		);
+		];
 		$this->assertEquals( $expected_stats, json_decode( wp_json_encode( $data_store->get_data( $query_args ) ), true ), 'Query args: ' . $this->return_print_r( $query_args ) . "; query: {$wpdb->last_query}" );
 
 		// * Product filter
 		// ** Product includes, positive filter for 2 products, i.e. 2 orders out of 3.
-		$query_args = array(
+		$query_args = [
 			'after'            => $current_hour_start->format( TimeInterval::$sql_datetime_format ),
 			'before'           => $current_hour_end->format( TimeInterval::$sql_datetime_format ),
 			'interval'         => 'hour',
-			'product_includes' => array(
+			'product_includes' => [
 				$product_1->get_id(),
 				$product_2->get_id(),
-			),
-		);
+			],
+		];
 
 		$order_permutations     = 48;
 		$order_w_coupon_1_perms = 16;
@@ -1348,8 +1348,8 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 		$total_sales    = $net_revenue + $shipping;
 		$gross_sales    = $net_revenue + $coupons;
 
-		$expected_stats = array(
-			'totals'    => array(
+		$expected_stats = [
+			'totals'    => [
 				'orders_count'        => $orders_count,
 				'num_items_sold'      => $num_items_sold,
 				'total_sales'         => $total_sales,
@@ -1364,16 +1364,16 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 				'avg_order_value'     => $net_revenue / $orders_count,
 				'total_customers'     => $total_customers,
 				'products'            => 3,
-				'segments'            => array(),
-			),
-			'intervals' => array(
-				array(
+				'segments'            => [],
+			],
+			'intervals' => [
+				[
 					'interval'       => $current_hour_start->format( 'Y-m-d H' ),
 					'date_start'     => $current_hour_start->format( 'Y-m-d H:i:s' ),
 					'date_start_gmt' => $current_hour_start->format( 'Y-m-d H:i:s' ),
 					'date_end'       => $current_hour_end->format( 'Y-m-d H:i:s' ),
 					'date_end_gmt'   => $current_hour_end->format( 'Y-m-d H:i:s' ),
-					'subtotals'      => array(
+					'subtotals'      => [
 						'orders_count'        => $orders_count,
 						'num_items_sold'      => $num_items_sold,
 						'total_sales'         => $total_sales,
@@ -1387,25 +1387,25 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 						'avg_items_per_order' => $num_items_sold / $orders_count,
 						'avg_order_value'     => $net_revenue / $orders_count,
 						'total_customers'     => $total_customers,
-						'segments'            => array(),
-					),
-				),
-			),
+						'segments'            => [],
+					],
+				],
+			],
 			'total'     => 1,
 			'pages'     => 1,
 			'page_no'   => 1,
-		);
+		];
 		$this->assertEquals( $expected_stats, json_decode( wp_json_encode( $data_store->get_data( $query_args ) ), true ), 'Query args: ' . $this->return_print_r( $query_args ) . "; query: {$wpdb->last_query}" );
 
 		// ** Product includes, positive filter for 1 product, 1/3 of orders
-		$query_args = array(
+		$query_args = [
 			'after'            => $current_hour_start->format( TimeInterval::$sql_datetime_format ),
 			'before'           => $current_hour_end->format( TimeInterval::$sql_datetime_format ),
 			'interval'         => 'hour',
-			'product_includes' => array(
+			'product_includes' => [
 				$product_3->get_id(),
-			),
-		);
+			],
+		];
 
 		$order_permutations     = 24;
 		$order_w_coupon_1_perms = 8;
@@ -1423,8 +1423,8 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 		$total_sales    = $net_revenue + $shipping;
 		$gross_sales    = $net_revenue + $coupons;
 
-		$expected_stats = array(
-			'totals'    => array(
+		$expected_stats = [
+			'totals'    => [
 				'orders_count'        => $orders_count,
 				'num_items_sold'      => $num_items_sold,
 				'total_sales'         => $total_sales,
@@ -1439,17 +1439,17 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 				'avg_order_value'     => $net_revenue / $orders_count,
 				'total_customers'     => 2,
 				'products'            => 2,
-				'segments'            => array(),
+				'segments'            => [],
 				// product 3 and product 4 (that is sometimes included in the orders with product 3).
-			),
-			'intervals' => array(
-				array(
+			],
+			'intervals' => [
+				[
 					'interval'       => $current_hour_start->format( 'Y-m-d H' ),
 					'date_start'     => $current_hour_start->format( 'Y-m-d H:i:s' ),
 					'date_start_gmt' => $current_hour_start->format( 'Y-m-d H:i:s' ),
 					'date_end'       => $current_hour_end->format( 'Y-m-d H:i:s' ),
 					'date_end_gmt'   => $current_hour_end->format( 'Y-m-d H:i:s' ),
-					'subtotals'      => array(
+					'subtotals'      => [
 						'orders_count'        => $orders_count,
 						'num_items_sold'      => $num_items_sold,
 						'total_sales'         => $total_sales,
@@ -1463,25 +1463,25 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 						'avg_items_per_order' => $num_items_sold / $orders_count,
 						'avg_order_value'     => $net_revenue / $orders_count,
 						'total_customers'     => 2,
-						'segments'            => array(),
-					),
-				),
-			),
+						'segments'            => [],
+					],
+				],
+			],
 			'total'     => 1,
 			'pages'     => 1,
 			'page_no'   => 1,
-		);
+		];
 		$this->assertEquals( $expected_stats, json_decode( wp_json_encode( $data_store->get_data( $query_args ) ), true ), 'Query args: ' . $this->return_print_r( $query_args ) . "; query: {$wpdb->last_query}" );
 
 		// ** Product excludes, negative filter for 1 product, 2/3 of orders.
-		$query_args = array(
+		$query_args = [
 			'after'            => $current_hour_start->format( TimeInterval::$sql_datetime_format ),
 			'before'           => $current_hour_end->format( TimeInterval::$sql_datetime_format ),
 			'interval'         => 'hour',
-			'product_excludes' => array(
+			'product_excludes' => [
 				$product_1->get_id(),
-			),
-		);
+			],
+		];
 
 		$order_permutations     = 48;
 		$order_w_coupon_1_perms = 16;
@@ -1501,8 +1501,8 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 		$total_sales    = $net_revenue + $shipping;
 		$gross_sales    = $net_revenue + $coupons;
 
-		$expected_stats = array(
-			'totals'    => array(
+		$expected_stats = [
+			'totals'    => [
 				'orders_count'        => $orders_count,
 				'num_items_sold'      => $num_items_sold,
 				'total_sales'         => $total_sales,
@@ -1517,16 +1517,16 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 				'avg_order_value'     => $net_revenue / $orders_count,
 				'total_customers'     => 2,
 				'products'            => 3,
-				'segments'            => array(),
-			),
-			'intervals' => array(
-				array(
+				'segments'            => [],
+			],
+			'intervals' => [
+				[
 					'interval'       => $current_hour_start->format( 'Y-m-d H' ),
 					'date_start'     => $current_hour_start->format( 'Y-m-d H:i:s' ),
 					'date_start_gmt' => $current_hour_start->format( 'Y-m-d H:i:s' ),
 					'date_end'       => $current_hour_end->format( 'Y-m-d H:i:s' ),
 					'date_end_gmt'   => $current_hour_end->format( 'Y-m-d H:i:s' ),
-					'subtotals'      => array(
+					'subtotals'      => [
 						'orders_count'        => $orders_count,
 						'num_items_sold'      => $num_items_sold,
 						'total_sales'         => $total_sales,
@@ -1540,26 +1540,26 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 						'avg_items_per_order' => $num_items_sold / $orders_count,
 						'avg_order_value'     => $net_revenue / $orders_count,
 						'total_customers'     => 2,
-						'segments'            => array(),
-					),
-				),
-			),
+						'segments'            => [],
+					],
+				],
+			],
 			'total'     => 1,
 			'pages'     => 1,
 			'page_no'   => 1,
-		);
+		];
 		$this->assertEquals( $expected_stats, json_decode( wp_json_encode( $data_store->get_data( $query_args ) ), true ), 'Query args: ' . $this->return_print_r( $query_args ) . "; query: {$wpdb->last_query}" );
 
 		// ** Product excludes, negative filter for 2 products, 1/3 of orders
-		$query_args = array(
+		$query_args = [
 			'after'            => $current_hour_start->format( TimeInterval::$sql_datetime_format ),
 			'before'           => $current_hour_end->format( TimeInterval::$sql_datetime_format ),
 			'interval'         => 'hour',
-			'product_excludes' => array(
+			'product_excludes' => [
 				$product_1->get_id(),
 				$product_2->get_id(),
-			),
-		);
+			],
+		];
 
 		$order_permutations     = 24;
 		$order_w_coupon_1_perms = 8;
@@ -1577,8 +1577,8 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 		$total_sales    = $net_revenue + $shipping;
 		$gross_sales    = $net_revenue + $coupons;
 
-		$expected_stats = array(
-			'totals'    => array(
+		$expected_stats = [
+			'totals'    => [
 				'orders_count'        => $orders_count,
 				'num_items_sold'      => $num_items_sold,
 				'total_sales'         => $total_sales,
@@ -1593,16 +1593,16 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 				'avg_order_value'     => $net_revenue / $orders_count,
 				'total_customers'     => 2,
 				'products'            => 2,
-				'segments'            => array(),
-			),
-			'intervals' => array(
-				array(
+				'segments'            => [],
+			],
+			'intervals' => [
+				[
 					'interval'       => $current_hour_start->format( 'Y-m-d H' ),
 					'date_start'     => $current_hour_start->format( 'Y-m-d H:i:s' ),
 					'date_start_gmt' => $current_hour_start->format( 'Y-m-d H:i:s' ),
 					'date_end'       => $current_hour_end->format( 'Y-m-d H:i:s' ),
 					'date_end_gmt'   => $current_hour_end->format( 'Y-m-d H:i:s' ),
-					'subtotals'      => array(
+					'subtotals'      => [
 						'orders_count'        => $orders_count,
 						'num_items_sold'      => $num_items_sold,
 						'total_sales'         => $total_sales,
@@ -1616,29 +1616,29 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 						'avg_items_per_order' => $num_items_sold / $orders_count,
 						'avg_order_value'     => $net_revenue / $orders_count,
 						'total_customers'     => 2,
-						'segments'            => array(),
-					),
-				),
-			),
+						'segments'            => [],
+					],
+				],
+			],
 			'total'     => 1,
 			'pages'     => 1,
 			'page_no'   => 1,
-		);
+		];
 		$this->assertEquals( $expected_stats, json_decode( wp_json_encode( $data_store->get_data( $query_args ) ), true ), 'Query args: ' . $this->return_print_r( $query_args ) . "; query: {$wpdb->last_query}" );
 
 		// ** Product includes + product excludes, positive filter for 2 products, negative for 1 -> 1/3 of orders, only orders with product 2 and product 2 + product 4
-		$query_args = array(
+		$query_args = [
 			'after'            => $current_hour_start->format( TimeInterval::$sql_datetime_format ),
 			'before'           => $current_hour_end->format( TimeInterval::$sql_datetime_format ),
 			'interval'         => 'hour',
-			'product_includes' => array(
+			'product_includes' => [
 				$product_1->get_id(),
 				$product_2->get_id(),
-			),
-			'product_excludes' => array(
+			],
+			'product_excludes' => [
 				$product_1->get_id(),
-			),
-		);
+			],
+		];
 
 		$order_permutations     = 24;
 		$order_w_coupon_1_perms = 8;
@@ -1656,8 +1656,8 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 		$total_sales    = $net_revenue + $shipping;
 		$gross_sales    = $net_revenue + $coupons;
 
-		$expected_stats = array(
-			'totals'    => array(
+		$expected_stats = [
+			'totals'    => [
 				'orders_count'        => $orders_count,
 				'num_items_sold'      => $num_items_sold,
 				'total_sales'         => $total_sales,
@@ -1672,16 +1672,16 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 				'avg_order_value'     => $net_revenue / $orders_count,
 				'total_customers'     => 2,
 				'products'            => 2,
-				'segments'            => array(),
-			),
-			'intervals' => array(
-				array(
+				'segments'            => [],
+			],
+			'intervals' => [
+				[
 					'interval'       => $current_hour_start->format( 'Y-m-d H' ),
 					'date_start'     => $current_hour_start->format( 'Y-m-d H:i:s' ),
 					'date_start_gmt' => $current_hour_start->format( 'Y-m-d H:i:s' ),
 					'date_end'       => $current_hour_end->format( 'Y-m-d H:i:s' ),
 					'date_end_gmt'   => $current_hour_end->format( 'Y-m-d H:i:s' ),
-					'subtotals'      => array(
+					'subtotals'      => [
 						'orders_count'        => $orders_count,
 						'num_items_sold'      => $num_items_sold,
 						'total_sales'         => $total_sales,
@@ -1695,27 +1695,27 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 						'avg_items_per_order' => $num_items_sold / $orders_count,
 						'avg_order_value'     => $net_revenue / $orders_count,
 						'total_customers'     => 2,
-						'segments'            => array(),
-					),
-				),
-			),
+						'segments'            => [],
+					],
+				],
+			],
 			'total'     => 1,
 			'pages'     => 1,
 			'page_no'   => 1,
-		);
+		];
 		$this->assertEquals( $expected_stats, json_decode( wp_json_encode( $data_store->get_data( $query_args ) ), true ), 'Query args: ' . $this->return_print_r( $query_args ) . "; query: {$wpdb->last_query}" );
 
 		// * Coupon filters
 		// ** Coupon includes, positive filter for 2 coupons, i.e. 2/3 of orders.
-		$query_args = array(
+		$query_args = [
 			'after'           => $current_hour_start->format( TimeInterval::$sql_datetime_format ),
 			'before'          => $current_hour_end->format( TimeInterval::$sql_datetime_format ),
 			'interval'        => 'hour',
-			'coupon_includes' => array(
+			'coupon_includes' => [
 				$coupon_1->get_id(),
 				$coupon_2->get_id(),
-			),
-		);
+			],
+		];
 
 		$order_permutations     = 48;
 		$order_w_coupon_1_perms = 24;
@@ -1737,8 +1737,8 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 		$total_sales    = $net_revenue + $shipping;
 		$gross_sales    = $net_revenue + $coupons;
 
-		$expected_stats = array(
-			'totals'    => array(
+		$expected_stats = [
+			'totals'    => [
 				'orders_count'        => $orders_count,
 				'num_items_sold'      => $num_items_sold,
 				'total_sales'         => $total_sales,
@@ -1753,16 +1753,16 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 				'avg_order_value'     => $net_revenue / $orders_count,
 				'total_customers'     => 2,
 				'products'            => 4,
-				'segments'            => array(),
-			),
-			'intervals' => array(
-				array(
+				'segments'            => [],
+			],
+			'intervals' => [
+				[
 					'interval'       => $current_hour_start->format( 'Y-m-d H' ),
 					'date_start'     => $current_hour_start->format( 'Y-m-d H:i:s' ),
 					'date_start_gmt' => $current_hour_start->format( 'Y-m-d H:i:s' ),
 					'date_end'       => $current_hour_end->format( 'Y-m-d H:i:s' ),
 					'date_end_gmt'   => $current_hour_end->format( 'Y-m-d H:i:s' ),
-					'subtotals'      => array(
+					'subtotals'      => [
 						'orders_count'        => $orders_count,
 						'num_items_sold'      => $num_items_sold,
 						'total_sales'         => $total_sales,
@@ -1776,25 +1776,25 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 						'avg_items_per_order' => $num_items_sold / $orders_count,
 						'avg_order_value'     => $net_revenue / $orders_count,
 						'total_customers'     => 2,
-						'segments'            => array(),
-					),
-				),
-			),
+						'segments'            => [],
+					],
+				],
+			],
 			'total'     => 1,
 			'pages'     => 1,
 			'page_no'   => 1,
-		);
+		];
 		$this->assertEquals( $expected_stats, json_decode( wp_json_encode( $data_store->get_data( $query_args ) ), true ), 'Query args: ' . $this->return_print_r( $query_args ) . "; query: {$wpdb->last_query}" );
 
 		// ** Coupon includes, positive filter for 1 coupon, 1/3 of orders
-		$query_args = array(
+		$query_args = [
 			'after'           => $current_hour_start->format( TimeInterval::$sql_datetime_format ),
 			'before'          => $current_hour_end->format( TimeInterval::$sql_datetime_format ),
 			'interval'        => 'hour',
-			'coupon_includes' => array(
+			'coupon_includes' => [
 				$coupon_1->get_id(),
-			),
-		);
+			],
+		];
 
 		$order_permutations     = 24;
 		$order_w_coupon_1_perms = 24;
@@ -1816,8 +1816,8 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 		$total_sales    = $net_revenue + $shipping;
 		$gross_sales    = $net_revenue + $coupons;
 
-		$expected_stats = array(
-			'totals'    => array(
+		$expected_stats = [
+			'totals'    => [
 				'orders_count'        => $orders_count,
 				'num_items_sold'      => $num_items_sold,
 				'total_sales'         => $total_sales,
@@ -1832,16 +1832,16 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 				'avg_order_value'     => $net_revenue / $orders_count,
 				'total_customers'     => 2,
 				'products'            => 4,
-				'segments'            => array(),
-			),
-			'intervals' => array(
-				array(
+				'segments'            => [],
+			],
+			'intervals' => [
+				[
 					'interval'       => $current_hour_start->format( 'Y-m-d H' ),
 					'date_start'     => $current_hour_start->format( 'Y-m-d H:i:s' ),
 					'date_start_gmt' => $current_hour_start->format( 'Y-m-d H:i:s' ),
 					'date_end'       => $current_hour_end->format( 'Y-m-d H:i:s' ),
 					'date_end_gmt'   => $current_hour_end->format( 'Y-m-d H:i:s' ),
-					'subtotals'      => array(
+					'subtotals'      => [
 						'orders_count'        => $orders_count,
 						'num_items_sold'      => $num_items_sold,
 						'total_sales'         => $total_sales,
@@ -1855,25 +1855,25 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 						'avg_items_per_order' => $num_items_sold / $orders_count,
 						'avg_order_value'     => $net_revenue / $orders_count,
 						'total_customers'     => 2,
-						'segments'            => array(),
-					),
-				),
-			),
+						'segments'            => [],
+					],
+				],
+			],
 			'total'     => 1,
 			'pages'     => 1,
 			'page_no'   => 1,
-		);
+		];
 		$this->assertEquals( $expected_stats, json_decode( wp_json_encode( $data_store->get_data( $query_args ) ), true ), 'Query args: ' . $this->return_print_r( $query_args ) . "; query: {$wpdb->last_query}" );
 
 		// ** Coupon excludes, negative filter for 1 coupon, 2/3 of orders
-		$query_args = array(
+		$query_args = [
 			'after'           => $current_hour_start->format( TimeInterval::$sql_datetime_format ),
 			'before'          => $current_hour_end->format( TimeInterval::$sql_datetime_format ),
 			'interval'        => 'hour',
-			'coupon_excludes' => array(
+			'coupon_excludes' => [
 				$coupon_1->get_id(),
-			),
-		);
+			],
+		];
 
 		$order_permutations     = 48;
 		$order_w_coupon_1_perms = 0;
@@ -1895,8 +1895,8 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 		$total_sales    = $net_revenue + $shipping;
 		$gross_sales    = $net_revenue + $coupons;
 
-		$expected_stats = array(
-			'totals'    => array(
+		$expected_stats = [
+			'totals'    => [
 				'orders_count'        => $orders_count,
 				'num_items_sold'      => $num_items_sold,
 				'total_sales'         => $total_sales,
@@ -1911,16 +1911,16 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 				'avg_order_value'     => $net_revenue / $orders_count,
 				'total_customers'     => $total_customers,
 				'products'            => 4,
-				'segments'            => array(),
-			),
-			'intervals' => array(
-				array(
+				'segments'            => [],
+			],
+			'intervals' => [
+				[
 					'interval'       => $current_hour_start->format( 'Y-m-d H' ),
 					'date_start'     => $current_hour_start->format( 'Y-m-d H:i:s' ),
 					'date_start_gmt' => $current_hour_start->format( 'Y-m-d H:i:s' ),
 					'date_end'       => $current_hour_end->format( 'Y-m-d H:i:s' ),
 					'date_end_gmt'   => $current_hour_end->format( 'Y-m-d H:i:s' ),
-					'subtotals'      => array(
+					'subtotals'      => [
 						'orders_count'        => $orders_count,
 						'num_items_sold'      => $num_items_sold,
 						'total_sales'         => $total_sales,
@@ -1934,26 +1934,26 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 						'avg_items_per_order' => $num_items_sold / $orders_count,
 						'avg_order_value'     => $net_revenue / $orders_count,
 						'total_customers'     => $total_customers,
-						'segments'            => array(),
-					),
-				),
-			),
+						'segments'            => [],
+					],
+				],
+			],
 			'total'     => 1,
 			'pages'     => 1,
 			'page_no'   => 1,
-		);
+		];
 		$this->assertEquals( $expected_stats, json_decode( wp_json_encode( $data_store->get_data( $query_args ) ), true ), 'Query args: ' . $this->return_print_r( $query_args ) . "; query: {$wpdb->last_query}" );
 
 		// ** Coupon excludes, negative filter for 2 coupons, 1/3 of orders
-		$query_args = array(
+		$query_args = [
 			'after'           => $current_hour_start->format( TimeInterval::$sql_datetime_format ),
 			'before'          => $current_hour_end->format( TimeInterval::$sql_datetime_format ),
 			'interval'        => 'hour',
-			'coupon_excludes' => array(
+			'coupon_excludes' => [
 				$coupon_1->get_id(),
 				$coupon_2->get_id(),
-			),
-		);
+			],
+		];
 
 		$order_permutations     = 24;
 		$order_w_coupon_1_perms = 0;
@@ -1975,8 +1975,8 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 		$total_sales    = $net_revenue + $shipping;
 		$gross_sales    = $net_revenue + $coupons;
 
-		$expected_stats = array(
-			'totals'    => array(
+		$expected_stats = [
+			'totals'    => [
 				'orders_count'        => $orders_count,
 				'num_items_sold'      => $num_items_sold,
 				'total_sales'         => $total_sales,
@@ -1991,16 +1991,16 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 				'avg_order_value'     => $net_revenue / $orders_count,
 				'total_customers'     => $total_customers,
 				'products'            => 4,
-				'segments'            => array(),
-			),
-			'intervals' => array(
-				array(
+				'segments'            => [],
+			],
+			'intervals' => [
+				[
 					'interval'       => $current_hour_start->format( 'Y-m-d H' ),
 					'date_start'     => $current_hour_start->format( 'Y-m-d H:i:s' ),
 					'date_start_gmt' => $current_hour_start->format( 'Y-m-d H:i:s' ),
 					'date_end'       => $current_hour_end->format( 'Y-m-d H:i:s' ),
 					'date_end_gmt'   => $current_hour_end->format( 'Y-m-d H:i:s' ),
-					'subtotals'      => array(
+					'subtotals'      => [
 						'orders_count'        => $orders_count,
 						'num_items_sold'      => $num_items_sold,
 						'total_sales'         => $total_sales,
@@ -2014,29 +2014,29 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 						'avg_items_per_order' => $num_items_sold / $orders_count,
 						'avg_order_value'     => $net_revenue / $orders_count,
 						'total_customers'     => $total_customers,
-						'segments'            => array(),
-					),
-				),
-			),
+						'segments'            => [],
+					],
+				],
+			],
 			'total'     => 1,
 			'pages'     => 1,
 			'page_no'   => 1,
-		);
+		];
 		$this->assertEquals( $expected_stats, json_decode( wp_json_encode( $data_store->get_data( $query_args ) ), true ), 'Query args: ' . $this->return_print_r( $query_args ) . "; query: {$wpdb->last_query}" );
 
 		// ** Coupon includes + coupon excludes, positive filter for 2 coupon, negative for 1, 1/3 orders
-		$query_args = array(
+		$query_args = [
 			'after'           => $current_hour_start->format( TimeInterval::$sql_datetime_format ),
 			'before'          => $current_hour_end->format( TimeInterval::$sql_datetime_format ),
 			'interval'        => 'hour',
-			'coupon_includes' => array(
+			'coupon_includes' => [
 				$coupon_1->get_id(),
 				$coupon_2->get_id(),
-			),
-			'coupon_excludes' => array(
+			],
+			'coupon_excludes' => [
 				$coupon_2->get_id(),
-			),
-		);
+			],
+		];
 
 		$order_permutations     = 24;
 		$order_w_coupon_1_perms = 24;
@@ -2058,8 +2058,8 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 		$total_sales    = $net_revenue + $shipping;
 		$gross_sales    = $net_revenue + $coupons;
 
-		$expected_stats = array(
-			'totals'    => array(
+		$expected_stats = [
+			'totals'    => [
 				'orders_count'        => $orders_count,
 				'num_items_sold'      => $num_items_sold,
 				'total_sales'         => $total_sales,
@@ -2074,16 +2074,16 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 				'avg_order_value'     => $net_revenue / $orders_count,
 				'total_customers'     => 2,
 				'products'            => 4,
-				'segments'            => array(),
-			),
-			'intervals' => array(
-				array(
+				'segments'            => [],
+			],
+			'intervals' => [
+				[
 					'interval'       => $current_hour_start->format( 'Y-m-d H' ),
 					'date_start'     => $current_hour_start->format( 'Y-m-d H:i:s' ),
 					'date_start_gmt' => $current_hour_start->format( 'Y-m-d H:i:s' ),
 					'date_end'       => $current_hour_end->format( 'Y-m-d H:i:s' ),
 					'date_end_gmt'   => $current_hour_end->format( 'Y-m-d H:i:s' ),
-					'subtotals'      => array(
+					'subtotals'      => [
 						'orders_count'        => $orders_count,
 						'num_items_sold'      => $num_items_sold,
 						'total_sales'         => $total_sales,
@@ -2097,24 +2097,24 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 						'avg_items_per_order' => $num_items_sold / $orders_count,
 						'avg_order_value'     => $net_revenue / $orders_count,
 						'total_customers'     => 2,
-						'segments'            => array(),
-					),
-				),
-			),
+						'segments'            => [],
+					],
+				],
+			],
 			'total'     => 1,
 			'pages'     => 1,
 			'page_no'   => 1,
-		);
+		];
 		$this->assertEquals( $expected_stats, json_decode( wp_json_encode( $data_store->get_data( $query_args ) ), true ), 'Query args: ' . $this->return_print_r( $query_args ) . "; query: {$wpdb->last_query}" );
 
 		// * Customer filters
 		// ** Customer new
-		$query_args = array(
+		$query_args = [
 			'after'         => $current_hour_start->format( TimeInterval::$sql_datetime_format ),
 			'before'        => $current_hour_end->format( TimeInterval::$sql_datetime_format ),
 			'interval'      => 'hour',
 			'customer_type' => 'new',
-		);
+		];
 
 		$orders_count   = 2;
 		$num_items_sold = $orders_count * $qty_per_product;
@@ -2124,8 +2124,8 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 		$total_sales    = $net_revenue + $shipping;
 		$gross_sales    = $net_revenue + $coupons;
 
-		$expected_stats = array(
-			'totals'    => array(
+		$expected_stats = [
+			'totals'    => [
 				'orders_count'        => $orders_count,
 				'num_items_sold'      => $num_items_sold,
 				'total_sales'         => $total_sales,
@@ -2140,16 +2140,16 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 				'avg_order_value'     => $net_revenue / $orders_count,
 				'total_customers'     => $total_customers,
 				'products'            => 1,
-				'segments'            => array(),
-			),
-			'intervals' => array(
-				array(
+				'segments'            => [],
+			],
+			'intervals' => [
+				[
 					'interval'       => $current_hour_start->format( 'Y-m-d H' ),
 					'date_start'     => $current_hour_start->format( 'Y-m-d H:i:s' ),
 					'date_start_gmt' => $current_hour_start->format( 'Y-m-d H:i:s' ),
 					'date_end'       => $current_hour_end->format( 'Y-m-d H:i:s' ),
 					'date_end_gmt'   => $current_hour_end->format( 'Y-m-d H:i:s' ),
-					'subtotals'      => array(
+					'subtotals'      => [
 						'orders_count'        => $orders_count,
 						'num_items_sold'      => $num_items_sold,
 						'total_sales'         => $total_sales,
@@ -2163,23 +2163,23 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 						'avg_items_per_order' => $num_items_sold / $orders_count,
 						'avg_order_value'     => $net_revenue / $orders_count,
 						'total_customers'     => $total_customers,
-						'segments'            => array(),
-					),
-				),
-			),
+						'segments'            => [],
+					],
+				],
+			],
 			'total'     => 1,
 			'pages'     => 1,
 			'page_no'   => 1,
-		);
+		];
 		$this->assertEquals( $expected_stats, json_decode( wp_json_encode( $data_store->get_data( $query_args ) ), true ), 'Query args: ' . $this->return_print_r( $query_args ) . "; query: {$wpdb->last_query}" );
 
 		// ** Customer returning
-		$query_args = array(
+		$query_args = [
 			'after'         => $current_hour_start->format( TimeInterval::$sql_datetime_format ), // I don't think this makes sense.... gmdate( 'Y-m-d H:i:s', $orders[0]->get_date_created()->getOffsetTimestamp() + 1 ), // Date after initial order to get a returning customer.
 			'before'        => $current_hour_end->format( TimeInterval::$sql_datetime_format ),
 			'interval'      => 'hour',
 			'customer_type' => 'returning',
-		);
+		];
 
 		$total_orders_count     = 144;
 		$returning_orders_count = 2;
@@ -2202,8 +2202,8 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 		$total_sales    = $net_revenue + $shipping;
 		$gross_sales    = $net_revenue + $coupons;
 
-		$expected_stats = array(
-			'totals'    => array(
+		$expected_stats = [
+			'totals'    => [
 				'orders_count'        => $orders_count,
 				'num_items_sold'      => $num_items_sold,
 				'total_sales'         => $total_sales,
@@ -2218,16 +2218,16 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 				'avg_order_value'     => $net_revenue / $orders_count,
 				'total_customers'     => $returning_orders_count,
 				'products'            => 4,
-				'segments'            => array(),
-			),
-			'intervals' => array(
-				array(
+				'segments'            => [],
+			],
+			'intervals' => [
+				[
 					'interval'       => $current_hour_start->format( 'Y-m-d H' ),
 					'date_start'     => $current_hour_start->format( TimeInterval::$sql_datetime_format ),
 					'date_start_gmt' => $current_hour_start->format( TimeInterval::$sql_datetime_format ),
 					'date_end'       => $current_hour_end->format( 'Y-m-d H:i:s' ),
 					'date_end_gmt'   => $current_hour_end->format( 'Y-m-d H:i:s' ),
-					'subtotals'      => array(
+					'subtotals'      => [
 						'orders_count'        => $orders_count,
 						'num_items_sold'      => $num_items_sold,
 						'total_sales'         => $total_sales,
@@ -2241,30 +2241,30 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 						'avg_items_per_order' => round( $num_items_sold / $orders_count, 4 ),
 						'avg_order_value'     => $net_revenue / $orders_count,
 						'total_customers'     => $returning_orders_count,
-						'segments'            => array(),
-					),
-				),
-			),
+						'segments'            => [],
+					],
+				],
+			],
 			'total'     => 1,
 			'pages'     => 1,
 			'page_no'   => 1,
-		);
+		];
 
 		$this->assertEquals( $expected_stats, json_decode( wp_json_encode( $data_store->get_data( $query_args ) ), true ), 'Query args: ' . $this->return_print_r( $query_args ) . "; query: {$wpdb->last_query};" );
 
 		// Combinations: match all
 		// status_is + product_includes.
-		$query_args = array(
+		$query_args = [
 			'after'            => $current_hour_start->format( TimeInterval::$sql_datetime_format ),
 			'before'           => $current_hour_end->format( TimeInterval::$sql_datetime_format ),
 			'interval'         => 'hour',
-			'status_is'        => array(
+			'status_is'        => [
 				$order_status_1,
-			),
-			'product_includes' => array(
+			],
+			'product_includes' => [
 				$product_1->get_id(),
-			),
-		);
+			],
+		];
 
 		$order_permutations     = 12;
 		$order_w_coupon_1_perms = 4;
@@ -2282,8 +2282,8 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 		$total_sales    = $net_revenue + $shipping;
 		$gross_sales    = $net_revenue + $coupons;
 
-		$expected_stats = array(
-			'totals'    => array(
+		$expected_stats = [
+			'totals'    => [
 				'orders_count'        => $orders_count,
 				'num_items_sold'      => $num_items_sold,
 				'total_sales'         => $total_sales,
@@ -2298,16 +2298,16 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 				'avg_order_value'     => $net_revenue / $orders_count,
 				'total_customers'     => $total_customers,
 				'products'            => 2,
-				'segments'            => array(),
-			),
-			'intervals' => array(
-				array(
+				'segments'            => [],
+			],
+			'intervals' => [
+				[
 					'interval'       => $current_hour_start->format( 'Y-m-d H' ),
 					'date_start'     => $current_hour_start->format( 'Y-m-d H:i:s' ),
 					'date_start_gmt' => $current_hour_start->format( 'Y-m-d H:i:s' ),
 					'date_end'       => $current_hour_end->format( 'Y-m-d H:i:s' ),
 					'date_end_gmt'   => $current_hour_end->format( 'Y-m-d H:i:s' ),
-					'subtotals'      => array(
+					'subtotals'      => [
 						'orders_count'        => $orders_count,
 						'num_items_sold'      => $num_items_sold,
 						'total_sales'         => $total_sales,
@@ -2321,28 +2321,28 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 						'avg_items_per_order' => $num_items_sold / $orders_count,
 						'avg_order_value'     => $net_revenue / $orders_count,
 						'total_customers'     => $total_customers,
-						'segments'            => array(),
-					),
-				),
-			),
+						'segments'            => [],
+					],
+				],
+			],
 			'total'     => 1,
 			'pages'     => 1,
 			'page_no'   => 1,
-		);
+		];
 		$this->assertEquals( $expected_stats, json_decode( wp_json_encode( $data_store->get_data( $query_args ) ), true ), 'Query args: ' . $this->return_print_r( $query_args ) . "; query: {$wpdb->last_query}" );
 
 		// status_is + coupon_includes.
-		$query_args = array(
+		$query_args = [
 			'after'           => $current_hour_start->format( TimeInterval::$sql_datetime_format ),
 			'before'          => $current_hour_end->format( TimeInterval::$sql_datetime_format ),
 			'interval'        => 'hour',
-			'status_is'       => array(
+			'status_is'       => [
 				$order_status_1,
-			),
-			'coupon_includes' => array(
+			],
+			'coupon_includes' => [
 				$coupon_1->get_id(),
-			),
-		);
+			],
+		];
 
 		$order_permutations     = 12;
 		$order_w_coupon_1_perms = 12;
@@ -2364,8 +2364,8 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 		$total_sales    = $net_revenue + $shipping;
 		$gross_sales    = $net_revenue + $coupons;
 
-		$expected_stats = array(
-			'totals'    => array(
+		$expected_stats = [
+			'totals'    => [
 				'orders_count'        => $orders_count,
 				'num_items_sold'      => $num_items_sold,
 				'total_sales'         => $total_sales,
@@ -2380,16 +2380,16 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 				'avg_order_value'     => $net_revenue / $orders_count,
 				'total_customers'     => 2,
 				'products'            => 4,
-				'segments'            => array(),
-			),
-			'intervals' => array(
-				array(
+				'segments'            => [],
+			],
+			'intervals' => [
+				[
 					'interval'       => $current_hour_start->format( 'Y-m-d H' ),
 					'date_start'     => $current_hour_start->format( 'Y-m-d H:i:s' ),
 					'date_start_gmt' => $current_hour_start->format( 'Y-m-d H:i:s' ),
 					'date_end'       => $current_hour_end->format( 'Y-m-d H:i:s' ),
 					'date_end_gmt'   => $current_hour_end->format( 'Y-m-d H:i:s' ),
-					'subtotals'      => array(
+					'subtotals'      => [
 						'orders_count'        => $orders_count,
 						'num_items_sold'      => $num_items_sold,
 						'total_sales'         => $total_sales,
@@ -2403,28 +2403,28 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 						'avg_items_per_order' => $num_items_sold / $orders_count,
 						'avg_order_value'     => $net_revenue / $orders_count,
 						'total_customers'     => 2,
-						'segments'            => array(),
-					),
-				),
-			),
+						'segments'            => [],
+					],
+				],
+			],
 			'total'     => 1,
 			'pages'     => 1,
 			'page_no'   => 1,
-		);
+		];
 		$this->assertEquals( $expected_stats, json_decode( wp_json_encode( $data_store->get_data( $query_args ) ), true ), 'Query args: ' . $this->return_print_r( $query_args ) . "; query: {$wpdb->last_query}" );
 
 		// product_includes + coupon_includes.
-		$query_args = array(
+		$query_args = [
 			'after'            => $current_hour_start->format( TimeInterval::$sql_datetime_format ),
 			'before'           => $current_hour_end->format( TimeInterval::$sql_datetime_format ),
 			'interval'         => 'hour',
-			'product_includes' => array(
+			'product_includes' => [
 				$product_1->get_id(),
-			),
-			'coupon_includes'  => array(
+			],
+			'coupon_includes'  => [
 				$coupon_1->get_id(),
-			),
-		);
+			],
+		];
 
 		$order_permutations     = 8;
 		$order_w_coupon_1_perms = 8;
@@ -2442,8 +2442,8 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 		$total_sales    = $net_revenue + $shipping;
 		$gross_sales    = $net_revenue + $coupons;
 
-		$expected_stats = array(
-			'totals'    => array(
+		$expected_stats = [
+			'totals'    => [
 				'orders_count'        => $orders_count,
 				'num_items_sold'      => $num_items_sold,
 				'total_sales'         => $total_sales,
@@ -2458,16 +2458,16 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 				'avg_order_value'     => $net_revenue / $orders_count,
 				'total_customers'     => 2,
 				'products'            => 2,
-				'segments'            => array(),
-			),
-			'intervals' => array(
-				array(
+				'segments'            => [],
+			],
+			'intervals' => [
+				[
 					'interval'       => $current_hour_start->format( 'Y-m-d H' ),
 					'date_start'     => $current_hour_start->format( 'Y-m-d H:i:s' ),
 					'date_start_gmt' => $current_hour_start->format( 'Y-m-d H:i:s' ),
 					'date_end'       => $current_hour_end->format( 'Y-m-d H:i:s' ),
 					'date_end_gmt'   => $current_hour_end->format( 'Y-m-d H:i:s' ),
-					'subtotals'      => array(
+					'subtotals'      => [
 						'orders_count'        => $orders_count,
 						'num_items_sold'      => $num_items_sold,
 						'total_sales'         => $total_sales,
@@ -2481,31 +2481,31 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 						'avg_items_per_order' => $num_items_sold / $orders_count,
 						'avg_order_value'     => $net_revenue / $orders_count,
 						'total_customers'     => 2,
-						'segments'            => array(),
-					),
-				),
-			),
+						'segments'            => [],
+					],
+				],
+			],
 			'total'     => 1,
 			'pages'     => 1,
 			'page_no'   => 1,
-		);
+		];
 		$this->assertEquals( $expected_stats, json_decode( wp_json_encode( $data_store->get_data( $query_args ) ), true ), 'Query args: ' . $this->return_print_r( $query_args ) . "; query: {$wpdb->last_query}" );
 
 		// status_is + product_includes + coupon_includes.
-		$query_args = array(
+		$query_args = [
 			'after'            => $current_hour_start->format( TimeInterval::$sql_datetime_format ),
 			'before'           => $current_hour_end->format( TimeInterval::$sql_datetime_format ),
 			'interval'         => 'hour',
-			'status_is'        => array(
+			'status_is'        => [
 				$order_status_1,
-			),
-			'product_includes' => array(
+			],
+			'product_includes' => [
 				$product_1->get_id(),
-			),
-			'coupon_includes'  => array(
+			],
+			'coupon_includes'  => [
 				$coupon_1->get_id(),
-			),
-		);
+			],
+		];
 
 		$order_permutations     = 4;
 		$order_w_coupon_1_perms = 4;
@@ -2523,8 +2523,8 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 		$total_sales    = $net_revenue + $shipping;
 		$gross_sales    = $net_revenue + $coupons;
 
-		$expected_stats = array(
-			'totals'    => array(
+		$expected_stats = [
+			'totals'    => [
 				'orders_count'        => $orders_count,
 				'num_items_sold'      => $num_items_sold,
 				'total_sales'         => $total_sales,
@@ -2539,16 +2539,16 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 				'avg_order_value'     => $net_revenue / $orders_count,
 				'total_customers'     => 2,
 				'products'            => 2,
-				'segments'            => array(),
-			),
-			'intervals' => array(
-				array(
+				'segments'            => [],
+			],
+			'intervals' => [
+				[
 					'interval'       => $current_hour_start->format( 'Y-m-d H' ),
 					'date_start'     => $current_hour_start->format( 'Y-m-d H:i:s' ),
 					'date_start_gmt' => $current_hour_start->format( 'Y-m-d H:i:s' ),
 					'date_end'       => $current_hour_end->format( 'Y-m-d H:i:s' ),
 					'date_end_gmt'   => $current_hour_end->format( 'Y-m-d H:i:s' ),
-					'subtotals'      => array(
+					'subtotals'      => [
 						'orders_count'        => $orders_count,
 						'num_items_sold'      => $num_items_sold,
 						'total_sales'         => $total_sales,
@@ -2562,35 +2562,35 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 						'avg_items_per_order' => $num_items_sold / $orders_count,
 						'avg_order_value'     => $net_revenue / $orders_count,
 						'total_customers'     => 2,
-						'segments'            => array(),
-					),
-				),
-			),
+						'segments'            => [],
+					],
+				],
+			],
 			'total'     => 1,
 			'pages'     => 1,
 			'page_no'   => 1,
-		);
+		];
 		$this->assertEquals( $expected_stats, json_decode( wp_json_encode( $data_store->get_data( $query_args ) ), true ), 'Query args: ' . $this->return_print_r( $query_args ) . "; query: {$wpdb->last_query}" );
 
 		// status_is + status_is_not + product_includes.
-		$query_args = array(
+		$query_args = [
 			'after'            => $current_hour_start->format( TimeInterval::$sql_datetime_format ),
 			'before'           => $current_hour_end->format( TimeInterval::$sql_datetime_format ),
 			'interval'         => 'hour',
-			'status_is'        => array(
+			'status_is'        => [
 				$order_status_1,
 				$order_status_2,
-			),
-			'status_is_not'    => array(
+			],
+			'status_is_not'    => [
 				$order_status_2,
-			),
-			'product_includes' => array(
+			],
+			'product_includes' => [
 				$product_1->get_id(),
-			),
-			'coupon_includes'  => array(
+			],
+			'coupon_includes'  => [
 				$coupon_1->get_id(),
-			),
-		);
+			],
+		];
 
 		$order_permutations     = 4;
 		$order_w_coupon_1_perms = 4;
@@ -2608,8 +2608,8 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 		$total_sales    = $net_revenue + $shipping;
 		$gross_sales    = $net_revenue + $coupons;
 
-		$expected_stats = array(
-			'totals'    => array(
+		$expected_stats = [
+			'totals'    => [
 				'orders_count'        => $orders_count,
 				'num_items_sold'      => $num_items_sold,
 				'total_sales'         => $total_sales,
@@ -2624,16 +2624,16 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 				'avg_order_value'     => $net_revenue / $orders_count,
 				'total_customers'     => 2,
 				'products'            => 2,
-				'segments'            => array(),
-			),
-			'intervals' => array(
-				array(
+				'segments'            => [],
+			],
+			'intervals' => [
+				[
 					'interval'       => $current_hour_start->format( 'Y-m-d H' ),
 					'date_start'     => $current_hour_start->format( 'Y-m-d H:i:s' ),
 					'date_start_gmt' => $current_hour_start->format( 'Y-m-d H:i:s' ),
 					'date_end'       => $current_hour_end->format( 'Y-m-d H:i:s' ),
 					'date_end_gmt'   => $current_hour_end->format( 'Y-m-d H:i:s' ),
-					'subtotals'      => array(
+					'subtotals'      => [
 						'orders_count'        => $orders_count,
 						'num_items_sold'      => $num_items_sold,
 						'total_sales'         => $total_sales,
@@ -2647,36 +2647,36 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 						'avg_items_per_order' => $num_items_sold / $orders_count,
 						'avg_order_value'     => $net_revenue / $orders_count,
 						'total_customers'     => 2,
-						'segments'            => array(),
-					),
-				),
-			),
+						'segments'            => [],
+					],
+				],
+			],
 			'total'     => 1,
 			'pages'     => 1,
 			'page_no'   => 1,
-		);
+		];
 		$this->assertEquals( $expected_stats, json_decode( wp_json_encode( $data_store->get_data( $query_args ) ), true ), 'Query args: ' . $this->return_print_r( $query_args ) . "; query: {$wpdb->last_query}" );
 
 		// status_is + status_is_not + product_includes + product_excludes.
-		$query_args = array(
+		$query_args = [
 			'after'            => $current_hour_start->format( TimeInterval::$sql_datetime_format ),
 			'before'           => $current_hour_end->format( TimeInterval::$sql_datetime_format ),
 			'interval'         => 'hour',
-			'status_is'        => array(
+			'status_is'        => [
 				$order_status_1,
 				$order_status_2,
-			),
-			'status_is_not'    => array(
+			],
+			'status_is_not'    => [
 				$order_status_2,
-			),
-			'product_includes' => array(
+			],
+			'product_includes' => [
 				$product_1->get_id(),
 				$product_2->get_id(),
-			),
-			'product_excludes' => array(
+			],
+			'product_excludes' => [
 				$product_4->get_id(),
-			),
-		);
+			],
+		];
 
 		$order_permutations     = 12;
 		$order_w_coupon_1_perms = 4;
@@ -2693,8 +2693,8 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 		$total_sales    = $net_revenue + $shipping;
 		$gross_sales    = $net_revenue + $coupons;
 
-		$expected_stats = array(
-			'totals'    => array(
+		$expected_stats = [
+			'totals'    => [
 				'orders_count'        => $orders_count,
 				'num_items_sold'      => $num_items_sold,
 				'total_sales'         => $total_sales,
@@ -2710,16 +2710,16 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 				'total_customers'     => $total_customers,
 				// Prod_1, status_1, no coupon orders included here, so 2 new cust orders.
 				'products'            => 2,
-				'segments'            => array(),
-			),
-			'intervals' => array(
-				array(
+				'segments'            => [],
+			],
+			'intervals' => [
+				[
 					'interval'       => $current_hour_start->format( 'Y-m-d H' ),
 					'date_start'     => $current_hour_start->format( 'Y-m-d H:i:s' ),
 					'date_start_gmt' => $current_hour_start->format( 'Y-m-d H:i:s' ),
 					'date_end'       => $current_hour_end->format( 'Y-m-d H:i:s' ),
 					'date_end_gmt'   => $current_hour_end->format( 'Y-m-d H:i:s' ),
-					'subtotals'      => array(
+					'subtotals'      => [
 						'orders_count'        => $orders_count,
 						'num_items_sold'      => $num_items_sold,
 						'total_sales'         => $total_sales,
@@ -2733,39 +2733,39 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 						'avg_items_per_order' => $num_items_sold / $orders_count,
 						'avg_order_value'     => $net_revenue / $orders_count,
 						'total_customers'     => $total_customers,
-						'segments'            => array(),
-					),
-				),
-			),
+						'segments'            => [],
+					],
+				],
+			],
 			'total'     => 1,
 			'pages'     => 1,
 			'page_no'   => 1,
-		);
+		];
 		$this->assertEquals( $expected_stats, json_decode( wp_json_encode( $data_store->get_data( $query_args ) ), true ), 'Query args: ' . $this->return_print_r( $query_args ) . "; query: {$wpdb->last_query}" );
 
 		// status_is + status_is_not + product_includes + product_excludes + coupon_includes.
-		$query_args = array(
+		$query_args = [
 			'after'            => $current_hour_start->format( TimeInterval::$sql_datetime_format ),
 			'before'           => $current_hour_end->format( TimeInterval::$sql_datetime_format ),
 			'interval'         => 'hour',
-			'status_is'        => array(
+			'status_is'        => [
 				$order_status_1,
 				$order_status_2,
-			),
-			'status_is_not'    => array(
+			],
+			'status_is_not'    => [
 				$order_status_2,
-			),
-			'product_includes' => array(
+			],
+			'product_includes' => [
 				$product_1->get_id(),
 				$product_2->get_id(),
-			),
-			'product_excludes' => array(
+			],
+			'product_excludes' => [
 				$product_4->get_id(),
-			),
-			'coupon_includes'  => array(
+			],
+			'coupon_includes'  => [
 				$coupon_1->get_id(),
-			),
-		);
+			],
+		];
 
 		$order_permutations     = 4;
 		$order_w_coupon_1_perms = 4;
@@ -2782,8 +2782,8 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 		$total_sales    = $net_revenue + $shipping;
 		$gross_sales    = $net_revenue + $coupons;
 
-		$expected_stats = array(
-			'totals'    => array(
+		$expected_stats = [
+			'totals'    => [
 				'orders_count'        => $orders_count,
 				'num_items_sold'      => $num_items_sold,
 				'total_sales'         => $total_sales,
@@ -2798,16 +2798,16 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 				'avg_order_value'     => $net_revenue / $orders_count,
 				'total_customers'     => 2,
 				'products'            => 2,
-				'segments'            => array(),
-			),
-			'intervals' => array(
-				array(
+				'segments'            => [],
+			],
+			'intervals' => [
+				[
 					'interval'       => $current_hour_start->format( 'Y-m-d H' ),
 					'date_start'     => $current_hour_start->format( 'Y-m-d H:i:s' ),
 					'date_start_gmt' => $current_hour_start->format( 'Y-m-d H:i:s' ),
 					'date_end'       => $current_hour_end->format( 'Y-m-d H:i:s' ),
 					'date_end_gmt'   => $current_hour_end->format( 'Y-m-d H:i:s' ),
-					'subtotals'      => array(
+					'subtotals'      => [
 						'orders_count'        => $orders_count,
 						'num_items_sold'      => $num_items_sold,
 						'total_sales'         => $total_sales,
@@ -2821,43 +2821,43 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 						'avg_items_per_order' => $num_items_sold / $orders_count,
 						'avg_order_value'     => $net_revenue / $orders_count,
 						'total_customers'     => 2,
-						'segments'            => array(),
-					),
-				),
-			),
+						'segments'            => [],
+					],
+				],
+			],
 			'total'     => 1,
 			'pages'     => 1,
 			'page_no'   => 1,
-		);
+		];
 		$this->assertEquals( $expected_stats, json_decode( wp_json_encode( $data_store->get_data( $query_args ) ), true ), 'Query args: ' . $this->return_print_r( $query_args ) . "; query: {$wpdb->last_query}" );
 
 		// status_is + status_is_not + product_includes + product_excludes + coupon_includes + coupon_excludes.
-		$query_args = array(
+		$query_args = [
 			'after'            => $current_hour_start->format( TimeInterval::$sql_datetime_format ),
 			'before'           => $current_hour_end->format( TimeInterval::$sql_datetime_format ),
 			'interval'         => 'hour',
-			'status_is'        => array(
+			'status_is'        => [
 				$order_status_1,
 				$order_status_2,
-			),
-			'status_is_not'    => array(
+			],
+			'status_is_not'    => [
 				$order_status_2,
-			),
-			'product_includes' => array(
+			],
+			'product_includes' => [
 				$product_1->get_id(),
 				$product_2->get_id(),
-			),
-			'product_excludes' => array(
+			],
+			'product_excludes' => [
 				$product_4->get_id(),
-			),
-			'coupon_includes'  => array(
+			],
+			'coupon_includes'  => [
 				$coupon_1->get_id(),
 				$coupon_2->get_id(),
-			),
-			'coupon_excludes'  => array(
+			],
+			'coupon_excludes'  => [
 				$coupon_2->get_id(),
-			),
-		);
+			],
+		];
 
 		$order_permutations     = 4;
 		$order_w_coupon_1_perms = 4;
@@ -2874,8 +2874,8 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 		$total_sales    = $net_revenue + $shipping;
 		$gross_sales    = $net_revenue + $coupons;
 
-		$expected_stats = array(
-			'totals'    => array(
+		$expected_stats = [
+			'totals'    => [
 				'orders_count'        => $orders_count,
 				'num_items_sold'      => $num_items_sold,
 				'total_sales'         => $total_sales,
@@ -2890,16 +2890,16 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 				'avg_order_value'     => $net_revenue / $orders_count,
 				'total_customers'     => 2,
 				'products'            => 2,
-				'segments'            => array(),
-			),
-			'intervals' => array(
-				array(
+				'segments'            => [],
+			],
+			'intervals' => [
+				[
 					'interval'       => $current_hour_start->format( 'Y-m-d H' ),
 					'date_start'     => $current_hour_start->format( 'Y-m-d H:i:s' ),
 					'date_start_gmt' => $current_hour_start->format( 'Y-m-d H:i:s' ),
 					'date_end'       => $current_hour_end->format( 'Y-m-d H:i:s' ),
 					'date_end_gmt'   => $current_hour_end->format( 'Y-m-d H:i:s' ),
-					'subtotals'      => array(
+					'subtotals'      => [
 						'orders_count'        => $orders_count,
 						'num_items_sold'      => $num_items_sold,
 						'total_sales'         => $total_sales,
@@ -2913,30 +2913,30 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 						'avg_items_per_order' => $num_items_sold / $orders_count,
 						'avg_order_value'     => $net_revenue / $orders_count,
 						'total_customers'     => 2,
-						'segments'            => array(),
-					),
-				),
-			),
+						'segments'            => [],
+					],
+				],
+			],
 			'total'     => 1,
 			'pages'     => 1,
 			'page_no'   => 1,
-		);
+		];
 		$this->assertEquals( $expected_stats, json_decode( wp_json_encode( $data_store->get_data( $query_args ) ), true ), 'Query args: ' . $this->return_print_r( $query_args ) . "; query: {$wpdb->last_query}" );
 
 		// Combinations: match any
 		// status_is + status_is_not, all orders.
-		$query_args = array(
+		$query_args = [
 			'after'         => $current_hour_start->format( TimeInterval::$sql_datetime_format ),
 			'before'        => $current_hour_end->format( TimeInterval::$sql_datetime_format ),
 			'interval'      => 'hour',
 			'match'         => 'any',
-			'status_is'     => array(
+			'status_is'     => [
 				$order_status_1,
-			),
-			'status_is_not' => array(
+			],
+			'status_is_not' => [
 				$order_status_1,
-			),
-		);
+			],
+		];
 
 		$order_permutations     = 72;
 		$order_w_coupon_1_perms = 24;
@@ -2958,8 +2958,8 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 		$total_sales    = $net_revenue + $shipping;
 		$gross_sales    = $net_revenue + $coupons;
 
-		$expected_stats = array(
-			'totals'    => array(
+		$expected_stats = [
+			'totals'    => [
 				'orders_count'        => $orders_count,
 				'num_items_sold'      => $num_items_sold,
 				'total_sales'         => $total_sales,
@@ -2974,16 +2974,16 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 				'avg_order_value'     => $net_revenue / $orders_count,
 				'total_customers'     => $total_customers,
 				'products'            => 4,
-				'segments'            => array(),
-			),
-			'intervals' => array(
-				array(
+				'segments'            => [],
+			],
+			'intervals' => [
+				[
 					'interval'       => $current_hour_start->format( 'Y-m-d H' ),
 					'date_start'     => $current_hour_start->format( 'Y-m-d H:i:s' ),
 					'date_start_gmt' => $current_hour_start->format( 'Y-m-d H:i:s' ),
 					'date_end'       => $current_hour_end->format( 'Y-m-d H:i:s' ),
 					'date_end_gmt'   => $current_hour_end->format( 'Y-m-d H:i:s' ),
-					'subtotals'      => array(
+					'subtotals'      => [
 						'orders_count'        => $orders_count,
 						'num_items_sold'      => $num_items_sold,
 						'total_sales'         => $total_sales,
@@ -2997,29 +2997,29 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 						'avg_items_per_order' => $num_items_sold / $orders_count,
 						'avg_order_value'     => $net_revenue / $orders_count,
 						'total_customers'     => $total_customers,
-						'segments'            => array(),
-					),
-				),
-			),
+						'segments'            => [],
+					],
+				],
+			],
 			'total'     => 1,
 			'pages'     => 1,
 			'page_no'   => 1,
-		);
+		];
 		$this->assertEquals( $expected_stats, json_decode( wp_json_encode( $data_store->get_data( $query_args ) ), true ), 'Query args: ' . $this->return_print_r( $query_args ) . "; query: {$wpdb->last_query}" );
 
 		// status_is OR product_includes.
-		$query_args = array(
+		$query_args = [
 			'after'            => $current_hour_start->format( TimeInterval::$sql_datetime_format ),
 			'before'           => $current_hour_end->format( TimeInterval::$sql_datetime_format ),
 			'interval'         => 'hour',
 			'match'            => 'any',
-			'status_is'        => array(
+			'status_is'        => [
 				$order_status_1,
-			),
-			'product_includes' => array(
+			],
+			'product_includes' => [
 				$product_1->get_id(),
-			),
-		);
+			],
+		];
 
 		$order_permutations     = 48;
 		$order_w_coupon_1_perms = 16;
@@ -3041,8 +3041,8 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 		$total_sales    = $net_revenue + $shipping;
 		$gross_sales    = $net_revenue + $coupons;
 
-		$expected_stats = array(
-			'totals'    => array(
+		$expected_stats = [
+			'totals'    => [
 				'orders_count'        => $orders_count,
 				'num_items_sold'      => $num_items_sold,
 				'total_sales'         => $total_sales,
@@ -3057,16 +3057,16 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 				'avg_order_value'     => $net_revenue / $orders_count,
 				'total_customers'     => $total_customers,
 				'products'            => 4,
-				'segments'            => array(),
-			),
-			'intervals' => array(
-				array(
+				'segments'            => [],
+			],
+			'intervals' => [
+				[
 					'interval'       => $current_hour_start->format( 'Y-m-d H' ),
 					'date_start'     => $current_hour_start->format( 'Y-m-d H:i:s' ),
 					'date_start_gmt' => $current_hour_start->format( 'Y-m-d H:i:s' ),
 					'date_end'       => $current_hour_end->format( 'Y-m-d H:i:s' ),
 					'date_end_gmt'   => $current_hour_end->format( 'Y-m-d H:i:s' ),
-					'subtotals'      => array(
+					'subtotals'      => [
 						'orders_count'        => $orders_count,
 						'num_items_sold'      => $num_items_sold,
 						'total_sales'         => $total_sales,
@@ -3080,29 +3080,29 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 						'avg_items_per_order' => $num_items_sold / $orders_count,
 						'avg_order_value'     => $net_revenue / $orders_count,
 						'total_customers'     => $total_customers,
-						'segments'            => array(),
-					),
-				),
-			),
+						'segments'            => [],
+					],
+				],
+			],
 			'total'     => 1,
 			'pages'     => 1,
 			'page_no'   => 1,
-		);
+		];
 		$this->assertEquals( $expected_stats, json_decode( wp_json_encode( $data_store->get_data( $query_args ) ), true ), 'Query args: ' . $this->return_print_r( $query_args ) . "; query: {$wpdb->last_query}" );
 
 		// status_is OR coupon_includes.
-		$query_args = array(
+		$query_args = [
 			'after'           => $current_hour_start->format( TimeInterval::$sql_datetime_format ),
 			'before'          => $current_hour_end->format( TimeInterval::$sql_datetime_format ),
 			'interval'        => 'hour',
 			'match'           => 'any',
-			'status_is'       => array(
+			'status_is'       => [
 				$order_status_1,
-			),
-			'coupon_includes' => array(
+			],
+			'coupon_includes' => [
 				$coupon_1->get_id(),
-			),
-		);
+			],
+		];
 
 		$order_permutations     = 48;
 		$order_w_coupon_1_perms = 24;
@@ -3124,8 +3124,8 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 		$total_sales    = $net_revenue + $shipping;
 		$gross_sales    = $net_revenue + $coupons;
 
-		$expected_stats = array(
-			'totals'    => array(
+		$expected_stats = [
+			'totals'    => [
 				'orders_count'        => $orders_count,
 				'num_items_sold'      => $num_items_sold,
 				'total_sales'         => $total_sales,
@@ -3140,16 +3140,16 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 				'avg_order_value'     => $net_revenue / $orders_count,
 				'total_customers'     => $total_customers,
 				'products'            => 4,
-				'segments'            => array(),
-			),
-			'intervals' => array(
-				array(
+				'segments'            => [],
+			],
+			'intervals' => [
+				[
 					'interval'       => $current_hour_start->format( 'Y-m-d H' ),
 					'date_start'     => $current_hour_start->format( 'Y-m-d H:i:s' ),
 					'date_start_gmt' => $current_hour_start->format( 'Y-m-d H:i:s' ),
 					'date_end'       => $current_hour_end->format( 'Y-m-d H:i:s' ),
 					'date_end_gmt'   => $current_hour_end->format( 'Y-m-d H:i:s' ),
-					'subtotals'      => array(
+					'subtotals'      => [
 						'orders_count'        => $orders_count,
 						'num_items_sold'      => $num_items_sold,
 						'total_sales'         => $total_sales,
@@ -3163,29 +3163,29 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 						'avg_items_per_order' => $num_items_sold / $orders_count,
 						'avg_order_value'     => $net_revenue / $orders_count,
 						'total_customers'     => $total_customers,
-						'segments'            => array(),
-					),
-				),
-			),
+						'segments'            => [],
+					],
+				],
+			],
 			'total'     => 1,
 			'pages'     => 1,
 			'page_no'   => 1,
-		);
+		];
 		$this->assertEquals( $expected_stats, json_decode( wp_json_encode( $data_store->get_data( $query_args ) ), true ), 'Query args: ' . $this->return_print_r( $query_args ) . "; query: {$wpdb->last_query}" );
 
 		// status_is OR coupon_excludes.
-		$query_args = array(
+		$query_args = [
 			'after'           => $current_hour_start->format( TimeInterval::$sql_datetime_format ),
 			'before'          => $current_hour_end->format( TimeInterval::$sql_datetime_format ),
 			'interval'        => 'hour',
 			'match'           => 'any',
-			'status_is'       => array(
+			'status_is'       => [
 				$order_status_1,
-			),
-			'coupon_excludes' => array(
+			],
+			'coupon_excludes' => [
 				$coupon_1->get_id(),
-			),
-		);
+			],
+		];
 
 		$order_permutations     = 60;
 		$order_w_coupon_1_perms = 12;
@@ -3207,8 +3207,8 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 		$total_sales    = $net_revenue + $shipping;
 		$gross_sales    = $net_revenue + $coupons;
 
-		$expected_stats = array(
-			'totals'    => array(
+		$expected_stats = [
+			'totals'    => [
 				'orders_count'        => $orders_count,
 				'num_items_sold'      => $num_items_sold,
 				'total_sales'         => $total_sales,
@@ -3223,16 +3223,16 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 				'avg_order_value'     => $net_revenue / $orders_count,
 				'total_customers'     => $total_customers,
 				'products'            => 4,
-				'segments'            => array(),
-			),
-			'intervals' => array(
-				array(
+				'segments'            => [],
+			],
+			'intervals' => [
+				[
 					'interval'       => $current_hour_start->format( 'Y-m-d H' ),
 					'date_start'     => $current_hour_start->format( 'Y-m-d H:i:s' ),
 					'date_start_gmt' => $current_hour_start->format( 'Y-m-d H:i:s' ),
 					'date_end'       => $current_hour_end->format( 'Y-m-d H:i:s' ),
 					'date_end_gmt'   => $current_hour_end->format( 'Y-m-d H:i:s' ),
-					'subtotals'      => array(
+					'subtotals'      => [
 						'orders_count'        => $orders_count,
 						'num_items_sold'      => $num_items_sold,
 						'total_sales'         => $total_sales,
@@ -3246,29 +3246,29 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 						'avg_items_per_order' => $num_items_sold / $orders_count,
 						'avg_order_value'     => $net_revenue / $orders_count,
 						'total_customers'     => $total_customers,
-						'segments'            => array(),
-					),
-				),
-			),
+						'segments'            => [],
+					],
+				],
+			],
 			'total'     => 1,
 			'pages'     => 1,
 			'page_no'   => 1,
-		);
+		];
 		$this->assertEquals( $expected_stats, json_decode( wp_json_encode( $data_store->get_data( $query_args ) ), true ), 'Query args: ' . $this->return_print_r( $query_args ) . "; query: {$wpdb->last_query}" );
 
 		// product_includes OR coupon_includes.
-		$query_args = array(
+		$query_args = [
 			'after'            => $current_hour_start->format( TimeInterval::$sql_datetime_format ),
 			'before'           => $current_hour_end->format( TimeInterval::$sql_datetime_format ),
 			'interval'         => 'hour',
 			'match'            => 'any',
-			'product_includes' => array(
+			'product_includes' => [
 				$product_1->get_id(),
-			),
-			'coupon_includes'  => array(
+			],
+			'coupon_includes'  => [
 				$coupon_1->get_id(),
-			),
-		);
+			],
+		];
 
 		$order_permutations     = 40;
 		$order_w_coupon_1_perms = 24;
@@ -3290,8 +3290,8 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 		$total_sales    = $net_revenue + $shipping;
 		$gross_sales    = $net_revenue + $coupons;
 
-		$expected_stats = array(
-			'totals'    => array(
+		$expected_stats = [
+			'totals'    => [
 				'orders_count'        => $orders_count,
 				'num_items_sold'      => $num_items_sold,
 				'total_sales'         => $total_sales,
@@ -3306,16 +3306,16 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 				'avg_order_value'     => $net_revenue / $orders_count,
 				'total_customers'     => $total_customers,
 				'products'            => 4,
-				'segments'            => array(),
-			),
-			'intervals' => array(
-				array(
+				'segments'            => [],
+			],
+			'intervals' => [
+				[
 					'interval'       => $current_hour_start->format( 'Y-m-d H' ),
 					'date_start'     => $current_hour_start->format( 'Y-m-d H:i:s' ),
 					'date_start_gmt' => $current_hour_start->format( 'Y-m-d H:i:s' ),
 					'date_end'       => $current_hour_end->format( 'Y-m-d H:i:s' ),
 					'date_end_gmt'   => $current_hour_end->format( 'Y-m-d H:i:s' ),
-					'subtotals'      => array(
+					'subtotals'      => [
 						'orders_count'        => $orders_count,
 						'num_items_sold'      => $num_items_sold,
 						'total_sales'         => $total_sales,
@@ -3329,32 +3329,32 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 						'avg_items_per_order' => $num_items_sold / $orders_count,
 						'avg_order_value'     => $net_revenue / $orders_count,
 						'total_customers'     => $total_customers,
-						'segments'            => array(),
-					),
-				),
-			),
+						'segments'            => [],
+					],
+				],
+			],
 			'total'     => 1,
 			'pages'     => 1,
 			'page_no'   => 1,
-		);
+		];
 		$this->assertEquals( $expected_stats, json_decode( wp_json_encode( $data_store->get_data( $query_args ) ), true ), 'Query args: ' . $this->return_print_r( $query_args ) . "; query: {$wpdb->last_query}" );
 
 		// status_is OR product_includes OR coupon_includes.
-		$query_args = array(
+		$query_args = [
 			'after'            => $current_hour_start->format( TimeInterval::$sql_datetime_format ),
 			'before'           => $current_hour_end->format( TimeInterval::$sql_datetime_format ),
 			'interval'         => 'hour',
 			'match'            => 'any',
-			'status_is'        => array(
+			'status_is'        => [
 				$order_status_1,
-			),
-			'product_includes' => array(
+			],
+			'product_includes' => [
 				$product_1->get_id(),
-			),
-			'coupon_includes'  => array(
+			],
+			'coupon_includes'  => [
 				$coupon_1->get_id(),
-			),
-		);
+			],
+		];
 
 		$order_permutations     = 56;
 		$order_w_coupon_1_perms = 24;
@@ -3376,8 +3376,8 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 		$total_sales    = $net_revenue + $shipping;
 		$gross_sales    = $net_revenue + $coupons;
 
-		$expected_stats = array(
-			'totals'    => array(
+		$expected_stats = [
+			'totals'    => [
 				'orders_count'        => $orders_count,
 				'num_items_sold'      => $num_items_sold,
 				'total_sales'         => $total_sales,
@@ -3392,16 +3392,16 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 				'avg_order_value'     => $net_revenue / $orders_count,
 				'total_customers'     => $total_customers,
 				'products'            => 4,
-				'segments'            => array(),
-			),
-			'intervals' => array(
-				array(
+				'segments'            => [],
+			],
+			'intervals' => [
+				[
 					'interval'       => $current_hour_start->format( 'Y-m-d H' ),
 					'date_start'     => $current_hour_start->format( 'Y-m-d H:i:s' ),
 					'date_start_gmt' => $current_hour_start->format( 'Y-m-d H:i:s' ),
 					'date_end'       => $current_hour_end->format( 'Y-m-d H:i:s' ),
 					'date_end_gmt'   => $current_hour_end->format( 'Y-m-d H:i:s' ),
-					'subtotals'      => array(
+					'subtotals'      => [
 						'orders_count'        => $orders_count,
 						'num_items_sold'      => $num_items_sold,
 						'total_sales'         => $total_sales,
@@ -3415,35 +3415,35 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 						'avg_items_per_order' => $num_items_sold / $orders_count,
 						'avg_order_value'     => $net_revenue / $orders_count,
 						'total_customers'     => $total_customers,
-						'segments'            => array(),
-					),
-				),
-			),
+						'segments'            => [],
+					],
+				],
+			],
 			'total'     => 1,
 			'pages'     => 1,
 			'page_no'   => 1,
-		);
+		];
 		$this->assertEquals( $expected_stats, json_decode( wp_json_encode( $data_store->get_data( $query_args ) ), true ), 'Query args: ' . $this->return_print_r( $query_args ) . "; query: {$wpdb->last_query}" );
 
 		// status_is OR status_is_not OR product_includes.
-		$query_args = array(
+		$query_args = [
 			'after'            => $current_hour_start->format( TimeInterval::$sql_datetime_format ),
 			'before'           => $current_hour_end->format( TimeInterval::$sql_datetime_format ),
 			'interval'         => 'hour',
 			'match'            => 'any',
-			'status_is'        => array(
+			'status_is'        => [
 				$order_status_1,
-			),
-			'status_is_not'    => array(
+			],
+			'status_is_not'    => [
 				$order_status_2,
-			),
-			'product_includes' => array(
+			],
+			'product_includes' => [
 				$product_1->get_id(),
-			),
-			'coupon_includes'  => array(
+			],
+			'coupon_includes'  => [
 				$coupon_1->get_id(),
-			),
-		);
+			],
+		];
 
 		$order_permutations     = 56;
 		$order_w_coupon_1_perms = 24;
@@ -3465,8 +3465,8 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 		$total_sales    = $net_revenue + $shipping;
 		$gross_sales    = $net_revenue + $coupons;
 
-		$expected_stats = array(
-			'totals'    => array(
+		$expected_stats = [
+			'totals'    => [
 				'orders_count'        => $orders_count,
 				'num_items_sold'      => $num_items_sold,
 				'total_sales'         => $total_sales,
@@ -3481,16 +3481,16 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 				'avg_order_value'     => $net_revenue / $orders_count,
 				'total_customers'     => $total_customers,
 				'products'            => 4,
-				'segments'            => array(),
-			),
-			'intervals' => array(
-				array(
+				'segments'            => [],
+			],
+			'intervals' => [
+				[
 					'interval'       => $current_hour_start->format( 'Y-m-d H' ),
 					'date_start'     => $current_hour_start->format( 'Y-m-d H:i:s' ),
 					'date_start_gmt' => $current_hour_start->format( 'Y-m-d H:i:s' ),
 					'date_end'       => $current_hour_end->format( 'Y-m-d H:i:s' ),
 					'date_end_gmt'   => $current_hour_end->format( 'Y-m-d H:i:s' ),
-					'subtotals'      => array(
+					'subtotals'      => [
 						'orders_count'        => $orders_count,
 						'num_items_sold'      => $num_items_sold,
 						'total_sales'         => $total_sales,
@@ -3504,35 +3504,35 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 						'avg_items_per_order' => $num_items_sold / $orders_count,
 						'avg_order_value'     => $net_revenue / $orders_count,
 						'total_customers'     => $total_customers,
-						'segments'            => array(),
-					),
-				),
-			),
+						'segments'            => [],
+					],
+				],
+			],
 			'total'     => 1,
 			'pages'     => 1,
 			'page_no'   => 1,
-		);
+		];
 		$this->assertEquals( $expected_stats, json_decode( wp_json_encode( $data_store->get_data( $query_args ) ), true ), 'Query args: ' . $this->return_print_r( $query_args ) . "; query: {$wpdb->last_query}" );
 
 		// status_is OR status_is_not OR product_includes OR product_excludes.
-		$query_args = array(
+		$query_args = [
 			'after'            => $current_hour_start->format( TimeInterval::$sql_datetime_format ),
 			'before'           => $current_hour_end->format( TimeInterval::$sql_datetime_format ),
 			'interval'         => 'hour',
 			'match'            => 'any',
-			'status_is'        => array(
+			'status_is'        => [
 				$order_status_1,
-			),
-			'status_is_not'    => array(
+			],
+			'status_is_not'    => [
 				$order_status_2,
-			),
-			'product_includes' => array(
+			],
+			'product_includes' => [
 				$product_1->get_id(),
-			),
-			'product_excludes' => array(
+			],
+			'product_excludes' => [
 				$product_2->get_id(),
-			),
-		);
+			],
+		];
 
 		$order_permutations     = 60;
 		$order_w_coupon_1_perms = 20;
@@ -3554,8 +3554,8 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 		$total_sales    = $net_revenue + $shipping;
 		$gross_sales    = $net_revenue + $coupons;
 
-		$expected_stats = array(
-			'totals'    => array(
+		$expected_stats = [
+			'totals'    => [
 				'orders_count'        => $orders_count,
 				'num_items_sold'      => $num_items_sold,
 				'total_sales'         => $total_sales,
@@ -3570,16 +3570,16 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 				'avg_order_value'     => $net_revenue / $orders_count,
 				'total_customers'     => $total_customers,
 				'products'            => 4,
-				'segments'            => array(),
-			),
-			'intervals' => array(
-				array(
+				'segments'            => [],
+			],
+			'intervals' => [
+				[
 					'interval'       => $current_hour_start->format( 'Y-m-d H' ),
 					'date_start'     => $current_hour_start->format( 'Y-m-d H:i:s' ),
 					'date_start_gmt' => $current_hour_start->format( 'Y-m-d H:i:s' ),
 					'date_end'       => $current_hour_end->format( 'Y-m-d H:i:s' ),
 					'date_end_gmt'   => $current_hour_end->format( 'Y-m-d H:i:s' ),
-					'subtotals'      => array(
+					'subtotals'      => [
 						'orders_count'        => $orders_count,
 						'num_items_sold'      => $num_items_sold,
 						'total_sales'         => $total_sales,
@@ -3593,38 +3593,38 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 						'avg_items_per_order' => $num_items_sold / $orders_count,
 						'avg_order_value'     => $net_revenue / $orders_count,
 						'total_customers'     => $total_customers,
-						'segments'            => array(),
-					),
-				),
-			),
+						'segments'            => [],
+					],
+				],
+			],
 			'total'     => 1,
 			'pages'     => 1,
 			'page_no'   => 1,
-		);
+		];
 		$this->assertEquals( $expected_stats, json_decode( wp_json_encode( $data_store->get_data( $query_args ) ), true ), 'Query args: ' . $this->return_print_r( $query_args ) . "; query: {$wpdb->last_query}" );
 
 		// status_is OR status_is_not OR product_includes OR product_excludes OR coupon_includes.
-		$query_args = array(
+		$query_args = [
 			'after'            => $current_hour_start->format( TimeInterval::$sql_datetime_format ),
 			'before'           => $current_hour_end->format( TimeInterval::$sql_datetime_format ),
 			'interval'         => 'hour',
 			'match'            => 'any',
-			'status_is'        => array(
+			'status_is'        => [
 				$order_status_1,
-			),
-			'status_is_not'    => array(
+			],
+			'status_is_not'    => [
 				$order_status_2,
-			),
-			'product_includes' => array(
+			],
+			'product_includes' => [
 				$product_1->get_id(),
-			),
-			'product_excludes' => array(
+			],
+			'product_excludes' => [
 				$product_2->get_id(),
-			),
-			'coupon_includes'  => array(
+			],
+			'coupon_includes'  => [
 				$coupon_1->get_id(),
-			),
-		);
+			],
+		];
 
 		$order_permutations     = 64;
 		$order_w_coupon_1_perms = 24;
@@ -3646,8 +3646,8 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 		$total_sales    = $net_revenue + $shipping;
 		$gross_sales    = $net_revenue + $coupons;
 
-		$expected_stats = array(
-			'totals'    => array(
+		$expected_stats = [
+			'totals'    => [
 				'orders_count'        => $orders_count,
 				'num_items_sold'      => $num_items_sold,
 				'total_sales'         => $total_sales,
@@ -3662,16 +3662,16 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 				'avg_order_value'     => $net_revenue / $orders_count,
 				'total_customers'     => $total_customers,
 				'products'            => 4,
-				'segments'            => array(),
-			),
-			'intervals' => array(
-				array(
+				'segments'            => [],
+			],
+			'intervals' => [
+				[
 					'interval'       => $current_hour_start->format( 'Y-m-d H' ),
 					'date_start'     => $current_hour_start->format( 'Y-m-d H:i:s' ),
 					'date_start_gmt' => $current_hour_start->format( 'Y-m-d H:i:s' ),
 					'date_end'       => $current_hour_end->format( 'Y-m-d H:i:s' ),
 					'date_end_gmt'   => $current_hour_end->format( 'Y-m-d H:i:s' ),
-					'subtotals'      => array(
+					'subtotals'      => [
 						'orders_count'        => $orders_count,
 						'num_items_sold'      => $num_items_sold,
 						'total_sales'         => $total_sales,
@@ -3685,41 +3685,41 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 						'avg_items_per_order' => $num_items_sold / $orders_count,
 						'avg_order_value'     => $net_revenue / $orders_count,
 						'total_customers'     => $total_customers,
-						'segments'            => array(),
-					),
-				),
-			),
+						'segments'            => [],
+					],
+				],
+			],
 			'total'     => 1,
 			'pages'     => 1,
 			'page_no'   => 1,
-		);
+		];
 		$this->assertEquals( $expected_stats, json_decode( wp_json_encode( $data_store->get_data( $query_args ) ), true ), 'Query args: ' . $this->return_print_r( $query_args ) . "; query: {$wpdb->last_query}" );
 
 		// status_is OR status_is_not OR product_includes OR product_excludes OR coupon_includes OR coupon_excludes.
-		$query_args = array(
+		$query_args = [
 			'after'            => $current_hour_start->format( TimeInterval::$sql_datetime_format ),
 			'before'           => $current_hour_end->format( TimeInterval::$sql_datetime_format ),
 			'interval'         => 'hour',
 			'match'            => 'any',
-			'status_is'        => array(
+			'status_is'        => [
 				$order_status_1,
-			),
-			'status_is_not'    => array(
+			],
+			'status_is_not'    => [
 				$order_status_2,
-			),
-			'product_includes' => array(
+			],
+			'product_includes' => [
 				$product_1->get_id(),
-			),
-			'product_excludes' => array(
+			],
+			'product_excludes' => [
 				$product_2->get_id(),
-			),
-			'coupon_includes'  => array(
+			],
+			'coupon_includes'  => [
 				$coupon_1->get_id(),
-			),
-			'coupon_excludes'  => array(
+			],
+			'coupon_excludes'  => [
 				$coupon_2->get_id(),
-			),
-		);
+			],
+		];
 
 		$order_permutations     = 68;
 		$order_w_coupon_1_perms = 24;
@@ -3741,8 +3741,8 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 		$total_sales    = $net_revenue + $shipping;
 		$gross_sales    = $net_revenue + $coupons;
 
-		$expected_stats = array(
-			'totals'    => array(
+		$expected_stats = [
+			'totals'    => [
 				'orders_count'        => $orders_count,
 				'num_items_sold'      => $num_items_sold,
 				'total_sales'         => $total_sales,
@@ -3757,16 +3757,16 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 				'avg_order_value'     => $net_revenue / $orders_count,
 				'total_customers'     => $total_customers,
 				'products'            => 4,
-				'segments'            => array(),
-			),
-			'intervals' => array(
-				array(
+				'segments'            => [],
+			],
+			'intervals' => [
+				[
 					'interval'       => $current_hour_start->format( 'Y-m-d H' ),
 					'date_start'     => $current_hour_start->format( 'Y-m-d H:i:s' ),
 					'date_start_gmt' => $current_hour_start->format( 'Y-m-d H:i:s' ),
 					'date_end'       => $current_hour_end->format( 'Y-m-d H:i:s' ),
 					'date_end_gmt'   => $current_hour_end->format( 'Y-m-d H:i:s' ),
-					'subtotals'      => array(
+					'subtotals'      => [
 						'orders_count'        => $orders_count,
 						'num_items_sold'      => $num_items_sold,
 						'total_sales'         => $total_sales,
@@ -3780,14 +3780,14 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 						'avg_items_per_order' => $num_items_sold / $orders_count,
 						'avg_order_value'     => $net_revenue / $orders_count,
 						'total_customers'     => $total_customers,
-						'segments'            => array(),
-					),
-				),
-			),
+						'segments'            => [],
+					],
+				],
+			],
 			'total'     => 1,
 			'pages'     => 1,
 			'page_no'   => 1,
-		);
+		];
 		$this->assertEquals( $expected_stats, json_decode( wp_json_encode( $data_store->get_data( $query_args ) ), true ), 'Query args: ' . $this->return_print_r( $query_args ) . "; query: {$wpdb->last_query}" );
 
 	}
@@ -3806,12 +3806,12 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 		WC_Helper_Reports::reset_stats_dbs();
 
 		// Tables to check.
-		$tables = array(
+		$tables = [
 			'wc_order_coupon_lookup',
 			'wc_order_product_lookup',
 			'wc_order_stats',
 			'wc_order_tax_lookup',
-		);
+		];
 
 		// Enable taxes.
 		$default_calc_taxes       = get_option( 'woocommerce_calc_taxes', 'no' );
@@ -3823,7 +3823,7 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 
 		// Create tax.
 		$tax_id = WC_Tax::_insert_tax_rate(
-			array(
+			[
 				'tax_rate_country'  => '',
 				'tax_rate_state'    => '',
 				'tax_rate'          => '10.0000',
@@ -3833,7 +3833,7 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 				'tax_rate_shipping' => '1',
 				'tax_rate_order'    => '1',
 				'tax_rate_class'    => '',
-			)
+			]
 		);
 
 		// Create product.
@@ -3921,7 +3921,7 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 		$child_2->set_regular_price( 27 );
 		$child_2->save();
 
-		$product_2->set_children( array( $child_1->get_id(), $child_2->get_id() ) );
+		$product_2->set_children( [ $child_1->get_id(), $child_2->get_id() ] );
 
 		$child_1->set_stock_status( 'instock' );
 		$child_1->save();
@@ -3955,13 +3955,13 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 		$item    = new WC_Order_Item_Product();
 
 		$item->set_props(
-			array(
+			[
 				'product_id'   => $product_2->get_id(),
 				'variation_id' => $child_1->get_id(),
 				'quantity'     => 3,
 				'subtotal'     => 3 * floatval( $child_1->get_price() ),
 				'total'        => 3 * floatval( $child_1->get_price() ),
-			)
+			]
 		);
 		$item->save();
 		$order_1->add_item( $item );
@@ -3973,13 +3973,13 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 		$order_2 = WC_Helper_Order::create_order( $customer_1->get_id(), $child_1 );
 		$item    = new WC_Order_Item_Product();
 		$item->set_props(
-			array(
+			[
 				'product_id'   => $product_2->get_id(),
 				'variation_id' => $child_2->get_id(),
 				'quantity'     => 1,
 				'subtotal'     => floatval( $child_2->get_price() ),
 				'total'        => floatval( $child_2->get_price() ),
-			)
+			]
 		);
 		$item->save();
 		$order_2->add_item( $item );
@@ -4017,12 +4017,12 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 		$i3_end = new DateTime();
 		$i3_end->setTimestamp( $i3_end_timestamp );
 
-		$query_args = array(
+		$query_args = [
 			'after'     => $two_hours_back->format( TimeInterval::$sql_datetime_format ),
 			'before'    => $now->format( TimeInterval::$sql_datetime_format ),
 			'interval'  => 'hour',
 			'segmentby' => 'product',
-		);
+		];
 
 		$shipping_amnt  = 10;
 		$o1_net_revenue = 4 * $product_1_price + 3 * intval( $child_1->get_price() );
@@ -4095,8 +4095,8 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 		$i2_p2_net_revenue    = 0;
 		$i2_p2_total_sales    = $i2_p2_net_revenue + $i2_p2_shipping;
 
-		$expected_stats = array(
-			'totals'    => array(
+		$expected_stats = [
+			'totals'    => [
 				'orders_count'        => $orders_count,
 				'num_items_sold'      => $num_items_sold,
 				'total_sales'         => $total_sales,
@@ -4111,11 +4111,11 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 				'avg_order_value'     => $net_revenue / $orders_count,
 				'total_customers'     => $total_customers,
 				'products'            => 2,
-				'segments'            => array(
-					array(
+				'segments'            => [
+					[
 						'segment_id'    => $product_1->get_id(),
 						'segment_label' => $product_1->get_name(),
-						'subtotals'     => array(
+						'subtotals'     => [
 							'orders_count'        => $p1_orders_count,
 							'num_items_sold'      => $p1_num_items_sold,
 							'total_sales'         => $p1_total_sales,
@@ -4128,12 +4128,12 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 							'avg_items_per_order' => ( $o1_num_items + $o3_num_items ) / $p1_orders_count,
 							'avg_order_value'     => ( $o1_net_revenue + $o3_net_revenue ) / $p1_orders_count,
 							'total_customers'     => $total_customers,
-						),
-					),
-					array(
+						],
+					],
+					[
 						'segment_id'    => $product_2->get_id(),
 						'segment_label' => $product_2->get_name(),
-						'subtotals'     => array(
+						'subtotals'     => [
 							'orders_count'        => $p2_orders_count,
 							'num_items_sold'      => $p2_num_items_sold,
 							'total_sales'         => $p2_total_sales,
@@ -4146,12 +4146,12 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 							'avg_items_per_order' => ( $o1_num_items + $o2_num_items ) / $p2_orders_count,
 							'avg_order_value'     => ( $o1_net_revenue + $o2_net_revenue ) / $p2_orders_count,
 							'total_customers'     => $total_customers,
-						),
-					),
-					array(
+						],
+					],
+					[
 						'segment_id'    => $product_3->get_id(),
 						'segment_label' => $product_3->get_name(),
-						'subtotals'     => array(
+						'subtotals'     => [
 							'orders_count'        => 0,
 							'num_items_sold'      => 0,
 							'total_sales'         => 0,
@@ -4164,18 +4164,18 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 							'avg_items_per_order' => 0,
 							'avg_order_value'     => 0,
 							'total_customers'     => 0,
-						),
-					),
-				),
-			),
-			'intervals' => array(
-				array(
+						],
+					],
+				],
+			],
+			'intervals' => [
+				[
 					'interval'       => $i3_start->format( 'Y-m-d H' ),
 					'date_start'     => $i3_start->format( 'Y-m-d H:i:s' ),
 					'date_start_gmt' => $i3_start->format( 'Y-m-d H:i:s' ),
 					'date_end'       => $i3_end->format( 'Y-m-d H:i:s' ),
 					'date_end_gmt'   => $i3_end->format( 'Y-m-d H:i:s' ),
-					'subtotals'      => array(
+					'subtotals'      => [
 						'orders_count'        => $i3_tot_orders_count,
 						'num_items_sold'      => $i3_tot_num_items_sold,
 						'total_sales'         => $i3_tot_total_sales,
@@ -4189,11 +4189,11 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 						'avg_items_per_order' => $i3_tot_num_items_sold / $i3_tot_orders_count,
 						'avg_order_value'     => $i3_tot_net_revenue / $i3_tot_orders_count,
 						'total_customers'     => $total_customers,
-						'segments'            => array(
-							array(
+						'segments'            => [
+							[
 								'segment_id'    => $product_1->get_id(),
 								'segment_label' => $product_1->get_name(),
-								'subtotals'     => array(
+								'subtotals'     => [
 									'orders_count'        => $i3_p1_orders_count,
 									'num_items_sold'      => $i3_p1_num_items_sold,
 									'total_sales'         => $i3_p1_total_sales,
@@ -4206,12 +4206,12 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 									'avg_items_per_order' => $o1_num_items / $i3_p1_orders_count,
 									'avg_order_value'     => $o1_net_revenue / $i3_p1_orders_count,
 									'total_customers'     => $total_customers,
-								),
-							),
-							array(
+								],
+							],
+							[
 								'segment_id'    => $product_2->get_id(),
 								'segment_label' => $product_2->get_name(),
-								'subtotals'     => array(
+								'subtotals'     => [
 									'orders_count'        => $i3_p2_orders_count,
 									'num_items_sold'      => $i3_p2_num_items_sold,
 									'total_sales'         => $i3_p2_total_sales,
@@ -4224,12 +4224,12 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 									'avg_items_per_order' => ( $o1_num_items + $o2_num_items ) / $i3_p2_orders_count,
 									'avg_order_value'     => ( $o1_net_revenue + $o2_net_revenue ) / $i3_p2_orders_count,
 									'total_customers'     => $total_customers,
-								),
-							),
-							array(
+								],
+							],
+							[
 								'segment_id'    => $product_3->get_id(),
 								'segment_label' => $product_3->get_name(),
-								'subtotals'     => array(
+								'subtotals'     => [
 									'orders_count'        => 0,
 									'num_items_sold'      => 0,
 									'total_sales'         => 0,
@@ -4242,18 +4242,18 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 									'avg_items_per_order' => 0,
 									'avg_order_value'     => 0,
 									'total_customers'     => 0,
-								),
-							),
-						),
-					),
-				),
-				array(
+								],
+							],
+						],
+					],
+				],
+				[
 					'interval'       => $i2_start->format( 'Y-m-d H' ),
 					'date_start'     => $i2_start->format( 'Y-m-d H:i:s' ),
 					'date_start_gmt' => $i2_start->format( 'Y-m-d H:i:s' ),
 					'date_end'       => $i2_end->format( 'Y-m-d H:i:s' ),
 					'date_end_gmt'   => $i2_end->format( 'Y-m-d H:i:s' ),
-					'subtotals'      => array(
+					'subtotals'      => [
 						'orders_count'        => $i2_tot_orders_count,
 						'num_items_sold'      => $i2_tot_num_items_sold,
 						'total_sales'         => $i2_tot_total_sales,
@@ -4267,11 +4267,11 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 						'avg_items_per_order' => $i2_tot_num_items_sold / $i2_tot_orders_count,
 						'avg_order_value'     => $i2_tot_net_revenue / $i2_tot_orders_count,
 						'total_customers'     => $total_customers,
-						'segments'            => array(
-							array(
+						'segments'            => [
+							[
 								'segment_id'    => $product_1->get_id(),
 								'segment_label' => $product_1->get_name(),
-								'subtotals'     => array(
+								'subtotals'     => [
 									'orders_count'        => $i2_p1_orders_count,
 									'num_items_sold'      => $i2_p1_num_items_sold,
 									'total_sales'         => $i2_p1_total_sales,
@@ -4284,12 +4284,12 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 									'avg_items_per_order' => $o3_num_items / $i2_p1_orders_count,
 									'avg_order_value'     => $o3_net_revenue / $i2_p1_orders_count,
 									'total_customers'     => $total_customers,
-								),
-							),
-							array(
+								],
+							],
+							[
 								'segment_id'    => $product_2->get_id(),
 								'segment_label' => $product_2->get_name(),
-								'subtotals'     => array(
+								'subtotals'     => [
 									'orders_count'        => $i2_p2_orders_count,
 									'num_items_sold'      => $i2_p2_num_items_sold,
 									'total_sales'         => $i2_p2_total_sales,
@@ -4302,12 +4302,12 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 									'avg_items_per_order' => $i2_p2_orders_count ? $o3_num_items / $i2_p2_orders_count : 0,
 									'avg_order_value'     => $i2_p2_orders_count ? $o3_net_revenue / $i2_p2_orders_count : 0,
 									'total_customers'     => $i2_p2_orders_count ? $total_customers : 0,
-								),
-							),
-							array(
+								],
+							],
+							[
 								'segment_id'    => $product_3->get_id(),
 								'segment_label' => $product_3->get_name(),
-								'subtotals'     => array(
+								'subtotals'     => [
 									'orders_count'        => 0,
 									'num_items_sold'      => 0,
 									'total_sales'         => 0,
@@ -4320,18 +4320,18 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 									'avg_items_per_order' => 0,
 									'avg_order_value'     => 0,
 									'total_customers'     => 0,
-								),
-							),
-						),
-					),
-				),
-				array(
+								],
+							],
+						],
+					],
+				],
+				[
 					'interval'       => $i1_start->format( 'Y-m-d H' ),
 					'date_start'     => $i1_start->format( 'Y-m-d H:i:s' ),
 					'date_start_gmt' => $i1_start->format( 'Y-m-d H:i:s' ),
 					'date_end'       => $i1_end->format( 'Y-m-d H:i:s' ),
 					'date_end_gmt'   => $i1_end->format( 'Y-m-d H:i:s' ),
-					'subtotals'      => array(
+					'subtotals'      => [
 						'orders_count'        => 0,
 						'num_items_sold'      => 0,
 						'total_sales'         => 0,
@@ -4345,11 +4345,11 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 						'avg_items_per_order' => 0,
 						'avg_order_value'     => 0,
 						'total_customers'     => 0,
-						'segments'            => array(
-							array(
+						'segments'            => [
+							[
 								'segment_id'    => $product_1->get_id(),
 								'segment_label' => $product_1->get_name(),
-								'subtotals'     => array(
+								'subtotals'     => [
 									'orders_count'        => 0,
 									'num_items_sold'      => 0,
 									'total_sales'         => 0,
@@ -4362,12 +4362,12 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 									'avg_items_per_order' => 0,
 									'avg_order_value'     => 0,
 									'total_customers'     => 0,
-								),
-							),
-							array(
+								],
+							],
+							[
 								'segment_id'    => $product_2->get_id(),
 								'segment_label' => $product_2->get_name(),
-								'subtotals'     => array(
+								'subtotals'     => [
 									'orders_count'        => 0,
 									'num_items_sold'      => 0,
 									'total_sales'         => 0,
@@ -4380,12 +4380,12 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 									'avg_items_per_order' => 0,
 									'avg_order_value'     => 0,
 									'total_customers'     => 0,
-								),
-							),
-							array(
+								],
+							],
+							[
 								'segment_id'    => $product_3->get_id(),
 								'segment_label' => $product_3->get_name(),
-								'subtotals'     => array(
+								'subtotals'     => [
 									'orders_count'        => 0,
 									'num_items_sold'      => 0,
 									'total_sales'         => 0,
@@ -4398,16 +4398,16 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 									'avg_items_per_order' => 0,
 									'avg_order_value'     => 0,
 									'total_customers'     => 0,
-								),
-							),
-						),
-					),
-				),
-			),
+								],
+							],
+						],
+					],
+				],
+			],
 			'total'     => 3,
 			'pages'     => 1,
 			'page_no'   => 1,
-		);
+		];
 
 		$actual = json_decode( wp_json_encode( $data_store->get_data( $query_args ) ), true );
 
@@ -4432,11 +4432,11 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 		$order_1_time = time();
 		$order_2_time = $order_1_time;
 
-		$order_during_this_['hour']  = array( 1, 2 );
-		$order_during_this_['day']   = array( 1, 2 );
-		$order_during_this_['week']  = array( 1, 2 );
-		$order_during_this_['month'] = array( 1, 2 );
-		$order_during_this_['year']  = array( 1, 2 );
+		$order_during_this_['hour']  = [ 1, 2 ];
+		$order_during_this_['day']   = [ 1, 2 ];
+		$order_during_this_['week']  = [ 1, 2 ];
+		$order_during_this_['month'] = [ 1, 2 ];
+		$order_during_this_['year']  = [ 1, 2 ];
 
 		$order_1_datetime = new DateTime();
 		$order_1_datetime = $order_1_datetime->setTimestamp( $order_1_time );
@@ -4493,7 +4493,7 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 		$order[1]['day']   = (int) $order_1_datetime->format( 'd' );
 		$order[1]['hour']  = (int) $order_1_datetime->format( 'H' );
 
-		foreach ( array( 3, 4, 5, 6, 7 ) as $order_no ) {
+		foreach ( [ 3, 4, 5, 6, 7 ] as $order_no ) {
 			if ( $order[ $order_no ]['day'] === $order[1]['day'] && $order[ $order_no ]['month'] === $order[1]['month'] && $order[ $order_no ]['year'] === $order[1]['year'] ) {
 				$order_during_this_['day'][] = $order_no;
 			}
@@ -4511,9 +4511,9 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 		$order_status    = 'completed';
 		$qty_per_product = 4; // Hardcoded in WC_Helper_Order::create_order.
 
-		$orders = array();
+		$orders = [];
 		foreach (
-			array(
+			[
 				$order_7_time,
 				$order_6_time,
 				$order_5_time,
@@ -4521,7 +4521,7 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 				$order_3_time,
 				$order_2_time,
 				$order_1_time,
-			) as $order_time
+			] as $order_time
 		) {
 			// Order with 1 product.
 			$order = WC_Helper_Order::create_order( $customer->get_id(), $product );
@@ -4551,13 +4551,13 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 
 		// Test for current hour--only 1 hour visible.
 		// DESC.
-		$query_args = array(
+		$query_args = [
 			'after'    => $current_hour_start->format( TimeInterval::$sql_datetime_format ),
 			'before'   => $current_hour_end->format( TimeInterval::$sql_datetime_format ),
 			'interval' => 'hour',
 			'orderby'  => 'date',
 			'order'    => 'desc',
-		);
+		];
 
 		$orders_count   = count( $order_during_this_['hour'] );
 		$num_items_sold = $orders_count * $qty_per_product;
@@ -4568,8 +4568,8 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 		$total_sales    = $net_revenue + $shipping;
 		$gross_sales    = $net_revenue + $coupons;
 
-		$expected_stats = array(
-			'totals'    => array(
+		$expected_stats = [
+			'totals'    => [
 				'orders_count'        => $orders_count,
 				'num_items_sold'      => $num_items_sold,
 				'total_sales'         => $total_sales,
@@ -4584,16 +4584,16 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 				'avg_order_value'     => $net_revenue / $orders_count,
 				'total_customers'     => 1,
 				'products'            => 1,
-				'segments'            => array(),
-			),
-			'intervals' => array(
-				array(
+				'segments'            => [],
+			],
+			'intervals' => [
+				[
 					'interval'       => $current_hour_start->format( 'Y-m-d H' ),
 					'date_start'     => $current_hour_start->format( 'Y-m-d H:i:s' ),
 					'date_start_gmt' => $current_hour_start->format( 'Y-m-d H:i:s' ),
 					'date_end'       => $current_hour_end->format( 'Y-m-d H:i:s' ),
 					'date_end_gmt'   => $current_hour_end->format( 'Y-m-d H:i:s' ),
-					'subtotals'      => array(
+					'subtotals'      => [
 						'orders_count'        => $orders_count,
 						'num_items_sold'      => $num_items_sold,
 						'total_sales'         => $total_sales,
@@ -4607,24 +4607,24 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 						'avg_items_per_order' => $num_items_sold / $orders_count,
 						'avg_order_value'     => $net_revenue / $orders_count,
 						'total_customers'     => 1,
-						'segments'            => array(),
-					),
-				),
-			),
+						'segments'            => [],
+					],
+				],
+			],
 			'total'     => 1,
 			'pages'     => 1,
 			'page_no'   => 1,
-		);
+		];
 		$this->assertEquals( $expected_stats, json_decode( wp_json_encode( $data_store->get_data( $query_args ) ), true ), 'Query args: ' . $this->return_print_r( $query_args ) . "; query: {$wpdb->last_query}" );
 
 		// ASC -- only 1 interval, so should be the same.
-		$query_args = array(
+		$query_args = [
 			'after'    => $current_hour_start->format( TimeInterval::$sql_datetime_format ),
 			'before'   => $current_hour_end->format( TimeInterval::$sql_datetime_format ),
 			'interval' => 'hour',
 			'orderby'  => 'date',
 			'order'    => 'asc',
-		);
+		];
 		$this->assertEquals( $expected_stats, json_decode( wp_json_encode( $data_store->get_data( $query_args ) ), true ), 'Query args: ' . $this->return_print_r( $query_args ) . "; query: {$wpdb->last_query}" );
 
 		/*
@@ -4642,16 +4642,16 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 		$now_timestamp = (int) $current_hour_end->format( 'U' );
 		$minus_5_hours->setTimestamp( $now_timestamp - $hour_offset * HOUR_IN_SECONDS );
 
-		$query_args = array(
+		$query_args = [
 			'after'    => $minus_5_hours->format( TimeInterval::$sql_datetime_format ),
 			'before'   => $current_hour_end->format( TimeInterval::$sql_datetime_format ),
 			'interval' => 'hour',
 			'orderby'  => 'date',
 			'order'    => 'desc',
-		);
+		];
 
 		// Expected Intervals section construction.
-		$expected_intervals = array();
+		$expected_intervals = [];
 		// Even in case this runs exactly at the hour turn second, there should still be 6 intervals:
 		// e.g. 20:30:51 -(minus 5 hours)- 15:30:51 means intervals 15:30:51--15:59:59, 16:00-16:59, 17, 18, 19, 20:00-20:30, i.e. 6 intervals
 		// also if this run exactly at 20:00 -(minus 5 hours)- 15:00, then intervals should be 15:00-15:59, 16, 17, 18, 19, 20:00-20:00.
@@ -4699,13 +4699,13 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 				$returning_customers = 0;
 			}
 
-			$expected_interval = array(
+			$expected_interval = [
 				'interval'       => $date_start->format( 'Y-m-d H' ),
 				'date_start'     => $date_start->format( 'Y-m-d H:i:s' ),
 				'date_start_gmt' => $date_start->format( 'Y-m-d H:i:s' ),
 				'date_end'       => $date_end->format( 'Y-m-d H:i:s' ),
 				'date_end_gmt'   => $date_end->format( 'Y-m-d H:i:s' ),
-				'subtotals'      => array(
+				'subtotals'      => [
 					'orders_count'        => $orders_count,
 					'num_items_sold'      => $num_items_sold,
 					'total_sales'         => $total_sales,
@@ -4719,9 +4719,9 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 					'avg_items_per_order' => 0 === $orders_count ? 0 : $num_items_sold / $orders_count,
 					'avg_order_value'     => 0 === $orders_count ? 0 : $net_revenue / $orders_count,
 					'total_customers'     => $returning_customers,
-					'segments'            => array(),
-				),
-			);
+					'segments'            => [],
+				],
+			];
 
 			$expected_intervals[] = $expected_interval;
 		}
@@ -4735,8 +4735,8 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 		$total_sales    = $net_revenue + $shipping;
 		$gross_sales    = $net_revenue + $coupons;
 
-		$expected_stats = array(
-			'totals'    => array(
+		$expected_stats = [
+			'totals'    => [
 				'orders_count'        => $orders_count,
 				'num_items_sold'      => $num_items_sold,
 				'total_sales'         => $total_sales,
@@ -4751,24 +4751,24 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 				'avg_order_value'     => $net_revenue / $orders_count,
 				'total_customers'     => 1,
 				'products'            => 1,
-				'segments'            => array(),
-			),
+				'segments'            => [],
+			],
 			'intervals' => $expected_intervals,
 			'total'     => $interval_count,
 			'pages'     => 1,
 			'page_no'   => 1,
-		);
+		];
 		$actual         = json_decode( wp_json_encode( $data_store->get_data( $query_args ) ), true );
 		$this->assertEquals( $expected_stats, $actual, 'Query args: ' . $this->return_print_r( $query_args ) . "; query: {$wpdb->last_query}" );
 
 		// ASC -- reverse the intervals array, but numbers stay the same.
-		$query_args                  = array(
+		$query_args                  = [
 			'after'    => $minus_5_hours->format( TimeInterval::$sql_datetime_format ),
 			'before'   => $current_hour_end->format( TimeInterval::$sql_datetime_format ),
 			'interval' => 'hour',
 			'orderby'  => 'date',
 			'order'    => 'asc',
-		);
+		];
 		$expected_stats['intervals'] = array_reverse( $expected_stats['intervals'] );
 
 		$actual = json_decode( wp_json_encode( $data_store->get_data( $query_args ) ), true );
@@ -4789,16 +4789,16 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 		$now_timestamp = (int) $current_hour_end->format( 'U' );
 		$minus_9_hours->setTimestamp( $now_timestamp - $hour_offset * HOUR_IN_SECONDS );
 
-		$query_args = array(
+		$query_args = [
 			'after'    => $minus_9_hours->format( TimeInterval::$sql_datetime_format ),
 			'before'   => $current_hour_end->format( TimeInterval::$sql_datetime_format ),
 			'interval' => 'hour',
 			'orderby'  => 'date',
 			'order'    => 'desc',
-		);
+		];
 
 		// Expected Intervals section construction.
-		$expected_intervals = array();
+		$expected_intervals = [];
 		$interval_count     = $hour_offset + 1;
 		for ( $i = 0; $i < $interval_count; $i ++ ) {
 			if ( 0 === $i ) {
@@ -4843,13 +4843,13 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 				$total_customers = 0;
 			}
 
-			$expected_interval = array(
+			$expected_interval = [
 				'interval'       => $date_start->format( 'Y-m-d H' ),
 				'date_start'     => $date_start->format( 'Y-m-d H:i:s' ),
 				'date_start_gmt' => $date_start->format( 'Y-m-d H:i:s' ),
 				'date_end'       => $date_end->format( 'Y-m-d H:i:s' ),
 				'date_end_gmt'   => $date_end->format( 'Y-m-d H:i:s' ),
-				'subtotals'      => array(
+				'subtotals'      => [
 					'orders_count'        => $orders_count,
 					'num_items_sold'      => $num_items_sold,
 					'total_sales'         => $total_sales,
@@ -4863,9 +4863,9 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 					'avg_items_per_order' => 0 === $orders_count ? 0 : $num_items_sold / $orders_count,
 					'avg_order_value'     => 0 === $orders_count ? 0 : $net_revenue / $orders_count,
 					'total_customers'     => $total_customers,
-					'segments'            => array(),
-				),
-			);
+					'segments'            => [],
+				],
+			];
 
 			$expected_intervals[] = $expected_interval;
 		}
@@ -4879,8 +4879,8 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 		$total_sales    = $net_revenue + $shipping;
 		$gross_sales    = $net_revenue + $coupons;
 
-		$expected_stats = array(
-			'totals'    => array(
+		$expected_stats = [
+			'totals'    => [
 				'orders_count'        => $orders_count,
 				'num_items_sold'      => $num_items_sold,
 				'total_sales'         => $total_sales,
@@ -4895,24 +4895,24 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 				'avg_order_value'     => $net_revenue / $orders_count,
 				'total_customers'     => 1,
 				'products'            => 1,
-				'segments'            => array(),
-			),
+				'segments'            => [],
+			],
 			'intervals' => $expected_intervals,
 			'total'     => $interval_count,
 			'pages'     => 1,
 			'page_no'   => 1,
-		);
+		];
 
 		$this->assertEquals( $expected_stats, json_decode( wp_json_encode( $data_store->get_data( $query_args ) ), true ), 'Query args: ' . $this->return_print_r( $query_args ) . "; query: {$wpdb->last_query}" );
 
 		// ASC -- same values, just reverse order of intervals.
-		$query_args = array(
+		$query_args = [
 			'after'    => $minus_9_hours->format( TimeInterval::$sql_datetime_format ),
 			'before'   => $current_hour_end->format( TimeInterval::$sql_datetime_format ),
 			'interval' => 'hour',
 			'orderby'  => 'date',
 			'order'    => 'asc',
-		);
+		];
 
 		$expected_stats['intervals'] = array_reverse( $expected_stats['intervals'] );
 
@@ -4942,7 +4942,7 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 		$per_page = 10;
 
 		// Page 1.
-		$query_args = array(
+		$query_args = [
 			'after'    => $minus_10_hours->format( TimeInterval::$sql_datetime_format ),
 			'before'   => $current_hour_end->format( TimeInterval::$sql_datetime_format ),
 			'interval' => 'hour',
@@ -4950,10 +4950,10 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 			'order'    => 'desc',
 			'page'     => 1,
 			'per_page' => $per_page,
-		);
+		];
 
 		// Expected Intervals section construction.
-		$expected_intervals = array();
+		$expected_intervals = [];
 		$interval_count     = 11;
 		for ( $i = 0; $i < $interval_count; $i ++ ) {
 			if ( 0 === $i ) {
@@ -4998,13 +4998,13 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 				$returning_customers = 0;
 			}
 
-			$expected_interval = array(
+			$expected_interval = [
 				'interval'       => $date_start->format( 'Y-m-d H' ),
 				'date_start'     => $date_start->format( 'Y-m-d H:i:s' ),
 				'date_start_gmt' => $date_start->format( 'Y-m-d H:i:s' ),
 				'date_end'       => $date_end->format( 'Y-m-d H:i:s' ),
 				'date_end_gmt'   => $date_end->format( 'Y-m-d H:i:s' ),
-				'subtotals'      => array(
+				'subtotals'      => [
 					'orders_count'        => $orders_count,
 					'num_items_sold'      => $num_items_sold,
 					'total_sales'         => $total_sales,
@@ -5018,9 +5018,9 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 					'avg_items_per_order' => 0 === $orders_count ? 0 : $num_items_sold / $orders_count,
 					'avg_order_value'     => 0 === $orders_count ? 0 : $net_revenue / $orders_count,
 					'total_customers'     => $returning_customers,
-					'segments'            => array(),
-				),
-			);
+					'segments'            => [],
+				],
+			];
 
 			$expected_intervals[] = $expected_interval;
 		}
@@ -5034,8 +5034,8 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 		$total_sales    = $net_revenue + $shipping;
 		$gross_sales    = $net_revenue + $coupons;
 
-		$expected_stats = array(
-			'totals'    => array(
+		$expected_stats = [
+			'totals'    => [
 				'orders_count'        => $orders_count,
 				'num_items_sold'      => $num_items_sold,
 				'total_sales'         => $total_sales,
@@ -5050,28 +5050,28 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 				'avg_order_value'     => $net_revenue / $orders_count,
 				'total_customers'     => 1,
 				'products'            => 1,
-				'segments'            => array(),
-			),
+				'segments'            => [],
+			],
 			'intervals' => array_slice( $expected_intervals, 0, $per_page ),
 			'total'     => 11,
 			'pages'     => 2,
 			'page_no'   => 1,
-		);
+		];
 
 		$this->assertEquals( $expected_stats, json_decode( wp_json_encode( $data_store->get_data( $query_args ) ), true ), 'Query args: ' . $this->return_print_r( $query_args ) . "; query: {$wpdb->last_query}" );
 
 		// Page 2.
-		$query_args = array(
+		$query_args = [
 			'after'    => $minus_10_hours->format( TimeInterval::$sql_datetime_format ),
 			'before'   => $current_hour_end->format( TimeInterval::$sql_datetime_format ),
 			'interval' => 'hour',
 			'orderby'  => 'date',
 			'order'    => 'desc',
 			'page'     => 2,
-		);
+		];
 
-		$expected_stats = array(
-			'totals'    => array(
+		$expected_stats = [
+			'totals'    => [
 				'orders_count'        => $orders_count,
 				'num_items_sold'      => $num_items_sold,
 				'total_sales'         => $total_sales,
@@ -5086,13 +5086,13 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 				'avg_order_value'     => $net_revenue / $orders_count,
 				'total_customers'     => 1,
 				'products'            => 1,
-				'segments'            => array(),
-			),
+				'segments'            => [],
+			],
 			'intervals' => array_slice( $expected_intervals, $per_page ),
 			'total'     => 11,
 			'pages'     => 2,
 			'page_no'   => 2,
-		);
+		];
 
 		$this->assertEquals( $expected_stats, json_decode( wp_json_encode( $data_store->get_data( $query_args ) ), true ), 'Query args: ' . $this->return_print_r( $query_args ) . "; query: {$wpdb->last_query}" );
 
@@ -5115,7 +5115,7 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 		$expected_intervals = array_reverse( $expected_intervals );
 
 		// Page 1.
-		$query_args = array(
+		$query_args = [
 			'after'    => $minus_10_hours->format( TimeInterval::$sql_datetime_format ),
 			'before'   => $current_hour_end->format( TimeInterval::$sql_datetime_format ),
 			'interval' => 'hour',
@@ -5123,10 +5123,10 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 			'order'    => 'asc',
 			'page'     => 1,
 			'per_page' => $per_page,
-		);
+		];
 
-		$expected_stats = array(
-			'totals'    => array(
+		$expected_stats = [
+			'totals'    => [
 				'orders_count'        => $orders_count,
 				'num_items_sold'      => $num_items_sold,
 				'total_sales'         => $total_sales,
@@ -5141,18 +5141,18 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 				'avg_order_value'     => $net_revenue / $orders_count,
 				'total_customers'     => 1,
 				'products'            => 1,
-				'segments'            => array(),
-			),
+				'segments'            => [],
+			],
 			'intervals' => array_slice( $expected_intervals, 0, $per_page ),
 			'total'     => 11,
 			'pages'     => 2,
 			'page_no'   => 1,
-		);
+		];
 
 		$this->assertEquals( $expected_stats, json_decode( wp_json_encode( $data_store->get_data( $query_args ) ), true ), 'Query args: ' . $this->return_print_r( $query_args ) . "; query: {$wpdb->last_query}" );
 
 		// Page 2.
-		$query_args = array(
+		$query_args = [
 			'after'    => $minus_10_hours->format( TimeInterval::$sql_datetime_format ),
 			'before'   => $current_hour_end->format( TimeInterval::$sql_datetime_format ),
 			'interval' => 'hour',
@@ -5160,10 +5160,10 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 			'order'    => 'asc',
 			'page'     => 2,
 			'per_page' => $per_page,
-		);
+		];
 
-		$expected_stats = array(
-			'totals'    => array(
+		$expected_stats = [
+			'totals'    => [
 				'orders_count'        => $orders_count,
 				'num_items_sold'      => $num_items_sold,
 				'total_sales'         => $total_sales,
@@ -5178,13 +5178,13 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 				'avg_order_value'     => $net_revenue / $orders_count,
 				'total_customers'     => 1,
 				'products'            => 1,
-				'segments'            => array(),
-			),
+				'segments'            => [],
+			],
 			'intervals' => array_slice( $expected_intervals, $per_page ),
 			'total'     => 11,
 			'pages'     => 2,
 			'page_no'   => 2,
-		);
+		];
 
 		$this->assertEquals( $expected_stats, json_decode( wp_json_encode( $data_store->get_data( $query_args ) ), true ), 'Query args: ' . $this->return_print_r( $query_args ) . "; query: {$wpdb->last_query}" );
 
@@ -5209,11 +5209,11 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 		// 1 order within the current hour.
 		$order_1_time = time();
 
-		$order_during_this_['hour']  = array( 1 );
-		$order_during_this_['day']   = array( 1 );
-		$order_during_this_['week']  = array( 1 );
-		$order_during_this_['month'] = array( 1 );
-		$order_during_this_['year']  = array( 1 );
+		$order_during_this_['hour']  = [ 1 ];
+		$order_during_this_['day']   = [ 1 ];
+		$order_during_this_['week']  = [ 1 ];
+		$order_during_this_['month'] = [ 1 ];
+		$order_during_this_['year']  = [ 1 ];
 
 		$order_1_datetime = new DateTime();
 		$order_1_datetime = $order_1_datetime->setTimestamp( $order_1_time );
@@ -5272,10 +5272,10 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 
 		// 2 orders within 1 hour before now to test multiple orders within one time interval.
 		$order_2_time                 = $order_3_time;
-		$order_during_this_['hour-1'] = array( 2, 3 );
+		$order_during_this_['hour-1'] = [ 2, 3 ];
 
 		// In case some of the orders end up on different day/hour/month/year, we need to find out where exactly they ended up.
-		foreach ( array( 3, 4, 5, 6, 7 ) as $order_no ) {
+		foreach ( [ 3, 4, 5, 6, 7 ] as $order_no ) {
 			if ( $order[ $order_no ]['day'] === $order[1]['day'] && $order[ $order_no ]['month'] === $order[1]['month'] && $order[ $order_no ]['year'] === $order[1]['year'] ) {
 				$order_during_this_['day'][] = $order_no;
 			}
@@ -5294,9 +5294,9 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 		$qty_per_product = 4; // Hardcoded in WC_Helper_Order::create_order.
 
 		// Create orders for the test cases.
-		$orders = array();
+		$orders = [];
 		foreach (
-			array(
+			[
 				$order_7_time,
 				$order_6_time,
 				$order_5_time,
@@ -5304,7 +5304,7 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 				$order_3_time,
 				$order_2_time,
 				$order_1_time,
-			) as $order_time
+			] as $order_time
 		) {
 			// Order with 1 product.
 			$order = WC_Helper_Order::create_order( $customer->get_id(), $product );
@@ -5339,13 +5339,13 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 
 		// Test 1: only one hour visible, so only 1 interval in the response, no real ordering.
 		// DESC.
-		$query_args = array(
+		$query_args = [
 			'after'    => $current_hour_start->format( TimeInterval::$sql_datetime_format ),
 			'before'   => $current_hour_end->format( TimeInterval::$sql_datetime_format ),
 			'interval' => 'hour',
 			'orderby'  => 'orders_count',
 			'order'    => 'desc',
-		);
+		];
 
 		$orders_count   = count( $order_during_this_['hour'] );
 		$num_items_sold = $orders_count * $qty_per_product;
@@ -5356,8 +5356,8 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 		$total_sales    = $net_revenue + $shipping;
 		$gross_sales    = $net_revenue + $coupons;
 
-		$expected_stats = array(
-			'totals'    => array(
+		$expected_stats = [
+			'totals'    => [
 				'orders_count'        => $orders_count,
 				'num_items_sold'      => $num_items_sold,
 				'total_sales'         => $total_sales,
@@ -5372,16 +5372,16 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 				'avg_order_value'     => $net_revenue / $orders_count,
 				'total_customers'     => 1,
 				'products'            => 1,
-				'segments'            => array(),
-			),
-			'intervals' => array(
-				array(
+				'segments'            => [],
+			],
+			'intervals' => [
+				[
 					'interval'       => $current_hour_start->format( 'Y-m-d H' ),
 					'date_start'     => $current_hour_start->format( 'Y-m-d H:i:s' ),
 					'date_start_gmt' => $current_hour_start->format( 'Y-m-d H:i:s' ),
 					'date_end'       => $current_hour_end->format( 'Y-m-d H:i:s' ),
 					'date_end_gmt'   => $current_hour_end->format( 'Y-m-d H:i:s' ),
-					'subtotals'      => array(
+					'subtotals'      => [
 						'orders_count'        => $orders_count,
 						'num_items_sold'      => $num_items_sold,
 						'total_sales'         => $total_sales,
@@ -5395,25 +5395,25 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 						'avg_items_per_order' => $num_items_sold / $orders_count,
 						'avg_order_value'     => $net_revenue / $orders_count,
 						'total_customers'     => 1,
-						'segments'            => array(),
-					),
-				),
-			),
+						'segments'            => [],
+					],
+				],
+			],
 			'total'     => 1,
 			'pages'     => 1,
 			'page_no'   => 1,
-		);
+		];
 		$actual         = json_decode( wp_json_encode( $data_store->get_data( $query_args ) ), true );
 		$this->assertEquals( $expected_stats, $actual, 'Query args: ' . $this->return_print_r( $query_args ) . "; query: {$wpdb->last_query}" );
 
 		// ASC -- only 1 interval, so should be the same.
-		$query_args = array(
+		$query_args = [
 			'after'    => $current_hour_start->format( TimeInterval::$sql_datetime_format ),
 			'before'   => $current_hour_end->format( TimeInterval::$sql_datetime_format ),
 			'interval' => 'hour',
 			'orderby'  => 'orders_count',
 			'order'    => 'asc',
-		);
+		];
 		$this->assertEquals( $expected_stats, json_decode( wp_json_encode( $data_store->get_data( $query_args ) ), true ), 'Query args: ' . $this->return_print_r( $query_args ) . "; query: {$wpdb->last_query}" );
 
 		/*
@@ -5430,16 +5430,16 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 		$now_timestamp = (int) $current_hour_end->format( 'U' );
 		$minus_5_hours->setTimestamp( $now_timestamp - $hour_offset * HOUR_IN_SECONDS );
 
-		$query_args = array(
+		$query_args = [
 			'after'    => $minus_5_hours->format( TimeInterval::$sql_datetime_format ),
 			'before'   => $current_hour_end->format( TimeInterval::$sql_datetime_format ),
 			'interval' => 'hour',
 			'orderby'  => 'orders_count',
 			'order'    => 'desc',
-		);
+		];
 
 		// Expected Intervals section construction.
-		$expected_intervals = array();
+		$expected_intervals = [];
 		// Even in case this runs exactly at the hour turn second, there should still be 6 intervals:
 		// e.g. 20:30:51 -(minus 5 hours)- 15:30:51 means intervals 15:30:51--15:59:59, 16:00-16:59, 17, 18, 19, 20:00-20:30, i.e. 6 intervals
 		// also if this run exactly at 20:00 -(minus 5 hours)- 15:00, then intervals should be 15:00-15:59, 16, 17, 18, 19, 20:00-20:00.
@@ -5487,13 +5487,13 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 				$returning_customers = 0;
 			}
 
-			$expected_interval = array(
+			$expected_interval = [
 				'interval'       => $date_start->format( 'Y-m-d H' ),
 				'date_start'     => $date_start->format( 'Y-m-d H:i:s' ),
 				'date_start_gmt' => $date_start->format( 'Y-m-d H:i:s' ),
 				'date_end'       => $date_end->format( 'Y-m-d H:i:s' ),
 				'date_end_gmt'   => $date_end->format( 'Y-m-d H:i:s' ),
-				'subtotals'      => array(
+				'subtotals'      => [
 					'orders_count'        => $orders_count,
 					'num_items_sold'      => $num_items_sold,
 					'total_sales'         => $total_sales,
@@ -5507,9 +5507,9 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 					'avg_items_per_order' => 0 === $orders_count ? 0 : $num_items_sold / $orders_count,
 					'avg_order_value'     => 0 === $orders_count ? 0 : $net_revenue / $orders_count,
 					'total_customers'     => $returning_customers,
-					'segments'            => array(),
-				),
-			);
+					'segments'            => [],
+				],
+			];
 
 			$expected_intervals[] = $expected_interval;
 		}
@@ -5540,8 +5540,8 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 		$total_sales    = $net_revenue + $shipping;
 		$gross_sales    = $net_revenue + $coupons;
 
-		$expected_stats = array(
-			'totals'    => array(
+		$expected_stats = [
+			'totals'    => [
 				'orders_count'        => $orders_count,
 				'num_items_sold'      => $num_items_sold,
 				'total_sales'         => $total_sales,
@@ -5556,13 +5556,13 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 				'avg_order_value'     => $net_revenue / $orders_count,
 				'total_customers'     => 1,
 				'products'            => 1,
-				'segments'            => array(),
-			),
+				'segments'            => [],
+			],
 			'intervals' => $expected_intervals,
 			'total'     => $interval_count,
 			'pages'     => 1,
 			'page_no'   => 1,
-		);
+		];
 		$actual         = json_decode( wp_json_encode( $data_store->get_data( $query_args ) ), true );
 		$this->assertEquals( $expected_stats, $actual, 'Query args: ' . $this->return_print_r( $query_args ) . "; query: {$wpdb->last_query}" );
 
@@ -5582,13 +5582,13 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 		array_push( $expected_stats['intervals'], $to_be_second_last );
 		array_push( $expected_stats['intervals'], $to_be_last );
 
-		$query_args = array(
+		$query_args = [
 			'after'    => $minus_5_hours->format( TimeInterval::$sql_datetime_format ),
 			'before'   => $current_hour_end->format( TimeInterval::$sql_datetime_format ),
 			'interval' => 'hour',
 			'orderby'  => 'orders_count',
 			'order'    => 'asc',
-		);
+		];
 
 		$actual = json_decode( wp_json_encode( $data_store->get_data( $query_args ) ), true );
 		$this->assertEquals( $expected_stats, $actual, 'Query args: ' . $this->return_print_r( $query_args ) . "; query: {$wpdb->last_query}" );
@@ -5603,13 +5603,13 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 		$now_timestamp = (int) $current_hour_end->format( 'U' );
 		$minus_9_hours->setTimestamp( $now_timestamp - $hour_offset * HOUR_IN_SECONDS );
 
-		$query_args = array(
+		$query_args = [
 			'after'    => $minus_9_hours->format( TimeInterval::$sql_datetime_format ),
 			'before'   => $current_hour_end->format( TimeInterval::$sql_datetime_format ),
 			'interval' => 'hour',
 			'orderby'  => 'orders_count',
 			'order'    => 'desc',
-		);
+		];
 
 		/*
 		 * Expected Intervals section construction.
@@ -5623,7 +5623,7 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 		 *
 		 * To change ordering by orders_count, just pop last two and push them to the front (aka unshift in php).
 		 */
-		$expected_intervals = array();
+		$expected_intervals = [];
 		$interval_count     = $hour_offset + 1;
 		for ( $i = $interval_count - 1; $i >= 0; $i -- ) {
 			if ( 0 === $i ) {
@@ -5668,13 +5668,13 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 				$returning_customers = 0;
 			}
 
-			$expected_interval = array(
+			$expected_interval = [
 				'interval'       => $date_start->format( 'Y-m-d H' ),
 				'date_start'     => $date_start->format( 'Y-m-d H:i:s' ),
 				'date_start_gmt' => $date_start->format( 'Y-m-d H:i:s' ),
 				'date_end'       => $date_end->format( 'Y-m-d H:i:s' ),
 				'date_end_gmt'   => $date_end->format( 'Y-m-d H:i:s' ),
-				'subtotals'      => array(
+				'subtotals'      => [
 					'orders_count'        => $orders_count,
 					'num_items_sold'      => $num_items_sold,
 					'total_sales'         => $total_sales,
@@ -5688,9 +5688,9 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 					'avg_items_per_order' => 0 === $orders_count ? 0 : $num_items_sold / $orders_count,
 					'avg_order_value'     => 0 === $orders_count ? 0 : $net_revenue / $orders_count,
 					'total_customers'     => $returning_customers,
-					'segments'            => array(),
-				),
-			);
+					'segments'            => [],
+				],
+			];
 
 			$expected_intervals[] = $expected_interval;
 		}
@@ -5708,8 +5708,8 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 		$total_sales    = $net_revenue + $shipping;
 		$gross_sales    = $net_revenue + $coupons;
 
-		$expected_stats = array(
-			'totals'    => array(
+		$expected_stats = [
+			'totals'    => [
 				'orders_count'        => $orders_count,
 				'num_items_sold'      => $num_items_sold,
 				'total_sales'         => $total_sales,
@@ -5724,13 +5724,13 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 				'avg_order_value'     => $net_revenue / $orders_count,
 				'total_customers'     => 1,
 				'products'            => 1,
-				'segments'            => array(),
-			),
+				'segments'            => [],
+			],
 			'intervals' => $expected_intervals,
 			'total'     => $interval_count,
 			'pages'     => 1,
 			'page_no'   => 1,
-		);
+		];
 
 		$this->assertEquals( $expected_stats, json_decode( wp_json_encode( $data_store->get_data( $query_args ) ), true ), 'Query args: ' . $this->return_print_r( $query_args ) . "; query: {$wpdb->last_query}" );
 
@@ -5752,13 +5752,13 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 		array_push( $expected_stats['intervals'], $to_be_second_last );
 		array_push( $expected_stats['intervals'], $to_be_last );
 
-		$query_args = array(
+		$query_args = [
 			'after'    => $minus_9_hours->format( TimeInterval::$sql_datetime_format ),
 			'before'   => $current_hour_end->format( TimeInterval::$sql_datetime_format ),
 			'interval' => 'hour',
 			'orderby'  => 'orders_count',
 			'order'    => 'asc',
-		);
+		];
 
 		$actual = json_decode( wp_json_encode( $data_store->get_data( $query_args ) ), true );
 		$this->assertEquals( $expected_stats, $actual, 'Query args: ' . $this->return_print_r( $query_args ) . "; query: {$wpdb->last_query}" );
@@ -5774,7 +5774,7 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 		$per_page = 10;
 
 		// Page 1.
-		$query_args = array(
+		$query_args = [
 			'after'    => $minus_10_hours->format( TimeInterval::$sql_datetime_format ),
 			'before'   => $current_hour_end->format( TimeInterval::$sql_datetime_format ),
 			'interval' => 'hour',
@@ -5782,7 +5782,7 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 			'order'    => 'desc',
 			'page'     => 1,
 			'per_page' => $per_page,
-		);
+		];
 
 		/**
 		 * Expected Intervals section construction.
@@ -5796,7 +5796,7 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 		 *
 		 * so last two need to be put first (last one second, second last one first).
 		 */
-		$expected_intervals = array();
+		$expected_intervals = [];
 		$interval_count     = 11;
 		for ( $i = $interval_count - 1; $i >= 0; $i -- ) {
 			if ( 0 === $i ) {
@@ -5841,13 +5841,13 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 				$returning_customers = 0;
 			}
 
-			$expected_interval = array(
+			$expected_interval = [
 				'interval'       => $date_start->format( 'Y-m-d H' ),
 				'date_start'     => $date_start->format( 'Y-m-d H:i:s' ),
 				'date_start_gmt' => $date_start->format( 'Y-m-d H:i:s' ),
 				'date_end'       => $date_end->format( 'Y-m-d H:i:s' ),
 				'date_end_gmt'   => $date_end->format( 'Y-m-d H:i:s' ),
-				'subtotals'      => array(
+				'subtotals'      => [
 					'orders_count'        => $orders_count,
 					'num_items_sold'      => $num_items_sold,
 					'total_sales'         => $total_sales,
@@ -5861,9 +5861,9 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 					'avg_items_per_order' => 0 === $orders_count ? 0 : $num_items_sold / $orders_count,
 					'avg_order_value'     => 0 === $orders_count ? 0 : $net_revenue / $orders_count,
 					'total_customers'     => $returning_customers,
-					'segments'            => array(),
-				),
-			);
+					'segments'            => [],
+				],
+			];
 
 			$expected_intervals[] = $expected_interval;
 		}
@@ -5881,8 +5881,8 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 		$total_sales    = $net_revenue + $shipping;
 		$gross_sales    = $net_revenue + $coupons;
 
-		$expected_stats = array(
-			'totals'    => array(
+		$expected_stats = [
+			'totals'    => [
 				'orders_count'        => $orders_count,
 				'num_items_sold'      => $num_items_sold,
 				'total_sales'         => $total_sales,
@@ -5897,28 +5897,28 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 				'avg_order_value'     => $net_revenue / $orders_count,
 				'total_customers'     => 1,
 				'products'            => 1,
-				'segments'            => array(),
-			),
+				'segments'            => [],
+			],
 			'intervals' => array_slice( $expected_intervals, 0, $per_page ),
 			'total'     => 11,
 			'pages'     => 2,
 			'page_no'   => 1,
-		);
+		];
 		$actual         = json_decode( wp_json_encode( $data_store->get_data( $query_args ) ), true );
 		$this->assertEquals( $expected_stats, $actual, 'Query args: ' . $this->return_print_r( $query_args ) . "; query: {$wpdb->last_query}" );
 
 		// Page 2.
-		$query_args = array(
+		$query_args = [
 			'after'    => $minus_10_hours->format( TimeInterval::$sql_datetime_format ),
 			'before'   => $current_hour_end->format( TimeInterval::$sql_datetime_format ),
 			'interval' => 'hour',
 			'orderby'  => 'orders_count',
 			'order'    => 'desc',
 			'page'     => 2,
-		);
+		];
 
-		$expected_stats = array(
-			'totals'    => array(
+		$expected_stats = [
+			'totals'    => [
 				'orders_count'        => $orders_count,
 				'num_items_sold'      => $num_items_sold,
 				'total_sales'         => $total_sales,
@@ -5933,13 +5933,13 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 				'avg_order_value'     => $net_revenue / $orders_count,
 				'total_customers'     => 1,
 				'products'            => 1,
-				'segments'            => array(),
-			),
+				'segments'            => [],
+			],
 			'intervals' => array_slice( $expected_intervals, $per_page ),
 			'total'     => 11,
 			'pages'     => 2,
 			'page_no'   => 2,
-		);
+		];
 		$this->assertEquals( $expected_stats, json_decode( wp_json_encode( $data_store->get_data( $query_args ) ), true ), 'Query args: ' . $this->return_print_r( $query_args ) . "; query: {$wpdb->last_query}" );
 
 		/*
@@ -5962,7 +5962,7 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 		array_push( $expected_intervals, $to_be_last );
 
 		// Page 1.
-		$query_args = array(
+		$query_args = [
 			'after'    => $minus_10_hours->format( TimeInterval::$sql_datetime_format ),
 			'before'   => $current_hour_end->format( TimeInterval::$sql_datetime_format ),
 			'interval' => 'hour',
@@ -5970,10 +5970,10 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 			'order'    => 'asc',
 			'page'     => 1,
 			'per_page' => $per_page,
-		);
+		];
 
-		$expected_stats = array(
-			'totals'    => array(
+		$expected_stats = [
+			'totals'    => [
 				'orders_count'        => $orders_count,
 				'num_items_sold'      => $num_items_sold,
 				'total_sales'         => $total_sales,
@@ -5988,19 +5988,19 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 				'avg_order_value'     => $net_revenue / $orders_count,
 				'total_customers'     => 1,
 				'products'            => 1,
-				'segments'            => array(),
-			),
+				'segments'            => [],
+			],
 			'intervals' => array_slice( $expected_intervals, 0, $per_page ),
 			'total'     => 11,
 			'pages'     => 2,
 			'page_no'   => 1,
-		);
+		];
 
 		$actual = json_decode( wp_json_encode( $data_store->get_data( $query_args ) ), true );
 		$this->assertEquals( $expected_stats, $actual, 'Query args: ' . $this->return_print_r( $query_args ) . "; query: {$wpdb->last_query}" );
 
 		// Page 2.
-		$query_args = array(
+		$query_args = [
 			'after'    => $minus_10_hours->format( TimeInterval::$sql_datetime_format ),
 			'before'   => $current_hour_end->format( TimeInterval::$sql_datetime_format ),
 			'interval' => 'hour',
@@ -6008,10 +6008,10 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 			'order'    => 'asc',
 			'page'     => 2,
 			'per_page' => $per_page,
-		);
+		];
 
-		$expected_stats = array(
-			'totals'    => array(
+		$expected_stats = [
+			'totals'    => [
 				'orders_count'        => $orders_count,
 				'num_items_sold'      => $num_items_sold,
 				'total_sales'         => $total_sales,
@@ -6026,13 +6026,13 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 				'avg_order_value'     => $net_revenue / $orders_count,
 				'total_customers'     => 1,
 				'products'            => 1,
-				'segments'            => array(),
-			),
+				'segments'            => [],
+			],
 			'intervals' => array_slice( $expected_intervals, $per_page ),
 			'total'     => 11,
 			'pages'     => 2,
 			'page_no'   => 2,
-		);
+		];
 
 		$this->assertEquals( $expected_stats, json_decode( wp_json_encode( $data_store->get_data( $query_args ) ), true ), 'Query args: ' . $this->return_print_r( $query_args ) . "; query: {$wpdb->last_query}" );
 	}
@@ -6065,9 +6065,9 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 		$data_store = new OrdersStatsDataStore();
 
 		// All empty in the beginning.
-		$query_args  = array(
+		$query_args  = [
 			'interval' => 'hour',
-		);
+		];
 		$actual_data = json_decode( wp_json_encode( $data_store->get_data( $query_args ) ) );
 		$this->assertEquals( 0, $actual_data->totals->total_customers );
 
@@ -6086,11 +6086,11 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 
 		$start_time  = gmdate( 'Y-m-d H:00:00', $order_0->get_date_created()->getOffsetTimestamp() );
 		$end_time    = gmdate( 'Y-m-d H:59:59', $order_0->get_date_created()->getOffsetTimestamp() );
-		$query_args  = array(
+		$query_args  = [
 			'interval' => 'hour',
 			'after'    => $start_time,
 			'before'   => $end_time,
-		);
+		];
 		$actual_data = json_decode( wp_json_encode( $data_store->get_data( $query_args ) ) );
 		$this->assertEquals( 1, $actual_data->totals->total_customers );
 
@@ -6106,11 +6106,11 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 		// Time frame includes both orders -> customer is a new customer.
 		$start_time = gmdate( 'Y-m-d H:00:00', $order_0->get_date_created()->getOffsetTimestamp() );
 		$end_time   = gmdate( 'Y-m-d H:59:59', $order_1->get_date_created()->getOffsetTimestamp() );
-		$query_args = array(
+		$query_args = [
 			'interval' => 'hour',
 			'after'    => $start_time,
 			'before'   => $end_time,
-		);
+		];
 
 		$actual_data = json_decode( wp_json_encode( $data_store->get_data( $query_args ) ) );
 		$this->assertEquals( 1, $actual_data->totals->total_customers );
@@ -6121,11 +6121,11 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 
 		$start_time = gmdate( 'Y-m-d H:i:s', $order_0_time + 1 );
 		$end_time   = gmdate( 'Y-m-d H:59:59', $order_1->get_date_created()->getOffsetTimestamp() );
-		$query_args = array(
+		$query_args = [
 			'interval' => 'hour',
 			'after'    => $start_time,
 			'before'   => $end_time,
-		);
+		];
 
 		$actual_data = json_decode( wp_json_encode( $data_store->get_data( $query_args ) ) );
 		$this->assertEquals( 1, $actual_data->totals->total_customers );
@@ -6144,11 +6144,11 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 		// Time frame includes second and third order -> there is one returning customer.
 		$start_time  = gmdate( 'Y-m-d H:i:s', $order_0_time + 1 );
 		$end_time    = gmdate( 'Y-m-d H:59:59', $order_2->get_date_created()->getOffsetTimestamp() );
-		$query_args  = array(
+		$query_args  = [
 			'interval' => 'day', // to skip cache.
 			'after'    => $start_time,
 			'before'   => $end_time,
-		);
+		];
 		$actual_data = json_decode( wp_json_encode( $data_store->get_data( $query_args ) ) );
 		// It's still the same customer who ordered for the first time in this hour, they just placed 2 orders.
 		$this->assertEquals( 1, $actual_data->totals->total_customers );
@@ -6172,9 +6172,9 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 		$data_store = new OrdersStatsDataStore();
 
 		// All empty in the beginning.
-		$query_args  = array(
+		$query_args  = [
 			'interval' => 'hour',
-		);
+		];
 		$actual_data = json_decode( wp_json_encode( $data_store->get_data( $query_args ) ) );
 		$this->assertEquals( 0, $actual_data->totals->total_customers );
 
@@ -6193,11 +6193,11 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 
 		$start_time  = gmdate( 'Y-m-d H:00:00', $order_0->get_date_created()->getOffsetTimestamp() );
 		$end_time    = gmdate( 'Y-m-d H:59:59', $order_0->get_date_created()->getOffsetTimestamp() );
-		$query_args  = array(
+		$query_args  = [
 			'interval' => 'hour',
 			'after'    => $start_time,
 			'before'   => $end_time,
-		);
+		];
 		$actual_data = json_decode( wp_json_encode( $data_store->get_data( $query_args ) ) );
 		$this->assertEquals( 1, $actual_data->totals->total_customers );
 
@@ -6213,11 +6213,11 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 		// Time frame includes both orders -> customer is a new customer.
 		$start_time = gmdate( 'Y-m-d H:00:00', $order_0->get_date_created()->getOffsetTimestamp() );
 		$end_time   = gmdate( 'Y-m-d H:59:59', $order_1->get_date_created()->getOffsetTimestamp() );
-		$query_args = array(
+		$query_args = [
 			'interval' => 'hour',
 			'after'    => $start_time,
 			'before'   => $end_time,
-		);
+		];
 
 		$actual_data = json_decode( wp_json_encode( $data_store->get_data( $query_args ) ) );
 		$this->assertEquals( 1, $actual_data->totals->total_customers );
@@ -6228,11 +6228,11 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 
 		$start_time = gmdate( 'Y-m-d H:i:s', $order_0_time + 1 );
 		$end_time   = gmdate( 'Y-m-d H:59:59', $order_1->get_date_created()->getOffsetTimestamp() );
-		$query_args = array(
+		$query_args = [
 			'interval' => 'hour',
 			'after'    => $start_time,
 			'before'   => $end_time,
-		);
+		];
 
 		$actual_data = json_decode( wp_json_encode( $data_store->get_data( $query_args ) ) );
 		$this->assertEquals( 1, $actual_data->totals->total_customers );
@@ -6251,11 +6251,11 @@ class WC_Admin_Tests_Reports_Orders_Stats extends WC_Unit_Test_Case {
 		// Time frame includes second and third order -> there is one returning customer.
 		$start_time  = gmdate( 'Y-m-d H:i:s', $order_0_time + 1 );
 		$end_time    = gmdate( 'Y-m-d H:59:59', $order_2->get_date_created()->getOffsetTimestamp() );
-		$query_args  = array(
+		$query_args  = [
 			'interval' => 'day', // to skip cache.
 			'after'    => $start_time,
 			'before'   => $end_time,
-		);
+		];
 		$actual_data = json_decode( wp_json_encode( $data_store->get_data( $query_args ) ) );
 		// It's still the same customer who ordered for the first time in this hour, they just placed 2 orders.
 		$this->assertEquals( 1, $actual_data->totals->total_customers );

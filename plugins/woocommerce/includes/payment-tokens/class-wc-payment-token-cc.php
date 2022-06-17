@@ -33,12 +33,12 @@ class WC_Payment_Token_CC extends WC_Payment_Token {
 	 *
 	 * @var array
 	 */
-	protected $extra_data = array(
+	protected $extra_data = [
 		'last4'        => '',
 		'expiry_year'  => '',
 		'expiry_month' => '',
 		'card_type'    => '',
-	);
+	];
 
 	/**
 	 * Get type to display to user.

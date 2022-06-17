@@ -35,7 +35,7 @@ class WC_API_Unit_Test_Case extends WC_Unit_Test_Case {
 		$_SERVER['REQUEST_METHOD'] = null;
 
 		// mock the API server to prevent headers from being sent.
-		$this->mock_server = $this->getMockBuilder( 'WC_API_Server' )->setMethods( array( 'header' ) )->disableOriginalConstructor()->getMock();
+		$this->mock_server = $this->getMockBuilder( 'WC_API_Server' )->setMethods( [ 'header' ] )->disableOriginalConstructor()->getMock();
 
 		WC()->api->register_resources( $this->mock_server );
 	}

@@ -20,10 +20,10 @@ class WC_Admin_Tests_OnboardingTasks_Task extends WC_Unit_Test_Case {
 	 */
 	public function test_capability_visible() {
 		$task = new TestTask(
-			new TaskList( array( 'id' => 'setup' ) ),
-			array(
+			new TaskList( [ 'id' => 'setup' ] ),
+			[
 				'id' => 'wc-unit-test-task',
-			)
+			]
 		);
 
 		$this->assertEquals( true, $task->can_view() );
@@ -34,11 +34,11 @@ class WC_Admin_Tests_OnboardingTasks_Task extends WC_Unit_Test_Case {
 	 */
 	public function test_capability_not_visible() {
 		$task = new TestTask(
-			new TaskList( array( 'id' => 'setup' ) ),
-			array(
+			new TaskList( [ 'id' => 'setup' ] ),
+			[
 				'id'       => 'wc-unit-test-task',
 				'can_view' => false,
-			)
+			]
 		);
 
 		$this->assertEquals( false, $task->can_view() );
@@ -49,15 +49,15 @@ class WC_Admin_Tests_OnboardingTasks_Task extends WC_Unit_Test_Case {
 	 */
 	public function test_dismiss() {
 		$task = new TestTask(
-			new TaskList( array( 'id' => 'setup' ) ),
-			array(
+			new TaskList( [ 'id' => 'setup' ] ),
+			[
 				'id'             => 'wc-unit-test-task',
 				'is_dismissable' => true,
-			)
+			]
 		);
 
 		$update    = $task->dismiss();
-		$dismissed = get_option( Task::DISMISSED_OPTION, array() );
+		$dismissed = get_option( Task::DISMISSED_OPTION, [] );
 		$this->assertEquals( true, $update );
 		$this->assertContains( $task->get_id(), $dismissed );
 	}
@@ -67,16 +67,16 @@ class WC_Admin_Tests_OnboardingTasks_Task extends WC_Unit_Test_Case {
 	 */
 	public function test_undo_dismiss() {
 		$task = new TestTask(
-			new TaskList( array( 'id' => 'setup' ) ),
-			array(
+			new TaskList( [ 'id' => 'setup' ] ),
+			[
 				'id'             => 'wc-unit-test-task',
 				'is_dismissable' => true,
-			)
+			]
 		);
 
 		$task->dismiss();
 		$task->undo_dismiss();
-		$dismissed = get_option( Task::DISMISSED_OPTION, array() );
+		$dismissed = get_option( Task::DISMISSED_OPTION, [] );
 		$this->assertNotContains( $task->get_id(), $dismissed );
 	}
 
@@ -85,15 +85,15 @@ class WC_Admin_Tests_OnboardingTasks_Task extends WC_Unit_Test_Case {
 	 */
 	public function test_not_dismissable() {
 		$task = new TestTask(
-			new TaskList( array( 'id' => 'setup' ) ),
-			array(
+			new TaskList( [ 'id' => 'setup' ] ),
+			[
 				'id'             => 'wc-unit-test-non-dismissable-task',
 				'is_dismissable' => false,
-			)
+			]
 		);
 
 		$update    = $task->dismiss();
-		$dismissed = get_option( Task::DISMISSED_OPTION, array() );
+		$dismissed = get_option( Task::DISMISSED_OPTION, [] );
 		$this->assertEquals( false, $update );
 		$this->assertNotContains( $task->get_id(), $dismissed );
 	}
@@ -104,15 +104,15 @@ class WC_Admin_Tests_OnboardingTasks_Task extends WC_Unit_Test_Case {
 	 */
 	public function test_snooze() {
 		$task = new TestTask(
-			new TaskList( array( 'id' => 'setup' ) ),
-			array(
+			new TaskList( [ 'id' => 'setup' ] ),
+			[
 				'id'            => 'wc-unit-test-snoozeable-task',
 				'is_snoozeable' => true,
-			)
+			]
 		);
 
 		$update  = $task->snooze();
-		$snoozed = get_option( Task::SNOOZED_OPTION, array() );
+		$snoozed = get_option( Task::SNOOZED_OPTION, [] );
 		$this->assertEquals( true, $update );
 		$this->assertArrayHasKey( $task->get_id(), $snoozed );
 	}
@@ -122,16 +122,16 @@ class WC_Admin_Tests_OnboardingTasks_Task extends WC_Unit_Test_Case {
 	 */
 	public function test_undo_snooze() {
 		$task = new TestTask(
-			new TaskList( array( 'id' => 'setup' ) ),
-			array(
+			new TaskList( [ 'id' => 'setup' ] ),
+			[
 				'id'            => 'wc-unit-test-snoozeable-task',
 				'is_snoozeable' => true,
-			)
+			]
 		);
 
 		$task->snooze();
 		$task->undo_snooze();
-		$snoozed = get_option( Task::SNOOZED_OPTION, array() );
+		$snoozed = get_option( Task::SNOOZED_OPTION, [] );
 		$this->assertArrayNotHasKey( $task->get_id(), $snoozed );
 	}
 
@@ -140,16 +140,16 @@ class WC_Admin_Tests_OnboardingTasks_Task extends WC_Unit_Test_Case {
 	 */
 	public function test_snoozed_until() {
 		$time                         = time() * 1000;
-		$snoozed                      = get_option( Task::SNOOZED_OPTION, array() );
+		$snoozed                      = get_option( Task::SNOOZED_OPTION, [] );
 		$snoozed['wc-unit-test-task'] = $time;
 		update_option( Task::SNOOZED_OPTION, $snoozed );
 
 		$task = new TestTask(
-			new TaskList( array( 'id' => 'setup' ) ),
-			array(
+			new TaskList( [ 'id' => 'setup' ] ),
+			[
 				'id'            => 'wc-unit-test-task',
 				'is_snoozeable' => true,
-			)
+			]
 		);
 
 		$this->assertEquals( $time, $task->get_snoozed_until() );
@@ -161,11 +161,11 @@ class WC_Admin_Tests_OnboardingTasks_Task extends WC_Unit_Test_Case {
 	 */
 	public function test_not_snoozeable() {
 		$task = new TestTask(
-			new TaskList( array( 'id' => 'setup' ) ),
-			array(
+			new TaskList( [ 'id' => 'setup' ] ),
+			[
 				'id'            => 'wc-unit-test-snoozeable-task',
 				'is_snoozeable' => false,
-			)
+			]
 		);
 
 		$task->snooze();
@@ -177,15 +177,15 @@ class WC_Admin_Tests_OnboardingTasks_Task extends WC_Unit_Test_Case {
 	 */
 	public function test_snooze_time() {
 		$task = new TestTask(
-			new TaskList( array( 'id' => 'setup' ) ),
-			array(
+			new TaskList( [ 'id' => 'setup' ] ),
+			[
 				'id'            => 'wc-unit-test-snoozeable-task',
 				'is_snoozeable' => true,
-			)
+			]
 		);
 
 		$time                                    = time() * 1000 - 1;
-		$snoozed                                 = get_option( Task::SNOOZED_OPTION, array() );
+		$snoozed                                 = get_option( Task::SNOOZED_OPTION, [] );
 		$snoozed['wc-unit-test-snoozeable-task'] = $time;
 		update_option( Task::SNOOZED_OPTION, $snoozed );
 
@@ -198,10 +198,10 @@ class WC_Admin_Tests_OnboardingTasks_Task extends WC_Unit_Test_Case {
 	 */
 	public function test_json() {
 		$task = new TestTask(
-			new TaskList( array( 'id' => 'setup' ) ),
-			array(
+			new TaskList( [ 'id' => 'setup' ] ),
+			[
 				'id' => 'wc-unit-test-task',
-			)
+			]
 		);
 
 		$json = $task->get_json();
@@ -226,14 +226,14 @@ class WC_Admin_Tests_OnboardingTasks_Task extends WC_Unit_Test_Case {
 	 */
 	public function test_action_task() {
 		$task = new TestTask(
-			new TaskList( array( 'id' => 'setup' ) ),
-			array(
+			new TaskList( [ 'id' => 'setup' ] ),
+			[
 				'id' => 'wc-unit-test-task',
-			)
+			]
 		);
 
 		$update   = $task->mark_actioned();
-		$actioned = get_option( Task::ACTIONED_OPTION, array() );
+		$actioned = get_option( Task::ACTIONED_OPTION, [] );
 		$this->assertEquals( true, $update );
 		$this->assertContains( $task->get_id(), $actioned );
 	}
@@ -243,16 +243,16 @@ class WC_Admin_Tests_OnboardingTasks_Task extends WC_Unit_Test_Case {
 	 */
 	public function test_sort_with_empty_sort_by_config() {
 		$task_a = new TestTask(
-			new TaskList( array( 'id' => 'setup' ) ),
-			array(
+			new TaskList( [ 'id' => 'setup' ] ),
+			[
 				'id' => 'a',
-			)
+			]
 		);
 		$task_b = new TestTask(
-			new TaskList( array( 'id' => 'setup' ) ),
-			array(
+			new TaskList( [ 'id' => 'setup' ] ),
+			[
 				'id' => 'b',
-			)
+			]
 		);
 		$result = Task::sort( $task_a, $task_b );
 		$this->assertEquals( 0, $result );
@@ -263,26 +263,26 @@ class WC_Admin_Tests_OnboardingTasks_Task extends WC_Unit_Test_Case {
 	 */
 	public function test_sort_with_sort_by_config_with_invalid_key() {
 		$task_a = new TestTask(
-			new TaskList( array( 'id' => 'setup' ) ),
-			array(
+			new TaskList( [ 'id' => 'setup' ] ),
+			[
 				'id' => 'a',
-			)
+			]
 		);
 		$task_b = new TestTask(
-			new TaskList( array( 'id' => 'setup' ) ),
-			array(
+			new TaskList( [ 'id' => 'setup' ] ),
+			[
 				'id' => 'b',
-			)
+			]
 		);
 		$result = Task::sort(
 			$task_a,
 			$task_b,
-			array(
-				array(
+			[
+				[
 					'key'   => 'invalid',
 					'order' => 'asc',
-				),
-			)
+				],
+			]
 		);
 		$this->assertEquals( 0, $result );
 	}
@@ -292,28 +292,28 @@ class WC_Admin_Tests_OnboardingTasks_Task extends WC_Unit_Test_Case {
 	 */
 	public function test_sort_with_sort_by_config_with_valid_key_asc() {
 		$task_a = new TestTask(
-			new TaskList( array( 'id' => 'setup' ) ),
-			array(
+			new TaskList( [ 'id' => 'setup' ] ),
+			[
 				'id'    => 'a',
 				'level' => 1,
-			)
+			]
 		);
 		$task_b = new TestTask(
-			new TaskList( array( 'id' => 'setup' ) ),
-			array(
+			new TaskList( [ 'id' => 'setup' ] ),
+			[
 				'id'    => 'b',
 				'level' => 2,
-			)
+			]
 		);
 		$result = Task::sort(
 			$task_a,
 			$task_b,
-			array(
-				array(
+			[
+				[
 					'key'   => 'level',
 					'order' => 'asc',
-				),
-			)
+				],
+			]
 		);
 		$this->assertEquals( -1, $result );
 	}
@@ -323,28 +323,28 @@ class WC_Admin_Tests_OnboardingTasks_Task extends WC_Unit_Test_Case {
 	 */
 	public function test_sort_with_sort_by_config_with_valid_key_desc() {
 		$task_a = new TestTask(
-			new TaskList( array( 'id' => 'setup' ) ),
-			array(
+			new TaskList( [ 'id' => 'setup' ] ),
+			[
 				'id'    => 'a',
 				'level' => 1,
-			)
+			]
 		);
 		$task_b = new TestTask(
-			new TaskList( array( 'id' => 'setup' ) ),
-			array(
+			new TaskList( [ 'id' => 'setup' ] ),
+			[
 				'id'    => 'b',
 				'level' => 2,
-			)
+			]
 		);
 		$result = Task::sort(
 			$task_a,
 			$task_b,
-			array(
-				array(
+			[
+				[
 					'key'   => 'level',
 					'order' => 'desc',
-				),
-			)
+				],
+			]
 		);
 		$this->assertEquals( 1, $result );
 	}
@@ -354,31 +354,31 @@ class WC_Admin_Tests_OnboardingTasks_Task extends WC_Unit_Test_Case {
 	 */
 	public function test_sort_with_sort_by_config_with_multiple_keys() {
 		$task_a  = new TestTask(
-			new TaskList( array( 'id' => 'setup' ) ),
-			array(
+			new TaskList( [ 'id' => 'setup' ] ),
+			[
 				'id'          => 'a',
 				'level'       => 2,
 				'is_complete' => false,
-			)
+			]
 		);
 		$task_b  = new TestTask(
-			new TaskList( array( 'id' => 'setup' ) ),
-			array(
+			new TaskList( [ 'id' => 'setup' ] ),
+			[
 				'id'          => 'b',
 				'level'       => 2,
 				'is_complete' => true,
-			)
+			]
 		);
-		$sort_by = array(
-			array(
+		$sort_by = [
+			[
 				'key'   => 'level',
 				'order' => 'asc',
-			),
-			array(
+			],
+			[
 				'key'   => 'is_complete',
 				'order' => 'asc',
-			),
-		);
+			],
+		];
 		$result  = Task::sort( $task_a, $task_b, $sort_by );
 		// Given levels are the same it should return the comparison of is_complete.
 		$this->assertEquals( -1, $result );
@@ -394,10 +394,10 @@ class WC_Admin_Tests_OnboardingTasks_Task extends WC_Unit_Test_Case {
 	 */
 	public function test_get_list_id() {
 		$task = new TestTask(
-			new TaskList( array( 'id' => 'extended' ) ),
-			array(
+			new TaskList( [ 'id' => 'extended' ] ),
+			[
 				'id' => 'wc-unit-test-task',
-			)
+			]
 		);
 
 		$this->assertEquals( 'extended', $task->get_list_id() );
@@ -408,10 +408,10 @@ class WC_Admin_Tests_OnboardingTasks_Task extends WC_Unit_Test_Case {
 	 */
 	public function test_record_tracks_event() {
 		$task = new TestTask(
-			new TaskList( array( 'id' => 'extended' ) ),
-			array(
+			new TaskList( [ 'id' => 'extended' ] ),
+			[
 				'id' => 'wc-unit-test-task',
-			)
+			]
 		);
 
 		$this->assertEquals( 'extended_tasklist_test_event', $task->record_tracks_event( 'test_event' ) );

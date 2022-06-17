@@ -22,7 +22,7 @@ class WC_Product_Factory {
 	 * @param array $deprecated Previously used to pass arguments to the factory, e.g. to force a type.
 	 * @return WC_Product|bool Product object or false if the product cannot be loaded.
 	 */
-	public function get_product( $product_id = false, $deprecated = array() ) {
+	public function get_product( $product_id = false, $deprecated = [] ) {
 		$product_id = $this->get_product_id( $product_id );
 
 		if ( ! $product_id ) {

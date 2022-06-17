@@ -27,7 +27,7 @@ function wc_notice_count( $notice_type = '' ) {
 	}
 
 	$notice_count = 0;
-	$all_notices  = WC()->session->get( 'wc_notices', array() );
+	$all_notices  = WC()->session->get( 'wc_notices', [] );
 
 	if ( isset( $all_notices[ $notice_type ] ) ) {
 
@@ -57,8 +57,8 @@ function wc_has_notice( $message, $notice_type = 'success' ) {
 		return false;
 	}
 
-	$notices = WC()->session->get( 'wc_notices', array() );
-	$notices = isset( $notices[ $notice_type ] ) ? $notices[ $notice_type ] : array();
+	$notices = WC()->session->get( 'wc_notices', [] );
+	$notices = isset( $notices[ $notice_type ] ) ? $notices[ $notice_type ] : [];
 	return array_search( $message, wp_list_pluck( $notices, 'notice' ), true ) !== false;
 }
 
@@ -71,13 +71,13 @@ function wc_has_notice( $message, $notice_type = 'success' ) {
  * @param string $notice_type Optional. The name of the notice type - either error, success or notice.
  * @param array  $data        Optional notice data.
  */
-function wc_add_notice( $message, $notice_type = 'success', $data = array() ) {
+function wc_add_notice( $message, $notice_type = 'success', $data = [] ) {
 	if ( ! did_action( 'woocommerce_init' ) ) {
 		wc_doing_it_wrong( __FUNCTION__, __( 'This function should not be called before woocommerce_init.', 'woocommerce' ), '2.3' );
 		return;
 	}
 
-	$notices = WC()->session->get( 'wc_notices', array() );
+	$notices = WC()->session->get( 'wc_notices', [] );
 
 	// Backward compatibility.
 	if ( 'success' === $notice_type ) {
@@ -87,10 +87,10 @@ function wc_add_notice( $message, $notice_type = 'success', $data = array() ) {
 	$message = apply_filters( 'woocommerce_add_' . $notice_type, $message );
 
 	if ( ! empty( $message ) ) {
-		$notices[ $notice_type ][] = array(
+		$notices[ $notice_type ][] = [
 			'notice' => $message,
 			'data'   => $data,
-		);
+		];
 	}
 
 	WC()->session->set( 'wc_notices', $notices );
@@ -137,15 +137,15 @@ function wc_print_notices( $return = false ) {
 		return;
 	}
 
-	$all_notices  = WC()->session->get( 'wc_notices', array() );
-	$notice_types = apply_filters( 'woocommerce_notice_types', array( 'error', 'success', 'notice' ) );
+	$all_notices  = WC()->session->get( 'wc_notices', [] );
+	$notice_types = apply_filters( 'woocommerce_notice_types', [ 'error', 'success', 'notice' ] );
 
 	// Buffer output.
 	ob_start();
 
 	foreach ( $notice_types as $notice_type ) {
 		if ( wc_notice_count( $notice_type ) > 0 ) {
-			$messages = array();
+			$messages = [];
 
 			foreach ( $all_notices[ $notice_type ] as $notice ) {
 				$messages[] = isset( $notice['notice'] ) ? $notice['notice'] : $notice;
@@ -153,10 +153,10 @@ function wc_print_notices( $return = false ) {
 
 			wc_get_template(
 				"notices/{$notice_type}.php",
-				array(
+				[
 					'messages' => array_filter( $messages ), // @deprecated 3.9.0
 					'notices'  => array_filter( $all_notices[ $notice_type ] ),
-				)
+				]
 			);
 		}
 	}
@@ -181,7 +181,7 @@ function wc_print_notices( $return = false ) {
  * @param string $notice_type Optional. The singular name of the notice type - either error, success or notice.
  * @param array  $data        Optional notice data. @since 3.9.0.
  */
-function wc_print_notice( $message, $notice_type = 'success', $data = array() ) {
+function wc_print_notice( $message, $notice_type = 'success', $data = [] ) {
 	if ( 'success' === $notice_type ) {
 		$message = apply_filters( 'woocommerce_add_message', $message );
 	}
@@ -190,15 +190,15 @@ function wc_print_notice( $message, $notice_type = 'success', $data = array() ) 
 
 	wc_get_template(
 		"notices/{$notice_type}.php",
-		array(
-			'messages' => array( $message ), // @deprecated 3.9.0
-			'notices'  => array(
-				array(
+		[
+			'messages' => [ $message ], // @deprecated 3.9.0
+			'notices'  => [
+				[
 					'notice' => $message,
 					'data'   => $data,
-				),
-			),
-		)
+				],
+			],
+		]
 	);
 }
 
@@ -216,14 +216,14 @@ function wc_get_notices( $notice_type = '' ) {
 		return;
 	}
 
-	$all_notices = WC()->session->get( 'wc_notices', array() );
+	$all_notices = WC()->session->get( 'wc_notices', [] );
 
 	if ( empty( $notice_type ) ) {
 		$notices = $all_notices;
 	} elseif ( isset( $all_notices[ $notice_type ] ) ) {
 		$notices = $all_notices[ $notice_type ];
 	} else {
-		$notices = array();
+		$notices = [];
 	}
 
 	return $notices;
@@ -252,11 +252,11 @@ function wc_add_wp_error_notices( $errors ) {
 function wc_kses_notice( $message ) {
 	$allowed_tags = array_replace_recursive(
 		wp_kses_allowed_html( 'post' ),
-		array(
-			'a' => array(
+		[
+			'a' => [
 				'tabindex' => true,
-			),
-		)
+			],
+		]
 	);
 
 	/**

@@ -24,11 +24,11 @@ class WC_Twenty_Twenty_Two {
 		remove_action( 'woocommerce_sidebar', 'woocommerce_get_sidebar', 10 );
 
 		// Enqueue theme compatibility styles.
-		add_filter( 'woocommerce_enqueue_styles', array( __CLASS__, 'enqueue_styles' ) );
+		add_filter( 'woocommerce_enqueue_styles', [ __CLASS__, 'enqueue_styles' ] );
 
 		// Wrap checkout form elements for styling.
-		add_action( 'woocommerce_checkout_before_order_review_heading', array( __CLASS__, 'before_order_review' ) );
-		add_action( 'woocommerce_checkout_after_order_review', array( __CLASS__, 'after_order_review' ) );
+		add_action( 'woocommerce_checkout_before_order_review_heading', [ __CLASS__, 'before_order_review' ] );
+		add_action( 'woocommerce_checkout_after_order_review', [ __CLASS__, 'after_order_review' ] );
 
 		// Register theme features.
 		add_theme_support( 'wc-product-gallery-zoom' );
@@ -36,10 +36,10 @@ class WC_Twenty_Twenty_Two {
 		add_theme_support( 'wc-product-gallery-slider' );
 		add_theme_support(
 			'woocommerce',
-			array(
+			[
 				'thumbnail_image_width' => 450,
 				'single_image_width'    => 600,
-			)
+			]
 		);
 
 	}
@@ -53,13 +53,13 @@ class WC_Twenty_Twenty_Two {
 	public static function enqueue_styles( $styles ) {
 		unset( $styles['woocommerce-general'] );
 
-		$styles['woocommerce-general'] = array(
-			'src'     => str_replace( array( 'http:', 'https:' ), '', WC()->plugin_url() ) . '/assets/css/twenty-twenty-two.css',
+		$styles['woocommerce-general'] = [
+			'src'     => str_replace( [ 'http:', 'https:' ], '', WC()->plugin_url() ) . '/assets/css/twenty-twenty-two.css',
 			'deps'    => '',
 			'version' => Constants::get_constant( 'WC_VERSION' ),
 			'media'   => 'all',
 			'has_rtl' => true,
-		);
+		];
 
 		return apply_filters( 'woocommerce_twenty_twenty_two_styles', $styles );
 	}

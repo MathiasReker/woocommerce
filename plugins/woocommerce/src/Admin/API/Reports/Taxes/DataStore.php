@@ -37,7 +37,7 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 	 *
 	 * @var array
 	 */
-	protected $column_types = array(
+	protected $column_types = [
 		'tax_rate_id'  => 'intval',
 		'name'         => 'strval',
 		'tax_rate'     => 'floatval',
@@ -48,7 +48,7 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 		'order_tax'    => 'floatval',
 		'shipping_tax' => 'floatval',
 		'orders_count' => 'intval',
-	);
+	];
 
 	/**
 	 * Data store context used to pass to filters.
@@ -62,7 +62,7 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 	 */
 	protected function assign_report_columns() {
 		$table_name           = self::get_db_table_name();
-		$this->report_columns = array(
+		$this->report_columns = [
 			'tax_rate_id'  => "{$table_name}.tax_rate_id",
 			'name'         => 'tax_rate_name as name',
 			'tax_rate'     => 'tax_rate',
@@ -73,14 +73,14 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 			'order_tax'    => 'SUM(order_tax) as order_tax',
 			'shipping_tax' => 'SUM(shipping_tax) as shipping_tax',
 			'orders_count' => "COUNT( DISTINCT ( CASE WHEN total_tax >= 0 THEN {$table_name}.order_id END ) ) as orders_count",
-		);
+		];
 	}
 
 	/**
 	 * Set up all the hooks for maintaining and populating table data.
 	 */
 	public static function init() {
-		add_action( 'woocommerce_analytics_delete_order_stats', array( __CLASS__, 'sync_on_order_delete' ), 15 );
+		add_action( 'woocommerce_analytics_delete_order_stats', [ __CLASS__, 'sync_on_order_delete' ], 15 );
 	}
 
 	/**
@@ -142,7 +142,7 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 		$table_name = self::get_db_table_name();
 
 		// These defaults are only partially applied when used via REST API, as that has its own defaults.
-		$defaults   = array(
+		$defaults   = [
 			'per_page' => get_option( 'posts_per_page' ),
 			'page'     => 1,
 			'order'    => 'DESC',
@@ -150,8 +150,8 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 			'before'   => TimeInterval::default_before(),
 			'after'    => TimeInterval::default_after(),
 			'fields'   => '*',
-			'taxes'    => array(),
-		);
+			'taxes'    => [],
+		];
 		$query_args = wp_parse_args( $query_args, $defaults );
 		$this->normalize_timezones( $query_args, $defaults );
 
@@ -165,12 +165,12 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 		if ( false === $data ) {
 			$this->initialize_queries();
 
-			$data = (object) array(
-				'data'    => array(),
+			$data = (object) [
+				'data'    => [],
 				'total'   => 0,
 				'pages'   => 0,
 				'page_no' => 0,
-			);
+			];
 
 			$this->add_sql_query_params( $query_args );
 			$params = $this->get_limit_params( $query_args );
@@ -179,16 +179,16 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 				$total_results = count( $query_args['taxes'] );
 				$total_pages   = (int) ceil( $total_results / $params['per_page'] );
 
-				$inner_selections = array( 'tax_rate_id', 'total_tax', 'order_tax', 'shipping_tax', 'orders_count' );
-				$outer_selections = array( 'name', 'tax_rate', 'country', 'state', 'priority' );
+				$inner_selections = [ 'tax_rate_id', 'total_tax', 'order_tax', 'shipping_tax', 'orders_count' ];
+				$outer_selections = [ 'name', 'tax_rate', 'country', 'state', 'priority' ];
 
-				$selections      = $this->selected_columns( array( 'fields' => $inner_selections ) );
+				$selections      = $this->selected_columns( [ 'fields' => $inner_selections ] );
 				$fields          = $this->get_fields( $query_args );
-				$join_selections = $this->format_join_selections( $fields, array( 'tax_rate_id' ), $outer_selections );
+				$join_selections = $this->format_join_selections( $fields, [ 'tax_rate_id' ], $outer_selections );
 				$ids_table       = $this->get_ids_table( $query_args['taxes'], 'tax_rate_id' );
 
 				$this->subquery->clear_sql_clause( 'select' );
-				$this->subquery->add_sql_clause( 'select', $this->selected_columns( array( 'fields' => $inner_selections ) ) );
+				$this->subquery->add_sql_clause( 'select', $this->selected_columns( [ 'fields' => $inner_selections ] ) );
 				$this->add_sql_clause( 'select', $join_selections );
 				$this->add_sql_clause( 'from', '(' );
 				$this->add_sql_clause( 'from', $this->subquery->get_query_statement() );
@@ -229,13 +229,13 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 				return $data;
 			}
 
-			$tax_data = array_map( array( $this, 'cast_numbers' ), $tax_data );
-			$data     = (object) array(
+			$tax_data = array_map( [ $this, 'cast_numbers' ], $tax_data );
+			$data     = (object) [
 				'data'    => $tax_data,
 				'total'   => $total_results,
 				'pages'   => $total_pages,
 				'page_no' => (int) $query_args['page'],
-			);
+			];
 
 			$this->set_cached_data( $cache_key, $data );
 		}
@@ -281,22 +281,22 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 		foreach ( $tax_items as $tax_item ) {
 			$result = $wpdb->replace(
 				self::get_db_table_name(),
-				array(
+				[
 					'order_id'     => $order->get_id(),
 					'date_created' => $order->get_date_created( 'edit' )->date( TimeInterval::$sql_datetime_format ),
 					'tax_rate_id'  => $tax_item->get_rate_id(),
 					'shipping_tax' => $tax_item->get_shipping_tax_total(),
 					'order_tax'    => $tax_item->get_tax_total(),
 					'total_tax'    => (float) $tax_item->get_tax_total() + (float) $tax_item->get_shipping_tax_total(),
-				),
-				array(
+				],
+				[
 					'%d',
 					'%s',
 					'%d',
 					'%f',
 					'%f',
 					'%f',
-				)
+				]
 			);
 
 			/**
@@ -322,7 +322,7 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 	public static function sync_on_order_delete( $order_id ) {
 		global $wpdb;
 
-		$wpdb->delete( self::get_db_table_name(), array( 'order_id' => $order_id ) );
+		$wpdb->delete( self::get_db_table_name(), [ 'order_id' => $order_id ] );
 
 		/**
 		 * Fires when tax's reports are removed from database.

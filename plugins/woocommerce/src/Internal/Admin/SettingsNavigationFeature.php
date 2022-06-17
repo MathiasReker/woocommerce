@@ -42,16 +42,16 @@ class SettingsNavigationFeature {
 			return;
 		}
 
-		add_filter( 'woocommerce_settings_features', array( $this, 'add_feature_toggle' ) );
+		add_filter( 'woocommerce_settings_features', [ $this, 'add_feature_toggle' ] );
 
 		if ( 'yes' !== get_option( 'woocommerce_settings_enabled', 'no' ) ) {
 			return;
 		}
 
-		add_filter( 'woocommerce_admin_shared_settings', array( __CLASS__, 'add_component_settings' ) );
+		add_filter( 'woocommerce_admin_shared_settings', [ __CLASS__, 'add_component_settings' ] );
 		// Run this after the original WooCommerce settings have been added.
-		add_action( 'admin_menu', array( $this, 'register_pages' ), 60 );
-		add_action( 'init', array( $this, 'redirect_core_settings_pages' ) );
+		add_action( 'admin_menu', [ $this, 'register_pages' ], 60 );
+		add_action( 'init', [ $this, 'redirect_core_settings_pages' ] );
 	}
 
 	/**
@@ -66,7 +66,7 @@ class SettingsNavigationFeature {
 		}
 
 		$setting_pages = \WC_Admin_Settings::get_settings_pages();
-		$pages         = array();
+		$pages         = [];
 		foreach ( $setting_pages as $setting_page ) {
 			$pages = $setting_page->add_settings_page( $pages );
 		}
@@ -83,7 +83,7 @@ class SettingsNavigationFeature {
 	 * @return array
 	 */
 	public static function add_feature_toggle( $features ) {
-		$features[] = array(
+		$features[] = [
 			'title' => __( 'Settings', 'woocommerce' ),
 			'desc'  => __(
 				'Adds the new WooCommerce settings UI.',
@@ -91,7 +91,7 @@ class SettingsNavigationFeature {
 			),
 			'id'    => 'woocommerce_settings_enabled',
 			'type'  => 'checkbox',
-		);
+		];
 
 		return $features;
 	}
@@ -103,7 +103,7 @@ class SettingsNavigationFeature {
 		$controller = PageController::get_instance();
 
 		$setting_pages = \WC_Admin_Settings::get_settings_pages();
-		$settings      = array();
+		$settings      = [];
 		foreach ( $setting_pages as $setting_page ) {
 			$settings = $setting_page->add_settings_page( $settings );
 		}
@@ -111,17 +111,17 @@ class SettingsNavigationFeature {
 		$order = 0;
 		foreach ( $settings as $key => $setting ) {
 			$order        += 10;
-			$settings_page = array(
+			$settings_page = [
 				'parent'   => 'woocommerce-settings',
 				'title'    => $setting,
 				'id'       => 'settings-' . $key,
 				'path'     => "/settings/$key",
-				'nav_args' => array(
+				'nav_args' => [
 					'capability' => 'manage_woocommerce',
 					'order'      => $order,
 					'parent'     => 'woocommerce-settings',
-				),
-			);
+				],
+			];
 
 			// Replace the old menu with the first settings item.
 			if ( 10 === $order ) {

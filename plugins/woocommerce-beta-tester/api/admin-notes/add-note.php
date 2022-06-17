@@ -31,9 +31,9 @@ function admin_notes_add_note( $request ) {
 }
 
 function add_email_note_params( $note ) {
-	$additional_data = array(
+	$additional_data = [
 		'role' => 'administrator',
-	);
+	];
 	$note->set_content_data( (object) $additional_data );
 }
 
@@ -50,18 +50,18 @@ function possibly_add_action( $note ) {
 
 function get_mock_note_data() {
 	$plugin_url = site_url() . '/wp-content/plugins/woocommerce-admin-test-helper/';
-	return array(
+	return [
 		'content'   => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud.',
-		'info'      => array(
+		'info'      => [
 			'banner'    => $plugin_url . 'images/admin-notes/banner.jpg',
 			'thumbnail' => $plugin_url . 'images/admin-notes/thumbnail.jpg',
 			'plain'     => ''
-		),
-		'email'     => array(
+		],
+		'email'     => [
 			'plain' => $plugin_url . 'images/admin-notes/woocommerce-logo-vector.png'
-		),
-		'update'    => array(
+		],
+		'update'    => [
 			'plain' => ''
-		)
-	);
+		]
+	];
 }

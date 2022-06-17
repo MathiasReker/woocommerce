@@ -49,7 +49,7 @@ class ManageOrdersOnTheGo {
 
 		$note->set_title( __( 'Manage your orders on the go', 'woocommerce' ) );
 		$note->set_content( __( 'Look for orders, customer info, and process refunds in one click with the Woo app.', 'woocommerce' ) );
-		$note->set_content_data( (object) array() );
+		$note->set_content_data( (object) [] );
 		$note->set_type( Note::E_WC_ADMIN_NOTE_INFORMATIONAL );
 		$note->set_name( self::NOTE_NAME );
 		$note->set_source( 'woocommerce-admin' );

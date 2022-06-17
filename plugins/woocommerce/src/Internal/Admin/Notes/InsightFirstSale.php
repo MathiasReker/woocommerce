@@ -43,7 +43,7 @@ class InsightFirstSale {
 		$note->set_content( __( 'A WooCommerce powered store needs on average 31 days to get the first sale. You\'re on the right track! Do you find this type of insight useful?', 'woocommerce' ) );
 		$note->set_type( Note::E_WC_ADMIN_NOTE_SURVEY );
 		$note->set_name( self::NOTE_NAME );
-		$note->set_content_data( (object) array() );
+		$note->set_content_data( (object) [] );
 		$note->set_source( 'woocommerce-admin' );
 
 		// Note that there is no corresponding function called in response to

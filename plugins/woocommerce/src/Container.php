@@ -41,7 +41,7 @@ final class Container implements \Psr\Container\ContainerInterface {
 	 *
 	 * @var string[]
 	 */
-	private $service_providers = array(
+	private $service_providers = [
 		AssignDefaultCategoryServiceProvider::class,
 		DownloadPermissionsAdjusterServiceProvider::class,
 		OptionSanitizerServiceProvider::class,
@@ -53,7 +53,7 @@ final class Container implements \Psr\Container\ContainerInterface {
 		RestockRefundedItemsAdjusterServiceProvider::class,
 		UtilsClassesServiceProvider::class,
 		COTMigrationServiceProvider::class,
-	);
+	];
 
 	/**
 	 * The underlying container.

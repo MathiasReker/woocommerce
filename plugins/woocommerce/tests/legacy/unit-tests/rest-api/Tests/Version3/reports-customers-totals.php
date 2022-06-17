@@ -14,9 +14,9 @@ class WC_Tests_API_Reports_Customers_Totals extends WC_REST_Unit_Test_Case {
 	public function setUp(): void {
 		parent::setUp();
 		$this->user = $this->factory->user->create(
-			array(
+			[
 				'role' => 'administrator',
-			)
+			]
 		);
 	}
 
@@ -44,7 +44,7 @@ class WC_Tests_API_Reports_Customers_Totals extends WC_REST_Unit_Test_Case {
 		$total_customers = 0;
 
 		foreach ( $users_count['avail_roles'] as $role => $total ) {
-			if ( in_array( $role, array( 'administrator', 'shop_manager' ), true ) ) {
+			if ( in_array( $role, [ 'administrator', 'shop_manager' ], true ) ) {
 				continue;
 			}
 
@@ -52,35 +52,35 @@ class WC_Tests_API_Reports_Customers_Totals extends WC_REST_Unit_Test_Case {
 		}
 
 		$customers_query = new WP_User_Query(
-			array(
-				'role__not_in' => array( 'administrator', 'shop_manager' ),
+			[
+				'role__not_in' => [ 'administrator', 'shop_manager' ],
 				'number'       => 0,
 				'fields'       => 'ID',
 				'count_total'  => true,
-				'meta_query'   => array( // WPCS: slow query ok.
-					array(
+				'meta_query'   => [ // WPCS: slow query ok.
+					[
 						'key'     => 'paying_customer',
 						'value'   => 1,
 						'compare' => '=',
-					),
-				),
-			)
+					],
+				],
+			]
 		);
 
 		$total_paying = (int) $customers_query->get_total();
 
-		$data = array(
-			array(
+		$data = [
+			[
 				'slug'  => 'paying',
 				'name'  => __( 'Paying customer', 'woocommerce' ),
 				'total' => $total_paying,
-			),
-			array(
+			],
+			[
 				'slug'  => 'non_paying',
 				'name'  => __( 'Non-paying customer', 'woocommerce' ),
 				'total' => $total_customers - $total_paying,
-			),
-		);
+			],
+		];
 
 		$this->assertEquals( 200, $response->get_status() );
 		$this->assertEquals( 2, count( $report ) );

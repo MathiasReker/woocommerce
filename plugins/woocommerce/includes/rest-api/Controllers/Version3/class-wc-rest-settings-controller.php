@@ -30,14 +30,14 @@ class WC_REST_Settings_Controller extends WC_REST_Settings_V2_Controller {
 	 */
 	public function register_routes() {
 		parent::register_routes();
-		register_rest_route( $this->namespace, '/' . $this->rest_base . '/batch', array(
-			array(
+		register_rest_route( $this->namespace, '/' . $this->rest_base . '/batch', [
+			[
 				'methods'             => WP_REST_Server::EDITABLE,
-				'callback'            => array( $this, 'batch_items' ),
-				'permission_callback' => array( $this, 'update_items_permissions_check' ),
-			),
-			'schema' => array( $this, 'get_public_batch_schema' ),
-		) );
+				'callback'            => [ $this, 'batch_items' ],
+				'permission_callback' => [ $this, 'update_items_permissions_check' ],
+			],
+			'schema' => [ $this, 'get_public_batch_schema' ],
+		] );
 	}
 
 	/**
@@ -48,7 +48,7 @@ class WC_REST_Settings_Controller extends WC_REST_Settings_V2_Controller {
 	 */
 	public function update_items_permissions_check( $request ) {
 		if ( ! wc_rest_check_manager_permissions( 'settings', 'edit' ) ) {
-			return new WP_Error( 'woocommerce_rest_cannot_edit', __( 'Sorry, you cannot edit this resource.', 'woocommerce' ), array( 'status' => rest_authorization_required_code() ) );
+			return new WP_Error( 'woocommerce_rest_cannot_edit', __( 'Sorry, you cannot edit this resource.', 'woocommerce' ), [ 'status' => rest_authorization_required_code() ] );
 		}
 
 		return true;
@@ -74,38 +74,38 @@ class WC_REST_Settings_Controller extends WC_REST_Settings_V2_Controller {
 	 * @return array
 	 */
 	public function get_item_schema() {
-		$schema = array(
+		$schema = [
 			'$schema'    => 'http://json-schema.org/draft-04/schema#',
 			'title'      => 'setting_group',
 			'type'       => 'object',
-			'properties' => array(
-				'id'          => array(
+			'properties' => [
+				'id'          => [
 					'description' => __( 'A unique identifier that can be used to link settings together.', 'woocommerce' ),
 					'type'        => 'string',
-					'context'     => array( 'view', 'edit' ),
-				),
-				'label'       => array(
+					'context'     => [ 'view', 'edit' ],
+				],
+				'label'       => [
 					'description' => __( 'A human readable label for the setting used in interfaces.', 'woocommerce' ),
 					'type'        => 'string',
-					'context'     => array( 'view', 'edit' ),
-				),
-				'description' => array(
+					'context'     => [ 'view', 'edit' ],
+				],
+				'description' => [
 					'description' => __( 'A human readable description for the setting used in interfaces.', 'woocommerce' ),
 					'type'        => 'string',
-					'context'     => array( 'view', 'edit' ),
-				),
-				'parent_id'   => array(
+					'context'     => [ 'view', 'edit' ],
+				],
+				'parent_id'   => [
 					'description' => __( 'ID of parent grouping.', 'woocommerce' ),
 					'type'        => 'string',
-					'context'     => array( 'view', 'edit' ),
-				),
-				'sub_groups'  => array(
+					'context'     => [ 'view', 'edit' ],
+				],
+				'sub_groups'  => [
 					'description' => __( 'IDs for settings sub groups.', 'woocommerce' ),
 					'type'        => 'string',
-					'context'     => array( 'view', 'edit' ),
-				),
-			),
-		);
+					'context'     => [ 'view', 'edit' ],
+				],
+			],
+		];
 
 		return $this->add_additional_fields_schema( $schema );
 	}

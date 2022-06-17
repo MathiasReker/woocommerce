@@ -40,9 +40,9 @@ class Controller extends \WC_REST_Reports_Controller {
 	public function get_items( $request ) {
 		$stock_query = new Query();
 		$report_data = $stock_query->get_data();
-		$out_data    = array(
+		$out_data    = [
 			'totals' => $report_data,
-		);
+		];
 		return rest_ensure_response( $out_data );
 	}
 
@@ -81,46 +81,46 @@ class Controller extends \WC_REST_Reports_Controller {
 	 * @return array
 	 */
 	public function get_item_schema() {
-		$totals = array(
-			'products' => array(
+		$totals = [
+			'products' => [
 				'description' => __( 'Number of products.', 'woocommerce' ),
 				'type'        => 'integer',
-				'context'     => array( 'view', 'edit' ),
+				'context'     => [ 'view', 'edit' ],
 				'readonly'    => true,
-			),
-			'lowstock' => array(
+			],
+			'lowstock' => [
 				'description' => __( 'Number of low stock products.', 'woocommerce' ),
 				'type'        => 'integer',
-				'context'     => array( 'view', 'edit' ),
+				'context'     => [ 'view', 'edit' ],
 				'readonly'    => true,
-			),
-		);
+			],
+		];
 
 		$status_options = wc_get_product_stock_status_options();
 		foreach ( $status_options as $status => $label ) {
-			$totals[ $status ] = array(
+			$totals[ $status ] = [
 				/* translators: Stock status. Example: "Number of low stock products */
 				'description' => sprintf( __( 'Number of %s products.', 'woocommerce' ), $label ),
 				'type'        => 'integer',
-				'context'     => array( 'view', 'edit' ),
+				'context'     => [ 'view', 'edit' ],
 				'readonly'    => true,
-			);
+			];
 		}
 
-		$schema = array(
+		$schema = [
 			'$schema'    => 'http://json-schema.org/draft-04/schema#',
 			'title'      => 'report_customers_stats',
 			'type'       => 'object',
-			'properties' => array(
-				'totals' => array(
+			'properties' => [
+				'totals' => [
 					'description' => __( 'Totals data.', 'woocommerce' ),
 					'type'        => 'object',
-					'context'     => array( 'view', 'edit' ),
+					'context'     => [ 'view', 'edit' ],
 					'readonly'    => true,
 					'properties'  => $totals,
-				),
-			),
-		);
+				],
+			],
+		];
 
 		return $this->add_additional_fields_schema( $schema );
 	}
@@ -131,8 +131,8 @@ class Controller extends \WC_REST_Reports_Controller {
 	 * @return array
 	 */
 	public function get_collection_params() {
-		$params            = array();
-		$params['context'] = $this->get_context_param( array( 'default' => 'view' ) );
+		$params            = [];
+		$params['context'] = $this->get_context_param( [ 'default' => 'view' ] );
 		return $params;
 	}
 }

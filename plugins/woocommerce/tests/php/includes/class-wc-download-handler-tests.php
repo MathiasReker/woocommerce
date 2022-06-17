@@ -75,16 +75,16 @@ class WC_Download_Handler_Tests extends \WC_Unit_Test_Case {
 		$approved_directory_rule_id = $approved_directories->add_approved_directory( 'https://new.supplier' );
 
 		$product = WC_Helper_Product::create_downloadable_product(
-			array(
-				array(
+			[
+				[
 					'name' => 'Book 1',
 					'file' => 'https://always.trusted/123.pdf',
-				),
-				array(
+				],
+				[
 					'name' => 'Book 2',
 					'file' => 'https://new.supplier/456.pdf',
-				),
-			)
+				],
+			]
 		);
 
 		$customer = WC_Helper_Customer::create_customer();
@@ -98,13 +98,13 @@ class WC_Download_Handler_Tests extends \WC_Unit_Test_Case {
 		$download_keys = array_keys( $downloads );
 
 		// phpcs:disable WordPress.Security.NonceVerification.Recommended WordPress.Security.ValidatedSanitizedInput.InputNotValidated
-		$_GET = array(
+		$_GET = [
 			'download_file' => $product_id,
 			'order'         => $order->get_order_key(),
 			'email'         => $email,
 			'uid'           => hash( 'sha256', $email ),
 			'key'           => $download_keys[0],
-		);
+		];
 
 		// With both the corresponding approved directory rules enabled...
 		WC_Download_Handler::download_product();
@@ -143,17 +143,17 @@ class WC_Download_Handler_Tests extends \WC_Unit_Test_Case {
 	 * Unregister download handlers to prevent unwanted output and side-effects.
 	 */
 	private static function remove_download_handlers() {
-		remove_action( 'woocommerce_download_file_xsendfile', array( WC_Download_Handler::class, 'download_file_xsendfile' ) );
-		remove_action( 'woocommerce_download_file_redirect', array( WC_Download_Handler::class, 'download_file_redirect' ) );
-		remove_action( 'woocommerce_download_file_force', array( WC_Download_Handler::class, 'download_file_force' ) );
+		remove_action( 'woocommerce_download_file_xsendfile', [ WC_Download_Handler::class, 'download_file_xsendfile' ] );
+		remove_action( 'woocommerce_download_file_redirect', [ WC_Download_Handler::class, 'download_file_redirect' ] );
+		remove_action( 'woocommerce_download_file_force', [ WC_Download_Handler::class, 'download_file_force' ] );
 	}
 
 	/**
 	 * Restores download handlers in case needed by other tests.
 	 */
 	private static function restore_download_handlers() {
-		add_action( 'woocommerce_download_file_redirect', array( WC_Download_Handler::class, 'download_file_redirect' ), 10, 2 );
-		add_action( 'woocommerce_download_file_xsendfile', array( WC_Download_Handler::class, 'download_file_xsendfile' ), 10, 2 );
-		add_action( 'woocommerce_download_file_force', array( WC_Download_Handler::class, 'download_file_force' ), 10, 2 );
+		add_action( 'woocommerce_download_file_redirect', [ WC_Download_Handler::class, 'download_file_redirect' ], 10, 2 );
+		add_action( 'woocommerce_download_file_xsendfile', [ WC_Download_Handler::class, 'download_file_xsendfile' ], 10, 2 );
+		add_action( 'woocommerce_download_file_force', [ WC_Download_Handler::class, 'download_file_force' ], 10, 2 );
 	}
 }

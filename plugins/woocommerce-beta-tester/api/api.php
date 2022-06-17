@@ -1,8 +1,8 @@
 <?php
-function register_woocommerce_admin_test_helper_rest_route( $route, $callback, $additional_options = array() ) {
+function register_woocommerce_admin_test_helper_rest_route( $route, $callback, $additional_options = [] ) {
     add_action( 'rest_api_init', function() use ( $route, $callback, $additional_options ) {
 
-    	$default_options = array(
+    	$default_options = [
 		    'methods'  => 'POST',
 		    'callback' => $callback,
 		    'permission_callback' => function( $request ) {
@@ -14,7 +14,7 @@ function register_woocommerce_admin_test_helper_rest_route( $route, $callback, $
 			    }
 			    return true;
 		    },
-	    );
+	    ];
 
     	$default_options = array_merge( $default_options, $additional_options );
 

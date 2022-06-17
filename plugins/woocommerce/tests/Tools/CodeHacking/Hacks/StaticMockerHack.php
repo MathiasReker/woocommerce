@@ -105,7 +105,7 @@ final class StaticMockerHack extends CodeHack {
 	/**
 	 * @var array Associative array of class name => associative array of method name => callback.
 	 */
-	private $method_mocks = array();
+	private $method_mocks = [];
 
 	/**
 	 * Register method mocks.
@@ -153,7 +153,7 @@ final class StaticMockerHack extends CodeHack {
 	 * Unregister all the registered method mocks.
 	 */
 	public function reset() {
-		$this->method_mocks = array();
+		$this->method_mocks = [];
 	}
 
 	/**

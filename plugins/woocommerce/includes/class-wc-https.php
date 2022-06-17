@@ -21,7 +21,7 @@ class WC_HTTPS {
 	public static function init() {
 		if ( 'yes' === get_option( 'woocommerce_force_ssl_checkout' ) && ! is_admin() ) {
 			// HTTPS urls with SSL on
-			$filters = array(
+			$filters = [
 				'post_thumbnail_html',
 				'wp_get_attachment_image_attributes',
 				'wp_get_attachment_url',
@@ -32,20 +32,20 @@ class WC_HTTPS {
 				'template_directory_uri',
 				'stylesheet_directory_uri',
 				'site_url',
-			);
+			];
 
 			foreach ( $filters as $filter ) {
-				add_filter( $filter, array( __CLASS__, 'force_https_url' ), 999 );
+				add_filter( $filter, [ __CLASS__, 'force_https_url' ], 999 );
 			}
 
-			add_filter( 'page_link', array( __CLASS__, 'force_https_page_link' ), 10, 2 );
-			add_action( 'template_redirect', array( __CLASS__, 'force_https_template_redirect' ) );
+			add_filter( 'page_link', [ __CLASS__, 'force_https_page_link' ], 10, 2 );
+			add_action( 'template_redirect', [ __CLASS__, 'force_https_template_redirect' ] );
 
 			if ( 'yes' == get_option( 'woocommerce_unforce_ssl_checkout' ) ) {
-				add_action( 'template_redirect', array( __CLASS__, 'unforce_https_template_redirect' ) );
+				add_action( 'template_redirect', [ __CLASS__, 'unforce_https_template_redirect' ] );
 			}
 		}
-		add_action( 'http_api_curl', array( __CLASS__, 'http_api_curl' ), 10, 3 );
+		add_action( 'http_api_curl', [ __CLASS__, 'http_api_curl' ], 10, 3 );
 	}
 
 	/**
@@ -74,7 +74,7 @@ class WC_HTTPS {
 	 * @return string
 	 */
 	public static function force_https_page_link( $link, $page_id ) {
-		if ( in_array( $page_id, array( get_option( 'woocommerce_checkout_page_id' ), get_option( 'woocommerce_myaccount_page_id' ) ) ) ) {
+		if ( in_array( $page_id, [ get_option( 'woocommerce_checkout_page_id' ), get_option( 'woocommerce_myaccount_page_id' ) ] ) ) {
 			$link = str_replace( 'http:', 'https:', $link );
 		} elseif ( 'yes' === get_option( 'woocommerce_unforce_ssl_checkout' ) && ! wc_site_is_https() ) {
 			$link = str_replace( 'https:', 'http:', $link );

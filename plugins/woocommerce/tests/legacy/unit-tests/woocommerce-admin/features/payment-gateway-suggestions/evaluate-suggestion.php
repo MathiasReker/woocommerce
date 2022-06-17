@@ -28,9 +28,9 @@ class WC_Admin_Tests_PaymentGatewaySuggestions_EvaluateSuggestion extends WC_Uni
 	 * Test that the gateway is returned as is when no rules are provided.
 	 */
 	public function test_no_rules() {
-		$suggestion = array(
+		$suggestion = [
 			'id' => 'mock-gateway',
-		);
+		];
 		$evaluated  = EvaluateSuggestion::evaluate( (object) $suggestion );
 		$this->assertEquals( (object) $suggestion, $evaluated );
 	}
@@ -39,16 +39,16 @@ class WC_Admin_Tests_PaymentGatewaySuggestions_EvaluateSuggestion extends WC_Uni
 	 * Test that the gateway is not visible when rules do not pass.
 	 */
 	public function test_is_not_visible() {
-		$suggestion = array(
+		$suggestion = [
 			'id'         => 'mock-gateway',
-			'is_visible' => (object) array(
+			'is_visible' => (object) [
 				'type'        => 'option',
 				'option_name' => self::MOCK_OPTION,
 				'value'       => 'a',
 				'default'     => null,
 				'operation'   => '=',
-			),
-		);
+			],
+		];
 		$evaluated  = EvaluateSuggestion::evaluate( (object) $suggestion );
 		$this->assertFalse( $evaluated->is_visible );
 	}
@@ -57,16 +57,16 @@ class WC_Admin_Tests_PaymentGatewaySuggestions_EvaluateSuggestion extends WC_Uni
 	 * Test that the gateway is returned when visibility rules pass.
 	 */
 	public function test_is_visible() {
-		$suggestion = array(
+		$suggestion = [
 			'id'         => 'mock-gateway',
-			'is_visible' => (object) array(
+			'is_visible' => (object) [
 				'type'        => 'option',
 				'option_name' => self::MOCK_OPTION,
 				'value'       => 'a',
 				'default'     => null,
 				'operation'   => '=',
-			),
-		);
+			],
+		];
 		update_option( self::MOCK_OPTION, 'a' );
 		$evaluated = EvaluateSuggestion::evaluate( (object) $suggestion );
 		$this->assertTrue( $evaluated->is_visible );

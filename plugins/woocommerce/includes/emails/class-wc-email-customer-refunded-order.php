@@ -47,14 +47,14 @@ if ( ! class_exists( 'WC_Email_Customer_Refunded_Order', false ) ) :
 			$this->description    = __( 'Order refunded emails are sent to customers when their orders are refunded.', 'woocommerce' );
 			$this->template_html  = 'emails/customer-refunded-order.php';
 			$this->template_plain = 'emails/plain/customer-refunded-order.php';
-			$this->placeholders   = array(
+			$this->placeholders   = [
 				'{order_date}'   => '',
 				'{order_number}' => '',
-			);
+			];
 
 			// Triggers for this email.
-			add_action( 'woocommerce_order_fully_refunded_notification', array( $this, 'trigger_full' ), 10, 2 );
-			add_action( 'woocommerce_order_partially_refunded_notification', array( $this, 'trigger_partial' ), 10, 2 );
+			add_action( 'woocommerce_order_fully_refunded_notification', [ $this, 'trigger_full' ], 10, 2 );
+			add_action( 'woocommerce_order_partially_refunded_notification', [ $this, 'trigger_partial' ], 10, 2 );
 
 			// Call parent constructor.
 			parent::__construct();
@@ -186,7 +186,7 @@ if ( ! class_exists( 'WC_Email_Customer_Refunded_Order', false ) ) :
 		public function get_content_html() {
 			return wc_get_template_html(
 				$this->template_html,
-				array(
+				[
 					'order'              => $this->object,
 					'refund'             => $this->refund,
 					'partial_refund'     => $this->partial_refund,
@@ -195,7 +195,7 @@ if ( ! class_exists( 'WC_Email_Customer_Refunded_Order', false ) ) :
 					'sent_to_admin'      => false,
 					'plain_text'         => false,
 					'email'              => $this,
-				)
+				]
 			);
 		}
 
@@ -207,7 +207,7 @@ if ( ! class_exists( 'WC_Email_Customer_Refunded_Order', false ) ) :
 		public function get_content_plain() {
 			return wc_get_template_html(
 				$this->template_plain,
-				array(
+				[
 					'order'              => $this->object,
 					'refund'             => $this->refund,
 					'partial_refund'     => $this->partial_refund,
@@ -216,7 +216,7 @@ if ( ! class_exists( 'WC_Email_Customer_Refunded_Order', false ) ) :
 					'sent_to_admin'      => false,
 					'plain_text'         => true,
 					'email'              => $this,
-				)
+				]
 			);
 		}
 
@@ -236,46 +236,46 @@ if ( ! class_exists( 'WC_Email_Customer_Refunded_Order', false ) ) :
 		public function init_form_fields() {
 			/* translators: %s: list of placeholders */
 			$placeholder_text  = sprintf( __( 'Available placeholders: %s', 'woocommerce' ), '<code>' . esc_html( implode( '</code>, <code>', array_keys( $this->placeholders ) ) ) . '</code>' );
-			$this->form_fields = array(
-				'enabled'            => array(
+			$this->form_fields = [
+				'enabled'            => [
 					'title'   => __( 'Enable/Disable', 'woocommerce' ),
 					'type'    => 'checkbox',
 					'label'   => __( 'Enable this email notification', 'woocommerce' ),
 					'default' => 'yes',
-				),
-				'subject_full'       => array(
+				],
+				'subject_full'       => [
 					'title'       => __( 'Full refund subject', 'woocommerce' ),
 					'type'        => 'text',
 					'desc_tip'    => true,
 					'description' => $placeholder_text,
 					'placeholder' => $this->get_default_subject(),
 					'default'     => '',
-				),
-				'subject_partial'    => array(
+				],
+				'subject_partial'    => [
 					'title'       => __( 'Partial refund subject', 'woocommerce' ),
 					'type'        => 'text',
 					'desc_tip'    => true,
 					'description' => $placeholder_text,
 					'placeholder' => $this->get_default_subject( true ),
 					'default'     => '',
-				),
-				'heading_full'       => array(
+				],
+				'heading_full'       => [
 					'title'       => __( 'Full refund email heading', 'woocommerce' ),
 					'type'        => 'text',
 					'desc_tip'    => true,
 					'description' => $placeholder_text,
 					'placeholder' => $this->get_default_heading(),
 					'default'     => '',
-				),
-				'heading_partial'    => array(
+				],
+				'heading_partial'    => [
 					'title'       => __( 'Partial refund email heading', 'woocommerce' ),
 					'type'        => 'text',
 					'desc_tip'    => true,
 					'description' => $placeholder_text,
 					'placeholder' => $this->get_default_heading( true ),
 					'default'     => '',
-				),
-				'additional_content' => array(
+				],
+				'additional_content' => [
 					'title'       => __( 'Additional content', 'woocommerce' ),
 					'description' => __( 'Text to appear below the main email content.', 'woocommerce' ) . ' ' . $placeholder_text,
 					'css'         => 'width:400px; height: 75px;',
@@ -283,8 +283,8 @@ if ( ! class_exists( 'WC_Email_Customer_Refunded_Order', false ) ) :
 					'type'        => 'textarea',
 					'default'     => $this->get_default_additional_content(),
 					'desc_tip'    => true,
-				),
-				'email_type'         => array(
+				],
+				'email_type'         => [
 					'title'       => __( 'Email type', 'woocommerce' ),
 					'type'        => 'select',
 					'description' => __( 'Choose which format of email to send.', 'woocommerce' ),
@@ -292,8 +292,8 @@ if ( ! class_exists( 'WC_Email_Customer_Refunded_Order', false ) ) :
 					'class'       => 'email_type wc-enhanced-select',
 					'options'     => $this->get_email_type_options(),
 					'desc_tip'    => true,
-				),
-			);
+				],
+			];
 		}
 	}
 

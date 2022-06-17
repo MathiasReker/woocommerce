@@ -26,7 +26,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<?php
 		foreach ( self::get_product_type_options() as $key => $option ) :
 			if ( metadata_exists( 'post', $post->ID, '_' . $key ) ) {
-				$selected_value = is_callable( array( $product_object, "is_$key" ) ) ? $product_object->{"is_$key"}() : 'yes' === get_post_meta( $post->ID, '_' . $key, true );
+				$selected_value = is_callable( [ $product_object, "is_$key" ] ) ? $product_object->{"is_$key"}() : 'yes' === get_post_meta( $post->ID, '_' . $key, true );
 			} else {
 				$selected_value = 'yes' === ( isset( $option['default'] ) ? $option['default'] : 'no' );
 			}
@@ -51,7 +51,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 		self::output_tabs();
 		self::output_variations();
 		do_action( 'woocommerce_product_data_panels' );
-		wc_do_deprecated_action( 'woocommerce_product_write_panels', array(), '2.6', 'Use woocommerce_product_data_panels action instead.' );
+		wc_do_deprecated_action( 'woocommerce_product_write_panels', [], '2.6', 'Use woocommerce_product_data_panels action instead.' );
 	?>
 	<div class="clear"></div>
 </div>

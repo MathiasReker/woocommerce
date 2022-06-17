@@ -26,7 +26,7 @@ class WC_Report_Most_Stocked extends WC_Report_Stock {
 		global $wpdb;
 
 		$this->max_items = 0;
-		$this->items     = array();
+		$this->items     = [];
 
 		$stock = absint( max( get_option( 'woocommerce_notify_low_stock_amount' ), 0 ) );
 

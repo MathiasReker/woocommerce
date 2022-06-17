@@ -23,11 +23,11 @@ class QueueHelper {
 	 */
 	public static function get_all_pending() {
 		$jobs = WC()->queue()->search(
-			array(
+			[
 				'per_page' => -1,
 				'status'   => 'pending',
 				'claimed'  => false,
-			)
+			]
 		);
 
 		return $jobs;

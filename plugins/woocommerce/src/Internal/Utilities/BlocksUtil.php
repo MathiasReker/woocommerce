@@ -17,7 +17,7 @@ class BlocksUtil {
 		return array_reduce(
 			$blocks,
 			function( $carry, $block ) {
-				array_push( $carry, array_diff_key( $block, array_flip( array( 'innerBlocks' ) ) ) );
+				array_push( $carry, array_diff_key( $block, array_flip( [ 'innerBlocks' ] ) ) );
 				if ( isset( $block['innerBlocks'] ) ) {
 					$inner_blocks = self::flatten_blocks( $block['innerBlocks'] );
 					return array_merge( $carry, $inner_blocks );
@@ -25,7 +25,7 @@ class BlocksUtil {
 
 				return $carry;
 			},
-			array()
+			[]
 		);
 	}
 
@@ -39,14 +39,14 @@ class BlocksUtil {
 		return array_reduce(
 			get_option( 'widget_block' ),
 			function ( $acc, $block ) use ( $block_name ) {
-				$parsed_blocks = ! empty( $block ) && is_array( $block ) ? parse_blocks( $block['content'] ) : array();
+				$parsed_blocks = ! empty( $block ) && is_array( $block ) ? parse_blocks( $block['content'] ) : [];
 				if ( ! empty( $parsed_blocks ) && $block_name === $parsed_blocks[0]['blockName'] ) {
 					array_push( $acc, $parsed_blocks[0] );
 					return $acc;
 				}
 				return $acc;
 			},
-			array()
+			[]
 		);
 	}
 

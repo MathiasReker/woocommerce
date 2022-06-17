@@ -59,7 +59,7 @@ class WC_Notes_Refund_Returns {
 		$note->set_content( __( 'We have created a sample draft Refund and Returns Policy page for you. Please have a look and update it to fit your store.', 'woocommerce' ) );
 		$note->set_type( Note::E_WC_ADMIN_NOTE_INFORMATIONAL );
 		$note->set_name( self::NOTE_NAME );
-		$note->set_content_data( (object) array() );
+		$note->set_content_data( (object) [] );
 		$note->set_source( 'woocommerce-core' );
 		$note->add_action(
 			'notify-refund-returns-page',

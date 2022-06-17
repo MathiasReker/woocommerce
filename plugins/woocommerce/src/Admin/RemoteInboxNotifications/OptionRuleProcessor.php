@@ -21,7 +21,7 @@ class OptionRuleProcessor implements RuleProcessorInterface {
 	 */
 	public function process( $rule, $stored_state ) {
 		$is_contains   = $rule->operation && strpos( $rule->operation, 'contains' ) !== false;
-		$default_value = $is_contains ? array() : false;
+		$default_value = $is_contains ? [] : false;
 		$default       = isset( $rule->default ) ? $rule->default : $default_value;
 		$option_value  = get_option( $rule->option_name, $default );
 
@@ -33,12 +33,12 @@ class OptionRuleProcessor implements RuleProcessorInterface {
 					$rule->operation,
 					$rule->option_name
 				),
-				array(
+				[
 					'option_value' => $option_value,
 					'rule'         => $rule,
-				)
+				]
 			);
-			$option_value = array();
+			$option_value = [];
 		}
 
 		if ( isset( $rule->transformers ) && is_array( $rule->transformers ) ) {

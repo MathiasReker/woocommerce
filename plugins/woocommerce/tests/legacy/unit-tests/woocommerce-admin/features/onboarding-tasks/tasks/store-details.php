@@ -51,7 +51,7 @@ class WC_Admin_Tests_OnboardingTasks_Task_StoreDetails extends WC_Unit_Test_Case
 	 * Test get_title function of StoreDetails task.
 	 */
 	public function test_completed_task_get_title_with_use_completed_title_option() {
-		update_option( OnboardingProfile::DATA_OPTION, array( 'completed' => true ) );
+		update_option( OnboardingProfile::DATA_OPTION, [ 'completed' => true ] );
 		$this->task_list->options['use_completed_title'] = true;
 		$this->assertEquals( 'You added store details', $this->task->get_title() );
 	}

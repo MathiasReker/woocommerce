@@ -35,10 +35,10 @@ if ( ! class_exists( 'WC_Settings_Page', false ) ) :
 		 * Constructor.
 		 */
 		public function __construct() {
-			add_filter( 'woocommerce_settings_tabs_array', array( $this, 'add_settings_page' ), 20 );
-			add_action( 'woocommerce_sections_' . $this->id, array( $this, 'output_sections' ) );
-			add_action( 'woocommerce_settings_' . $this->id, array( $this, 'output' ) );
-			add_action( 'woocommerce_settings_save_' . $this->id, array( $this, 'save' ) );
+			add_filter( 'woocommerce_settings_tabs_array', [ $this, 'add_settings_page' ], 20 );
+			add_action( 'woocommerce_sections_' . $this->id, [ $this, 'output_sections' ] );
+			add_action( 'woocommerce_settings_' . $this->id, [ $this, 'output' ] );
+			add_action( 'woocommerce_settings_save_' . $this->id, [ $this, 'save' ] );
 		}
 
 		/**
@@ -143,7 +143,7 @@ if ( ! class_exists( 'WC_Settings_Page', false ) ) :
 		 * @return array Settings array, each item being an associative array representing a setting.
 		 */
 		protected function get_settings_for_section_core( $section_id ) {
-			return array();
+			return [];
 		}
 
 		/**
@@ -170,7 +170,7 @@ if ( ! class_exists( 'WC_Settings_Page', false ) ) :
 		 * @return array An associative array where keys are section identifiers and the values are translated section names.
 		 */
 		protected function get_own_sections() {
-			return array( '' => __( 'General', 'woocommerce' ) );
+			return [ '' => __( 'General', 'woocommerce' ) ];
 		}
 
 		/**

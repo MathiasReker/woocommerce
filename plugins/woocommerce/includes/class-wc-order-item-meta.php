@@ -50,7 +50,7 @@ class WC_Order_Item_Meta {
 	 * @param array       $item defaults to array().
 	 * @param \WC_Product $product defaults to null.
 	 */
-	public function __construct( $item = array(), $product = null ) {
+	public function __construct( $item = [], $product = null ) {
 		wc_deprecated_function( 'WC_Order_Item_Meta::__construct', '3.1', 'WC_Order_Item_Product' );
 
 		// Backwards (pre 2.4) compatibility.
@@ -78,7 +78,7 @@ class WC_Order_Item_Meta {
 		$formatted_meta = $this->get_formatted( $hideprefix );
 
 		if ( ! empty( $formatted_meta ) ) {
-			$meta_list = array();
+			$meta_list = [];
 
 			foreach ( $formatted_meta as $meta ) {
 				if ( $flat ) {
@@ -128,7 +128,7 @@ class WC_Order_Item_Meta {
 			return $this->get_formatted_legacy( $hideprefix );
 		}
 
-		$formatted_meta = array();
+		$formatted_meta = [];
 
 		if ( ! empty( $this->item['item_meta_array'] ) ) {
 			foreach ( $this->item['item_meta_array'] as $meta_id => $meta ) {
@@ -148,11 +148,11 @@ class WC_Order_Item_Meta {
 					}
 				}
 
-				$formatted_meta[ $meta_id ] = array(
+				$formatted_meta[ $meta_id ] = [
 					'key'   => $meta->key,
 					'label' => wc_attribute_label( $attribute_key, $this->product ),
 					'value' => apply_filters( 'woocommerce_order_item_display_meta_value', $meta_value, $meta, $this->item ),
-				);
+				];
 			}
 		}
 
@@ -172,7 +172,7 @@ class WC_Order_Item_Meta {
 			wc_deprecated_argument( 'WC_Order_Item_Meta::get_formatted', '2.4', 'Item Meta Data is being called with legacy arguments' );
 		}
 
-		$formatted_meta = array();
+		$formatted_meta = [];
 
 		foreach ( $this->meta as $meta_key => $meta_values ) {
 			if ( empty( $meta_values ) || ( ! empty( $hideprefix ) && substr( $meta_key, 0, 1 ) === $hideprefix ) ) {
@@ -202,11 +202,11 @@ class WC_Order_Item_Meta {
 					$formatted_meta_key = $meta_key . '-' . $loop;
 				}
 
-				$formatted_meta[ $formatted_meta_key ] = array(
+				$formatted_meta[ $formatted_meta_key ] = [
 					'key'   => $meta_key,
 					'label' => wc_attribute_label( $attribute_key, $this->product ),
 					'value' => apply_filters( 'woocommerce_order_item_display_meta_value', $meta_value, $this->meta, $this->item ),
-				);
+				];
 			}
 		}
 

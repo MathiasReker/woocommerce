@@ -255,12 +255,12 @@ class Reviews {
 		$x = new WP_Ajax_Response();
 
 		$x->add(
-			array(
+			[
 				'what'     => 'edit_comment',
 				'id'       => $review->comment_ID,
 				'data'     => $review_list_item,
 				'position' => $position,
-			)
+			]
 		);
 
 		$x->send();
@@ -305,7 +305,7 @@ class Reviews {
 
 		if ( empty( $post->post_status ) ) {
 			wp_die( 1 );
-		} elseif ( in_array( $post->post_status, array( 'draft', 'pending', 'trash' ), true ) ) {
+		} elseif ( in_array( $post->post_status, [ 'draft', 'pending', 'trash' ], true ) ) {
 			wp_die( esc_html__( 'Error: You can\'t reply to a review on a draft product.', 'woocommerce' ) );
 		}
 
@@ -383,15 +383,15 @@ class Reviews {
 		$wp_list_table->single_row( $comment );
 		$comment_list_item = ob_get_clean();
 
-		$response = array(
+		$response = [
 			'what'     => 'comment',
 			'id'       => $comment->comment_ID,
 			'data'     => $comment_list_item,
 			'position' => $position,
-		);
+		];
 
 		$counts                   = wp_count_comments();
-		$response['supplemental'] = array(
+		$response['supplemental'] = [
 			'in_moderation'        => $counts->moderated,
 			'i18n_comments_text'   => sprintf(
 			/* translators: %s: Number of reviews. */
@@ -403,7 +403,7 @@ class Reviews {
 				_n( '%s Review in moderation', '%s Reviews in moderation', $counts->moderated, 'woocommerce' ),
 				number_format_i18n( $counts->moderated )
 			),
-		);
+		];
 
 		if ( $comment_auto_approved && isset( $parent ) ) {
 			$response['supplemental']['parent_approved'] = $parent->comment_ID;

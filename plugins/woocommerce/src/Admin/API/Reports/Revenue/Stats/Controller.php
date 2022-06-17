@@ -47,7 +47,7 @@ class Controller extends \WC_REST_Reports_Controller implements ExportableInterf
 	 * @return array
 	 */
 	protected function prepare_reports_query( $request ) {
-		$args                        = array();
+		$args                        = [];
 		$args['before']              = $request['before'];
 		$args['after']               = $request['after'];
 		$args['interval']            = $request['interval'];
@@ -74,13 +74,13 @@ class Controller extends \WC_REST_Reports_Controller implements ExportableInterf
 		try {
 			$report_data = $reports_revenue->get_data();
 		} catch ( ParameterException $e ) {
-			return new \WP_Error( $e->getErrorCode(), $e->getMessage(), array( 'status' => $e->getCode() ) );
+			return new \WP_Error( $e->getErrorCode(), $e->getMessage(), [ 'status' => $e->getCode() ] );
 		}
 
-		$out_data = array(
+		$out_data = [
 			'totals'    => get_object_vars( $report_data->totals ),
-			'intervals' => array(),
-		);
+			'intervals' => [],
+		];
 
 		foreach ( $report_data->intervals as $interval_data ) {
 			$item                    = $this->prepare_item_for_response( $interval_data, $request );
@@ -164,115 +164,115 @@ class Controller extends \WC_REST_Reports_Controller implements ExportableInterf
 	 * @return array
 	 */
 	public function get_item_schema() {
-		$data_values = array(
-			'total_sales'    => array(
+		$data_values = [
+			'total_sales'    => [
 				'description' => __( 'Total sales.', 'woocommerce' ),
 				'type'        => 'number',
-				'context'     => array( 'view', 'edit' ),
+				'context'     => [ 'view', 'edit' ],
 				'readonly'    => true,
 				'indicator'   => true,
 				'format'      => 'currency',
-			),
-			'net_revenue'    => array(
+			],
+			'net_revenue'    => [
 				'description' => __( 'Net sales.', 'woocommerce' ),
 				'type'        => 'number',
-				'context'     => array( 'view', 'edit' ),
+				'context'     => [ 'view', 'edit' ],
 				'readonly'    => true,
 				'indicator'   => true,
 				'format'      => 'currency',
-			),
-			'coupons'        => array(
+			],
+			'coupons'        => [
 				'description' => __( 'Amount discounted by coupons.', 'woocommerce' ),
 				'type'        => 'number',
-				'context'     => array( 'view', 'edit' ),
+				'context'     => [ 'view', 'edit' ],
 				'readonly'    => true,
-			),
-			'coupons_count'  => array(
+			],
+			'coupons_count'  => [
 				'description' => __( 'Unique coupons count.', 'woocommerce' ),
 				'type'        => 'number',
-				'context'     => array( 'view', 'edit' ),
+				'context'     => [ 'view', 'edit' ],
 				'readonly'    => true,
 				'format'      => 'currency',
-			),
-			'shipping'       => array(
+			],
+			'shipping'       => [
 				'title'       => __( 'Shipping', 'woocommerce' ),
 				'description' => __( 'Total of shipping.', 'woocommerce' ),
 				'type'        => 'number',
-				'context'     => array( 'view', 'edit' ),
+				'context'     => [ 'view', 'edit' ],
 				'readonly'    => true,
 				'indicator'   => true,
 				'format'      => 'currency',
-			),
-			'taxes'          => array(
+			],
+			'taxes'          => [
 				'description' => __( 'Total of taxes.', 'woocommerce' ),
 				'type'        => 'number',
-				'context'     => array( 'view', 'edit' ),
+				'context'     => [ 'view', 'edit' ],
 				'readonly'    => true,
 				'format'      => 'currency',
-			),
-			'refunds'        => array(
+			],
+			'refunds'        => [
 				'title'       => __( 'Returns', 'woocommerce' ),
 				'description' => __( 'Total of returns.', 'woocommerce' ),
 				'type'        => 'number',
-				'context'     => array( 'view', 'edit' ),
+				'context'     => [ 'view', 'edit' ],
 				'readonly'    => true,
 				'indicator'   => true,
 				'format'      => 'currency',
-			),
-			'orders_count'   => array(
+			],
+			'orders_count'   => [
 				'description' => __( 'Number of orders.', 'woocommerce' ),
 				'type'        => 'integer',
-				'context'     => array( 'view', 'edit' ),
+				'context'     => [ 'view', 'edit' ],
 				'readonly'    => true,
-			),
-			'num_items_sold' => array(
+			],
+			'num_items_sold' => [
 				'description' => __( 'Items sold.', 'woocommerce' ),
 				'type'        => 'integer',
-				'context'     => array( 'view', 'edit' ),
+				'context'     => [ 'view', 'edit' ],
 				'readonly'    => true,
-			),
-			'products'       => array(
+			],
+			'products'       => [
 				'description' => __( 'Products sold.', 'woocommerce' ),
 				'type'        => 'integer',
-				'context'     => array( 'view', 'edit' ),
+				'context'     => [ 'view', 'edit' ],
 				'readonly'    => true,
-			),
-			'gross_sales'    => array(
+			],
+			'gross_sales'    => [
 				'description' => __( 'Gross sales.', 'woocommerce' ),
 				'type'        => 'number',
-				'context'     => array( 'view', 'edit' ),
+				'context'     => [ 'view', 'edit' ],
 				'readonly'    => true,
 				'indicator'   => true,
 				'format'      => 'currency',
-			),
-		);
+			],
+		];
 
-		$segments = array(
-			'segments' => array(
+		$segments = [
+			'segments' => [
 				'description' => __( 'Reports data grouped by segment condition.', 'woocommerce' ),
 				'type'        => 'array',
-				'context'     => array( 'view', 'edit' ),
+				'context'     => [ 'view', 'edit' ],
 				'readonly'    => true,
-				'items'       => array(
+				'items'       => [
 					'type'       => 'object',
-					'properties' => array(
-						'segment_id' => array(
+					'properties' => [
+						'segment_id' => [
 							'description' => __( 'Segment identificator.', 'woocommerce' ),
 							'type'        => 'integer',
-							'context'     => array( 'view', 'edit' ),
+							'context'     => [ 'view', 'edit' ],
 							'readonly'    => true,
-						),
-						'subtotals'  => array(
+						],
+						'subtotals'  => [
 							'description' => __( 'Interval subtotals.', 'woocommerce' ),
 							'type'        => 'object',
-							'context'     => array( 'view', 'edit' ),
+							'context'     => [ 'view', 'edit' ],
 							'readonly'    => true,
 							'properties'  => $data_values,
-						),
-					),
-				),
-			),
-		);
+						],
+					],
+				],
+			],
+		];
 
 		$totals = array_merge( $data_values, $segments );
 
@@ -281,69 +281,69 @@ class Controller extends \WC_REST_Reports_Controller implements ExportableInterf
 
 		$intervals = array_merge( $data_values, $segments );
 
-		$schema = array(
+		$schema = [
 			'$schema'    => 'http://json-schema.org/draft-04/schema#',
 			'title'      => 'report_revenue_stats',
 			'type'       => 'object',
-			'properties' => array(
-				'totals'    => array(
+			'properties' => [
+				'totals'    => [
 					'description' => __( 'Totals data.', 'woocommerce' ),
 					'type'        => 'object',
-					'context'     => array( 'view', 'edit' ),
+					'context'     => [ 'view', 'edit' ],
 					'readonly'    => true,
 					'properties'  => $totals,
-				),
-				'intervals' => array(
+				],
+				'intervals' => [
 					'description' => __( 'Reports data grouped by intervals.', 'woocommerce' ),
 					'type'        => 'array',
-					'context'     => array( 'view', 'edit' ),
+					'context'     => [ 'view', 'edit' ],
 					'readonly'    => true,
-					'items'       => array(
+					'items'       => [
 						'type'       => 'object',
-						'properties' => array(
-							'interval'       => array(
+						'properties' => [
+							'interval'       => [
 								'description' => __( 'Type of interval.', 'woocommerce' ),
 								'type'        => 'string',
-								'context'     => array( 'view', 'edit' ),
+								'context'     => [ 'view', 'edit' ],
 								'readonly'    => true,
-								'enum'        => array( 'day', 'week', 'month', 'year' ),
-							),
-							'date_start'     => array(
+								'enum'        => [ 'day', 'week', 'month', 'year' ],
+							],
+							'date_start'     => [
 								'description' => __( "The date the report start, in the site's timezone.", 'woocommerce' ),
 								'type'        => 'date-time',
-								'context'     => array( 'view', 'edit' ),
+								'context'     => [ 'view', 'edit' ],
 								'readonly'    => true,
-							),
-							'date_start_gmt' => array(
+							],
+							'date_start_gmt' => [
 								'description' => __( 'The date the report start, as GMT.', 'woocommerce' ),
 								'type'        => 'date-time',
-								'context'     => array( 'view', 'edit' ),
+								'context'     => [ 'view', 'edit' ],
 								'readonly'    => true,
-							),
-							'date_end'       => array(
+							],
+							'date_end'       => [
 								'description' => __( "The date the report end, in the site's timezone.", 'woocommerce' ),
 								'type'        => 'date-time',
-								'context'     => array( 'view', 'edit' ),
+								'context'     => [ 'view', 'edit' ],
 								'readonly'    => true,
-							),
-							'date_end_gmt'   => array(
+							],
+							'date_end_gmt'   => [
 								'description' => __( 'The date the report end, as GMT.', 'woocommerce' ),
 								'type'        => 'date-time',
-								'context'     => array( 'view', 'edit' ),
+								'context'     => [ 'view', 'edit' ],
 								'readonly'    => true,
-							),
-							'subtotals'      => array(
+							],
+							'subtotals'      => [
 								'description' => __( 'Interval subtotals.', 'woocommerce' ),
 								'type'        => 'object',
-								'context'     => array( 'view', 'edit' ),
+								'context'     => [ 'view', 'edit' ],
 								'readonly'    => true,
 								'properties'  => $intervals,
-							),
-						),
-					),
-				),
-			),
-		);
+							],
+						],
+					],
+				],
+			],
+		];
 
 		return $this->add_additional_fields_schema( $schema );
 	}
@@ -354,17 +354,17 @@ class Controller extends \WC_REST_Reports_Controller implements ExportableInterf
 	 * @return array
 	 */
 	public function get_collection_params() {
-		$params              = array();
-		$params['context']   = $this->get_context_param( array( 'default' => 'view' ) );
-		$params['page']      = array(
+		$params              = [];
+		$params['context']   = $this->get_context_param( [ 'default' => 'view' ] );
+		$params['page']      = [
 			'description'       => __( 'Current page of the collection.', 'woocommerce' ),
 			'type'              => 'integer',
 			'default'           => 1,
 			'sanitize_callback' => 'absint',
 			'validate_callback' => 'rest_validate_request_arg',
 			'minimum'           => 1,
-		);
-		$params['per_page']  = array(
+		];
+		$params['per_page']  = [
 			'description'       => __( 'Maximum number of items to be returned in result set.', 'woocommerce' ),
 			'type'              => 'integer',
 			'default'           => 10,
@@ -372,31 +372,31 @@ class Controller extends \WC_REST_Reports_Controller implements ExportableInterf
 			'maximum'           => 100,
 			'sanitize_callback' => 'absint',
 			'validate_callback' => 'rest_validate_request_arg',
-		);
-		$params['after']     = array(
+		];
+		$params['after']     = [
 			'description'       => __( 'Limit response to resources published after a given ISO8601 compliant date.', 'woocommerce' ),
 			'type'              => 'string',
 			'format'            => 'date-time',
 			'validate_callback' => 'rest_validate_request_arg',
-		);
-		$params['before']    = array(
+		];
+		$params['before']    = [
 			'description'       => __( 'Limit response to resources published before a given ISO8601 compliant date.', 'woocommerce' ),
 			'type'              => 'string',
 			'format'            => 'date-time',
 			'validate_callback' => 'rest_validate_request_arg',
-		);
-		$params['order']     = array(
+		];
+		$params['order']     = [
 			'description'       => __( 'Order sort attribute ascending or descending.', 'woocommerce' ),
 			'type'              => 'string',
 			'default'           => 'desc',
-			'enum'              => array( 'asc', 'desc' ),
+			'enum'              => [ 'asc', 'desc' ],
 			'validate_callback' => 'rest_validate_request_arg',
-		);
-		$params['orderby']   = array(
+		];
+		$params['orderby']   = [
 			'description'       => __( 'Sort collection by object attribute.', 'woocommerce' ),
 			'type'              => 'string',
 			'default'           => 'date',
-			'enum'              => array(
+			'enum'              => [
 				'date',
 				'total_sales',
 				'coupons',
@@ -407,41 +407,41 @@ class Controller extends \WC_REST_Reports_Controller implements ExportableInterf
 				'orders_count',
 				'items_sold',
 				'gross_sales',
-			),
+			],
 			'validate_callback' => 'rest_validate_request_arg',
-		);
-		$params['interval']  = array(
+		];
+		$params['interval']  = [
 			'description'       => __( 'Time interval to use for buckets in the returned data.', 'woocommerce' ),
 			'type'              => 'string',
 			'default'           => 'week',
-			'enum'              => array(
+			'enum'              => [
 				'hour',
 				'day',
 				'week',
 				'month',
 				'quarter',
 				'year',
-			),
+			],
 			'validate_callback' => 'rest_validate_request_arg',
-		);
-		$params['segmentby'] = array(
+		];
+		$params['segmentby'] = [
 			'description'       => __( 'Segment the response by additional constraint.', 'woocommerce' ),
 			'type'              => 'string',
-			'enum'              => array(
+			'enum'              => [
 				'product',
 				'category',
 				'variation',
 				'coupon',
 				'customer_type', // new vs returning.
-			),
+			],
 			'validate_callback' => 'rest_validate_request_arg',
-		);
-		$params['force_cache_refresh'] = array(
+		];
+		$params['force_cache_refresh'] = [
 			'description'       => __( 'Force retrieval of fresh data instead of from the cache.', 'woocommerce' ),
 			'type'              => 'boolean',
 			'sanitize_callback' => 'wp_validate_boolean',
 			'validate_callback' => 'rest_validate_request_arg',
-		);
+		];
 
 		return $params;
 	}
@@ -452,7 +452,7 @@ class Controller extends \WC_REST_Reports_Controller implements ExportableInterf
 	 * @return array Key value pair of Column ID => Label.
 	 */
 	public function get_export_columns() {
-		return array(
+		return [
 			'date'         => __( 'Date', 'woocommerce' ),
 			'orders_count' => __( 'Orders', 'woocommerce' ),
 			'gross_sales'  => __( 'Gross sales', 'woocommerce' ),
@@ -462,7 +462,7 @@ class Controller extends \WC_REST_Reports_Controller implements ExportableInterf
 			'taxes'        => __( 'Taxes', 'woocommerce' ),
 			'shipping'     => __( 'Shipping', 'woocommerce' ),
 			'net_revenue'  => __( 'Net Revenue', 'woocommerce' ),
-		);
+		];
 	}
 
 	/**
@@ -474,7 +474,7 @@ class Controller extends \WC_REST_Reports_Controller implements ExportableInterf
 	public function prepare_item_for_export( $item ) {
 		$subtotals = (array) $item['subtotals'];
 
-		return array(
+		return [
 			'date'         => $item['date_start'],
 			'orders_count' => $subtotals['orders_count'],
 			'gross_sales'  => self::csv_number_format( $subtotals['gross_sales'] ),
@@ -484,6 +484,6 @@ class Controller extends \WC_REST_Reports_Controller implements ExportableInterf
 			'taxes'        => self::csv_number_format( $subtotals['taxes'] ),
 			'shipping'     => self::csv_number_format( $subtotals['shipping'] ),
 			'net_revenue'  => self::csv_number_format( $subtotals['net_revenue'] ),
-		);
+		];
 	}
 }

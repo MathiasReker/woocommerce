@@ -34,10 +34,10 @@ class Init {
 	 * Hook into WooCommerce.
 	 */
 	public function __construct() {
-		add_filter( 'woocommerce_settings_features', array( $this, 'add_feature_toggle' ) );
-		add_action( 'update_option_' . self::TOGGLE_OPTION_NAME, array( $this, 'reload_page_on_toggle' ), 10, 2 );
-		add_action( 'woocommerce_settings_saved', array( $this, 'maybe_reload_page' ) );
-		add_action( 'admin_enqueue_scripts', array( $this, 'maybe_enqueue_opt_out_scripts' ) );
+		add_filter( 'woocommerce_settings_features', [ $this, 'add_feature_toggle' ] );
+		add_action( 'update_option_' . self::TOGGLE_OPTION_NAME, [ $this, 'reload_page_on_toggle' ], 10, 2 );
+		add_action( 'woocommerce_settings_saved', [ $this, 'maybe_reload_page' ] );
+		add_action( 'admin_enqueue_scripts', [ $this, 'maybe_enqueue_opt_out_scripts' ] );
 
 		if ( Features::is_enabled( 'navigation' ) ) {
 			Menu::instance()->init();
@@ -69,13 +69,13 @@ class Init {
 			);
 		}
 
-		$features[] = array(
+		$features[] = [
 			'title' => __( 'Navigation', 'woocommerce' ),
 			'desc'  => $description . $update_text,
 			'id'    => self::TOGGLE_OPTION_NAME,
 			'type'  => 'checkbox',
 			'class' => $needs_update ? 'disabled' : '',
-		);
+		];
 
 		return $features;
 	}
@@ -150,7 +150,7 @@ class Init {
 		wp_enqueue_style(
 			'wc-admin-navigation-opt-out',
 			WCAdminAssets::get_url( "navigation-opt-out/style{$rtl}", 'css' ),
-			array( 'wp-components' ),
+			[ 'wp-components' ],
 			WCAdminAssets::get_file_version( 'css' )
 		);
 
@@ -160,7 +160,7 @@ class Init {
 		wp_enqueue_script(
 			'wc-admin-navigation-opt-out',
 			WCAdminAssets::get_url( 'wp-admin-scripts/navigation-opt-out', 'js' ),
-			array_merge( array( WC_ADMIN_APP ), $script_assets ['dependencies'] ),
+			array_merge( [ WC_ADMIN_APP ], $script_assets ['dependencies'] ),
 			WCAdminAssets::get_file_version( 'js' ),
 			true
 		);
@@ -168,9 +168,9 @@ class Init {
 		wp_localize_script(
 			'wc-admin-navigation-opt-out',
 			'surveyData',
-			array(
+			[
 				'url' => Survey::get_url( '/new-navigation-opt-out' ),
-			)
+			]
 		);
 
 		delete_option( 'woocommerce_navigation_show_opt_out' );

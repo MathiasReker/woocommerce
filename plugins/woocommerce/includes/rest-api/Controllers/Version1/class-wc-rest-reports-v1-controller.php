@@ -40,15 +40,15 @@ class WC_REST_Reports_V1_Controller extends WC_REST_Controller {
 	 * Register the routes for reports.
 	 */
 	public function register_routes() {
-		register_rest_route( $this->namespace, '/' . $this->rest_base, array(
-			array(
+		register_rest_route( $this->namespace, '/' . $this->rest_base, [
+			[
 				'methods'             => WP_REST_Server::READABLE,
-				'callback'            => array( $this, 'get_items' ),
-				'permission_callback' => array( $this, 'get_items_permissions_check' ),
+				'callback'            => [ $this, 'get_items' ],
+				'permission_callback' => [ $this, 'get_items_permissions_check' ],
 				'args'                => $this->get_collection_params(),
-			),
-			'schema' => array( $this, 'get_public_item_schema' ),
-		) );
+			],
+			'schema' => [ $this, 'get_public_item_schema' ],
+		] );
 	}
 
 	/**
@@ -59,7 +59,7 @@ class WC_REST_Reports_V1_Controller extends WC_REST_Controller {
 	 */
 	public function get_items_permissions_check( $request ) {
 		if ( ! wc_rest_check_manager_permissions( 'reports', 'read' ) ) {
-			return new WP_Error( 'woocommerce_rest_cannot_view', __( 'Sorry, you cannot list resources.', 'woocommerce' ), array( 'status' => rest_authorization_required_code() ) );
+			return new WP_Error( 'woocommerce_rest_cannot_view', __( 'Sorry, you cannot list resources.', 'woocommerce' ), [ 'status' => rest_authorization_required_code() ] );
 		}
 
 		return true;
@@ -72,16 +72,16 @@ class WC_REST_Reports_V1_Controller extends WC_REST_Controller {
 	 * @return array
 	 */
 	protected function get_reports() {
-		return array(
-			array(
+		return [
+			[
 				'slug'        => 'sales',
 				'description' => __( 'List of sales reports.', 'woocommerce' ),
-			),
-			array(
+			],
+			[
 				'slug'        => 'top_sellers',
 				'description' => __( 'List of top sellers products.', 'woocommerce' ),
-			),
-		);
+			],
+		];
 	}
 
 	/**
@@ -91,7 +91,7 @@ class WC_REST_Reports_V1_Controller extends WC_REST_Controller {
 	 * @return array|WP_Error
 	 */
 	public function get_items( $request ) {
-		$data    = array();
+		$data    = [];
 		$reports = $this->get_reports();
 
 		foreach ( $reports as $report ) {
@@ -110,10 +110,10 @@ class WC_REST_Reports_V1_Controller extends WC_REST_Controller {
 	 * @return WP_REST_Response $response Response data.
 	 */
 	public function prepare_item_for_response( $report, $request ) {
-		$data = array(
+		$data = [
 			'slug'        => $report->slug,
 			'description' => $report->description,
-		);
+		];
 
 		$context = ! empty( $request['context'] ) ? $request['context'] : 'view';
 		$data = $this->add_additional_fields_to_object( $data, $request );
@@ -121,14 +121,14 @@ class WC_REST_Reports_V1_Controller extends WC_REST_Controller {
 
 		// Wrap the data in a response object.
 		$response = rest_ensure_response( $data );
-		$response->add_links( array(
-			'self' => array(
+		$response->add_links( [
+			'self' => [
 				'href' => rest_url( sprintf( '/%s/%s/%s', $this->namespace, $this->rest_base, $report->slug ) ),
-			),
-			'collection' => array(
+			],
+			'collection' => [
 				'href' => rest_url( sprintf( '%s/%s', $this->namespace, $this->rest_base ) ),
-			),
-		) );
+			],
+		] );
 
 		/**
 		 * Filter a report returned from the API.
@@ -148,25 +148,25 @@ class WC_REST_Reports_V1_Controller extends WC_REST_Controller {
 	 * @return array
 	 */
 	public function get_item_schema() {
-		$schema = array(
+		$schema = [
 			'$schema'    => 'http://json-schema.org/draft-04/schema#',
 			'title'      => 'report',
 			'type'       => 'object',
-			'properties' => array(
-				'slug' => array(
+			'properties' => [
+				'slug' => [
 					'description' => __( 'An alphanumeric identifier for the resource.', 'woocommerce' ),
 					'type'        => 'string',
-					'context'     => array( 'view' ),
+					'context'     => [ 'view' ],
 					'readonly'    => true,
-				),
-				'description' => array(
+				],
+				'description' => [
 					'description' => __( 'A human-readable description of the resource.', 'woocommerce' ),
 					'type'        => 'string',
-					'context'     => array( 'view' ),
+					'context'     => [ 'view' ],
 					'readonly'    => true,
-				),
-			),
-		);
+				],
+			],
+		];
 
 		return $this->add_additional_fields_schema( $schema );
 	}
@@ -177,8 +177,8 @@ class WC_REST_Reports_V1_Controller extends WC_REST_Controller {
 	 * @return array
 	 */
 	public function get_collection_params() {
-		return array(
-			'context' => $this->get_context_param( array( 'default' => 'view' ) ),
-		);
+		return [
+			'context' => $this->get_context_param( [ 'default' => 'view' ] ),
+		];
 	}
 }

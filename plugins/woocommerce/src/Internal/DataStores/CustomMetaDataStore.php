@@ -43,11 +43,11 @@ abstract class CustomMetaDataStore {
 	 * @return array Array elements: table, object_id_field, meta_id_field.
 	 */
 	protected function get_db_info() {
-		return array(
+		return [
 			'table'           => $this->get_table_name(),
 			'meta_id_field'   => $this->get_meta_id_field(),
 			'object_id_field' => $this->get_object_id_field(),
-		);
+		];
 	}
 
 	/**
@@ -89,7 +89,7 @@ abstract class CustomMetaDataStore {
 		$db_info = $this->get_db_info();
 		$meta_id = absint( $meta->id );
 
-		return (bool) $wpdb->delete( $db_info['table'], array( $db_info['meta_id_field'] => $meta_id ) );
+		return (bool) $wpdb->delete( $db_info['table'], [ $db_info['meta_id_field'] => $meta_id ] );
 	}
 
 	/**
@@ -115,11 +115,11 @@ abstract class CustomMetaDataStore {
 		// phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_meta_value,WordPress.DB.SlowDBQuery.slow_db_query_meta_key
 		$result = $wpdb->insert(
 			$db_info['table'],
-			array(
+			[
 				$db_info['object_id_field'] => $object_id,
 				'meta_key'                  => $meta_key,
 				'meta_value'                => $meta_value,
-			)
+			]
 		);
 		// phpcs:enable WordPress.DB.SlowDBQuery.slow_db_query_meta_value,WordPress.DB.SlowDBQuery.slow_db_query_meta_key
 
@@ -140,10 +140,10 @@ abstract class CustomMetaDataStore {
 		}
 
 		// phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_meta_value,WordPress.DB.SlowDBQuery.slow_db_query_meta_key
-		$data = array(
+		$data = [
 			'meta_key'   => $meta->key,
 			'meta_value' => maybe_serialize( $meta->value ),
-		);
+		];
 		// phpcs:enable WordPress.DB.SlowDBQuery.slow_db_query_meta_value,WordPress.DB.SlowDBQuery.slow_db_query_meta_key
 
 		$db_info = $this->get_db_info();
@@ -151,7 +151,7 @@ abstract class CustomMetaDataStore {
 		$result = $wpdb->update(
 			$db_info['table'],
 			$data,
-			array( $db_info['meta_id_field'] => $meta->id ),
+			[ $db_info['meta_id_field'] => $meta->id ],
 			'%s',
 			'%d'
 		);

@@ -37,9 +37,9 @@ class WC_Admin_Tests_API_Onboarding_Tasks extends WC_REST_Unit_Test_Case {
 		parent::setUp();
 
 		$this->user = $this->factory->user->create(
-			array(
+			[
 				'role' => 'administrator',
-			)
+			]
 		);
 
 		// Empty the db of any products.
@@ -50,8 +50,8 @@ class WC_Admin_Tests_API_Onboarding_Tasks extends WC_REST_Unit_Test_Case {
 		}
 
 		// Resetting task list options and lists.
-		update_option( Task::DISMISSED_OPTION, array() );
-		update_option( Task::SNOOZED_OPTION, array() );
+		update_option( Task::DISMISSED_OPTION, [] );
+		update_option( Task::SNOOZED_OPTION, [] );
 		TaskLists::clear_lists();
 
 	}
@@ -194,25 +194,25 @@ class WC_Admin_Tests_API_Onboarding_Tasks extends WC_REST_Unit_Test_Case {
 		wp_set_current_user( $this->user );
 
 		TaskLists::add_list(
-			array(
+			[
 				'id' => 'test-list',
-			)
+			]
 		);
 
 		TaskLists::add_task(
 			'test-list',
 			new TestTask(
 				TaskLists::get_list( 'test-list' ),
-				array(
+				[
 					'id'            => 'test-task',
 					'title'         => 'Test Task',
 					'is_snoozeable' => true,
-				)
+				]
 			)
 		);
 
 		$request = new WP_REST_Request( 'POST', $this->endpoint . '/test-task/snooze' );
-		$request->set_headers( array( 'content-type' => 'application/json' ) );
+		$request->set_headers( [ 'content-type' => 'application/json' ] );
 		$response = $this->server->dispatch( $request );
 		$data     = $response->get_data();
 
@@ -233,26 +233,26 @@ class WC_Admin_Tests_API_Onboarding_Tasks extends WC_REST_Unit_Test_Case {
 		wp_set_current_user( $this->user );
 
 		TaskLists::add_list(
-			array(
+			[
 				'id' => 'test-list',
-			)
+			]
 		);
 
 		TaskLists::add_task(
 			'test-list',
 			new TestTask(
 				TaskLists::get_list( 'test-list' ),
-				array(
+				[
 					'id'            => 'test-task',
 					'title'         => 'Test Task',
 					'is_snoozeable' => true,
-				)
+				]
 			)
 		);
 
 		$request = new WP_REST_Request( 'POST', $this->endpoint . '/test-task/snooze' );
-		$request->set_headers( array( 'content-type' => 'application/json' ) );
-		$request->set_body( wp_json_encode( array( 'task_list_id' => 'test-list' ) ) );
+		$request->set_headers( [ 'content-type' => 'application/json' ] );
+		$request->set_body( wp_json_encode( [ 'task_list_id' => 'test-list' ] ) );
 		$response = $this->server->dispatch( $request );
 		$data     = $response->get_data();
 
@@ -272,26 +272,26 @@ class WC_Admin_Tests_API_Onboarding_Tasks extends WC_REST_Unit_Test_Case {
 		wp_set_current_user( $this->user );
 
 		TaskLists::add_list(
-			array(
+			[
 				'id' => 'test-list',
-			)
+			]
 		);
 
 		TaskLists::add_task(
 			'test-list',
 			new TestTask(
 				TaskLists::get_list( 'test-list' ),
-				array(
+				[
 					'id'            => 'test-task',
 					'title'         => 'Test Task',
 					'is_snoozeable' => true,
-				)
+				]
 			)
 		);
 
 		$request = new WP_REST_Request( 'POST', $this->endpoint . '/test-task/snooze' );
-		$request->set_headers( array( 'content-type' => 'application/json' ) );
-		$request->set_body( wp_json_encode( array( 'duration' => 'week' ) ) );
+		$request->set_headers( [ 'content-type' => 'application/json' ] );
+		$request->set_body( wp_json_encode( [ 'duration' => 'week' ] ) );
 		$response = $this->server->dispatch( $request );
 		$data     = $response->get_data();
 
@@ -313,20 +313,20 @@ class WC_Admin_Tests_API_Onboarding_Tasks extends WC_REST_Unit_Test_Case {
 		wp_set_current_user( $this->user );
 
 		TaskLists::add_list(
-			array(
+			[
 				'id' => 'test-list',
-			)
+			]
 		);
 
 		TaskLists::add_task(
 			'test-list',
 			new TestTask(
 				TaskLists::get_list( 'test-list' ),
-				array(
+				[
 					'id'            => 'test-task',
 					'title'         => 'Test Task',
 					'is_snoozeable' => true,
-				)
+				]
 			)
 		);
 
@@ -337,7 +337,7 @@ class WC_Admin_Tests_API_Onboarding_Tasks extends WC_REST_Unit_Test_Case {
 		$this->assertEquals( $task->is_snoozed(), true );
 
 		$request = new WP_REST_Request( 'POST', $this->endpoint . '/test-task/undo_snooze' );
-		$request->set_headers( array( 'content-type' => 'application/json' ) );
+		$request->set_headers( [ 'content-type' => 'application/json' ] );
 		$response = $this->server->dispatch( $request );
 		$data     = $response->get_data();
 
@@ -356,7 +356,7 @@ class WC_Admin_Tests_API_Onboarding_Tasks extends WC_REST_Unit_Test_Case {
 		wp_set_current_user( $this->user );
 
 		$request = new WP_REST_Request( 'POST', $this->endpoint . '/test-task/snooze' );
-		$request->set_headers( array( 'content-type' => 'application/json' ) );
+		$request->set_headers( [ 'content-type' => 'application/json' ] );
 		$response      = $this->server->dispatch( $request );
 		$response_data = $response->get_data();
 
@@ -372,25 +372,25 @@ class WC_Admin_Tests_API_Onboarding_Tasks extends WC_REST_Unit_Test_Case {
 		wp_set_current_user( $this->user );
 
 		TaskLists::add_list(
-			array(
+			[
 				'id' => 'test-list',
-			)
+			]
 		);
 
 		TaskLists::add_task(
 			'test-list',
 			new TestTask(
 				TaskLists::get_list( 'test-list' ),
-				array(
+				[
 					'id'             => 'test-task',
 					'title'          => 'Test Task',
 					'is_dismissable' => true,
-				)
+				]
 			)
 		);
 
 		$request = new WP_REST_Request( 'POST', $this->endpoint . '/test-task/dismiss' );
-		$request->set_headers( array( 'content-type' => 'application/json' ) );
+		$request->set_headers( [ 'content-type' => 'application/json' ] );
 		$response = $this->server->dispatch( $request );
 		$data     = $response->get_data();
 
@@ -408,20 +408,20 @@ class WC_Admin_Tests_API_Onboarding_Tasks extends WC_REST_Unit_Test_Case {
 		wp_set_current_user( $this->user );
 
 		TaskLists::add_list(
-			array(
+			[
 				'id' => 'test-list',
-			)
+			]
 		);
 
 		TaskLists::add_task(
 			'test-list',
 			new TestTask(
 				TaskLists::get_list( 'test-list' ),
-				array(
+				[
 					'id'             => 'test-task',
 					'title'          => 'Test Task',
 					'is_dismissable' => true,
-				)
+				]
 			)
 		);
 
@@ -432,7 +432,7 @@ class WC_Admin_Tests_API_Onboarding_Tasks extends WC_REST_Unit_Test_Case {
 		$this->assertEquals( $task->is_dismissed(), true );
 
 		$request = new WP_REST_Request( 'POST', $this->endpoint . '/test-task/undo_dismiss' );
-		$request->set_headers( array( 'content-type' => 'application/json' ) );
+		$request->set_headers( [ 'content-type' => 'application/json' ] );
 		$response = $this->server->dispatch( $request );
 		$data     = $response->get_data();
 
@@ -450,7 +450,7 @@ class WC_Admin_Tests_API_Onboarding_Tasks extends WC_REST_Unit_Test_Case {
 		wp_set_current_user( $this->user );
 
 		$request = new WP_REST_Request( 'POST', $this->endpoint . '/test-task/dismiss' );
-		$request->set_headers( array( 'content-type' => 'application/json' ) );
+		$request->set_headers( [ 'content-type' => 'application/json' ] );
 		$response      = $this->server->dispatch( $request );
 		$response_data = $response->get_data();
 
@@ -466,25 +466,25 @@ class WC_Admin_Tests_API_Onboarding_Tasks extends WC_REST_Unit_Test_Case {
 		wp_set_current_user( $this->user );
 
 		TaskLists::add_list(
-			array(
+			[
 				'id' => 'test-list',
-			)
+			]
 		);
 
 		TaskLists::add_task(
 			'test-list',
 			new TestTask(
 				TaskLists::get_list( 'test-list' ),
-				array(
+				[
 					'id'             => 'test-task',
 					'title'          => 'Test Task',
 					'is_dismissable' => true,
-				)
+				]
 			)
 		);
 
 		$request = new WP_REST_Request( 'POST', $this->endpoint . '/test-list/hide' );
-		$request->set_headers( array( 'content-type' => 'application/json' ) );
+		$request->set_headers( [ 'content-type' => 'application/json' ] );
 		$response      = $this->server->dispatch( $request );
 		$response_data = $response->get_data();
 
@@ -502,7 +502,7 @@ class WC_Admin_Tests_API_Onboarding_Tasks extends WC_REST_Unit_Test_Case {
 		wp_set_current_user( $this->user );
 
 		$request = new WP_REST_Request( 'POST', $this->endpoint . '/test-list/hide' );
-		$request->set_headers( array( 'content-type' => 'application/json' ) );
+		$request->set_headers( [ 'content-type' => 'application/json' ] );
 		$response      = $this->server->dispatch( $request );
 		$response_data = $response->get_data();
 
@@ -519,25 +519,25 @@ class WC_Admin_Tests_API_Onboarding_Tasks extends WC_REST_Unit_Test_Case {
 		wp_set_current_user( $this->user );
 
 		TaskLists::add_list(
-			array(
+			[
 				'id' => 'test-list',
-			)
+			]
 		);
 
 		TaskLists::add_task(
 			'test-list',
 			new TestTask(
 				TaskLists::get_list( 'test-list' ),
-				array(
+				[
 					'id'             => 'test-task',
 					'title'          => 'Test Task',
 					'is_dismissable' => true,
-				)
+				]
 			)
 		);
 
 		$request = new WP_REST_Request( 'GET', $this->endpoint );
-		$request->set_headers( array( 'content-type' => 'application/json' ) );
+		$request->set_headers( [ 'content-type' => 'application/json' ] );
 		$response      = $this->server->dispatch( $request );
 		$response_data = $response->get_data();
 

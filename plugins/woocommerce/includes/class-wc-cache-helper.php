@@ -17,21 +17,21 @@ class WC_Cache_Helper {
 	 *
 	 * @var array Array of transient keys.
 	 */
-	private static $delete_transients = array();
+	private static $delete_transients = [];
 
 	/**
 	 * Hook in methods.
 	 */
 	public static function init() {
-		add_filter( 'nocache_headers', array( __CLASS__, 'additional_nocache_headers' ), 10 );
-		add_action( 'shutdown', array( __CLASS__, 'delete_transients_on_shutdown' ), 10 );
-		add_action( 'template_redirect', array( __CLASS__, 'geolocation_ajax_redirect' ) );
-		add_action( 'wc_ajax_update_order_review', array( __CLASS__, 'update_geolocation_hash' ), 5 );
-		add_action( 'admin_notices', array( __CLASS__, 'notices' ) );
-		add_action( 'delete_version_transients', array( __CLASS__, 'delete_version_transients' ), 10 );
-		add_action( 'wp', array( __CLASS__, 'prevent_caching' ) );
-		add_action( 'clean_term_cache', array( __CLASS__, 'clean_term_cache' ), 10, 2 );
-		add_action( 'edit_terms', array( __CLASS__, 'clean_term_cache' ), 10, 2 );
+		add_filter( 'nocache_headers', [ __CLASS__, 'additional_nocache_headers' ], 10 );
+		add_action( 'shutdown', [ __CLASS__, 'delete_transients_on_shutdown' ], 10 );
+		add_action( 'template_redirect', [ __CLASS__, 'geolocation_ajax_redirect' ] );
+		add_action( 'wc_ajax_update_order_review', [ __CLASS__, 'update_geolocation_hash' ], 5 );
+		add_action( 'admin_notices', [ __CLASS__, 'notices' ] );
+		add_action( 'delete_version_transients', [ __CLASS__, 'delete_version_transients' ], 10 );
+		add_action( 'wp', [ __CLASS__, 'prevent_caching' ] );
+		add_action( 'clean_term_cache', [ __CLASS__, 'clean_term_cache' ], 10, 2 );
+		add_action( 'edit_terms', [ __CLASS__, 'clean_term_cache' ], 10, 2 );
 	}
 
 	/**
@@ -83,7 +83,7 @@ class WC_Cache_Helper {
 	 * @param string|array $keys Transient key or keys.
 	 */
 	public static function queue_delete_transient( $keys ) {
-		self::$delete_transients = array_unique( array_merge( is_array( $keys ) ? $keys : array( $keys ), self::$delete_transients ) );
+		self::$delete_transients = array_unique( array_merge( is_array( $keys ) ? $keys : [ $keys ], self::$delete_transients ) );
 	}
 
 	/**
@@ -96,7 +96,7 @@ class WC_Cache_Helper {
 			foreach ( self::$delete_transients as $key ) {
 				delete_transient( $key );
 			}
-			self::$delete_transients = array();
+			self::$delete_transients = [];
 		}
 	}
 
@@ -159,7 +159,7 @@ class WC_Cache_Helper {
 	 */
 	public static function geolocation_ajax_get_location_hash() {
 		$customer             = new WC_Customer( 0, true );
-		$location             = array();
+		$location             = [];
 		$location['country']  = $customer->get_billing_country();
 		$location['state']    = $customer->get_billing_state();
 		$location['postcode'] = $customer->get_billing_postcode();
@@ -174,7 +174,7 @@ class WC_Cache_Helper {
 		if ( ! is_blog_installed() ) {
 			return;
 		}
-		$page_ids = array_filter( array( wc_get_page_id( 'cart' ), wc_get_page_id( 'checkout' ), wc_get_page_id( 'myaccount' ) ) );
+		$page_ids = array_filter( [ wc_get_page_id( 'cart' ), wc_get_page_id( 'checkout' ), wc_get_page_id( 'myaccount' ) ] );
 
 		if ( is_page( $page_ids ) ) {
 			self::set_nocache_constants();
@@ -311,9 +311,9 @@ class WC_Cache_Helper {
 	 */
 	public static function clean_term_cache( $ids, $taxonomy ) {
 		if ( 'product_cat' === $taxonomy ) {
-			$ids = is_array( $ids ) ? $ids : array( $ids );
+			$ids = is_array( $ids ) ? $ids : [ $ids ];
 
-			$clear_ids = array( 0 );
+			$clear_ids = [ 0 ];
 
 			foreach ( $ids as $id ) {
 				$clear_ids[] = $id;
@@ -351,7 +351,7 @@ class WC_Cache_Helper {
 
 			// If affected rows is equal to limit, there are more rows to delete. Delete in 30 secs.
 			if ( $affected === $limit ) {
-				wp_schedule_single_event( time() + 30, 'delete_version_transients', array( $version ) );
+				wp_schedule_single_event( time() + 30, 'delete_version_transients', [ $version ] );
 			}
 		}
 	}

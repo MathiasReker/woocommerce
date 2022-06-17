@@ -22,7 +22,7 @@ class WC_Order_Refund_Data_Store_CPT extends Abstract_WC_Order_Data_Store_CPT im
 	 * @since 3.0.0
 	 * @var array
 	 */
-	protected $internal_meta_keys = array(
+	protected $internal_meta_keys = [
 		'_order_currency',
 		'_cart_discount',
 		'_refund_amount',
@@ -37,7 +37,7 @@ class WC_Order_Refund_Data_Store_CPT extends Abstract_WC_Order_Data_Store_CPT im
 		'_order_version',
 		'_prices_include_tax',
 		'_payment_tokens',
-	);
+	];
 
 	/**
 	 * Delete a refund - no trash is supported.
@@ -45,7 +45,7 @@ class WC_Order_Refund_Data_Store_CPT extends Abstract_WC_Order_Data_Store_CPT im
 	 * @param WC_Order $order Order object.
 	 * @param array    $args Array of args to pass to the delete method.
 	 */
-	public function delete( &$order, $args = array() ) {
+	public function delete( &$order, $args = [] ) {
 		$id = $order->get_id();
 		$parent_order_id = $order->get_parent_id();
 		$refund_cache_key = WC_Cache_Helper::get_cache_prefix( 'orders' ) . 'refunds' . $parent_order_id;
@@ -71,12 +71,12 @@ class WC_Order_Refund_Data_Store_CPT extends Abstract_WC_Order_Data_Store_CPT im
 		parent::read_order_data( $refund, $post_object );
 		$id = $refund->get_id();
 		$refund->set_props(
-			array(
+			[
 				'amount'           => get_post_meta( $id, '_refund_amount', true ),
 				'refunded_by'      => metadata_exists( 'post', $id, '_refunded_by' ) ? get_post_meta( $id, '_refunded_by', true ) : absint( $post_object->post_author ),
 				'refunded_payment' => wc_string_to_bool( get_post_meta( $id, '_refunded_payment', true ) ),
 				'reason'           => metadata_exists( 'post', $id, '_refund_reason' ) ? get_post_meta( $id, '_refund_reason', true ) : $post_object->post_excerpt,
-			)
+			]
 		);
 	}
 
@@ -89,13 +89,13 @@ class WC_Order_Refund_Data_Store_CPT extends Abstract_WC_Order_Data_Store_CPT im
 	protected function update_post_meta( &$refund ) {
 		parent::update_post_meta( $refund );
 
-		$updated_props     = array();
-		$meta_key_to_props = array(
+		$updated_props     = [];
+		$meta_key_to_props = [
 			'_refund_amount'    => 'amount',
 			'_refunded_by'      => 'refunded_by',
 			'_refunded_payment' => 'refunded_payment',
 			'_refund_reason'    => 'reason',
-		);
+		];
 
 		$props_to_update = $this->get_props_to_update( $refund, $meta_key_to_props );
 		foreach ( $props_to_update as $meta_key => $prop ) {

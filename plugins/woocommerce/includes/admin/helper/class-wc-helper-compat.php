@@ -20,7 +20,7 @@ class WC_Helper_Compat {
 	 * Loads the class, runs on init.
 	 */
 	public static function load() {
-		add_action( 'woocommerce_helper_loaded', array( __CLASS__, 'helper_loaded' ) );
+		add_action( 'woocommerce_helper_loaded', [ __CLASS__, 'helper_loaded' ] );
 	}
 
 	/**
@@ -31,7 +31,7 @@ class WC_Helper_Compat {
 		remove_action( 'admin_notices', 'woothemes_updater_notice' );
 
 		// A placeholder dashboard menu for legacy helper users.
-		add_action( 'admin_menu', array( __CLASS__, 'admin_menu' ) );
+		add_action( 'admin_menu', [ __CLASS__, 'admin_menu' ] );
 
 		if ( empty( $GLOBALS['woothemes_updater'] ) ) {
 			return;
@@ -47,10 +47,10 @@ class WC_Helper_Compat {
 	 */
 	public static function remove_actions() {
 		// Remove WooThemes Updater notices
-		remove_action( 'network_admin_notices', array( $GLOBALS['woothemes_updater']->admin, 'maybe_display_activation_notice' ) );
-		remove_action( 'admin_notices', array( $GLOBALS['woothemes_updater']->admin, 'maybe_display_activation_notice' ) );
-		remove_action( 'network_admin_menu', array( $GLOBALS['woothemes_updater']->admin, 'register_settings_screen' ) );
-		remove_action( 'admin_menu', array( $GLOBALS['woothemes_updater']->admin, 'register_settings_screen' ) );
+		remove_action( 'network_admin_notices', [ $GLOBALS['woothemes_updater']->admin, 'maybe_display_activation_notice' ] );
+		remove_action( 'admin_notices', [ $GLOBALS['woothemes_updater']->admin, 'maybe_display_activation_notice' ] );
+		remove_action( 'network_admin_menu', [ $GLOBALS['woothemes_updater']->admin, 'register_settings_screen' ] );
+		remove_action( 'admin_menu', [ $GLOBALS['woothemes_updater']->admin, 'register_settings_screen' ] );
 	}
 
 	/**
@@ -78,12 +78,12 @@ class WC_Helper_Compat {
 
 		$request = WC_Helper_API::post(
 			'oauth/migrate',
-			array(
-				'body' => array(
+			[
+				'body' => [
 					'home_url'   => home_url(),
 					'master_key' => $master_key,
-				),
-			)
+				],
+			]
 		);
 
 		if ( is_wp_error( $request ) || wp_remote_retrieve_response_code( $request ) !== 200 ) {
@@ -100,13 +100,13 @@ class WC_Helper_Compat {
 		// Obtain an access token.
 		$request = WC_Helper_API::post(
 			'oauth/access_token',
-			array(
-				'body' => array(
+			[
+				'body' => [
 					'request_token' => $request_token,
 					'home_url'      => home_url(),
 					'migrate'       => true,
-				),
-			)
+				],
+			]
 		);
 
 		if ( is_wp_error( $request ) || wp_remote_retrieve_response_code( $request ) !== 200 ) {
@@ -122,19 +122,19 @@ class WC_Helper_Compat {
 
 		WC_Helper_Options::update(
 			'auth',
-			array(
+			[
 				'access_token'        => $access_token['access_token'],
 				'access_token_secret' => $access_token['access_token_secret'],
 				'site_id'             => $access_token['site_id'],
 				'user_id'             => null, // Set this later
 				'updated'             => time(),
-			)
+			]
 		);
 
 		// Obtain the connected user info.
 		if ( ! WC_Helper::_flush_authentication_cache() ) {
 			WC_Helper::log( 'Could not obtain connected user info in migrate_connection' );
-			WC_Helper_Options::update( 'auth', array() );
+			WC_Helper_Options::update( 'auth', [] );
 			return;
 		}
 	}
@@ -152,7 +152,7 @@ class WC_Helper_Compat {
 			deactivate_plugins( 'woothemes-updater/woothemes-updater.php' );
 
 			// Notify the user when the plugin is deactivated.
-			add_action( 'pre_current_active_plugins', array( __CLASS__, 'plugin_deactivation_notice' ) );
+			add_action( 'pre_current_active_plugins', [ __CLASS__, 'plugin_deactivation_notice' ] );
 		}
 	}
 
@@ -183,7 +183,7 @@ class WC_Helper_Compat {
 			return;
 		}
 
-		add_dashboard_page( __( 'WooCommerce Helper', 'woocommerce' ), __( 'WooCommerce Helper', 'woocommerce' ), 'manage_options', 'woothemes-helper', array( __CLASS__, 'render_compat_menu' ) );
+		add_dashboard_page( __( 'WooCommerce Helper', 'woocommerce' ), __( 'WooCommerce Helper', 'woocommerce' ), 'manage_options', 'woothemes-helper', [ __CLASS__, 'render_compat_menu' ] );
 	}
 
 	/**
@@ -191,10 +191,10 @@ class WC_Helper_Compat {
 	 */
 	public static function render_compat_menu() {
 		$helper_url = add_query_arg(
-			array(
+			[
 				'page'    => 'wc-addons',
 				'section' => 'helper',
-			),
+			],
 			admin_url( 'admin.php' )
 		);
 		include WC_Helper::get_view_filename( 'html-helper-compat.php' );

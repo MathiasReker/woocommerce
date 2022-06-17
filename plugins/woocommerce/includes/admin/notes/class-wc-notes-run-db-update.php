@@ -23,7 +23,7 @@ class WC_Notes_Run_Db_Update {
 	 */
 	public function __construct() {
 		// If the old notice gets dismissed, also hide this new one.
-		add_action( 'woocommerce_hide_update_notice', array( __CLASS__, 'set_notice_actioned' ) );
+		add_action( 'woocommerce_hide_update_notice', [ __CLASS__, 'set_notice_actioned' ] );
 
 		// Not using Jetpack\Constants here as it can run before 'plugin_loaded' is done.
 		if ( defined( 'DOING_AJAX' ) && DOING_AJAX
@@ -32,7 +32,7 @@ class WC_Notes_Run_Db_Update {
 			return;
 		}
 
-		add_action( 'current_screen', array( __CLASS__, 'show_reminder' ) );
+		add_action( 'current_screen', [ __CLASS__, 'show_reminder' ] );
 	}
 
 	/**
@@ -111,14 +111,14 @@ class WC_Notes_Run_Db_Update {
 	private static function update_needed_notice( $note_id = null ) {
 		$update_url =
 			add_query_arg(
-				array(
+				[
 					'do_update_woocommerce' => 'true',
-				),
+				],
 				wc_get_current_admin_url() ? wc_get_current_admin_url() : admin_url( 'admin.php?page=wc-settings' )
 			);
 
-		$note_actions = array(
-			array(
+		$note_actions = [
+			[
 				'name'         => 'update-db_run',
 				'label'        => __( 'Update WooCommerce Database', 'woocommerce' ),
 				'url'          => $update_url,
@@ -126,15 +126,15 @@ class WC_Notes_Run_Db_Update {
 				'primary'      => true,
 				'nonce_action' => 'wc_db_update',
 				'nonce_name'   => 'wc_db_update_nonce',
-			),
-			array(
+			],
+			[
 				'name'    => 'update-db_learn-more',
 				'label'   => __( 'Learn more about updates', 'woocommerce' ),
 				'url'     => 'https://docs.woocommerce.com/document/how-to-update-woocommerce/',
 				'status'  => 'unactioned',
 				'primary' => false,
-			),
-		);
+			],
+		];
 
 		if ( $note_id ) {
 			$note = new Note( $note_id );
@@ -155,7 +155,7 @@ class WC_Notes_Run_Db_Update {
 		);
 		$note->set_type( Note::E_WC_ADMIN_NOTE_UPDATE );
 		$note->set_name( self::NOTE_NAME );
-		$note->set_content_data( (object) array() );
+		$note->set_content_data( (object) [] );
 		$note->set_source( 'woocommerce-core' );
 		// In case db version is out of sync with WC version or during the next update, the notice needs to show up again,
 		// so set it to unactioned.
@@ -213,15 +213,15 @@ class WC_Notes_Run_Db_Update {
 	private static function update_done_notice( $note_id ) {
 		$hide_notices_url = html_entity_decode( // to convert &amp;s to normal &, otherwise produces invalid link.
 			add_query_arg(
-				array(
+				[
 					'wc-hide-notice' => 'update',
-				),
+				],
 				wc_get_current_admin_url() ? remove_query_arg( 'do_update_woocommerce', wc_get_current_admin_url() ) : admin_url( 'admin.php?page=wc-settings' )
 			)
 		);
 
-		$note_actions = array(
-			array(
+		$note_actions = [
+			[
 				'name'         => 'update-db_done',
 				'label'        => __( 'Thanks!', 'woocommerce' ),
 				'url'          => $hide_notices_url,
@@ -229,8 +229,8 @@ class WC_Notes_Run_Db_Update {
 				'primary'      => true,
 				'nonce_action' => 'woocommerce_hide_notices_nonce',
 				'nonce_name'   => '_wc_notice_nonce',
-			),
-		);
+			],
+		];
 
 		$note = new Note( $note_id );
 

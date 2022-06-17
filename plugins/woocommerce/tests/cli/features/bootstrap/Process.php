@@ -12,7 +12,7 @@ class Process {
 	 * @param string $cwd Directory to execute the command in.
 	 * @param array $env Environment variables to set when running the command.
 	 */
-	public static function create( $command, $cwd = null, $env = array() ) {
+	public static function create( $command, $cwd = null, $env = [] ) {
 		$proc = new self;
 
 		$proc->command = $command;
@@ -34,11 +34,11 @@ class Process {
 	public function run() {
 		$cwd = $this->cwd;
 
-		$descriptors = array(
+		$descriptors = [
 			0 => STDIN,
-			1 => array( 'pipe', 'w' ),
-			2 => array( 'pipe', 'w' ),
-		);
+			1 => [ 'pipe', 'w' ],
+			2 => [ 'pipe', 'w' ],
+		];
 
 		$proc = proc_open( $this->command, $descriptors, $pipes, $cwd, $this->env );
 
@@ -48,14 +48,14 @@ class Process {
 		$stderr = stream_get_contents( $pipes[2] );
 		fclose( $pipes[2] );
 
-		return new ProcessRun( array(
+		return new ProcessRun( [
 			'stdout' => $stdout,
 			'stderr' => $stderr,
 			'return_code' => proc_close( $proc ),
 			'command' => $this->command,
 			'cwd' => $cwd,
 			'env' => $this->env
-		) );
+		] );
 	}
 
 	/**

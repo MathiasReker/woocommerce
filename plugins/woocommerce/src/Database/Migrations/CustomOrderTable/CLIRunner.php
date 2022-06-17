@@ -56,9 +56,9 @@ class CLIRunner {
 	 * Registers commands for CLI.
 	 */
 	public function register_commands() {
-		WP_CLI::add_command( 'wc cot count_unmigrated', array( $this, 'count_unmigrated' ) );
-		WP_CLI::add_command( 'wc cot migrate', array( $this, 'migrate' ) );
-		WP_CLI::add_command( 'wc cot verify_cot_data', array( $this, 'verify_cot_data' ) );
+		WP_CLI::add_command( 'wc cot count_unmigrated', [ $this, 'count_unmigrated' ] );
+		WP_CLI::add_command( 'wc cot migrate', [ $this, 'migrate' ] );
+		WP_CLI::add_command( 'wc cot verify_cot_data', [ $this, 'verify_cot_data' ] );
 	}
 
 	/**
@@ -104,7 +104,7 @@ class CLIRunner {
 	 *
 	 * @return int The number of orders to be migrated.*
 	 */
-	public function count_unmigrated( $args = array(), $assoc_args = array() ) : int {
+	public function count_unmigrated( $args = [], $assoc_args = [] ) : int {
 		if ( ! $this->is_enabled() ) {
 			return 0;
 		}
@@ -114,9 +114,9 @@ class CLIRunner {
 
 		$assoc_args = wp_parse_args(
 			$assoc_args,
-			array(
+			[
 				'log' => true,
-			)
+			]
 		);
 		if ( isset( $assoc_args['log'] ) && $assoc_args['log'] ) {
 			WP_CLI::log(
@@ -154,7 +154,7 @@ class CLIRunner {
 	 * @param array $args Positional arguments passed to the command.
 	 * @param array $assoc_args Associative arguments (options) passed to the command.
 	 */
-	public function migrate( $args = array(), $assoc_args = array() ) {
+	public function migrate( $args = [], $assoc_args = [] ) {
 		$this->log_production_warning();
 		if ( ! $this->is_enabled() ) {
 			return;
@@ -173,9 +173,9 @@ class CLIRunner {
 
 		$assoc_args  = wp_parse_args(
 			$assoc_args,
-			array(
+			[
 				'batch-size' => 500,
-			)
+			]
 		);
 		$batch_size  = ( (int) $assoc_args['batch-size'] ) === 0 ? 500 : (int) $assoc_args['batch-size'];
 		$progress    = WP_CLI\Utils\make_progress_bar( 'Order Data Migration', $order_count / $batch_size );
@@ -216,7 +216,7 @@ class CLIRunner {
 
 			$progress->tick();
 
-			$remaining_count = $this->count_unmigrated( array(), array( 'log' => false ) );
+			$remaining_count = $this->count_unmigrated( [], [ 'log' => false ] );
 			if ( $remaining_count === $order_count ) {
 				return WP_CLI::error( __( 'Infinite loop detected, aborting.', 'woocommerce' ) );
 			}
@@ -269,7 +269,7 @@ class CLIRunner {
 	 * @param array $args Positional arguments passed to the command.
 	 * @param array $assoc_args Associative arguments (options) passed to the command.
 	 */
-	public function backfill( $args = array(), $assoc_args = array() ) {
+	public function backfill( $args = [], $assoc_args = [] ) {
 		return WP_CLI::error( __( 'Error: Backfill is not implemented yet.', 'woocommerce' ) );
 	}
 
@@ -298,7 +298,7 @@ class CLIRunner {
 	 * @param array $args Positional arguments passed to the command.
 	 * @param array $assoc_args Associative arguments (options) passed to the command.
 	 */
-	public function verify_cot_data( $args = array(), $assoc_args = array() ) {
+	public function verify_cot_data( $args = [], $assoc_args = [] ) {
 		global $wpdb;
 		$this->log_production_warning();
 		if ( ! $this->is_enabled() ) {
@@ -307,15 +307,15 @@ class CLIRunner {
 
 		$assoc_args = wp_parse_args(
 			$assoc_args,
-			array(
+			[
 				'batch-size' => 500,
 				'start-from' => 0,
-			)
+			]
 		);
 
 		$batch_count    = 1;
 		$total_time     = 0;
-		$failed_ids     = array();
+		$failed_ids     = [];
 		$processed      = 0;
 		$order_id_start = (int) $assoc_args['start-from'];
 		$order_count    = $this->get_verify_order_count( $order_id_start );
@@ -469,7 +469,7 @@ class CLIRunner {
 	private function verify_meta_data( array $order_ids, array $failed_ids ) : array {
 		global $wpdb;
 		if ( ! count( $order_ids ) ) {
-			return array();
+			return [];
 		}
 		$excluded_columns             = $this->post_to_cot_migrator->get_migrated_meta_keys();
 		$excluded_columns_placeholder = implode( ', ', array_fill( 0, count( $excluded_columns ), '%s' ) );
@@ -514,19 +514,19 @@ ORDER BY $meta_table.order_id ASC, $meta_table.meta_key ASC;
 
 		foreach ( $normalized_source_data as $order_id => $meta ) {
 			foreach ( $meta as $meta_key => $values ) {
-				$migrated_meta_values = isset( $normalized_migrated_meta_data[ $order_id ][ $meta_key ] ) ? $normalized_migrated_meta_data[ $order_id ][ $meta_key ] : array();
+				$migrated_meta_values = isset( $normalized_migrated_meta_data[ $order_id ][ $meta_key ] ) ? $normalized_migrated_meta_data[ $order_id ][ $meta_key ] : [];
 				$diff = array_diff( $values, $migrated_meta_values );
 
 				if ( count( $diff ) ) {
 					if ( ! isset( $failed_ids[ $order_id ] ) ) {
-						$failed_ids[ $order_id ] = array();
+						$failed_ids[ $order_id ] = [];
 					}
-					$failed_ids[ $order_id ][] = array(
+					$failed_ids[ $order_id ][] = [
 						'order_id'   => $order_id,
 						'meta_key'   => $meta_key,
 						'orig_meta_values' => $values,
 						'new_meta_values' => $migrated_meta_values,
-					);
+					];
 				}
 			}
 		}
@@ -542,13 +542,13 @@ ORDER BY $meta_table.order_id ASC, $meta_table.meta_key ASC;
 	 * @return array Normalized data.
 	 */
 	private function normalize_raw_meta_data( array $data ) : array {
-		$clubbed_data = array();
+		$clubbed_data = [];
 		foreach ( $data as $row ) {
 			if ( ! isset( $clubbed_data[ $row['entity_id'] ] ) ) {
-				$clubbed_data[ $row['entity_id'] ] = array();
+				$clubbed_data[ $row['entity_id'] ] = [];
 			}
 			if ( ! isset( $clubbed_data[ $row['entity_id'] ][ $row['meta_key'] ] ) ) {
-				$clubbed_data[ $row['entity_id'] ][ $row['meta_key'] ] = array();
+				$clubbed_data[ $row['entity_id'] ][ $row['meta_key'] ] = [];
 			}
 			$clubbed_data[ $row['entity_id'] ][ $row['meta_key'] ][] = $row['meta_value'];
 		}

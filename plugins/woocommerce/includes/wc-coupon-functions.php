@@ -18,11 +18,11 @@ defined( 'ABSPATH' ) || exit;
 function wc_get_coupon_types() {
 	return (array) apply_filters(
 		'woocommerce_coupon_discount_types',
-		array(
+		[
 			'percent'       => __( 'Percentage discount', 'woocommerce' ),
 			'fixed_cart'    => __( 'Fixed cart discount', 'woocommerce' ),
 			'fixed_product' => __( 'Fixed product discount', 'woocommerce' ),
-		)
+		]
 	);
 }
 
@@ -44,7 +44,7 @@ function wc_get_coupon_type( $type = '' ) {
  * @return array
  */
 function wc_get_product_coupon_types() {
-	return (array) apply_filters( 'woocommerce_product_coupon_types', array( 'fixed_product', 'percent' ) );
+	return (array) apply_filters( 'woocommerce_product_coupon_types', [ 'fixed_product', 'percent' ] );
 }
 
 /**
@@ -54,7 +54,7 @@ function wc_get_product_coupon_types() {
  * @return array
  */
 function wc_get_cart_coupon_types() {
-	return (array) apply_filters( 'woocommerce_cart_coupon_types', array( 'fixed_cart' ) );
+	return (array) apply_filters( 'woocommerce_cart_coupon_types', [ 'fixed_cart' ] );
 }
 
 /**
@@ -105,7 +105,7 @@ function wc_get_coupon_id_by_code( $code, $exclude = 0 ) {
 		}
 	}
 
-	$ids = array_diff( array_filter( array_map( 'absint', (array) $ids ) ), array( $exclude ) );
+	$ids = array_diff( array_filter( array_map( 'absint', (array) $ids ) ), [ $exclude ] );
 
 	return apply_filters( 'woocommerce_get_coupon_id_from_code', absint( current( $ids ) ), $code, $exclude );
 }

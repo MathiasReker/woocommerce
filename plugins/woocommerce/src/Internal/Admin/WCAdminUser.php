@@ -18,7 +18,7 @@ class WCAdminUser {
 	 * Constructor.
 	 */
 	public function __construct() {
-		add_action( 'rest_api_init', array( $this, 'register_user_data' ) );
+		add_action( 'rest_api_init', [ $this, 'register_user_data' ] );
 	}
 
 	/**
@@ -40,21 +40,21 @@ class WCAdminUser {
 		register_rest_field(
 			'user',
 			'is_super_admin',
-			array(
+			[
 				'get_callback' => function() {
 					return is_super_admin();
 				},
 				'schema'       => null,
-			)
+			]
 		);
 		register_rest_field(
 			'user',
 			'woocommerce_meta',
-			array(
-				'get_callback'    => array( $this, 'get_user_data_values' ),
-				'update_callback' => array( $this, 'update_user_data_values' ),
+			[
+				'get_callback'    => [ $this, 'get_user_data_values' ],
+				'update_callback' => [ $this, 'update_user_data_values' ],
 				'schema'          => null,
-			)
+			]
 		);
 	}
 
@@ -65,7 +65,7 @@ class WCAdminUser {
 	 * @param WP_User $user Current user.
 	 */
 	public function get_user_data_values( $user ) {
-		$values = array();
+		$values = [];
 		foreach ( $this->get_user_data_fields() as $field ) {
 			$values[ $field ] = self::get_user_data_field( $user['id'], $field );
 		}
@@ -85,7 +85,7 @@ class WCAdminUser {
 			return;
 		}
 		$fields  = $this->get_user_data_fields();
-		$updates = array();
+		$updates = [];
 		foreach ( $values as $field => $value ) {
 			if ( in_array( $field, $fields, true ) ) {
 				$updates[ $field ] = $value;
@@ -103,7 +103,7 @@ class WCAdminUser {
 	 * @return array Fields to expose over the WP user endpoint.
 	 */
 	public function get_user_data_fields() {
-		return apply_filters( 'woocommerce_admin_get_user_data_fields', array() );
+		return apply_filters( 'woocommerce_admin_get_user_data_fields', [] );
 	}
 
 	/**

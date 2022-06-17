@@ -24,11 +24,11 @@ class WC_Product_Query extends WC_Object_Query {
 	protected function get_default_query_vars() {
 		return array_merge(
 			parent::get_default_query_vars(),
-			array(
-				'status'            => array( 'draft', 'pending', 'private', 'publish' ),
+			[
+				'status'            => [ 'draft', 'pending', 'private', 'publish' ],
 				'type'              => array_merge( array_keys( wc_get_product_types() ) ),
 				'limit'             => get_option( 'posts_per_page' ),
-				'include'           => array(),
+				'include'           => [],
 				'date_created'      => '',
 				'date_modified'     => '',
 				'featured'          => '',
@@ -55,14 +55,14 @@ class WC_Product_Query extends WC_Object_Query {
 				'reviews_allowed'   => '',
 				'virtual'           => '',
 				'downloadable'      => '',
-				'category'          => array(),
-				'tag'               => array(),
-				'shipping_class'    => array(),
+				'category'          => [],
+				'tag'               => [],
+				'shipping_class'    => [],
 				'download_limit'    => '',
 				'download_expiry'   => '',
 				'average_rating'    => '',
 				'review_count'      => '',
-			)
+			]
 		);
 	}
 

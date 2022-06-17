@@ -62,10 +62,10 @@ function wc_customer_edit_account_url() {
 function wc_edit_address_i18n( $id, $flip = false ) {
 	$slugs = apply_filters(
 		'woocommerce_edit_address_slugs',
-		array(
+		[
 			'billing'  => sanitize_title( _x( 'billing', 'edit-address-slug', 'woocommerce' ) ),
 			'shipping' => sanitize_title( _x( 'shipping', 'edit-address-slug', 'woocommerce' ) ),
-		)
+		]
 	);
 
 	if ( $flip ) {
@@ -86,16 +86,16 @@ function wc_edit_address_i18n( $id, $flip = false ) {
  * @return array
  */
 function wc_get_account_menu_items() {
-	$endpoints = array(
+	$endpoints = [
 		'orders'          => get_option( 'woocommerce_myaccount_orders_endpoint', 'orders' ),
 		'downloads'       => get_option( 'woocommerce_myaccount_downloads_endpoint', 'downloads' ),
 		'edit-address'    => get_option( 'woocommerce_myaccount_edit_address_endpoint', 'edit-address' ),
 		'payment-methods' => get_option( 'woocommerce_myaccount_payment_methods_endpoint', 'payment-methods' ),
 		'edit-account'    => get_option( 'woocommerce_myaccount_edit_account_endpoint', 'edit-account' ),
 		'customer-logout' => get_option( 'woocommerce_logout_endpoint', 'customer-logout' ),
-	);
+	];
 
-	$items = array(
+	$items = [
 		'dashboard'       => __( 'Dashboard', 'woocommerce' ),
 		'orders'          => __( 'Orders', 'woocommerce' ),
 		'downloads'       => __( 'Downloads', 'woocommerce' ),
@@ -103,7 +103,7 @@ function wc_get_account_menu_items() {
 		'payment-methods' => __( 'Payment methods', 'woocommerce' ),
 		'edit-account'    => __( 'Account details', 'woocommerce' ),
 		'customer-logout' => __( 'Logout', 'woocommerce' ),
-	);
+	];
 
 	// Remove missing endpoints.
 	foreach ( $endpoints as $endpoint_id => $endpoint ) {
@@ -140,10 +140,10 @@ function wc_get_account_menu_items() {
 function wc_get_account_menu_item_classes( $endpoint ) {
 	global $wp;
 
-	$classes = array(
+	$classes = [
 		'woocommerce-MyAccount-navigation-link',
 		'woocommerce-MyAccount-navigation-link--' . $endpoint,
-	);
+	];
 
 	// Set current item class.
 	$current = isset( $wp->query_vars[ $endpoint ] );
@@ -192,13 +192,13 @@ function wc_get_account_endpoint_url( $endpoint ) {
 function wc_get_account_orders_columns() {
 	$columns = apply_filters(
 		'woocommerce_account_orders_columns',
-		array(
+		[
 			'order-number'  => __( 'Order', 'woocommerce' ),
 			'order-date'    => __( 'Date', 'woocommerce' ),
 			'order-status'  => __( 'Status', 'woocommerce' ),
 			'order-total'   => __( 'Total', 'woocommerce' ),
 			'order-actions' => __( 'Actions', 'woocommerce' ),
-		)
+		]
 	);
 
 	// Deprecated filter since 2.6.0.
@@ -214,13 +214,13 @@ function wc_get_account_orders_columns() {
 function wc_get_account_downloads_columns() {
 	$columns = apply_filters(
 		'woocommerce_account_downloads_columns',
-		array(
+		[
 			'download-product'   => __( 'Product', 'woocommerce' ),
 			'download-remaining' => __( 'Downloads remaining', 'woocommerce' ),
 			'download-expires'   => __( 'Expires', 'woocommerce' ),
 			'download-file'      => __( 'Download', 'woocommerce' ),
 			'download-actions'   => '&nbsp;',
-		)
+		]
 	);
 
 	if ( ! has_filter( 'woocommerce_account_download_actions' ) ) {
@@ -239,11 +239,11 @@ function wc_get_account_downloads_columns() {
 function wc_get_account_payment_methods_columns() {
 	return apply_filters(
 		'woocommerce_account_payment_methods_columns',
-		array(
+		[
 			'method'  => __( 'Method', 'woocommerce' ),
 			'expires' => __( 'Expires', 'woocommerce' ),
 			'actions' => '&nbsp;',
-		)
+		]
 	);
 }
 
@@ -256,10 +256,10 @@ function wc_get_account_payment_methods_columns() {
 function wc_get_account_payment_methods_types() {
 	return apply_filters(
 		'woocommerce_payment_methods_types',
-		array(
+		[
 			'cc'     => __( 'Credit card', 'woocommerce' ),
 			'echeck' => __( 'eCheck', 'woocommerce' ),
-		)
+		]
 	);
 }
 
@@ -276,26 +276,26 @@ function wc_get_account_orders_actions( $order ) {
 		$order    = wc_get_order( $order_id );
 	}
 
-	$actions = array(
-		'pay'    => array(
+	$actions = [
+		'pay'    => [
 			'url'  => $order->get_checkout_payment_url(),
 			'name' => __( 'Pay', 'woocommerce' ),
-		),
-		'view'   => array(
+		],
+		'view'   => [
 			'url'  => $order->get_view_order_url(),
 			'name' => __( 'View', 'woocommerce' ),
-		),
-		'cancel' => array(
+		],
+		'cancel' => [
 			'url'  => $order->get_cancel_order_url( wc_get_page_permalink( 'myaccount' ) ),
 			'name' => __( 'Cancel', 'woocommerce' ),
-		),
-	);
+		],
+	];
 
 	if ( ! $order->needs_payment() ) {
 		unset( $actions['pay'] );
 	}
 
-	if ( ! in_array( $order->get_status(), apply_filters( 'woocommerce_valid_order_statuses_for_cancel', array( 'pending', 'failed' ), $order ), true ) ) {
+	if ( ! in_array( $order->get_status(), apply_filters( 'woocommerce_valid_order_statuses_for_cancel', [ 'pending', 'failed' ], $order ), true ) ) {
 		unset( $actions['cancel'] );
 	}
 
@@ -315,7 +315,7 @@ function wc_get_account_orders_actions( $order ) {
  */
 function wc_get_account_formatted_address( $address_type = 'billing', $customer_id = 0 ) {
 	$getter  = "get_{$address_type}";
-	$address = array();
+	$address = [];
 
 	if ( 0 === $customer_id ) {
 		$customer_id = get_current_user_id();
@@ -323,7 +323,7 @@ function wc_get_account_formatted_address( $address_type = 'billing', $customer_
 
 	$customer = new WC_Customer( $customer_id );
 
-	if ( is_callable( array( $customer, $getter ) ) ) {
+	if ( is_callable( [ $customer, $getter ] ) ) {
 		$address = $customer->$getter();
 		unset( $address['email'], $address['tel'] );
 	}
@@ -348,26 +348,26 @@ function wc_get_account_saved_payment_methods_list( $list, $customer_id ) {
 		$set_default_url = wp_nonce_url( $set_default_url, 'set-default-payment-method-' . $payment_token->get_id() );
 
 		$type            = strtolower( $payment_token->get_type() );
-		$list[ $type ][] = array(
-			'method'     => array(
+		$list[ $type ][] = [
+			'method'     => [
 				'gateway' => $payment_token->get_gateway_id(),
-			),
+			],
 			'expires'    => esc_html__( 'N/A', 'woocommerce' ),
 			'is_default' => $payment_token->is_default(),
-			'actions'    => array(
-				'delete' => array(
+			'actions'    => [
+				'delete' => [
 					'url'  => $delete_url,
 					'name' => esc_html__( 'Delete', 'woocommerce' ),
-				),
-			),
-		);
+				],
+			],
+		];
 		$key             = key( array_slice( $list[ $type ], -1, 1, true ) );
 
 		if ( ! $payment_token->is_default() ) {
-			$list[ $type ][ $key ]['actions']['default'] = array(
+			$list[ $type ][ $key ]['actions']['default'] = [
 				'url'  => $set_default_url,
 				'name' => esc_html__( 'Make default', 'woocommerce' ),
-			);
+			];
 		}
 
 		$list[ $type ][ $key ] = apply_filters( 'woocommerce_payment_methods_list_item', $list[ $type ][ $key ], $payment_token );

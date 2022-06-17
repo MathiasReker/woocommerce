@@ -31,11 +31,11 @@ class OnboardingJetpack {
 	 * Init.
 	 */
 	public function init() {
-		add_action( 'woocommerce_admin_plugins_pre_activate', array( $this, 'activate_and_install_jetpack_ahead_of_wcpay' ) );
-		add_action( 'woocommerce_admin_plugins_pre_install', array( $this, 'activate_and_install_jetpack_ahead_of_wcpay' ) );
+		add_action( 'woocommerce_admin_plugins_pre_activate', [ $this, 'activate_and_install_jetpack_ahead_of_wcpay' ] );
+		add_action( 'woocommerce_admin_plugins_pre_install', [ $this, 'activate_and_install_jetpack_ahead_of_wcpay' ] );
 
 		// Always hook into Jetpack connection even if outside of admin.
-		add_action( 'jetpack_site_registered', array( $this, 'set_woocommerce_setup_jetpack_opted_in' ) );
+		add_action( 'jetpack_site_registered', [ $this, 'set_woocommerce_setup_jetpack_opted_in' ] );
 	}
 
 	/**

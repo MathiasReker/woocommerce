@@ -24,14 +24,14 @@ class Init {
 	public function __construct() {
 		include_once __DIR__ . '/WCPaymentGatewayPreInstallWCPayPromotion.php';
 
-		add_action( 'change_locale', array( __CLASS__, 'delete_specs_transient' ) );
+		add_action( 'change_locale', [ __CLASS__, 'delete_specs_transient' ] );
 
 		$is_payments_page = isset( $_GET['page'] ) && 'wc-settings' === $_GET['page'] && isset( $_GET['tab'] ) && 'checkout' === $_GET['tab']; // phpcs:ignore WordPress.Security.NonceVerification
 		if ( ! wp_is_json_request() && ! $is_payments_page ) {
 			return;
 		}
 
-		add_filter( 'woocommerce_payment_gateways', array( __CLASS__, 'possibly_register_pre_install_wc_pay_promotion_gateway' ) );
+		add_filter( 'woocommerce_payment_gateways', [ __CLASS__, 'possibly_register_pre_install_wc_pay_promotion_gateway' ] );
 		add_filter( 'option_woocommerce_gateway_order', [ __CLASS__, 'set_gateway_top_of_list' ] );
 		add_filter( 'default_option_woocommerce_gateway_order', [ __CLASS__, 'set_gateway_top_of_list' ] );
 
@@ -40,7 +40,7 @@ class Init {
 		wp_enqueue_style(
 			'wc-admin-payment-method-promotions',
 			WCAdminAssets::get_url( "payment-method-promotions/style{$rtl}", 'css' ),
-			array( 'wp-components' ),
+			[ 'wp-components' ],
 			WCAdminAssets::get_file_version( 'css' )
 		);
 
@@ -50,7 +50,7 @@ class Init {
 		wp_enqueue_script(
 			'wc-admin-payment-method-promotions',
 			WCAdminAssets::get_url( 'wp-admin-scripts/payment-method-promotions', 'js' ),
-			array_merge( array( WC_ADMIN_APP ), $script_assets ['dependencies'] ),
+			array_merge( [ WC_ADMIN_APP ], $script_assets ['dependencies'] ),
 			WCAdminAssets::get_file_version( 'js' ),
 			true
 		);
@@ -133,7 +133,7 @@ class Init {
 	 * Go through the specs and run them.
 	 */
 	public static function get_promotions() {
-		$suggestions = array();
+		$suggestions = [];
 		$specs       = self::get_specs();
 
 		foreach ( $specs as $spec ) {
@@ -164,7 +164,7 @@ class Init {
 	 */
 	public static function get_specs() {
 		if ( 'no' === get_option( 'woocommerce_show_marketplace_suggestions', 'yes' ) ) {
-			return array();
+			return [];
 		}
 		return WCPayPromotionDataSourcePoller::get_instance()->get_specs_from_data_sources();
 	}

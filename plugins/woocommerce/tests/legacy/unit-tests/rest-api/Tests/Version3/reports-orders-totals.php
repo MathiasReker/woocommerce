@@ -14,9 +14,9 @@ class WC_Tests_API_Reports_Orders_Totals extends WC_REST_Unit_Test_Case {
 	public function setUp(): void {
 		parent::setUp();
 		$this->user = $this->factory->user->create(
-			array(
+			[
 				'role' => 'administrator',
-			)
+			]
 		);
 	}
 
@@ -41,18 +41,18 @@ class WC_Tests_API_Reports_Orders_Totals extends WC_REST_Unit_Test_Case {
 		$response = $this->server->dispatch( new WP_REST_Request( 'GET', '/wc/v3/reports/orders/totals' ) );
 		$report   = $response->get_data();
 		$totals   = wp_count_posts( 'shop_order' );
-		$data     = array();
+		$data     = [];
 
 		foreach ( wc_get_order_statuses() as $slug => $name ) {
 			if ( ! isset( $totals->$slug ) ) {
 				continue;
 			}
 
-			$data[] = array(
+			$data[] = [
 				'slug'  => str_replace( 'wc-', '', $slug ),
 				'name'  => $name,
 				'total' => (int) $totals->$slug,
-			);
+			];
 		}
 
 		$this->assertEquals( 200, $response->get_status() );

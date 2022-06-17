@@ -93,7 +93,7 @@ class WC_Tax_Rate_Importer extends WP_Importer {
 						$file = ABSPATH . $this->file_url;
 					}
 
-					add_filter( 'http_request_timeout', array( $this, 'bump_request_timeout' ) );
+					add_filter( 'http_request_timeout', [ $this, 'bump_request_timeout' ] );
 
 					$this->import( $file );
 				} else {
@@ -156,7 +156,7 @@ class WC_Tax_Rate_Importer extends WP_Importer {
 
 					list( $country, $state, $postcode, $city, $rate, $name, $priority, $compound, $shipping, $class ) = $row;
 
-					$tax_rate = array(
+					$tax_rate = [
 						'tax_rate_country'  => $country,
 						'tax_rate_state'    => $state,
 						'tax_rate'          => $rate,
@@ -166,7 +166,7 @@ class WC_Tax_Rate_Importer extends WP_Importer {
 						'tax_rate_shipping' => $shipping ? 1 : 0,
 						'tax_rate_order'    => $loop ++,
 						'tax_rate_class'    => $class,
-					);
+					];
 
 					$tax_rate_id = WC_Tax::_insert_tax_rate( $tax_rate );
 					WC_Tax::_update_tax_rate_postcodes( $tax_rate_id, wc_clean( $postcode ) );

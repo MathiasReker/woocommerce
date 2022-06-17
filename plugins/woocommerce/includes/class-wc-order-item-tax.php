@@ -20,7 +20,7 @@ class WC_Order_Item_Tax extends WC_Order_Item {
 	 * @since 3.0.0
 	 * @var array
 	 */
-	protected $extra_data = array(
+	protected $extra_data = [
 		'rate_code'          => '',
 		'rate_id'            => 0,
 		'label'              => '',
@@ -28,7 +28,7 @@ class WC_Order_Item_Tax extends WC_Order_Item {
 		'tax_total'          => 0,
 		'shipping_tax_total' => 0,
 		'rate_percent'       => null,
-	);
+	];
 
 	/*
 	|--------------------------------------------------------------------------
@@ -283,7 +283,7 @@ class WC_Order_Item_Tax extends WC_Order_Item {
 	 */
 	#[\ReturnTypeWillChange]
 	public function offsetExists( $offset ) {
-		if ( in_array( $offset, array( 'tax_amount', 'shipping_tax_amount' ), true ) ) {
+		if ( in_array( $offset, [ 'tax_amount', 'shipping_tax_amount' ], true ) ) {
 			return true;
 		}
 		return parent::offsetExists( $offset );

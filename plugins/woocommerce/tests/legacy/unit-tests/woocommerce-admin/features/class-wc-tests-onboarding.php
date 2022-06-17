@@ -16,23 +16,23 @@ class WC_Admin_Tests_Onboarding extends WC_Unit_Test_Case {
 	 * Verifies that given an array of theme objects, the object containing Storefront will be sorted to the first position.
 	 */
 	public function test_sort_woocommerce_themes() {
-		$theme1        = (object) array(
+		$theme1        = (object) [
 			'id'   => 1,
 			'slug' => 'ribs',
-		);
-		$theme2        = (object) array(
+		];
+		$theme2        = (object) [
 			'id'   => 2,
 			'slug' => 'chicken',
-		);
-		$theme3        = (object) array(
+		];
+		$theme3        = (object) [
 			'id'   => 3,
 			'slug' => 'Storefront',
-		);
-		$theme4        = (object) array(
+		];
+		$theme4        = (object) [
 			'id'   => 4,
 			'slug' => 'poutine',
-		);
-		$some_themes   = array( $theme1, $theme2, $theme3, $theme4 );
+		];
+		$some_themes   = [ $theme1, $theme2, $theme3, $theme4 ];
 		$sorted_themes = OnboardingThemes::sort_woocommerce_themes( $some_themes );
 		$this->assertEquals( 'Storefront', $sorted_themes[0]->slug );
 	}

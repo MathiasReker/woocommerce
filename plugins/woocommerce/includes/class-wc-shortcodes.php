@@ -17,7 +17,7 @@ class WC_Shortcodes {
 	 * Init shortcodes.
 	 */
 	public static function init() {
-		$shortcodes = array(
+		$shortcodes = [
 			'product'                    => __CLASS__ . '::product',
 			'product_page'               => __CLASS__ . '::product_page',
 			'product_category'           => __CLASS__ . '::product_category',
@@ -37,7 +37,7 @@ class WC_Shortcodes {
 			'woocommerce_cart'           => __CLASS__ . '::cart',
 			'woocommerce_checkout'       => __CLASS__ . '::checkout',
 			'woocommerce_my_account'     => __CLASS__ . '::my_account',
-		);
+		];
 
 		foreach ( $shortcodes as $shortcode => $function ) {
 			add_shortcode( apply_filters( "{$shortcode}_shortcode_tag", $shortcode ), $function );
@@ -58,12 +58,12 @@ class WC_Shortcodes {
 	 */
 	public static function shortcode_wrapper(
 		$function,
-		$atts = array(),
-		$wrapper = array(
+		$atts = [],
+		$wrapper = [
 			'class'  => 'woocommerce',
 			'before' => null,
 			'after'  => null,
-		)
+		]
 	) {
 		ob_start();
 
@@ -82,7 +82,7 @@ class WC_Shortcodes {
 	 * @return string
 	 */
 	public static function cart() {
-		return is_null( WC()->cart ) ? '' : self::shortcode_wrapper( array( 'WC_Shortcode_Cart', 'output' ) );
+		return is_null( WC()->cart ) ? '' : self::shortcode_wrapper( [ 'WC_Shortcode_Cart', 'output' ] );
 	}
 
 	/**
@@ -92,7 +92,7 @@ class WC_Shortcodes {
 	 * @return string
 	 */
 	public static function checkout( $atts ) {
-		return self::shortcode_wrapper( array( 'WC_Shortcode_Checkout', 'output' ), $atts );
+		return self::shortcode_wrapper( [ 'WC_Shortcode_Checkout', 'output' ], $atts );
 	}
 
 	/**
@@ -102,7 +102,7 @@ class WC_Shortcodes {
 	 * @return string
 	 */
 	public static function order_tracking( $atts ) {
-		return self::shortcode_wrapper( array( 'WC_Shortcode_Order_Tracking', 'output' ), $atts );
+		return self::shortcode_wrapper( [ 'WC_Shortcode_Order_Tracking', 'output' ], $atts );
 	}
 
 	/**
@@ -112,7 +112,7 @@ class WC_Shortcodes {
 	 * @return string
 	 */
 	public static function my_account( $atts ) {
-		return self::shortcode_wrapper( array( 'WC_Shortcode_My_Account', 'output' ), $atts );
+		return self::shortcode_wrapper( [ 'WC_Shortcode_My_Account', 'output' ], $atts );
 	}
 
 	/**
@@ -127,14 +127,14 @@ class WC_Shortcodes {
 		}
 
 		$atts = array_merge(
-			array(
+			[
 				'limit'        => '12',
 				'columns'      => '4',
 				'orderby'      => 'menu_order title',
 				'order'        => 'ASC',
 				'category'     => '',
 				'cat_operator' => 'IN',
-			),
+			],
 			(array) $atts
 		);
 
@@ -155,7 +155,7 @@ class WC_Shortcodes {
 		}
 
 		$atts = shortcode_atts(
-			array(
+			[
 				'limit'      => '-1',
 				'orderby'    => 'name',
 				'order'      => 'ASC',
@@ -163,7 +163,7 @@ class WC_Shortcodes {
 				'hide_empty' => 1,
 				'parent'     => '',
 				'ids'        => '',
-			),
+			],
 			$atts,
 			'product_categories'
 		);
@@ -172,14 +172,14 @@ class WC_Shortcodes {
 		$hide_empty = ( true === $atts['hide_empty'] || 'true' === $atts['hide_empty'] || 1 === $atts['hide_empty'] || '1' === $atts['hide_empty'] ) ? 1 : 0;
 
 		// Get terms and workaround WP bug with parents/pad counts.
-		$args = array(
+		$args = [
 			'orderby'    => $atts['orderby'],
 			'order'      => $atts['order'],
 			'hide_empty' => $hide_empty,
 			'include'    => $ids,
 			'pad_counts' => true,
 			'child_of'   => $atts['parent'],
-		);
+		];
 
 		$product_categories = apply_filters(
 			'woocommerce_product_categories',
@@ -189,9 +189,9 @@ class WC_Shortcodes {
 		if ( '' !== $atts['parent'] ) {
 			$product_categories = wp_list_filter(
 				$product_categories,
-				array(
+				[
 					'parent' => $atts['parent'],
-				)
+				]
 			);
 		}
 
@@ -221,9 +221,9 @@ class WC_Shortcodes {
 			foreach ( $product_categories as $category ) {
 				wc_get_template(
 					'content-product_cat.php',
-					array(
+					[
 						'category' => $category,
-					)
+					]
 				);
 			}
 
@@ -243,14 +243,14 @@ class WC_Shortcodes {
 	 */
 	public static function recent_products( $atts ) {
 		$atts = array_merge(
-			array(
+			[
 				'limit'        => '12',
 				'columns'      => '4',
 				'orderby'      => 'date',
 				'order'        => 'DESC',
 				'category'     => '',
 				'cat_operator' => 'IN',
-			),
+			],
 			(array) $atts
 		);
 
@@ -316,14 +316,14 @@ class WC_Shortcodes {
 		}
 
 		$atts = shortcode_atts(
-			array(
+			[
 				'id'         => '',
 				'class'      => '',
 				'quantity'   => '1',
 				'sku'        => '',
 				'style'      => 'border:4px solid #ccc; padding: 12px;',
 				'show_price' => 'true',
-			),
+			],
 			$atts,
 			'product_add_to_cart'
 		);
@@ -337,7 +337,7 @@ class WC_Shortcodes {
 			return '';
 		}
 
-		$product = is_object( $product_data ) && in_array( $product_data->post_type, array( 'product', 'product_variation' ), true ) ? wc_setup_product_data( $product_data ) : false;
+		$product = is_object( $product_data ) && in_array( $product_data->post_type, [ 'product', 'product_variation' ], true ) ? wc_setup_product_data( $product_data ) : false;
 
 		if ( ! $product ) {
 			return '';
@@ -354,9 +354,9 @@ class WC_Shortcodes {
 		}
 
 		woocommerce_template_loop_add_to_cart(
-			array(
+			[
 				'quantity' => $atts['quantity'],
-			)
+			]
 		);
 
 		echo '</p>';
@@ -387,7 +387,7 @@ class WC_Shortcodes {
 			return '';
 		}
 
-		$product = is_object( $product_data ) && in_array( $product_data->post_type, array( 'product', 'product_variation' ), true ) ? wc_setup_product_data( $product_data ) : false;
+		$product = is_object( $product_data ) && in_array( $product_data->post_type, [ 'product', 'product_variation' ], true ) ? wc_setup_product_data( $product_data ) : false;
 
 		if ( ! $product ) {
 			return '';
@@ -406,14 +406,14 @@ class WC_Shortcodes {
 	 */
 	public static function sale_products( $atts ) {
 		$atts = array_merge(
-			array(
+			[
 				'limit'        => '12',
 				'columns'      => '4',
 				'orderby'      => 'title',
 				'order'        => 'ASC',
 				'category'     => '',
 				'cat_operator' => 'IN',
-			),
+			],
 			(array) $atts
 		);
 
@@ -430,12 +430,12 @@ class WC_Shortcodes {
 	 */
 	public static function best_selling_products( $atts ) {
 		$atts = array_merge(
-			array(
+			[
 				'limit'        => '12',
 				'columns'      => '4',
 				'category'     => '',
 				'cat_operator' => 'IN',
-			),
+			],
 			(array) $atts
 		);
 
@@ -452,14 +452,14 @@ class WC_Shortcodes {
 	 */
 	public static function top_rated_products( $atts ) {
 		$atts = array_merge(
-			array(
+			[
 				'limit'        => '12',
 				'columns'      => '4',
 				'orderby'      => 'title',
 				'order'        => 'ASC',
 				'category'     => '',
 				'cat_operator' => 'IN',
-			),
+			],
 			(array) $atts
 		);
 
@@ -476,14 +476,14 @@ class WC_Shortcodes {
 	 */
 	public static function featured_products( $atts ) {
 		$atts = array_merge(
-			array(
+			[
 				'limit'        => '12',
 				'columns'      => '4',
 				'orderby'      => 'date',
 				'order'        => 'DESC',
 				'category'     => '',
 				'cat_operator' => 'IN',
-			),
+			],
 			(array) $atts
 		);
 
@@ -509,22 +509,22 @@ class WC_Shortcodes {
 			return '';
 		}
 
-		$args = array(
+		$args = [
 			'posts_per_page'      => 1,
 			'post_type'           => 'product',
 			'post_status'         => ( ! empty( $atts['status'] ) ) ? $atts['status'] : 'publish',
 			'ignore_sticky_posts' => 1,
 			'no_found_rows'       => 1,
-		);
+		];
 
 		if ( isset( $atts['sku'] ) ) {
-			$args['meta_query'][] = array(
+			$args['meta_query'][] = [
 				'key'     => '_sku',
 				'value'   => sanitize_text_field( $atts['sku'] ),
 				'compare' => '=',
-			);
+			];
 
-			$args['post_type'] = array( 'product', 'product_variation' );
+			$args['post_type'] = [ 'product', 'product_variation' ];
 		}
 
 		if ( isset( $atts['id'] ) ) {
@@ -553,14 +553,14 @@ class WC_Shortcodes {
 			$preselected_id = $single_product->post->ID;
 
 			// Get the parent product object.
-			$args = array(
+			$args = [
 				'posts_per_page'      => 1,
 				'post_type'           => 'product',
 				'post_status'         => 'publish',
 				'ignore_sticky_posts' => 1,
 				'no_found_rows'       => 1,
 				'p'                   => $single_product->post->post_parent,
-			);
+			];
 
 			$single_product = new WP_Query( $args );
 			?>
@@ -648,14 +648,14 @@ class WC_Shortcodes {
 	 */
 	public static function product_attribute( $atts ) {
 		$atts = array_merge(
-			array(
+			[
 				'limit'     => '12',
 				'columns'   => '4',
 				'orderby'   => 'title',
 				'order'     => 'ASC',
 				'attribute' => '',
 				'terms'     => '',
-			),
+			],
 			(array) $atts
 		);
 
@@ -680,11 +680,11 @@ class WC_Shortcodes {
 		}
 
 		// @codingStandardsIgnoreStart
-		$atts = shortcode_atts( array(
+		$atts = shortcode_atts( [
 			'limit'    => '4',
 			'columns'  => '4',
 			'orderby'  => 'rand',
-		), $atts, 'related_products' );
+		], $atts, 'related_products' );
 		// @codingStandardsIgnoreEnd
 
 		ob_start();

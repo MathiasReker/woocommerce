@@ -36,40 +36,40 @@ class WC_Admin_Post_Types {
 		}
 
 		// Load correct list table classes for current screen.
-		add_action( 'current_screen', array( $this, 'setup_screen' ) );
-		add_action( 'check_ajax_referer', array( $this, 'setup_screen' ) );
+		add_action( 'current_screen', [ $this, 'setup_screen' ] );
+		add_action( 'check_ajax_referer', [ $this, 'setup_screen' ] );
 
 		// Admin notices.
-		add_filter( 'post_updated_messages', array( $this, 'post_updated_messages' ) );
-		add_filter( 'bulk_post_updated_messages', array( $this, 'bulk_post_updated_messages' ), 10, 2 );
+		add_filter( 'post_updated_messages', [ $this, 'post_updated_messages' ] );
+		add_filter( 'bulk_post_updated_messages', [ $this, 'bulk_post_updated_messages' ], 10, 2 );
 
 		// Disable Auto Save.
-		add_action( 'admin_print_scripts', array( $this, 'disable_autosave' ) );
+		add_action( 'admin_print_scripts', [ $this, 'disable_autosave' ] );
 
 		// Extra post data and screen elements.
-		add_action( 'edit_form_top', array( $this, 'edit_form_top' ) );
-		add_filter( 'enter_title_here', array( $this, 'enter_title_here' ), 1, 2 );
-		add_action( 'edit_form_after_title', array( $this, 'edit_form_after_title' ) );
-		add_filter( 'default_hidden_meta_boxes', array( $this, 'hidden_meta_boxes' ), 10, 2 );
-		add_action( 'post_submitbox_misc_actions', array( $this, 'product_data_visibility' ) );
+		add_action( 'edit_form_top', [ $this, 'edit_form_top' ] );
+		add_filter( 'enter_title_here', [ $this, 'enter_title_here' ], 1, 2 );
+		add_action( 'edit_form_after_title', [ $this, 'edit_form_after_title' ] );
+		add_filter( 'default_hidden_meta_boxes', [ $this, 'hidden_meta_boxes' ], 10, 2 );
+		add_action( 'post_submitbox_misc_actions', [ $this, 'product_data_visibility' ] );
 
 		// Uploads.
-		add_filter( 'upload_dir', array( $this, 'upload_dir' ) );
-		add_filter( 'wp_unique_filename', array( $this, 'update_filename' ), 10, 3 );
-		add_action( 'media_upload_downloadable_product', array( $this, 'media_upload_downloadable_product' ) );
+		add_filter( 'upload_dir', [ $this, 'upload_dir' ] );
+		add_filter( 'wp_unique_filename', [ $this, 'update_filename' ], 10, 3 );
+		add_action( 'media_upload_downloadable_product', [ $this, 'media_upload_downloadable_product' ] );
 
 		// Hide template for CPT archive.
-		add_filter( 'theme_page_templates', array( $this, 'hide_cpt_archive_templates' ), 10, 3 );
-		add_action( 'edit_form_top', array( $this, 'show_cpt_archive_notice' ) );
+		add_filter( 'theme_page_templates', [ $this, 'hide_cpt_archive_templates' ], 10, 3 );
+		add_action( 'edit_form_top', [ $this, 'show_cpt_archive_notice' ] );
 
 		// Add a post display state for special WC pages.
-		add_filter( 'display_post_states', array( $this, 'add_display_post_states' ), 10, 2 );
+		add_filter( 'display_post_states', [ $this, 'add_display_post_states' ], 10, 2 );
 
 		// Bulk / quick edit.
-		add_action( 'bulk_edit_custom_box', array( $this, 'bulk_edit' ), 10, 2 );
-		add_action( 'quick_edit_custom_box', array( $this, 'quick_edit' ), 10, 2 );
-		add_action( 'save_post', array( $this, 'bulk_and_quick_edit_hook' ), 10, 2 );
-		add_action( 'woocommerce_product_bulk_and_quick_edit', array( $this, 'bulk_and_quick_edit_save_post' ), 10, 2 );
+		add_action( 'bulk_edit_custom_box', [ $this, 'bulk_edit' ], 10, 2 );
+		add_action( 'quick_edit_custom_box', [ $this, 'quick_edit' ], 10, 2 );
+		add_action( 'save_post', [ $this, 'bulk_and_quick_edit_hook' ], 10, 2 );
+		add_action( 'woocommerce_product_bulk_and_quick_edit', [ $this, 'bulk_and_quick_edit_save_post' ], 10, 2 );
 	}
 
 	/**
@@ -109,8 +109,8 @@ class WC_Admin_Post_Types {
 		}
 
 		// Ensure the table handler is only loaded once. Prevents multiple loads if a plugin calls check_ajax_referer many times.
-		remove_action( 'current_screen', array( $this, 'setup_screen' ) );
-		remove_action( 'check_ajax_referer', array( $this, 'setup_screen' ) );
+		remove_action( 'current_screen', [ $this, 'setup_screen' ] );
+		remove_action( 'check_ajax_referer', [ $this, 'setup_screen' ] );
 	}
 
 	/**
@@ -122,7 +122,7 @@ class WC_Admin_Post_Types {
 	public function post_updated_messages( $messages ) {
 		global $post;
 
-		$messages['product'] = array(
+		$messages['product'] = [
 			0  => '', // Unused. Messages start at index 1.
 			/* translators: %s: Product view URL. */
 			1  => sprintf( __( 'Product updated. <a href="%s">View Product</a>', 'woocommerce' ), esc_url( get_permalink( $post->ID ) ) ),
@@ -143,9 +143,9 @@ class WC_Admin_Post_Types {
 			),
 			/* translators: %s: product url */
 			10 => sprintf( __( 'Product draft updated. <a target="_blank" href="%s">Preview product</a>', 'woocommerce' ), esc_url( add_query_arg( 'preview', 'true', get_permalink( $post->ID ) ) ) ),
-		);
+		];
 
-		$messages['shop_order'] = array(
+		$messages['shop_order'] = [
 			0  => '', // Unused. Messages start at index 1.
 			1  => __( 'Order updated.', 'woocommerce' ),
 			2  => __( 'Custom field updated.', 'woocommerce' ),
@@ -162,9 +162,9 @@ class WC_Admin_Post_Types {
 			),
 			10 => __( 'Order draft updated.', 'woocommerce' ),
 			11 => __( 'Order updated and sent.', 'woocommerce' ),
-		);
+		];
 
-		$messages['shop_coupon'] = array(
+		$messages['shop_coupon'] = [
 			0  => '', // Unused. Messages start at index 1.
 			1  => __( 'Coupon updated.', 'woocommerce' ),
 			2  => __( 'Custom field updated.', 'woocommerce' ),
@@ -180,7 +180,7 @@ class WC_Admin_Post_Types {
 				'<strong>' . date_i18n( __( 'M j, Y @ G:i', 'woocommerce' ), strtotime( $post->post_date ) ) . '</strong>'
 			),
 			10 => __( 'Coupon draft updated.', 'woocommerce' ),
-		);
+		];
 
 		return $messages;
 	}
@@ -193,7 +193,7 @@ class WC_Admin_Post_Types {
 	 * @return array
 	 */
 	public function bulk_post_updated_messages( $bulk_messages, $bulk_counts ) {
-		$bulk_messages['product'] = array(
+		$bulk_messages['product'] = [
 			/* translators: %s: product count */
 			'updated'   => _n( '%s product updated.', '%s products updated.', $bulk_counts['updated'], 'woocommerce' ),
 			/* translators: %s: product count */
@@ -204,9 +204,9 @@ class WC_Admin_Post_Types {
 			'trashed'   => _n( '%s product moved to the Trash.', '%s products moved to the Trash.', $bulk_counts['trashed'], 'woocommerce' ),
 			/* translators: %s: product count */
 			'untrashed' => _n( '%s product restored from the Trash.', '%s products restored from the Trash.', $bulk_counts['untrashed'], 'woocommerce' ),
-		);
+		];
 
-		$bulk_messages['shop_order'] = array(
+		$bulk_messages['shop_order'] = [
 			/* translators: %s: order count */
 			'updated'   => _n( '%s order updated.', '%s orders updated.', $bulk_counts['updated'], 'woocommerce' ),
 			/* translators: %s: order count */
@@ -217,9 +217,9 @@ class WC_Admin_Post_Types {
 			'trashed'   => _n( '%s order moved to the Trash.', '%s orders moved to the Trash.', $bulk_counts['trashed'], 'woocommerce' ),
 			/* translators: %s: order count */
 			'untrashed' => _n( '%s order restored from the Trash.', '%s orders restored from the Trash.', $bulk_counts['untrashed'], 'woocommerce' ),
-		);
+		];
 
-		$bulk_messages['shop_coupon'] = array(
+		$bulk_messages['shop_coupon'] = [
 			/* translators: %s: coupon count */
 			'updated'   => _n( '%s coupon updated.', '%s coupons updated.', $bulk_counts['updated'], 'woocommerce' ),
 			/* translators: %s: coupon count */
@@ -230,7 +230,7 @@ class WC_Admin_Post_Types {
 			'trashed'   => _n( '%s coupon moved to the Trash.', '%s coupons moved to the Trash.', $bulk_counts['trashed'], 'woocommerce' ),
 			/* translators: %s: coupon count */
 			'untrashed' => _n( '%s coupon restored from the Trash.', '%s coupons restored from the Trash.', $bulk_counts['untrashed'], 'woocommerce' ),
-		);
+		];
 
 		return $bulk_messages;
 	}
@@ -248,9 +248,9 @@ class WC_Admin_Post_Types {
 
 		$shipping_class = get_terms(
 			'product_shipping_class',
-			array(
+			[
 				'hide_empty' => false,
-			)
+			]
 		);
 
 		include WC()->plugin_path() . '/includes/admin/views/html-bulk-edit-product.php';
@@ -269,9 +269,9 @@ class WC_Admin_Post_Types {
 
 		$shipping_class = get_terms(
 			'product_shipping_class',
-			array(
+			[
 				'hide_empty' => false,
-			)
+			]
 		);
 
 		include WC()->plugin_path() . '/includes/admin/views/html-quick-edit-product.php';
@@ -286,9 +286,9 @@ class WC_Admin_Post_Types {
 	 * @param object $post Post object being saved.
 	 */
 	public function bulk_and_quick_edit_hook( $post_id, $post ) {
-		remove_action( 'save_post', array( $this, 'bulk_and_quick_edit_hook' ) );
+		remove_action( 'save_post', [ $this, 'bulk_and_quick_edit_hook' ] );
 		do_action( 'woocommerce_product_bulk_and_quick_edit', $post_id, $post );
-		add_action( 'save_post', array( $this, 'bulk_and_quick_edit_hook' ), 10, 2 );
+		add_action( 'save_post', [ $this, 'bulk_and_quick_edit_hook' ], 10, 2 );
 	}
 
 	/**
@@ -341,7 +341,7 @@ class WC_Admin_Post_Types {
 		$data_store        = $product->get_data_store();
 		$old_regular_price = $product->get_regular_price();
 		$old_sale_price    = $product->get_sale_price();
-		$input_to_props    = array(
+		$input_to_props    = [
 			'_weight'     => 'weight',
 			'_length'     => 'length',
 			'_width'      => 'width',
@@ -349,7 +349,7 @@ class WC_Admin_Post_Types {
 			'_visibility' => 'catalog_visibility',
 			'_tax_class'  => 'tax_class',
 			'_tax_status' => 'tax_status',
-		);
+		];
 
 		foreach ( $input_to_props as $input_var => $prop ) {
 			if ( isset( $request_data[ $input_var ] ) ) {
@@ -516,7 +516,7 @@ class WC_Admin_Post_Types {
 		}
 
 		// Handle price - remove dates and set to lowest.
-		$change_price_product_types    = apply_filters( 'woocommerce_bulk_edit_save_price_product_types', array( 'simple', 'external' ) );
+		$change_price_product_types    = apply_filters( 'woocommerce_bulk_edit_save_price_product_types', [ 'simple', 'external' ] );
 		$can_product_type_change_price = false;
 		foreach ( $change_price_product_types as $product_type ) {
 			if ( $product->is_type( $product_type ) ) {
@@ -650,7 +650,7 @@ class WC_Admin_Post_Types {
 	 */
 	public function hidden_meta_boxes( $hidden, $screen ) {
 		if ( 'product' === $screen->post_type && 'post' === $screen->base ) {
-			$hidden = array_merge( $hidden, array( 'postcustom' ) );
+			$hidden = array_merge( $hidden, [ 'postcustom' ] );
 		}
 
 		return $hidden;
@@ -830,7 +830,7 @@ class WC_Admin_Post_Types {
 		$shop_page_id = wc_get_page_id( 'shop' );
 
 		if ( $post && absint( $post->ID ) === $shop_page_id ) {
-			$page_templates = array();
+			$page_templates = [];
 		}
 
 		return $page_templates;

@@ -39,12 +39,12 @@ class WC_Cart_Test extends \WC_Unit_Test_Case {
 			$variation['variation_id'],
 			1,
 			0,
-			array(
+			[
 				'attribute_pa_colour' => '',
 				'attribute_pa_number' => '',
-			)
+			]
 		);
-		$notices = WC()->session->get( 'wc_notices', array() );
+		$notices = WC()->session->get( 'wc_notices', [] );
 
 		// Check for cart contents.
 		$this->assertCount( 0, WC()->cart->get_cart_contents() );
@@ -78,7 +78,7 @@ class WC_Cart_Test extends \WC_Unit_Test_Case {
 			1,
 			$single_product->get_id()
 		);
-		$notices = WC()->session->get( 'wc_notices', array() );
+		$notices = WC()->session->get( 'wc_notices', [] );
 
 		// Check for cart contents.
 		$this->assertCount( 0, WC()->cart->get_cart_contents() );
@@ -183,7 +183,7 @@ class WC_Cart_Test extends \WC_Unit_Test_Case {
 
 		WC_Form_Handler::add_to_cart_action();
 
-		$notices = WC()->session->get( 'wc_notices', array() );
+		$notices = WC()->session->get( 'wc_notices', [] );
 
 		$this->assertArrayHasKey( 'error', $notices );
 		$this->assertCount( 1, $notices['error'] );

@@ -25,7 +25,7 @@ class DataStore extends \WC_Data_Store_WP implements \WC_Object_Data_Store_Inter
 
 		global $wpdb;
 
-		$note_to_be_inserted = array(
+		$note_to_be_inserted = [
 			'name'         => $note->get_name(),
 			'type'         => $note->get_type(),
 			'locale'       => $note->get_locale(),
@@ -37,7 +37,7 @@ class DataStore extends \WC_Data_Store_WP implements \WC_Object_Data_Store_Inter
 			'layout'       => $note->get_layout(),
 			'image'        => $note->get_image(),
 			'is_deleted'   => (int) $note->get_is_deleted(),
-		);
+		];
 
 		$note_to_be_inserted['content_data']  = wp_json_encode( $note->get_content_data() );
 		$note_to_be_inserted['date_created']  = gmdate( 'Y-m-d H:i:s', $date_created );
@@ -151,7 +151,7 @@ class DataStore extends \WC_Data_Store_WP implements \WC_Object_Data_Store_Inter
 
 			$wpdb->update(
 				$wpdb->prefix . 'wc_admin_notes',
-				array(
+				[
 					'name'          => $note->get_name(),
 					'type'          => $note->get_type(),
 					'locale'        => $note->get_locale(),
@@ -167,8 +167,8 @@ class DataStore extends \WC_Data_Store_WP implements \WC_Object_Data_Store_Inter
 					'image'         => $note->get_image(),
 					'is_deleted'    => $note->get_is_deleted(),
 					'is_read'       => $note->get_is_read(),
-				),
-				array( 'note_id' => $note->get_id() )
+				],
+				[ 'note_id' => $note->get_id() ]
 			);
 		}
 
@@ -189,12 +189,12 @@ class DataStore extends \WC_Data_Store_WP implements \WC_Object_Data_Store_Inter
 	 * @param Note  $note Admin note.
 	 * @param array $args Array of args to pass to the delete method (not used).
 	 */
-	public function delete( &$note, $args = array() ) {
+	public function delete( &$note, $args = [] ) {
 		$note_id = $note->get_id();
 		if ( $note_id ) {
 			global $wpdb;
-			$wpdb->delete( $wpdb->prefix . 'wc_admin_notes', array( 'note_id' => $note_id ) );
-			$wpdb->delete( $wpdb->prefix . 'wc_admin_note_actions', array( 'note_id' => $note_id ) );
+			$wpdb->delete( $wpdb->prefix . 'wc_admin_notes', [ 'note_id' => $note_id ] );
+			$wpdb->delete( $wpdb->prefix . 'wc_admin_note_actions', [ 'note_id' => $note_id ] );
 			$note->set_id( null );
 		}
 
@@ -223,11 +223,11 @@ class DataStore extends \WC_Data_Store_WP implements \WC_Object_Data_Store_Inter
 			)
 		);
 
-		$note_actions = array();
+		$note_actions = [];
 
 		if ( $db_actions ) {
 			foreach ( $db_actions as $action ) {
-				$note_actions[] = (object) array(
+				$note_actions[] = (object) [
 					'id'            => (int) $action->action_id,
 					'name'          => $action->name,
 					'label'         => $action->label,
@@ -236,7 +236,7 @@ class DataStore extends \WC_Data_Store_WP implements \WC_Object_Data_Store_Inter
 					'actioned_text' => $action->actioned_text,
 					'nonce_action'  => $action->nonce_action,
 					'nonce_name'    => $action->nonce_name,
-				);
+				];
 			}
 		}
 
@@ -264,7 +264,7 @@ class DataStore extends \WC_Data_Store_WP implements \WC_Object_Data_Store_Inter
 		// the note if they aren't part of the changeset.
 		// See Note::add_action().
 		$changed_actions = $note->get_actions( 'edit' );
-		$actions_to_keep = array();
+		$actions_to_keep = [];
 
 		foreach ( $changed_actions as $action ) {
 			if ( ! empty( $action->id ) ) {
@@ -285,7 +285,7 @@ class DataStore extends \WC_Data_Store_WP implements \WC_Object_Data_Store_Inter
 
 		// Update/insert the actions in this changeset.
 		foreach ( $changed_actions as $action ) {
-			$action_data = array(
+			$action_data = [
 				'note_id'       => $note->get_id(),
 				'name'          => $action->name,
 				'label'         => $action->label,
@@ -294,9 +294,9 @@ class DataStore extends \WC_Data_Store_WP implements \WC_Object_Data_Store_Inter
 				'actioned_text' => $action->actioned_text,
 				'nonce_action'  => $action->nonce_action,
 				'nonce_name'    => $action->nonce_name,
-			);
+			];
 
-			$data_format = array(
+			$data_format = [
 				'%d',
 				'%s',
 				'%s',
@@ -305,7 +305,7 @@ class DataStore extends \WC_Data_Store_WP implements \WC_Object_Data_Store_Inter
 				'%s',
 				'%s',
 				'%s',
-			);
+			];
 
 			if ( ! empty( $action->id ) ) {
 				$action_data['action_id'] = $action->id;
@@ -330,15 +330,15 @@ class DataStore extends \WC_Data_Store_WP implements \WC_Object_Data_Store_Inter
 	 * @param string $context Optional argument that the woocommerce_note_where_clauses filter can use to determine whether to apply extra conditions. Extensions should define their own contexts and use them to avoid adding to notes where clauses when not needed.
 	 * @return array An array of objects containing a note id.
 	 */
-	public function get_notes( $args = array(), $context = self::WC_ADMIN_NOTE_OPER_GLOBAL ) {
+	public function get_notes( $args = [], $context = self::WC_ADMIN_NOTE_OPER_GLOBAL ) {
 		global $wpdb;
 
-		$defaults = array(
+		$defaults = [
 			'per_page' => get_option( 'posts_per_page' ),
 			'page'     => 1,
 			'order'    => 'DESC',
 			'orderby'  => 'date_created',
-		);
+		];
 		$args     = wp_parse_args( $args, $defaults );
 
 		$offset        = $args['per_page'] * ( $args['page'] - 1 );
@@ -365,13 +365,13 @@ class DataStore extends \WC_Data_Store_WP implements \WC_Object_Data_Store_Inter
 	 * @param array $args Query arguments.
 	 * @return array An array of database records.
 	 */
-	public function lookup_notes( $args = array() ) {
+	public function lookup_notes( $args = [] ) {
 		global $wpdb;
 
-		$defaults = array(
+		$defaults = [
 			'order'   => 'DESC',
 			'orderby' => 'date_created',
-		);
+		];
 		$args     = wp_parse_args( $args, $defaults );
 
 		$where_clauses = $this->args_to_where_clauses( $args );
@@ -393,14 +393,14 @@ class DataStore extends \WC_Data_Store_WP implements \WC_Object_Data_Store_Inter
 	 * @param string $context Optional argument that the woocommerce_note_where_clauses filter can use to determine whether to apply extra conditions. Extensions should define their own contexts and use them to avoid adding to notes where clauses when not needed.
 	 * @return array An array of objects containing a note id.
 	 */
-	public function get_notes_count( $type = array(), $status = array(), $context = self::WC_ADMIN_NOTE_OPER_GLOBAL ) {
+	public function get_notes_count( $type = [], $status = [], $context = self::WC_ADMIN_NOTE_OPER_GLOBAL ) {
 		global $wpdb;
 
 		$where_clauses = $this->get_notes_where_clauses(
-			array(
+			[
 				'type'   => $type,
 				'status' => $status,
-			),
+			],
 			$context
 		);
 
@@ -420,8 +420,8 @@ class DataStore extends \WC_Data_Store_WP implements \WC_Object_Data_Store_Inter
 	 * @param array|null $allowed_types optional allowed_types if only a specific set is allowed.
 	 * @return array the escaped array of argument values.
 	 */
-	private function get_escaped_arguments_array_by_key( $args = array(), $key = '', $allowed_types = null ) {
-		$arg_array = array();
+	private function get_escaped_arguments_array_by_key( $args = [], $key = '', $allowed_types = null ) {
+		$arg_array = [];
 		if ( isset( $args[ $key ] ) ) {
 			foreach ( $args[ $key ] as $args_type ) {
 				$args_type = trim( $args_type );
@@ -443,7 +443,7 @@ class DataStore extends \WC_Data_Store_WP implements \WC_Object_Data_Store_Inter
 	 * @param string $context Optional argument that the woocommerce_note_where_clauses filter can use to determine whether to apply extra conditions. Extensions should define their own contexts and use them to avoid adding to notes where clauses when not needed.
 	 * @return string Where clauses for the query.
 	 */
-	public function get_notes_where_clauses( $args = array(), $context = self::WC_ADMIN_NOTE_OPER_GLOBAL ) {
+	public function get_notes_where_clauses( $args = [], $context = self::WC_ADMIN_NOTE_OPER_GLOBAL ) {
 		$where_clauses = $this->args_to_where_clauses( $args );
 
 		/**
@@ -465,7 +465,7 @@ class DataStore extends \WC_Data_Store_WP implements \WC_Object_Data_Store_Inter
 	 * @param array $args Array of arguments for query conditionals.
 	 * @return string Where clauses.
 	 */
-	protected function args_to_where_clauses( $args = array() ) {
+	protected function args_to_where_clauses( $args = [] ) {
 		$allowed_types    = Note::get_allowed_types();
 		$where_type_array = $this->get_escaped_arguments_array_by_key( $args, 'type', $allowed_types );
 

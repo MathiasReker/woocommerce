@@ -25,21 +25,21 @@ class WC_Test_Taxonomies extends WC_Unit_Test_Case {
 		$terms = array_values(
 			wp_list_pluck(
 				get_terms(
-					array(
+					[
 						'taxonomy'   => 'product_cat',
 						'hide_empty' => false,
 						'exclude'    => $default_category_id,
-					)
+					]
 				),
 				'name'
 			)
 		);
 		$this->assertEquals(
-			array(
+			[
 				'Alpha Category',
 				'Zulu Category',
 				'Beta Category',
-			),
+			],
 			$terms,
 			print_r( $terms, true ) // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_print_r
 		);
@@ -48,23 +48,23 @@ class WC_Test_Taxonomies extends WC_Unit_Test_Case {
 		$terms = array_values(
 			wp_list_pluck(
 				get_terms(
-					array(
+					[
 						'taxonomy'   => 'product_cat',
 						'hide_empty' => false,
 						'orderby'    => 'menu_order',
 						'order'      => 'DESC',
 						'exclude'    => $default_category_id,
-					)
+					]
 				),
 				'name'
 			)
 		);
 		$this->assertEquals(
-			array(
+			[
 				'Beta Category',
 				'Zulu Category',
 				'Alpha Category',
-			),
+			],
 			$terms,
 			print_r( $terms, true ) // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_print_r
 		);
@@ -73,22 +73,22 @@ class WC_Test_Taxonomies extends WC_Unit_Test_Case {
 		$terms = array_values(
 			wp_list_pluck(
 				get_terms(
-					array(
+					[
 						'taxonomy'   => 'product_cat',
 						'orderby'    => 'name',
 						'hide_empty' => false,
 						'exclude'    => $default_category_id,
-					)
+					]
 				),
 				'name'
 			)
 		);
 		$this->assertEquals(
-			array(
+			[
 				'Alpha Category',
 				'Beta Category',
 				'Zulu Category',
-			),
+			],
 			$terms,
 			print_r( $terms, true ) // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_print_r
 		);
@@ -97,22 +97,22 @@ class WC_Test_Taxonomies extends WC_Unit_Test_Case {
 		$terms = array_values(
 			wp_list_pluck(
 				get_terms(
-					array(
+					[
 						'taxonomy'   => 'product_cat',
 						'orderby'    => 'term_id',
 						'hide_empty' => false,
 						'exclude'    => $default_category_id,
-					)
+					]
 				),
 				'name'
 			)
 		);
 		$this->assertEquals(
-			array(
+			[
 				'Zulu Category',
 				'Alpha Category',
 				'Beta Category',
-			),
+			],
 			$terms,
 			print_r( $terms, true ) // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_print_r
 		);
@@ -138,18 +138,18 @@ class WC_Test_Taxonomies extends WC_Unit_Test_Case {
 		$terms = array_values(
 			wp_list_pluck(
 				get_terms(
-					array(
+					[
 						'taxonomy'   => 'product_cat',
 						'hide_empty' => false,
 						'orderby'    => 'name',
 						'exclude'    => $default_category_id,
-					)
+					]
 				),
 				'name'
 			)
 		);
 		$this->assertEquals(
-			array(
+			[
 				'1',
 				'10',
 				'2',
@@ -160,7 +160,7 @@ class WC_Test_Taxonomies extends WC_Unit_Test_Case {
 				'7',
 				'8',
 				'9',
-			),
+			],
 			$terms,
 			print_r( $terms, true ) // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_print_r
 		);
@@ -169,18 +169,18 @@ class WC_Test_Taxonomies extends WC_Unit_Test_Case {
 		$terms = array_values(
 			wp_list_pluck(
 				get_terms(
-					array(
+					[
 						'taxonomy'   => 'product_cat',
 						'hide_empty' => false,
 						'orderby'    => 'name_num',
 						'exclude'    => $default_category_id,
-					)
+					]
 				),
 				'name'
 			)
 		);
 		$this->assertEquals(
-			array(
+			[
 				'1',
 				'2',
 				'3',
@@ -191,7 +191,7 @@ class WC_Test_Taxonomies extends WC_Unit_Test_Case {
 				'8',
 				'9',
 				'10',
-			),
+			],
 			$terms,
 			print_r( $terms, true ) // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_print_r
 		);

@@ -105,19 +105,19 @@ abstract class MetaToMetaTableMigrator extends TableMigrator {
 		$meta_key_column   = $this->schema_config['destination']['meta']['meta_key_column'];
 		$meta_value_column = $this->schema_config['destination']['meta']['meta_value_column'];
 		$entity_id_column  = $this->schema_config['destination']['meta']['entity_id_column'];
-		$columns           = array( $meta_id_column, $entity_id_column, $meta_key_column, $meta_value_column );
+		$columns           = [ $meta_id_column, $entity_id_column, $meta_key_column, $meta_value_column ];
 		$columns_sql       = implode( '`, `', $columns );
 
 		$entity_id_column_placeholder = MigrationHelper::get_wpdb_placeholder_for_type( $this->schema_config['destination']['meta']['entity_id_type'] );
 		$placeholder_string           = "%d, $entity_id_column_placeholder, %s, %s";
-		$values                       = array();
+		$values                       = [];
 		foreach ( $batch as $entity_id => $rows ) {
 			foreach ( $rows as $meta_key => $meta_details ) {
 
 				// phpcs:disable WordPress.DB.PreparedSQL, WordPress.DB.PreparedSQLPlaceholders
 				$values[] = $wpdb->prepare(
 					"( $placeholder_string )",
-					array( $meta_details['id'], $entity_id, $meta_key, $meta_details['meta_value'] )
+					[ $meta_details['id'], $entity_id, $meta_key, $meta_details['meta_value'] ]
 				);
 				// phpcs:enable
 			}
@@ -147,15 +147,15 @@ abstract class MetaToMetaTableMigrator extends TableMigrator {
 
 		$entity_id_column_placeholder = MigrationHelper::get_wpdb_placeholder_for_type( $this->schema_config['destination']['meta']['entity_id_type'] );
 		$placeholder_string           = "$entity_id_column_placeholder, %s, %s";
-		$values                       = array();
+		$values                       = [];
 		foreach ( $batch as $entity_id => $rows ) {
 			foreach ( $rows as $meta_key => $meta_values ) {
 				foreach ( $meta_values as $meta_value ) {
-					$query_params = array(
+					$query_params = [
 						$entity_id,
 						$meta_key,
 						$meta_value,
-					);
+					];
 					// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders
 					$value_sql = $wpdb->prepare( "$placeholder_string", $query_params );
 					$values[]  = $value_sql;
@@ -181,24 +181,24 @@ abstract class MetaToMetaTableMigrator extends TableMigrator {
 	 */
 	private function fetch_data_for_migration_for_ids( array $entity_ids ): array {
 		if ( empty( $entity_ids ) ) {
-			return array();
+			return [];
 		}
 
 		$meta_query = $this->build_meta_table_query( $entity_ids );
 
 		$meta_data_rows = $this->db_get_results( $meta_query );
 		if ( empty( $meta_data_rows ) ) {
-			return array();
+			return [];
 		}
 
 		foreach ( $meta_data_rows as $migrate_row ) {
 			if ( ! isset( $to_migrate[ $migrate_row->entity_id ] ) ) {
-				$to_migrate[ $migrate_row->entity_id ] = array();
+				$to_migrate[ $migrate_row->entity_id ] = [];
 			}
 
 			if ( ! isset( $to_migrate[ $migrate_row->entity_id ][ $migrate_row->meta_key ] ) ) {
 				// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
-				$to_migrate[ $migrate_row->entity_id ][ $migrate_row->meta_key ] = array();
+				$to_migrate[ $migrate_row->entity_id ][ $migrate_row->meta_key ] = [];
 			}
 
 			$to_migrate[ $migrate_row->entity_id ][ $migrate_row->meta_key ][] = $migrate_row->meta_value;
@@ -243,22 +243,22 @@ WHERE destination.$destination_entity_id_column in ( $entity_ids_placeholder ) O
 		);
 		// phpcs:enable
 
-		$already_migrated = array();
+		$already_migrated = [];
 
 		foreach ( $data_already_migrated as $migrate_row ) {
 			if ( ! isset( $already_migrated[ $migrate_row->entity_id ] ) ) {
-				$already_migrated[ $migrate_row->entity_id ] = array();
+				$already_migrated[ $migrate_row->entity_id ] = [];
 			}
 
 			// phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_meta_key, WordPress.DB.SlowDBQuery.slow_db_query_meta_value
 			if ( ! isset( $already_migrated[ $migrate_row->entity_id ][ $migrate_row->meta_key ] ) ) {
-				$already_migrated[ $migrate_row->entity_id ][ $migrate_row->meta_key ] = array();
+				$already_migrated[ $migrate_row->entity_id ][ $migrate_row->meta_key ] = [];
 			}
 
-			$already_migrated[ $migrate_row->entity_id ][ $migrate_row->meta_key ][] = array(
+			$already_migrated[ $migrate_row->entity_id ][ $migrate_row->meta_key ][] = [
 				'id'         => $migrate_row->meta_id,
 				'meta_value' => $migrate_row->meta_value,
-			);
+			];
 			// phpcs:enable
 		}
 
@@ -274,8 +274,8 @@ WHERE destination.$destination_entity_id_column in ( $entity_ids_placeholder ) O
 	 * @return array[] Returns two arrays, first for records to migrate, and second for records to upgrade.
 	 */
 	private function classify_update_insert_records( array $to_migrate, array $already_migrated ): array {
-		$to_update = array();
-		$to_insert = array();
+		$to_update = [];
+		$to_insert = [];
 
 		foreach ( $to_migrate as $entity_id => $rows ) {
 			foreach ( $rows as $meta_key => $meta_values ) {
@@ -284,7 +284,7 @@ WHERE destination.$destination_entity_id_column in ( $entity_ids_placeholder ) O
 				// If there are multiple values in either already_migrated records or in to_migrate_records, then insert instead of updating.
 				if ( ! isset( $already_migrated[ $entity_id ][ $meta_key ] ) ) {
 					if ( ! isset( $to_insert[ $entity_id ] ) ) {
-						$to_insert[ $entity_id ] = array();
+						$to_insert[ $entity_id ] = [];
 					}
 					$to_insert[ $entity_id ][ $meta_key ] = $meta_values;
 				} else {
@@ -293,13 +293,13 @@ WHERE destination.$destination_entity_id_column in ( $entity_ids_placeholder ) O
 							continue;
 						}
 						if ( ! isset( $to_update[ $entity_id ] ) ) {
-							$to_update[ $entity_id ] = array();
+							$to_update[ $entity_id ] = [];
 						}
-						$to_update[ $entity_id ][ $meta_key ] = array(
+						$to_update[ $entity_id ][ $meta_key ] = [
 							'id'         => $already_migrated[ $entity_id ][ $meta_key ][0]['id'],
 							// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_value
 							'meta_value' => $meta_values[0],
-						);
+						];
 						continue;
 					}
 
@@ -309,14 +309,14 @@ WHERE destination.$destination_entity_id_column in ( $entity_ids_placeholder ) O
 						continue;
 					}
 					if ( ! isset( $to_insert[ $entity_id ] ) ) {
-						$to_insert[ $entity_id ] = array();
+						$to_insert[ $entity_id ] = [];
 					}
 					$to_insert[ $entity_id ][ $meta_key ] = $unique_meta_values;
 				}
 			}
 		}
 
-		return array( $to_insert, $to_update );
+		return [ $to_insert, $to_update ];
 	}
 
 	/**

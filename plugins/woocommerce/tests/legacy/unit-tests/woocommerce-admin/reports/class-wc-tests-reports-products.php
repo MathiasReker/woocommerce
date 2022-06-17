@@ -47,27 +47,27 @@ class WC_Admin_Tests_Reports_Products extends WC_Unit_Test_Case {
 		$data_store = new ProductsDataStore();
 		$start_time = gmdate( 'Y-m-d H:00:00', $order->get_date_created()->getOffsetTimestamp() );
 		$end_time   = gmdate( 'Y-m-d H:00:00', $order->get_date_created()->getOffsetTimestamp() + HOUR_IN_SECONDS );
-		$args       = array(
+		$args       = [
 			'after'  => $start_time,
 			'before' => $end_time,
-		);
+		];
 
 		// Test retrieving the stats through the data store.
 		$data          = $data_store->get_data( $args );
-		$expected_data = (object) array(
+		$expected_data = (object) [
 			'total'   => 1,
 			'pages'   => 1,
 			'page_no' => 1,
-			'data'    => array(
-				0 => array(
+			'data'    => [
+				0 => [
 					'product_id'    => $product->get_id(),
 					'items_sold'    => 4,
 					'net_revenue'   => 100.0, // $25 * 4.
 					'orders_count'  => 1,
 					'extended_info' => new ArrayObject(),
-				),
-			),
-		);
+				],
+			],
+		];
 		$this->assertEquals( $expected_data, $data );
 
 		// Test retrieving the stats through the query class.
@@ -125,65 +125,65 @@ class WC_Admin_Tests_Reports_Products extends WC_Unit_Test_Case {
 		$start_time = gmdate( 'Y-m-d H:00:00', $order->get_date_created()->getOffsetTimestamp() );
 		$end_time   = gmdate( 'Y-m-d H:00:00', $order_2->get_date_created()->getOffsetTimestamp() + HOUR_IN_SECONDS );
 		// Test retrieving the stats through the data store, default order by date/time desc.
-		$args = array(
+		$args = [
 			'after'  => $start_time,
 			'before' => $end_time,
-		);
+		];
 
 		$data          = $data_store->get_data( $args );
-		$expected_data = (object) array(
+		$expected_data = (object) [
 			'total'   => 2,
 			'pages'   => 1,
 			'page_no' => 1,
-			'data'    => array(
-				0 => array(
+			'data'    => [
+				0 => [
 					'product_id'    => $product_2->get_id(),
 					'items_sold'    => 4,
 					'net_revenue'   => 80.0, // $20 * 4.
 					'orders_count'  => 1,
 					'extended_info' => new ArrayObject(),
-				),
-				1 => array(
+				],
+				1 => [
 					'product_id'    => $product->get_id(),
 					'items_sold'    => 4,
 					'net_revenue'   => 100.0, // $25 * 4.
 					'orders_count'  => 1,
 					'extended_info' => new ArrayObject(),
-				),
-			),
-		);
+				],
+			],
+		];
 		$this->assertEquals( $expected_data, $data );
 
 		// Test retrieving the stats through the data store, order by product name asc.
-		$args = array(
+		$args = [
 			'after'    => $start_time,
 			'before'   => $end_time,
 			'order_by' => 'product_name',
 			'order'    => 'asc',
-		);
+		];
 
 		$data          = $data_store->get_data( $args );
-		$expected_data = (object) array(
+		$expected_data = (object) [
 			'total'   => 2,
 			'pages'   => 1,
 			'page_no' => 1,
-			'data'    => array(
-				0 => array(
+			'data'    => [
+				0 => [
 					'product_id'    => $product->get_id(),
 					'items_sold'    => 4,
 					'net_revenue'   => 100.0, // $25 * 4.
 					'orders_count'  => 1,
 					'extended_info' => new ArrayObject(),
-				),
-				1 => array(
+				],
+				1 => [
 					'product_id'    => $product_2->get_id(),
 					'items_sold'    => 4,
 					'net_revenue'   => 80.0, // $20 * 4.
 					'orders_count'  => 1,
 					'extended_info' => new ArrayObject(),
-				),
-			),
-		);
+				],
+			],
+		];
 		$this->assertEquals( $expected_data, $data );
 
 		// Test retrieving the stats through the query class.
@@ -225,26 +225,26 @@ class WC_Admin_Tests_Reports_Products extends WC_Unit_Test_Case {
 		$data_store = new ProductsDataStore();
 		$start_time = gmdate( 'Y-m-d H:00:00', $order->get_date_created()->getOffsetTimestamp() );
 		$end_time   = gmdate( 'Y-m-d H:00:00', $order->get_date_created()->getOffsetTimestamp() + HOUR_IN_SECONDS );
-		$args       = array(
+		$args       = [
 			'after'         => $start_time,
 			'before'        => $end_time,
 			'extended_info' => 1,
-		);
+		];
 		// Test retrieving the stats through the data store.
 		$data = $data_store->get_data( $args );
 		// Get updated product data.
 		$product       = wc_get_product( $product->get_id() );
-		$expected_data = (object) array(
+		$expected_data = (object) [
 			'total'   => 1,
 			'pages'   => 1,
 			'page_no' => 1,
-			'data'    => array(
-				0 => array(
+			'data'    => [
+				0 => [
 					'product_id'    => $product->get_id(),
 					'items_sold'    => 4,
 					'net_revenue'   => 100.0, // $25 * 4.
 					'orders_count'  => 1,
-					'extended_info' => array(
+					'extended_info' => [
 						'name'             => $product->get_name(),
 						'image'            => $product->get_image(),
 						'permalink'        => $product->get_permalink(),
@@ -255,10 +255,10 @@ class WC_Admin_Tests_Reports_Products extends WC_Unit_Test_Case {
 						'low_stock_amount' => $product->get_low_stock_amount(),
 						'category_ids'     => array_values( $product->get_category_ids() ),
 						'sku'              => $product->get_sku(),
-					),
-				),
-			),
-		);
+					],
+				],
+			],
+		];
 		$this->assertEquals( $expected_data, $data );
 	}
 
@@ -280,7 +280,7 @@ class WC_Admin_Tests_Reports_Products extends WC_Unit_Test_Case {
 		$variation = new WC_Product_Variation();
 		$variation->set_name( 'Test Variation' );
 		$variation->set_parent_id( $product->get_id() );
-		$variation->set_attributes( array( 'pa_color' => 'green' ) );
+		$variation->set_attributes( [ 'pa_color' => 'green' ] );
 		$variation->set_sku( 'test-sku' );
 		$variation->set_regular_price( 25 );
 		$variation->set_manage_stock( true );
@@ -306,26 +306,26 @@ class WC_Admin_Tests_Reports_Products extends WC_Unit_Test_Case {
 		$data_store = new ProductsDataStore();
 		$start_time = gmdate( 'Y-m-d H:00:00', $order->get_date_created()->getOffsetTimestamp() );
 		$end_time   = gmdate( 'Y-m-d H:00:00', $order->get_date_created()->getOffsetTimestamp() + HOUR_IN_SECONDS );
-		$args       = array(
+		$args       = [
 			'after'         => $start_time,
 			'before'        => $end_time,
 			'extended_info' => 1,
-		);
+		];
 		// Test retrieving the stats through the data store.
 		$data = $data_store->get_data( $args );
 		// Get updated product data.
 		$product       = wc_get_product( $product->get_id() );
-		$expected_data = (object) array(
+		$expected_data = (object) [
 			'total'   => 1,
 			'pages'   => 1,
 			'page_no' => 1,
-			'data'    => array(
-				0 => array(
+			'data'    => [
+				0 => [
 					'product_id'    => $product->get_id(),
 					'items_sold'    => 4,
 					'net_revenue'   => 100.0, // $25 * 4.
 					'orders_count'  => 1,
-					'extended_info' => array(
+					'extended_info' => [
 						'name'             => $product->get_name(),
 						'image'            => $product->get_image(),
 						'permalink'        => $product->get_permalink(),
@@ -337,10 +337,10 @@ class WC_Admin_Tests_Reports_Products extends WC_Unit_Test_Case {
 						'category_ids'     => array_values( $product->get_category_ids() ),
 						'sku'              => $product->get_sku(),
 						'variations'       => $product->get_children(),
-					),
-				),
-			),
-		);
+					],
+				],
+			],
+		];
 		$this->assertEquals( $expected_data, $data );
 	}
 
@@ -369,16 +369,16 @@ class WC_Admin_Tests_Reports_Products extends WC_Unit_Test_Case {
 		foreach ( $order->get_items() as  $item_key => $item_values ) {
 			$item_data = $item_values->get_data();
 			$refund    = wc_create_refund(
-				array(
+				[
 					'amount'     => 12,
 					'order_id'   => $order->get_id(),
-					'line_items' => array(
-						$item_data['id'] => array(
+					'line_items' => [
+						$item_data['id'] => [
 							'qty'          => 1,
 							'refund_total' => 10,
-						),
-					),
-				)
+						],
+					],
+				]
 			);
 			break;
 		}
@@ -388,27 +388,27 @@ class WC_Admin_Tests_Reports_Products extends WC_Unit_Test_Case {
 		$data_store = new ProductsDataStore();
 		$start_time = gmdate( 'Y-m-d H:00:00', $order->get_date_created()->getOffsetTimestamp() );
 		$end_time   = gmdate( 'Y-m-d H:00:00', $order->get_date_created()->getOffsetTimestamp() + HOUR_IN_SECONDS );
-		$args       = array(
+		$args       = [
 			'after'  => $start_time,
 			'before' => $end_time,
-		);
+		];
 
 		// Test retrieving the stats through the data store.
 		$data          = $data_store->get_data( $args );
-		$expected_data = (object) array(
+		$expected_data = (object) [
 			'total'   => 1,
 			'pages'   => 1,
 			'page_no' => 1,
-			'data'    => array(
-				0 => array(
+			'data'    => [
+				0 => [
 					'product_id'    => $product->get_id(),
 					'items_sold'    => 3,
 					'net_revenue'   => 90.0, // $25 * 4 - $10 refund.
 					'orders_count'  => 1,
 					'extended_info' => new ArrayObject(),
-				),
-			),
-		);
+				],
+			],
+		];
 		$this->assertEquals( $expected_data, $data );
 
 		// Test retrieving the stats through the query class.
@@ -448,31 +448,31 @@ class WC_Admin_Tests_Reports_Products extends WC_Unit_Test_Case {
 		$data_store = new ProductsDataStore();
 		$start_time = gmdate( 'Y-m-d H:00:00', $order->get_date_created()->getOffsetTimestamp() );
 		$end_time   = gmdate( 'Y-m-d H:00:00', $order->get_date_created()->getOffsetTimestamp() + HOUR_IN_SECONDS );
-		$args       = array(
+		$args       = [
 			'after'             => $start_time,
 			'before'            => $end_time,
-			'category_includes' => array( $term['term_id'] ),
-		);
+			'category_includes' => [ $term['term_id'] ],
+		];
 
 		// Test retrieving the stats through the data store.
 		$data = $data_store->get_data( $args );
 
-		$expected_data = (object) array(
+		$expected_data = (object) [
 			'total'   => 0,
 			'pages'   => 0,
 			'page_no' => 1,
-			'data'    => array(),
-		);
+			'data'    => [],
+		];
 		$this->assertEquals( $expected_data, $data );
 
 		// Ensures the report params get mapped and sanitized for exports.
 		do_action( 'rest_api_init' );
 
-		$args = array(
+		$args = [
 			'after'      => $start_time,
 			'before'     => $end_time,
 			'categories' => $term['term_id'],
-		);
+		];
 
 		$expected_csv  = chr( 239 ) . chr( 187 ) . chr( 191 );
 		$expected_csv .= '"Product title",SKU,"Items sold","N. Revenue",Orders,Category,Variations,Status,Stock';

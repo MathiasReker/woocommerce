@@ -2,45 +2,45 @@
 register_woocommerce_admin_test_helper_rest_route(
 	'/tools/get-cron-list/v1',
 	'tools_get_cron_list',
-	array(
+	[
 		'methods' => 'GET',
-	)
+	]
 );
 register_woocommerce_admin_test_helper_rest_route(
 	'/tools/trigger-selected-cron/v1',
 	'trigger_selected_cron',
-	array(
+	[
 		'methods' => 'POST',
-		'args'                => array(
-			'hook'     => array(
+		'args'                => [
+			'hook'     => [
 				'description'       => 'Name of the cron that will be triggered.',
 				'type'              => 'string',
 				'sanitize_callback' => 'sanitize_text_field',
-			),
-			'signature' => array(
+			],
+			'signature' => [
 				'description'       => 'Signature of the cron to trigger.',
 				'type'              => 'string',
 				'sanitize_callback' => 'sanitize_text_field',
-			),
-		),
-	)
+			],
+		],
+	]
 );
 
 function tools_get_cron_list() {
 	$crons  = _get_cron_array();
-	$events = array();
+	$events = [];
 
 	if ( empty( $crons ) ) {
-		return array();
+		return [];
 	}
 
 	foreach ( $crons as $cron ) {
 		foreach ( $cron as $hook => $data ) {
 			foreach ( $data as $signature => $element ) {
-				$events[ $hook ] = (object) array(
+				$events[ $hook ] = (object) [
 					'hook'      => $hook,
 					'signature' => $signature,
-				);
+				];
 			}
 		}
 	}
@@ -79,20 +79,20 @@ function trigger_selected_cron( $request ) {
 	return false;
 }
 
-function schedule_event( $hook, $args = array() ) {
-	$event = (object) array(
+function schedule_event( $hook, $args = [] ) {
+	$event = (object) [
 		'hook'      => $hook,
 		'timestamp' => 1,
 		'schedule'  => false,
 		'args'      => $args,
-	);
+	];
 	$crons = (array) _get_cron_array();
 	$key   = md5( serialize( $event->args ) );
 
-	$crons[ $event->timestamp ][ $event->hook ][ $key ] = array(
+	$crons[ $event->timestamp ][ $event->hook ][ $key ] = [
 		'schedule' => $event->schedule,
 		'args'     => $event->args,
-	);
+	];
 	uksort( $crons, 'strnatcasecmp' );
 	return _set_cron_array( $crons );
 }

@@ -48,7 +48,7 @@ abstract class WC_CSV_Exporter {
 	 *
 	 * @var array
 	 */
-	protected $row_data = array();
+	protected $row_data = [];
 
 	/**
 	 * Total rows to export.
@@ -62,14 +62,14 @@ abstract class WC_CSV_Exporter {
 	 *
 	 * @var array
 	 */
-	protected $column_names = array();
+	protected $column_names = [];
 
 	/**
 	 * List of columns to export, or empty for all.
 	 *
 	 * @var array
 	 */
-	protected $columns_to_export = array();
+	protected $columns_to_export = [];
 
 	/**
 	 * The delimiter parameter sets the field delimiter (one character only).
@@ -100,7 +100,7 @@ abstract class WC_CSV_Exporter {
 	 * @param array $column_names Column names array.
 	 */
 	public function set_column_names( $column_names ) {
-		$this->column_names = array();
+		$this->column_names = [];
 
 		foreach ( $column_names as $column_id => $column_name ) {
 			$this->column_names[ wc_clean( $column_id ) ] = wc_clean( $column_name );
@@ -166,7 +166,7 @@ abstract class WC_CSV_Exporter {
 	 * @return array
 	 */
 	public function get_default_column_names() {
-		return array();
+		return [];
 	}
 
 	/**
@@ -251,7 +251,7 @@ abstract class WC_CSV_Exporter {
 	 */
 	protected function export_column_headers() {
 		$columns    = $this->get_column_names();
-		$export_row = array();
+		$export_row = [];
 		$buffer     = fopen( 'php://output', 'w' ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_read_fopen
 		ob_start();
 
@@ -288,7 +288,7 @@ abstract class WC_CSV_Exporter {
 		$buffer = fopen( 'php://output', 'w' ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_read_fopen
 		ob_start();
 
-		array_walk( $data, array( $this, 'export_row' ), $buffer );
+		array_walk( $data, [ $this, 'export_row' ], $buffer );
 
 		return apply_filters( "woocommerce_{$this->export_type}_export_rows", ob_get_clean(), $this );
 	}
@@ -303,7 +303,7 @@ abstract class WC_CSV_Exporter {
 	 */
 	protected function export_row( $row_data, $key, $buffer ) {
 		$columns    = $this->get_column_names();
-		$export_row = array();
+		$export_row = [];
 
 		foreach ( $columns as $column_id => $column_name ) {
 			if ( ! $this->is_column_exporting( $column_id ) ) {
@@ -368,7 +368,7 @@ abstract class WC_CSV_Exporter {
 	 * @return string
 	 */
 	public function escape_data( $data ) {
-		$active_content_triggers = array( '=', '+', '-', '@' );
+		$active_content_triggers = [ '=', '+', '-', '@' ];
 
 		if ( in_array( mb_substr( $data, 0, 1 ), $active_content_triggers, true ) ) {
 			$data = "'" . $data;
@@ -420,11 +420,11 @@ abstract class WC_CSV_Exporter {
 			return '';
 		}
 
-		$formatted_terms = array();
+		$formatted_terms = [];
 
 		if ( is_taxonomy_hierarchical( $taxonomy ) ) {
 			foreach ( $term_ids as $term_id ) {
-				$formatted_term = array();
+				$formatted_term = [];
 				$ancestor_ids   = array_reverse( get_ancestors( $term_id, $taxonomy ) );
 
 				foreach ( $ancestor_ids as $ancestor_id ) {
@@ -464,7 +464,7 @@ abstract class WC_CSV_Exporter {
 	 * @return string
 	 */
 	protected function implode_values( $values ) {
-		$values_to_implode = array();
+		$values_to_implode = [];
 
 		foreach ( $values as $value ) {
 			$value               = (string) is_scalar( $value ) ? $value : '';

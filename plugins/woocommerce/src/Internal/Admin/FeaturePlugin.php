@@ -87,7 +87,7 @@ class FeaturePlugin {
 			// If core is network activated but we aren't, the packaged version of WooCommerce Admin will
 			// attempt to use a data store that hasn't been loaded yet - because we've defined our constants here.
 			// See: https://github.com/woocommerce/woocommerce-admin/issues/3869.
-			add_action( 'plugins_loaded', array( $this, 'on_plugins_loaded' ), 9 );
+			add_action( 'plugins_loaded', [ $this, 'on_plugins_loaded' ], 9 );
 		}
 	}
 
@@ -193,7 +193,7 @@ class FeaturePlugin {
 	 * Set up our admin hooks and plugin loader.
 	 */
 	protected function hooks() {
-		add_filter( 'woocommerce_admin_features', array( $this, 'replace_supported_features' ), 0 );
+		add_filter( 'woocommerce_admin_features', [ $this, 'replace_supported_features' ], 0 );
 
 		Loader::get_instance();
 		WCAdminAssets::get_instance();

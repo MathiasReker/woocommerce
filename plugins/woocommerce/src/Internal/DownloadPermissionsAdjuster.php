@@ -28,7 +28,7 @@ class DownloadPermissionsAdjuster {
 	 */
 	final public function init() {
 		$this->downloads_data_store = wc_get_container()->get( LegacyProxy::class )->get_instance_of( \WC_Data_Store::class, 'customer-download' );
-		add_action( 'adjust_download_permissions', array( $this, 'adjust_download_permissions' ), 10, 1 );
+		add_action( 'adjust_download_permissions', [ $this, 'adjust_download_permissions' ], 10, 1 );
 	}
 
 	/**
@@ -43,16 +43,16 @@ class DownloadPermissionsAdjuster {
 			return;
 		}
 
-		$scheduled_action_args = array( $product->get_id() );
+		$scheduled_action_args = [ $product->get_id() ];
 
 		$already_scheduled_actions =
 			WC()->call_function(
 				'as_get_scheduled_actions',
-				array(
+				[
 					'hook'   => 'adjust_download_permissions',
 					'args'   => $scheduled_action_args,
 					'status' => \ActionScheduler_Store::STATUS_PENDING,
-				),
+				],
 				'ids'
 			);
 
@@ -97,7 +97,7 @@ class DownloadPermissionsAdjuster {
 			return;
 		}
 
-		$children_with_downloads = array();
+		$children_with_downloads = [];
 		foreach ( $children_ids as $child_id ) {
 			$child                                = wc_get_product( $child_id );
 			$children_with_downloads[ $child_id ] = $this->get_download_files_and_permissions( $child );
@@ -136,24 +136,24 @@ class DownloadPermissionsAdjuster {
 	 * @return array[] Information about the downloadable files and permissions for the product.
 	 */
 	private function get_download_files_and_permissions( \WC_Product $product ) {
-		$result    = array(
-			'permission_data_by_file_order_user' => array(),
-			'download_ids_by_file_url'           => array(),
-		);
+		$result    = [
+			'permission_data_by_file_order_user' => [],
+			'download_ids_by_file_url'           => [],
+		];
 		$downloads = $product->get_downloads();
 		foreach ( $downloads as $download ) {
 			$result['download_ids_by_file_url'][ $download->get_file() ] = $download->get_id();
 		}
 
-		$permissions = $this->downloads_data_store->get_downloads( array( 'product_id' => $product->get_id() ) );
+		$permissions = $this->downloads_data_store->get_downloads( [ 'product_id' => $product->get_id() ] );
 		foreach ( $permissions as $permission ) {
 			$permission_data = (array) $permission->data;
 			if ( array_key_exists( $permission_data['download_id'], $downloads ) ) {
 				$file = $downloads[ $permission_data['download_id'] ]->get_file();
-				$data = array(
+				$data = [
 					'file' => $file,
 					'data' => (array) $permission->data,
-				);
+				];
 				$result['permission_data_by_file_order_user'][ "${file}:${permission_data['user_id']}:${permission_data['order_id']}" ] = $data;
 			}
 		}

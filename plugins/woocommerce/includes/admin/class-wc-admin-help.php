@@ -23,7 +23,7 @@ class WC_Admin_Help {
 	 * Hook in tabs.
 	 */
 	public function __construct() {
-		add_action( 'current_screen', array( $this, 'add_tabs' ), 50 );
+		add_action( 'current_screen', [ $this, 'add_tabs' ], 50 );
 	}
 
 	/**
@@ -37,7 +37,7 @@ class WC_Admin_Help {
 		}
 
 		$screen->add_help_tab(
-			array(
+			[
 				'id'      => 'woocommerce_support_tab',
 				'title'   => __( 'Help &amp; Support', 'woocommerce' ),
 				'content' =>
@@ -55,11 +55,11 @@ class WC_Admin_Help {
 					) . '</p>' .
 					'<p>' . __( 'Before asking for help, we recommend checking the system status page to identify any problems with your configuration.', 'woocommerce' ) . '</p>' .
 					'<p><a href="' . admin_url( 'admin.php?page=wc-status' ) . '" class="button button-primary">' . __( 'System status', 'woocommerce' ) . '</a> <a href="https://wordpress.org/support/plugin/woocommerce" class="button">' . __( 'Community forum', 'woocommerce' ) . '</a> <a href="https://woocommerce.com/my-account/create-a-ticket/?utm_source=helptab&utm_medium=product&utm_content=tickets&utm_campaign=woocommerceplugin" class="button">' . __( 'WooCommerce.com support', 'woocommerce' ) . '</a></p>',
-			)
+			]
 		);
 
 		$screen->add_help_tab(
-			array(
+			[
 				'id'      => 'woocommerce_bugs_tab',
 				'title'   => __( 'Found a bug?', 'woocommerce' ),
 				'content' =>
@@ -68,7 +68,7 @@ class WC_Admin_Help {
 					'<p>' . sprintf( __( 'If you find a bug within WooCommerce core you can create a ticket via <a href="%1$s">GitHub issues</a>. Ensure you read the <a href="%2$s">contribution guide</a> prior to submitting your report. To help us solve your issue, please be as descriptive as possible and include your <a href="%3$s">system status report</a>.', 'woocommerce' ), 'https://github.com/woocommerce/woocommerce/issues?state=open', 'https://github.com/woocommerce/woocommerce/blob/trunk/.github/CONTRIBUTING.md', admin_url( 'admin.php?page=wc-status' ) ) . '</p>' .
 					'<p><a href="https://github.com/woocommerce/woocommerce/issues/new?assignees=&labels=&template=1-bug-report.yml" class="button button-primary">' . __( 'Report a bug', 'woocommerce' ) . '</a> <a href="' . admin_url( 'admin.php?page=wc-status' ) . '" class="button">' . __( 'System status', 'woocommerce' ) . '</a></p>',
 
-			)
+			]
 		);
 
 		$screen->set_help_sidebar(

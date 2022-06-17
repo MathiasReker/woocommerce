@@ -23,7 +23,7 @@ class WC_Admin_Tests_API_Reports_Revenue_Stats extends WC_REST_Unit_Test_Case {
 	 *
 	 * @var array
 	 */
-	protected $orders = array();
+	protected $orders = [];
 
 	/**
 	 * Setup test reports revenue data.
@@ -34,9 +34,9 @@ class WC_Admin_Tests_API_Reports_Revenue_Stats extends WC_REST_Unit_Test_Case {
 		parent::setUp();
 
 		$this->user = $this->factory->user->create(
-			array(
+			[
 				'role' => 'administrator',
-			)
+			]
 		);
 	}
 

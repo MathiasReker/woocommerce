@@ -21,7 +21,7 @@ function add_extension_register_script() {
 	$script_asset_path = dirname( __FILE__ ) . '/build/index.asset.php';
 	$script_asset      = file_exists( $script_asset_path )
 		? require( $script_asset_path )
-		: array( 'dependencies' => array(), 'version' => filemtime( $script_path ) );
+		: [ 'dependencies' => [], 'version' => filemtime( $script_path ) ];
 	$script_url = plugins_url( $script_path, __FILE__ );
 
 	wp_register_script(
@@ -36,7 +36,7 @@ function add_extension_register_script() {
 		'{{extension_slug}}',
 		plugins_url( '/build/index.css', __FILE__ ),
 		// Add any dependencies styles may have, such as wp-components.
-		array(),
+		[],
 		filemtime( dirname( __FILE__ ) . '/build/index.css' )
 	);
 
@@ -54,16 +54,16 @@ function add_extension_register_page() {
 		return;
 	}
 
-    wc_admin_register_page( array(
+    wc_admin_register_page( [
 		'id'       => 'my-example-page',
 		'title'    => __( 'My Example Page', 'my-textdomain' ),
 		'parent'   => 'woocommerce',
 		'path'     => '/example',
-		'nav_args' => array(
+		'nav_args' => [
 			'order'  => 10,
 			'parent' => 'woocommerce',
-		),
-	) );
+		],
+	] );
 }
 
 add_action( 'admin_menu', 'add_extension_register_page' );

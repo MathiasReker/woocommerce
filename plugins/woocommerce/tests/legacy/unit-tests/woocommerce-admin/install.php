@@ -21,11 +21,11 @@ class WC_Admin_Tests_Install extends WP_UnitTestCase {
 		global $wpdb;
 
 		// Remove the Test Suite’s use of temporary tables https://wordpress.stackexchange.com/a/220308.
-		remove_filter( 'query', array( $this, '_create_temporary_tables' ) );
-		remove_filter( 'query', array( $this, '_drop_temporary_tables' ) );
+		remove_filter( 'query', [ $this, '_create_temporary_tables' ] );
+		remove_filter( 'query', [ $this, '_drop_temporary_tables' ] );
 
 		// List of tables created by Install::create_tables.
-		$tables = array(
+		$tables = [
 			"{$wpdb->prefix}wc_order_stats",
 			"{$wpdb->prefix}wc_order_product_lookup",
 			"{$wpdb->prefix}wc_order_tax_lookup",
@@ -34,7 +34,7 @@ class WC_Admin_Tests_Install extends WP_UnitTestCase {
 			"{$wpdb->prefix}wc_admin_note_actions",
 			"{$wpdb->prefix}wc_customer_lookup",
 			"{$wpdb->prefix}wc_category_lookup",
-		);
+		];
 
 		// Remove any existing tables in the environment.
 		$query = 'DROP TABLE IF EXISTS ' . implode( ',', $tables );
@@ -86,21 +86,21 @@ class WC_Admin_Tests_Install extends WP_UnitTestCase {
 	 * @return array[]
 	 */
 	public function db_update_version_provider() {
-		return array(
+		return [
 			// [DB Update version string, # of expected pending jobs]
-			array( '3.9.0', 35 ),
-			array( '4.0.0', 28 ),
-			array( '4.4.0', 24 ),
-			array( '4.5.0', 22 ),
-			array( '5.0.0', 18 ),
-			array( '5.6.0', 16 ),
-			array( '6.0.0', 9 ),
-			array( '6.3.0', 6 ),
-			array( '6.4.0', 3 ),
-			array( '6.5.0', 2 ),
-			array( '6.6.0', 1 ),
-			array( '6.7.0', 0 ),
-		);
+			[ '3.9.0', 35 ],
+			[ '4.0.0', 28 ],
+			[ '4.4.0', 24 ],
+			[ '4.5.0', 22 ],
+			[ '5.0.0', 18 ],
+			[ '5.6.0', 16 ],
+			[ '6.0.0', 9 ],
+			[ '6.3.0', 6 ],
+			[ '6.4.0', 3 ],
+			[ '6.5.0', 2 ],
+			[ '6.6.0', 1 ],
+			[ '6.7.0', 0 ],
+		];
 	}
 
 	/**
@@ -138,7 +138,7 @@ class WC_Admin_Tests_Install extends WP_UnitTestCase {
 	public function test_options_are_set() {
 		delete_transient( 'wc_installing' );
 		WC_Install::install();
-		$options = array( 'woocommerce_admin_install_timestamp' );
+		$options = [ 'woocommerce_admin_install_timestamp' ];
 		foreach ( $options as $option ) {
 			$this->assertNotFalse( get_option( $option ) );
 		}
@@ -185,7 +185,7 @@ class WC_Admin_Tests_Install extends WP_UnitTestCase {
 		delete_transient( 'wc_installing' );
 		WC_Install::install();
 		$this->assertTrue( defined( 'WC_ADMIN_MIGRATING_OPTIONS' ) );
-		$migrated_options = array(
+		$migrated_options = [
 			'woocommerce_onboarding_profile'           => 'wc_onboarding_profile',
 			'woocommerce_admin_install_timestamp'      => 'wc_admin_install_timestamp',
 			'woocommerce_onboarding_opt_in'            => 'wc_onboarding_opt_in',
@@ -198,7 +198,7 @@ class WC_Admin_Tests_Install extends WP_UnitTestCase {
 			'woocommerce_task_list_hidden'             => 'woocommerce_task_list_hidden',
 			'woocommerce_extended_task_list_complete'  => 'woocommerce_extended_task_list_complete',
 			'woocommerce_extended_task_list_hidden'    => 'woocommerce_extended_task_list_hidden',
-		);
+		];
 
 		foreach ( $migrated_options as $new_option => $old_option ) {
 			$old_option_value = get_option( $old_option );

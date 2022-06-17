@@ -15,7 +15,7 @@ class WC_Coupons_Tracking {
 	 * Init tracking.
 	 */
 	public function init() {
-		add_action( 'load-edit.php', array( $this, 'tracks_coupons_events' ), 10 );
+		add_action( 'load-edit.php', [ $this, 'tracks_coupons_events' ], 10 );
 	}
 
 	/**
@@ -50,18 +50,18 @@ class WC_Coupons_Tracking {
 
 			WC_Tracks::record_event(
 				'coupons_view',
-				array(
+				[
 					'status' => isset( $_GET['post_status'] ) ? sanitize_text_field( wp_unslash( $_GET['post_status'] ) ) : 'all',
-				)
+				]
 			);
 
 			if ( isset( $_GET['filter_action'] ) && 'Filter' === sanitize_text_field( wp_unslash( $_GET['filter_action'] ) ) && isset( $_GET['coupon_type'] ) ) {
 				WC_Tracks::record_event(
 					'coupons_filter',
-					array(
+					[
 						'filter' => 'coupon_type',
 						'value'  => sanitize_text_field( wp_unslash( $_GET['coupon_type'] ) ),
-					)
+					]
 				);
 			}
 

@@ -46,11 +46,11 @@ class WC_Checkout_Test extends \WC_Unit_Test_Case {
 	 * @param bool $expect_error_message_for_shipping_country True to expect an error to be generated for the shipping country.
 	 */
 	public function test_validate_posted_data_adds_error_for_non_existing_country( $ship_to_different_address, $expect_error_message_for_shipping_country ) {
-		$_POST = array(
+		$_POST = [
 			'billing_country'           => 'XX',
 			'shipping_country'          => 'YY',
 			'ship_to_different_address' => $ship_to_different_address,
-		);
+		];
 		$data  = $_POST; // phpcs:ignore WordPress.Security.NonceVerification.Missing
 
 		add_filter(
@@ -80,11 +80,11 @@ class WC_Checkout_Test extends \WC_Unit_Test_Case {
 	 * @param bool $ship_to_different_address True to simulate shipping to a different address than the billing address.
 	 */
 	public function test_validate_posted_data_does_not_add_error_for_existing_country( $ship_to_different_address ) {
-		$_POST = array(
+		$_POST = [
 			'billing_country'           => 'ES',
 			'shipping_country'          => 'ES',
 			'ship_to_different_address' => $ship_to_different_address,
-		);
+		];
 		$data  = $_POST; // phpcs:ignore WordPress.Security.NonceVerification.Missing
 
 		$errors = new WP_Error();
@@ -104,11 +104,11 @@ class WC_Checkout_Test extends \WC_Unit_Test_Case {
 	 * @param bool $ship_to_different_address True to simulate shipping to a different address than the billing address.
 	 */
 	public function test_validate_posted_data_does_not_add_error_for_empty_country( $ship_to_different_address ) {
-		$_POST = array(
+		$_POST = [
 			'billing_country'           => '',
 			'shipping_country'          => '',
 			'ship_to_different_address' => $ship_to_different_address,
-		);
+		];
 		$data  = $_POST; // phpcs:ignore WordPress.Security.NonceVerification.Missing
 
 		$errors = new WP_Error();
@@ -132,7 +132,7 @@ class WC_Checkout_Test extends \WC_Unit_Test_Case {
 		add_filter(
 			'woocommerce_countries_allowed_countries',
 			function() {
-				return array( 'ES' );
+				return [ 'ES' ];
 			}
 		);
 
@@ -151,18 +151,18 @@ class WC_Checkout_Test extends \WC_Unit_Test_Case {
 		);
 
 		FunctionsMockerHack::add_function_mocks(
-			array(
+			[
 				'wc_get_shipping_method_count' => function( $include_legacy = false, $enabled_only = false ) {
 					return 1;
 				},
-			)
+			]
 		);
 
-		$_POST = array(
+		$_POST = [
 			'billing_country'           => $country,
 			'shipping_country'          => $country,
 			'ship_to_different_address' => false,
-		);
+		];
 		$data  = $_POST; // phpcs:ignore WordPress.Security.NonceVerification.Missing
 
 		$errors = new WP_Error();

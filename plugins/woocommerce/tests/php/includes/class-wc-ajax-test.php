@@ -21,12 +21,12 @@ class WC_AJAX_Test extends \WP_Ajax_UnitTestCase {
 
 		$order = WC_Helper_Order::create_order();
 
-		$data = array(
-			array(
+		$data = [
+			[
 				'id'  => $product->get_id(),
 				'qty' => 10,
-			),
-		);
+			],
+		];
 		// Call private method `maybe_add_order_item`.
 		$maybe_add_order_item_func = function () use ( $order, $data ) {
 			return static::maybe_add_order_item( $order->get_id(), '', $data );
@@ -59,12 +59,12 @@ class WC_AJAX_Test extends \WP_Ajax_UnitTestCase {
 		$order->set_status( 'pending' );
 		$order->save();
 
-		$data = array(
-			array(
+		$data = [
+			[
 				'id'  => $product->get_id(),
 				'qty' => 10,
-			),
-		);
+			],
+		];
 		// Call private method `maybe_add_order_item`.
 		$maybe_add_order_item_func = function () use ( $order, $data ) {
 			return static::maybe_add_order_item( $order->get_id(), '', $data );

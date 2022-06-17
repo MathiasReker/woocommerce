@@ -25,10 +25,10 @@ function wc_webhook_execute_queue() {
 		// user who triggered it.
 		if ( apply_filters( 'woocommerce_webhook_deliver_async', true, $data['webhook'], $data['arg'] ) ) {
 
-			$queue_args = array(
+			$queue_args = [
 				'webhook_id' => $data['webhook']->get_id(),
 				'arg'        => $data['arg'],
-			);
+			];
 
 			$next_scheduled_date = WC()->queue()->get_next( 'woocommerce_deliver_webhook_async', $queue_args, 'woocommerce-webhooks' );
 
@@ -55,12 +55,12 @@ function wc_webhook_process_delivery( $webhook, $arg ) {
 	// We need to queue the webhook so that it can be ran after the request has finished processing.
 	global $wc_queued_webhooks;
 	if ( ! isset( $wc_queued_webhooks ) ) {
-		$wc_queued_webhooks = array();
+		$wc_queued_webhooks = [];
 	}
-	$wc_queued_webhooks[] = array(
+	$wc_queued_webhooks[] = [
 		'webhook' => $webhook,
 		'arg'     => $arg,
-	);
+	];
 }
 add_action( 'woocommerce_webhook_process_delivery', 'wc_webhook_process_delivery', 10, 2 );
 
@@ -90,11 +90,11 @@ add_action( 'woocommerce_deliver_webhook_async', 'wc_deliver_webhook_async', 10,
  * @return bool
  */
 function wc_is_webhook_valid_topic( $topic ) {
-	$invalid_topics = array(
+	$invalid_topics = [
 		'action.woocommerce_login_credentials',
 		'action.woocommerce_product_csv_importer_check_import_file_path',
 		'action.woocommerce_webhook_should_deliver',
-	);
+	];
 
 	if ( in_array( $topic, $invalid_topics, true ) ) {
 		return false;
@@ -111,8 +111,8 @@ function wc_is_webhook_valid_topic( $topic ) {
 		return false;
 	}
 
-	$valid_resources = apply_filters( 'woocommerce_valid_webhook_resources', array( 'coupon', 'customer', 'order', 'product' ) );
-	$valid_events    = apply_filters( 'woocommerce_valid_webhook_events', array( 'created', 'updated', 'deleted', 'restored' ) );
+	$valid_resources = apply_filters( 'woocommerce_valid_webhook_resources', [ 'coupon', 'customer', 'order', 'product' ] );
+	$valid_events    = apply_filters( 'woocommerce_valid_webhook_events', [ 'created', 'updated', 'deleted', 'restored' ] );
 
 	if ( in_array( $data[0], $valid_resources, true ) && in_array( $data[1], $valid_events, true ) ) {
 		return true;
@@ -141,11 +141,11 @@ function wc_is_webhook_valid_status( $status ) {
 function wc_get_webhook_statuses() {
 	return apply_filters(
 		'woocommerce_webhook_statuses',
-		array(
+		[
 			'active'   => __( 'Active', 'woocommerce' ),
 			'paused'   => __( 'Paused', 'woocommerce' ),
 			'disabled' => __( 'Disabled', 'woocommerce' ),
-		)
+		]
 	);
 }
 
@@ -196,9 +196,9 @@ function wc_get_webhook( $id ) {
  * @return array
  */
 function wc_get_webhook_rest_api_versions() {
-	return array(
+	return [
 		'wp_api_v1',
 		'wp_api_v2',
 		'wp_api_v3',
-	);
+	];
 }

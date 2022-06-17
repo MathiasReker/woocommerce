@@ -55,22 +55,22 @@ class WC_Meta_Box_Product_Data {
 	private static function get_product_type_options() {
 		return apply_filters(
 			'product_type_options',
-			array(
-				'virtual'      => array(
+			[
+				'virtual'      => [
 					'id'            => '_virtual',
 					'wrapper_class' => 'show_if_simple',
 					'label'         => __( 'Virtual', 'woocommerce' ),
 					'description'   => __( 'Virtual products are intangible and are not shipped.', 'woocommerce' ),
 					'default'       => 'no',
-				),
-				'downloadable' => array(
+				],
+				'downloadable' => [
 					'id'            => '_downloadable',
 					'wrapper_class' => 'show_if_simple',
 					'label'         => __( 'Downloadable', 'woocommerce' ),
 					'description'   => __( 'Downloadable products give access to a file upon purchase.', 'woocommerce' ),
 					'default'       => 'no',
-				),
-			)
+				],
+			]
 		);
 	}
 
@@ -82,54 +82,54 @@ class WC_Meta_Box_Product_Data {
 	private static function get_product_data_tabs() {
 		$tabs = apply_filters(
 			'woocommerce_product_data_tabs',
-			array(
-				'general'        => array(
+			[
+				'general'        => [
 					'label'    => __( 'General', 'woocommerce' ),
 					'target'   => 'general_product_data',
-					'class'    => array( 'hide_if_grouped' ),
+					'class'    => [ 'hide_if_grouped' ],
 					'priority' => 10,
-				),
-				'inventory'      => array(
+				],
+				'inventory'      => [
 					'label'    => __( 'Inventory', 'woocommerce' ),
 					'target'   => 'inventory_product_data',
-					'class'    => array( 'show_if_simple', 'show_if_variable', 'show_if_grouped', 'show_if_external' ),
+					'class'    => [ 'show_if_simple', 'show_if_variable', 'show_if_grouped', 'show_if_external' ],
 					'priority' => 20,
-				),
-				'shipping'       => array(
+				],
+				'shipping'       => [
 					'label'    => __( 'Shipping', 'woocommerce' ),
 					'target'   => 'shipping_product_data',
-					'class'    => array( 'hide_if_virtual', 'hide_if_grouped', 'hide_if_external' ),
+					'class'    => [ 'hide_if_virtual', 'hide_if_grouped', 'hide_if_external' ],
 					'priority' => 30,
-				),
-				'linked_product' => array(
+				],
+				'linked_product' => [
 					'label'    => __( 'Linked Products', 'woocommerce' ),
 					'target'   => 'linked_product_data',
-					'class'    => array(),
+					'class'    => [],
 					'priority' => 40,
-				),
-				'attribute'      => array(
+				],
+				'attribute'      => [
 					'label'    => __( 'Attributes', 'woocommerce' ),
 					'target'   => 'product_attributes',
-					'class'    => array(),
+					'class'    => [],
 					'priority' => 50,
-				),
-				'variations'     => array(
+				],
+				'variations'     => [
 					'label'    => __( 'Variations', 'woocommerce' ),
 					'target'   => 'variable_product_options',
-					'class'    => array( 'show_if_variable' ),
+					'class'    => [ 'show_if_variable' ],
 					'priority' => 60,
-				),
-				'advanced'       => array(
+				],
+				'advanced'       => [
 					'label'    => __( 'Advanced', 'woocommerce' ),
 					'target'   => 'advanced_product_data',
-					'class'    => array(),
+					'class'    => [],
 					'priority' => 70,
-				),
-			)
+				],
+			]
 		);
 
 		// Sort tabs based on priority.
-		uasort( $tabs, array( __CLASS__, 'product_data_tabs_sort' ) );
+		uasort( $tabs, [ __CLASS__, 'product_data_tabs_sort' ] );
 
 		return $tabs;
 	}
@@ -171,7 +171,7 @@ class WC_Meta_Box_Product_Data {
 	public static function output_variations() {
 		global $post, $wpdb, $product_object;
 
-		$variation_attributes   = array_filter( $product_object->get_attributes(), array( __CLASS__, 'filter_variation_attributes' ) );
+		$variation_attributes   = array_filter( $product_object->get_attributes(), [ __CLASS__, 'filter_variation_attributes' ] );
 		$default_attributes     = $product_object->get_default_attributes();
 		$variations_count       = absint( apply_filters( 'woocommerce_admin_meta_boxes_variations_count', $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(ID) FROM $wpdb->posts WHERE post_parent = %d AND post_type = 'product_variation' AND post_status IN ('publish', 'private')", $post->ID ) ), $post->ID ) );
 		$variations_per_page    = absint( apply_filters( 'woocommerce_admin_meta_boxes_variations_per_page', 15 ) );
@@ -190,18 +190,18 @@ class WC_Meta_Box_Product_Data {
 	 * @return array
 	 */
 	private static function prepare_downloads( $file_names, $file_urls, $file_hashes ) {
-		$downloads = array();
+		$downloads = [];
 
 		if ( ! empty( $file_urls ) ) {
 			$file_url_size = count( $file_urls );
 
 			for ( $i = 0; $i < $file_url_size; $i ++ ) {
 				if ( ! empty( $file_urls[ $i ] ) ) {
-					$downloads[] = array(
+					$downloads[] = [
 						'name'        => wc_clean( $file_names[ $i ] ),
 						'file'        => wp_unslash( trim( $file_urls[ $i ] ) ),
 						'download_id' => wc_clean( $file_hashes[ $i ] ),
-					);
+					];
 				}
 			}
 		}
@@ -214,7 +214,7 @@ class WC_Meta_Box_Product_Data {
 	 * @return array
 	 */
 	private static function prepare_children() {
-		return isset( $_POST['grouped_products'] ) ? array_filter( array_map( 'intval', (array) $_POST['grouped_products'] ) ) : array(); // phpcs:ignore WordPress.Security.NonceVerification.Missing
+		return isset( $_POST['grouped_products'] ) ? array_filter( array_map( 'intval', (array) $_POST['grouped_products'] ) ) : []; // phpcs:ignore WordPress.Security.NonceVerification.Missing
 	}
 
 	/**
@@ -225,7 +225,7 @@ class WC_Meta_Box_Product_Data {
 	 * @return array
 	 */
 	public static function prepare_attributes( $data = false ) {
-		$attributes = array();
+		$attributes = [];
 
 		if ( ! $data ) {
 			$data = stripslashes_deep( $_POST ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
@@ -234,8 +234,8 @@ class WC_Meta_Box_Product_Data {
 		if ( isset( $data['attribute_names'], $data['attribute_values'] ) ) {
 			$attribute_names         = $data['attribute_names'];
 			$attribute_values        = $data['attribute_values'];
-			$attribute_visibility    = isset( $data['attribute_visibility'] ) ? $data['attribute_visibility'] : array();
-			$attribute_variation     = isset( $data['attribute_variation'] ) ? $data['attribute_variation'] : array();
+			$attribute_visibility    = isset( $data['attribute_visibility'] ) ? $data['attribute_visibility'] : [];
+			$attribute_variation     = isset( $data['attribute_variation'] ) ? $data['attribute_variation'] : [];
 			$attribute_position      = $data['attribute_position'];
 			$attribute_names_max_key = max( array_keys( $attribute_names ) );
 
@@ -287,7 +287,7 @@ class WC_Meta_Box_Product_Data {
 	 * @return array
 	 */
 	private static function prepare_set_attributes( $all_attributes, $key_prefix = 'attribute_', $index = null ) {
-		$attributes = array();
+		$attributes = [];
 
 		if ( $all_attributes ) {
 			foreach ( $all_attributes as $attribute ) {
@@ -363,7 +363,7 @@ class WC_Meta_Box_Product_Data {
 		}
 
 		$errors = $product->set_props(
-			array(
+			[
 				'sku'                => isset( $_POST['_sku'] ) ? wc_clean( wp_unslash( $_POST['_sku'] ) ) : null,
 				'purchase_note'      => isset( $_POST['_purchase_note'] ) ? wp_kses_post( wp_unslash( $_POST['_purchase_note'] ) ) : '',
 				'downloadable'       => isset( $_POST['_downloadable'] ),
@@ -378,8 +378,8 @@ class WC_Meta_Box_Product_Data {
 				'height'             => isset( $_POST['_height'] ) ? wc_clean( wp_unslash( $_POST['_height'] ) ) : null,
 				'shipping_class_id'  => isset( $_POST['product_shipping_class'] ) ? absint( wp_unslash( $_POST['product_shipping_class'] ) ) : null,
 				'sold_individually'  => ! empty( $_POST['_sold_individually'] ),
-				'upsell_ids'         => isset( $_POST['upsell_ids'] ) ? array_map( 'intval', (array) wp_unslash( $_POST['upsell_ids'] ) ) : array(),
-				'cross_sell_ids'     => isset( $_POST['crosssell_ids'] ) ? array_map( 'intval', (array) wp_unslash( $_POST['crosssell_ids'] ) ) : array(),
+				'upsell_ids'         => isset( $_POST['upsell_ids'] ) ? array_map( 'intval', (array) wp_unslash( $_POST['upsell_ids'] ) ) : [],
+				'cross_sell_ids'     => isset( $_POST['crosssell_ids'] ) ? array_map( 'intval', (array) wp_unslash( $_POST['crosssell_ids'] ) ) : [],
 				'regular_price'      => isset( $_POST['_regular_price'] ) ? wc_clean( wp_unslash( $_POST['_regular_price'] ) ) : null,
 				'sale_price'         => isset( $_POST['_sale_price'] ) ? wc_clean( wp_unslash( $_POST['_sale_price'] ) ) : null,
 				'date_on_sale_from'  => $date_on_sale_from,
@@ -393,9 +393,9 @@ class WC_Meta_Box_Product_Data {
 				'download_expiry'    => isset( $_POST['_download_expiry'] ) && '' !== $_POST['_download_expiry'] ? absint( wp_unslash( $_POST['_download_expiry'] ) ) : '',
 				// Those are sanitized inside prepare_downloads.
 				'downloads'          => self::prepare_downloads(
-					isset( $_POST['_wc_file_names'] ) ? wp_unslash( $_POST['_wc_file_names'] ) : array(), // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-					isset( $_POST['_wc_file_urls'] ) ? wp_unslash( $_POST['_wc_file_urls'] ) : array(), // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-					isset( $_POST['_wc_file_hashes'] ) ? wp_unslash( $_POST['_wc_file_hashes'] ) : array() // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+					isset( $_POST['_wc_file_names'] ) ? wp_unslash( $_POST['_wc_file_names'] ) : [], // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+					isset( $_POST['_wc_file_urls'] ) ? wp_unslash( $_POST['_wc_file_urls'] ) : [], // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+					isset( $_POST['_wc_file_hashes'] ) ? wp_unslash( $_POST['_wc_file_hashes'] ) : [] // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 				),
 				'product_url'        => isset( $_POST['_product_url'] ) ? esc_url_raw( wp_unslash( $_POST['_product_url'] ) ) : '',
 				'button_text'        => isset( $_POST['_button_text'] ) ? wc_clean( wp_unslash( $_POST['_button_text'] ) ) : '',
@@ -403,7 +403,7 @@ class WC_Meta_Box_Product_Data {
 				'reviews_allowed'    => ! empty( $_POST['comment_status'] ) && 'open' === $_POST['comment_status'],
 				'attributes'         => $attributes,
 				'default_attributes' => self::prepare_set_attributes( $attributes, 'default_attribute_' ),
-			)
+			]
 		);
 
 		if ( is_wp_error( $errors ) ) {
@@ -511,7 +511,7 @@ class WC_Meta_Box_Product_Data {
 				}
 
 				$errors = $variation->set_props(
-					array(
+					[
 						'status'            => isset( $_POST['variable_enabled'][ $i ] ) ? 'publish' : 'private',
 						'menu_order'        => isset( $_POST['variation_menu_order'][ $i ] ) ? wc_clean( wp_unslash( $_POST['variation_menu_order'][ $i ] ) ) : null,
 						'regular_price'     => isset( $_POST['variable_regular_price'][ $i ] ) ? wc_clean( wp_unslash( $_POST['variable_regular_price'][ $i ] ) ) : null,
@@ -525,9 +525,9 @@ class WC_Meta_Box_Product_Data {
 						'download_expiry'   => isset( $_POST['variable_download_expiry'][ $i ] ) ? wc_clean( wp_unslash( $_POST['variable_download_expiry'][ $i ] ) ) : null,
 						// Those are sanitized inside prepare_downloads.
 						'downloads'         => self::prepare_downloads(
-							isset( $_POST['_wc_variation_file_names'][ $variation_id ] ) ? wp_unslash( $_POST['_wc_variation_file_names'][ $variation_id ] ) : array(), // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-							isset( $_POST['_wc_variation_file_urls'][ $variation_id ] ) ? wp_unslash( $_POST['_wc_variation_file_urls'][ $variation_id ] ) : array(), // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-							isset( $_POST['_wc_variation_file_hashes'][ $variation_id ] ) ? wp_unslash( $_POST['_wc_variation_file_hashes'][ $variation_id ] ) : array() // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+							isset( $_POST['_wc_variation_file_names'][ $variation_id ] ) ? wp_unslash( $_POST['_wc_variation_file_names'][ $variation_id ] ) : [], // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+							isset( $_POST['_wc_variation_file_urls'][ $variation_id ] ) ? wp_unslash( $_POST['_wc_variation_file_urls'][ $variation_id ] ) : [], // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+							isset( $_POST['_wc_variation_file_hashes'][ $variation_id ] ) ? wp_unslash( $_POST['_wc_variation_file_hashes'][ $variation_id ] ) : [] // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 						),
 						'manage_stock'      => isset( $_POST['variable_manage_stock'][ $i ] ),
 						'stock_quantity'    => $stock,
@@ -543,7 +543,7 @@ class WC_Meta_Box_Product_Data {
 						'height'            => isset( $_POST['variable_height'][ $i ] ) ? wc_clean( wp_unslash( $_POST['variable_height'][ $i ] ) ) : '',
 						'shipping_class_id' => isset( $_POST['variable_shipping_class'][ $i ] ) ? wc_clean( wp_unslash( $_POST['variable_shipping_class'][ $i ] ) ) : null,
 						'tax_class'         => isset( $_POST['variable_tax_class'][ $i ] ) ? wc_clean( wp_unslash( $_POST['variable_tax_class'][ $i ] ) ) : null,
-					)
+					]
 				);
 
 				if ( is_wp_error( $errors ) ) {

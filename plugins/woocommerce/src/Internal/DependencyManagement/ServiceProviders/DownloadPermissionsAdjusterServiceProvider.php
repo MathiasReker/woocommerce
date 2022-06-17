@@ -18,9 +18,9 @@ class DownloadPermissionsAdjusterServiceProvider extends AbstractServiceProvider
 	 *
 	 * @var array
 	 */
-	protected $provides = array(
+	protected $provides = [
 		DownloadPermissionsAdjuster::class,
-	);
+	];
 
 	/**
 	 * Register the classes.

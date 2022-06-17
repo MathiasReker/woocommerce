@@ -86,16 +86,16 @@ class Marketing extends Task {
 	 */
 	public static function get_plugins() {
 		$bundles = RemoteFreeExtensions::get_extensions(
-			array(
+			[
 				'task-list/reach',
 				'task-list/grow',
-			)
+			]
 		);
 
 		return array_reduce(
 			$bundles,
 			function( $plugins, $bundle ) {
-				$visible = array();
+				$visible = [];
 				foreach ( $bundle['plugins'] as $plugin ) {
 					if ( $plugin->is_visible ) {
 						$visible[] = $plugin;
@@ -103,7 +103,7 @@ class Marketing extends Task {
 				}
 				return array_merge( $plugins, $visible );
 			},
-			array()
+			[]
 		);
 	}
 
@@ -114,8 +114,8 @@ class Marketing extends Task {
 	 */
 	public static function has_installed_extensions() {
 		$plugins   = self::get_plugins();
-		$remaining = array();
-		$installed = array();
+		$remaining = [];
+		$installed = [];
 
 		foreach ( $plugins as $plugin ) {
 			if ( ! $plugin->is_installed ) {

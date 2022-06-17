@@ -33,7 +33,7 @@ class WC_Tests_API_Functions extends WC_Unit_Test_Case {
 		parent::setUp();
 
 		// Callback used by WP_HTTP_TestCase to decide whether to perform HTTP requests or to provide a mocked response.
-		$this->http_responder = array( $this, 'mock_http_responses' );
+		$this->http_responder = [ $this, 'mock_http_responses' ];
 
 		$upload_dir_info       = wp_upload_dir();
 		$this->upload_dir_path = $upload_dir_info['path'];
@@ -108,11 +108,11 @@ class WC_Tests_API_Functions extends WC_Unit_Test_Case {
 	 * @requires PHP 5.4
 	 */
 	public function test_wc_rest_upload_image_from_url_should_download_image_and_return_array() {
-		$expected_result = array(
+		$expected_result = [
 			'file' => $this->upload_dir_path . '/' . $this->file_name,
 			'url'  => $this->upload_dir_url . '/' . $this->file_name,
 			'type' => 'image/png',
-		);
+		];
 		$result          = wc_rest_upload_image_from_url( 'http://somedomain.com/' . $this->file_name );
 
 		$this->assertEquals( $expected_result, $result );
@@ -126,10 +126,10 @@ class WC_Tests_API_Functions extends WC_Unit_Test_Case {
 	public function test_wc_rest_set_uploaded_image_as_attachment() {
 		$this->assertIsInt(
 			wc_rest_set_uploaded_image_as_attachment(
-				array(
+				[
 					'file' => '',
 					'url'  => '',
-				)
+				]
 			)
 		);
 	}
@@ -143,14 +143,14 @@ class WC_Tests_API_Functions extends WC_Unit_Test_Case {
 		$request = new WP_REST_Request(
 			'GET',
 			'/wc/v3/foo',
-			array(
-				'args' => array(
-					'date' => array(
+			[
+				'args' => [
+					'date' => [
 						'type'   => 'string',
 						'format' => 'date',
-					),
-				),
-			)
+					],
+				],
+			]
 		);
 
 		// Success.
@@ -222,32 +222,32 @@ class WC_Tests_API_Functions extends WC_Unit_Test_Case {
 		$mocked_response = false;
 
 		if ( 'http://somedomain.com/nonexistent-image.png' === $url ) {
-			$mocked_response = array(
-				'response' => array(
+			$mocked_response = [
+				'response' => [
 					'code'    => 404,
 					'message' => 'Not found.',
-				),
-			);
+				],
+			];
 		} elseif ( 'http://somedomain.com/invalid-image-1.png' === $url ) {
 			// empty image.
-			$mocked_response = array(
-				'response' => array( 'code' => 200 ),
-			);
+			$mocked_response = [
+				'response' => [ 'code' => 200 ],
+			];
 		} elseif ( 'http://somedomain.com/invalid-image-2.png' === $url ) {
 			// image with an unsupported mime type.
 			// we need to manually copy the file as we are mocking the request. without this an empty file is created.
 			self::file_copy( WC_Unit_Tests_Bootstrap::instance()->tests_dir . '/data/file.txt', $request['filename'] );
 
-			$mocked_response = array(
-				'response' => array( 'code' => 200 ),
-			);
+			$mocked_response = [
+				'response' => [ 'code' => 200 ],
+			];
 		} elseif ( 'http://somedomain.com/' . $this->file_name === $url ) {
 			// we need to manually copy the file as we are mocking the request. without this an empty file is created.
 			self::file_copy( WC_Unit_Tests_Bootstrap::instance()->tests_dir . '/data/Dr1Bczxq4q.png', $request['filename'] );
 
-			$mocked_response = array(
-				'response' => array( 'code' => 200 ),
-			);
+			$mocked_response = [
+				'response' => [ 'code' => 200 ],
+			];
 		}
 
 		return $mocked_response;

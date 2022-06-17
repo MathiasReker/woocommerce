@@ -46,18 +46,18 @@ class WC_Product_Download_Test extends WC_Unit_Test_Case {
 		$download_directories->set_mode( Download_Directories::MODE_ENABLED );
 
 		$non_admin_user = wp_insert_user(
-			array(
+			[
 				'user_login' => uniqid(),
 				'role'       => 'editor',
 				'user_pass'  => 'x',
-			)
+			]
 		);
 		$admin_user     = wp_insert_user(
-			array(
+			[
 				'user_login' => uniqid(),
 				'role'       => 'administrator',
 				'user_pass'  => 'x',
-			)
+			]
 		);
 		$ebook_url      = 'https://external.site/books/ultimate-guide-to-stuff.pdf';
 		$podcast_url    = 'https://external.site/podcasts/ultimate-guide-to-stuff.mp3';
@@ -88,11 +88,11 @@ class WC_Product_Download_Test extends WC_Unit_Test_Case {
 
 		// We select an admin user because we wish to automatically add Approved Directory rules.
 		$admin_user = wp_insert_user(
-			array(
+			[
 				'user_login' => uniqid(),
 				'role'       => 'administrator',
 				'user_pass'  => 'x',
-			)
+			]
 		);
 		wp_set_current_user( $admin_user );
 

@@ -41,7 +41,7 @@ class UnsecuredReportFiles {
 				'</a>'
 			)
 		);
-		$note->set_content_data( (object) array() );
+		$note->set_content_data( (object) [] );
 		$note->set_type( Note::E_WC_ADMIN_NOTE_ERROR );
 		$note->set_name( self::NOTE_NAME );
 		$note->set_source( 'woocommerce-admin' );

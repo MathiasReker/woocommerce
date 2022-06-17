@@ -50,13 +50,13 @@ class WC_Admin_Status {
 
 				$tool                  = $tools[ $action ];
 				$tool_requires_refresh = ArrayUtil::get_value_or_default( $tool, 'requires_refresh', false );
-				$tool                  = array(
+				$tool                  = [
 					'id'          => $action,
 					'name'        => $tool['name'],
 					'action'      => $tool['button'],
 					'description' => $tool['desc'],
 					'disabled'    => ArrayUtil::get_value_or_default( $tool, 'disabled', false ),
-				);
+				];
 				$tool                  = array_merge( $tool, $response );
 
 				/**
@@ -66,10 +66,10 @@ class WC_Admin_Status {
 				 */
 				do_action( 'woocommerce_system_status_tool_executed', $tool );
 			} else {
-				$response = array(
+				$response = [
 					'success' => false,
 					'message' => __( 'Tool does not exist.', 'woocommerce' ),
-				);
+				];
 			}
 
 			if ( $response['success'] ) {
@@ -205,13 +205,13 @@ class WC_Admin_Status {
 	 */
 	public static function scan_template_files( $template_path ) {
 		$files  = @scandir( $template_path ); // @codingStandardsIgnoreLine.
-		$result = array();
+		$result = [];
 
 		if ( ! empty( $files ) ) {
 
 			foreach ( $files as $key => $value ) {
 
-				if ( ! in_array( $value, array( '.', '..' ), true ) ) {
+				if ( ! in_array( $value, [ '.', '..' ], true ) ) {
 
 					if ( is_dir( $template_path . DIRECTORY_SEPARATOR . $value ) ) {
 						$sub_files = self::scan_template_files( $template_path . DIRECTORY_SEPARATOR . $value );
@@ -247,13 +247,13 @@ class WC_Admin_Status {
 
 		$api = themes_api(
 			'theme_information',
-			array(
+			[
 				'slug'   => $theme->get_stylesheet(),
-				'fields' => array(
+				'fields' => [
 					'sections' => false,
 					'tags'     => false,
-				),
-			)
+				],
+			]
 		);
 
 		$update_theme_version = 0;
@@ -274,12 +274,12 @@ class WC_Admin_Status {
 							$theme_date         = str_replace( '.', '-', trim( substr( $cl_line, 0, strpos( $cl_line, '-' ) ) ) );
 							$theme_version      = preg_replace( '~[^0-9,.]~', '', stristr( $cl_line, 'version' ) );
 							$theme_update       = trim( str_replace( '*', '', $cl_lines[ $line_num + 1 ] ) );
-							$theme_version_data = array(
+							$theme_version_data = [
 								'date'      => $theme_date,
 								'version'   => $theme_version,
 								'update'    => $theme_update,
 								'changelog' => $theme_changelog,
-							);
+							];
 							set_transient( $theme_dir . '_version_data', $theme_version_data, DAY_IN_SECONDS );
 							break;
 						}
@@ -338,7 +338,7 @@ class WC_Admin_Status {
 			wp_die( esc_html__( 'Action failed. Please refresh the page and retry.', 'woocommerce' ) );
 		}
 
-		$log_ids = array_map( 'absint', (array) isset( $_REQUEST['log'] ) ? wp_unslash( $_REQUEST['log'] ) : array() ); // WPCS: input var ok, sanitization ok.
+		$log_ids = array_map( 'absint', (array) isset( $_REQUEST['log'] ) ? wp_unslash( $_REQUEST['log'] ) : [] ); // WPCS: input var ok, sanitization ok.
 
 		if ( ( isset( $_REQUEST['action'] ) && 'delete' === $_REQUEST['action'] ) || ( isset( $_REQUEST['action2'] ) && 'delete' === $_REQUEST['action2'] ) ) { // WPCS: input var ok, sanitization ok.
 			WC_Log_Handler_DB::delete( $log_ids );

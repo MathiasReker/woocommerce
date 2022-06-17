@@ -17,7 +17,7 @@ class WC_Admin_Tests_RemoteInboxNotifications_Transformers_ArrayColumn extends W
 	 */
 	public function test_validate_returns_false_when_key_argument_is_missing() {
 		$array_column = new ArrayColumn();
-		$result       = $array_column->validate( (object) array() );
+		$result       = $array_column->validate( (object) [] );
 		$this->assertFalse( false, $result );
 	}
 
@@ -25,22 +25,22 @@ class WC_Admin_Tests_RemoteInboxNotifications_Transformers_ArrayColumn extends W
 	 * Test it returns value by array column.
 	 */
 	public function test_it_returns_value_by_array_column() {
-		$items = array(
-			array(
+		$items = [
+			[
 				'name' => 'mothra',
-			),
-			array(
+			],
+			[
 				'name' => 'gezora',
-			),
-			array(
+			],
+			[
 				'name' => 'ghidorah',
-			),
-		);
+			],
+		];
 
-		$arguments    = (object) array( 'key' => 'name' );
+		$arguments    = (object) [ 'key' => 'name' ];
 		$array_column = new ArrayColumn();
 		$result       = $array_column->transform( $items, $arguments );
-		$expected     = array( 'mothra', 'gezora', 'ghidorah' );
+		$expected     = [ 'mothra', 'gezora', 'ghidorah' ];
 		$this->assertEquals( $expected, $result );
 	}
 }

@@ -17,12 +17,12 @@ class ProductDownloadsServiceProvider extends AbstractServiceProvider {
 	 *
 	 * @var array
 	 */
-	protected $provides = array(
+	protected $provides = [
 		Register::class,
 		Sync::class,
 		SyncUI::class,
 		UI::class,
-	);
+	];
 
 	/**
 	 * Register the classes.

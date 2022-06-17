@@ -15,7 +15,7 @@ class WC_Tests_Webhook_Functions extends WC_Unit_Test_Case {
 	 * Temporarily store webhook delivery counters.
 	 * @var array
 	 */
-	protected $delivery_counter = array();
+	protected $delivery_counter = [];
 
 	/**
 	 * Data provider for test_wc_is_webhook_valid_topic.
@@ -23,30 +23,30 @@ class WC_Tests_Webhook_Functions extends WC_Unit_Test_Case {
 	 * @since 3.2.0
 	 */
 	public function data_provider_test_wc_is_webhook_valid_topic() {
-		return array(
-			array( true, wc_is_webhook_valid_topic( 'action.woocommerce_add_to_cart' ) ),
-			array( true, wc_is_webhook_valid_topic( 'action.wc_add_to_cart' ) ),
-			array( true, wc_is_webhook_valid_topic( 'product.created' ) ),
-			array( true, wc_is_webhook_valid_topic( 'product.updated' ) ),
-			array( true, wc_is_webhook_valid_topic( 'product.deleted' ) ),
-			array( true, wc_is_webhook_valid_topic( 'product.restored' ) ),
-			array( true, wc_is_webhook_valid_topic( 'order.created' ) ),
-			array( true, wc_is_webhook_valid_topic( 'order.updated' ) ),
-			array( true, wc_is_webhook_valid_topic( 'order.deleted' ) ),
-			array( true, wc_is_webhook_valid_topic( 'order.restored' ) ),
-			array( true, wc_is_webhook_valid_topic( 'customer.created' ) ),
-			array( true, wc_is_webhook_valid_topic( 'customer.updated' ) ),
-			array( true, wc_is_webhook_valid_topic( 'customer.deleted' ) ),
-			array( true, wc_is_webhook_valid_topic( 'coupon.created' ) ),
-			array( true, wc_is_webhook_valid_topic( 'coupon.updated' ) ),
-			array( true, wc_is_webhook_valid_topic( 'coupon.deleted' ) ),
-			array( true, wc_is_webhook_valid_topic( 'coupon.restored' ) ),
-			array( false, wc_is_webhook_valid_topic( 'coupon.upgraded' ) ),
-			array( false, wc_is_webhook_valid_topic( 'wc.product.updated' ) ),
-			array( false, wc_is_webhook_valid_topic( 'missingdot' ) ),
-			array( false, wc_is_webhook_valid_topic( 'with space' ) ),
-			array( false, wc_is_webhook_valid_topic( 'action.woocommerce_login_credentials' ) ),
-		);
+		return [
+			[ true, wc_is_webhook_valid_topic( 'action.woocommerce_add_to_cart' ) ],
+			[ true, wc_is_webhook_valid_topic( 'action.wc_add_to_cart' ) ],
+			[ true, wc_is_webhook_valid_topic( 'product.created' ) ],
+			[ true, wc_is_webhook_valid_topic( 'product.updated' ) ],
+			[ true, wc_is_webhook_valid_topic( 'product.deleted' ) ],
+			[ true, wc_is_webhook_valid_topic( 'product.restored' ) ],
+			[ true, wc_is_webhook_valid_topic( 'order.created' ) ],
+			[ true, wc_is_webhook_valid_topic( 'order.updated' ) ],
+			[ true, wc_is_webhook_valid_topic( 'order.deleted' ) ],
+			[ true, wc_is_webhook_valid_topic( 'order.restored' ) ],
+			[ true, wc_is_webhook_valid_topic( 'customer.created' ) ],
+			[ true, wc_is_webhook_valid_topic( 'customer.updated' ) ],
+			[ true, wc_is_webhook_valid_topic( 'customer.deleted' ) ],
+			[ true, wc_is_webhook_valid_topic( 'coupon.created' ) ],
+			[ true, wc_is_webhook_valid_topic( 'coupon.updated' ) ],
+			[ true, wc_is_webhook_valid_topic( 'coupon.deleted' ) ],
+			[ true, wc_is_webhook_valid_topic( 'coupon.restored' ) ],
+			[ false, wc_is_webhook_valid_topic( 'coupon.upgraded' ) ],
+			[ false, wc_is_webhook_valid_topic( 'wc.product.updated' ) ],
+			[ false, wc_is_webhook_valid_topic( 'missingdot' ) ],
+			[ false, wc_is_webhook_valid_topic( 'with space' ) ],
+			[ false, wc_is_webhook_valid_topic( 'action.woocommerce_login_credentials' ) ],
+		];
 	}
 
 	/**
@@ -67,12 +67,12 @@ class WC_Tests_Webhook_Functions extends WC_Unit_Test_Case {
 	 * @since 3.5.3
 	 */
 	public function data_provider_test_wc_is_webhook_valid_status() {
-		return array(
-			array( true, wc_is_webhook_valid_status( 'active' ) ),
-			array( true, wc_is_webhook_valid_status( 'paused' ) ),
-			array( true, wc_is_webhook_valid_status( 'disabled' ) ),
-			array( false, wc_is_webhook_valid_status( 'pending' ) ),
-		);
+		return [
+			[ true, wc_is_webhook_valid_status( 'active' ) ],
+			[ true, wc_is_webhook_valid_status( 'paused' ) ],
+			[ true, wc_is_webhook_valid_status( 'disabled' ) ],
+			[ false, wc_is_webhook_valid_status( 'pending' ) ],
+		];
 	}
 
 	/**
@@ -94,11 +94,11 @@ class WC_Tests_Webhook_Functions extends WC_Unit_Test_Case {
 	 * @since 3.2.0
 	 */
 	public function test_wc_get_webhook_statuses() {
-		$expected = array(
+		$expected = [
 			'active'   => 'Active',
 			'paused'   => 'Paused',
 			'disabled' => 'Disabled',
-		);
+		];
 
 		$this->assertEquals( $expected, wc_get_webhook_statuses() );
 	}
@@ -122,10 +122,10 @@ class WC_Tests_Webhook_Functions extends WC_Unit_Test_Case {
 	 */
 	public function provider_webhook_statuses() {
 
-		$webhook_statuses = array();
+		$webhook_statuses = [];
 
 		foreach ( wc_get_webhook_statuses() as $status_key => $status_string ) {
-			$webhook_statuses[] = array( $status_key );
+			$webhook_statuses[] = [ $status_key ];
 		}
 
 		return $webhook_statuses;
@@ -230,7 +230,7 @@ class WC_Tests_Webhook_Functions extends WC_Unit_Test_Case {
 		$webhook1 = wc_get_webhook( $this->create_webhook( 'customer.created' )->get_id() );
 		$webhook2 = wc_get_webhook( $this->create_webhook( 'customer.created' )->get_id() );
 		wc_load_webhooks( 'active' );
-		add_action( 'woocommerce_webhook_process_delivery', array( $this, 'woocommerce_webhook_process_delivery' ), 1, 2 );
+		add_action( 'woocommerce_webhook_process_delivery', [ $this, 'woocommerce_webhook_process_delivery' ], 1, 2 );
 		$customer1 = WC_Helper_Customer::create_customer( 'test1', 'pw1', 'user1@example.com' );
 		$customer2 = WC_Helper_Customer::create_customer( 'test2', 'pw2', 'user2@example.com' );
 		$this->assertEquals( 1, $this->delivery_counter[ $webhook1->get_id() . $customer1->get_id() ] );
@@ -253,7 +253,7 @@ class WC_Tests_Webhook_Functions extends WC_Unit_Test_Case {
 		$webhook2->delete( true );
 		$customer1->delete( true );
 		$customer2->delete( true );
-		remove_action( 'woocommerce_webhook_process_delivery', array( $this, 'woocommerce_webhook_process_delivery' ), 1, 2 );
+		remove_action( 'woocommerce_webhook_process_delivery', [ $this, 'woocommerce_webhook_process_delivery' ], 1, 2 );
 	}
 
 	/**
@@ -280,7 +280,7 @@ class WC_Tests_Webhook_Functions extends WC_Unit_Test_Case {
 
 		$webhook = new WC_Webhook();
 		$webhook->set_props(
-			array(
+			[
 				'status'       => $status,
 				'name'         => 'Testing webhook',
 				'user_id'      => 0,
@@ -288,7 +288,7 @@ class WC_Tests_Webhook_Functions extends WC_Unit_Test_Case {
 				'secret'       => 'secret',
 				'topic'        => $topic,
 				'api_version'  => 2,
-			)
+			]
 		);
 		$webhook->save();
 

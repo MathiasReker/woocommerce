@@ -28,7 +28,7 @@ class WC_Autoloader {
 			spl_autoload_register( '__autoload' );
 		}
 
-		spl_autoload_register( array( $this, 'autoload' ) );
+		spl_autoload_register( [ $this, 'autoload' ] );
 
 		$this->include_path = untrailingslashit( plugin_dir_path( WC_PLUGIN_FILE ) ) . '/includes/';
 	}

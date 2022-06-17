@@ -27,9 +27,9 @@ class WC_Admin_Tests_API_Products extends WC_REST_Unit_Test_Case {
 		parent::setUp();
 
 		$this->user = $this->factory->user->create(
-			array(
+			[
 				'role' => 'administrator',
-			)
+			]
 		);
 	}
 
@@ -44,7 +44,7 @@ class WC_Admin_Tests_API_Products extends WC_REST_Unit_Test_Case {
 		$data       = $response->get_data();
 		$properties = $data['schema']['properties'];
 
-		$properties_to_embed = array(
+		$properties_to_embed = [
 			'id',
 			'name',
 			'slug',
@@ -52,11 +52,11 @@ class WC_Admin_Tests_API_Products extends WC_REST_Unit_Test_Case {
 			'images',
 			'description',
 			'short_description',
-		);
+		];
 
 		foreach ( $properties as $property_key => $property ) {
 			if ( in_array( $property_key, $properties_to_embed, true ) ) {
-				$this->assertEquals( array( 'view', 'edit', 'embed' ), $property['context'] );
+				$this->assertEquals( [ 'view', 'edit', 'embed' ], $property['context'] );
 			}
 		}
 

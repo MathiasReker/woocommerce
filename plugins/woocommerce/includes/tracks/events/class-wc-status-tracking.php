@@ -15,7 +15,7 @@ class WC_Status_Tracking {
 	 * Init tracking.
 	 */
 	public function init() {
-		add_action( 'admin_init', array( $this, 'track_status_view' ), 10 );
+		add_action( 'admin_init', [ $this, 'track_status_view' ], 10 );
 	}
 
 	/**
@@ -28,10 +28,10 @@ class WC_Status_Tracking {
 
 			WC_Tracks::record_event(
 				'status_view',
-				array(
+				[
 					'tab'       => $tab,
 					'tool_used' => isset( $_GET['action'] ) ? sanitize_text_field( wp_unslash( $_GET['action'] ) ) : null,
-				)
+				]
 			);
 
 			if ( 'status' === $tab ) {

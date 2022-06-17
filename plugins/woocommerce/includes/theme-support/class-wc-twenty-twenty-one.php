@@ -28,10 +28,10 @@ class WC_Twenty_Twenty_One {
 		remove_action( 'woocommerce_sidebar', 'woocommerce_get_sidebar', 10 );
 
 		// Enqueue theme compatibility styles.
-		add_filter( 'woocommerce_enqueue_styles', array( __CLASS__, 'enqueue_styles' ) );
+		add_filter( 'woocommerce_enqueue_styles', [ __CLASS__, 'enqueue_styles' ] );
 
 		// Enqueue wp-admin compatibility styles.
-		add_action( 'admin_enqueue_scripts', array( __CLASS__, 'enqueue_admin_styles' ) );
+		add_action( 'admin_enqueue_scripts', [ __CLASS__, 'enqueue_admin_styles' ] );
 
 		// Register theme features.
 		add_theme_support( 'wc-product-gallery-zoom' );
@@ -39,10 +39,10 @@ class WC_Twenty_Twenty_One {
 		add_theme_support( 'wc-product-gallery-slider' );
 		add_theme_support(
 			'woocommerce',
-			array(
+			[
 				'thumbnail_image_width' => 450,
 				'single_image_width'    => 600,
-			)
+			]
 		);
 
 	}
@@ -56,13 +56,13 @@ class WC_Twenty_Twenty_One {
 	public static function enqueue_styles( $styles ) {
 		unset( $styles['woocommerce-general'] );
 
-		$styles['woocommerce-general'] = array(
-			'src'     => str_replace( array( 'http:', 'https:' ), '', WC()->plugin_url() ) . '/assets/css/twenty-twenty-one.css',
+		$styles['woocommerce-general'] = [
+			'src'     => str_replace( [ 'http:', 'https:' ], '', WC()->plugin_url() ) . '/assets/css/twenty-twenty-one.css',
 			'deps'    => '',
 			'version' => Constants::get_constant( 'WC_VERSION' ),
 			'media'   => 'all',
 			'has_rtl' => true,
-		);
+		];
 
 		return apply_filters( 'woocommerce_twenty_twenty_one_styles', $styles );
 	}
@@ -73,7 +73,7 @@ class WC_Twenty_Twenty_One {
 	public static function enqueue_admin_styles() {
 		wp_enqueue_style(
 			'woocommerce-twenty-twenty-one-admin',
-			str_replace( array( 'http:', 'https:' ), '', WC()->plugin_url() ) . '/assets/css/twenty-twenty-one-admin.css',
+			str_replace( [ 'http:', 'https:' ], '', WC()->plugin_url() ) . '/assets/css/twenty-twenty-one-admin.css',
 			'',
 			Constants::get_constant( 'WC_VERSION' ),
 			'all'

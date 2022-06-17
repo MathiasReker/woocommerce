@@ -20,7 +20,7 @@ class WC_Integrations {
 	 *
 	 * @var array
 	 */
-	public $integrations = array();
+	public $integrations = [];
 
 	/**
 	 * Initialize integrations.
@@ -29,9 +29,9 @@ class WC_Integrations {
 
 		do_action( 'woocommerce_integrations_init' );
 
-		$load_integrations = array(
+		$load_integrations = [
 			'WC_Integration_MaxMind_Geolocation',
-		);
+		];
 
 		$load_integrations = apply_filters( 'woocommerce_integrations', $load_integrations );
 

@@ -20,7 +20,7 @@ class WC_Payment_Gateways {
 	 *
 	 * @var array
 	 */
-	public $payment_gateways = array();
+	public $payment_gateways = [];
 
 	/**
 	 * The single instance of the class.
@@ -74,11 +74,11 @@ class WC_Payment_Gateways {
 	 * Load gateways and hook in functions.
 	 */
 	public function init() {
-		$load_gateways = array(
+		$load_gateways = [
 			'WC_Gateway_BACS',
 			'WC_Gateway_Cheque',
 			'WC_Gateway_COD',
-		);
+		];
 
 		if ( $this->should_load_paypal_standard() ) {
 			$load_gateways[] = 'WC_Gateway_Paypal';
@@ -121,7 +121,7 @@ class WC_Payment_Gateways {
 	 * @return array
 	 */
 	public function payment_gateways() {
-		$_available_gateways = array();
+		$_available_gateways = [];
 
 		if ( count( $this->payment_gateways ) > 0 ) {
 			foreach ( $this->payment_gateways as $gateway ) {
@@ -148,7 +148,7 @@ class WC_Payment_Gateways {
 	 * @return array
 	 */
 	public function get_available_payment_gateways() {
-		$_available_gateways = array();
+		$_available_gateways = [];
 
 		foreach ( $this->payment_gateways as $gateway ) {
 			if ( $gateway->is_available() ) {
@@ -160,7 +160,7 @@ class WC_Payment_Gateways {
 			}
 		}
 
-		return array_filter( (array) apply_filters( 'woocommerce_available_payment_gateways', $_available_gateways ), array( $this, 'filter_valid_gateway_class' ) );
+		return array_filter( (array) apply_filters( 'woocommerce_available_payment_gateways', $_available_gateways ), [ $this, 'filter_valid_gateway_class' ] );
 	}
 
 	/**
@@ -200,7 +200,7 @@ class WC_Payment_Gateways {
 		}
 
 		// Ensure we can make a call to set_current() without triggering an error.
-		if ( $current_gateway && is_callable( array( $current_gateway, 'set_current' ) ) ) {
+		if ( $current_gateway && is_callable( [ $current_gateway, 'set_current' ] ) ) {
 			$current_gateway->set_current();
 		}
 	}
@@ -210,7 +210,7 @@ class WC_Payment_Gateways {
 	 */
 	public function process_admin_options() {
 		$gateway_order = isset( $_POST['gateway_order'] ) ? wc_clean( wp_unslash( $_POST['gateway_order'] ) ) : ''; // WPCS: input var ok, CSRF ok.
-		$order         = array();
+		$order         = [];
 
 		if ( is_array( $gateway_order ) && count( $gateway_order ) > 0 ) {
 			$loop = 0;

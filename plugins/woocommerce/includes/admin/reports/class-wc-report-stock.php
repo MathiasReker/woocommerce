@@ -31,11 +31,11 @@ class WC_Report_Stock extends WP_List_Table {
 	public function __construct() {
 
 		parent::__construct(
-			array(
+			[
 				'singular' => 'stock',
 				'plural'   => 'stock',
 				'ajax'     => false,
-			)
+			]
 		);
 	}
 
@@ -127,21 +127,21 @@ class WC_Report_Stock extends WP_List_Table {
 			case 'wc_actions':
 				?><p>
 					<?php
-					$actions   = array();
+					$actions   = [];
 					$action_id = $product->is_type( 'variation' ) ? $item->parent : $item->id;
 
-					$actions['edit'] = array(
+					$actions['edit'] = [
 						'url'    => admin_url( 'post.php?post=' . $action_id . '&action=edit' ),
 						'name'   => __( 'Edit', 'woocommerce' ),
 						'action' => 'edit',
-					);
+					];
 
 					if ( $product->is_visible() ) {
-						$actions['view'] = array(
+						$actions['view'] = [
 							'url'    => get_permalink( $action_id ),
 							'name'   => __( 'View', 'woocommerce' ),
 							'action' => 'view',
-						);
+						];
 					}
 
 					$actions = apply_filters( 'woocommerce_admin_stock_report_product_actions', $actions, $product );
@@ -169,13 +169,13 @@ class WC_Report_Stock extends WP_List_Table {
 	 */
 	public function get_columns() {
 
-		$columns = array(
+		$columns = [
 			'product'      => __( 'Product', 'woocommerce' ),
 			'parent'       => __( 'Parent', 'woocommerce' ),
 			'stock_level'  => __( 'Units in stock', 'woocommerce' ),
 			'stock_status' => __( 'Stock status', 'woocommerce' ),
 			'wc_actions'   => __( 'Actions', 'woocommerce' ),
-		);
+		];
 
 		return $columns;
 	}
@@ -185,7 +185,7 @@ class WC_Report_Stock extends WP_List_Table {
 	 */
 	public function prepare_items() {
 
-		$this->_column_headers = array( $this->get_columns(), array(), $this->get_sortable_columns() );
+		$this->_column_headers = [ $this->get_columns(), [], $this->get_sortable_columns() ];
 		$current_page          = absint( $this->get_pagenum() );
 		$per_page              = apply_filters( 'woocommerce_admin_stock_report_products_per_page', 20 );
 
@@ -195,11 +195,11 @@ class WC_Report_Stock extends WP_List_Table {
 		 * Pagination.
 		 */
 		$this->set_pagination_args(
-			array(
+			[
 				'total_items' => $this->max_items,
 				'per_page'    => $per_page,
 				'total_pages' => ceil( $this->max_items / $per_page ),
-			)
+			]
 		);
 	}
 }

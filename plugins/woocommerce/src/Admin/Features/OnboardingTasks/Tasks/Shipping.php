@@ -105,16 +105,16 @@ class Shipping extends Task {
 	 * @return bool
 	 */
 	public static function has_physical_products() {
-		$profiler_data = get_option( OnboardingProfile::DATA_OPTION, array() );
-		$product_types = isset( $profiler_data['product_types'] ) ? $profiler_data['product_types'] : array();
+		$profiler_data = get_option( OnboardingProfile::DATA_OPTION, [] );
+		$product_types = isset( $profiler_data['product_types'] ) ? $profiler_data['product_types'] : [];
 
 		return in_array( 'physical', $product_types, true ) ||
 			count(
 				wc_get_products(
-					array(
+					[
 						'virtual' => false,
 						'limit'   => 1,
-					)
+					]
 				)
 			) > 0;
 	}

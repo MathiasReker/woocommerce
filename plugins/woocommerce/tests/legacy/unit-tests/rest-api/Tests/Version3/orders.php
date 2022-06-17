@@ -23,7 +23,7 @@ class WC_Tests_API_Orders extends WC_REST_Unit_Test_Case {
 	 * Array of order to track
 	 * @var array
 	 */
-	protected $orders = array();
+	protected $orders = [];
 
 	/**
 	 * Setup our test server.
@@ -32,9 +32,9 @@ class WC_Tests_API_Orders extends WC_REST_Unit_Test_Case {
 		parent::setUp();
 		$this->endpoint = new WC_REST_Orders_Controller();
 		$this->user     = $this->factory->user->create(
-			array(
+			[
 				'role' => 'administrator',
-			)
+			]
 		);
 	}
 
@@ -85,20 +85,20 @@ class WC_Tests_API_Orders extends WC_REST_Unit_Test_Case {
 
 		$request = new WP_REST_Request( 'GET', '/wc/v3/orders' );
 		$request->set_query_params(
-			array(
+			[
 				'orderby' => 'modified',
 				'order'   => 'asc',
-			)
+			]
 		);
 		$response = $this->server->dispatch( $request );
 		$orders   = $response->get_data();
 		$this->assertEquals( $order1->get_id(), $orders[0]['id'] );
 
 		$request->set_query_params(
-			array(
+			[
 				'orderby' => 'modified',
 				'order'   => 'desc',
-			)
+			]
 		);
 		$response = $this->server->dispatch( $request );
 		$orders   = $response->get_data();
@@ -160,11 +160,11 @@ class WC_Tests_API_Orders extends WC_REST_Unit_Test_Case {
 		wp_set_current_user( $this->user );
 
 		$attribute_name            = 'Site Level Type';
-		$site_level_attribute_id   = wc_create_attribute( array( 'name' => $attribute_name ) );
+		$site_level_attribute_id   = wc_create_attribute( [ 'name' => $attribute_name ] );
 		$site_level_attribute_slug = wc_attribute_taxonomy_name_by_id( $site_level_attribute_id );
 
 		// Register the attribute so that wp_insert_term will be successful.
-		register_taxonomy( $site_level_attribute_slug, array( 'product' ), array() );
+		register_taxonomy( $site_level_attribute_slug, [ 'product' ], [] );
 
 		$term_name                        = 'Site Level Value - Wood';
 		$site_level_term_insertion_result = wp_insert_term( $term_name, $site_level_attribute_slug );
@@ -176,7 +176,7 @@ class WC_Tests_API_Orders extends WC_REST_Unit_Test_Case {
 		$line_item = new WC_Order_Item_Product();
 		$line_item->set_product( $variation );
 		$line_item->set_props(
-			array( 'variation' => array( "attribute_{$site_level_attribute_slug}" => $site_level_term->slug ) )
+			[ 'variation' => [ "attribute_{$site_level_attribute_slug}" => $site_level_term->slug ] ]
 		);
 
 		$order = OrderHelper::create_order();
@@ -257,9 +257,9 @@ class WC_Tests_API_Orders extends WC_REST_Unit_Test_Case {
 		wp_set_current_user( $this->user );
 		$order    = OrderHelper::create_order();
 		$refund   = wc_create_refund(
-			array(
+			[
 				'order_id' => $order->get_id(),
-			)
+			]
 		);
 		$response = $this->server->dispatch( new WP_REST_Request( 'GET', '/wc/v3/orders/' . $refund->get_id() ) );
 		$this->assertEquals( 404, $response->get_status() );
@@ -274,11 +274,11 @@ class WC_Tests_API_Orders extends WC_REST_Unit_Test_Case {
 		$product = \Automattic\WooCommerce\RestApi\UnitTests\Helpers\ProductHelper::create_simple_product();
 		$request = new WP_REST_Request( 'POST', '/wc/v3/orders' );
 		$request->set_body_params(
-			array(
+			[
 				'payment_method'       => 'bacs',
 				'payment_method_title' => 'Direct Bank Transfer',
 				'set_paid'             => true,
-				'billing'              => array(
+				'billing'              => [
 					'first_name' => 'John',
 					'last_name'  => 'Doe',
 					'address_1'  => '969 Market',
@@ -289,8 +289,8 @@ class WC_Tests_API_Orders extends WC_REST_Unit_Test_Case {
 					'country'    => 'US',
 					'email'      => 'john.doe@example.com',
 					'phone'      => '(555) 555-5555',
-				),
-				'shipping'             => array(
+				],
+				'shipping'             => [
 					'first_name' => 'John',
 					'last_name'  => 'Doe',
 					'address_1'  => '969 Market',
@@ -300,36 +300,36 @@ class WC_Tests_API_Orders extends WC_REST_Unit_Test_Case {
 					'postcode'   => '94103',
 					'country'    => 'US',
 					'phone'      => '(555) 555-5555',
-				),
-				'line_items'           => array(
-					array(
+				],
+				'line_items'           => [
+					[
 						'product_id' => $product->get_id(),
 						'quantity'   => 2,
-					),
-				),
-				'shipping_lines'       => array(
-					array(
+					],
+				],
+				'shipping_lines'       => [
+					[
 						'method_id'    => 'flat_rate',
 						'method_title' => 'Flat rate',
 						'total'        => '10.00',
 						'instance_id'  => '1',
-						'meta_data'    => array(
-							array(
+						'meta_data'    => [
+							[
 								'key'   => 'string',
 								'value' => 'string_val',
-							),
-							array(
+							],
+							[
 								'key'   => 'integer',
 								'value' => 1,
-							),
-							array(
+							],
+							[
 								'key'   => 'array',
-								'value' => array( 1, 2 ),
-							),
-						),
-					),
-				),
-			)
+								'value' => [ 1, 2 ],
+							],
+						],
+					],
+				],
+			]
 		);
 		$response = $this->server->dispatch( $request );
 		$data     = $response->get_data();
@@ -362,15 +362,15 @@ class WC_Tests_API_Orders extends WC_REST_Unit_Test_Case {
 		$this->assertEquals( 1, count( $data['shipping_lines'] ) );
 
 		$shipping               = current( $order->get_items( 'shipping' ) );
-		$expected_shipping_line = array(
+		$expected_shipping_line = [
 			'id'           => $shipping->get_id(),
 			'method_title' => $shipping->get_method_title(),
 			'method_id'    => $shipping->get_method_id(),
 			'instance_id'  => $shipping->get_instance_id(),
 			'total'        => wc_format_decimal( $shipping->get_total(), '' ),
 			'total_tax'    => wc_format_decimal( $shipping->get_total_tax(), '' ),
-			'taxes'        => array(),
-		);
+			'taxes'        => [],
+		];
 		foreach ( $expected_shipping_line as $key => $value ) {
 			$this->assertEquals( $value, $data['shipping_lines'][0][ $key ] );
 		}
@@ -398,11 +398,11 @@ class WC_Tests_API_Orders extends WC_REST_Unit_Test_Case {
 		// Test when creating order.
 		$request = new WP_REST_Request( 'POST', '/wc/v3/orders' );
 		$request->set_body_params(
-			array(
+			[
 				'payment_method'       => 'bacs',
 				'payment_method_title' => '<h1>Sanitize this <script>alert(1);</script></h1>',
 				'set_paid'             => true,
-				'billing'              => array(
+				'billing'              => [
 					'first_name' => 'John',
 					'last_name'  => 'Doe',
 					'address_1'  => '969 Market',
@@ -413,8 +413,8 @@ class WC_Tests_API_Orders extends WC_REST_Unit_Test_Case {
 					'country'    => 'US',
 					'email'      => 'john.doe@example.com',
 					'phone'      => '(555) 555-5555',
-				),
-				'shipping'             => array(
+				],
+				'shipping'             => [
 					'first_name' => 'John',
 					'last_name'  => 'Doe',
 					'address_1'  => '969 Market',
@@ -424,21 +424,21 @@ class WC_Tests_API_Orders extends WC_REST_Unit_Test_Case {
 					'postcode'   => '94103',
 					'country'    => 'US',
 					'phone'      => '(555) 555-5555',
-				),
-				'line_items'           => array(
-					array(
+				],
+				'line_items'           => [
+					[
 						'product_id' => $product->get_id(),
 						'quantity'   => 2,
-					),
-				),
-				'shipping_lines'       => array(
-					array(
+					],
+				],
+				'shipping_lines'       => [
+					[
 						'method_id'    => 'flat_rate',
 						'method_title' => 'Flat rate',
 						'total'        => '10',
-					),
-				),
-			)
+					],
+				],
+			]
 		);
 		$response = $this->server->dispatch( $request );
 		$data     = $response->get_data();
@@ -450,10 +450,10 @@ class WC_Tests_API_Orders extends WC_REST_Unit_Test_Case {
 		// Test when updating order.
 		$request = new WP_REST_Request( 'PUT', '/wc/v3/orders/' . $data['id'] );
 		$request->set_body_params(
-			array(
+			[
 				'payment_method'       => 'bacs',
 				'payment_method_title' => '<h1>Sanitize this too <script>alert(1);</script></h1>',
-			)
+			]
 		);
 		$response = $this->server->dispatch( $request );
 		$data     = $response->get_data();
@@ -474,12 +474,12 @@ class WC_Tests_API_Orders extends WC_REST_Unit_Test_Case {
 		// Non-existent customer.
 		$request = new WP_REST_Request( 'POST', '/wc/v3/orders' );
 		$request->set_body_params(
-			array(
+			[
 				'payment_method'       => 'bacs',
 				'payment_method_title' => 'Direct Bank Transfer',
 				'set_paid'             => true,
 				'customer_id'          => 99999,
-				'billing'              => array(
+				'billing'              => [
 					'first_name' => 'John',
 					'last_name'  => 'Doe',
 					'address_1'  => '969 Market',
@@ -490,8 +490,8 @@ class WC_Tests_API_Orders extends WC_REST_Unit_Test_Case {
 					'country'    => 'US',
 					'email'      => 'john.doe@example.com',
 					'phone'      => '(555) 555-5555',
-				),
-				'shipping'             => array(
+				],
+				'shipping'             => [
 					'first_name' => 'John',
 					'last_name'  => 'Doe',
 					'address_1'  => '969 Market',
@@ -501,21 +501,21 @@ class WC_Tests_API_Orders extends WC_REST_Unit_Test_Case {
 					'postcode'   => '94103',
 					'country'    => 'US',
 					'phone'      => '(555) 555-5555',
-				),
-				'line_items'           => array(
-					array(
+				],
+				'line_items'           => [
+					[
 						'product_id' => $product->get_id(),
 						'quantity'   => 2,
-					),
-				),
-				'shipping_lines'       => array(
-					array(
+					],
+				],
+				'shipping_lines'       => [
+					[
 						'method_id'    => 'flat_rate',
 						'method_title' => 'Flat rate',
 						'total'        => 10,
-					),
-				),
-			)
+					],
+				],
+			]
 		);
 		$response = $this->server->dispatch( $request );
 		$this->assertEquals( 400, $response->get_status() );
@@ -531,13 +531,13 @@ class WC_Tests_API_Orders extends WC_REST_Unit_Test_Case {
 
 		$request = new WP_REST_Request( 'POST', '/wc/v3/orders' );
 		$request->set_body_params(
-			array(
-				'line_items' => array(
-					array(
+			[
+				'line_items' => [
+					[
 						'quantity' => 2,
-					),
-				),
-			)
+					],
+				],
+			]
 		);
 
 		$response = $this->server->dispatch( $request );
@@ -556,13 +556,13 @@ class WC_Tests_API_Orders extends WC_REST_Unit_Test_Case {
 		$order   = OrderHelper::create_order();
 		$request = new WP_REST_Request( 'PUT', '/wc/v3/orders/' . $order->get_id() );
 		$request->set_body_params(
-			array(
+			[
 				'payment_method' => 'test-update',
-				'billing'        => array(
+				'billing'        => [
 					'first_name' => 'Fish',
 					'last_name'  => 'Face',
-				),
-			)
+				],
+			]
 		);
 		$response = $this->server->dispatch( $request );
 		$data     = $response->get_data();
@@ -583,12 +583,12 @@ class WC_Tests_API_Orders extends WC_REST_Unit_Test_Case {
 		$order = OrderHelper::create_order();
 		$fee   = new WC_Order_Item_Fee();
 		$fee->set_props(
-			array(
+			[
 				'name'       => 'Some Fee',
 				'tax_status' => 'taxable',
 				'total'      => '100',
 				'tax_class'  => '',
-			)
+			]
 		);
 		$order->add_item( $fee );
 		$order->save();
@@ -597,14 +597,14 @@ class WC_Tests_API_Orders extends WC_REST_Unit_Test_Case {
 		$fee_data = current( $order->get_items( 'fee' ) );
 
 		$request->set_body_params(
-			array(
-				'fee_lines' => array(
-					array(
+			[
+				'fee_lines' => [
+					[
 						'id'   => $fee_data->get_id(),
 						'name' => null,
-					),
-				),
-			)
+					],
+				],
+			]
 		);
 		$response = $this->server->dispatch( $request );
 		$data     = $response->get_data();
@@ -629,19 +629,19 @@ class WC_Tests_API_Orders extends WC_REST_Unit_Test_Case {
 		$item       = current( $line_items );
 
 		$request->set_body_params(
-			array(
-				'line_items' => array(
-					array(
+			[
+				'line_items' => [
+					[
 						'id'       => $item->get_id(),
 						'quantity' => 10,
-					),
-				),
-			)
+					],
+				],
+			]
 		);
 
 		$response = $this->server->dispatch( $request );
 		$data     = $response->get_data();
-		$expected = array(
+		$expected = [
 			'id'           => $item->get_id(),
 			'name'         => 'Dummy Product',
 			'product_id'   => 0,
@@ -652,16 +652,16 @@ class WC_Tests_API_Orders extends WC_REST_Unit_Test_Case {
 			'subtotal_tax' => '0.00',
 			'total'        => '40.00',
 			'total_tax'    => '0.00',
-			'taxes'        => array(),
-			'meta_data'    => array(),
+			'taxes'        => [],
+			'meta_data'    => [],
 			'sku'          => null,
 			'price'        => 4,
 			'parent_name'  => null,
-			'image'        => array(
+			'image'        => [
 				'id'  => 0,
 				'src' => '',
-			),
-		);
+			],
+		];
 
 		$this->assertEquals( 200, $response->get_status() );
 		$this->assertEquals( $expected, $data['line_items'][0] );
@@ -673,192 +673,192 @@ class WC_Tests_API_Orders extends WC_REST_Unit_Test_Case {
 	 * @return array Data for test_update_order_add_coupons.
 	 */
 	public function data_provider_for_test_update_order_add_coupons() {
-		return array(
+		return [
 
 			// Successful case, no previous coupon, it gets created.
-			array(
-				'request_body'                             => array(
-					'coupon_lines' => array(
-						array(
+			[
+				'request_body'                             => [
+					'coupon_lines' => [
+						[
 							'code' => 'fake-coupon-2',
-						),
-					),
-				),
+						],
+					],
+				],
 				'order_has_coupon_before_request'          => false,
-				'expected_request_result'                  => array(
+				'expected_request_result'                  => [
 					'code' => 200,
-				),
+				],
 				'expected_order_coupon_code_after_request' => 'fake-coupon-2',
-			),
+			],
 
 			// Successful case with previous coupon, it gets replaced.
-			array(
-				'request_body'                             => array(
-					'coupon_lines' => array(
-						array(
+			[
+				'request_body'                             => [
+					'coupon_lines' => [
+						[
 							'code' => 'fake-coupon-2',
-						),
-					),
-				),
+						],
+					],
+				],
 				'order_has_coupon_before_request'          => true,
-				'expected_request_result'                  => array(
+				'expected_request_result'                  => [
 					'code' => 200,
-				),
+				],
 				'expected_order_coupon_code_after_request' => 'fake-coupon-2',
-			),
+			],
 
 			// Bad request: invalid coupon name, no previous coupon, it doesn't get added.
-			array(
-				'request_body'                             => array(
-					'coupon_lines' => array(
-						array(
+			[
+				'request_body'                             => [
+					'coupon_lines' => [
+						[
 							'code' => 'not-existing-coupon',
-						),
-					),
-				),
+						],
+					],
+				],
 				'order_has_coupon_before_request'          => false,
-				'expected_request_result'                  => array(
+				'expected_request_result'                  => [
 					'code'    => 400,
 					'message' => 'Coupon "not-existing-coupon" does not exist!',
-				),
+				],
 				'expected_order_coupon_code_after_request' => null,
-			),
+			],
 
 			// Bad request: invalid coupon name, coupon existed, it's kept.
-			array(
-				'request_body'                             => array(
-					'coupon_lines' => array(
-						array(
+			[
+				'request_body'                             => [
+					'coupon_lines' => [
+						[
 							'code' => 'not-existing-coupon',
-						),
-					),
-				),
+						],
+					],
+				],
 				'order_has_coupon_before_request'          => true,
-				'expected_request_result'                  => array(
+				'expected_request_result'                  => [
 					'code'    => 400,
 					'message' => 'Coupon "not-existing-coupon" does not exist!',
-				),
+				],
 				'expected_order_coupon_code_after_request' => 'fake-coupon',
-			),
+			],
 
 			// Bad request: has coupon id, no previous coupon, it doesn't get added.
-			array(
-				'request_body'                             => array(
-					'coupon_lines' => array(
-						array(
+			[
+				'request_body'                             => [
+					'coupon_lines' => [
+						[
 							'id'   => '1234',
 							'code' => 'fake-coupon-2',
-						),
-					),
-				),
+						],
+					],
+				],
 				'order_has_coupon_before_request'          => false,
-				'expected_request_result'                  => array(
+				'expected_request_result'                  => [
 					'code'    => 400,
 					'message' => 'Coupon item ID is readonly.',
-				),
+				],
 				'expected_order_coupon_code_after_request' => null,
-			),
+			],
 
 			// Bad request: has coupon id, previous coupon existed, it's kept.
-			array(
-				'request_body'                             => array(
-					'coupon_lines' => array(
-						array(
+			[
+				'request_body'                             => [
+					'coupon_lines' => [
+						[
 							'id'   => '1234',
 							'code' => 'fake-coupon-2',
-						),
-					),
-				),
+						],
+					],
+				],
 				'order_has_coupon_before_request'          => true,
-				'expected_request_result'                  => array(
+				'expected_request_result'                  => [
 					'code'    => 400,
 					'message' => 'Coupon item ID is readonly.',
-				),
+				],
 				'expected_order_coupon_code_after_request' => 'fake-coupon',
-			),
+			],
 
 			// Bad request: no coupon code, no previous coupon, it doesn't get added.
-			array(
-				'request_body'                             => array(
-					'coupon_lines' => array(
-						array(),
-					),
-				),
+			[
+				'request_body'                             => [
+					'coupon_lines' => [
+						[],
+					],
+				],
 				'order_has_coupon_before_request'          => false,
-				'expected_request_result'                  => array(
+				'expected_request_result'                  => [
 					'code'    => 400,
 					'message' => 'Coupon code is required.',
-				),
+				],
 				'expected_order_coupon_code_after_request' => null,
-			),
+			],
 
 			// Bad request: no coupon code, previous coupon existed, it's kept.
-			array(
-				'request_body'                             => array(
-					'coupon_lines' => array(
-						array(),
-					),
-				),
+			[
+				'request_body'                             => [
+					'coupon_lines' => [
+						[],
+					],
+				],
 				'order_has_coupon_before_request'          => true,
-				'expected_request_result'                  => array(
+				'expected_request_result'                  => [
 					'code'    => 400,
 					'message' => 'Coupon code is required.',
-				),
+				],
 				'expected_order_coupon_code_after_request' => 'fake-coupon',
-			),
+			],
 
 			// Bad request: invalid input ('coupon_lines' is not an array), no previous coupon, it doesn't get added.
-			array(
-				'request_body'                             => array(
+			[
+				'request_body'                             => [
 					'coupon_lines' => 1234,
-				),
+				],
 				'order_has_coupon_before_request'          => false,
-				'expected_request_result'                  => array(
+				'expected_request_result'                  => [
 					'code'    => 400,
 					'message' => 'Invalid parameter(s): coupon_lines',
-				),
+				],
 				'expected_order_coupon_code_after_request' => null,
-			),
+			],
 
 			// Bad request: invalid input ('coupon_lines' is not an array), previous coupon existed, it's kept.
-			array(
-				'request_body'                             => array(
+			[
+				'request_body'                             => [
 					'coupon_lines' => 1234,
-				),
+				],
 				'order_has_coupon_before_request'          => true,
-				'expected_request_result'                  => array(
+				'expected_request_result'                  => [
 					'code'    => 400,
 					'message' => 'Invalid parameter(s): coupon_lines',
-				),
+				],
 				'expected_order_coupon_code_after_request' => 'fake-coupon',
-			),
+			],
 
 			// Bad request: invalid input ('coupon_lines' has non-array elements), no previous coupon, it doesn't get added.
-			array(
-				'request_body'                             => array(
-					'coupon_lines' => array( 1234 ),
-				),
+			[
+				'request_body'                             => [
+					'coupon_lines' => [ 1234 ],
+				],
 				'order_has_coupon_before_request'          => false,
-				'expected_request_result'                  => array(
+				'expected_request_result'                  => [
 					'code'    => 400,
 					'message' => 'Invalid parameter(s): coupon_lines',
-				),
+				],
 				'expected_order_coupon_code_after_request' => null,
-			),
+			],
 
 			// Bad request: invalid input ('coupon_lines' has non-array elements), previous coupon existed, it's kept.
-			array(
-				'request_body'                             => array(
-					'coupon_lines' => array( 1234 ),
-				),
+			[
+				'request_body'                             => [
+					'coupon_lines' => [ 1234 ],
+				],
 				'order_has_coupon_before_request'          => true,
-				'expected_request_result'                  => array(
+				'expected_request_result'                  => [
 					'code'    => 400,
 					'message' => 'Invalid parameter(s): coupon_lines',
-				),
+				],
 				'expected_order_coupon_code_after_request' => 'fake-coupon',
-			),
-		);
+			],
+		];
 	}
 
 
@@ -882,7 +882,7 @@ class WC_Tests_API_Orders extends WC_REST_Unit_Test_Case {
 		$order                 = OrderHelper::create_order();
 		$original_order_amount = $order->get_total();
 
-		$coupons = array();
+		$coupons = [];
 
 		$coupon = CouponHelper::create_coupon( 'fake-coupon' );
 		$coupon->set_amount( 5 );
@@ -959,16 +959,16 @@ class WC_Tests_API_Orders extends WC_REST_Unit_Test_Case {
 		$request = new WP_REST_Request( 'PUT', '/wc/v3/orders/' . $order->get_id() );
 
 		$request->set_body_params(
-			array(
-				'coupon_lines' => array(),
-				'line_items'   => array(
-					array(
+			[
+				'coupon_lines' => [],
+				'line_items'   => [
+					[
 						'id'         => $order_item->get_id(),
 						'product_id' => $order_item->get_product_id(),
 						'total'      => '40.00',
-					),
-				),
-			)
+					],
+				],
+			]
 		);
 		$response = $this->server->dispatch( $request );
 		$data     = $response->get_data();
@@ -989,13 +989,13 @@ class WC_Tests_API_Orders extends WC_REST_Unit_Test_Case {
 		$request = new WP_REST_Request( 'PUT', '/wc/v3/orders/' . $order->get_id() );
 
 		$request->set_body_params(
-			array(
-				'coupon_lines' => array(
-					array(
+			[
+				'coupon_lines' => [
+					[
 						'code' => 'NON_EXISTING_COUPON',
-					),
-				),
-			)
+					],
+				],
+			]
 		);
 		$response = $this->server->dispatch( $request );
 		$data     = $response->get_data();
@@ -1015,13 +1015,13 @@ class WC_Tests_API_Orders extends WC_REST_Unit_Test_Case {
 		$order   = OrderHelper::create_order();
 		$request = new WP_REST_Request( 'PUT', '/wc/v3/orders/' . $order->get_id() );
 		$request->set_body_params(
-			array(
+			[
 				'payment_method' => 'test-update',
-				'billing'        => array(
+				'billing'        => [
 					'first_name' => 'Fish',
 					'last_name'  => 'Face',
-				),
-			)
+				],
+			]
 		);
 		$response = $this->server->dispatch( $request );
 		$this->assertEquals( 401, $response->get_status() );
@@ -1036,13 +1036,13 @@ class WC_Tests_API_Orders extends WC_REST_Unit_Test_Case {
 		wp_set_current_user( $this->user );
 		$request = new WP_REST_Request( 'POST', '/wc/v3/orders/999999' );
 		$request->set_body_params(
-			array(
+			[
 				'payment_method' => 'test-update',
-				'billing'        => array(
+				'billing'        => [
 					'first_name' => 'Fish',
 					'last_name'  => 'Face',
-				),
-			)
+				],
+			]
 		);
 		$response = $this->server->dispatch( $request );
 		$this->assertEquals( 400, $response->get_status() );
@@ -1104,18 +1104,18 @@ class WC_Tests_API_Orders extends WC_REST_Unit_Test_Case {
 
 		$request = new WP_REST_Request( 'POST', '/wc/v3/orders/batch' );
 		$request->set_body_params(
-			array(
-				'update' => array(
-					array(
+			[
+				'update' => [
+					[
 						'id'             => $order1->get_id(),
 						'payment_method' => 'updated',
-					),
-				),
-				'delete' => array(
+					],
+				],
+				'delete' => [
 					$order2->get_id(),
 					$order3->get_id(),
-				),
-			)
+				],
+			]
 		);
 		$response = $this->server->dispatch( $request );
 		$data     = $response->get_data();
@@ -1166,7 +1166,7 @@ class WC_Tests_API_Orders extends WC_REST_Unit_Test_Case {
 
 		$meta_data_item_properties = $line_item_properties['meta_data']['items']['properties'];
 		$this->assertEquals( 5, count( $meta_data_item_properties ) );
-		$this->assertEquals( array( 'id', 'key', 'value', 'display_key', 'display_value' ), array_keys( $meta_data_item_properties ) );
+		$this->assertEquals( [ 'id', 'key', 'value', 'display_key', 'display_value' ], array_keys( $meta_data_item_properties ) );
 	}
 
 	/**

@@ -18,7 +18,7 @@ class WC_Admin_Duplicate_Product_Test extends WC_Unit_Test_Case {
 
 		$filter = function ( $exclude_meta, $existing_meta_keys ) {
 			$this->assertContains( 'test_data', $existing_meta_keys );
-			return array( 'test_data' );
+			return [ 'test_data' ];
 		};
 		add_filter( 'woocommerce_duplicate_product_exclude_meta', $filter, 10, 2 );
 

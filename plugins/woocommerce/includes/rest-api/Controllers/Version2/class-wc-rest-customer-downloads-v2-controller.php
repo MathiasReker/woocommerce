@@ -33,7 +33,7 @@ class WC_REST_Customer_Downloads_V2_Controller extends WC_REST_Customer_Download
 	 * @return WP_REST_Response $response Response data.
 	 */
 	public function prepare_item_for_response( $download, $request ) {
-		$data = array(
+		$data = [
 			'download_id'         => $download->download_id,
 			'download_url'        => $download->download_url,
 			'product_id'          => $download->product_id,
@@ -45,7 +45,7 @@ class WC_REST_Customer_Downloads_V2_Controller extends WC_REST_Customer_Download
 			'access_expires'      => $download->access_expires ? wc_rest_prepare_date_response( $download->access_expires ) : 'never',
 			'access_expires_gmt'  => $download->access_expires ? wc_rest_prepare_date_response( get_gmt_from_date( $download->access_expires ) ) : 'never',
 			'file'                => $download->file,
-		);
+		];
 
 		$context = ! empty( $request['context'] ) ? $request['context'] : 'view';
 		$data    = $this->add_additional_fields_to_object( $data, $request );
@@ -72,93 +72,93 @@ class WC_REST_Customer_Downloads_V2_Controller extends WC_REST_Customer_Download
 	 * @return array
 	 */
 	public function get_item_schema() {
-		$schema = array(
+		$schema = [
 			'$schema'    => 'http://json-schema.org/draft-04/schema#',
 			'title'      => 'customer_download',
 			'type'       => 'object',
-			'properties' => array(
-				'download_id'         => array(
+			'properties' => [
+				'download_id'         => [
 					'description' => __( 'Download ID.', 'woocommerce' ),
 					'type'        => 'string',
-					'context'     => array( 'view' ),
+					'context'     => [ 'view' ],
 					'readonly'    => true,
-				),
-				'download_url'        => array(
+				],
+				'download_url'        => [
 					'description' => __( 'Download file URL.', 'woocommerce' ),
 					'type'        => 'string',
-					'context'     => array( 'view' ),
+					'context'     => [ 'view' ],
 					'readonly'    => true,
-				),
-				'product_id'          => array(
+				],
+				'product_id'          => [
 					'description' => __( 'Downloadable product ID.', 'woocommerce' ),
 					'type'        => 'integer',
-					'context'     => array( 'view' ),
+					'context'     => [ 'view' ],
 					'readonly'    => true,
-				),
-				'product_name'        => array(
+				],
+				'product_name'        => [
 					'description' => __( 'Product name.', 'woocommerce' ),
 					'type'        => 'string',
-					'context'     => array( 'view' ),
+					'context'     => [ 'view' ],
 					'readonly'    => true,
-				),
-				'download_name'       => array(
+				],
+				'download_name'       => [
 					'description' => __( 'Downloadable file name.', 'woocommerce' ),
 					'type'        => 'string',
-					'context'     => array( 'view' ),
+					'context'     => [ 'view' ],
 					'readonly'    => true,
-				),
-				'order_id'            => array(
+				],
+				'order_id'            => [
 					'description' => __( 'Order ID.', 'woocommerce' ),
 					'type'        => 'integer',
-					'context'     => array( 'view' ),
+					'context'     => [ 'view' ],
 					'readonly'    => true,
-				),
-				'order_key'           => array(
+				],
+				'order_key'           => [
 					'description' => __( 'Order key.', 'woocommerce' ),
 					'type'        => 'string',
-					'context'     => array( 'view' ),
+					'context'     => [ 'view' ],
 					'readonly'    => true,
-				),
-				'downloads_remaining' => array(
+				],
+				'downloads_remaining' => [
 					'description' => __( 'Number of downloads remaining.', 'woocommerce' ),
 					'type'        => 'string',
-					'context'     => array( 'view' ),
+					'context'     => [ 'view' ],
 					'readonly'    => true,
-				),
-				'access_expires'      => array(
+				],
+				'access_expires'      => [
 					'description' => __( "The date when download access expires, in the site's timezone.", 'woocommerce' ),
 					'type'        => 'string',
-					'context'     => array( 'view' ),
+					'context'     => [ 'view' ],
 					'readonly'    => true,
-				),
-				'access_expires_gmt'  => array(
+				],
+				'access_expires_gmt'  => [
 					'description' => __( 'The date when download access expires, as GMT.', 'woocommerce' ),
 					'type'        => 'string',
-					'context'     => array( 'view' ),
+					'context'     => [ 'view' ],
 					'readonly'    => true,
-				),
-				'file'                => array(
+				],
+				'file'                => [
 					'description' => __( 'File details.', 'woocommerce' ),
 					'type'        => 'object',
-					'context'     => array( 'view' ),
+					'context'     => [ 'view' ],
 					'readonly'    => true,
-					'properties'  => array(
-						'name' => array(
+					'properties'  => [
+						'name' => [
 							'description' => __( 'File name.', 'woocommerce' ),
 							'type'        => 'string',
-							'context'     => array( 'view' ),
+							'context'     => [ 'view' ],
 							'readonly'    => true,
-						),
-						'file' => array(
+						],
+						'file' => [
 							'description' => __( 'File URL.', 'woocommerce' ),
 							'type'        => 'string',
-							'context'     => array( 'view' ),
+							'context'     => [ 'view' ],
 							'readonly'    => true,
-						),
-					),
-				),
-			),
-		);
+						],
+					],
+				],
+			],
+		];
 
 		return $this->add_additional_fields_schema( $schema );
 	}

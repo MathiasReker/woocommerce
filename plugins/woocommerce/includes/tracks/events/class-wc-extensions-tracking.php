@@ -15,14 +15,14 @@ class WC_Extensions_Tracking {
 	 * Init tracking.
 	 */
 	public function init() {
-		add_action( 'load-woocommerce_page_wc-addons', array( $this, 'track_extensions_page' ) );
-		add_action( 'woocommerce_helper_connect_start', array( $this, 'track_helper_connection_start' ) );
-		add_action( 'woocommerce_helper_denied', array( $this, 'track_helper_connection_cancelled' ) );
-		add_action( 'woocommerce_helper_connected', array( $this, 'track_helper_connection_complete' ) );
-		add_action( 'woocommerce_helper_disconnected', array( $this, 'track_helper_disconnected' ) );
-		add_action( 'woocommerce_helper_subscriptions_refresh', array( $this, 'track_helper_subscriptions_refresh' ) );
-		add_action( 'woocommerce_addon_installed', array( $this, 'track_addon_install' ), 10, 2 );
-		add_action( 'woocommerce_page_wc-addons_connection_error', array( $this, 'track_extensions_page_connection_error' ), 10, 1 );
+		add_action( 'load-woocommerce_page_wc-addons', [ $this, 'track_extensions_page' ] );
+		add_action( 'woocommerce_helper_connect_start', [ $this, 'track_helper_connection_start' ] );
+		add_action( 'woocommerce_helper_denied', [ $this, 'track_helper_connection_cancelled' ] );
+		add_action( 'woocommerce_helper_connected', [ $this, 'track_helper_connection_complete' ] );
+		add_action( 'woocommerce_helper_disconnected', [ $this, 'track_helper_disconnected' ] );
+		add_action( 'woocommerce_helper_subscriptions_refresh', [ $this, 'track_helper_subscriptions_refresh' ] );
+		add_action( 'woocommerce_addon_installed', [ $this, 'track_addon_install' ], 10, 2 );
+		add_action( 'woocommerce_page_wc-addons_connection_error', [ $this, 'track_extensions_page_connection_error' ], 10, 1 );
 	}
 
 	/**
@@ -30,9 +30,9 @@ class WC_Extensions_Tracking {
 	 */
 	public function track_extensions_page() {
 		// phpcs:disable WordPress.Security.NonceVerification.Recommended
-		$properties = array(
+		$properties = [
 			'section' => empty( $_REQUEST['section'] ) ? '_featured' : wc_clean( wp_unslash( $_REQUEST['section'] ) ),
-		);
+		];
 
 		$event      = 'extensions_view';
 		if ( 'helper' === $properties['section'] ) {
@@ -56,9 +56,9 @@ class WC_Extensions_Tracking {
 	 */
 	public function track_extensions_page_connection_error( string $error = '' ) {
 		// phpcs:disable WordPress.Security.NonceVerification.Recommended
-		$properties = array(
+		$properties = [
 			'section' => empty( $_REQUEST['section'] ) ? '_featured' : wc_clean( wp_unslash( $_REQUEST['section'] ) ),
-		);
+		];
 
 		if ( ! empty( $_REQUEST['search'] ) ) {
 			$properties['search_term'] = wc_clean( wp_unslash( $_REQUEST['search'] ) );
@@ -113,10 +113,10 @@ class WC_Extensions_Tracking {
 	 * @param string $section  Extensions tab.
 	 */
 	public function track_addon_install( $addon_id, $section ) {
-		$properties = array(
+		$properties = [
 			'context' => 'extensions',
 			'section' => $section,
-		);
+		];
 
 		if ( 'woocommerce-payments' === $addon_id ) {
 			WC_Tracks::record_event( 'woocommerce_payments_install', $properties );

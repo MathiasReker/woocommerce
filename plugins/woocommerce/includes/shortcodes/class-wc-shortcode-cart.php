@@ -24,7 +24,7 @@ class WC_Shortcode_Cart {
 		try {
 			WC()->shipping()->reset_shipping();
 
-			$address = array();
+			$address = [];
 
 			$address['country']  = isset( $_POST['calc_shipping_country'] ) ? wc_clean( wp_unslash( $_POST['calc_shipping_country'] ) ) : ''; // WPCS: input var ok, CSRF ok, sanitization ok.
 			$address['state']    = isset( $_POST['calc_shipping_state'] ) ? wc_clean( wp_unslash( $_POST['calc_shipping_state'] ) ) : ''; // WPCS: input var ok, CSRF ok, sanitization ok.
@@ -76,7 +76,7 @@ class WC_Shortcode_Cart {
 		// Constants.
 		wc_maybe_define_constant( 'WOOCOMMERCE_CART', true );
 
-		$atts        = shortcode_atts( array(), $atts, 'woocommerce_cart' );
+		$atts        = shortcode_atts( [], $atts, 'woocommerce_cart' );
 		$nonce_value = wc_get_var( $_REQUEST['woocommerce-shipping-calculator-nonce'], wc_get_var( $_REQUEST['_wpnonce'], '' ) ); // @codingStandardsIgnoreLine.
 
 		// Update Shipping. Nonce check uses new value and old value (woocommerce-cart). @todo remove in 4.0.

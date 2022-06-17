@@ -34,24 +34,24 @@ class WC_API_Coupons extends WC_API_Resource {
 	public function register_routes( $routes ) {
 
 		# GET /coupons
-		$routes[ $this->base ] = array(
-			array( array( $this, 'get_coupons' ),     WC_API_Server::READABLE ),
-		);
+		$routes[ $this->base ] = [
+			[ [ $this, 'get_coupons' ],     WC_API_Server::READABLE ],
+		];
 
 		# GET /coupons/count
-		$routes[ $this->base . '/count' ] = array(
-			array( array( $this, 'get_coupons_count' ), WC_API_Server::READABLE ),
-		);
+		$routes[ $this->base . '/count' ] = [
+			[ [ $this, 'get_coupons_count' ], WC_API_Server::READABLE ],
+		];
 
 		# GET /coupons/<id>
-		$routes[ $this->base . '/(?P<id>\d+)' ] = array(
-			array( array( $this, 'get_coupon' ),  WC_API_Server::READABLE ),
-		);
+		$routes[ $this->base . '/(?P<id>\d+)' ] = [
+			[ [ $this, 'get_coupon' ],  WC_API_Server::READABLE ],
+		];
 
 		# GET /coupons/code/<code>, note that coupon codes can contain spaces, dashes and underscores
-		$routes[ $this->base . '/code/(?P<code>\w[\w\s\-]*)' ] = array(
-			array( array( $this, 'get_coupon_by_code' ), WC_API_Server::READABLE ),
-		);
+		$routes[ $this->base . '/code/(?P<code>\w[\w\s\-]*)' ] = [
+			[ [ $this, 'get_coupon_by_code' ], WC_API_Server::READABLE ],
+		];
 
 		return $routes;
 	}
@@ -65,13 +65,13 @@ class WC_API_Coupons extends WC_API_Resource {
 	 * @param int $page
 	 * @return array
 	 */
-	public function get_coupons( $fields = null, $filter = array(), $page = 1 ) {
+	public function get_coupons( $fields = null, $filter = [], $page = 1 ) {
 
 		$filter['page'] = $page;
 
 		$query = $this->query_coupons( $filter );
 
-		$coupons = array();
+		$coupons = [];
 
 		foreach ( $query->posts as $coupon_id ) {
 
@@ -84,7 +84,7 @@ class WC_API_Coupons extends WC_API_Resource {
 
 		$this->server->add_pagination_headers( $query );
 
-		return array( 'coupons' => $coupons );
+		return [ 'coupons' => $coupons ];
 	}
 
 	/**
@@ -111,7 +111,7 @@ class WC_API_Coupons extends WC_API_Resource {
 			throw new WC_API_Exception( 'woocommerce_api_invalid_coupon_id', __( 'Invalid coupon ID', 'woocommerce' ), 404 );
 		}
 
-		$coupon_data = array(
+		$coupon_data = [
 			'id'                           => $coupon->get_id(),
 			'code'                         => $coupon->get_code(),
 			'type'                         => $coupon->get_discount_type(),
@@ -132,9 +132,9 @@ class WC_API_Coupons extends WC_API_Resource {
 			'exclude_sale_items'           => $coupon->get_exclude_sale_items(),
 			'minimum_amount'               => wc_format_decimal( $coupon->get_minimum_amount(), 2 ),
 			'customer_emails'              => $coupon->get_email_restrictions(),
-		);
+		];
 
-		return array( 'coupon' => apply_filters( 'woocommerce_api_coupon_response', $coupon_data, $coupon, $fields, $this->server ) );
+		return [ 'coupon' => apply_filters( 'woocommerce_api_coupon_response', $coupon_data, $coupon, $fields, $this->server ) ];
 	}
 
 	/**
@@ -146,15 +146,15 @@ class WC_API_Coupons extends WC_API_Resource {
 	 *
 	 * @return array|WP_Error
 	 */
-	public function get_coupons_count( $filter = array() ) {
+	public function get_coupons_count( $filter = [] ) {
 
 		$query = $this->query_coupons( $filter );
 
 		if ( ! current_user_can( 'read_private_shop_coupons' ) ) {
-			return new WP_Error( 'woocommerce_api_user_cannot_read_coupons_count', __( 'You do not have permission to read the coupons count', 'woocommerce' ), array( 'status' => 401 ) );
+			return new WP_Error( 'woocommerce_api_user_cannot_read_coupons_count', __( 'You do not have permission to read the coupons count', 'woocommerce' ), [ 'status' => 401 ] );
 		}
 
-		return array( 'count' => (int) $query->found_posts );
+		return [ 'count' => (int) $query->found_posts ];
 	}
 
 	/**
@@ -171,7 +171,7 @@ class WC_API_Coupons extends WC_API_Resource {
 		$id = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM $wpdb->posts WHERE post_title = %s AND post_type = 'shop_coupon' AND post_status = 'publish' ORDER BY post_date DESC LIMIT 1;", $code ) );
 
 		if ( is_null( $id ) ) {
-			return new WP_Error( 'woocommerce_api_invalid_coupon_code', __( 'Invalid coupon code', 'woocommerce' ), array( 'status' => 404 ) );
+			return new WP_Error( 'woocommerce_api_invalid_coupon_code', __( 'Invalid coupon code', 'woocommerce' ), [ 'status' => 404 ] );
 		}
 
 		return $this->get_coupon( $id, $fields );
@@ -185,7 +185,7 @@ class WC_API_Coupons extends WC_API_Resource {
 	 */
 	public function create_coupon( $data ) {
 
-		return array();
+		return [];
 	}
 
 	/**
@@ -234,11 +234,11 @@ class WC_API_Coupons extends WC_API_Resource {
 	private function query_coupons( $args ) {
 
 		// set base query arguments
-		$query_args = array(
+		$query_args = [
 			'fields'      => 'ids',
 			'post_type'   => 'shop_coupon',
 			'post_status' => 'publish',
-		);
+		];
 
 		$query_args = $this->merge_query_args( $query_args, $args );
 

@@ -30,7 +30,7 @@ class WC_Tests_Paypal_Gateway_Request extends WC_Unit_Test_Case {
 	 * @param int $product_count Number of products to create.
 	 */
 	protected function create_products( $product_count = 30 ) {
-		$this->products = array();
+		$this->products = [];
 		for ( $i = 0; $i < $product_count; $i++ ) {
 			$product = WC_Helper_Product::create_simple_product( false );
 			$product->set_name( 'Dummy Product ' . $i );
@@ -52,7 +52,7 @@ class WC_Tests_Paypal_Gateway_Request extends WC_Unit_Test_Case {
 	 * @param WC_Order $order Order to which the products should be added.
 	 * @param array    $prices Array of prices to use for created products. Leave empty for default prices.
 	 */
-	protected function add_products_to_order( &$order, $prices = array() ) {
+	protected function add_products_to_order( &$order, $prices = [] ) {
 		// Remove previous items.
 		foreach ( $order->get_items() as $item ) {
 			$order->remove_item( $item->get_id() );
@@ -63,12 +63,12 @@ class WC_Tests_Paypal_Gateway_Request extends WC_Unit_Test_Case {
 		foreach ( $this->products as $product ) {
 			$item = new WC_Order_Item_Product();
 			$item->set_props(
-				array(
+				[
 					'product'  => $product,
 					'quantity' => 3,
-					'subtotal' => $prices ? $prices[ $prod_count ] : wc_get_price_excluding_tax( $product, array( 'qty' => 3 ) ),
-					'total'    => $prices ? $prices[ $prod_count ] : wc_get_price_excluding_tax( $product, array( 'qty' => 3 ) ),
-				)
+					'subtotal' => $prices ? $prices[ $prod_count ] : wc_get_price_excluding_tax( $product, [ 'qty' => 3 ] ),
+					'total'    => $prices ? $prices[ $prod_count ] : wc_get_price_excluding_tax( $product, [ 'qty' => 3 ] ),
+				]
 			);
 
 			$item->save();
@@ -102,7 +102,7 @@ class WC_Tests_Paypal_Gateway_Request extends WC_Unit_Test_Case {
 	 * @return string
 	 * @throws WC_Data_Exception Exception on failure.
 	 */
-	protected function get_request_url( $product_count, $testmode, $product_prices = array(), $calc_order_totals = true ) {
+	protected function get_request_url( $product_count, $testmode, $product_prices = [], $calc_order_totals = true ) {
 		// Create products.
 		$this->create_products( $product_count );
 
@@ -115,7 +115,7 @@ class WC_Tests_Paypal_Gateway_Request extends WC_Unit_Test_Case {
 
 		// Add tax.
 		if ( wc_tax_enabled() ) {
-			$tax_rate = array(
+			$tax_rate = [
 				'tax_rate_country'  => '',
 				'tax_rate_state'    => '',
 				'tax_rate'          => '11.0000',
@@ -125,7 +125,7 @@ class WC_Tests_Paypal_Gateway_Request extends WC_Unit_Test_Case {
 				'tax_rate_shipping' => '1',
 				'tax_rate_order'    => '1',
 				'tax_rate_class'    => '',
-			);
+			];
 			WC_Tax::_insert_tax_rate( $tax_rate );
 
 			$tax_item = new WC_Order_Item_Tax();
@@ -190,16 +190,16 @@ class WC_Tests_Paypal_Gateway_Request extends WC_Unit_Test_Case {
 		$this->check_order_common_props( $request_url, $testmode );
 
 		// Check fields limited to 127 characters for length.
-		$fields_limited_to_127_chars = array(
+		$fields_limited_to_127_chars = [
 			'invoice',
 			'item_name_1',
 			'item_number_1',
-		);
+		];
 
 		$query_string = wp_parse_url( $request_url, PHP_URL_QUERY )
 			? wp_parse_url( $request_url, PHP_URL_QUERY )
 			: '';
-		$query_array  = array();
+		$query_array  = [];
 		parse_str( $query_string, $query_array );
 		foreach ( $fields_limited_to_127_chars as $field_name ) {
 			$this->assertLessThanOrEqual( 127, mb_strlen( $query_array[ $field_name ] ) );
@@ -229,11 +229,11 @@ class WC_Tests_Paypal_Gateway_Request extends WC_Unit_Test_Case {
 
 		$product = new WC_Product_Simple();
 		$product->set_props(
-			array(
+			[
 				'name'          => 'New Product <a href="#" style="color: red;">Link</a>',
 				'regular_price' => 10,
 				'price'         => 10,
-			)
+			]
 		);
 		$product->save();
 		$product = wc_get_product( $product->get_id() );
@@ -242,12 +242,12 @@ class WC_Tests_Paypal_Gateway_Request extends WC_Unit_Test_Case {
 
 		$item = new WC_Order_Item_Product();
 		$item->set_props(
-			array(
+			[
 				'product'  => $product,
 				'quantity' => $qty,
-				'subtotal' => wc_get_price_excluding_tax( $product, array( 'qty' => $qty ) ),
-				'total'    => wc_get_price_excluding_tax( $product, array( 'qty' => $qty ) ),
-			)
+				'subtotal' => wc_get_price_excluding_tax( $product, [ 'qty' => $qty ] ),
+				'total'    => wc_get_price_excluding_tax( $product, [ 'qty' => $qty ] ),
+			]
 		);
 		$item->save();
 
@@ -259,7 +259,7 @@ class WC_Tests_Paypal_Gateway_Request extends WC_Unit_Test_Case {
 		$query_string = wp_parse_url( $request_url, PHP_URL_QUERY )
 			? wp_parse_url( $request_url, PHP_URL_QUERY )
 			: '';
-		$query_array  = array();
+		$query_array  = [];
 		parse_str( $query_string, $query_array );
 
 		$this->assertEquals( $query_array['item_name_1'], 'New Product Link x ' . $qty );
@@ -285,19 +285,19 @@ class WC_Tests_Paypal_Gateway_Request extends WC_Unit_Test_Case {
 	 * @param bool  $calc_order_totals Whether the WC_Order::calculate_totals() should be triggered when creating order.
 	 * @throws WC_Data_Exception Exception on failure.
 	 */
-	protected function check_small_order( $product_count, $shipping_tax_included, $testmode, $product_prices = array(), $calc_order_totals = true ) {
+	protected function check_small_order( $product_count, $shipping_tax_included, $testmode, $product_prices = [], $calc_order_totals = true ) {
 		$request_url = $this->get_request_url( $product_count, $testmode, $product_prices, $calc_order_totals );
 		$this->check_order_common_props( $request_url, $testmode );
 
 		$query_string = wp_parse_url( $request_url, PHP_URL_QUERY )
 			? wp_parse_url( $request_url, PHP_URL_QUERY )
 			: '';
-		$query_array  = array();
+		$query_array  = [];
 		parse_str( $query_string, $query_array );
 
 		// Check that there are $product_count line items in the request URL.
 		// However, if shipping tax is included, there is only one item.
-		if ( $shipping_tax_included || array_filter( $product_prices, array( $this, 'is_negative' ) ) || ! $calc_order_totals ) {
+		if ( $shipping_tax_included || array_filter( $product_prices, [ $this, 'is_negative' ] ) || ! $calc_order_totals ) {
 			$product_count = 1;
 		}
 
@@ -329,7 +329,7 @@ class WC_Tests_Paypal_Gateway_Request extends WC_Unit_Test_Case {
 	 */
 	protected function check_negative_amount( $testmode ) {
 		$shipping_tax_included = true;
-		$product_prices        = array( 6, 6, 6, 6, -3 );
+		$product_prices        = [ 6, 6, 6, 6, -3 ];
 		$this->check_small_order( count( $product_prices ), $shipping_tax_included, $testmode, $product_prices );
 	}
 
@@ -344,7 +344,7 @@ class WC_Tests_Paypal_Gateway_Request extends WC_Unit_Test_Case {
 	protected function check_totals_mismatch( $testmode ) {
 		// totals mismatch forces tax inclusion and single line item.
 		$shipping_tax_included = true;
-		$this->check_small_order( 5, $shipping_tax_included, $testmode, array(), false );
+		$this->check_small_order( 5, $shipping_tax_included, $testmode, [], false );
 	}
 
 	/**
@@ -362,14 +362,14 @@ class WC_Tests_Paypal_Gateway_Request extends WC_Unit_Test_Case {
 		// Note that prepare_line_items() can return false in 2 cases, tested separately below:
 		// - order totals mismatch and
 		// - item amount < 0.
-		$correct_options = array(
+		$correct_options = [
 			// woocommerce_calc_taxes, woocommerce_prices_include_tax, $shipping_tax_included values.
-			array( 'no', 'no', false ),
-			array( 'yes', 'no', false ),
+			[ 'no', 'no', false ],
+			[ 'yes', 'no', false ],
 			// phpcs:ignore Squiz.PHP.CommentedOutCode.Found
 			// array( 'no',  'yes',  false ), // this is not a valid option due to definition of wc_prices_include_tax().
-			array( 'yes', 'yes', true ),
-		);
+			[ 'yes', 'yes', true ],
+		];
 
 		// One test without sandbox.
 		$testmode = false;

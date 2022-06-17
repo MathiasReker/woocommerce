@@ -13,7 +13,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-return array(
+return [
 	'AF' => __( 'Afghanistan', 'woocommerce' ),
 	'AX' => __( 'Åland Islands', 'woocommerce' ),
 	'AL' => __( 'Albania', 'woocommerce' ),
@@ -263,4 +263,4 @@ return array(
 	'YE' => __( 'Yemen', 'woocommerce' ),
 	'ZM' => __( 'Zambia', 'woocommerce' ),
 	'ZW' => __( 'Zimbabwe', 'woocommerce' ),
-);
+];

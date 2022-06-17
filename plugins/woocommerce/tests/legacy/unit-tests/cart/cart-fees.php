@@ -17,10 +17,10 @@ class WC_Tests_WC_Cart_Fees extends WC_Unit_Test_Case {
 		$cart_fees = new WC_Cart_Fees( wc()->cart );
 
 		// Test add_fee.
-		$args = array(
+		$args = [
 			'name'   => 'testfee',
 			'amount' => 10,
-		);
+		];
 		$cart_fees->add_fee( $args );
 		$applied_fees = $cart_fees->get_fees();
 		$this->assertEquals( 'testfee', $applied_fees['testfee']->name );
@@ -29,21 +29,21 @@ class WC_Tests_WC_Cart_Fees extends WC_Unit_Test_Case {
 
 		// Test remove_all_fees.
 		$cart_fees->remove_all_fees();
-		$this->assertEquals( array(), $cart_fees->get_fees() );
+		$this->assertEquals( [], $cart_fees->get_fees() );
 
 		// Test set_fees.
-		$args = array(
-			array(
+		$args = [
+			[
 				'name'   => 'newfee',
 				'amount' => -5,
-			),
-			array(
+			],
+			[
 				'name'      => 'newfee2',
 				'amount'    => 10,
 				'tax_class' => 'Reduced rate',
 				'taxable'   => true,
-			),
-		);
+			],
+		];
 		$cart_fees->set_fees( $args );
 		$applied_fees = $cart_fees->get_fees();
 		$this->assertEquals( -5, $applied_fees['newfee']->amount );

@@ -17,10 +17,10 @@ class WC_Beta_Tester_Admin_Menus {
 	 */
 	public function __construct() {
 		if ( class_exists( 'WC_Admin_Status' ) ) {
-			add_action( 'admin_bar_menu', array( $this, 'admin_bar_menus' ), 50 );
+			add_action( 'admin_bar_menu', [ $this, 'admin_bar_menus' ], 50 );
 		}
-		add_action( 'admin_footer', array( $this, 'version_information_template' ) );
-		add_action( 'admin_head', array( $this, 'hide_from_menus' ) );
+		add_action( 'admin_footer', [ $this, 'version_information_template' ] );
+		add_action( 'admin_head', [ $this, 'hide_from_menus' ] );
 	}
 
 	/**
@@ -174,7 +174,7 @@ Copy and paste the system status report from **WooCommerce > System Status** in 
 			$api      = new WC_REST_System_Status_Controller();
 			$schema   = $api->get_item_schema();
 			$mappings = $api->get_item_mappings();
-			$response = array();
+			$response = [];
 
 			foreach ( $mappings as $section => $values ) {
 				foreach ( $values as $key => $value ) {
@@ -233,11 +233,11 @@ Copy and paste the system status report from **WooCommerce > System Status** in 
 		}
 
 		return add_query_arg(
-			array(
+			[
 				'body'  => rawurlencode( $body ),
 				/* translators: %s: woocommerce version */
 				'title' => rawurlencode( sprintf( __( '[WC Beta Tester] Bug report for version "%s"', 'woocommerce-beta-tester' ), $version ) ),
-			),
+			],
 			'https://github.com/woocommerce/woocommerce/issues/new'
 		);
 	}
@@ -259,11 +259,11 @@ Copy and paste the system status report from **WooCommerce > System Status** in 
 
 		// Add the beta tester root node.
 		$wp_admin_bar->add_node(
-			array(
+			[
 				'parent' => 0,
 				'id'     => 'wc-beta-tester',
 				'title'  => __( 'WC Beta Tester', 'woocommerce-beta-tester' ),
-			)
+			]
 		);
 
 		$settings = WC_Beta_Tester::get_settings();
@@ -279,44 +279,44 @@ Copy and paste the system status report from **WooCommerce > System Status** in 
 				break;
 		}
 
-		$nodes = array(
-			array(
+		$nodes = [
+			[
 				'parent' => 'wc-beta-tester',
 				'id'     => 'update-channel',
 				/* translators: %s: current channel */
 				'title'  => sprintf( __( 'Channel: %s', 'woocommerce-beta-tester' ), $current_channel ),
 				'href'   => admin_url( 'plugins.php?page=wc-beta-tester' ),
-			),
-			array(
+			],
+			[
 				'parent' => 'wc-beta-tester',
 				'id'     => 'import-export-settings',
 				'title'  => __( 'Import/Export Settings', 'woocommerce-beta-tester' ),
 				'href'   => admin_url( 'admin.php?page=wc-beta-tester-settings' ),
-			),
-			array(
+			],
+			[
 				'parent' => 'wc-beta-tester',
 				'id'     => 'show-version-info',
 				/* translators: %s: current version */
 				'title'  => sprintf( __( 'Release %s information', 'woocommerce-beta-tester' ), WC_VERSION ),
 				'href'   => '#',
-			),
-			array(
+			],
+			[
 				'parent' => 'wc-beta-tester',
 				'id'     => 'switch-version',
 				'title'  => __( 'Switch versions', 'woocommerce-beta-tester' ),
 				'href'   => admin_url( 'plugins.php?page=wc-beta-tester-version-picker' ),
-			),
-			array(
+			],
+			[
 				'parent' => 'wc-beta-tester',
 				'id'     => 'submit-gh-ticket',
 				'title'  => __( 'Submit bug report', 'woocommerce-beta-tester' ),
 				'href'   => '#',
-				'meta'   => array(
+				'meta'   => [
 					// We can't simply use the href here since WP core calls esc_url on it which strips some parts.
 					'onclick' => 'javascript:window.open( "' . esc_js( $this->get_github_ticket_url() ) . '" );',
-				),
-			),
-		);
+				],
+			],
+		];
 
 		foreach ( $nodes as $node ) {
 			$wp_admin_bar->add_node( $node );
@@ -329,7 +329,7 @@ Copy and paste the system status report from **WooCommerce > System Status** in 
 	public function hide_from_menus() {
 		global $submenu;
 
-		$items_to_remove = array( 'wc-beta-tester-settings', 'wc-beta-tester-version-picker', 'wc-beta-tester' );
+		$items_to_remove = [ 'wc-beta-tester-settings', 'wc-beta-tester-version-picker', 'wc-beta-tester' ];
 		if ( isset( $submenu['plugins.php'] ) ) {
 			foreach ( $submenu['plugins.php'] as $key => $menu ) {
 				if (  in_array( $menu[2], $items_to_remove ) ) {

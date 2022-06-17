@@ -17,22 +17,22 @@ class WC_Settings_Tracking {
 	 *
 	 * @var array
 	 */
-	protected $allowed_options = array();
+	protected $allowed_options = [];
 
 	/**
 	 * WooCommerce settings that have been updated (and will be tracked).
 	 *
 	 * @var array
 	 */
-	protected $updated_options = array();
+	protected $updated_options = [];
 
 	/**
 	 * Init tracking.
 	 */
 	public function init() {
-		add_action( 'woocommerce_settings_page_init', array( $this, 'track_settings_page_view' ) );
-		add_action( 'woocommerce_update_option', array( $this, 'add_option_to_list' ) );
-		add_action( 'woocommerce_update_options', array( $this, 'send_settings_change_event' ) );
+		add_action( 'woocommerce_settings_page_init', [ $this, 'track_settings_page_view' ] );
+		add_action( 'woocommerce_update_option', [ $this, 'add_option_to_list' ] );
+		add_action( 'woocommerce_update_options', [ $this, 'send_settings_change_event' ] );
 	}
 
 	/**
@@ -49,8 +49,8 @@ class WC_Settings_Tracking {
 		$this->allowed_options[] = $option['id'];
 
 		// Delay attaching this action since it could get fired a lot.
-		if ( false === has_action( 'update_option', array( $this, 'track_setting_change' ) ) ) {
-			add_action( 'update_option', array( $this, 'track_setting_change' ), 10, 3 );
+		if ( false === has_action( 'update_option', [ $this, 'track_setting_change' ] ) ) {
+			add_action( 'update_option', [ $this, 'track_setting_change' ], 10, 3 );
 		}
 	}
 
@@ -91,9 +91,9 @@ class WC_Settings_Tracking {
 			return;
 		}
 
-		$properties = array(
+		$properties = [
 			'settings' => implode( ',', $this->updated_options ),
-		);
+		];
 
 		if ( isset( $current_tab ) ) {
 			$properties['tab'] = $current_tab;
@@ -111,10 +111,10 @@ class WC_Settings_Tracking {
 	public function track_settings_page_view() {
 		global $current_tab, $current_section;
 
-		$properties = array(
+		$properties = [
 			'tab'     => $current_tab,
 			'section' => empty( $current_section ) ? null : $current_section,
-		);
+		];
 
 		WC_Tracks::record_event( 'settings_view', $properties );
 	}

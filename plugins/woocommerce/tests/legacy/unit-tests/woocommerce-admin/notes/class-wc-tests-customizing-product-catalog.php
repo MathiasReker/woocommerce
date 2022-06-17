@@ -58,12 +58,12 @@ class WC_Admin_Tests_Customizing_Product_Catalog extends WC_Unit_Test_Case {
 	public function test_it_does_not_add_note_if_prouduct_is_less_than_a_day_old() {
 		// Given.
 		wp_insert_post(
-			array(
+			[
 				'post_title'   => 'a product',
 				'post_type'    => 'product',
 				'post_status'  => 'publish',
 				'post_content' => '',
-			)
+			]
 		);
 
 		// When.
@@ -82,12 +82,12 @@ class WC_Admin_Tests_Customizing_Product_Catalog extends WC_Unit_Test_Case {
 		// Given.
 		update_option( 'woocommerce_admin_install_timestamp', time() - ( DAY_IN_SECONDS * 14 ) );
 		wp_insert_post(
-			array(
+			[
 				'post_title'   => 'a product',
 				'post_type'    => 'product',
 				'post_status'  => 'publish',
 				'post_content' => '',
-			)
+			]
 		);
 
 		// When.
@@ -110,17 +110,17 @@ class WC_Admin_Tests_Customizing_Product_Catalog extends WC_Unit_Test_Case {
 		$day_before = gmdate( 'Y-m-d H:i:s', time() - DAY_IN_SECONDS );
 		$product    = new \WC_Product();
 		$product->set_props(
-			array(
+			[
 				'name' => 'test',
-			)
+			]
 		);
 		$product_id = $product->save();
 		wp_update_post(
-			array(
+			[
 				'ID'            => $product_id,
 				'post_date'     => $day_before,
 				'post_date_gmt' => get_gmt_from_date( $day_before ),
-			)
+			]
 		);
 
 		// When.

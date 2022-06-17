@@ -43,7 +43,7 @@ trait WC_Item_Totals {
 	public static function get_rounded_items_total( $values ) {
 		return array_sum(
 			array_map(
-				array( self::class, 'round_item_subtotal' ),
+				[ self::class, 'round_item_subtotal' ],
 				$values
 			)
 		);

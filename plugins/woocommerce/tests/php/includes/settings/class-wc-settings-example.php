@@ -18,15 +18,15 @@ class WC_Settings_Example extends WC_Settings_Page {
 	}
 
 	protected function get_settings_for_default_section() {
-		return array( 'key' => 'value' );
+		return [ 'key' => 'value' ];
 	}
 
 	protected function get_settings_for_foobar_section() {
-		return array( 'foo' => 'bar' );
+		return [ 'foo' => 'bar' ];
 	}
 
 	protected function get_settings_for_section_core( $section_id ) {
-		return array( "${section_id}_key" => "${section_id}_value" );
+		return [ "${section_id}_key" => "${section_id}_value" ];
 	}
 
 	protected function get_own_sections() {

@@ -44,7 +44,7 @@ class WC_Tests_WC_Query extends WC_Unit_Test_Case {
 		// Test the default options are present.
 		WC()->query->init_query_vars();
 		$default_vars = WC()->query->get_query_vars();
-		$expected     = array(
+		$expected     = [
 			'order-pay'                  => 'order-pay',
 			'order-received'             => 'order-received',
 			'orders'                     => 'orders',
@@ -58,7 +58,7 @@ class WC_Tests_WC_Query extends WC_Unit_Test_Case {
 			'add-payment-method'         => 'add-payment-method',
 			'delete-payment-method'      => 'delete-payment-method',
 			'set-default-payment-method' => 'set-default-payment-method',
-		);
+		];
 		$this->assertEquals( $expected, $default_vars );
 
 		// Test updating a setting works.
@@ -72,7 +72,7 @@ class WC_Tests_WC_Query extends WC_Unit_Test_Case {
 	 * Test the get_endpoint_title method.
 	 */
 	public function test_get_endpoint_title() {
-		$endpoints = array(
+		$endpoints = [
 			'order-pay',
 			'order-received',
 			'orders',
@@ -82,7 +82,7 @@ class WC_Tests_WC_Query extends WC_Unit_Test_Case {
 			'payment-methods',
 			'add-payment-method',
 			'lost-password',
-		);
+		];
 
 		foreach ( $endpoints as $endpoint ) {
 			$this->assertNotEquals( '', WC()->query->get_endpoint_title( $endpoint ) );
@@ -109,10 +109,10 @@ class WC_Tests_WC_Query extends WC_Unit_Test_Case {
 	public function test_add_query_vars() {
 		WC()->query->init_query_vars();
 
-		$vars  = array(
+		$vars  = [
 			'test1',
 			'test2',
-		);
+		];
 		$added = WC()->query->add_query_vars( $vars );
 
 		$this->assertContains( 'test1', $added );
@@ -157,11 +157,11 @@ class WC_Tests_WC_Query extends WC_Unit_Test_Case {
 	 * Test the remove_product_query method.
 	 */
 	public function test_remove_product_query() {
-		$this->assertTrue( (bool) has_filter( 'pre_get_posts', array( WC()->query, 'pre_get_posts' ) ) );
+		$this->assertTrue( (bool) has_filter( 'pre_get_posts', [ WC()->query, 'pre_get_posts' ] ) );
 
 		WC()->query->remove_product_query();
 
-		$this->assertFalse( (bool) has_filter( 'pre_get_posts', array( WC()->query, 'pre_get_posts' ) ) );
+		$this->assertFalse( (bool) has_filter( 'pre_get_posts', [ WC()->query, 'pre_get_posts' ] ) );
 	}
 
 	/**
@@ -171,10 +171,10 @@ class WC_Tests_WC_Query extends WC_Unit_Test_Case {
 	 */
 	public function test_remove_ordering_args() {
 		WC()->query->get_catalog_ordering_args( 'price', 'DESC' );
-		$this->assertTrue( (bool) has_filter( 'posts_clauses', array( WC()->query, 'order_by_price_desc_post_clauses' ) ) );
+		$this->assertTrue( (bool) has_filter( 'posts_clauses', [ WC()->query, 'order_by_price_desc_post_clauses' ] ) );
 
 		WC()->query->remove_ordering_args();
-		$this->assertFalse( (bool) has_filter( 'posts_clauses', array( WC()->query, 'order_by_price_desc_post_clauses' ) ) );
+		$this->assertFalse( (bool) has_filter( 'posts_clauses', [ WC()->query, 'order_by_price_desc_post_clauses' ] ) );
 	}
 
 	/**
@@ -184,121 +184,121 @@ class WC_Tests_WC_Query extends WC_Unit_Test_Case {
 	 */
 	public function test_get_catalog_ordering_args() {
 		// phpcs:disable WordPress.DB.SlowDBQuery
-		$data = array(
-			array(
+		$data = [
+			[
 				'orderby'  => 'menu_order',
 				'order'    => 'ASC',
-				'expected' => array(
+				'expected' => [
 					'orderby'  => 'menu_order title',
 					'order'    => 'ASC',
 					'meta_key' => '',
-				),
-			),
-			array(
+				],
+			],
+			[
 				'orderby'  => 'title',
 				'order'    => 'DESC',
-				'expected' => array(
+				'expected' => [
 					'orderby'  => 'title',
 					'order'    => 'DESC',
 					'meta_key' => '',
-				),
-			),
-			array(
+				],
+			],
+			[
 				'orderby'  => 'relevance',
 				'order'    => 'ASC',
-				'expected' => array(
+				'expected' => [
 					'orderby'  => 'relevance',
 					'order'    => 'DESC', // Relevance is always DESC order.
 					'meta_key' => '',
-				),
-			),
-			array(
+				],
+			],
+			[
 				'orderby'  => 'rand',
 				'order'    => '',
-				'expected' => array(
+				'expected' => [
 					'orderby'  => 'rand',
 					'order'    => 'ASC',
 					'meta_key' => '',
-				),
-			),
-			array(
+				],
+			],
+			[
 				'orderby'  => 'date',
 				'order'    => 'DESC',
-				'expected' => array(
+				'expected' => [
 					'orderby'  => 'date ID',
 					'order'    => 'DESC',
 					'meta_key' => '',
-				),
-			),
-			array(
+				],
+			],
+			[
 				'orderby'  => 'price',
 				'order'    => 'ASC',
-				'expected' => array(
+				'expected' => [
 					'orderby'  => 'price',
 					'order'    => 'ASC',
 					'meta_key' => '',
-				),
-			),
-			array(
+				],
+			],
+			[
 				'orderby'  => 'price',
 				'order'    => 'DESC',
-				'expected' => array(
+				'expected' => [
 					'orderby'  => 'price',
 					'order'    => 'DESC',
 					'meta_key' => '',
-				),
-			),
-			array(
+				],
+			],
+			[
 				'orderby'  => 'popularity',
 				'order'    => 'DESC',
-				'expected' => array(
+				'expected' => [
 					'orderby'  => 'popularity',
 					'order'    => 'DESC',
 					'meta_key' => '',
-				),
-			),
-			array(
+				],
+			],
+			[
 				'orderby'  => 'rating',
 				'order'    => 'ASC',
-				'expected' => array(
+				'expected' => [
 					'orderby'  => 'rating',
 					'order'    => 'ASC',
 					'meta_key' => '',
-				),
-			),
-			array(
+				],
+			],
+			[
 				'orderby'  => 'unknownkey',
 				'order'    => 'ASC',
-				'expected' => array(
+				'expected' => [
 					'orderby'  => 'unknownkey',
 					'order'    => 'ASC',
 					'meta_key' => '',
-				),
-			),
-			array(
+				],
+			],
+			[
 				'orderby'  => 'date',
 				'order'    => 'INVALIDORDER',
-				'expected' => array(
+				'expected' => [
 					'orderby'  => 'date ID',
 					'order'    => 'DESC',
 					'meta_key' => '',
-				),
-			),
-			array(
-				'orderby'  => array(
+				],
+			],
+			[
+				'orderby'  => [
 					'price',
 					'date',
-				),
-				'order'    => array(
+				],
+				'order'    => [
 					'DESC',
-				),
-				'expected' => array(
+				],
+				'expected' => [
 					'orderby'  => 'price',
 					'order'    => 'DESC',
 					'meta_key' => '',
-				),
-			),
-		);
+				],
+			],
+		];
 		// phpcs:enable WordPress.DB.SlowDBQuery
 
 		foreach ( $data as $test ) {
@@ -314,11 +314,11 @@ class WC_Tests_WC_Query extends WC_Unit_Test_Case {
 		$_GET['orderby'] = 'price-desc';
 
 		// phpcs:disable WordPress.DB.SlowDBQuery
-		$expected = array(
+		$expected = [
 			'orderby'  => 'price',
 			'order'    => 'DESC',
 			'meta_key' => '',
-		);
+		];
 		// phpcs:enable WordPress.DB.SlowDBQuery
 
 		$this->assertEquals( $expected, WC()->query->get_catalog_ordering_args() );
@@ -338,18 +338,18 @@ class WC_Tests_WC_Query extends WC_Unit_Test_Case {
 	 * Test the get_main_tax_query method.
 	 */
 	public function test_get_main_tax_query() {
-		$tax_query = array(
+		$tax_query = [
 			'taxonomy'         => 'product_tag',
 			'field'            => 'slug',
-			'terms'            => array( 'test' ),
+			'terms'            => [ 'test' ],
 			'operator'         => 'IN',
 			'include_children' => true,
-		);
+		];
 
 		// phpcs:disable WordPress.DB.SlowDBQuery
-		$query_args = array(
-			'tax_query' => array( $tax_query ),
-		);
+		$query_args = [
+			'tax_query' => [ $tax_query ],
+		];
 		// phpcs:enable WordPress.DB.SlowDBQuery
 
 		WC()->query->product_query( new WP_Query( $query_args ) );
@@ -361,16 +361,16 @@ class WC_Tests_WC_Query extends WC_Unit_Test_Case {
 	 * Test the get_main_meta_query method.
 	 */
 	public function test_get_main_meta_query() {
-		$meta_query = array(
+		$meta_query = [
 			'key'     => '_stock',
 			'value'   => 10,
 			'compare' => '=',
-		);
+		];
 
 		// phpcs:disable WordPress.DB.SlowDBQuery
-		$query_args = array(
-			'meta_query' => array( $meta_query ),
-		);
+		$query_args = [
+			'meta_query' => [ $meta_query ],
+		];
 		// phpcs:enable WordPress.DB.SlowDBQuery
 
 		WC()->query->product_query( new WP_Query( $query_args ) );
@@ -392,46 +392,46 @@ class WC_Tests_WC_Query extends WC_Unit_Test_Case {
 	public function test_catalog_order_by_rating() {
 		$worst_product = WC_Helper_Product::create_simple_product();
 		$worst_product->set_average_rating( 1 );
-		$worst_product->set_rating_counts( array( 1 => 5 ) );
+		$worst_product->set_rating_counts( [ 1 => 5 ] );
 		$worst_product->save();
 		$no_reviews = WC_Helper_Product::create_simple_product();
 		$no_reviews->set_average_rating( 0 );
-		$no_reviews->set_rating_counts( array() );
+		$no_reviews->set_rating_counts( [] );
 		$no_reviews->save();
 		$two_positive = WC_Helper_Product::create_simple_product();
 		$two_positive->set_average_rating( 5 );
-		$two_positive->set_rating_counts( array( 5 => 2 ) );
+		$two_positive->set_rating_counts( [ 5 => 2 ] );
 		$two_positive->save();
 		$one_positive = WC_Helper_Product::create_simple_product();
 		$one_positive->set_average_rating( 5 );
-		$one_positive->set_rating_counts( array( 5 => 1 ) );
+		$one_positive->set_rating_counts( [ 5 => 1 ] );
 		$one_positive->save();
 		$top_product = WC_Helper_Product::create_simple_product();
 		$top_product->set_average_rating( 5 );
-		$top_product->set_rating_counts( array( 5 => 3 ) );
+		$top_product->set_rating_counts( [ 5 => 3 ] );
 		$top_product->save();
 
 		$query = new WP_Query(
 			array_merge(
-				array(
+				[
 					'fields'      => 'ids',
 					'post_type'   => 'product',
 					'post_status' => 'publish',
 					'orderby'     => 'rating',
 					'order'       => 'DESC',
-				),
+				],
 				WC()->query->get_catalog_ordering_args( 'rating' )
 			)
 		);
 
 		$this->assertEquals(
-			array(
+			[
 				$top_product->get_id(),
 				$two_positive->get_id(),
 				$one_positive->get_id(),
 				$worst_product->get_id(),
 				$no_reviews->get_id(),
-			),
+			],
 			wp_parse_id_list( $query->posts )
 		);
 

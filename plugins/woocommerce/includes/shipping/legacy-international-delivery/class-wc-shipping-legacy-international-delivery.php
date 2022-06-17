@@ -30,7 +30,7 @@ class WC_Shipping_Legacy_International_Delivery extends WC_Shipping_Legacy_Flat_
 		$this->method_description = '<strong>' . sprintf( __( 'This method is deprecated in 2.6.0 and will be removed in future versions - we recommend disabling it and instead setting up a new rate within your <a href="%s">Shipping zones</a>.', 'woocommerce' ), admin_url( 'admin.php?page=wc-settings&tab=shipping' ) ) . '</strong>';
 		$this->init();
 
-		add_action( 'woocommerce_update_options_shipping_' . $this->id, array( $this, 'process_admin_options' ) );
+		add_action( 'woocommerce_update_options_shipping_' . $this->id, [ $this, 'process_admin_options' ] );
 	}
 
 	/**
@@ -48,17 +48,17 @@ class WC_Shipping_Legacy_International_Delivery extends WC_Shipping_Legacy_Flat_
 	 */
 	public function init_form_fields() {
 		parent::init_form_fields();
-		$this->form_fields['availability'] = array(
+		$this->form_fields['availability'] = [
 			'title'       => __( 'Availability', 'woocommerce' ),
 			'type'        => 'select',
 			'class'       => 'wc-enhanced-select',
 			'description' => '',
 			'default'     => 'including',
-			'options'     => array(
+			'options'     => [
 				'including' => __( 'Selected countries', 'woocommerce' ),
 				'excluding' => __( 'Excluding selected countries', 'woocommerce' ),
-			),
-		);
+			],
+		];
 	}
 
 	/**

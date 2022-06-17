@@ -18,35 +18,35 @@ class SqlQuery {
 	 *
 	 * @var array
 	 */
-	private $sql_clauses = array(
-		'select'     => array(),
-		'from'       => array(),
-		'left_join'  => array(),
-		'join'       => array(),
-		'right_join' => array(),
-		'where'      => array(),
-		'where_time' => array(),
-		'group_by'   => array(),
-		'having'     => array(),
-		'limit'      => array(),
-		'order_by'   => array(),
-	);
+	private $sql_clauses = [
+		'select'     => [],
+		'from'       => [],
+		'left_join'  => [],
+		'join'       => [],
+		'right_join' => [],
+		'where'      => [],
+		'where_time' => [],
+		'group_by'   => [],
+		'having'     => [],
+		'limit'      => [],
+		'order_by'   => [],
+	];
 	/**
 	 * SQL clause merge filters.
 	 *
 	 * @var array
 	 */
-	private $sql_filters = array(
-		'where' => array(
+	private $sql_filters = [
+		'where' => [
 			'where',
 			'where_time',
-		),
-		'join'  => array(
+		],
+		'join'  => [
 			'right_join',
 			'join',
 			'left_join',
-		),
-	);
+		],
+	];
 	/**
 	 * Data store context used to pass to filters.
 	 *
@@ -97,7 +97,7 @@ class SqlQuery {
 		}
 
 		if ( isset( $this->sql_filters[ $type ] ) ) {
-			$clauses = array();
+			$clauses = [];
 			foreach ( $this->sql_filters[ $type ] as $subset ) {
 				$clauses = array_merge( $clauses, $this->sql_clauses[ $subset ] );
 			}
@@ -129,7 +129,7 @@ class SqlQuery {
 	protected function clear_sql_clause( $types ) {
 		foreach ( (array) $types as $type ) {
 			if ( isset( $this->sql_clauses[ $type ] ) ) {
-				$this->sql_clauses[ $type ] = array();
+				$this->sql_clauses[ $type ] = [];
 			}
 		}
 	}
@@ -200,18 +200,18 @@ class SqlQuery {
 	 * Reinitialize the clause array.
 	 */
 	public function clear_all_clauses() {
-		$this->sql_clauses = array(
-			'select'     => array(),
-			'from'       => array(),
-			'left_join'  => array(),
-			'join'       => array(),
-			'right_join' => array(),
-			'where'      => array(),
-			'where_time' => array(),
-			'group_by'   => array(),
-			'having'     => array(),
-			'limit'      => array(),
-			'order_by'   => array(),
-		);
+		$this->sql_clauses = [
+			'select'     => [],
+			'from'       => [],
+			'left_join'  => [],
+			'join'       => [],
+			'right_join' => [],
+			'where'      => [],
+			'where_time' => [],
+			'group_by'   => [],
+			'having'     => [],
+			'limit'      => [],
+			'order_by'   => [],
+		];
 	}
 }

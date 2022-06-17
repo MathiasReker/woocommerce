@@ -15,20 +15,20 @@ class WC_Admin_Tests_RemoteInboxNotifications_Transformers_ArrayFlatten extends 
 	 * Test it returns flatten array
 	 */
 	public function test_it_returns_flatten_array() {
-		$items = array(
-			array(
+		$items = [
+			[
 				'member1',
-			),
-			array(
+			],
+			[
 				'member2',
-			),
-			array(
+			],
+			[
 				'member3',
-			),
-		);
+			],
+		];
 
 		$array_keys = new ArrayFlatten();
 		$result     = $array_keys->transform( $items );
-		$this->assertEquals( array( 'member1', 'member2', 'member3' ), $result );
+		$this->assertEquals( [ 'member1', 'member2', 'member3' ], $result );
 	}
 }

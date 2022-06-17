@@ -39,14 +39,14 @@ class WC_REST_Data_Controller extends WC_REST_Controller {
 	 */
 	public function register_routes() {
 		register_rest_route(
-			$this->namespace, '/' . $this->rest_base, array(
-				array(
+			$this->namespace, '/' . $this->rest_base, [
+				[
 					'methods'             => WP_REST_Server::READABLE,
-					'callback'            => array( $this, 'get_items' ),
-					'permission_callback' => array( $this, 'get_items_permissions_check' ),
-				),
-				'schema' => array( $this, 'get_public_item_schema' ),
-			)
+					'callback'            => [ $this, 'get_items' ],
+					'permission_callback' => [ $this, 'get_items_permissions_check' ],
+				],
+				'schema' => [ $this, 'get_public_item_schema' ],
+			]
 		);
 	}
 
@@ -58,7 +58,7 @@ class WC_REST_Data_Controller extends WC_REST_Controller {
 	 */
 	public function get_items_permissions_check( $request ) {
 		if ( ! wc_rest_check_manager_permissions( 'settings', 'read' ) ) {
-			return new WP_Error( 'woocommerce_rest_cannot_view', __( 'Sorry, you cannot list resources.', 'woocommerce' ), array( 'status' => rest_authorization_required_code() ) );
+			return new WP_Error( 'woocommerce_rest_cannot_view', __( 'Sorry, you cannot list resources.', 'woocommerce' ), [ 'status' => rest_authorization_required_code() ] );
 		}
 
 		return true;
@@ -72,7 +72,7 @@ class WC_REST_Data_Controller extends WC_REST_Controller {
 	 */
 	public function get_item_permissions_check( $request ) {
 		if ( ! wc_rest_check_manager_permissions( 'settings', 'read' ) ) {
-			return new WP_Error( 'woocommerce_rest_cannot_view', __( 'Sorry, you cannot view this resource.', 'woocommerce' ), array( 'status' => rest_authorization_required_code() ) );
+			return new WP_Error( 'woocommerce_rest_cannot_view', __( 'Sorry, you cannot view this resource.', 'woocommerce' ), [ 'status' => rest_authorization_required_code() ] );
 		}
 
 		return true;
@@ -86,21 +86,21 @@ class WC_REST_Data_Controller extends WC_REST_Controller {
 	 * @return WP_Error|WP_REST_Response
 	 */
 	public function get_items( $request ) {
-		$data      = array();
-		$resources = array(
-			array(
+		$data      = [];
+		$resources = [
+			[
 				'slug'        => 'continents',
 				'description' => __( 'List of supported continents, countries, and states.', 'woocommerce' ),
-			),
-			array(
+			],
+			[
 				'slug'        => 'countries',
 				'description' => __( 'List of supported states in a given country.', 'woocommerce' ),
-			),
-			array(
+			],
+			[
 				'slug'        => 'currencies',
 				'description' => __( 'List of supported currencies.', 'woocommerce' ),
-			),
-		);
+			],
+		];
 
 		foreach ( $resources as $resource ) {
 			$item   = $this->prepare_item_for_response( (object) $resource, $request );
@@ -118,10 +118,10 @@ class WC_REST_Data_Controller extends WC_REST_Controller {
 	 * @return WP_REST_Response $response Response data.
 	 */
 	public function prepare_item_for_response( $resource, $request ) {
-		$data = array(
+		$data = [
 			'slug'        => $resource->slug,
 			'description' => $resource->description,
-		);
+		];
 
 		$data = $this->add_additional_fields_to_object( $data, $request );
 		$data = $this->filter_response_by_context( $data, 'view' );
@@ -140,14 +140,14 @@ class WC_REST_Data_Controller extends WC_REST_Controller {
 	 * @return array Links for the given country.
 	 */
 	protected function prepare_links( $item ) {
-		$links = array(
-			'self'       => array(
+		$links = [
+			'self'       => [
 				'href' => rest_url( sprintf( '/%s/%s/%s', $this->namespace, $this->rest_base, $item->slug ) ),
-			),
-			'collection' => array(
+			],
+			'collection' => [
 				'href' => rest_url( sprintf( '%s/%s', $this->namespace, $this->rest_base ) ),
-			),
-		);
+			],
+		];
 
 		return $links;
 	}
@@ -159,25 +159,25 @@ class WC_REST_Data_Controller extends WC_REST_Controller {
 	 * @return array
 	 */
 	public function get_item_schema() {
-		$schema = array(
+		$schema = [
 			'$schema'    => 'http://json-schema.org/draft-04/schema#',
 			'title'      => 'data_index',
 			'type'       => 'object',
-			'properties' => array(
-				'slug'        => array(
+			'properties' => [
+				'slug'        => [
 					'description' => __( 'Data resource ID.', 'woocommerce' ),
 					'type'        => 'string',
-					'context'     => array( 'view' ),
+					'context'     => [ 'view' ],
 					'readonly'    => true,
-				),
-				'description' => array(
+				],
+				'description' => [
 					'description' => __( 'Data resource description.', 'woocommerce' ),
 					'type'        => 'string',
-					'context'     => array( 'view' ),
+					'context'     => [ 'view' ],
 					'readonly'    => true,
-				),
-			),
-		);
+				],
+			],
+		];
 
 		return $this->add_additional_fields_schema( $schema );
 	}

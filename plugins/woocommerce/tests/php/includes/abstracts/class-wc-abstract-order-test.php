@@ -18,14 +18,14 @@ class WC_Abstract_Order_Test extends WC_Unit_Test_Case {
 	public function test_order_calculate_26582() {
 		update_option( 'woocommerce_prices_include_tax', 'yes' );
 		update_option( 'woocommerce_calc_taxes', 'yes' );
-		$tax_rate = array(
+		$tax_rate = [
 			'tax_rate_country'  => '',
 			'tax_rate_state'    => '',
 			'tax_rate'          => '15.0000',
 			'tax_rate_name'     => 'tax',
 			'tax_rate_priority' => '1',
 			'tax_rate_order'    => '1',
-		);
+		];
 		WC_Tax::_insert_tax_rate( $tax_rate );
 
 		$product1 = WC_Helper_Product::create_simple_product();
@@ -86,12 +86,12 @@ class WC_Abstract_Order_Test extends WC_Unit_Test_Case {
 
 		$password = wp_generate_password( 8, false, false );
 		$admin_id = wp_insert_user(
-			array(
+			[
 				'user_login' => "test_admin$password",
 				'user_pass'  => $password,
 				'user_email' => "admin$password@example.com",
 				'role'       => 'administrator',
-			)
+			]
 		);
 
 		update_user_meta( $admin_id, 'billing_country', 'MV' ); // Different than customer's address and base location.
@@ -101,14 +101,14 @@ class WC_Abstract_Order_Test extends WC_Unit_Test_Case {
 
 		update_option( 'woocommerce_default_country', 'IN:AP' );
 
-		$tax_rate = array(
+		$tax_rate = [
 			'tax_rate_country' => 'IN',
 			'tax_rate_state'   => '',
 			'tax_rate'         => '25.0000',
 			'tax_rate_name'    => 'tax',
 			'tax_rate_order'   => '1',
 			'tax_rate_class'   => '',
-		);
+		];
 		WC_Tax::_insert_tax_rate( $tax_rate );
 
 		$product = WC_Helper_Product::create_simple_product();
@@ -147,14 +147,14 @@ class WC_Abstract_Order_Test extends WC_Unit_Test_Case {
 		$args_passed_to_get_price    = false;
 
 		FunctionsMockerHack::add_function_mocks(
-			array(
-				'wc_get_price_excluding_tax' => function( $product, $args = array() ) use ( &$product_passed_to_get_price, &$args_passed_to_get_price ) {
+			[
+				'wc_get_price_excluding_tax' => function( $product, $args = [] ) use ( &$product_passed_to_get_price, &$args_passed_to_get_price ) {
 						$product_passed_to_get_price = $product;
 						$args_passed_to_get_price    = $args;
 
 						return 1234;
 				},
-			)
+			]
 		);
 
 		//phpcs:disable Squiz.Commenting
@@ -168,7 +168,7 @@ class WC_Abstract_Order_Test extends WC_Unit_Test_Case {
 		//phpcs:enable Squiz.Commenting
 
 		$this->register_legacy_proxy_class_mocks(
-			array( 'WC_Order_Item_Product' => $order_item )
+			[ 'WC_Order_Item_Product' => $order_item ]
 		);
 
 		$product = WC_Helper_Product::create_simple_product();
@@ -177,7 +177,7 @@ class WC_Abstract_Order_Test extends WC_Unit_Test_Case {
 
 		$order = wc_create_order();
 
-		$order->add_product( $product, 1, array( 'order' => $order ) );
+		$order->add_product( $product, 1, [ 'order' => $order ] );
 
 		$this->assertSame( $product, $product_passed_to_get_price );
 		$this->assertSame( $order, $args_passed_to_get_price['order'] );

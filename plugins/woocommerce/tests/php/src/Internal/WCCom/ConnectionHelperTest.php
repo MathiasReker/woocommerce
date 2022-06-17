@@ -16,7 +16,7 @@ class ConnectionHelperTest extends \WC_Unit_Test_Case {
 		delete_option( 'woocommerce_helper_data' );
 		$this->assertEquals( false, ConnectionHelper::is_connected() );
 
-		update_option( 'woocommerce_helper_data', array( 'auth' => 'random token' ) );
+		update_option( 'woocommerce_helper_data', [ 'auth' => 'random token' ] );
 		$this->assertEquals( true, ConnectionHelper::is_connected() );
 	}
 }

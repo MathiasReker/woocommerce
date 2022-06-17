@@ -27,17 +27,17 @@ class WC_Admin_Tests_API_Reports_Import extends WC_REST_Unit_Test_Case {
 		parent::setUp();
 
 		$this->user = $this->factory->user->create(
-			array(
+			[
 				'role' => 'administrator',
-			)
+			]
 		);
 
 		$this->customer = $this->factory->user->create(
-			array(
+			[
 				'first_name' => 'Steve',
 				'last_name'  => 'User',
 				'role'       => 'customer',
-			)
+			]
 		);
 	}
 
@@ -112,7 +112,7 @@ class WC_Admin_Tests_API_Reports_Import extends WC_REST_Unit_Test_Case {
 
 		// Use the days param to only process orders in the last day.
 		$request = new WP_REST_Request( 'POST', $this->endpoint );
-		$request->set_query_params( array( 'days' => '1' ) );
+		$request->set_query_params( [ 'days' => '1' ] );
 		$response = $this->server->dispatch( $request );
 		$report   = $response->get_data();
 
@@ -144,17 +144,17 @@ class WC_Admin_Tests_API_Reports_Import extends WC_REST_Unit_Test_Case {
 
 		// Compare against name to make sure previously imported customer was skipped.
 		wp_update_user(
-			array(
+			[
 				'ID'         => $this->customer,
 				'first_name' => 'Changed',
-			)
+			]
 		);
 
 		// Delete scheduled actions to avoid default order processing.
 		WC_Helper_Queue::cancel_all_pending();
 
 		$request = new WP_REST_Request( 'POST', $this->endpoint );
-		$request->set_query_params( array( 'skip_existing' => '1' ) );
+		$request->set_query_params( [ 'skip_existing' => '1' ] );
 		$response = $this->server->dispatch( $request );
 		$report   = $response->get_data();
 
@@ -172,7 +172,7 @@ class WC_Admin_Tests_API_Reports_Import extends WC_REST_Unit_Test_Case {
 		$this->assertEquals( 'Steve User', $reports[0]['name'] );
 
 		$request = new WP_REST_Request( 'GET', '/wc-analytics/reports/orders' );
-		$request->set_query_params( array( 'per_page' => 5 ) );
+		$request->set_query_params( [ 'per_page' => 5 ] );
 		$response = $this->server->dispatch( $request );
 		$reports  = $response->get_data();
 
@@ -252,7 +252,7 @@ class WC_Admin_Tests_API_Reports_Import extends WC_REST_Unit_Test_Case {
 		WC_Helper_Queue::run_all_pending();
 
 		$request = new WP_REST_Request( 'GET', '/wc-analytics/reports/orders' );
-		$request->set_query_params( array( 'per_page' => 25 ) );
+		$request->set_query_params( [ 'per_page' => 25 ] );
 		$response = $this->server->dispatch( $request );
 		$reports  = $response->get_data();
 
@@ -260,7 +260,7 @@ class WC_Admin_Tests_API_Reports_Import extends WC_REST_Unit_Test_Case {
 		$this->assertCount( 25, $reports );
 
 		$request = new WP_REST_Request( 'GET', '/wc-analytics/reports/customers' );
-		$request->set_query_params( array( 'per_page' => 25 ) );
+		$request->set_query_params( [ 'per_page' => 25 ] );
 		$response = $this->server->dispatch( $request );
 		$reports  = $response->get_data();
 
@@ -325,10 +325,10 @@ class WC_Admin_Tests_API_Reports_Import extends WC_REST_Unit_Test_Case {
 		$order->set_date_created( time() - ( 5 * DAY_IN_SECONDS ) );
 		$order->save();
 		wp_update_post(
-			array(
+			[
 				'ID'          => $order->get_id(),
 				'post_status' => 'auto-draft',
-			)
+			]
 		);
 
 		// Test totals and total params.
@@ -336,11 +336,11 @@ class WC_Admin_Tests_API_Reports_Import extends WC_REST_Unit_Test_Case {
 		$response   = $this->server->dispatch( $request );
 		$report     = $response->get_data();
 		$user_query = new WP_User_Query(
-			array(
+			[
 				'fields'   => 'ID',
 				'number'   => 1,
-				'role__in' => array( 'customer' ),
-			)
+				'role__in' => [ 'customer' ],
+			]
 		);
 
 		$this->assertEquals( 200, $response->get_status() );
@@ -349,7 +349,7 @@ class WC_Admin_Tests_API_Reports_Import extends WC_REST_Unit_Test_Case {
 
 		// Test totals with days param.
 		$request = new WP_REST_Request( 'GET', $this->endpoint . '/totals' );
-		$request->set_query_params( array( 'days' => 2 ) );
+		$request->set_query_params( [ 'days' => 2 ] );
 		$response = $this->server->dispatch( $request );
 		$report   = $response->get_data();
 
@@ -398,7 +398,7 @@ class WC_Admin_Tests_API_Reports_Import extends WC_REST_Unit_Test_Case {
 
 		// Test totals with skip existing param.
 		$request = new WP_REST_Request( 'GET', $this->endpoint . '/totals' );
-		$request->set_query_params( array( 'skip_existing' => 1 ) );
+		$request->set_query_params( [ 'skip_existing' => 1 ] );
 		$response = $this->server->dispatch( $request );
 		$report   = $response->get_data();
 

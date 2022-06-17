@@ -32,7 +32,7 @@ class WC_Helper_Admin_Notes {
 		$note_1 = new Note();
 		$note_1->set_title( 'PHPUNIT_TEST_NOTE_1_TITLE' );
 		$note_1->set_content( 'PHPUNIT_TEST_NOTE_1_CONTENT' );
-		$note_1->set_content_data( (object) array( 'amount' => 1.23 ) );
+		$note_1->set_content_data( (object) [ 'amount' => 1.23 ] );
 		$note_1->set_type( Note::E_WC_ADMIN_NOTE_INFORMATIONAL );
 		$note_1->set_name( 'PHPUNIT_TEST_NOTE_NAME' );
 		$note_1->set_source( 'PHPUNIT_TEST' );
@@ -54,7 +54,7 @@ class WC_Helper_Admin_Notes {
 		$note_2 = new Note();
 		$note_2->set_title( 'PHPUNIT_TEST_NOTE_2_TITLE' );
 		$note_2->set_content( 'PHPUNIT_TEST_NOTE_2_CONTENT' );
-		$note_2->set_content_data( (object) array( 'amount' => 4.56 ) );
+		$note_2->set_content_data( (object) [ 'amount' => 4.56 ] );
 		$note_2->set_type( Note::E_WC_ADMIN_NOTE_WARNING );
 		$note_2->set_name( 'PHPUNIT_TEST_NOTE_NAME' );
 		$note_2->set_source( 'PHPUNIT_TEST' );
@@ -68,7 +68,7 @@ class WC_Helper_Admin_Notes {
 		$note_3 = new Note();
 		$note_3->set_title( 'PHPUNIT_TEST_NOTE_3_TITLE' );
 		$note_3->set_content( 'PHPUNIT_TEST_NOTE_3_CONTENT' );
-		$note_3->set_content_data( (object) array( 'amount' => 7.89 ) );
+		$note_3->set_content_data( (object) [ 'amount' => 7.89 ] );
 		$note_3->set_type( Note::E_WC_ADMIN_NOTE_INFORMATIONAL );
 		$note_3->set_name( 'PHPUNIT_TEST_NOTE_NAME' );
 		$note_3->set_source( 'PHPUNIT_TEST' );
@@ -82,7 +82,7 @@ class WC_Helper_Admin_Notes {
 		$note_4 = new Note();
 		$note_4->set_title( 'PHPUNIT_TEST_NOTE_4_TITLE' );
 		$note_4->set_content( 'PHPUNIT_TEST_NOTE_4_CONTENT' );
-		$note_4->set_content_data( (object) array( 'amount' => 1.23 ) );
+		$note_4->set_content_data( (object) [ 'amount' => 1.23 ] );
 		$note_4->set_type( Note::E_WC_ADMIN_NOTE_INFORMATIONAL );
 		$note_4->set_name( 'PHPUNIT_TEST_NOTE_NAME' );
 		$note_4->set_source( 'PHPUNIT_TEST' );
@@ -112,12 +112,12 @@ class WC_Helper_Admin_Notes {
 		$note_5 = new Note();
 		$note_5->set_title( 'PHPUNIT_TEST_NOTE_5_TITLE' );
 		$note_5->set_content( 'PHPUNIT_TEST_NOTE_5_CONTENT' );
-		$additional_data = array(
+		$additional_data = [
 			'heading'        => 'PHPUNIT_TEST_EMAIL_HEADING',
 			'role'           => 'administrator',
 			'template_html'  => 'PHPUNIT_TEST_EMAIL_HTML_TEMPLATE',
 			'template_plain' => 'PHPUNIT_TEST_EMAIL_HTML_PLAIN',
-		);
+		];
 		$note_5->set_content_data( (object) $additional_data );
 		$note_5->set_type( Note::E_WC_ADMIN_NOTE_EMAIL );
 		$note_5->set_name( 'PHPUNIT_TEST_NOTE_NAME' );

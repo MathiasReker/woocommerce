@@ -138,9 +138,9 @@ class WC_Tests_Customer_Download_Log extends WC_Unit_Test_Case {
 		// Make sure download log was recorded properly.
 		$data_store    = WC_Data_Store::load( 'customer-download-log' );
 		$download_logs = $data_store->get_download_logs(
-			array(
+			[
 				'permission_id' => $download_1->get_id(),
-			)
+			]
 		);
 
 		$this->assertEquals( 1, count( $download_logs ), 'After single download, permission should have one download log in database.' );

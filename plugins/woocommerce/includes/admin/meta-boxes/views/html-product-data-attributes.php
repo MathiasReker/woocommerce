@@ -35,7 +35,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 		foreach ( $attributes as $attribute ) {
 			$i++;
-			$metabox_class = array();
+			$metabox_class = [];
 
 			if ( $attribute->is_taxonomy() ) {
 				$metabox_class[] = 'taxonomy';

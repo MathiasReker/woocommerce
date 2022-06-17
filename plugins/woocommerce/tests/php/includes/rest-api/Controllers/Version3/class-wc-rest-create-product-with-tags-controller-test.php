@@ -16,15 +16,15 @@ class WC_REST_Create_Product_With_Tags_Controller_Test extends WC_REST_Unit_Test
 
 		$this->assertNotWPError( $term );
 
-		$json_data = array(
+		$json_data = [
 			'name' => 'Product with existing tags',
 			'type' => 'simple',
-			'tags' => array(
-				array(
+			'tags' => [
+				[
 					'id' => $term['term_id'],
-				),
-			),
-		);
+				],
+			],
+		];
 
 		$request = new WP_REST_Request( 'POST', '/wc/v3/products' );
 		$request->set_header( 'content-type', 'application/json' );
@@ -48,18 +48,18 @@ class WC_REST_Create_Product_With_Tags_Controller_Test extends WC_REST_Unit_Test
 	public function test_create_product_with_new_tags() {
 		wp_set_current_user( 1 );
 
-		$json_data = array(
+		$json_data = [
 			'name' => 'Product with new tags',
 			'type' => 'simple',
-			'tags' => array(
-				array(
+			'tags' => [
+				[
 					'name' => 'clothes',
-				),
-				array(
+				],
+				[
 					'name' => 'shirts',
-				),
-			),
-		);
+				],
+			],
+		];
 
 		$request = new WP_REST_Request( 'POST', '/wc/v3/products' );
 		$request->set_header( 'content-type', 'application/json' );
@@ -87,18 +87,18 @@ class WC_REST_Create_Product_With_Tags_Controller_Test extends WC_REST_Unit_Test
 
 		$this->assertNotWPError( $term );
 
-		$json_data = array(
+		$json_data = [
 			'name' => 'Product with existing tags',
 			'type' => 'simple',
-			'tags' => array(
-				array(
+			'tags' => [
+				[
 					'id' => $term['term_id'],
-				),
-				array(
+				],
+				[
 					'name' => 'shirts',
-				),
-			),
-		);
+				],
+			],
+		];
 
 		$request = new WP_REST_Request( 'POST', '/wc/v3/products' );
 		$request->set_header( 'content-type', 'application/json' );

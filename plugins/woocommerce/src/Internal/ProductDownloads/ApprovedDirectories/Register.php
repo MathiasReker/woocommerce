@@ -15,10 +15,10 @@ class Register {
 	/**
 	 * Used to indicate the current mode.
 	 */
-	private const MODES = array(
+	private const MODES = [
 		self::MODE_DISABLED,
 		self::MODE_ENABLED,
-	);
+	];
 
 	public const MODE_DISABLED  = 'disabled';
 	public const MODE_ENABLED   = 'enabled';
@@ -118,10 +118,10 @@ class Register {
 		}
 
 		global $wpdb;
-		$insert_fields = array(
+		$insert_fields = [
 			'url'     => $url,
 			'enabled' => (int) $enabled,
-		);
+		];
 
 		if ( false !== $wpdb->insert( $this->get_table(), $insert_fields ) ) {
 			return $wpdb->insert_id;
@@ -154,12 +154,12 @@ class Register {
 		}
 
 		global $wpdb;
-		$fields = array(
+		$fields = [
 			'url'     => $url,
 			'enabled' => (int) $enabled,
-		);
+		];
 
-		if ( false === $wpdb->update( $this->get_table(), $fields, array( 'url_id' => $id ) ) ) {
+		if ( false === $wpdb->update( $this->get_table(), $fields, [ 'url_id' => $id ] ) ) {
 			throw new ApprovedDirectoriesException( __( 'URL could not be updated (probable database error).', 'woocommerce' ), ApprovedDirectoriesException::DB_ERROR );
 		}
 
@@ -190,7 +190,7 @@ class Register {
 		$table = $this->get_table();
 
 		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-		$result = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$table} WHERE url_id = %d", array( $id ) ) );
+		$result = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$table} WHERE url_id = %d", [ $id ] ) );
 
 		if ( ! $result ) {
 			return false;
@@ -213,7 +213,7 @@ class Register {
 		$url   = trailingslashit( $url );
 
 		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-		$result = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$table} WHERE url = %s", array( $url ) ) );
+		$result = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$table} WHERE url = %s", [ $url ] ) );
 
 		if ( ! $result ) {
 			return false;
@@ -240,7 +240,7 @@ class Register {
 	public function is_valid_path( string $download_url ): bool {
 		global $wpdb;
 
-		$parent_directories = array();
+		$parent_directories = [];
 
 		foreach ( ( new URL( $this->normalize_url( $download_url ) ) )->get_all_parent_urls() as $parent ) {
 			$parent_directories[] = "'" . esc_sql( $parent ) . "'";
@@ -336,21 +336,21 @@ class Register {
 		global $wpdb;
 
 		$args = array_merge(
-			array(
+			[
 				'enabled'  => null,
 				'order'    => 'ASC',
 				'order_by' => 'url',
 				'page'     => 1,
 				'per_page' => 20,
 				'search'   => '',
-			),
+			],
 			$args
 		);
 
 		$table    = $this->get_table();
-		$paths    = array();
-		$order    = in_array( $args['order'], array( 'ASC', 'DESC' ), true ) ? $args['order'] : 'ASC';
-		$order_by = in_array( $args['order_by'], array( 'url_id', 'url' ), true ) ? $args['order_by'] : 'url';
+		$paths    = [];
+		$order    = in_array( $args['order'], [ 'ASC', 'DESC' ], true ) ? $args['order'] : 'ASC';
+		$order_by = in_array( $args['order_by'], [ 'url_id', 'url' ], true ) ? $args['order_by'] : 'url';
 		$page     = absint( $args['page'] );
 		$per_page = absint( $args['per_page'] );
 		$enabled  = is_bool( $args['enabled'] ) ? $args['enabled'] : null;
@@ -364,7 +364,7 @@ class Register {
 			$per_page = 1;
 		}
 
-		$where     = array();
+		$where     = [];
 		$where_sql = '';
 
 		if ( ! empty( $search ) ) {
@@ -401,11 +401,11 @@ class Register {
 			$paths[] = new StoredUrl( $single_result->url_id, $single_result->url, $single_result->enabled );
 		}
 
-		return array(
+		return [
 			'total_urls'           => $total_rows,
 			'total_pages'          => (int) ceil( $total_rows / $per_page ),
 			'approved_directories' => $paths,
-		);
+		];
 	}
 
 	/**
@@ -419,7 +419,7 @@ class Register {
 		global $wpdb;
 		$table = $this->get_table();
 
-		return (bool) $wpdb->delete( $table, array( 'url_id' => $id ) );
+		return (bool) $wpdb->delete( $table, [ 'url_id' => $id ] );
 	}
 
 	/**
@@ -444,7 +444,7 @@ class Register {
 	public function enable_by_id( int $id ): bool {
 		global $wpdb;
 		$table = $this->get_table();
-		return (bool) $wpdb->update( $table, array( 'enabled' => 1 ), array( 'url_id' => $id ) );
+		return (bool) $wpdb->update( $table, [ 'enabled' => 1 ], [ 'url_id' => $id ] );
 	}
 
 	/**
@@ -457,7 +457,7 @@ class Register {
 	public function disable_by_id( int $id ): bool {
 		global $wpdb;
 		$table = $this->get_table();
-		return (bool) $wpdb->update( $table, array( 'enabled' => 0 ), array( 'url_id' => $id ) );
+		return (bool) $wpdb->update( $table, [ 'enabled' => 0 ], [ 'url_id' => $id ] );
 	}
 
 	/**

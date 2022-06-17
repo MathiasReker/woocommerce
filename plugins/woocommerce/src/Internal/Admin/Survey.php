@@ -23,7 +23,7 @@ class Survey {
 	 * @param  array  $query Query arguments as key value pairs.
 	 * @return string Full URL to survey.
 	 */
-	public static function get_url( $path, $query = array() ) {
+	public static function get_url( $path, $query = [] ) {
 		$url = self::SURVEY_URL . $path;
 
 		$query_args = apply_filters( 'woocommerce_admin_survey_query', $query );

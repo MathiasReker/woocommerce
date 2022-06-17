@@ -39,64 +39,64 @@ class Controller extends \Automattic\WooCommerce\Admin\API\Reports\Controller {
 		register_rest_route(
 			$this->namespace,
 			'/' . $this->rest_base,
-			array(
-				array(
+			[
+				[
 					'methods'             => \WP_REST_Server::EDITABLE,
-					'callback'            => array( $this, 'import_items' ),
-					'permission_callback' => array( $this, 'import_permissions_check' ),
+					'callback'            => [ $this, 'import_items' ],
+					'permission_callback' => [ $this, 'import_permissions_check' ],
 					'args'                => $this->get_import_collection_params(),
-				),
-				'schema' => array( $this, 'get_import_public_schema' ),
-			)
+				],
+				'schema' => [ $this, 'get_import_public_schema' ],
+			]
 		);
 		register_rest_route(
 			$this->namespace,
 			'/' . $this->rest_base . '/cancel',
-			array(
-				array(
+			[
+				[
 					'methods'             => \WP_REST_Server::EDITABLE,
-					'callback'            => array( $this, 'cancel_import' ),
-					'permission_callback' => array( $this, 'import_permissions_check' ),
-				),
-				'schema' => array( $this, 'get_import_public_schema' ),
-			)
+					'callback'            => [ $this, 'cancel_import' ],
+					'permission_callback' => [ $this, 'import_permissions_check' ],
+				],
+				'schema' => [ $this, 'get_import_public_schema' ],
+			]
 		);
 		register_rest_route(
 			$this->namespace,
 			'/' . $this->rest_base . '/delete',
-			array(
-				array(
+			[
+				[
 					'methods'             => \WP_REST_Server::EDITABLE,
-					'callback'            => array( $this, 'delete_imported_items' ),
-					'permission_callback' => array( $this, 'import_permissions_check' ),
-				),
-				'schema' => array( $this, 'get_import_public_schema' ),
-			)
+					'callback'            => [ $this, 'delete_imported_items' ],
+					'permission_callback' => [ $this, 'import_permissions_check' ],
+				],
+				'schema' => [ $this, 'get_import_public_schema' ],
+			]
 		);
 		register_rest_route(
 			$this->namespace,
 			'/' . $this->rest_base . '/status',
-			array(
-				array(
+			[
+				[
 					'methods'             => \WP_REST_Server::READABLE,
-					'callback'            => array( $this, 'get_import_status' ),
-					'permission_callback' => array( $this, 'import_permissions_check' ),
-				),
-				'schema' => array( $this, 'get_import_public_schema' ),
-			)
+					'callback'            => [ $this, 'get_import_status' ],
+					'permission_callback' => [ $this, 'import_permissions_check' ],
+				],
+				'schema' => [ $this, 'get_import_public_schema' ],
+			]
 		);
 		register_rest_route(
 			$this->namespace,
 			'/' . $this->rest_base . '/totals',
-			array(
-				array(
+			[
+				[
 					'methods'             => \WP_REST_Server::READABLE,
-					'callback'            => array( $this, 'get_import_totals' ),
-					'permission_callback' => array( $this, 'import_permissions_check' ),
+					'callback'            => [ $this, 'get_import_totals' ],
+					'permission_callback' => [ $this, 'import_permissions_check' ],
 					'args'                => $this->get_import_collection_params(),
-				),
-				'schema' => array( $this, 'get_import_public_schema' ),
-			)
+				],
+				'schema' => [ $this, 'get_import_public_schema' ],
+			]
 		);
 	}
 
@@ -108,7 +108,7 @@ class Controller extends \Automattic\WooCommerce\Admin\API\Reports\Controller {
 	 */
 	public function import_permissions_check( $request ) {
 		if ( ! wc_rest_check_manager_permissions( 'settings', 'edit' ) ) {
-			return new \WP_Error( 'woocommerce_rest_cannot_edit', __( 'Sorry, you cannot edit this resource.', 'woocommerce' ), array( 'status' => rest_authorization_required_code() ) );
+			return new \WP_Error( 'woocommerce_rest_cannot_edit', __( 'Sorry, you cannot edit this resource.', 'woocommerce' ), [ 'status' => rest_authorization_required_code() ] );
 		}
 		return true;
 	}
@@ -124,15 +124,15 @@ class Controller extends \Automattic\WooCommerce\Admin\API\Reports\Controller {
 		$import     = ReportsSync::regenerate_report_data( $query_args['days'], $query_args['skip_existing'] );
 
 		if ( is_wp_error( $import ) ) {
-			$result = array(
+			$result = [
 				'status'  => 'error',
 				'message' => $import->get_error_message(),
-			);
+			];
 		} else {
-			$result = array(
+			$result = [
 				'status'  => 'success',
 				'message' => $import,
-			);
+			];
 		}
 
 		$response = $this->prepare_item_for_response( $result, $request );
@@ -148,7 +148,7 @@ class Controller extends \Automattic\WooCommerce\Admin\API\Reports\Controller {
 	 * @return array
 	 */
 	protected function prepare_objects_query( $request ) {
-		$args                  = array();
+		$args                  = [];
 		$args['skip_existing'] = $request['skip_existing'];
 		$args['days']          = $request['days'];
 
@@ -183,21 +183,21 @@ class Controller extends \Automattic\WooCommerce\Admin\API\Reports\Controller {
 	 * @return array
 	 */
 	public function get_import_collection_params() {
-		$params                  = array();
-		$params['days']          = array(
+		$params                  = [];
+		$params['days']          = [
 			'description'       => __( 'Number of days to import.', 'woocommerce' ),
 			'type'              => 'integer',
 			'sanitize_callback' => 'absint',
 			'validate_callback' => 'rest_validate_request_arg',
 			'minimum'           => 0,
-		);
-		$params['skip_existing'] = array(
+		];
+		$params['skip_existing'] = [
 			'description'       => __( 'Skip importing existing order data.', 'woocommerce' ),
 			'type'              => 'boolean',
 			'default'           => false,
 			'sanitize_callback' => 'wc_string_to_bool',
 			'validate_callback' => 'rest_validate_request_arg',
-		);
+		];
 		return $params;
 	}
 
@@ -207,25 +207,25 @@ class Controller extends \Automattic\WooCommerce\Admin\API\Reports\Controller {
 	 * @return array
 	 */
 	public function get_import_public_schema() {
-		$schema = array(
+		$schema = [
 			'$schema'    => 'http://json-schema.org/draft-04/schema#',
 			'title'      => 'report_import',
 			'type'       => 'object',
-			'properties' => array(
-				'status'  => array(
+			'properties' => [
+				'status'  => [
 					'description' => __( 'Regeneration status.', 'woocommerce' ),
 					'type'        => 'string',
-					'context'     => array( 'view', 'edit' ),
+					'context'     => [ 'view', 'edit' ],
 					'readonly'    => true,
-				),
-				'message' => array(
+				],
+				'message' => [
 					'description' => __( 'Regenerate data message.', 'woocommerce' ),
 					'type'        => 'string',
-					'context'     => array( 'view', 'edit' ),
+					'context'     => [ 'view', 'edit' ],
 					'readonly'    => true,
-				),
-			),
-		);
+				],
+			],
+		];
 
 		return $this->add_additional_fields_schema( $schema );
 	}
@@ -239,10 +239,10 @@ class Controller extends \Automattic\WooCommerce\Admin\API\Reports\Controller {
 	public function cancel_import( $request ) {
 		ReportsSync::clear_queued_actions();
 
-		$result = array(
+		$result = [
 			'status'  => 'success',
 			'message' => __( 'All pending and in-progress import actions have been cancelled.', 'woocommerce' ),
-		);
+		];
 
 		$response = $this->prepare_item_for_response( $result, $request );
 		$data     = $this->prepare_response_for_collection( $response );
@@ -260,15 +260,15 @@ class Controller extends \Automattic\WooCommerce\Admin\API\Reports\Controller {
 		$delete = ReportsSync::delete_report_data();
 
 		if ( is_wp_error( $delete ) ) {
-			$result = array(
+			$result = [
 				'status'  => 'error',
 				'message' => $delete->get_error_message(),
-			);
+			];
 		} else {
-			$result = array(
+			$result = [
 				'status'  => 'success',
 				'message' => $delete,
-			);
+			];
 		}
 
 		$response = $this->prepare_item_for_response( $result, $request );

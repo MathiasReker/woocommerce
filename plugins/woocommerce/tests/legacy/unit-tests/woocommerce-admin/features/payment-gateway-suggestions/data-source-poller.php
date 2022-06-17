@@ -22,9 +22,9 @@ class WC_Admin_Tests_PaymentGatewaySuggestions_DataSourcePoller extends WC_Unit_
 		add_filter(
 			DataSourcePoller::FILTER_NAME,
 			function() {
-				return array(
+				return [
 					'payment-gateway-suggestions-data-source.json',
-				);
+				];
 			}
 		);
 
@@ -34,33 +34,33 @@ class WC_Admin_Tests_PaymentGatewaySuggestions_DataSourcePoller extends WC_Unit_
 				$locale = get_locale();
 
 				if ( 'payment-gateway-suggestions-data-source.json?_locale=' . $locale === $url ) {
-					return array(
+					return [
 						'body' => wp_json_encode(
-							array(
-								array(
+							[
+								[
 									'id' => 'mock-gateway1',
-								),
-								array(
+								],
+								[
 									'id' => 'mock-gateway2',
-								),
-								array(
+								],
+								[
 									'key' => 'mock-gateway-invalid',
-								),
-							)
+								],
+							]
 						),
-					);
+					];
 				}
 
 				if ( 'payment-gateway-suggestions-data-source2.json?_locale=' . $locale === $url ) {
-					return array(
+					return [
 						'body' => wp_json_encode(
-							array(
-								array(
+							[
+								[
 									'id' => 'mock-gateway3',
-								),
-							)
+								],
+							]
 						),
-					);
+					];
 				}
 
 				return $pre;
@@ -96,9 +96,9 @@ class WC_Admin_Tests_PaymentGatewaySuggestions_DataSourcePoller extends WC_Unit_
 		add_filter(
 			DataSourcePoller::FILTER_NAME,
 			function() {
-				return array(
+				return [
 					'bad-data-source.json',
-				);
+				];
 			},
 			20
 		);
@@ -115,10 +115,10 @@ class WC_Admin_Tests_PaymentGatewaySuggestions_DataSourcePoller extends WC_Unit_
 		add_filter(
 			DataSourcePoller::FILTER_NAME,
 			function() {
-				return array(
+				return [
 					'payment-gateway-suggestions-data-source.json',
 					'payment-gateway-suggestions-data-source2.json',
-				);
+				];
 			},
 			20
 		);
@@ -150,9 +150,9 @@ class WC_Admin_Tests_PaymentGatewaySuggestions_DataSourcePoller extends WC_Unit_
 		add_filter(
 			DataSourcePoller::FILTER_NAME,
 			function() {
-				return array(
+				return [
 					'bad-data-source.json',
-				);
+				];
 			},
 			20
 		);

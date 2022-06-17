@@ -91,11 +91,11 @@ class WC_Tests_Notice_Functions extends WC_Unit_Test_Case {
 		WC()->session->set( 'wc_notices', null );
 
 		// Specific type.
-		wc_add_notice( 'Test Error Notice', 'error', array( 'id' => 'billing_postcode' ) );
+		wc_add_notice( 'Test Error Notice', 'error', [ 'id' => 'billing_postcode' ] );
 		$notices = wc_get_notices();
 		$this->assertArrayHasKey( 'error', $notices );
 		$this->assertEquals( 'Test Error Notice', $notices['error'][0]['notice'] );
-		$this->assertEquals( array( 'id' => 'billing_postcode' ), $notices['error'][0]['data'] );
+		$this->assertEquals( [ 'id' => 'billing_postcode' ], $notices['error'][0]['data'] );
 	}
 
 	/**
@@ -117,7 +117,7 @@ class WC_Tests_Notice_Functions extends WC_Unit_Test_Case {
 	 */
 	public function test_wc_print_notices() {
 		wc_add_notice( 'One True Notice', 'notice' );
-		wc_add_notice( 'Second True Notice', 'notice', array( 'id' => 'second_notice' ) );
+		wc_add_notice( 'Second True Notice', 'notice', [ 'id' => 'second_notice' ] );
 
 		$this->expectOutputString( '<div class="woocommerce-info">One True Notice</div><div class="woocommerce-info" data-id="second_notice">Second True Notice</div>' );
 
@@ -185,7 +185,7 @@ class WC_Tests_Notice_Functions extends WC_Unit_Test_Case {
 		// Specific type.
 		$this->expectOutputString( '<ul class="woocommerce-error" role="alert"><li data-id="billing_postcode">Error!</li></ul>' );
 
-		wc_print_notice( 'Error!', 'error', array( 'id' => 'billing_postcode' ) );
+		wc_print_notice( 'Error!', 'error', [ 'id' => 'billing_postcode' ] );
 	}
 
 	/**
@@ -203,26 +203,26 @@ class WC_Tests_Notice_Functions extends WC_Unit_Test_Case {
 		// Default type.
 		wc_add_notice( 'Another Notice' );
 		$this->assertEquals(
-			array(
-				'success' => array(
-					array(
+			[
+				'success' => [
+					[
 						'notice' => 'Another Notice',
-						'data'   => array(),
-					),
-				),
-			),
+						'data'   => [],
+					],
+				],
+			],
 			wc_get_notices()
 		);
 
 		// Specific type.
-		wc_add_notice( 'Error Notice', 'error', array( 'id' => 'billing_email' ) );
+		wc_add_notice( 'Error Notice', 'error', [ 'id' => 'billing_email' ] );
 		$this->assertEquals(
-			array(
-				array(
+			[
+				[
 					'notice' => 'Error Notice',
-					'data'   => array( 'id' => 'billing_email' ),
-				),
-			),
+					'data'   => [ 'id' => 'billing_email' ],
+				],
+			],
 			wc_get_notices( 'error' )
 		);
 

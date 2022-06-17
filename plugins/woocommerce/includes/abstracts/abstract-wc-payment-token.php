@@ -32,13 +32,13 @@ abstract class WC_Payment_Token extends WC_Legacy_Payment_Token {
 	 *
 	 * @var array
 	 */
-	protected $data = array(
+	protected $data = [
 		'gateway_id' => '',
 		'token'      => '',
 		'is_default' => false,
 		'user_id'    => 0,
 		'type'       => '',
-	);
+	];
 
 	/**
 	 * Token Type (CC, eCheck, or a custom type added by an extension).

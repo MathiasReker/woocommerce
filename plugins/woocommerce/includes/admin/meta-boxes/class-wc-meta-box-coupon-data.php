@@ -43,23 +43,23 @@ class WC_Meta_Box_Coupon_Data {
 				<?php
 				$coupon_data_tabs = apply_filters(
 					'woocommerce_coupon_data_tabs',
-					array(
-						'general'           => array(
+					[
+						'general'           => [
 							'label'  => __( 'General', 'woocommerce' ),
 							'target' => 'general_coupon_data',
 							'class'  => 'general_coupon_data',
-						),
-						'usage_restriction' => array(
+						],
+						'usage_restriction' => [
 							'label'  => __( 'Usage restriction', 'woocommerce' ),
 							'target' => 'usage_restriction_coupon_data',
 							'class'  => '',
-						),
-						'usage_limit'       => array(
+						],
+						'usage_limit'       => [
 							'label'  => __( 'Usage limits', 'woocommerce' ),
 							'target' => 'usage_limit_coupon_data',
 							'class'  => '',
-						),
-					)
+						],
+					]
 				);
 
 				foreach ( $coupon_data_tabs as $key => $tab ) :
@@ -76,17 +76,17 @@ class WC_Meta_Box_Coupon_Data {
 
 				// Type.
 				woocommerce_wp_select(
-					array(
+					[
 						'id'      => 'discount_type',
 						'label'   => __( 'Discount type', 'woocommerce' ),
 						'options' => wc_get_coupon_types(),
 						'value'   => $coupon->get_discount_type( 'edit' ),
-					)
+					]
 				);
 
 				// Amount.
 				woocommerce_wp_text_input(
-					array(
+					[
 						'id'          => 'coupon_amount',
 						'label'       => __( 'Coupon amount', 'woocommerce' ),
 						'placeholder' => wc_format_localized_price( 0 ),
@@ -94,25 +94,25 @@ class WC_Meta_Box_Coupon_Data {
 						'data_type'   => 'percent' === $coupon->get_discount_type( 'edit' ) ? 'decimal' : 'price',
 						'desc_tip'    => true,
 						'value'       => $coupon->get_amount( 'edit' ),
-					)
+					]
 				);
 
 				// Free Shipping.
 				if ( wc_shipping_enabled() ) {
 					woocommerce_wp_checkbox(
-						array(
+						[
 							'id'          => 'free_shipping',
 							'label'       => __( 'Allow free shipping', 'woocommerce' ),
 							'description' => sprintf( __( 'Check this box if the coupon grants free shipping. A <a href="%s" target="_blank">free shipping method</a> must be enabled in your shipping zone and be set to require "a valid free shipping coupon" (see the "Free Shipping Requires" setting).', 'woocommerce' ), 'https://docs.woocommerce.com/document/free-shipping/' ),
 							'value'       => wc_bool_to_string( $coupon->get_free_shipping( 'edit' ) ),
-						)
+						]
 					);
 				}
 
 				// Expiry date.
 				$expiry_date = $coupon->get_date_expires( 'edit' ) ? $coupon->get_date_expires( 'edit' )->date( 'Y-m-d' ) : '';
 				woocommerce_wp_text_input(
-					array(
+					[
 						'id'                => 'expiry_date',
 						'value'             => esc_attr( $expiry_date ),
 						'label'             => __( 'Coupon expiry date', 'woocommerce' ),
@@ -120,10 +120,10 @@ class WC_Meta_Box_Coupon_Data {
 						'description'       => __( 'The coupon will expire at 00:00:00 of this date.', 'woocommerce' ),
 						'desc_tip'          => true,
 						'class'             => 'date-picker',
-						'custom_attributes' => array(
+						'custom_attributes' => [
 							'pattern' => apply_filters( 'woocommerce_date_input_html_pattern', '[0-9]{4}-(0[1-9]|1[012])-(0[1-9]|1[0-9]|2[0-9]|3[01])' ),
-						),
-					)
+						],
+					]
 				);
 
 				do_action( 'woocommerce_coupon_options', $coupon->get_id(), $coupon );
@@ -137,7 +137,7 @@ class WC_Meta_Box_Coupon_Data {
 
 				// minimum spend.
 				woocommerce_wp_text_input(
-					array(
+					[
 						'id'          => 'minimum_amount',
 						'label'       => __( 'Minimum spend', 'woocommerce' ),
 						'placeholder' => __( 'No minimum', 'woocommerce' ),
@@ -145,12 +145,12 @@ class WC_Meta_Box_Coupon_Data {
 						'data_type'   => 'price',
 						'desc_tip'    => true,
 						'value'       => $coupon->get_minimum_amount( 'edit' ),
-					)
+					]
 				);
 
 				// maximum spend.
 				woocommerce_wp_text_input(
-					array(
+					[
 						'id'          => 'maximum_amount',
 						'label'       => __( 'Maximum spend', 'woocommerce' ),
 						'placeholder' => __( 'No maximum', 'woocommerce' ),
@@ -158,27 +158,27 @@ class WC_Meta_Box_Coupon_Data {
 						'data_type'   => 'price',
 						'desc_tip'    => true,
 						'value'       => $coupon->get_maximum_amount( 'edit' ),
-					)
+					]
 				);
 
 				// Individual use.
 				woocommerce_wp_checkbox(
-					array(
+					[
 						'id'          => 'individual_use',
 						'label'       => __( 'Individual use only', 'woocommerce' ),
 						'description' => __( 'Check this box if the coupon cannot be used in conjunction with other coupons.', 'woocommerce' ),
 						'value'       => wc_bool_to_string( $coupon->get_individual_use( 'edit' ) ),
-					)
+					]
 				);
 
 				// Exclude Sale Products.
 				woocommerce_wp_checkbox(
-					array(
+					[
 						'id'          => 'exclude_sale_items',
 						'label'       => __( 'Exclude sale items', 'woocommerce' ),
 						'description' => __( 'Check this box if the coupon should not apply to items on sale. Per-item coupons will only work if the item is not on sale. Per-cart coupons will only work if there are items in the cart that are not on sale.', 'woocommerce' ),
 						'value'       => wc_bool_to_string( $coupon->get_exclude_sale_items( 'edit' ) ),
-					)
+					]
 				);
 
 				echo '</div><div class="options_group">';
@@ -263,7 +263,7 @@ class WC_Meta_Box_Coupon_Data {
 				<?php
 				// Customers.
 				woocommerce_wp_text_input(
-					array(
+					[
 						'id'                => 'customer_email',
 						'label'             => __( 'Allowed emails', 'woocommerce' ),
 						'placeholder'       => __( 'No restrictions', 'woocommerce' ),
@@ -272,10 +272,10 @@ class WC_Meta_Box_Coupon_Data {
 						'desc_tip'          => true,
 						'type'              => 'email',
 						'class'             => '',
-						'custom_attributes' => array(
+						'custom_attributes' => [
 							'multiple' => 'multiple',
-						),
-					)
+						],
+					]
 				);
 				?>
 			</div>
@@ -286,7 +286,7 @@ class WC_Meta_Box_Coupon_Data {
 					<?php
 					// Usage limit per coupons.
 					woocommerce_wp_text_input(
-						array(
+						[
 							'id'                => 'usage_limit',
 							'label'             => __( 'Usage limit per coupon', 'woocommerce' ),
 							'placeholder'       => esc_attr__( 'Unlimited usage', 'woocommerce' ),
@@ -294,17 +294,17 @@ class WC_Meta_Box_Coupon_Data {
 							'type'              => 'number',
 							'desc_tip'          => true,
 							'class'             => 'short',
-							'custom_attributes' => array(
+							'custom_attributes' => [
 								'step' => 1,
 								'min'  => 0,
-							),
+							],
 							'value'             => $coupon->get_usage_limit( 'edit' ) ? $coupon->get_usage_limit( 'edit' ) : '',
-						)
+						]
 					);
 
 					// Usage limit per product.
 					woocommerce_wp_text_input(
-						array(
+						[
 							'id'                => 'limit_usage_to_x_items',
 							'label'             => __( 'Limit usage to X items', 'woocommerce' ),
 							'placeholder'       => esc_attr__( 'Apply to all qualifying items in cart', 'woocommerce' ),
@@ -312,17 +312,17 @@ class WC_Meta_Box_Coupon_Data {
 							'desc_tip'          => true,
 							'class'             => 'short',
 							'type'              => 'number',
-							'custom_attributes' => array(
+							'custom_attributes' => [
 								'step' => 1,
 								'min'  => 0,
-							),
+							],
 							'value'             => $coupon->get_limit_usage_to_x_items( 'edit' ) ? $coupon->get_limit_usage_to_x_items( 'edit' ) : '',
-						)
+						]
 					);
 
 					// Usage limit per users.
 					woocommerce_wp_text_input(
-						array(
+						[
 							'id'                => 'usage_limit_per_user',
 							'label'             => __( 'Usage limit per user', 'woocommerce' ),
 							'placeholder'       => esc_attr__( 'Unlimited usage', 'woocommerce' ),
@@ -330,12 +330,12 @@ class WC_Meta_Box_Coupon_Data {
 							'desc_tip'          => true,
 							'class'             => 'short',
 							'type'              => 'number',
-							'custom_attributes' => array(
+							'custom_attributes' => [
 								'step' => 1,
 								'min'  => 0,
-							),
+							],
 							'value'             => $coupon->get_usage_limit_per_user( 'edit' ) ? $coupon->get_usage_limit_per_user( 'edit' ) : '',
-						)
+						]
 					);
 					?>
 				</div>
@@ -362,19 +362,19 @@ class WC_Meta_Box_Coupon_Data {
 			WC_Admin_Meta_Boxes::add_error( __( 'Coupon code already exists - customers will use the latest coupon with this code.', 'woocommerce' ) );
 		}
 
-		$product_categories         = isset( $_POST['product_categories'] ) ? (array) $_POST['product_categories'] : array();
-		$exclude_product_categories = isset( $_POST['exclude_product_categories'] ) ? (array) $_POST['exclude_product_categories'] : array();
+		$product_categories         = isset( $_POST['product_categories'] ) ? (array) $_POST['product_categories'] : [];
+		$exclude_product_categories = isset( $_POST['exclude_product_categories'] ) ? (array) $_POST['exclude_product_categories'] : [];
 
 		$coupon = new WC_Coupon( $post_id );
 		$coupon->set_props(
-			array(
+			[
 				'code'                        => $post->post_title,
 				'discount_type'               => wc_clean( $_POST['discount_type'] ),
 				'amount'                      => wc_format_decimal( $_POST['coupon_amount'] ),
 				'date_expires'                => wc_clean( $_POST['expiry_date'] ),
 				'individual_use'              => isset( $_POST['individual_use'] ),
-				'product_ids'                 => isset( $_POST['product_ids'] ) ? array_filter( array_map( 'intval', (array) $_POST['product_ids'] ) ) : array(),
-				'excluded_product_ids'        => isset( $_POST['exclude_product_ids'] ) ? array_filter( array_map( 'intval', (array) $_POST['exclude_product_ids'] ) ) : array(),
+				'product_ids'                 => isset( $_POST['product_ids'] ) ? array_filter( array_map( 'intval', (array) $_POST['product_ids'] ) ) : [],
+				'excluded_product_ids'        => isset( $_POST['exclude_product_ids'] ) ? array_filter( array_map( 'intval', (array) $_POST['exclude_product_ids'] ) ) : [],
 				'usage_limit'                 => absint( $_POST['usage_limit'] ),
 				'usage_limit_per_user'        => absint( $_POST['usage_limit_per_user'] ),
 				'limit_usage_to_x_items'      => absint( $_POST['limit_usage_to_x_items'] ),
@@ -385,7 +385,7 @@ class WC_Meta_Box_Coupon_Data {
 				'minimum_amount'              => wc_format_decimal( $_POST['minimum_amount'] ),
 				'maximum_amount'              => wc_format_decimal( $_POST['maximum_amount'] ),
 				'email_restrictions'          => array_filter( array_map( 'trim', explode( ',', wc_clean( $_POST['customer_email'] ) ) ) ),
-			)
+			]
 		);
 		$coupon->save();
 		do_action( 'woocommerce_coupon_options_save', $post_id, $coupon );

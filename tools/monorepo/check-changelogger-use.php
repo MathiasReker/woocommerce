@@ -29,12 +29,12 @@ EOH;
 
 // Options followed by a single colon have a required value.
 $short_options = 'vhp:';
-$long_options = array(
+$long_options = [
 	'debug',
 	'list',
 	'help',
 	'path:',
-);
+];
 $options = getopt( $short_options, $long_options, $remain_index );
 $arg_count = count( $argv ) - $remain_index;
 
@@ -86,7 +86,7 @@ if ( $verbose ) {
 
 $base_path = dirname( dirname( __DIR__ ) );
 
-$workspace_paths = array();
+$workspace_paths = [];
 $workspace_yaml = file_get_contents( $base_path . '/pnpm-workspace.yaml' );
 if ( preg_match( '/^packages:((\n\s+.+)+)/', $workspace_yaml, $matches ) ) {
         $packages_config = $matches[1];
@@ -107,7 +107,7 @@ if ( $path && ! count( $composer_projects ) ) {
 }
 
 // Find projects that use changelogger, and read the relevant config.
-$changelogger_projects = array();
+$changelogger_projects = [];
 foreach ( $composer_projects as $project_path ) {
 	try {
 		$data = json_decode( file_get_contents( $base_path . '/' . $project_path . '/composer.json' ), true, 512, JSON_THROW_ON_ERROR );
@@ -120,11 +120,11 @@ foreach ( $composer_projects as $project_path ) {
 	} catch ( Exception $e ) {
 		continue;
 	}
-	$data  = isset( $data['extra']['changelogger'] ) ? $data['extra']['changelogger'] : array();
-	$data += array(
+	$data  = isset( $data['extra']['changelogger'] ) ? $data['extra']['changelogger'] : [];
+	$data += [
 		'changelog'   => $project_path . '/CHANGELOG.md',
 		'changes-dir' => $project_path . '/changelog',
-	);
+	];
 	$changelogger_projects[ $project_path ] = $data;
 }
 
@@ -133,7 +133,7 @@ debug( 'Checking diff from %s...%s.', $base, $head );
 $pipes = null;
 $p     = proc_open(
 	sprintf( 'git -c core.quotepath=off diff --no-renames --name-only %s...%s', escapeshellarg( $base ), escapeshellarg( $head ) ),
-	array( array( 'pipe', 'r' ), array( 'pipe', 'w' ), STDERR ),
+	[ [ 'pipe', 'r' ], [ 'pipe', 'w' ], STDERR ],
 	$pipes
 );
 if ( ! $p ) {
@@ -141,8 +141,8 @@ if ( ! $p ) {
 }
 fclose( $pipes[0] );
 
-$ok_projects      = array();
-$touched_projects = array();
+$ok_projects      = [];
+$touched_projects = [];
 // phpcs:ignore WordPress.CodeAnalysis.AssignmentInCondition.FoundInWhileCondition
 while ( ( $line = fgets( $pipes[1] ) ) ) {
 	$line  = trim( $line );

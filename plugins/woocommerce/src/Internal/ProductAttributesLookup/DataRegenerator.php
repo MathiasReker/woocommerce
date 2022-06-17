@@ -159,13 +159,13 @@ class DataRegenerator {
 		$last_existing_product_id_array =
 			WC()->call_function(
 				'wc_get_products',
-				array(
+				[
 					'return'  => 'ids',
 					'limit'   => 1,
-					'orderby' => array(
+					'orderby' => [
 						'ID' => 'DESC',
-					),
-				)
+					],
+				]
 			);
 
 		return empty( $last_existing_product_id_array ) ? null : current( $last_existing_product_id_array );
@@ -200,7 +200,7 @@ class DataRegenerator {
 		$queue->schedule_single(
 			WC()->call_function( 'time' ) + 1,
 			'woocommerce_run_product_attribute_lookup_regeneration_callback',
-			array(),
+			[],
 			'woocommerce-db-updates'
 		);
 	}
@@ -224,14 +224,14 @@ class DataRegenerator {
 
 		$product_ids = WC()->call_function(
 			'wc_get_products',
-			array(
+			[
 				'limit'   => $products_per_generation_step,
 				'offset'  => $products_already_processed,
-				'orderby' => array(
+				'orderby' => [
 					'ID' => 'ASC',
-				),
+				],
 				'return'  => 'ids',
-			)
+			]
 		);
 
 		if ( ! $product_ids ) {
@@ -275,7 +275,7 @@ class DataRegenerator {
 		$generation_is_in_progress = $this->data_store->regeneration_is_in_progress();
 		$generation_was_aborted    = $this->data_store->regeneration_was_aborted();
 
-		$entry = array(
+		$entry = [
 			'name'             => __( 'Regenerate the product attributes lookup table', 'woocommerce' ),
 			'desc'             => __( 'This tool will regenerate the product attributes lookup table data from existing product(s) data. This process may take a while.', 'woocommerce' ),
 			'requires_refresh' => true,
@@ -284,14 +284,14 @@ class DataRegenerator {
 				return __( 'Product attributes lookup table data is regenerating', 'woocommerce' );
 
 			},
-			'selector'         => array(
+			'selector'         => [
 				'description'   => __( 'Select a product to regenerate the data for, or leave empty for a full table regeneration:', 'woocommerce' ),
 				'class'         => 'wc-product-search',
 				'search_action' => 'woocommerce_json_search_products',
 				'name'          => 'regenerate_product_attribute_lookup_data_product_id',
 				'placeholder'   => esc_attr__( 'Search for a product&hellip;', 'woocommerce' ),
-			),
-		);
+			],
+		];
 
 		if ( $generation_is_in_progress ) {
 			$entry['button'] = sprintf(
@@ -307,7 +307,7 @@ class DataRegenerator {
 		$tools_array['regenerate_product_attributes_lookup_table'] = $entry;
 
 		if ( $generation_is_in_progress ) {
-			$entry = array(
+			$entry = [
 				'name'             => __( 'Abort the product attributes lookup table regeneration', 'woocommerce' ),
 				'desc'             => __( 'This tool will abort the regenerate product attributes lookup table regeneration. After this is done the process can be either started over, or resumed to continue where it stopped.', 'woocommerce' ),
 				'requires_refresh' => true,
@@ -316,11 +316,11 @@ class DataRegenerator {
 					return __( 'Product attributes lookup table regeneration process has been aborted.', 'woocommerce' );
 				},
 				'button'           => __( 'Abort', 'woocommerce' ),
-			);
+			];
 			$tools_array['abort_product_attributes_lookup_table_regeneration'] = $entry;
 		} elseif ( $generation_was_aborted ) {
 			$processed_count = get_option( 'woocommerce_attribute_lookup_processed_count', 0 );
-			$entry           = array(
+			$entry           = [
 				'name'             => __( 'Resume the product attributes lookup table regeneration', 'woocommerce' ),
 				'desc'             =>
 					sprintf(
@@ -334,7 +334,7 @@ class DataRegenerator {
 					return __( 'Product attributes lookup table regeneration process has been resumed.', 'woocommerce' );
 				},
 				'button'           => __( 'Resume', 'woocommerce' ),
-			);
+			];
 			$tools_array['resume_product_attributes_lookup_table_regeneration'] = $entry;
 		}
 
@@ -490,7 +490,7 @@ class DataRegenerator {
 	 */
 	public function create_table_primary_index() {
 		$database_util = wc_get_container()->get( DatabaseUtil::class );
-		$database_util->create_primary_key( $this->lookup_table_name, array( 'product_or_parent_id', 'term_id', 'product_id', 'taxonomy' ) );
+		$database_util->create_primary_key( $this->lookup_table_name, [ 'product_or_parent_id', 'term_id', 'product_id', 'taxonomy' ] );
 		$database_util->drop_table_index( $this->lookup_table_name, 'product_or_parent_id_term_id' );
 
 		if ( empty( $database_util->get_index_columns( $this->lookup_table_name ) ) ) {

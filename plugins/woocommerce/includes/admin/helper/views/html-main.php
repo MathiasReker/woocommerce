@@ -26,11 +26,11 @@
 						'Below is a list of extensions available on your WooCommerce.com account. To receive extension updates please make sure the extension is installed, and its subscription activated and connected to your WooCommerce.com account. Extensions can be activated from the <a href="%s">Plugins</a> screen.',
 						'woocommerce'
 					),
-					array(
-						'a' => array(
-							'href' => array(),
-						),
-					)
+					[
+						'a' => [
+							'href' => [],
+						],
+					]
 				),
 				esc_url(
 					admin_url( 'plugins.php' )
@@ -232,15 +232,15 @@
 								<?php
 									echo wp_kses(
 										$subscription_action['message'],
-										array(
-											'a'      => array(
-												'href'  => array(),
-												'title' => array(),
-											),
-											'br'     => array(),
-											'em'     => array(),
-											'strong' => array(),
-										)
+										[
+											'a'      => [
+												'href'  => [],
+												'title' => [],
+											],
+											'br'     => [],
+											'em'     => [],
+											'strong' => [],
+										]
 									);
 								?>
 							</p>

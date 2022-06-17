@@ -36,10 +36,10 @@ class WC_Admin_List_Table_Products extends WC_Admin_List_Table {
 	public function __construct() {
 		parent::__construct();
 		add_filter( 'disable_months_dropdown', '__return_true' );
-		add_filter( 'query_vars', array( $this, 'add_custom_query_var' ) );
-		add_filter( 'views_edit-product', array( $this, 'product_views' ) );
-		add_filter( 'get_search_query', array( $this, 'search_label' ) );
-		add_filter( 'posts_clauses', array( $this, 'posts_clauses' ), 10, 2 );
+		add_filter( 'query_vars', [ $this, 'add_custom_query_var' ] );
+		add_filter( 'views_edit-product', [ $this, 'product_views' ] );
+		add_filter( 'get_search_query', [ $this, 'search_label' ] );
+		add_filter( 'posts_clauses', [ $this, 'posts_clauses' ], 10, 2 );
 	}
 
 	/**
@@ -80,7 +80,7 @@ class WC_Admin_List_Table_Products extends WC_Admin_List_Table {
 	 */
 	protected function get_row_actions( $actions, $post ) {
 		/* translators: %d: product ID. */
-		return array_merge( array( 'id' => sprintf( __( 'ID: %d', 'woocommerce' ), $post->ID ) ), $actions );
+		return array_merge( [ 'id' => sprintf( __( 'ID: %d', 'woocommerce' ), $post->ID ) ], $actions );
 	}
 
 	/**
@@ -90,11 +90,11 @@ class WC_Admin_List_Table_Products extends WC_Admin_List_Table {
 	 * @return array
 	 */
 	public function define_sortable_columns( $columns ) {
-		$custom = array(
+		$custom = [
 			'price' => 'price',
 			'sku'   => 'sku',
 			'name'  => 'title',
-		);
+		];
 		return wp_parse_args( $custom, $columns );
 	}
 
@@ -106,12 +106,12 @@ class WC_Admin_List_Table_Products extends WC_Admin_List_Table {
 	 */
 	public function define_columns( $columns ) {
 		if ( empty( $columns ) && ! is_array( $columns ) ) {
-			$columns = array();
+			$columns = [];
 		}
 
 		unset( $columns['title'], $columns['comments'], $columns['date'] );
 
-		$show_columns          = array();
+		$show_columns          = [];
 		$show_columns['cb']    = '<input type="checkbox" />';
 		$show_columns['thumb'] = '<span class="wc-image tips" data-tip="' . esc_attr__( 'Image', 'woocommerce' ) . '">' . __( 'Image', 'woocommerce' ) . '</span>';
 		$show_columns['name']  = __( 'Name', 'woocommerce' );
@@ -224,7 +224,7 @@ class WC_Admin_List_Table_Products extends WC_Admin_List_Table {
 		if ( ! $terms ) {
 			echo '<span class="na">&ndash;</span>';
 		} else {
-			$termlist = array();
+			$termlist = [];
 			foreach ( $terms as $term ) {
 				$termlist[] = '<a href="' . esc_url( admin_url( 'edit.php?product_cat=' . $term->slug . '&post_type=product' ) ) . ' ">' . esc_html( $term->name ) . '</a>';
 			}
@@ -241,7 +241,7 @@ class WC_Admin_List_Table_Products extends WC_Admin_List_Table {
 		if ( ! $terms ) {
 			echo '<span class="na">&ndash;</span>';
 		} else {
-			$termlist = array();
+			$termlist = [];
 			foreach ( $terms as $term ) {
 				$termlist[] = '<a href="' . esc_url( admin_url( 'edit.php?product_tag=' . $term->slug . '&post_type=product' ) ) . ' ">' . esc_html( $term->name ) . '</a>';
 			}
@@ -300,11 +300,11 @@ class WC_Admin_List_Table_Products extends WC_Admin_List_Table {
 	protected function render_filters() {
 		$filters = apply_filters(
 			'woocommerce_products_admin_list_table_filters',
-			array(
-				'product_category' => array( $this, 'render_products_category_filter' ),
-				'product_type'     => array( $this, 'render_products_type_filter' ),
-				'stock_status'     => array( $this, 'render_products_stock_status_filter' ),
-			)
+			[
+				'product_category' => [ $this, 'render_products_category_filter' ],
+				'product_type'     => [ $this, 'render_products_type_filter' ],
+				'stock_status'     => [ $this, 'render_products_stock_status_filter' ],
+			]
 		);
 
 		ob_start();
@@ -326,10 +326,10 @@ class WC_Admin_List_Table_Products extends WC_Admin_List_Table {
 
 		if ( $categories_count <= apply_filters( 'woocommerce_product_category_filter_threshold', 100 ) ) {
 			wc_product_dropdown_categories(
-				array(
+				[
 					'option_select_text' => __( 'Filter by category', 'woocommerce' ),
 					'hide_empty'         => 0,
-				)
+				]
 			);
 		} else {
 			$current_category_slug = isset( $_GET['product_cat'] ) ? wc_clean( wp_unslash( $_GET['product_cat'] ) ) : false; // WPCS: input var ok, CSRF ok.
@@ -419,7 +419,7 @@ class WC_Admin_List_Table_Products extends WC_Admin_List_Table {
 		// Add sorting link.
 		if ( current_user_can( 'edit_others_products' ) ) {
 			$class            = ( isset( $wp_query->query['orderby'] ) && 'menu_order title' === $wp_query->query['orderby'] ) ? 'current' : '';
-			$query_string     = remove_query_arg( array( 'orderby', 'order' ) );
+			$query_string     = remove_query_arg( [ 'orderby', 'order' ] );
 			$query_string     = add_query_arg( 'orderby', rawurlencode( 'menu_order title' ), $query_string );
 			$query_string     = add_query_arg( 'order', rawurlencode( 'ASC' ), $query_string );
 			$views['byorder'] = '<a href="' . esc_url( $query_string ) . '" class="' . esc_attr( $class ) . '">' . __( 'Sorting', 'woocommerce' ) . '</a>';
@@ -459,12 +459,12 @@ class WC_Admin_List_Table_Products extends WC_Admin_List_Table {
 
 			if ( 'price' === $orderby ) {
 				$callback = 'DESC' === $order ? 'order_by_price_desc_post_clauses' : 'order_by_price_asc_post_clauses';
-				add_filter( 'posts_clauses', array( $this, $callback ) );
+				add_filter( 'posts_clauses', [ $this, $callback ] );
 			}
 
 			if ( 'sku' === $orderby ) {
 				$callback = 'DESC' === $order ? 'order_by_sku_desc_post_clauses' : 'order_by_sku_asc_post_clauses';
-				add_filter( 'posts_clauses', array( $this, $callback ) );
+				add_filter( 'posts_clauses', [ $this, $callback ] );
 			}
 		}
 
@@ -472,33 +472,33 @@ class WC_Admin_List_Table_Products extends WC_Admin_List_Table {
 		if ( isset( $query_vars['product_type'] ) ) {
 			if ( 'downloadable' === $query_vars['product_type'] ) {
 				$query_vars['product_type'] = '';
-				add_filter( 'posts_clauses', array( $this, 'filter_downloadable_post_clauses' ) );
+				add_filter( 'posts_clauses', [ $this, 'filter_downloadable_post_clauses' ] );
 			} elseif ( 'virtual' === $query_vars['product_type'] ) {
 				$query_vars['product_type'] = '';
-				add_filter( 'posts_clauses', array( $this, 'filter_virtual_post_clauses' ) );
+				add_filter( 'posts_clauses', [ $this, 'filter_virtual_post_clauses' ] );
 			}
 		}
 
 		// Stock status filter.
 		if ( ! empty( $_GET['stock_status'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-			add_filter( 'posts_clauses', array( $this, 'filter_stock_status_post_clauses' ) );
+			add_filter( 'posts_clauses', [ $this, 'filter_stock_status_post_clauses' ] );
 		}
 
 		// Shipping class taxonomy.
 		if ( ! empty( $_GET['product_shipping_class'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-			$query_vars['tax_query'][] = array(
+			$query_vars['tax_query'][] = [
 				'taxonomy' => 'product_shipping_class',
 				'field'    => 'slug',
 				'terms'    => sanitize_title( wp_unslash( $_GET['product_shipping_class'] ) ),
 				'operator' => 'IN',
-			);
+			];
 		}
 
 		// Search using CRUD.
 		if ( ! empty( $query_vars['s'] ) ) {
 			$data_store                   = WC_Data_Store::load( 'product' );
 			$ids                          = $data_store->search_products( wc_clean( wp_unslash( $query_vars['s'] ) ), '', true, true );
-			$query_vars['post__in']       = array_merge( $ids, array( 0 ) );
+			$query_vars['post__in']       = array_merge( $ids, [ 0 ] );
 			$query_vars['product_search'] = true;
 			unset( $query_vars['s'] );
 		}
@@ -524,14 +524,14 @@ class WC_Admin_List_Table_Products extends WC_Admin_List_Table {
 	 * @param array $posts Posts array, keeping this for backwards compatibility defaulting to empty array.
 	 * @return array
 	 */
-	public function remove_ordering_args( $posts = array() ) {
-		remove_filter( 'posts_clauses', array( $this, 'order_by_price_asc_post_clauses' ) );
-		remove_filter( 'posts_clauses', array( $this, 'order_by_price_desc_post_clauses' ) );
-		remove_filter( 'posts_clauses', array( $this, 'order_by_sku_asc_post_clauses' ) );
-		remove_filter( 'posts_clauses', array( $this, 'order_by_sku_desc_post_clauses' ) );
-		remove_filter( 'posts_clauses', array( $this, 'filter_downloadable_post_clauses' ) );
-		remove_filter( 'posts_clauses', array( $this, 'filter_virtual_post_clauses' ) );
-		remove_filter( 'posts_clauses', array( $this, 'filter_stock_status_post_clauses' ) );
+	public function remove_ordering_args( $posts = [] ) {
+		remove_filter( 'posts_clauses', [ $this, 'order_by_price_asc_post_clauses' ] );
+		remove_filter( 'posts_clauses', [ $this, 'order_by_price_desc_post_clauses' ] );
+		remove_filter( 'posts_clauses', [ $this, 'order_by_sku_asc_post_clauses' ] );
+		remove_filter( 'posts_clauses', [ $this, 'order_by_sku_desc_post_clauses' ] );
+		remove_filter( 'posts_clauses', [ $this, 'filter_downloadable_post_clauses' ] );
+		remove_filter( 'posts_clauses', [ $this, 'filter_virtual_post_clauses' ] );
+		remove_filter( 'posts_clauses', [ $this, 'filter_stock_status_post_clauses' ] );
 		return $posts; // Keeping this here for backward compatibility.
 	}
 

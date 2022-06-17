@@ -28,26 +28,26 @@ class WC_Mock_Enhanced_Payment_Gateway extends WC_Payment_Gateway {
 	 * Initialise Gateway Settings Form Fields.
 	 */
 	public function init_form_fields() {
-		$this->form_fields = array(
-			'enabled' => array(
+		$this->form_fields = [
+			'enabled' => [
 				'title'   => '',
 				'type'    => 'checkbox',
 				'label'   => '',
 				'default' => 'yes',
-			),
-			'api_key' => array(
+			],
+			'api_key' => [
 				'title'   => __( 'API Key', 'woocommerce-admin' ),
 				'type'    => 'text',
 				'default' => '',
-			),
-		);
+			],
+		];
 	}
 
 	/**
 	 * Determine if the gateway requires further setup.
 	 */
 	public function needs_setup() {
-		$settings = get_option( 'woocommerce_mock-enhanced_settings', array() );
+		$settings = get_option( 'woocommerce_mock-enhanced_settings', [] );
 		return ! empty( $settings['api_key'] );
 	}
 
@@ -60,15 +60,15 @@ class WC_Mock_Enhanced_Payment_Gateway extends WC_Payment_Gateway {
 		wp_register_script(
 			'post-install-script',
 			'post-install-script.js',
-			array(),
+			[],
 			'1.0.0',
 			true
 		);
 
-		return array(
+		return [
 			'post-install-script',
 			'unregistered-handle',
-		);
+		];
 	}
 
 	/**
@@ -96,7 +96,7 @@ class WC_Mock_Enhanced_Payment_Gateway extends WC_Payment_Gateway {
 	 * @return array
 	 */
 	public function get_required_settings_keys() {
-		return array( 'api_key' );
+		return [ 'api_key' ];
 	}
 }
 

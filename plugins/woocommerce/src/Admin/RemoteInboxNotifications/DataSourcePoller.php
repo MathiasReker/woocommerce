@@ -14,9 +14,9 @@ defined( 'ABSPATH' ) || exit;
  */
 class DataSourcePoller extends \Automattic\WooCommerce\Admin\DataSourcePoller {
 	const ID           = 'remote_inbox_notifications';
-	const DATA_SOURCES = array(
+	const DATA_SOURCES = [
 		'https://woocommerce.com/wp-json/wccom/inbox-notifications/1.0/notifications.json',
-	);
+	];
 	/**
 	 * Class instance.
 	 *
@@ -32,9 +32,9 @@ class DataSourcePoller extends \Automattic\WooCommerce\Admin\DataSourcePoller {
 			self::$instance = new self(
 				self::ID,
 				self::DATA_SOURCES,
-				array(
+				[
 					'spec_key' => 'slug',
-				)
+				]
 			);
 		}
 		return self::$instance;
@@ -50,7 +50,7 @@ class DataSourcePoller extends \Automattic\WooCommerce\Admin\DataSourcePoller {
 	 */
 	protected function validate_spec( $spec, $url ) {
 		$logger         = self::get_logger();
-		$logger_context = array( 'source' => $url );
+		$logger_context = [ 'source' => $url ];
 
 		if ( ! isset( $spec->slug ) ) {
 			$logger->error(
@@ -167,7 +167,7 @@ class DataSourcePoller extends \Automattic\WooCommerce\Admin\DataSourcePoller {
 	 */
 	private function validate_action( $action, $url ) {
 		$logger         = self::get_logger();
-		$logger_context = array( 'source' => $url );
+		$logger_context = [ 'source' => $url ];
 
 		if ( ! isset( $action->locales ) || ! is_array( $action->locales ) ) {
 			$logger->error(

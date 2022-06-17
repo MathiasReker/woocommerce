@@ -36,9 +36,9 @@ class WC_Tests_Session_Handler extends WC_Unit_Test_Case {
 
 		$this->assertEquals( $current_session_data->session_id + 1, $updated_session_data->session_id );
 		$this->assertEquals( $this->session_key, $updated_session_data->session_key );
-		$this->assertEquals( maybe_serialize( array( 'cart' => 'new cart' ) ), $updated_session_data->session_value );
+		$this->assertEquals( maybe_serialize( [ 'cart' => 'new cart' ] ), $updated_session_data->session_value );
 		$this->assertTrue( is_numeric( $updated_session_data->session_expiry ) );
-		$this->assertEquals( array( 'cart' => 'new cart' ), wp_cache_get( $this->cache_prefix . $this->session_key, WC_SESSION_CACHE_GROUP ) );
+		$this->assertEquals( [ 'cart' => 'new cart' ], wp_cache_get( $this->cache_prefix . $this->session_key, WC_SESSION_CACHE_GROUP ) );
 	}
 
 	/**
@@ -54,7 +54,7 @@ class WC_Tests_Session_Handler extends WC_Unit_Test_Case {
 
 		$this->assertEquals( $current_session_data->session_id, $updated_session_data->session_id );
 		$this->assertEquals( $this->session_key, $updated_session_data->session_key );
-		$this->assertEquals( maybe_serialize( array( 'cart' => 'new cart' ) ), $updated_session_data->session_value );
+		$this->assertEquals( maybe_serialize( [ 'cart' => 'new cart' ] ), $updated_session_data->session_value );
 		$this->assertTrue( is_numeric( $updated_session_data->session_expiry ) );
 	}
 
@@ -63,7 +63,7 @@ class WC_Tests_Session_Handler extends WC_Unit_Test_Case {
 	 */
 	public function test_get_session_should_use_cache() {
 		$session = $this->handler->get_session( $this->session_key );
-		$this->assertEquals( array( 'cart' => 'fake cart' ), $session );
+		$this->assertEquals( [ 'cart' => 'fake cart' ], $session );
 	}
 
 	/**
@@ -72,14 +72,14 @@ class WC_Tests_Session_Handler extends WC_Unit_Test_Case {
 	public function test_get_session_should_not_use_cache() {
 		wp_cache_delete( $this->cache_prefix . $this->session_key, WC_SESSION_CACHE_GROUP );
 		$session = $this->handler->get_session( $this->session_key );
-		$this->assertEquals( array( 'cart' => 'fake cart' ), $session );
+		$this->assertEquals( [ 'cart' => 'fake cart' ], $session );
 	}
 
 	/**
 	 * @testdox Test that get_setting() should return default value.
 	 */
 	public function test_get_session_should_return_default_value() {
-		$default_session = array( 'session' => 'default' );
+		$default_session = [ 'session' => 'default' ];
 		$session         = $this->handler->get_session( 'non-existent key', $default_session );
 		$this->assertEquals( $default_session, $session );
 	}
@@ -142,12 +142,12 @@ class WC_Tests_Session_Handler extends WC_Unit_Test_Case {
 
 		$handler = $this
 			->getMockBuilder( WC_Session_Handler::class )
-			->setMethods( array( 'get_session_cookie' ) )
+			->setMethods( [ 'get_session_cookie' ] )
 			->getMock();
 
 		$handler
 			->method( 'get_session_cookie' )
-			->willReturn( array( $customer_id, $session_expiration, $session_expiring, $cookie_hash ) );
+			->willReturn( [ $customer_id, $session_expiration, $session_expiring, $cookie_hash ] );
 
 		add_filter( 'woocommerce_set_cookie_enabled', '__return_false' );
 
@@ -174,12 +174,12 @@ class WC_Tests_Session_Handler extends WC_Unit_Test_Case {
 
 		$handler = $this
 			->getMockBuilder( WC_Session_Handler::class )
-			->setMethods( array( 'get_session_cookie' ) )
+			->setMethods( [ 'get_session_cookie' ] )
 			->getMock();
 
 		$handler
 			->method( 'get_session_cookie' )
-			->willReturn( array( $customer_id, $session_expiration, $session_expiring, $cookie_hash ) );
+			->willReturn( [ $customer_id, $session_expiration, $session_expiring, $cookie_hash ] );
 
 		add_filter( 'woocommerce_set_cookie_enabled', '__return_false' );
 
@@ -203,7 +203,7 @@ class WC_Tests_Session_Handler extends WC_Unit_Test_Case {
 
 		$handler = $this
 			->getMockBuilder( WC_Session_Handler::class )
-			->setMethods( array( 'get_session_cookie' ) )
+			->setMethods( [ 'get_session_cookie' ] )
 			->getMock();
 
 		wp_set_current_user( $customer->get_id() );
@@ -214,7 +214,7 @@ class WC_Tests_Session_Handler extends WC_Unit_Test_Case {
 
 		$handler
 			->method( 'get_session_cookie' )
-			->willReturn( array( $customer_id, $session_expiration, $session_expiring, $cookie_hash ) );
+			->willReturn( [ $customer_id, $session_expiration, $session_expiring, $cookie_hash ] );
 
 		wp_set_current_user( 1 );
 

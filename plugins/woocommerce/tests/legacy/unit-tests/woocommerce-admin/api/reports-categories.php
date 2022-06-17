@@ -29,9 +29,9 @@ class WC_Admin_Tests_API_Reports_Categories extends WC_REST_Unit_Test_Case {
 		parent::setUp();
 
 		$this->user = $this->factory->user->create(
-			array(
+			[
 				'role' => 'administrator',
-			)
+			]
 		);
 	}
 
@@ -111,7 +111,7 @@ class WC_Admin_Tests_API_Reports_Categories extends WC_REST_Unit_Test_Case {
 		$product->set_name( 'Test Product 2' );
 		$product->set_regular_price( 100 );
 		$second_category_id = wp_create_category( 'Second Category' );
-		$product->set_category_ids( array( $second_category_id ) );
+		$product->set_category_ids( [ $second_category_id ] );
 		$product->save();
 
 		WC_Helper_Queue::run_all_pending();
@@ -120,9 +120,9 @@ class WC_Admin_Tests_API_Reports_Categories extends WC_REST_Unit_Test_Case {
 
 		$request = new WP_REST_Request( 'GET', $this->endpoint );
 		$request->set_query_params(
-			array(
+			[
 				'categories' => $uncategorized_term->term_id . ',' . $second_category_id,
-			)
+			]
 		);
 		$response = $this->server->dispatch( $request );
 		$reports  = $response->get_data();
@@ -178,7 +178,7 @@ class WC_Admin_Tests_API_Reports_Categories extends WC_REST_Unit_Test_Case {
 		$product->set_regular_price( 100 );
 		$second_category    = wp_insert_term( 'Second Category', 'product_cat' );
 		$second_category_id = $second_category['term_id'];
-		$product->set_category_ids( array( $second_category_id ) );
+		$product->set_category_ids( [ $second_category_id ] );
 		$product->save();
 
 		$order = WC_Helper_Order::create_order( $customer->get_id(), $product );
@@ -189,12 +189,12 @@ class WC_Admin_Tests_API_Reports_Categories extends WC_REST_Unit_Test_Case {
 		WC_Helper_Queue::run_all_pending();
 
 		$uncategorized_term = get_term_by( 'slug', 'uncategorized', 'product_cat' );
-		$params             = array(
+		$params             = [
 			'orderby'       => 'category',
 			'order'         => 'desc',
 			'interval'      => 'week',
 			'extended_info' => true,
-		);
+		];
 
 		$request = new WP_REST_Request( 'GET', $this->endpoint );
 		$request->set_query_params( $params );

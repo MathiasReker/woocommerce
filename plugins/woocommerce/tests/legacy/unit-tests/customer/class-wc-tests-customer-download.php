@@ -77,7 +77,7 @@ class WC_Tests_Customer_Download extends WC_Unit_Test_Case {
 		$this->assertInstanceOf( 'StdClass', $downloads[0] );
 		$data_store->delete_by_download_id( $download_id );
 		$downloads = $data_store->get_downloads_for_customer( $this->customer_id );
-		$this->assertEquals( array(), $downloads );
+		$this->assertEquals( [], $downloads );
 	}
 
 	/**
@@ -93,41 +93,41 @@ class WC_Tests_Customer_Download extends WC_Unit_Test_Case {
 
 		$data_store = WC_Data_Store::load( 'customer-download' );
 		$downloads  = $data_store->get_downloads(
-			array(
+			[
 				'user_email' => $this->customer_email,
 				'orderby'    => 'order_id',
 				'order'      => 'DESC',
-			)
+			]
 		);
-		$this->assertEquals( array( $download_2, $this->download ), $downloads );
+		$this->assertEquals( [ $download_2, $this->download ], $downloads );
 
-		$downloads = $data_store->get_downloads( array( 'user_email' => 'test2@example.com' ) );
-		$this->assertEquals( array(), $downloads );
+		$downloads = $data_store->get_downloads( [ 'user_email' => 'test2@example.com' ] );
+		$this->assertEquals( [], $downloads );
 
-		$expected_result = array( $this->download->get_id(), $download_2->get_id() );
+		$expected_result = [ $this->download->get_id(), $download_2->get_id() ];
 		$downloads       = $data_store->get_downloads(
-			array(
+			[
 				'user_email' => $this->customer_email,
 				'return'     => 'ids',
-			)
+			]
 		);
 		$this->assertEquals( $expected_result, $downloads );
 
-		$expected_result = array(
-			array(
+		$expected_result = [
+			[
 				'user_email'    => $this->customer_email,
 				'permission_id' => $this->download->get_id(),
-			),
-			array(
+			],
+			[
 				'user_email'    => $this->customer_email,
 				'permission_id' => $download_2->get_id(),
-			),
-		);
+			],
+		];
 		$downloads       = $data_store->get_downloads(
-			array(
+			[
 				'user_email' => $this->customer_email,
 				'return'     => 'permission_id,user_email',
-			)
+			]
 		);
 		$this->assertEquals( $expected_result, $downloads );
 	}

@@ -22,21 +22,21 @@ class WC_Report_Sales_By_Product extends WC_Admin_Report {
 	 *
 	 * @var array
 	 */
-	public $chart_colours = array();
+	public $chart_colours = [];
 
 	/**
 	 * Product ids.
 	 *
 	 * @var array
 	 */
-	public $product_ids = array();
+	public $product_ids = [];
 
 	/**
 	 * Product ids with titles.
 	 *
 	 * @var array
 	 */
-	public $product_ids_titles = array();
+	public $product_ids_titles = [];
 
 	/**
 	 * Constructor.
@@ -46,7 +46,7 @@ class WC_Report_Sales_By_Product extends WC_Admin_Report {
 		if ( isset( $_GET['product_ids'] ) && is_array( $_GET['product_ids'] ) ) {
 			$this->product_ids = array_filter( array_map( 'absint', $_GET['product_ids'] ) );
 		} elseif ( isset( $_GET['product_ids'] ) ) {
-			$this->product_ids = array_filter( array( absint( $_GET['product_ids'] ) ) );
+			$this->product_ids = array_filter( [ absint( $_GET['product_ids'] ) ] );
 		}
 		// @codingStandardsIgnoreEnd
 	}
@@ -59,76 +59,76 @@ class WC_Report_Sales_By_Product extends WC_Admin_Report {
 	public function get_chart_legend() {
 
 		if ( empty( $this->product_ids ) ) {
-			return array();
+			return [];
 		}
 
-		$legend = array();
+		$legend = [];
 
 		$total_sales = $this->get_order_report_data(
-			array(
-				'data'         => array(
-					'_line_total' => array(
+			[
+				'data'         => [
+					'_line_total' => [
 						'type'            => 'order_item_meta',
 						'order_item_type' => 'line_item',
 						'function'        => 'SUM',
 						'name'            => 'order_item_amount',
-					),
-				),
-				'where_meta'   => array(
+					],
+				],
+				'where_meta'   => [
 					'relation' => 'OR',
-					array(
+					[
 						'type'       => 'order_item_meta',
-						'meta_key'   => array( '_product_id', '_variation_id' ), // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
+						'meta_key'   => [ '_product_id', '_variation_id' ], // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
 						'meta_value' => $this->product_ids, // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_value
 						'operator'   => 'IN',
-					),
-				),
+					],
+				],
 				'query_type'   => 'get_var',
 				'filter_range' => true,
-				'order_status' => array( 'completed', 'processing', 'on-hold', 'refunded' ),
-			)
+				'order_status' => [ 'completed', 'processing', 'on-hold', 'refunded' ],
+			]
 		);
 
 		$total_items = absint(
 			$this->get_order_report_data(
-				array(
-					'data'         => array(
-						'_qty' => array(
+				[
+					'data'         => [
+						'_qty' => [
 							'type'            => 'order_item_meta',
 							'order_item_type' => 'line_item',
 							'function'        => 'SUM',
 							'name'            => 'order_item_count',
-						),
-					),
-					'where_meta'   => array(
+						],
+					],
+					'where_meta'   => [
 						'relation' => 'OR',
-						array(
+						[
 							'type'       => 'order_item_meta',
-							'meta_key'   => array( '_product_id', '_variation_id' ), // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
+							'meta_key'   => [ '_product_id', '_variation_id' ], // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
 							'meta_value' => $this->product_ids, // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_value
 							'operator'   => 'IN',
-						),
-					),
+						],
+					],
 					'query_type'   => 'get_var',
 					'filter_range' => true,
-					'order_status' => array( 'completed', 'processing', 'on-hold', 'refunded' ),
-				)
+					'order_status' => [ 'completed', 'processing', 'on-hold', 'refunded' ],
+				]
 			)
 		);
 
-		$legend[] = array(
+		$legend[] = [
 			/* translators: %s: total items sold */
 			'title'            => sprintf( __( '%s sales for the selected items', 'woocommerce' ), '<strong>' . wc_price( $total_sales ) . '</strong>' ),
 			'color'            => $this->chart_colours['sales_amount'],
 			'highlight_series' => 1,
-		);
+		];
 
-		$legend[] = array(
+		$legend[] = [
 			/* translators: %s: total items purchased */
 			'title'            => sprintf( __( '%s purchases for the selected items', 'woocommerce' ), '<strong>' . ( $total_items ) . '</strong>' ),
 			'color'            => $this->chart_colours['item_count'],
 			'highlight_series' => 0,
-		);
+		];
 
 		return $legend;
 	}
@@ -138,21 +138,21 @@ class WC_Report_Sales_By_Product extends WC_Admin_Report {
 	 */
 	public function output_report() {
 
-		$ranges = array(
+		$ranges = [
 			'year'       => __( 'Year', 'woocommerce' ),
 			'last_month' => __( 'Last month', 'woocommerce' ),
 			'month'      => __( 'This month', 'woocommerce' ),
 			'7day'       => __( 'Last 7 days', 'woocommerce' ),
-		);
+		];
 
-		$this->chart_colours = array(
+		$this->chart_colours = [
 			'sales_amount' => '#3498db',
 			'item_count'   => '#d4d9dc',
-		);
+		];
 
 		$current_range = ! empty( $_GET['range'] ) ? sanitize_text_field( wp_unslash( $_GET['range'] ) ) : '7day'; //phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
-		if ( ! in_array( $current_range, array( 'custom', 'year', 'last_month', 'month', '7day' ), true ) ) {
+		if ( ! in_array( $current_range, [ 'custom', 'year', 'last_month', 'month', '7day' ], true ) ) {
 			$current_range = '7day';
 		}
 
@@ -169,19 +169,19 @@ class WC_Report_Sales_By_Product extends WC_Admin_Report {
 	 */
 	public function get_chart_widgets() {
 
-		$widgets = array();
+		$widgets = [];
 
 		if ( ! empty( $this->product_ids ) ) {
-			$widgets[] = array(
+			$widgets[] = [
 				'title'    => __( 'Showing reports for:', 'woocommerce' ),
-				'callback' => array( $this, 'current_filters' ),
-			);
+				'callback' => [ $this, 'current_filters' ],
+			];
 		}
 
-		$widgets[] = array(
+		$widgets[] = [
 			'title'    => '',
-			'callback' => array( $this, 'products_widget' ),
-		);
+			'callback' => [ $this, 'products_widget' ],
+		];
 
 		return $widgets;
 	}
@@ -191,7 +191,7 @@ class WC_Report_Sales_By_Product extends WC_Admin_Report {
 	 */
 	public function current_filters() {
 
-		$this->product_ids_titles = array();
+		$this->product_ids_titles = [];
 
 		foreach ( $this->product_ids as $product_id ) {
 
@@ -236,28 +236,28 @@ class WC_Report_Sales_By_Product extends WC_Admin_Report {
 			<table cellspacing="0">
 				<?php
 				$top_sellers = $this->get_order_report_data(
-					array(
-						'data'         => array(
-							'_product_id' => array(
+					[
+						'data'         => [
+							'_product_id' => [
 								'type'            => 'order_item_meta',
 								'order_item_type' => 'line_item',
 								'function'        => '',
 								'name'            => 'product_id',
-							),
-							'_qty'        => array(
+							],
+							'_qty'        => [
 								'type'            => 'order_item_meta',
 								'order_item_type' => 'line_item',
 								'function'        => 'SUM',
 								'name'            => 'order_item_qty',
-							),
-						),
+							],
+						],
 						'order_by'     => 'order_item_qty DESC',
 						'group_by'     => 'product_id',
 						'limit'        => 12,
 						'query_type'   => 'get_results',
 						'filter_range' => true,
-						'order_status' => array( 'completed', 'processing', 'on-hold', 'refunded' ),
-					)
+						'order_status' => [ 'completed', 'processing', 'on-hold', 'refunded' ],
+					]
 				);
 
 				if ( $top_sellers ) {
@@ -281,35 +281,35 @@ class WC_Report_Sales_By_Product extends WC_Admin_Report {
 			<table cellspacing="0">
 				<?php
 				$top_freebies = $this->get_order_report_data(
-					array(
-						'data'         => array(
-							'_product_id' => array(
+					[
+						'data'         => [
+							'_product_id' => [
 								'type'            => 'order_item_meta',
 								'order_item_type' => 'line_item',
 								'function'        => '',
 								'name'            => 'product_id',
-							),
-							'_qty'        => array(
+							],
+							'_qty'        => [
 								'type'            => 'order_item_meta',
 								'order_item_type' => 'line_item',
 								'function'        => 'SUM',
 								'name'            => 'order_item_qty',
-							),
-						),
-						'where_meta'   => array(
-							array(
+							],
+						],
+						'where_meta'   => [
+							[
 								'type'       => 'order_item_meta',
 								'meta_key'   => '_line_subtotal', // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
 								'meta_value' => '0', // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_value
 								'operator'   => '=',
-							),
-						),
+							],
+						],
 						'order_by'     => 'order_item_qty DESC',
 						'group_by'     => 'product_id',
 						'limit'        => 12,
 						'query_type'   => 'get_results',
 						'filter_range' => true,
-					)
+					]
 				);
 
 				if ( $top_freebies ) {
@@ -333,28 +333,28 @@ class WC_Report_Sales_By_Product extends WC_Admin_Report {
 			<table cellspacing="0">
 				<?php
 				$top_earners = $this->get_order_report_data(
-					array(
-						'data'         => array(
-							'_product_id' => array(
+					[
+						'data'         => [
+							'_product_id' => [
 								'type'            => 'order_item_meta',
 								'order_item_type' => 'line_item',
 								'function'        => '',
 								'name'            => 'product_id',
-							),
-							'_line_total' => array(
+							],
+							'_line_total' => [
 								'type'            => 'order_item_meta',
 								'order_item_type' => 'line_item',
 								'function'        => 'SUM',
 								'name'            => 'order_item_total',
-							),
-						),
+							],
+						],
 						'order_by'     => 'order_item_total DESC',
 						'group_by'     => 'product_id',
 						'limit'        => 12,
 						'query_type'   => 'get_results',
 						'filter_range' => true,
-						'order_status' => array( 'completed', 'processing', 'on-hold', 'refunded' ),
-					)
+						'order_status' => [ 'completed', 'processing', 'on-hold', 'refunded' ],
+					]
 				);
 
 				if ( $top_earners ) {
@@ -431,79 +431,79 @@ class WC_Report_Sales_By_Product extends WC_Admin_Report {
 		} else {
 			// Get orders and dates in range - we want the SUM of order totals, COUNT of order items, COUNT of orders, and the date.
 			$order_item_counts = $this->get_order_report_data(
-				array(
-					'data'         => array(
-						'_qty'        => array(
+				[
+					'data'         => [
+						'_qty'        => [
 							'type'            => 'order_item_meta',
 							'order_item_type' => 'line_item',
 							'function'        => 'SUM',
 							'name'            => 'order_item_count',
-						),
-						'post_date'   => array(
+						],
+						'post_date'   => [
 							'type'     => 'post_data',
 							'function' => '',
 							'name'     => 'post_date',
-						),
-						'_product_id' => array(
+						],
+						'_product_id' => [
 							'type'            => 'order_item_meta',
 							'order_item_type' => 'line_item',
 							'function'        => '',
 							'name'            => 'product_id',
-						),
-					),
-					'where_meta'   => array(
+						],
+					],
+					'where_meta'   => [
 						'relation' => 'OR',
-						array(
+						[
 							'type'       => 'order_item_meta',
-							'meta_key'   => array( '_product_id', '_variation_id' ), // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
+							'meta_key'   => [ '_product_id', '_variation_id' ], // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
 							'meta_value' => $this->product_ids, // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_value
 							'operator'   => 'IN',
-						),
-					),
+						],
+					],
 					'group_by'     => 'product_id,' . $this->group_by_query,
 					'order_by'     => 'post_date ASC',
 					'query_type'   => 'get_results',
 					'filter_range' => true,
-					'order_status' => array( 'completed', 'processing', 'on-hold', 'refunded' ),
-				)
+					'order_status' => [ 'completed', 'processing', 'on-hold', 'refunded' ],
+				]
 			);
 
 			$order_item_amounts = $this->get_order_report_data(
-				array(
-					'data'         => array(
-						'_line_total' => array(
+				[
+					'data'         => [
+						'_line_total' => [
 							'type'            => 'order_item_meta',
 							'order_item_type' => 'line_item',
 							'function'        => 'SUM',
 							'name'            => 'order_item_amount',
-						),
-						'post_date'   => array(
+						],
+						'post_date'   => [
 							'type'     => 'post_data',
 							'function' => '',
 							'name'     => 'post_date',
-						),
-						'_product_id' => array(
+						],
+						'_product_id' => [
 							'type'            => 'order_item_meta',
 							'order_item_type' => 'line_item',
 							'function'        => '',
 							'name'            => 'product_id',
-						),
-					),
-					'where_meta'   => array(
+						],
+					],
+					'where_meta'   => [
 						'relation' => 'OR',
-						array(
+						[
 							'type'       => 'order_item_meta',
-							'meta_key'   => array( '_product_id', '_variation_id' ), // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
+							'meta_key'   => [ '_product_id', '_variation_id' ], // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
 							'meta_value' => $this->product_ids, // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_value
 							'operator'   => 'IN',
-						),
-					),
+						],
+					],
 					'group_by'     => 'product_id, ' . $this->group_by_query,
 					'order_by'     => 'post_date ASC',
 					'query_type'   => 'get_results',
 					'filter_range' => true,
-					'order_status' => array( 'completed', 'processing', 'on-hold', 'refunded' ),
-				)
+					'order_status' => [ 'completed', 'processing', 'on-hold', 'refunded' ],
+				]
 			);
 
 			// Prepare data for report.
@@ -512,10 +512,10 @@ class WC_Report_Sales_By_Product extends WC_Admin_Report {
 
 			// Encode in json format.
 			$chart_data = wp_json_encode(
-				array(
+				[
 					'order_item_counts'  => array_values( $order_item_counts ),
 					'order_item_amounts' => array_values( $order_item_amounts ),
-				)
+				]
 			);
 			?>
 			<div class="chart-container">

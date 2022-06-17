@@ -50,14 +50,14 @@ class WC_REST_Order_Refunds_Controller extends WC_REST_Order_Refunds_V2_Controll
 
 		// Create the refund.
 		$refund = wc_create_refund(
-			array(
+			[
 				'order_id'       => $order->get_id(),
 				'amount'         => $request['amount'],
 				'reason'         => $request['reason'],
 				'line_items'     => $request['line_items'],
 				'refund_payment' => $request['api_refund'],
 				'restock_items'  => $request['api_restock'],
-			)
+			]
 		);
 
 		if ( is_wp_error( $refund ) ) {
@@ -96,26 +96,26 @@ class WC_REST_Order_Refunds_Controller extends WC_REST_Order_Refunds_V2_Controll
 	public function get_item_schema() {
 		$schema = parent::get_item_schema();
 
-		$schema['properties']['line_items']['items']['properties']['refund_total'] = array(
+		$schema['properties']['line_items']['items']['properties']['refund_total'] = [
 			'description' => __( 'Amount that will be refunded for this line item (excluding taxes).', 'woocommerce' ),
 			'type'        => 'number',
-			'context'     => array( 'edit' ),
+			'context'     => [ 'edit' ],
 			'readonly'    => true,
-		);
+		];
 
-		$schema['properties']['line_items']['items']['properties']['taxes']['items']['properties']['refund_total'] = array(
+		$schema['properties']['line_items']['items']['properties']['taxes']['items']['properties']['refund_total'] = [
 			'description' => __( 'Amount that will be refunded for this tax.', 'woocommerce' ),
 			'type'        => 'number',
-			'context'     => array( 'edit' ),
+			'context'     => [ 'edit' ],
 			'readonly'    => true,
-		);
+		];
 
-		$schema['properties']['api_restock'] = array(
+		$schema['properties']['api_restock'] = [
 			'description' => __( 'When true, refunded items are restocked.', 'woocommerce' ),
 			'type'        => 'boolean',
-			'context'     => array( 'edit' ),
+			'context'     => [ 'edit' ],
 			'default'     => true,
-		);
+		];
 
 		return $schema;
 	}

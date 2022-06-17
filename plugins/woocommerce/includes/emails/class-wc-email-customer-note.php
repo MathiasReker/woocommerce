@@ -40,13 +40,13 @@ if ( ! class_exists( 'WC_Email_Customer_Note', false ) ) :
 			$this->description    = __( 'Customer note emails are sent when you add a note to an order.', 'woocommerce' );
 			$this->template_html  = 'emails/customer-note.php';
 			$this->template_plain = 'emails/plain/customer-note.php';
-			$this->placeholders   = array(
+			$this->placeholders   = [
 				'{order_date}'   => '',
 				'{order_number}' => '',
-			);
+			];
 
 			// Triggers.
-			add_action( 'woocommerce_new_customer_note_notification', array( $this, 'trigger' ) );
+			add_action( 'woocommerce_new_customer_note_notification', [ $this, 'trigger' ] );
 
 			// Call parent constructor.
 			parent::__construct();
@@ -81,10 +81,10 @@ if ( ! class_exists( 'WC_Email_Customer_Note', false ) ) :
 			$this->setup_locale();
 
 			if ( ! empty( $args ) ) {
-				$defaults = array(
+				$defaults = [
 					'order_id'      => '',
 					'customer_note' => '',
-				);
+				];
 
 				$args = wp_parse_args( $args, $defaults );
 
@@ -118,7 +118,7 @@ if ( ! class_exists( 'WC_Email_Customer_Note', false ) ) :
 		public function get_content_html() {
 			return wc_get_template_html(
 				$this->template_html,
-				array(
+				[
 					'order'              => $this->object,
 					'email_heading'      => $this->get_heading(),
 					'additional_content' => $this->get_additional_content(),
@@ -126,7 +126,7 @@ if ( ! class_exists( 'WC_Email_Customer_Note', false ) ) :
 					'sent_to_admin'      => false,
 					'plain_text'         => false,
 					'email'              => $this,
-				)
+				]
 			);
 		}
 
@@ -138,7 +138,7 @@ if ( ! class_exists( 'WC_Email_Customer_Note', false ) ) :
 		public function get_content_plain() {
 			return wc_get_template_html(
 				$this->template_plain,
-				array(
+				[
 					'order'              => $this->object,
 					'email_heading'      => $this->get_heading(),
 					'additional_content' => $this->get_additional_content(),
@@ -146,7 +146,7 @@ if ( ! class_exists( 'WC_Email_Customer_Note', false ) ) :
 					'sent_to_admin'      => false,
 					'plain_text'         => true,
 					'email'              => $this,
-				)
+				]
 			);
 		}
 

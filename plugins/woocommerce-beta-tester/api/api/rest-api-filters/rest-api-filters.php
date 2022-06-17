@@ -3,53 +3,53 @@
 register_woocommerce_admin_test_helper_rest_route(
     '/rest-api-filters',
     [ WCA_Test_Helper_Rest_Api_Filters::class, 'create' ],
-    array(
+    [
         'methods' => 'POST',
-        'args'                => array(
-            'endpoint'     => array(
+        'args'                => [
+            'endpoint'     => [
                 'description'       => 'Rest API endpoint.',
                 'type'              => 'string',
                 'required'            => true,
                 'sanitize_callback' => 'sanitize_text_field',
-            ),
-            'dot_notation' => array(
+            ],
+            'dot_notation' => [
                 'description'       => 'Dot notation of the target field.',
                 'type'              => 'string',
                 'required'            => true,
                 'sanitize_callback' => 'sanitize_text_field',
-            ),
-            'replacement'   => array(
+            ],
+            'replacement'   => [
                 'description'       => 'Replacement value for the target field.',
                 'type'              => 'string',
                 'required'            => true,
                 'sanitize_callback' => 'sanitize_text_field',
-            ),
-        ),
-    )
+            ],
+        ],
+    ]
 );
 
 register_woocommerce_admin_test_helper_rest_route(
     '/rest-api-filters',
     [ WCA_Test_Helper_Rest_Api_Filters::class, 'delete' ],
-    array(
+    [
         'methods' => 'DELETE',
-        'args'                => array(
-            'index'     => array(
+        'args'                => [
+            'index'     => [
                 'description'       => 'Rest API endpoint.',
                 'type'              => 'integer',
                 'required' => true,
-            ),
-        ),
-    )
+            ],
+        ],
+    ]
 );
 
 
 register_woocommerce_admin_test_helper_rest_route(
     '/rest-api-filters/(?P<index>\d+)/toggle',
     [ WCA_Test_Helper_Rest_Api_Filters::class, 'toggle' ],
-    array(
+    [
         'methods' => 'POST',
-    )
+    ]
 );
 
 
@@ -67,12 +67,12 @@ class WCA_Test_Helper_Rest_Api_Filters {
                 $dot_notation,
                 $replacement
             ) {
-                $filters[] = array(
+                $filters[] = [
                 'endpoint' => $endpoint,
                 'dot_notation' => $dot_notation,
                 'replacement' => filter_var( $replacement, FILTER_VALIDATE_BOOLEAN ),
                 'enabled' => true,
-                );
+                ];
                 return $filters;
             }
         );
@@ -80,7 +80,7 @@ class WCA_Test_Helper_Rest_Api_Filters {
     }
 
     public static function update( callable $callback ) {
-        $filters = get_option(self::WC_ADMIN_TEST_HELPER_REST_API_FILTER_OPTION, array());
+        $filters = get_option(self::WC_ADMIN_TEST_HELPER_REST_API_FILTER_OPTION, []);
         $filters = $callback( $filters );
         return update_option(self::WC_ADMIN_TEST_HELPER_REST_API_FILTER_OPTION, $filters);
     }

@@ -17,24 +17,24 @@ class WC_Tests_Attributes_Functions extends WC_Unit_Test_Case {
 	 * @since 3.2.0
 	 */
 	public function test_wc_get_attribute() {
-		$args = array(
+		$args = [
 			'name'         => 'Brand',
 			'type'         => 'select',
 			'order_by'     => 'name',
 			'has_archives' => true,
-		);
+		];
 
 		$id = wc_create_attribute( $args );
 
 		$attribute = (array) wc_get_attribute( $id );
-		$expected  = array(
+		$expected  = [
 			'id'           => $id,
 			'name'         => 'Brand',
 			'slug'         => 'pa_brand',
 			'type'         => 'select',
 			'order_by'     => 'name',
 			'has_archives' => true,
-		);
+		];
 
 		wc_delete_attribute( $id );
 
@@ -48,21 +48,21 @@ class WC_Tests_Attributes_Functions extends WC_Unit_Test_Case {
 	 */
 	public function test_wc_create_attribute() {
 		// Test success.
-		$id = wc_create_attribute( array( 'name' => 'Brand' ) );
+		$id = wc_create_attribute( [ 'name' => 'Brand' ] );
 		$this->assertIsInt( $id );
 
 		// Test failures.
-		$err = wc_create_attribute( array() );
+		$err = wc_create_attribute( [] );
 		$this->assertEquals( 'missing_attribute_name', $err->get_error_code() );
 
-		$err = wc_create_attribute( array( 'name' => 'This is a big name for a product attribute!' ) );
+		$err = wc_create_attribute( [ 'name' => 'This is a big name for a product attribute!' ] );
 		$this->assertEquals( 'invalid_product_attribute_slug_too_long', $err->get_error_code() );
 
-		$err = wc_create_attribute( array( 'name' => 'Cat' ) );
+		$err = wc_create_attribute( [ 'name' => 'Cat' ] );
 		$this->assertEquals( 'invalid_product_attribute_slug_reserved_name', $err->get_error_code() );
 
-		register_taxonomy( 'pa_brand', array( 'product' ), array( 'labels' => array( 'name' => 'Brand' ) ) );
-		$err = wc_create_attribute( array( 'name' => 'Brand' ) );
+		register_taxonomy( 'pa_brand', [ 'product' ], [ 'labels' => [ 'name' => 'Brand' ] ] );
+		$err = wc_create_attribute( [ 'name' => 'Brand' ] );
 		$this->assertEquals( 'invalid_product_attribute_slug_already_exists', $err->get_error_code() );
 		unregister_taxonomy( 'pa_brand' );
 
@@ -77,12 +77,12 @@ class WC_Tests_Attributes_Functions extends WC_Unit_Test_Case {
 	public function test_wc_create_attribute_serialized_data() {
 		global $wpdb;
 
-		$global_attribute_data = WC_Helper_Product::create_attribute( 'test', array( 'Chicken', 'Nuggets' ) );
+		$global_attribute_data = WC_Helper_Product::create_attribute( 'test', [ 'Chicken', 'Nuggets' ] );
 
 		$local_attribute = new WC_Product_Attribute();
 		$local_attribute->set_id( 0 );
 		$local_attribute->set_name( 'Test Local Attribute' );
-		$local_attribute->set_options( array( 'Fish', 'Fingers', 's:7:"pa_test' ) );
+		$local_attribute->set_options( [ 'Fish', 'Fingers', 's:7:"pa_test' ] );
 		$local_attribute->set_position( 0 );
 		$local_attribute->set_visible( true );
 		$local_attribute->set_variation( false );
@@ -97,10 +97,10 @@ class WC_Tests_Attributes_Functions extends WC_Unit_Test_Case {
 
 		$product = new WC_Product_Simple();
 		$product->set_attributes(
-			array(
+			[
 				'test-local'  => $local_attribute,
 				'test-global' => $global_attribute,
-			)
+			]
 		);
 		$product->save();
 
@@ -109,34 +109,34 @@ class WC_Tests_Attributes_Functions extends WC_Unit_Test_Case {
 		$product_meta_before_update = @unserialize( $meta_before_update[0]['meta_value'] ); // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged, WordPress.PHP.DiscouragedPHPFunctions.serialize_unserialize
 		$this->assertNotFalse( $product_meta_before_update, 'Meta should be an unserializable string' );
 
-		$expected_local_attribute_data  = array(
+		$expected_local_attribute_data  = [
 			'name'         => 'Test Local Attribute',
 			'value'        => 'Fish | Fingers | s:7:"pa_test',
 			'position'     => 0,
 			'is_visible'   => 1,
 			'is_variation' => 0,
 			'is_taxonomy'  => 0,
-		);
-		$expected_global_attribute_data = array(
+		];
+		$expected_global_attribute_data = [
 			'name'         => 'pa_test',
 			'value'        => '',
 			'position'     => 1,
 			'is_visible'   => 1,
 			'is_variation' => 0,
 			'is_taxonomy'  => 1,
-		);
+		];
 		$local_before                   = isset( $product_meta_before_update['Test Local Attribute'] ) ? $product_meta_before_update['Test Local Attribute'] : $product_meta_before_update['test-local-attribute'];
 		$this->assertEquals( $expected_local_attribute_data, $local_before );
 		$this->assertEquals( $expected_global_attribute_data, $product_meta_before_update['pa_test'] );
 
 		// Update the global attribute.
 		$updated_global_attribute_id = wc_create_attribute(
-			array(
+			[
 				'id'       => $global_attribute_data['attribute_id'],
 				'name'     => 'Test Update',
 				'old_slug' => 'test',
 				'slug'     => 'testupdate',
-			)
+			]
 		);
 		$this->assertEquals( $updated_global_attribute_id, $global_attribute_data['attribute_id'] );
 
@@ -145,14 +145,14 @@ class WC_Tests_Attributes_Functions extends WC_Unit_Test_Case {
 		$product_meta_after_update = @unserialize( $meta_after_update[0]['meta_value'] ); // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged, WordPress.PHP.DiscouragedPHPFunctions.serialize_unserialize
 		$this->assertNotFalse( $product_meta_after_update, 'Meta should be an unserializable string' );
 
-		$expected_global_attribute_data = array(
+		$expected_global_attribute_data = [
 			'name'         => 'pa_testupdate',
 			'value'        => '',
 			'position'     => 1,
 			'is_visible'   => 1,
 			'is_variation' => 0,
 			'is_taxonomy'  => 1,
-		);
+		];
 		$this->assertEquals( $local_before, isset( $product_meta_after_update['Test Local Attribute'] ) ? $product_meta_after_update['Test Local Attribute'] : $product_meta_after_update['test-local-attribute'] );
 		$this->assertEquals( $expected_global_attribute_data, $product_meta_after_update['pa_testupdate'] );
 		$this->assertArrayNotHasKey( 'pa_test', $product_meta_after_update );
@@ -164,23 +164,23 @@ class WC_Tests_Attributes_Functions extends WC_Unit_Test_Case {
 	 * @since 3.2.0
 	 */
 	public function test_wc_update_attribute() {
-		$args = array(
+		$args = [
 			'name'         => 'Brand',
 			'type'         => 'select',
 			'order_by'     => 'name',
 			'has_archives' => true,
-		);
+		];
 
 		$id = wc_create_attribute( $args );
 
-		$updated = array(
+		$updated = [
 			'id'           => $id,
 			'name'         => 'Brand',
 			'slug'         => 'pa_brand',
 			'type'         => 'select',
 			'order_by'     => 'menu_order',
 			'has_archives' => true,
-		);
+		];
 
 		wc_update_attribute( $id, $updated );
 
@@ -198,7 +198,7 @@ class WC_Tests_Attributes_Functions extends WC_Unit_Test_Case {
 	 */
 	public function test_wc_delete_attribute() {
 		// Success.
-		$id     = wc_create_attribute( array( 'name' => 'Brand' ) );
+		$id     = wc_create_attribute( [ 'name' => 'Brand' ] );
 		$result = wc_delete_attribute( $id );
 		$this->assertTrue( $result );
 
@@ -211,12 +211,12 @@ class WC_Tests_Attributes_Functions extends WC_Unit_Test_Case {
 	 * Test counts of attributes.
 	 */
 	public function test_count_attribute_terms() {
-		$global_attribute_data = WC_Helper_Product::create_attribute( 'test', array( 'Chicken', 'Nuggets' ) );
+		$global_attribute_data = WC_Helper_Product::create_attribute( 'test', [ 'Chicken', 'Nuggets' ] );
 		$count                 = wp_count_terms(
 			$global_attribute_data['attribute_taxonomy'],
-			array(
+			[
 				'hide_empty' => false,
-			)
+			]
 		);
 
 		$this->assertEquals( 2, $count );

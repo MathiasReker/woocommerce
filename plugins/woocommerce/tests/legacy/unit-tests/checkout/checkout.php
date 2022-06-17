@@ -35,17 +35,17 @@ class WC_Tests_Checkout extends WC_Unit_Test_Case {
 		$coupon_data_store = WC_Data_Store::load( 'coupon' );
 		$coupon            = WC_Helper_Coupon::create_coupon(
 			$coupon_code,
-			array( 'usage_limit' => 1 )
+			[ 'usage_limit' => 1 ]
 		);
 		$product           = WC_Helper_Product::create_simple_product( true );
 		WC()->cart->add_to_cart( $product->get_id(), 1 );
 		WC()->cart->add_discount( $coupon->get_code() );
 		$checkout = WC_Checkout::instance();
 		$order_id = $checkout->create_order(
-			array(
+			[
 				'billing_email'  => 'a@b.com',
 				'payment_method' => 'dummy_payment_gateway',
-			)
+			]
 		);
 		$this->assertNotWPError( $order_id );
 		$order           = new WC_Order( $order_id );
@@ -56,10 +56,10 @@ class WC_Tests_Checkout extends WC_Unit_Test_Case {
 		$this->assertEquals( $coupon_data_store->get_tentative_usage_count( $coupon->get_id() ), 1 );
 
 		$order2_id = $checkout->create_order(
-			array(
+			[
 				'billing_email'  => 'a@c.com',
 				'payment_method' => 'dummy_payment_gateway',
-			)
+			]
 		);
 		$this->assertWPError( $order2_id );
 		$this->assertEquals( $coupon_data_store->get_tentative_usage_count( $coupon->get_id() ), 1 );
@@ -77,11 +77,11 @@ class WC_Tests_Checkout extends WC_Unit_Test_Case {
 
 		$coupon1 = WC_Helper_Coupon::create_coupon(
 			$coupon_code1,
-			array( 'usage_limit' => 2 )
+			[ 'usage_limit' => 2 ]
 		);
 		$coupon2 = WC_Helper_Coupon::create_coupon(
 			$coupon_code2,
-			array( 'usage_limit' => 1 )
+			[ 'usage_limit' => 1 ]
 		);
 		$product = WC_Helper_Product::create_simple_product( true );
 		WC()->cart->add_to_cart( $product->get_id(), 1 );
@@ -89,10 +89,10 @@ class WC_Tests_Checkout extends WC_Unit_Test_Case {
 		WC()->cart->add_discount( $coupon_code2 );
 		$checkout  = WC_Checkout::instance();
 		$order_id1 = $checkout->create_order(
-			array(
+			[
 				'billing_email'  => 'a@b.com',
 				'payment_method' => 'dummy_payment_gateway',
-			)
+			]
 		);
 
 		$this->assertNotWPError( $order_id1 );
@@ -100,10 +100,10 @@ class WC_Tests_Checkout extends WC_Unit_Test_Case {
 		$this->assertEquals( $coupon_data_store->get_tentative_usage_count( $coupon2->get_id() ), 1 );
 
 		$order2_id = $checkout->create_order(
-			array(
+			[
 				'billing_email'  => 'a@b.com',
 				'payment_method' => 'dummy_payment_gateway',
-			)
+			]
 		);
 
 		$this->assertWPError( $order2_id );
@@ -121,7 +121,7 @@ class WC_Tests_Checkout extends WC_Unit_Test_Case {
 		$coupon_data_store = WC_Data_Store::load( 'coupon' );
 		$coupon = WC_Helper_Coupon::create_coupon(
 			$coupon_code,
-			array( 'usage_limit' => 1 )
+			[ 'usage_limit' => 1 ]
 		);
 
 		delete_post_meta( $coupon->get_id(), 'usage_count' );
@@ -131,10 +131,10 @@ class WC_Tests_Checkout extends WC_Unit_Test_Case {
 		WC()->cart->add_discount( $coupon->get_code() );
 		$checkout = WC_Checkout::instance();
 		$order_id = $checkout->create_order(
-			array(
+			[
 				'billing_email' => 'a@b.com',
 				'payment_method' => 'dummy_payment_gateway',
-			)
+			]
 		);
 		$this->assertNotWPError( $order_id );
 		$this->assertEquals( $coupon_data_store->get_tentative_usage_count( $coupon->get_id() ), 1 );
@@ -151,16 +151,16 @@ class WC_Tests_Checkout extends WC_Unit_Test_Case {
 		$coupon_code = 'coupon4one';
 		$coupon = WC_Helper_Coupon::create_coupon(
 			$coupon_code,
-			array( 'usage_limit_per_user' => 1 )
+			[ 'usage_limit_per_user' => 1 ]
 		);
 		$product = WC_Helper_Product::create_simple_product( true );
 		WC()->cart->add_to_cart( $product->get_id(), 1 );
 		WC()->cart->add_discount( $coupon->get_code() );
 		$checkout = WC_Checkout::instance();
-		$posted_data = array(
+		$posted_data = [
 			'billing_email' => 'a@b.com',
 			'payment_method' => 'dummy_payment_gateway',
-		);
+		];
 		$order_id = $checkout->create_order( $posted_data );
 		$this->assertNotWPError( $order_id );
 
@@ -187,7 +187,7 @@ class WC_Tests_Checkout extends WC_Unit_Test_Case {
 	 */
 	protected function create_order_for_managed_inventory_product() {
 		$product = WC_Helper_Product::create_simple_product();
-		$product->set_props( array( 'manage_stock' => true ) );
+		$product->set_props( [ 'manage_stock' => true ] );
 		$product->set_stock_quantity( 10 );
 		$product->save();
 
@@ -196,17 +196,17 @@ class WC_Tests_Checkout extends WC_Unit_Test_Case {
 
 		$checkout = WC_Checkout::instance();
 		$order_id = $checkout->create_order(
-			array(
+			[
 				'payment_method' => 'cod',
 				'billing_email'  => 'a@b.com',
-			)
+			]
 		);
 
 		// Assertions whether the order was created successfully.
 		$this->assertNotWPError( $order_id );
 		$order = wc_get_order( $order_id );
 
-		return array( $product, $order );
+		return [ $product, $order ];
 	}
 
 	/**
@@ -275,19 +275,19 @@ class WC_Tests_Checkout extends WC_Unit_Test_Case {
 			$variation->get_id(),
 			9,
 			0,
-			array(
+			[
 				'attribute_pa_colour' => 'red', // Set a value since this is an 'any' attribute.
 				'attribute_pa_number' => '2', // Set a value since this is an 'any' attribute.
-			)
+			]
 		);
 		$this->assertEquals( true, WC()->cart->check_cart_items() );
 
 		$checkout = WC_Checkout::instance();
 		$order_id = $checkout->create_order(
-			array(
+			[
 				'payment_method' => 'cod',
 				'billing_email'  => 'a@b.com',
-			)
+			]
 		);
 
 		// Assertions whether the first order was created successfully.
@@ -303,10 +303,10 @@ class WC_Tests_Checkout extends WC_Unit_Test_Case {
 			$variation->get_stock_managed_by_id(),
 			2,
 			0,
-			array(
+			[
 				'attribute_pa_colour' => 'red',
 				'attribute_pa_number' => '2',
-			)
+			]
 		);
 
 		$this->assertEquals( false, WC()->cart->check_cart_items() );

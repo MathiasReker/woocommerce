@@ -108,23 +108,23 @@ class CustomerEffortScoreTracks {
 			return;
 		}
 
-		add_action( 'admin_init', array( $this, 'maybe_clear_ces_tracks_queue' ) );
-		add_action( 'woocommerce_update_options', array( $this, 'run_on_update_options' ), 10, 3 );
-		add_action( 'product_cat_add_form', array( $this, 'add_script_track_product_categories' ), 10, 3 );
-		add_action( 'product_tag_add_form', array( $this, 'add_script_track_product_tags' ), 10, 3 );
-		add_action( 'woocommerce_attribute_added', array( $this, 'run_on_add_product_attributes' ), 10, 3 );
-		add_action( 'load-edit.php', array( $this, 'run_on_load_edit_php' ), 10, 3 );
-		add_action( 'product_page_product_importer', array( $this, 'run_on_product_import' ), 10, 3 );
+		add_action( 'admin_init', [ $this, 'maybe_clear_ces_tracks_queue' ] );
+		add_action( 'woocommerce_update_options', [ $this, 'run_on_update_options' ], 10, 3 );
+		add_action( 'product_cat_add_form', [ $this, 'add_script_track_product_categories' ], 10, 3 );
+		add_action( 'product_tag_add_form', [ $this, 'add_script_track_product_tags' ], 10, 3 );
+		add_action( 'woocommerce_attribute_added', [ $this, 'run_on_add_product_attributes' ], 10, 3 );
+		add_action( 'load-edit.php', [ $this, 'run_on_load_edit_php' ], 10, 3 );
+		add_action( 'product_page_product_importer', [ $this, 'run_on_product_import' ], 10, 3 );
 		// Only hook up the transition_post_status action handler
 		// if on the edit page.
 		global $pagenow;
 		if ( 'post.php' === $pagenow ) {
 			add_action(
 				'transition_post_status',
-				array(
+				[
 					$this,
 					'run_on_transition_post_status',
-				),
+				],
 				10,
 				3
 			);
@@ -181,12 +181,12 @@ class CustomerEffortScoreTracks {
 	 */
 	private function get_product_count() {
 		$query         = new \WC_Product_Query(
-			array(
+			[
 				'limit'    => 1,
 				'paginate' => true,
 				'return'   => 'ids',
-				'status'   => array( 'publish' ),
-			)
+				'status'   => [ 'publish' ],
+			]
 		);
 		$products      = $query->get_products();
 		$product_count = intval( $products->total );
@@ -201,11 +201,11 @@ class CustomerEffortScoreTracks {
 	 */
 	private function get_shop_order_count() {
 		$query            = new \WC_Order_Query(
-			array(
+			[
 				'limit'    => 1,
 				'paginate' => true,
 				'return'   => 'ids',
-			)
+			]
 		);
 		$shop_orders      = $query->get_orders();
 		$shop_order_count = intval( $shop_orders->total );
@@ -221,7 +221,7 @@ class CustomerEffortScoreTracks {
 	 * @return bool Whether the action has already been shown.
 	 */
 	private function has_been_shown( $action ) {
-		$shown_for_features = get_option( self::SHOWN_FOR_ACTIONS_OPTION_NAME, array() );
+		$shown_for_features = get_option( self::SHOWN_FOR_ACTIONS_OPTION_NAME, [] );
 		$has_been_shown     = in_array( $action, $shown_for_features, true );
 
 		return $has_been_shown;
@@ -235,7 +235,7 @@ class CustomerEffortScoreTracks {
 	private function enqueue_to_ces_tracks( $item ) {
 		$queue = get_option(
 			self::CES_TRACKS_QUEUE_OPTION_NAME,
-			array()
+			[]
 		);
 
 		$has_duplicate = array_filter(
@@ -269,7 +269,7 @@ class CustomerEffortScoreTracks {
 		}
 
 		$this->enqueue_to_ces_tracks(
-			array(
+			[
 				'action'         => self::SEARCH_ACTION_NAME,
 				'label'          => __(
 					'How easy was it to use search?',
@@ -278,10 +278,10 @@ class CustomerEffortScoreTracks {
 				'onsubmit_label' => $this->onsubmit_label,
 				'pagenow'        => $page_now,
 				'adminpage'      => $admin_page,
-				'props'          => (object) array(
+				'props'          => (object) [
 					'search_area' => $search_area,
-				),
-			)
+				],
+			]
 		);
 	}
 
@@ -335,7 +335,7 @@ class CustomerEffortScoreTracks {
 		}
 
 		$this->enqueue_to_ces_tracks(
-			array(
+			[
 				'action'         => self::PRODUCT_ADD_PUBLISH_ACTION_NAME,
 				'label'          => __(
 					'How easy was it to add a product?',
@@ -344,10 +344,10 @@ class CustomerEffortScoreTracks {
 				'onsubmit_label' => $this->onsubmit_label,
 				'pagenow'        => 'product',
 				'adminpage'      => 'post-php',
-				'props'          => array(
+				'props'          => [
 					'product_count' => $this->get_product_count(),
-				),
-			)
+				],
+			]
 		);
 	}
 
@@ -360,7 +360,7 @@ class CustomerEffortScoreTracks {
 		}
 
 		$this->enqueue_to_ces_tracks(
-			array(
+			[
 				'action'         => self::PRODUCT_UPDATE_ACTION_NAME,
 				'label'          => __(
 					'How easy was it to edit your product?',
@@ -369,10 +369,10 @@ class CustomerEffortScoreTracks {
 				'onsubmit_label' => $this->onsubmit_label,
 				'pagenow'        => 'product',
 				'adminpage'      => 'post-php',
-				'props'          => array(
+				'props'          => [
 					'product_count' => $this->get_product_count(),
-				),
-			)
+				],
+			]
 		);
 	}
 
@@ -385,7 +385,7 @@ class CustomerEffortScoreTracks {
 		}
 
 		$this->enqueue_to_ces_tracks(
-			array(
+			[
 				'action'         => self::SHOP_ORDER_UPDATE_ACTION_NAME,
 				'label'          => __(
 					'How easy was it to update an order?',
@@ -394,10 +394,10 @@ class CustomerEffortScoreTracks {
 				'onsubmit_label' => $this->onsubmit_label,
 				'pagenow'        => 'shop_order',
 				'adminpage'      => 'post-php',
-				'props'          => array(
+				'props'          => [
 					'order_count' => $this->get_shop_order_count(),
-				),
-			)
+				],
+			]
 		);
 	}
 
@@ -419,7 +419,7 @@ class CustomerEffortScoreTracks {
 
 		$queue           = get_option(
 			self::CES_TRACKS_QUEUE_OPTION_NAME,
-			array()
+			[]
 		);
 		$remaining_items = array_filter(
 			$queue,
@@ -482,7 +482,7 @@ class CustomerEffortScoreTracks {
 		}
 
 		$this->enqueue_to_ces_tracks(
-			array(
+			[
 				'action'         => self::IMPORT_PRODUCTS_ACTION_NAME,
 				'label'          => __(
 					'How easy was it to import products?',
@@ -491,8 +491,8 @@ class CustomerEffortScoreTracks {
 				'onsubmit_label' => $this->onsubmit_label,
 				'pagenow'        => 'product_page_product_importer',
 				'adminpage'      => 'product_page_product_importer',
-				'props'          => (object) array(),
-			)
+				'props'          => (object) [],
+			]
 		);
 	}
 
@@ -508,16 +508,16 @@ class CustomerEffortScoreTracks {
 			return;
 		}
 
-		$props = array(
+		$props = [
 			'settings_area' => $current_tab,
-		);
+		];
 
 		if ( $current_section ) {
 			$props['settings_section'] = $current_section;
 		}
 
 		$this->enqueue_to_ces_tracks(
-			array(
+			[
 				'action'         => self::SETTINGS_CHANGE_ACTION_NAME,
 				'label'          => __(
 					'How easy was it to update your settings?',
@@ -527,7 +527,7 @@ class CustomerEffortScoreTracks {
 				'pagenow'        => 'woocommerce_page_wc-settings',
 				'adminpage'      => 'woocommerce_page_wc-settings',
 				'props'          => (object) $props,
-			)
+			]
 		);
 	}
 
@@ -540,7 +540,7 @@ class CustomerEffortScoreTracks {
 		}
 
 		$this->enqueue_to_ces_tracks(
-			array(
+			[
 				'action'         => self::ADD_PRODUCT_ATTRIBUTES_ACTION_NAME,
 				'label'          => __(
 					'How easy was it to add a product attribute?',
@@ -549,8 +549,8 @@ class CustomerEffortScoreTracks {
 				'onsubmit_label' => $this->onsubmit_label,
 				'pagenow'        => 'product_page_product_attributes',
 				'adminpage'      => 'product_page_product_attributes',
-				'props'          => (object) array(),
-			)
+				'props'          => (object) [],
+			]
 		);
 	}
 
@@ -558,7 +558,7 @@ class CustomerEffortScoreTracks {
 	 * Determine on initiating CES survey on searching for product or orders.
 	 */
 	public function run_on_load_edit_php() {
-		$allowed_types = array( 'product', 'shop_order' );
+		$allowed_types = [ 'product', 'shop_order' ];
 		$post_type     = get_current_screen()->post_type;
 
 		// We're only interested for certain post types.

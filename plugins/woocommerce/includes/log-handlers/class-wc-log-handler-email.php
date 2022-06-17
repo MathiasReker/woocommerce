@@ -44,14 +44,14 @@ class WC_Log_Handler_Email extends WC_Log_Handler {
 	 *
 	 * @var array
 	 */
-	protected $recipients = array();
+	protected $recipients = [];
 
 	/**
 	 * Stores log messages.
 	 *
 	 * @var array
 	 */
-	protected $logs = array();
+	protected $logs = [];
 
 	/**
 	 * Stores integer representation of maximum logged level.
@@ -81,7 +81,7 @@ class WC_Log_Handler_Email extends WC_Log_Handler {
 		}
 
 		$this->set_threshold( $threshold );
-		add_action( 'shutdown', array( $this, 'send_log_email' ) );
+		add_action( 'shutdown', [ $this, 'send_log_email' ] );
 	}
 
 	/**
@@ -220,7 +220,7 @@ class WC_Log_Handler_Email extends WC_Log_Handler {
 	 * Clear log messages.
 	 */
 	protected function clear_logs() {
-		$this->logs = array();
+		$this->logs = [];
 	}
 
 }

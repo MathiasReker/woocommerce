@@ -64,10 +64,10 @@ $exporter = new WC_Product_CSV_Exporter();
 								<select id="woocommerce-exporter-category" class="woocommerce-exporter-category wc-enhanced-select" style="width:100%;" multiple data-placeholder="<?php esc_attr_e( 'Export all categories', 'woocommerce' ); ?>">
 								<?php
 								$categories = get_categories(
-									array(
+									[
 										'taxonomy'   => 'product_cat',
 										'hide_empty' => false,
-									)
+									]
 								);
 								foreach ( $categories as $category ) {
 									echo '<option value="' . esc_attr( $category->slug ) . '">' . esc_html( $category->name ) . '</option>';

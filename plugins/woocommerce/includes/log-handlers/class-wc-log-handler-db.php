@@ -62,20 +62,20 @@ class WC_Log_Handler_DB extends WC_Log_Handler {
 	protected static function add( $timestamp, $level, $message, $source, $context ) {
 		global $wpdb;
 
-		$insert = array(
+		$insert = [
 			'timestamp' => date( 'Y-m-d H:i:s', $timestamp ),
 			'level'     => WC_Log_Levels::get_level_severity( $level ),
 			'message'   => $message,
 			'source'    => $source,
-		);
+		];
 
-		$format = array(
+		$format = [
 			'%s',
 			'%d',
 			'%s',
 			'%s',
 			'%s', // possible serialized context.
-		);
+		];
 
 		if ( ! empty( $context ) ) {
 			try {
@@ -127,7 +127,7 @@ class WC_Log_Handler_DB extends WC_Log_Handler {
 		global $wpdb;
 
 		if ( ! is_array( $log_ids ) ) {
-			$log_ids = array( $log_ids );
+			$log_ids = [ $log_ids ];
 		}
 
 		$format   = array_fill( 0, count( $log_ids ), '%d' );
@@ -164,7 +164,7 @@ class WC_Log_Handler_DB extends WC_Log_Handler {
 	 * @return string Text to use as log source. "" (empty string) if none is found.
 	 */
 	protected static function get_log_source() {
-		static $ignore_files = array( 'class-wc-log-handler-db', 'class-wc-logger' );
+		static $ignore_files = [ 'class-wc-log-handler-db', 'class-wc-logger' ];
 
 		/**
 		 * PHP < 5.3.6 correct behavior

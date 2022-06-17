@@ -27,9 +27,9 @@ class WC_Admin_Tests_API_Onboarding_Themes extends WC_REST_Unit_Test_Case {
 		parent::setUp();
 
 		$this->user = $this->factory->user->create(
-			array(
+			[
 				'role' => 'administrator',
-			)
+			]
 		);
 	}
 
@@ -49,9 +49,9 @@ class WC_Admin_Tests_API_Onboarding_Themes extends WC_REST_Unit_Test_Case {
 
 		$request = new WP_REST_Request( 'POST', $this->endpoint . '/install' );
 		$request->set_query_params(
-			array(
+			[
 				'theme' => 'storefront',
-			)
+			]
 		);
 		$response = $this->server->dispatch( $request );
 		$data     = $response->get_data();
@@ -71,9 +71,9 @@ class WC_Admin_Tests_API_Onboarding_Themes extends WC_REST_Unit_Test_Case {
 
 		$request = new WP_REST_Request( 'POST', $this->endpoint . '/install' );
 		$request->set_query_params(
-			array(
+			[
 				'theme' => 'invalid-theme-name',
-			)
+			]
 		);
 		$response = $this->server->dispatch( $request );
 		$data     = $response->get_data();
@@ -90,9 +90,9 @@ class WC_Admin_Tests_API_Onboarding_Themes extends WC_REST_Unit_Test_Case {
 		$previous_theme = get_stylesheet();
 		$request        = new WP_REST_Request( 'POST', $this->endpoint . '/activate' );
 		$request->set_query_params(
-			array(
+			[
 				'theme' => 'storefront',
-			)
+			]
 		);
 		$response     = $this->server->dispatch( $request );
 		$data         = $response->get_data();
@@ -113,9 +113,9 @@ class WC_Admin_Tests_API_Onboarding_Themes extends WC_REST_Unit_Test_Case {
 
 		$request = new WP_REST_Request( 'POST', $this->endpoint . '/activate' );
 		$request->set_query_params(
-			array(
+			[
 				'theme' => 'invalid-theme-name',
-			)
+			]
 		);
 		$response = $this->server->dispatch( $request );
 		$data     = $response->get_data();

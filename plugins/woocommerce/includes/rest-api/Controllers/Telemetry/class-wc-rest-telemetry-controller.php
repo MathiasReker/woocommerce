@@ -39,15 +39,15 @@ class WC_REST_Telemetry_Controller extends WC_REST_Controller {
 		register_rest_route(
 			$this->namespace,
 			'/' . $this->rest_base,
-			array(
-				array(
+			[
+				[
 					'methods'             => WP_REST_Server::CREATABLE,
-					'callback'            => array( $this, 'record_usage_data' ),
-					'permission_callback' => array( $this, 'telemetry_permissions_check' ),
+					'callback'            => [ $this, 'record_usage_data' ],
+					'permission_callback' => [ $this, 'telemetry_permissions_check' ],
 					'args'                => $this->get_collection_params(),
-				),
-				'schema' => array( $this, 'get_public_item_schema' ),
-			)
+				],
+				'schema' => [ $this, 'get_public_item_schema' ],
+			]
 		);
 	}
 
@@ -59,7 +59,7 @@ class WC_REST_Telemetry_Controller extends WC_REST_Controller {
 	 */
 	public function telemetry_permissions_check( $request ) {
 		if ( ! is_user_logged_in() ) {
-			return new WP_Error( 'woocommerce_rest_cannot_view', __( 'Sorry, you post telemetry data.', 'woocommerce' ), array( 'status' => rest_authorization_required_code() ) );
+			return new WP_Error( 'woocommerce_rest_cannot_view', __( 'Sorry, you post telemetry data.', 'woocommerce' ), [ 'status' => rest_authorization_required_code() ] );
 		}
 		return true;
 	}
@@ -77,7 +77,7 @@ class WC_REST_Telemetry_Controller extends WC_REST_Controller {
 
 		$data = get_option( 'woocommerce_mobile_app_usage' );
 		if ( ! $data ) {
-			$data = array();
+			$data = [];
 		}
 
 		$platform = $new['platform'];
@@ -109,11 +109,11 @@ class WC_REST_Telemetry_Controller extends WC_REST_Controller {
 			return;
 		}
 
-		return array(
+		return [
 			'platform'  => sanitize_text_field( $platform ),
 			'version'   => sanitize_text_field( $version ),
 			'last_used' => gmdate( 'c' ),
-		);
+		];
 	}
 
 	/**
@@ -122,21 +122,21 @@ class WC_REST_Telemetry_Controller extends WC_REST_Controller {
 	 * @return array
 	 */
 	public function get_collection_params() {
-		return array(
-			'platform' => array(
+		return [
+			'platform' => [
 				'description'       => __( 'Platform to track.', 'woocommerce' ),
 				'required'          => true,
 				'type'              => 'string',
 				'sanitize_callback' => 'sanitize_text_field',
 				'validate_callback' => 'rest_validate_request_arg',
-			),
-			'version'  => array(
+			],
+			'version'  => [
 				'description'       => __( 'Platform version to track.', 'woocommerce' ),
 				'required'          => true,
 				'type'              => 'string',
 				'sanitize_callback' => 'sanitize_text_field',
 				'validate_callback' => 'rest_validate_request_arg',
-			),
-		);
+			],
+		];
 	}
 }

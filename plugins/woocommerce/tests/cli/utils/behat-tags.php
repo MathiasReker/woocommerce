@@ -19,7 +19,7 @@ function version_tags( $prefix, $current, $operator = '<' ) {
 
 	exec( "grep '@{$prefix}-[0-9\.]*' -h -o features/*.feature | uniq", $existing_tags );
 
-	$skip_tags = array();
+	$skip_tags = [];
 
 	foreach ( $existing_tags as $tag ) {
 		$compare = str_replace( "@{$prefix}-", '', $tag );

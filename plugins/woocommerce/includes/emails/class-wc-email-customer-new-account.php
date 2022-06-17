@@ -129,7 +129,7 @@ if ( ! class_exists( 'WC_Email_Customer_New_Account', false ) ) :
 		public function get_content_html() {
 			return wc_get_template_html(
 				$this->template_html,
-				array(
+				[
 					'email_heading'      => $this->get_heading(),
 					'additional_content' => $this->get_additional_content(),
 					'user_login'         => $this->user_login,
@@ -140,7 +140,7 @@ if ( ! class_exists( 'WC_Email_Customer_New_Account', false ) ) :
 					'plain_text'         => false,
 					'email'              => $this,
 					'set_password_url'   => $this->set_password_url,
-				)
+				]
 			);
 		}
 
@@ -152,7 +152,7 @@ if ( ! class_exists( 'WC_Email_Customer_New_Account', false ) ) :
 		public function get_content_plain() {
 			return wc_get_template_html(
 				$this->template_plain,
-				array(
+				[
 					'email_heading'      => $this->get_heading(),
 					'additional_content' => $this->get_additional_content(),
 					'user_login'         => $this->user_login,
@@ -163,7 +163,7 @@ if ( ! class_exists( 'WC_Email_Customer_New_Account', false ) ) :
 					'plain_text'         => true,
 					'email'              => $this,
 					'set_password_url'   => $this->set_password_url,
-				)
+				]
 			);
 		}
 

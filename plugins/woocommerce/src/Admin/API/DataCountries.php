@@ -33,14 +33,14 @@ class DataCountries extends \WC_REST_Data_Countries_Controller {
 		register_rest_route(
 			$this->namespace,
 			'/' . $this->rest_base . '/locales',
-			array(
-				array(
+			[
+				[
 					'methods'             => \WP_REST_Server::READABLE,
-					'callback'            => array( $this, 'get_locales' ),
-					'permission_callback' => array( $this, 'get_items_permissions_check' ),
-				),
-				'schema' => array( $this, 'get_public_item_schema' ),
-			)
+					'callback'            => [ $this, 'get_locales' ],
+					'permission_callback' => [ $this, 'get_items_permissions_check' ],
+				],
+				'schema' => [ $this, 'get_public_item_schema' ],
+			]
 		);
 
 		parent::register_routes();

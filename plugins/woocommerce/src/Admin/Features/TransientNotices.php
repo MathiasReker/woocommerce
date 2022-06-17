@@ -22,7 +22,7 @@ class TransientNotices {
 	 * Constructor
 	 */
 	public function __construct() {
-		add_filter( 'woocommerce_admin_preload_options', array( $this, 'preload_options' ) );
+		add_filter( 'woocommerce_admin_preload_options', [ $this, 'preload_options' ] );
 	}
 
 
@@ -32,7 +32,7 @@ class TransientNotices {
 	 * @return array
 	 */
 	public static function get_queue() {
-		return get_option( self::QUEUE_OPTION, array() );
+		return get_option( self::QUEUE_OPTION, [] );
 	}
 
 	/**
@@ -86,11 +86,11 @@ class TransientNotices {
 	public static function add( $notice ) {
 		$queue = self::get_queue();
 
-		$defaults               = array(
+		$defaults               = [
 			'user_id' => null,
 			'status'  => 'info',
-			'options' => array(),
-		);
+			'options' => [],
+		];
 		$notice_data            = array_merge( $defaults, $notice );
 		$notice_data['options'] = (object) $notice_data['options'];
 

@@ -65,10 +65,10 @@ class DeprecatedClassFacade {
 		self::log_deprecation( $name );
 
 		return call_user_func_array(
-			array(
+			[
 				$this->instance,
 				$name,
-			),
+			],
 			$arguments
 		);
 	}
@@ -83,10 +83,10 @@ class DeprecatedClassFacade {
 		self::log_deprecation( $name );
 
 		return call_user_func_array(
-			array(
+			[
 				static::$facade_over_classname,
 				$name,
-			),
+			],
 			$arguments
 		);
 	}

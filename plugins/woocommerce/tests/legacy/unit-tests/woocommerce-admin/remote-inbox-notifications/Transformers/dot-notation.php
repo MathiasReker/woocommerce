@@ -18,7 +18,7 @@ class WC_Admin_Tests_RemoteInboxNotifications_Transformers_DotNotation extends W
 	 */
 	public function test_validate_returns_false_when_path_argument_is_missing() {
 		$array_column = new DotNotation();
-		$result       = $array_column->validate( (object) array() );
+		$result       = $array_column->validate( (object) [] );
 		$this->assertFalse( false, $result );
 	}
 
@@ -26,10 +26,10 @@ class WC_Admin_Tests_RemoteInboxNotifications_Transformers_DotNotation extends W
 	 * Test it can get value by index
 	 */
 	public function test_it_can_get_value_by_index() {
-		$arguments    = (object) array( 'path' => '0' );
+		$arguments    = (object) [ 'path' => '0' ];
 		$dot_notation = new DotNotation();
-		$item         = array( 'name' => 'test' );
-		$items        = array( $item );
+		$item         = [ 'name' => 'test' ];
+		$items        = [ $item ];
 
 		$result = $dot_notation->transform( $items, $arguments );
 		$this->assertEquals( $result, $item );
@@ -39,13 +39,13 @@ class WC_Admin_Tests_RemoteInboxNotifications_Transformers_DotNotation extends W
 	 * Test it get getvalue by dot notation.
 	 */
 	public function test_it_can_get_value_by_dot_notation() {
-		$arguments = (object) array( 'path' => 'teams.mothra' );
+		$arguments = (object) [ 'path' => 'teams.mothra' ];
 
-		$items = array(
-			'teams' => array(
+		$items = [
+			'teams' => [
 				'mothra' => 'nice!',
-			),
-		);
+			],
+		];
 
 		$dot_notation = new DotNotation();
 		$result       = $dot_notation->transform( $items, $arguments );
@@ -56,13 +56,13 @@ class WC_Admin_Tests_RemoteInboxNotifications_Transformers_DotNotation extends W
 	 * Test it returns default value when path is undefined
 	 */
 	public function test_it_can_get_default_value_by_dot_notation() {
-		$arguments = (object) array( 'path' => 'teams.property_that_does_not_exist' );
+		$arguments = (object) [ 'path' => 'teams.property_that_does_not_exist' ];
 
-		$items = array(
-			'teams' => array(
+		$items = [
+			'teams' => [
 				'mothra' => 'nice!',
-			),
-		);
+			],
+		];
 
 		$dot_notation = new DotNotation();
 		$default      = 'default value';

@@ -39,7 +39,7 @@ class WC_REST_Coupons_Controller extends WC_REST_Coupons_V2_Controller {
 
 		if ( ! empty( $request['code'] ) ) {
 			$id               = wc_get_coupon_id_by_code( $request['code'] );
-			$args['post__in'] = array( $id );
+			$args['post__in'] = [ $id ];
 		}
 
 		// Get only ids.

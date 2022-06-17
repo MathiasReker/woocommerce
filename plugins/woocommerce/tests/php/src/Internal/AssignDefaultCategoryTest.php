@@ -32,7 +32,7 @@ class AssignDefaultCategoryTest extends \WC_Unit_Test_Case {
 		$product3         = ProductHelper::create_simple_product();
 		$default_category = (int) get_option( 'default_product_cat', 0 );
 
-		$products = array( $product1, $product2, $product3 );
+		$products = [ $product1, $product2, $product3 ];
 
 		// Remove all categories from products.
 		foreach ( $products as $product ) {

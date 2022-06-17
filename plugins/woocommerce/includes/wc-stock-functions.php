@@ -161,7 +161,7 @@ function wc_reduce_stock_levels( $order_id ) {
 		return;
 	}
 
-	$changes = array();
+	$changes = [];
 
 	// Loop over all items.
 	foreach ( $order->get_items() as $item ) {
@@ -197,11 +197,11 @@ function wc_reduce_stock_levels( $order_id ) {
 		$item->add_meta_data( '_reduced_stock', $qty, true );
 		$item->save();
 
-		$changes[] = array(
+		$changes[] = [
 			'product' => $product,
 			'from'    => $new_stock + $qty,
 			'to'      => $new_stock,
-		);
+		];
 	}
 
 	wc_trigger_stock_change_notifications( $order, $changes );
@@ -221,7 +221,7 @@ function wc_trigger_stock_change_notifications( $order, $changes ) {
 		return;
 	}
 
-	$order_notes     = array();
+	$order_notes     = [];
 	$no_stock_amount = absint( get_option( 'woocommerce_notify_no_stock_amount', 0 ) );
 
 	foreach ( $changes as $change ) {
@@ -236,11 +236,11 @@ function wc_trigger_stock_change_notifications( $order, $changes ) {
 		if ( $change['to'] < 0 ) {
 			do_action(
 				'woocommerce_product_on_backorder',
-				array(
+				[
 					'product'  => wc_get_product( $change['product']->get_id() ),
 					'order_id' => $order->get_id(),
 					'quantity' => abs( $change['from'] - $change['to'] ),
-				)
+				]
 			);
 		}
 	}
@@ -267,7 +267,7 @@ function wc_increase_stock_levels( $order_id ) {
 		return;
 	}
 
-	$changes = array();
+	$changes = [];
 
 	// Loop over all items.
 	foreach ( $order->get_items() as $item ) {

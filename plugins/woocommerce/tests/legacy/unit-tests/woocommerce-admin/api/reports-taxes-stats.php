@@ -27,9 +27,9 @@ class WC_Admin_Tests_API_Reports_Taxes_Stats extends WC_REST_Unit_Test_Case {
 		parent::setUp();
 
 		$this->user = $this->factory->user->create(
-			array(
+			[
 				'role' => 'administrator',
-			)
+			]
 		);
 	}
 
@@ -56,7 +56,7 @@ class WC_Admin_Tests_API_Reports_Taxes_Stats extends WC_REST_Unit_Test_Case {
 
 		// Populate all of the data.
 		$tax = WC_Tax::_insert_tax_rate(
-			array(
+			[
 				'tax_rate_country'  => 'US',
 				'tax_rate_state'    => '',
 				'tax_rate'          => '7',
@@ -66,7 +66,7 @@ class WC_Admin_Tests_API_Reports_Taxes_Stats extends WC_REST_Unit_Test_Case {
 				'tax_rate_shipping' => '1',
 				'tax_rate_order'    => '1',
 				'tax_rate_class'    => '',
-			)
+			]
 		);
 
 		$product = new WC_Product_Simple();
@@ -84,18 +84,18 @@ class WC_Admin_Tests_API_Reports_Taxes_Stats extends WC_REST_Unit_Test_Case {
 
 		// Add refunds to line items.
 		foreach ( $order->get_items() as $item_id => $item ) {
-			$refund    = array(
+			$refund    = [
 				'amount'     => 1,
 				'reason'     => 'Testing line item refund',
 				'order_id'   => $order->get_id(),
-				'line_items' => array(
-					$item_id => array(
+				'line_items' => [
+					$item_id => [
 						'qty'          => 1,
 						'refund_total' => 1,
-						'refund_tax'   => array( $tax => 1 ),
-					),
-				),
-			);
+						'refund_tax'   => [ $tax => 1 ],
+					],
+				],
+			];
 			$wc_refund = wc_create_refund( $refund );
 		}
 

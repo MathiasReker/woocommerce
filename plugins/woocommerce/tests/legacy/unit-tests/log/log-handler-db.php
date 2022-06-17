@@ -9,7 +9,7 @@ class WC_Tests_Log_Handler_DB extends WC_Unit_Test_Case {
 	public function setUp(): void {
 		parent::setUp();
 
-		$this->handler = new WC_Log_Handler_DB( array( 'threshold' => 'debug' ) );
+		$this->handler = new WC_Log_Handler_DB( [ 'threshold' => 'debug' ] );
 	}
 
 	/**
@@ -21,93 +21,93 @@ class WC_Tests_Log_Handler_DB extends WC_Unit_Test_Case {
 		global $wpdb;
 
 		$time    = time();
-		$context = array(
+		$context = [
 			1,
 			2,
 			'a',
 			'b',
 			'key' => 'value',
-		);
+		];
 
-		$this->handler->handle( $time, 'debug', 'msg_debug', array( 'source' => 'source_debug' ) );
-		$this->handler->handle( $time, 'info', 'msg_info', array( 'source' => 'source_info' ) );
-		$this->handler->handle( $time, 'notice', 'msg_notice', array( 'source' => 'source_notice' ) );
-		$this->handler->handle( $time, 'warning', 'msg_warning', array( 'source' => 'source_warning' ) );
-		$this->handler->handle( $time, 'error', 'msg_error', array( 'source' => 'source_error' ) );
-		$this->handler->handle( $time, 'critical', 'msg_critical', array( 'source' => 'source_critical' ) );
-		$this->handler->handle( $time, 'alert', 'msg_alert', array( 'source' => 'source_alert' ) );
-		$this->handler->handle( $time, 'emergency', 'msg_emergency', array( 'source' => 'source_emergency' ) );
+		$this->handler->handle( $time, 'debug', 'msg_debug', [ 'source' => 'source_debug' ] );
+		$this->handler->handle( $time, 'info', 'msg_info', [ 'source' => 'source_info' ] );
+		$this->handler->handle( $time, 'notice', 'msg_notice', [ 'source' => 'source_notice' ] );
+		$this->handler->handle( $time, 'warning', 'msg_warning', [ 'source' => 'source_warning' ] );
+		$this->handler->handle( $time, 'error', 'msg_error', [ 'source' => 'source_error' ] );
+		$this->handler->handle( $time, 'critical', 'msg_critical', [ 'source' => 'source_critical' ] );
+		$this->handler->handle( $time, 'alert', 'msg_alert', [ 'source' => 'source_alert' ] );
+		$this->handler->handle( $time, 'emergency', 'msg_emergency', [ 'source' => 'source_emergency' ] );
 
 		$this->handler->handle( $time, 'debug', 'context_test', $context );
 
 		$log_entries = $wpdb->get_results( "SELECT timestamp, level, message, source, context FROM {$wpdb->prefix}woocommerce_log", ARRAY_A );
 
 		$expected_ts = date( 'Y-m-d H:i:s', $time );
-		$expected    = array(
-			array(
+		$expected    = [
+			[
 				'timestamp' => $expected_ts,
 				'level'     => WC_Log_Levels::get_level_severity( 'debug' ),
 				'message'   => 'msg_debug',
 				'source'    => 'source_debug',
-				'context'   => serialize( array( 'source' => 'source_debug' ) ),
-			),
-			array(
+				'context'   => serialize( [ 'source' => 'source_debug' ] ),
+			],
+			[
 				'timestamp' => $expected_ts,
 				'level'     => WC_Log_Levels::get_level_severity( 'info' ),
 				'message'   => 'msg_info',
 				'source'    => 'source_info',
-				'context'   => serialize( array( 'source' => 'source_info' ) ),
-			),
-			array(
+				'context'   => serialize( [ 'source' => 'source_info' ] ),
+			],
+			[
 				'timestamp' => $expected_ts,
 				'level'     => WC_Log_Levels::get_level_severity( 'notice' ),
 				'message'   => 'msg_notice',
 				'source'    => 'source_notice',
-				'context'   => serialize( array( 'source' => 'source_notice' ) ),
-			),
-			array(
+				'context'   => serialize( [ 'source' => 'source_notice' ] ),
+			],
+			[
 				'timestamp' => $expected_ts,
 				'level'     => WC_Log_Levels::get_level_severity( 'warning' ),
 				'message'   => 'msg_warning',
 				'source'    => 'source_warning',
-				'context'   => serialize( array( 'source' => 'source_warning' ) ),
-			),
-			array(
+				'context'   => serialize( [ 'source' => 'source_warning' ] ),
+			],
+			[
 				'timestamp' => $expected_ts,
 				'level'     => WC_Log_Levels::get_level_severity( 'error' ),
 				'message'   => 'msg_error',
 				'source'    => 'source_error',
-				'context'   => serialize( array( 'source' => 'source_error' ) ),
-			),
-			array(
+				'context'   => serialize( [ 'source' => 'source_error' ] ),
+			],
+			[
 				'timestamp' => $expected_ts,
 				'level'     => WC_Log_Levels::get_level_severity( 'critical' ),
 				'message'   => 'msg_critical',
 				'source'    => 'source_critical',
-				'context'   => serialize( array( 'source' => 'source_critical' ) ),
-			),
-			array(
+				'context'   => serialize( [ 'source' => 'source_critical' ] ),
+			],
+			[
 				'timestamp' => $expected_ts,
 				'level'     => WC_Log_Levels::get_level_severity( 'alert' ),
 				'message'   => 'msg_alert',
 				'source'    => 'source_alert',
-				'context'   => serialize( array( 'source' => 'source_alert' ) ),
-			),
-			array(
+				'context'   => serialize( [ 'source' => 'source_alert' ] ),
+			],
+			[
 				'timestamp' => $expected_ts,
 				'level'     => WC_Log_Levels::get_level_severity( 'emergency' ),
 				'message'   => 'msg_emergency',
 				'source'    => 'source_emergency',
-				'context'   => serialize( array( 'source' => 'source_emergency' ) ),
-			),
-			array(
+				'context'   => serialize( [ 'source' => 'source_emergency' ] ),
+			],
+			[
 				'timestamp' => $expected_ts,
 				'level'     => WC_Log_Levels::get_level_severity( 'debug' ),
 				'message'   => 'context_test',
 				'source'    => pathinfo( __FILE__, PATHINFO_FILENAME ),
 				'context'   => serialize( $context ),
-			),
-		);
+			],
+		];
 
 		$this->assertEquals( $log_entries, $expected );
 	}
@@ -123,7 +123,7 @@ class WC_Tests_Log_Handler_DB extends WC_Unit_Test_Case {
 
 		$time = time();
 
-		$this->handler->handle( $time, 'debug', '', array() );
+		$this->handler->handle( $time, 'debug', '', [] );
 
 		$log_entries = $wpdb->get_results( "SELECT timestamp, level, message, source FROM {$wpdb->prefix}woocommerce_log" );
 		$this->assertCount( 1, $log_entries );
@@ -138,8 +138,8 @@ class WC_Tests_Log_Handler_DB extends WC_Unit_Test_Case {
 		global $wpdb;
 
 		$time = time();
-		$this->handler->handle( $time, 'debug', '', array() );
-		$this->handler->handle( $time - 10, 'debug', '', array() );
+		$this->handler->handle( $time, 'debug', '', [] );
+		$this->handler->handle( $time - 10, 'debug', '', [] );
 
 		$this->handler->delete_logs_before_timestamp( $time );
 

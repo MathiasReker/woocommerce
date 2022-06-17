@@ -29,7 +29,7 @@ class WC_Shortcode_Products {
 	 * @since 3.2.0
 	 * @var   array
 	 */
-	protected $attributes = array();
+	protected $attributes = [];
 
 	/**
 	 * Query args.
@@ -37,7 +37,7 @@ class WC_Shortcode_Products {
 	 * @since 3.2.0
 	 * @var   array
 	 */
-	protected $query_args = array();
+	protected $query_args = [];
 
 	/**
 	 * Set custom visibility.
@@ -54,7 +54,7 @@ class WC_Shortcode_Products {
 	 * @param array  $attributes Shortcode attributes.
 	 * @param string $type       Shortcode type.
 	 */
-	public function __construct( $attributes = array(), $type = 'products' ) {
+	public function __construct( $attributes = [], $type = 'products' ) {
 		$this->type       = $type;
 		$this->attributes = $this->parse_attributes( $attributes );
 		$this->query_args = $this->parse_query_args();
@@ -111,7 +111,7 @@ class WC_Shortcode_Products {
 		$attributes = $this->parse_legacy_attributes( $attributes );
 
 		$attributes = shortcode_atts(
-			array(
+			[
 				'limit'          => '-1',      // Results limit.
 				'columns'        => '',        // Number of columns.
 				'rows'           => '',        // Number of rows. If defined, limit will be ignored.
@@ -131,7 +131,7 @@ class WC_Shortcode_Products {
 				'page'           => 1,         // Page for pagination.
 				'paginate'       => false,     // Should results be paginated.
 				'cache'          => true,      // Should shortcode output be cached.
-			),
+			],
 			$attributes,
 			$this->type
 		);
@@ -151,11 +151,11 @@ class WC_Shortcode_Products {
 	 * @return array
 	 */
 	protected function parse_legacy_attributes( $attributes ) {
-		$mapping = array(
+		$mapping = [
 			'per_page' => 'limit',
 			'operator' => 'cat_operator',
 			'filter'   => 'terms',
-		);
+		];
 
 		foreach ( $mapping as $old => $new ) {
 			if ( isset( $attributes[ $old ] ) ) {
@@ -174,13 +174,13 @@ class WC_Shortcode_Products {
 	 * @return array
 	 */
 	protected function parse_query_args() {
-		$query_args = array(
+		$query_args = [
 			'post_type'           => 'product',
 			'post_status'         => 'publish',
 			'ignore_sticky_posts' => true,
 			'no_found_rows'       => false === wc_string_to_bool( $this->attributes['paginate'] ),
 			'orderby'             => empty( $_GET['orderby'] ) ? $this->attributes['orderby'] : wc_clean( wp_unslash( $_GET['orderby'] ) ), // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-		);
+		];
 
 		$orderby_value         = explode( '-', $query_args['orderby'] );
 		$orderby               = esc_attr( $orderby_value[0] );
@@ -207,7 +207,7 @@ class WC_Shortcode_Products {
 			$query_args['paged'] = absint( $this->attributes['page'] );
 		}
 		$query_args['meta_query'] = WC()->query->get_meta_query(); // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
-		$query_args['tax_query']  = array(); // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query
+		$query_args['tax_query']  = []; // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query
 
 		// Visibility.
 		$this->set_visibility_query_args( $query_args );
@@ -249,11 +249,11 @@ class WC_Shortcode_Products {
 	protected function set_skus_query_args( &$query_args ) {
 		if ( ! empty( $this->attributes['skus'] ) ) {
 			$skus                       = array_map( 'trim', explode( ',', $this->attributes['skus'] ) );
-			$query_args['meta_query'][] = array(
+			$query_args['meta_query'][] = [
 				'key'     => '_sku',
 				'value'   => 1 === count( $skus ) ? $skus[0] : $skus,
 				'compare' => 1 === count( $skus ) ? '=' : 'IN',
-			);
+			];
 		}
 	}
 
@@ -284,7 +284,7 @@ class WC_Shortcode_Products {
 	protected function set_attributes_query_args( &$query_args ) {
 		if ( ! empty( $this->attributes['attribute'] ) || ! empty( $this->attributes['terms'] ) ) {
 			$taxonomy = strstr( $this->attributes['attribute'], 'pa_' ) ? sanitize_title( $this->attributes['attribute'] ) : 'pa_' . sanitize_title( $this->attributes['attribute'] );
-			$terms    = $this->attributes['terms'] ? array_map( 'sanitize_title', explode( ',', $this->attributes['terms'] ) ) : array();
+			$terms    = $this->attributes['terms'] ? array_map( 'sanitize_title', explode( ',', $this->attributes['terms'] ) ) : [];
 			$field    = 'slug';
 
 			if ( $terms && is_numeric( $terms[0] ) ) {
@@ -302,21 +302,21 @@ class WC_Shortcode_Products {
 			// If no terms were specified get all products that are in the attribute taxonomy.
 			if ( ! $terms ) {
 				$terms = get_terms(
-					array(
+					[
 						'taxonomy' => $taxonomy,
 						'fields'   => 'ids',
-					)
+					]
 				);
 				$field = 'term_id';
 			}
 
 			// We always need to search based on the slug as well, this is to accommodate numeric slugs.
-			$query_args['tax_query'][] = array(
+			$query_args['tax_query'][] = [
 				'taxonomy' => $taxonomy,
 				'terms'    => $terms,
 				'field'    => $field,
 				'operator' => $this->attributes['terms_operator'],
-			);
+			];
 		}
 	}
 
@@ -343,7 +343,7 @@ class WC_Shortcode_Products {
 				}
 			}
 
-			$query_args['tax_query'][] = array(
+			$query_args['tax_query'][] = [
 				'taxonomy'         => 'product_cat',
 				'terms'            => $categories,
 				'field'            => $field,
@@ -354,7 +354,7 @@ class WC_Shortcode_Products {
 				 * as only products belonging to all the children categories would be selected.
 				 */
 				'include_children' => 'AND' === $this->attributes['cat_operator'] ? false : true,
-			);
+			];
 		}
 	}
 
@@ -366,12 +366,12 @@ class WC_Shortcode_Products {
 	 */
 	protected function set_tags_query_args( &$query_args ) {
 		if ( ! empty( $this->attributes['tag'] ) ) {
-			$query_args['tax_query'][] = array(
+			$query_args['tax_query'][] = [
 				'taxonomy' => 'product_tag',
 				'terms'    => array_map( 'sanitize_title', explode( ',', $this->attributes['tag'] ) ),
 				'field'    => 'slug',
 				'operator' => $this->attributes['tag_operator'],
-			);
+			];
 		}
 	}
 
@@ -382,7 +382,7 @@ class WC_Shortcode_Products {
 	 * @param array $query_args Query args.
 	 */
 	protected function set_sale_products_query_args( &$query_args ) {
-		$query_args['post__in'] = array_merge( array( 0 ), wc_get_product_ids_on_sale() );
+		$query_args['post__in'] = array_merge( [ 0 ], wc_get_product_ids_on_sale() );
 	}
 
 	/**
@@ -417,13 +417,13 @@ class WC_Shortcode_Products {
 	 */
 	protected function set_visibility_hidden_query_args( &$query_args ) {
 		$this->custom_visibility   = true;
-		$query_args['tax_query'][] = array(
+		$query_args['tax_query'][] = [
 			'taxonomy'         => 'product_visibility',
-			'terms'            => array( 'exclude-from-catalog', 'exclude-from-search' ),
+			'terms'            => [ 'exclude-from-catalog', 'exclude-from-search' ],
 			'field'            => 'name',
 			'operator'         => 'AND',
 			'include_children' => false,
-		);
+		];
 	}
 
 	/**
@@ -434,20 +434,20 @@ class WC_Shortcode_Products {
 	 */
 	protected function set_visibility_catalog_query_args( &$query_args ) {
 		$this->custom_visibility   = true;
-		$query_args['tax_query'][] = array(
+		$query_args['tax_query'][] = [
 			'taxonomy'         => 'product_visibility',
 			'terms'            => 'exclude-from-search',
 			'field'            => 'name',
 			'operator'         => 'IN',
 			'include_children' => false,
-		);
-		$query_args['tax_query'][] = array(
+		];
+		$query_args['tax_query'][] = [
 			'taxonomy'         => 'product_visibility',
 			'terms'            => 'exclude-from-catalog',
 			'field'            => 'name',
 			'operator'         => 'NOT IN',
 			'include_children' => false,
-		);
+		];
 	}
 
 	/**
@@ -458,20 +458,20 @@ class WC_Shortcode_Products {
 	 */
 	protected function set_visibility_search_query_args( &$query_args ) {
 		$this->custom_visibility   = true;
-		$query_args['tax_query'][] = array(
+		$query_args['tax_query'][] = [
 			'taxonomy'         => 'product_visibility',
 			'terms'            => 'exclude-from-catalog',
 			'field'            => 'name',
 			'operator'         => 'IN',
 			'include_children' => false,
-		);
-		$query_args['tax_query'][] = array(
+		];
+		$query_args['tax_query'][] = [
 			'taxonomy'         => 'product_visibility',
 			'terms'            => 'exclude-from-search',
 			'field'            => 'name',
 			'operator'         => 'NOT IN',
 			'include_children' => false,
-		);
+		];
 	}
 
 	/**
@@ -483,13 +483,13 @@ class WC_Shortcode_Products {
 	protected function set_visibility_featured_query_args( &$query_args ) {
 		$query_args['tax_query'] = array_merge( $query_args['tax_query'], WC()->query->get_tax_query() ); // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query
 
-		$query_args['tax_query'][] = array(
+		$query_args['tax_query'][] = [
 			'taxonomy'         => 'product_visibility',
 			'terms'            => 'featured',
 			'field'            => 'name',
 			'operator'         => 'IN',
 			'include_children' => false,
-		);
+		];
 	}
 
 	/**
@@ -525,7 +525,7 @@ class WC_Shortcode_Products {
 	 * @return array
 	 */
 	protected function get_wrapper_classes( $columns ) {
-		$classes = array( 'woocommerce' );
+		$classes = [ 'woocommerce' ];
 
 		if ( 'product' !== $this->type ) {
 			$classes[] = 'columns-' . $columns;
@@ -573,19 +573,19 @@ class WC_Shortcode_Products {
 
 			$paginated = ! $query->get( 'no_found_rows' );
 
-			$results = (object) array(
+			$results = (object) [
 				'ids'          => wp_parse_id_list( $query->posts ),
 				'total'        => $paginated ? (int) $query->found_posts : count( $query->posts ),
 				'total_pages'  => $paginated ? (int) $query->max_num_pages : 1,
 				'per_page'     => (int) $query->get( 'posts_per_page' ),
 				'current_page' => $paginated ? (int) max( 1, $query->get( 'paged', 1 ) ) : 1,
-			);
+			];
 
 			if ( $cache ) {
-				$transient_value = array(
+				$transient_value = [
 					'version' => $transient_version,
 					'value'   => $results,
-				);
+				];
 				set_transient( $transient_name, $transient_value, DAY_IN_SECONDS * 30 );
 			}
 		}
@@ -624,7 +624,7 @@ class WC_Shortcode_Products {
 
 			// Setup the loop.
 			wc_setup_loop(
-				array(
+				[
 					'columns'      => $columns,
 					'name'         => $this->type,
 					'is_shortcode' => true,
@@ -634,7 +634,7 @@ class WC_Shortcode_Products {
 					'total_pages'  => $products->total_pages,
 					'per_page'     => $products->per_page,
 					'current_page' => $products->current_page,
-				)
+				]
 			);
 
 			$original_post = $GLOBALS['post'];
@@ -654,13 +654,13 @@ class WC_Shortcode_Products {
 					setup_postdata( $GLOBALS['post'] );
 
 					// Set custom product visibility when quering hidden products.
-					add_action( 'woocommerce_product_is_visible', array( $this, 'set_product_as_visible' ) );
+					add_action( 'woocommerce_product_is_visible', [ $this, 'set_product_as_visible' ] );
 
 					// Render product template.
 					wc_get_template_part( 'content', 'product' );
 
 					// Restore product visibility.
-					remove_action( 'woocommerce_product_is_visible', array( $this, 'set_product_as_visible' ) );
+					remove_action( 'woocommerce_product_is_visible', [ $this, 'set_product_as_visible' ] );
 				}
 			}
 

@@ -21,15 +21,15 @@ class StoredStateSetupForProducts {
 	 * Initialize the class via the admin_init hook.
 	 */
 	public static function admin_init() {
-		add_action( 'product_page_product_importer', array( __CLASS__, 'run_on_product_importer' ) );
-		add_action( 'transition_post_status', array( __CLASS__, 'run_on_transition_post_status' ), 10, 3 );
+		add_action( 'product_page_product_importer', [ __CLASS__, 'run_on_product_importer' ] );
+		add_action( 'transition_post_status', [ __CLASS__, 'run_on_transition_post_status' ], 10, 3 );
 	}
 
 	/**
 	 * Initialize the class via the init hook.
 	 */
 	public static function init() {
-		add_action( self::ASYNC_RUN_REMOTE_NOTIFICATIONS_ACTION_NAME, array( __CLASS__, 'run_remote_notifications' ) );
+		add_action( self::ASYNC_RUN_REMOTE_NOTIFICATIONS_ACTION_NAME, [ __CLASS__, 'run_remote_notifications' ] );
 	}
 
 	/**
@@ -62,12 +62,12 @@ class StoredStateSetupForProducts {
 	 */
 	private static function are_there_products() {
 		$query    = new \WC_Product_Query(
-			array(
+			[
 				'limit'    => 1,
 				'paginate' => true,
 				'return'   => 'ids',
-				'status'   => array( 'publish' ),
-			)
+				'status'   => [ 'publish' ],
+			]
 		);
 		$products = $query->get_products();
 		$count    = $products->total;

@@ -19,51 +19,51 @@ class WC_Tests_Widget_Layered_Nav extends WC_Unit_Test_Case {
 	 *
 	 * @return WC_Widget_Layered_Nav An instance of WC_Widget_Layered_Nav ready to test.
 	 */
-	private function get_widget( $filter_operation, $filter_colors = array(), $filter_styles = array() ) {
-		$tax_query = array(
+	private function get_widget( $filter_operation, $filter_colors = [], $filter_styles = [] ) {
+		$tax_query = [
 			'relation' => 'and',
-			0          => array(
+			0          => [
 				'taxonomy' => 'product_visibility',
-				'terms'    => array(
+				'terms'    => [
 					get_term_by( 'slug', 'outofstock', 'product_visibility' )->term_taxonomy_id,
 					get_term_by( 'slug', 'exclude-from-catalog', 'product_visibility' )->term_taxonomy_id,
-				),
+				],
 				'field'    => 'term_taxonomy_id',
 				'operator' => 'NOT IN',
-			),
-		);
+			],
+		];
 
 		if ( ! empty( $filter_colors ) ) {
 			array_push(
 				$tax_query,
-				array(
+				[
 					'taxonomy' => 'pa_color',
 					'terms'    => $filter_colors,
 					'field'    => 'slug',
 					'operator' => $filter_operation,
-				)
+				]
 			);
 		}
 
 		if ( ! empty( $filter_styles ) ) {
 			array_push(
 				$tax_query,
-				array(
+				[
 					'taxonomy' => 'pa_style',
 					'terms'    => $filter_styles,
 					'field'    => 'slug',
 					'operator' => $filter_operation,
-				)
+				]
 			);
 		}
 
 		$sut = $this
 			->getMockBuilder( WC_Widget_Layered_Nav::class )
-			->setMethods( array( 'get_main_tax_query', 'get_main_meta_query', 'get_main_search_query_sql' ) )
+			->setMethods( [ 'get_main_tax_query', 'get_main_meta_query', 'get_main_search_query_sql' ] )
 			->getMock();
 
 		$sut->method( 'get_main_tax_query' )->willReturn( $tax_query );
-		$sut->method( 'get_main_meta_query' )->willReturn( array() );
+		$sut->method( 'get_main_meta_query' )->willReturn( [] );
 		$sut->method( 'get_main_search_query_sql' )->willReturn( null );
 
 		return $sut;
@@ -80,23 +80,23 @@ class WC_Tests_Widget_Layered_Nav extends WC_Unit_Test_Case {
 	 *
 	 * @return WC_Product_Simple|WC_Product_Variable The created product.
 	 */
-	private function create_colored_product( $name, $colors_in_stock, $colors_disabled = array(), $styles = array() ) {
+	private function create_colored_product( $name, $colors_in_stock, $colors_disabled = [], $styles = [] ) {
 		$create_as_simple = is_null( $colors_in_stock );
 		$main_product     = $create_as_simple ? new WC_Product_Simple() : new WC_Product_Variable();
 
 		$main_product->set_props(
-			array(
+			[
 				'name' => $name,
 				'sku'  => 'SKU for' . $name,
-			)
+			]
 		);
 
-		$existing_colors = array( 'black', 'brown', 'blue', 'green', 'pink', 'yellow' );
-		$existing_styles = array( 'classic', 'sport' );
-		$attributes      = array(
+		$existing_colors = [ 'black', 'brown', 'blue', 'green', 'pink', 'yellow' ];
+		$existing_styles = [ 'classic', 'sport' ];
+		$attributes      = [
 			WC_Helper_Product::create_product_attribute_object( 'color', $existing_colors ),
 			WC_Helper_Product::create_product_attribute_object( 'style', $existing_styles ),
-		);
+		];
 		$main_product->set_attributes( $attributes );
 		$main_product->save();
 
@@ -104,12 +104,12 @@ class WC_Tests_Widget_Layered_Nav extends WC_Unit_Test_Case {
 			return $main_product;
 		}
 
-		$variation_objects = array();
+		$variation_objects = [];
 		foreach ( $existing_colors as $color ) {
-			$variation_attributes = array(
+			$variation_attributes = [
 				'pa_color' => $color,
 				'pa_style' => array_key_exists( $color, $styles ) ? $styles[ $color ] : '',
-			);
+			];
 			$variation_object     = WC_Helper_Product::create_product_variation_object(
 				$main_product->get_id(),
 				"SKU for $color $name",
@@ -123,10 +123,10 @@ class WC_Tests_Widget_Layered_Nav extends WC_Unit_Test_Case {
 
 			if ( in_array( $color, $colors_disabled, true ) ) {
 				wp_update_post(
-					array(
+					[
 						'ID'          => $variation_object->get_id(),
 						'post_status' => 'draft',
-					)
+					]
 				);
 			}
 
@@ -166,10 +166,10 @@ class WC_Tests_Widget_Layered_Nav extends WC_Unit_Test_Case {
 	 * @return array An associative array where the keys are the color slugs and the values are the counts for each color.
 	 * @throws ReflectionException Error when dealing with reflection to invoke the method.
 	 */
-	private function run_get_filtered_term_product_counts( $operator, $colors, $styles = array() ) {
+	private function run_get_filtered_term_product_counts( $operator, $colors, $styles = [] ) {
 		$sut = $this->get_widget( $operator, $colors, $styles );
 
-		$color_terms       = get_terms( 'pa_color', array( 'hide_empty' => '1' ) );
+		$color_terms       = get_terms( 'pa_color', [ 'hide_empty' => '1' ] );
 		$color_term_ids    = wp_list_pluck( $color_terms, 'term_id' );
 		$color_term_names  = wp_list_pluck( $color_terms, 'slug' );
 		$color_names_by_id = array_combine( $color_term_ids, $color_term_names );
@@ -177,14 +177,14 @@ class WC_Tests_Widget_Layered_Nav extends WC_Unit_Test_Case {
 		$counts = $this->invoke_protected(
 			$sut,
 			'get_filtered_term_product_counts',
-			array(
+			[
 				$color_term_ids,
 				'pa_color',
 				$operator,
-			)
+			]
 		);
 
-		$counts_by_name = array();
+		$counts_by_name = [];
 		foreach ( $counts as $id => $count ) {
 			$counts_by_name[ $color_names_by_id[ $id ] ] = $count;
 		}
@@ -210,167 +210,167 @@ class WC_Tests_Widget_Layered_Nav extends WC_Unit_Test_Case {
 	 * @return array[]
 	 */
 	public function data_provider_for_test_product_count_per_attribute() {
-		return array(
+		return [
 			// OR filtering, no attributes selected.
 			// Should count all the visible variations of all the products.
-			array(
+			[
 				'or',
-				array(),
+				[],
 				false,
-				array(
+				[
 					'black'  => 1,
 					'brown'  => 2,
 					'blue'   => 2,
 					'green'  => 2,
 					'pink'   => 1,
 					'yellow' => 1,
-				),
-			),
+				],
+			],
 
 			// OR filtering, some attributes selected
 			// (doesn't matter, the result is the same as in the previous case).
-			array(
+			[
 				'or',
-				array( 'black', 'green' ),
+				[ 'black', 'green' ],
 				false,
-				array(
+				[
 					'black'  => 1,
 					'brown'  => 2,
 					'blue'   => 2,
 					'green'  => 2,
 					'pink'   => 1,
 					'yellow' => 1,
-				),
-			),
+				],
+			],
 
 			// OR filtering, no attributes selected. Simple product is created too.
 			// Now it should include all the attributes of the simple product too.
-			array(
+			[
 				'or',
-				array(),
+				[],
 				true,
-				array(
+				[
 					'black'  => 2,
 					'brown'  => 3,
 					'blue'   => 3,
 					'green'  => 3,
 					'pink'   => 2,
 					'yellow' => 2,
-				),
-			),
+				],
+			],
 
 			// OR filtering, some attributes selected, Simple product is created too.
 			// Again, the attributes selected don't change the result.
-			array(
+			[
 				'or',
-				array( 'black', 'green' ),
+				[ 'black', 'green' ],
 				true,
-				array(
+				[
 					'black'  => 2,
 					'brown'  => 3,
 					'blue'   => 3,
 					'green'  => 3,
 					'pink'   => 2,
 					'yellow' => 2,
-				),
-			),
+				],
+			],
 
 			// AND filtering, no attributes selected.
 			// Should count all the visible variations of all the products as in the 'or' case.
-			array(
+			[
 				'and',
-				array(),
+				[],
 				false,
-				array(
+				[
 					'black'  => 1,
 					'brown'  => 2,
 					'blue'   => 2,
 					'green'  => 2,
 					'pink'   => 1,
 					'yellow' => 1,
-				),
-			),
+				],
+			],
 
 			// AND filtering, one attribute selected.
 			// Should still count the visible variations for all products as in the 'or' case.
-			array(
+			[
 				'and',
-				array( 'green' ),
+				[ 'green' ],
 				false,
-				array(
+				[
 					'black'  => 1,
 					'brown'  => 2,
 					'blue'   => 2,
 					'green'  => 2,
 					'pink'   => 1,
 					'yellow' => 1,
-				),
-			),
+				],
+			],
 
 			// AND filtering, more than one attribute selected.
 			// Should still count the visible variations for all products as in the 'or' case.
-			array(
+			[
 				'and',
-				array( 'green', 'pink' ),
+				[ 'green', 'pink' ],
 				false,
-				array(
+				[
 					'black'  => 1,
 					'brown'  => 2,
 					'blue'   => 2,
 					'green'  => 2,
 					'pink'   => 1,
 					'yellow' => 1,
-				),
-			),
+				],
+			],
 
 			// AND filtering, no attributes selected, include simple product too.
 			// Same case as 'or': it should include all the attributes of the simple product too.
-			array(
+			[
 				'and',
-				array(),
+				[],
 				true,
-				array(
+				[
 					'black'  => 2,
 					'brown'  => 3,
 					'blue'   => 3,
 					'green'  => 3,
 					'pink'   => 2,
 					'yellow' => 2,
-				),
-			),
+				],
+			],
 
 			// AND filtering, select one attribute, include simple product too.
 			// Again, the simple product is now included in all counters, since it has the selected attribute.
-			array(
+			[
 				'and',
-				array( 'green' ),
+				[ 'green' ],
 				true,
-				array(
+				[
 					'black'  => 2,
 					'brown'  => 3,
 					'blue'   => 3,
 					'green'  => 3,
 					'pink'   => 2,
 					'yellow' => 2,
-				),
-			),
+				],
+			],
 
 			// AND filtering, select a couple of attributes, include simple product too.
 			// The simple product is still included too in all counters, since it has all of the selected attributes.
-			array(
+			[
 				'and',
-				array( 'green', 'pink' ),
+				[ 'green', 'pink' ],
 				true,
-				array(
+				[
 					'black'  => 2,
 					'brown'  => 3,
 					'blue'   => 3,
 					'green'  => 3,
 					'pink'   => 2,
 					'yellow' => 2,
-				),
-			),
-		);
+				],
+			],
+		];
 	}
 
 	/**
@@ -387,10 +387,10 @@ class WC_Tests_Widget_Layered_Nav extends WC_Unit_Test_Case {
 		if ( $create_simple_product_too ) {
 			$this->create_colored_product( 'Something with many colors', null );
 		}
-		$this->create_colored_product( 'Big shoes', array( 'black', 'brown' ) );
-		$this->create_colored_product( 'Medium shoes', array( 'blue', 'brown' ) );
-		$this->create_colored_product( 'Small shoes', array( 'blue', 'green' ) );
-		$this->create_colored_product( 'Kids shoes', array( 'green', 'pink', 'yellow' ) );
+		$this->create_colored_product( 'Big shoes', [ 'black', 'brown' ] );
+		$this->create_colored_product( 'Medium shoes', [ 'blue', 'brown' ] );
+		$this->create_colored_product( 'Small shoes', [ 'blue', 'green' ] );
+		$this->create_colored_product( 'Kids shoes', [ 'green', 'pink', 'yellow' ] );
 
 		$counts = $this->run_get_filtered_term_product_counts( $filter_operator, $filter_terms );
 		$this->assertEquals( $expected_counts, $counts );
@@ -401,41 +401,41 @@ class WC_Tests_Widget_Layered_Nav extends WC_Unit_Test_Case {
 	 *
 	 */
 	public function test_product_count_per_multiple_attributes() {
-		$this->create_colored_product( 'Big shoes', array( 'black', 'brown' ) );
+		$this->create_colored_product( 'Big shoes', [ 'black', 'brown' ] );
 		$this->create_colored_product(
 			'Medium shoes',
-			array( 'blue', 'brown' ),
-			array(),
-			array(
+			[ 'blue', 'brown' ],
+			[],
+			[
 				'blue'  => 'sport',
 				'brown' => 'classic',
-			)
+			]
 		);
 		$this->create_colored_product(
 			'Small shoes',
-			array( 'blue', 'green' ),
-			array(),
-			array(
+			[ 'blue', 'green' ],
+			[],
+			[
 				'blue'  => 'classic',
 				'green' => 'sport',
-			)
+			]
 		);
 		$this->create_colored_product(
 			'Kids shoes',
-			array( 'green', 'pink', 'yellow', 'blue' ),
-			array(),
-			array(
+			[ 'green', 'pink', 'yellow', 'blue' ],
+			[],
+			[
 				'green' => 'classic',
 				'blue'  => 'classic',
-			)
+			]
 		);
 
-		$counts          = $this->run_get_filtered_term_product_counts( 'IN', array( 'blue' ), array( 'classic' ) );
-		$expected_counts = array(
+		$counts          = $this->run_get_filtered_term_product_counts( 'IN', [ 'blue' ], [ 'classic' ] );
+		$expected_counts = [
 			'brown' => 1,
 			'blue'  => 2,
 			'green' => 1,
-		);
+		];
 		$this->assertEquals( $expected_counts, $counts );
 	}
 
@@ -445,16 +445,16 @@ class WC_Tests_Widget_Layered_Nav extends WC_Unit_Test_Case {
 	 * @throws ReflectionException Error when dealing with reflection to invoke the tested method.
 	 */
 	public function test_product_count_per_attribute_with_parent_not_published() {
-		$this->create_colored_product( 'Big shoes', array( 'black', 'brown' ) );
-		$medium = $this->create_colored_product( 'Medium shoes', array( 'blue', 'brown' ) );
+		$this->create_colored_product( 'Big shoes', [ 'black', 'brown' ] );
+		$medium = $this->create_colored_product( 'Medium shoes', [ 'blue', 'brown' ] );
 		$this->set_post_as_draft( $medium->get_id() );
 
-		$actual = $this->run_get_filtered_term_product_counts( 'or', array() );
+		$actual = $this->run_get_filtered_term_product_counts( 'or', [] );
 
-		$expected = array(
+		$expected = [
 			'black' => 1,
 			'brown' => 1,
-		);
+		];
 		$this->assertEquals( $expected, $actual );
 	}
 
@@ -464,16 +464,16 @@ class WC_Tests_Widget_Layered_Nav extends WC_Unit_Test_Case {
 	 * @throws ReflectionException Error when dealing with reflection to invoke the tested method.
 	 */
 	public function test_product_count_per_attribute_with_variation_not_published() {
-		$this->create_colored_product( 'Big shoes', array( 'black', 'brown' ) );
-		$this->create_colored_product( 'Medium shoes', array( 'blue', 'brown' ), array( 'brown' ) );
+		$this->create_colored_product( 'Big shoes', [ 'black', 'brown' ] );
+		$this->create_colored_product( 'Medium shoes', [ 'blue', 'brown' ], [ 'brown' ] );
 
-		$actual = $this->run_get_filtered_term_product_counts( 'or', array() );
+		$actual = $this->run_get_filtered_term_product_counts( 'or', [] );
 
-		$expected = array(
+		$expected = [
 			'black' => 1,
 			'brown' => 1,
 			'blue'  => 1,
-		);
+		];
 		$this->assertEquals( $expected, $actual );
 	}
 
@@ -491,36 +491,36 @@ class WC_Tests_Widget_Layered_Nav extends WC_Unit_Test_Case {
 		$main_product = new WC_Product_Variable();
 
 		$main_product->set_props(
-			array(
+			[
 				'name' => 'Some shoes',
 				'sku'  => 'SKU for Some shoes',
-			)
+			]
 		);
 
-		$existing_colors = array( 'black', 'brown', 'blue', 'green', 'pink', 'yellow' );
-		$existing_styles = array( 'classic', 'sport' );
+		$existing_colors = [ 'black', 'brown', 'blue', 'green', 'pink', 'yellow' ];
+		$existing_styles = [ 'classic', 'sport' ];
 
-		$attributes = array(
+		$attributes = [
 			WC_Helper_Product::create_product_attribute_object( 'color', array_values( $existing_colors ) ),
 			WC_Helper_Product::create_product_attribute_object( 'style', array_values( $existing_styles ) ),
-		);
+		];
 		$main_product->set_attributes( $attributes );
 		$main_product->save();
 
 		if ( $set_main_as_unpublished ) {
 			wp_update_post(
-				array(
+				[
 					'ID'          => $main_product->get_id(),
 					'post_status' => 'draft',
-				)
+				]
 			);
 		}
 
-		$variation_objects = array();
+		$variation_objects = [];
 		foreach ( $existing_styles as $style ) {
-			$variation_attributes = array(
+			$variation_attributes = [
 				'pa_style' => $style,
-			);
+			];
 			$variation_object     = WC_Helper_Product::create_product_variation_object(
 				$main_product->get_id(),
 				"SKU for $style Some shoes",
@@ -535,10 +535,10 @@ class WC_Tests_Widget_Layered_Nav extends WC_Unit_Test_Case {
 
 			if ( 'all' === $set_as_unpublished || ( 'one' === $set_as_unpublished && $style === $existing_styles[0] ) ) {
 				wp_update_post(
-					array(
+					[
 						'ID'          => $variation_object->get_id(),
 						'post_status' => 'draft',
-					)
+					]
 				);
 			}
 
@@ -565,19 +565,19 @@ class WC_Tests_Widget_Layered_Nav extends WC_Unit_Test_Case {
 	 */
 	public function test_product_count_per_attribute_with_any_valued_variations( $set_as_out_of_stock, $set_as_unpublished ) {
 		$this->create_product_with_all_styles_and_any_color( $set_as_out_of_stock, $set_as_unpublished, false );
-		$this->create_colored_product( 'Medium shoes', array( 'black', 'brown', 'blue' ) );
-		$this->create_colored_product( 'Medium shoes 2', array( 'black', 'brown', 'blue', 'pink' ) );
+		$this->create_colored_product( 'Medium shoes', [ 'black', 'brown', 'blue' ] );
+		$this->create_colored_product( 'Medium shoes 2', [ 'black', 'brown', 'blue', 'pink' ] );
 
-		$actual = $this->run_get_filtered_term_product_counts( 'or', array() );
+		$actual = $this->run_get_filtered_term_product_counts( 'or', [] );
 
-		$expected = array(
+		$expected = [
 			'black'  => 3,
 			'brown'  => 3,
 			'blue'   => 3,
 			'pink'   => 2,
 			'green'  => 1,
 			'yellow' => 1,
-		);
+		];
 		$this->assertEquals( $expected, $actual );
 	}
 
@@ -587,16 +587,16 @@ class WC_Tests_Widget_Layered_Nav extends WC_Unit_Test_Case {
 	 * @throws ReflectionException Error when dealing with reflection to invoke the tested method.
 	 */
 	public function test_product_count_per_attribute_with_any_valued_variations_when_main_is_unpublished() {
-		$this->create_colored_product( 'Medium shoes', array( 'black', 'brown', 'blue' ) );
+		$this->create_colored_product( 'Medium shoes', [ 'black', 'brown', 'blue' ] );
 		$this->create_product_with_all_styles_and_any_color( null, null, true );
 
-		$actual = $this->run_get_filtered_term_product_counts( 'or', array() );
+		$actual = $this->run_get_filtered_term_product_counts( 'or', [] );
 
-		$expected = array(
+		$expected = [
 			'black' => 1,
 			'brown' => 1,
 			'blue'  => 1,
-		);
+		];
 		$this->assertEquals( $expected, $actual );
 	}
 }

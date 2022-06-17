@@ -15,7 +15,7 @@ global $wpdb;
 $report             = wc()->api->get_endpoint_data( '/wc/v3/system_status' );
 $environment        = $report['environment'];
 $database           = $report['database'];
-$post_type_counts   = isset( $report['post_type_counts'] ) ? $report['post_type_counts'] : array();
+$post_type_counts   = isset( $report['post_type_counts'] ) ? $report['post_type_counts'] : [];
 $active_plugins     = $report['active_plugins'];
 $inactive_plugins   = $report['inactive_plugins'];
 $dropins_mu_plugins = $report['dropins_mu_plugins'];
@@ -427,7 +427,7 @@ $untested_plugins   = $plugin_updates->get_untested_plugins( WC()->version, Cons
 			</td>
 		</tr>
 		<?php
-		$rows = apply_filters( 'woocommerce_system_status_environment_rows', array() );
+		$rows = apply_filters( 'woocommerce_system_status_environment_rows', [] );
 		foreach ( $rows as $row ) {
 			if ( ! empty( $row['success'] ) ) {
 				$css_class = 'yes';
@@ -731,7 +731,7 @@ if ( 0 < count( $dropins_mu_plugins['mu_plugins'] ) ) :
 			<td class="help"><?php echo wc_help_tip( esc_html__( 'A list of taxonomy terms that can be used in regard to order/product statuses.', 'woocommerce' ) ); /* phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped */ ?></td>
 			<td>
 				<?php
-				$display_terms = array();
+				$display_terms = [];
 				foreach ( $settings['taxonomies'] as $slug => $name ) {
 					$display_terms[] = strtolower( $name ) . ' (' . $slug . ')';
 				}
@@ -744,7 +744,7 @@ if ( 0 < count( $dropins_mu_plugins['mu_plugins'] ) ) :
 			<td class="help"><?php echo wc_help_tip( esc_html__( 'A list of taxonomy terms used for product visibility.', 'woocommerce' ) ); /* phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped */ ?></td>
 			<td>
 				<?php
-				$display_terms = array();
+				$display_terms = [];
 				foreach ( $settings['product_visibility_terms'] as $slug => $name ) {
 					$display_terms[] = strtolower( $name ) . ' (' . $slug . ')';
 				}

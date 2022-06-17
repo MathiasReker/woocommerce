@@ -23,8 +23,8 @@ class WC_Twenty_Thirteen {
 		remove_action( 'woocommerce_after_main_content', 'woocommerce_output_content_wrapper_end' );
 
 		// Add custom wrappers.
-		add_action( 'woocommerce_before_main_content', array( __CLASS__, 'output_content_wrapper' ) );
-		add_action( 'woocommerce_after_main_content', array( __CLASS__, 'output_content_wrapper_end' ) );
+		add_action( 'woocommerce_before_main_content', [ __CLASS__, 'output_content_wrapper' ] );
+		add_action( 'woocommerce_after_main_content', [ __CLASS__, 'output_content_wrapper_end' ] );
 
 		// Declare theme support for features.
 		add_theme_support( 'wc-product-gallery-zoom' );
@@ -32,10 +32,10 @@ class WC_Twenty_Thirteen {
 		add_theme_support( 'wc-product-gallery-slider' );
 		add_theme_support(
 			'woocommerce',
-			array(
+			[
 				'thumbnail_image_width' => 200,
 				'single_image_width'    => 300,
-			)
+			]
 		);
 	}
 

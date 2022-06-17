@@ -35,21 +35,21 @@ class DynamicDecorator {
 	 *
 	 * @var array
 	 */
-	private $property_get_replacements = array();
+	private $property_get_replacements = [];
 
 	/**
 	 * Replacement callbacks for property writes.
 	 *
 	 * @var array
 	 */
-	private $property_set_replacements = array();
+	private $property_set_replacements = [];
 
 	/**
 	 * Replacement callbacks for methods.
 	 *
 	 * @var array
 	 */
-	private $method_replacements = array();
+	private $method_replacements = [];
 
 	/**
 	 * Creates a new instance of the class.
@@ -114,9 +114,9 @@ class DynamicDecorator {
 	 * @return void
 	 */
 	public function reset_replacements() {
-		$this->property_get_replacements = array();
-		$this->property_set_replacements = array();
-		$this->method_replacements       = array();
+		$this->property_get_replacements = [];
+		$this->property_set_replacements = [];
+		$this->method_replacements       = [];
 	}
 
 	/**
@@ -139,7 +139,7 @@ class DynamicDecorator {
 	 */
 	public function call_original_method( string $method_name, array $parameters ) {
 		array_shift( $parameters );
-		return call_user_func_array( array( $this->decorated_object, $method_name ), $parameters );
+		return call_user_func_array( [ $this->decorated_object, $method_name ], $parameters );
 	}
 
 	/**
@@ -154,7 +154,7 @@ class DynamicDecorator {
 			array_unshift( $arguments, $this );
 			return call_user_func_array( $this->method_replacements[ $name ], $arguments );
 		} else {
-			return call_user_func_array( array( $this->decorated_object, $name ), $arguments );
+			return call_user_func_array( [ $this->decorated_object, $name ], $arguments );
 		}
 	}
 

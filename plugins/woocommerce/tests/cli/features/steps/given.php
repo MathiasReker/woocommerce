@@ -59,7 +59,7 @@ $steps->Given( '/^a WP multisite (subdirectory|subdomain)?\s?install$/',
 	function ( $world, $type = 'subdirectory' ) {
 		$world->install_wp();
 		$subdomains = ! empty( $type ) && 'subdomain' === $type ? 1 : 0;
-		$world->proc( 'wp core install-network', array( 'title' => 'WP CLI Network', 'subdomains' => $subdomains ) )->run_check();
+		$world->proc( 'wp core install-network', [ 'title' => 'WP CLI Network', 'subdomains' => $subdomains ] )->run_check();
 	}
 );
 

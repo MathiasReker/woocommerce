@@ -16,7 +16,7 @@ use \WC_Coupon;
  */
 class CouponHelper {
 
-	protected static $custom_types = array();
+	protected static $custom_types = [];
 
 	/**
 	 * Create a dummy coupon.
@@ -26,20 +26,20 @@ class CouponHelper {
 	 *
 	 * @return WC_Coupon
 	 */
-	public static function create_coupon( $coupon_code = 'dummycoupon', $status = 'publish', $meta = array() ) {
+	public static function create_coupon( $coupon_code = 'dummycoupon', $status = 'publish', $meta = [] ) {
 		// Insert post
 		$coupon_id = wp_insert_post(
-			array(
+			[
 				'post_title'   => $coupon_code,
 				'post_type'    => 'shop_coupon',
 				'post_status'  => $status,
 				'post_excerpt' => 'This is a dummy coupon',
-			)
+			]
 		);
 
 		$meta = wp_parse_args(
 			$meta,
-			array(
+			[
 				'discount_type'              => 'fixed_cart',
 				'coupon_amount'              => '1',
 				'individual_use'             => 'no',
@@ -51,13 +51,13 @@ class CouponHelper {
 				'expiry_date'                => '',
 				'free_shipping'              => 'no',
 				'exclude_sale_items'         => 'no',
-				'product_categories'         => array(),
-				'exclude_product_categories' => array(),
+				'product_categories'         => [],
+				'exclude_product_categories' => [],
 				'minimum_amount'             => '',
 				'maximum_amount'             => '',
-				'customer_email'             => array(),
+				'customer_email'             => [],
 				'usage_count'                => '0',
-			)
+			]
 		);
 
 		// Update meta.
@@ -95,8 +95,8 @@ class CouponHelper {
 		self::$custom_types[ $coupon_type ] = "Testing custom type {$coupon_type}";
 
 		if ( ! $filters_added ) {
-			add_filter( 'woocommerce_coupon_discount_types', array( __CLASS__, 'filter_discount_types' ) );
-			add_filter( 'woocommerce_coupon_get_discount_amount', array( __CLASS__, 'filter_get_discount_amount' ), 10, 5 );
+			add_filter( 'woocommerce_coupon_discount_types', [ __CLASS__, 'filter_discount_types' ] );
+			add_filter( 'woocommerce_coupon_get_discount_amount', [ __CLASS__, 'filter_get_discount_amount' ], 10, 5 );
 			add_filter( 'woocommerce_coupon_is_valid_for_product', '__return_true' );
 			$filters_added = true;
 		}
@@ -110,8 +110,8 @@ class CouponHelper {
 	public static function unregister_custom_type( $coupon_type ) {
 		unset( self::$custom_types[ $coupon_type ] );
 		if ( empty( self::$custom_types ) ) {
-			remove_filter( 'woocommerce_coupon_discount_types', array( __CLASS__, 'filter_discount_types' ) );
-			remove_filter( 'woocommerce_coupon_get_discount_amount', array( __CLASS__, 'filter_get_discount_amount' ) );
+			remove_filter( 'woocommerce_coupon_discount_types', [ __CLASS__, 'filter_discount_types' ] );
+			remove_filter( 'woocommerce_coupon_get_discount_amount', [ __CLASS__, 'filter_get_discount_amount' ] );
 			remove_filter( 'woocommerce_coupon_is_valid_for_product', '__return_true' );
 		}
 	}

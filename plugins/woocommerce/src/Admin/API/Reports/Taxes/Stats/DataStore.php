@@ -36,13 +36,13 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 	 *
 	 * @var array
 	 */
-	protected $column_types = array(
+	protected $column_types = [
 		'tax_codes'    => 'intval',
 		'total_tax'    => 'floatval',
 		'order_tax'    => 'floatval',
 		'shipping_tax' => 'floatval',
 		'orders_count' => 'intval',
-	);
+	];
 
 	/**
 	 * Data store context used to pass to filters.
@@ -56,13 +56,13 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 	 */
 	protected function assign_report_columns() {
 		$table_name           = self::get_db_table_name();
-		$this->report_columns = array(
+		$this->report_columns = [
 			'tax_codes'    => 'COUNT(DISTINCT tax_rate_id) as tax_codes',
 			'total_tax'    => 'SUM(total_tax) AS total_tax',
 			'order_tax'    => 'SUM(order_tax) as order_tax',
 			'shipping_tax' => 'SUM(shipping_tax) as shipping_tax',
 			'orders_count' => "COUNT( DISTINCT ( CASE WHEN parent_id = 0 THEN {$table_name}.order_id END ) ) as orders_count",
-		);
+		];
 	}
 
 	/**
@@ -135,7 +135,7 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 		$table_name = self::get_db_table_name();
 
 		// These defaults are only partially applied when used via REST API, as that has its own defaults.
-		$defaults   = array(
+		$defaults   = [
 			'per_page' => get_option( 'posts_per_page' ),
 			'page'     => 1,
 			'order'    => 'DESC',
@@ -143,8 +143,8 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 			'before'   => TimeInterval::default_before(),
 			'after'    => TimeInterval::default_after(),
 			'fields'   => '*',
-			'taxes'    => array(),
-		);
+			'taxes'    => [],
+		];
 		$query_args = wp_parse_args( $query_args, $defaults );
 		$this->normalize_timezones( $query_args, $defaults );
 
@@ -158,13 +158,13 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 		if ( false === $data ) {
 			$this->initialize_queries();
 
-			$data = (object) array(
-				'totals'    => (object) array(),
-				'intervals' => (object) array(),
+			$data = (object) [
+				'totals'    => (object) [],
+				'intervals' => (object) [],
 				'total'     => 0,
 				'pages'     => 0,
 				'page_no'   => 0,
-			);
+			];
 
 			$selections       = $this->selected_columns( $query_args );
 			$params           = $this->get_limit_params( $query_args );
@@ -196,17 +196,17 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 			}
 
 			// @todo remove these assignements when refactoring segmenter classes to use query objects.
-			$totals_query          = array(
+			$totals_query          = [
 				'from_clause'       => $this->total_query->get_sql_clause( 'join' ),
 				'where_time_clause' => $this->total_query->get_sql_clause( 'where_time' ),
 				'where_clause'      => $this->total_query->get_sql_clause( 'where' ),
-			);
-			$intervals_query       = array(
+			];
+			$intervals_query       = [
 				'select_clause'     => $this->get_sql_clause( 'select' ),
 				'from_clause'       => $this->interval_query->get_sql_clause( 'join' ),
 				'where_time_clause' => $this->interval_query->get_sql_clause( 'where_time' ),
 				'where_clause'      => $this->interval_query->get_sql_clause( 'where' ),
-			);
+			];
 			$segmenter             = new Segmenter( $query_args, $this->report_columns );
 			$totals[0]['segments'] = $segmenter->get_totals_segments( $totals_query, $table_name );
 
@@ -231,13 +231,13 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 
 			$totals = (object) $this->cast_numbers( $totals[0] );
 
-			$data = (object) array(
+			$data = (object) [
 				'totals'    => $totals,
 				'intervals' => $intervals,
 				'total'     => $expected_interval_count,
 				'pages'     => $total_pages,
 				'page_no'   => (int) $query_args['page'],
-			);
+			];
 
 			if ( TimeInterval::intervals_missing( $expected_interval_count, $db_interval_count, $params['per_page'], $query_args['page'], $query_args['order'], $query_args['orderby'], count( $intervals ) ) ) {
 				$this->fill_in_missing_intervals( $db_intervals, $query_args['adj_after'], $query_args['adj_before'], $query_args['interval'], $data );

@@ -41,7 +41,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 			<li>
 			<?php
 
-			$links = array();
+			$links = [];
 
 			foreach ( $reports[ $current_tab ]['reports'] as $key => $report ) {
 				$link = '<a href="admin.php?page=wc-reports&tab=' . urlencode( $current_tab ) . '&amp;report=' . urlencode( $key ) . '" class="';

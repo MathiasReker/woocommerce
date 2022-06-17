@@ -45,22 +45,22 @@ final class WC_Cart_Session {
 	 * Register methods for this object on the appropriate WordPress hooks.
 	 */
 	public function init() {
-		add_action( 'wp_loaded', array( $this, 'get_cart_from_session' ) );
-		add_action( 'woocommerce_cart_emptied', array( $this, 'destroy_cart_session' ) );
-		add_action( 'woocommerce_after_calculate_totals', array( $this, 'set_session' ), 1000 );
-		add_action( 'woocommerce_cart_loaded_from_session', array( $this, 'set_session' ) );
-		add_action( 'woocommerce_removed_coupon', array( $this, 'set_session' ) );
+		add_action( 'wp_loaded', [ $this, 'get_cart_from_session' ] );
+		add_action( 'woocommerce_cart_emptied', [ $this, 'destroy_cart_session' ] );
+		add_action( 'woocommerce_after_calculate_totals', [ $this, 'set_session' ], 1000 );
+		add_action( 'woocommerce_cart_loaded_from_session', [ $this, 'set_session' ] );
+		add_action( 'woocommerce_removed_coupon', [ $this, 'set_session' ] );
 
 		// Persistent cart stored to usermeta.
-		add_action( 'woocommerce_add_to_cart', array( $this, 'persistent_cart_update' ) );
-		add_action( 'woocommerce_cart_item_removed', array( $this, 'persistent_cart_update' ) );
-		add_action( 'woocommerce_cart_item_restored', array( $this, 'persistent_cart_update' ) );
-		add_action( 'woocommerce_cart_item_set_quantity', array( $this, 'persistent_cart_update' ) );
+		add_action( 'woocommerce_add_to_cart', [ $this, 'persistent_cart_update' ] );
+		add_action( 'woocommerce_cart_item_removed', [ $this, 'persistent_cart_update' ] );
+		add_action( 'woocommerce_cart_item_restored', [ $this, 'persistent_cart_update' ] );
+		add_action( 'woocommerce_cart_item_set_quantity', [ $this, 'persistent_cart_update' ] );
 
 		// Cookie events - cart cookies need to be set before headers are sent.
-		add_action( 'woocommerce_add_to_cart', array( $this, 'maybe_set_cart_cookies' ) );
-		add_action( 'wp', array( $this, 'maybe_set_cart_cookies' ), 99 );
-		add_action( 'shutdown', array( $this, 'maybe_set_cart_cookies' ), 0 );
+		add_action( 'woocommerce_add_to_cart', [ $this, 'maybe_set_cart_cookies' ] );
+		add_action( 'wp', [ $this, 'maybe_set_cart_cookies' ], 99 );
+		add_action( 'shutdown', [ $this, 'maybe_set_cart_cookies' ], 0 );
 	}
 
 	/**
@@ -71,10 +71,10 @@ final class WC_Cart_Session {
 	public function get_cart_from_session() {
 		do_action( 'woocommerce_load_cart_from_session' );
 		$this->cart->set_totals( WC()->session->get( 'cart_totals', null ) );
-		$this->cart->set_applied_coupons( WC()->session->get( 'applied_coupons', array() ) );
-		$this->cart->set_coupon_discount_totals( WC()->session->get( 'coupon_discount_totals', array() ) );
-		$this->cart->set_coupon_discount_tax_totals( WC()->session->get( 'coupon_discount_tax_totals', array() ) );
-		$this->cart->set_removed_cart_contents( WC()->session->get( 'removed_cart_contents', array() ) );
+		$this->cart->set_applied_coupons( WC()->session->get( 'applied_coupons', [] ) );
+		$this->cart->set_coupon_discount_totals( WC()->session->get( 'coupon_discount_totals', [] ) );
+		$this->cart->set_coupon_discount_tax_totals( WC()->session->get( 'coupon_discount_tax_totals', [] ) );
+		$this->cart->set_removed_cart_contents( WC()->session->get( 'removed_cart_contents', [] ) );
 
 		$update_cart_session = false; // Flag to indicate the stored cart should be updated.
 		$order_again         = false; // Flag to indicate whether this is a re-order.
@@ -84,7 +84,7 @@ final class WC_Cart_Session {
 		// Merge saved cart with current cart.
 		if ( is_null( $cart ) || $merge_saved_cart ) {
 			$saved_cart          = $this->get_saved_cart();
-			$cart                = is_null( $cart ) ? array() : $cart;
+			$cart                = is_null( $cart ) ? [] : $cart;
 			$cart                = array_merge( $saved_cart, $cart );
 			$update_cart_session = true;
 
@@ -102,7 +102,7 @@ final class WC_Cart_Session {
 			_prime_post_caches( wp_list_pluck( $cart, 'product_id' ) );
 		}
 
-		$cart_contents = array();
+		$cart_contents = [];
 
 		foreach ( $cart as $key => $values ) {
 			if ( ! is_customize_preview() && 'customize-preview' === $key ) {
@@ -155,9 +155,9 @@ final class WC_Cart_Session {
 				// Put session data into array. Run through filter so other plugins can load their own session data.
 				$session_data = array_merge(
 					$values,
-					array(
+					[
 						'data' => $product,
-					)
+					]
 				);
 
 				$cart_contents[ $key ] = apply_filters( 'woocommerce_get_cart_item_from_session', $session_data, $values, $key );
@@ -240,7 +240,7 @@ final class WC_Cart_Session {
 	 * @return array contents of the cart
 	 */
 	public function get_cart_for_session() {
-		$cart_session = array();
+		$cart_session = [];
 
 		foreach ( $this->cart->get_cart() as $key => $values ) {
 			$cart_session[ $key ] = $values;
@@ -258,9 +258,9 @@ final class WC_Cart_Session {
 			update_user_meta(
 				get_current_user_id(),
 				'_woocommerce_persistent_cart_' . get_current_blog_id(),
-				array(
+				[
 					'cart' => $this->get_cart_for_session(),
-				)
+				]
 			);
 		}
 	}
@@ -281,20 +281,20 @@ final class WC_Cart_Session {
 	 */
 	private function set_cart_cookies( $set = true ) {
 		if ( $set ) {
-			$setcookies = array(
+			$setcookies = [
 				'woocommerce_items_in_cart' => '1',
 				'woocommerce_cart_hash'     => WC()->cart->get_cart_hash(),
-			);
+			];
 			foreach ( $setcookies as $name => $value ) {
 				if ( ! isset( $_COOKIE[ $name ] ) || $_COOKIE[ $name ] !== $value ) {
 					wc_setcookie( $name, $value );
 				}
 			}
 		} else {
-			$unsetcookies = array(
+			$unsetcookies = [
 				'woocommerce_items_in_cart',
 				'woocommerce_cart_hash',
-			);
+			];
 			foreach ( $unsetcookies as $name ) {
 				if ( isset( $_COOKIE[ $name ] ) ) {
 					wc_setcookie( $name, 0, time() - HOUR_IN_SECONDS );
@@ -313,7 +313,7 @@ final class WC_Cart_Session {
 	 * @return array
 	 */
 	private function get_saved_cart() {
-		$saved_cart = array();
+		$saved_cart = [];
 
 		if ( apply_filters( 'woocommerce_persistent_cart_enabled', true ) ) {
 			$saved_cart_meta = get_user_meta( get_current_user_id(), '_woocommerce_persistent_cart_' . get_current_blog_id(), true );
@@ -339,12 +339,12 @@ final class WC_Cart_Session {
 	private function populate_cart_from_order( $order_id, $cart ) {
 		$order = wc_get_order( $order_id );
 
-		if ( ! $order->get_id() || ! $order->has_status( apply_filters( 'woocommerce_valid_order_statuses_for_order_again', array( 'completed' ) ) ) || ! current_user_can( 'order_again', $order->get_id() ) ) {
+		if ( ! $order->get_id() || ! $order->has_status( apply_filters( 'woocommerce_valid_order_statuses_for_order_again', [ 'completed' ] ) ) || ! current_user_can( 'order_again', $order->get_id() ) ) {
 			return;
 		}
 
 		if ( apply_filters( 'woocommerce_empty_cart_when_order_again', true ) ) {
-			$cart = array();
+			$cart = [];
 		}
 
 		$inital_cart_size = count( $cart );
@@ -354,8 +354,8 @@ final class WC_Cart_Session {
 			$product_id     = (int) apply_filters( 'woocommerce_add_to_cart_product_id', $item->get_product_id() );
 			$quantity       = $item->get_quantity();
 			$variation_id   = (int) $item->get_variation_id();
-			$variations     = array();
-			$cart_item_data = apply_filters( 'woocommerce_order_again_cart_item_data', array(), $item, $order );
+			$variations     = [];
+			$cart_item_data = apply_filters( 'woocommerce_order_again_cart_item_data', [], $item, $order );
 			$product        = $item->get_product();
 
 			if ( ! $product ) {
@@ -392,7 +392,7 @@ final class WC_Cart_Session {
 				'woocommerce_add_order_again_cart_item',
 				array_merge(
 					$cart_item_data,
-					array(
+					[
 						'key'          => $cart_id,
 						'product_id'   => $product_id,
 						'variation_id' => $variation_id,
@@ -400,13 +400,13 @@ final class WC_Cart_Session {
 						'quantity'     => $quantity,
 						'data'         => $product_data,
 						'data_hash'    => wc_get_cart_item_data_hash( $product_data ),
-					)
+					]
 				),
 				$cart_id
 			);
 		}
 
-		do_action_ref_array( 'woocommerce_ordered_again', array( $order->get_id(), $order_items, &$cart ) );
+		do_action_ref_array( 'woocommerce_ordered_again', [ $order->get_id(), $order_items, &$cart ] );
 
 		$num_items_in_cart           = count( $cart );
 		$num_items_in_original_order = count( $order_items );

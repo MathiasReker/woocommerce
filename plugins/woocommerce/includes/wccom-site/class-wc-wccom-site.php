@@ -25,9 +25,9 @@ class WC_WCCOM_Site {
 	public static function load() {
 		self::includes();
 
-		add_action( 'woocommerce_wccom_install_products', array( 'WC_WCCOM_Site_Installer', 'install' ) );
-		add_filter( 'determine_current_user', array( __CLASS__, 'authenticate_wccom' ), 14 );
-		add_action( 'woocommerce_rest_api_get_rest_namespaces', array( __CLASS__, 'register_rest_namespace' ) );
+		add_action( 'woocommerce_wccom_install_products', [ 'WC_WCCOM_Site_Installer', 'install' ] );
+		add_filter( 'determine_current_user', [ __CLASS__, 'authenticate_wccom' ], 14 );
+		add_action( 'woocommerce_rest_api_get_rest_namespaces', [ __CLASS__, 'register_rest_namespace' ] );
 	}
 
 	/**
@@ -66,7 +66,7 @@ class WC_WCCOM_Site {
 					return new WP_Error(
 						WC_REST_WCCOM_Site_Installer_Errors::NO_ACCESS_TOKEN_CODE,
 						WC_REST_WCCOM_Site_Installer_Errors::NO_ACCESS_TOKEN_MESSAGE,
-						array( 'status' => WC_REST_WCCOM_Site_Installer_Errors::NO_ACCESS_TOKEN_HTTP_CODE )
+						[ 'status' => WC_REST_WCCOM_Site_Installer_Errors::NO_ACCESS_TOKEN_HTTP_CODE ]
 					);
 				}
 			);
@@ -84,7 +84,7 @@ class WC_WCCOM_Site {
 					return new WP_Error(
 						WC_REST_WCCOM_Site_Installer_Errors::NO_SIGNATURE_CODE,
 						WC_REST_WCCOM_Site_Installer_Errors::NO_SIGNATURE_MESSAGE,
-						array( 'status' => WC_REST_WCCOM_Site_Installer_Errors::NO_SIGNATURE_HTTP_CODE )
+						[ 'status' => WC_REST_WCCOM_Site_Installer_Errors::NO_SIGNATURE_HTTP_CODE ]
 					);
 				}
 			);
@@ -101,7 +101,7 @@ class WC_WCCOM_Site {
 					return new WP_Error(
 						WC_REST_WCCOM_Site_Installer_Errors::SITE_NOT_CONNECTED_CODE,
 						WC_REST_WCCOM_Site_Installer_Errors::SITE_NOT_CONNECTED_MESSAGE,
-						array( 'status' => WC_REST_WCCOM_Site_Installer_Errors::SITE_NOT_CONNECTED_HTTP_CODE )
+						[ 'status' => WC_REST_WCCOM_Site_Installer_Errors::SITE_NOT_CONNECTED_HTTP_CODE ]
 					);
 				}
 			);
@@ -115,7 +115,7 @@ class WC_WCCOM_Site {
 					return new WP_Error(
 						WC_REST_WCCOM_Site_Installer_Errors::INVALID_TOKEN_CODE,
 						WC_REST_WCCOM_Site_Installer_Errors::INVALID_TOKEN_MESSAGE,
-						array( 'status' => WC_REST_WCCOM_Site_Installer_Errors::INVALID_TOKEN_HTTP_CODE )
+						[ 'status' => WC_REST_WCCOM_Site_Installer_Errors::INVALID_TOKEN_HTTP_CODE ]
 					);
 				}
 			);
@@ -131,7 +131,7 @@ class WC_WCCOM_Site {
 					return new WP_Error(
 						WC_REST_WCCOM_Site_Installer_Errors::REQUEST_VERIFICATION_FAILED_CODE,
 						WC_REST_WCCOM_Site_Installer_Errors::REQUEST_VERIFICATION_FAILED_MESSAGE,
-						array( 'status' => WC_REST_WCCOM_Site_Installer_Errors::REQUEST_VERIFICATION_FAILED_HTTP_CODE )
+						[ 'status' => WC_REST_WCCOM_Site_Installer_Errors::REQUEST_VERIFICATION_FAILED_HTTP_CODE ]
 					);
 				}
 			);
@@ -146,7 +146,7 @@ class WC_WCCOM_Site {
 					return new WP_Error(
 						WC_REST_WCCOM_Site_Installer_Errors::USER_NOT_FOUND_CODE,
 						WC_REST_WCCOM_Site_Installer_Errors::USER_NOT_FOUND_MESSAGE,
-						array( 'status' => WC_REST_WCCOM_Site_Installer_Errors::USER_NOT_FOUND_HTTP_CODE )
+						[ 'status' => WC_REST_WCCOM_Site_Installer_Errors::USER_NOT_FOUND_HTTP_CODE ]
 					);
 				}
 			);
@@ -197,7 +197,7 @@ class WC_WCCOM_Site {
 			$route       = wp_unslash( $_REQUEST['rest_route'] ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.NonceVerification.Recommended
 			$rest_prefix = '';
 		} else {
-			$route       = wp_unslash( add_query_arg( array() ) );
+			$route       = wp_unslash( add_query_arg( [] ) );
 			$rest_prefix = trailingslashit( rest_get_url_prefix() );
 		}
 
@@ -215,11 +215,11 @@ class WC_WCCOM_Site {
 	 */
 	protected static function verify_wccom_request( $body, $signature, $access_token_secret ) {
 		// phpcs:disable WordPress.Security.ValidatedSanitizedInput.InputNotValidated, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-		$data = array(
+		$data = [
 			'host'        => $_SERVER['HTTP_HOST'],
-			'request_uri' => urldecode( remove_query_arg( array( 'token', 'signature' ), $_SERVER['REQUEST_URI'] ) ),
+			'request_uri' => urldecode( remove_query_arg( [ 'token', 'signature' ], $_SERVER['REQUEST_URI'] ) ),
 			'method'      => strtoupper( $_SERVER['REQUEST_METHOD'] ),
-		);
+		];
 		// phpcs:enable
 
 		if ( ! empty( $body ) ) {
@@ -242,9 +242,9 @@ class WC_WCCOM_Site {
 		require_once WC_ABSPATH . 'includes/wccom-site/rest-api/class-wc-rest-wccom-site-installer-errors.php';
 		require_once WC_ABSPATH . 'includes/wccom-site/rest-api/endpoints/class-wc-rest-wccom-site-installer-controller.php';
 
-		$namespaces['wccom-site/v1'] = array(
+		$namespaces['wccom-site/v1'] = [
 			'installer' => 'WC_REST_WCCOM_Site_Installer_Controller',
-		);
+		];
 
 		return $namespaces;
 	}

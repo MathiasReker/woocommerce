@@ -35,24 +35,24 @@ class WC_API_Products extends WC_API_Resource {
 	public function register_routes( $routes ) {
 
 		# GET /products
-		$routes[ $this->base ] = array(
-			array( array( $this, 'get_products' ),     WC_API_Server::READABLE ),
-		);
+		$routes[ $this->base ] = [
+			[ [ $this, 'get_products' ],     WC_API_Server::READABLE ],
+		];
 
 		# GET /products/count
-		$routes[ $this->base . '/count' ] = array(
-			array( array( $this, 'get_products_count' ), WC_API_Server::READABLE ),
-		);
+		$routes[ $this->base . '/count' ] = [
+			[ [ $this, 'get_products_count' ], WC_API_Server::READABLE ],
+		];
 
 		# GET /products/<id>
-		$routes[ $this->base . '/(?P<id>\d+)' ] = array(
-			array( array( $this, 'get_product' ),  WC_API_Server::READABLE ),
-		);
+		$routes[ $this->base . '/(?P<id>\d+)' ] = [
+			[ [ $this, 'get_product' ],  WC_API_Server::READABLE ],
+		];
 
 		# GET /products/<id>/reviews
-		$routes[ $this->base . '/(?P<id>\d+)/reviews' ] = array(
-			array( array( $this, 'get_product_reviews' ), WC_API_Server::READABLE ),
-		);
+		$routes[ $this->base . '/(?P<id>\d+)/reviews' ] = [
+			[ [ $this, 'get_product_reviews' ], WC_API_Server::READABLE ],
+		];
 
 		return $routes;
 	}
@@ -67,7 +67,7 @@ class WC_API_Products extends WC_API_Resource {
 	 * @param int $page
 	 * @return array
 	 */
-	public function get_products( $fields = null, $type = null, $filter = array(), $page = 1 ) {
+	public function get_products( $fields = null, $type = null, $filter = [], $page = 1 ) {
 
 		if ( ! empty( $type ) ) {
 			$filter['type'] = $type;
@@ -77,7 +77,7 @@ class WC_API_Products extends WC_API_Resource {
 
 		$query = $this->query_products( $filter );
 
-		$products = array();
+		$products = [];
 
 		foreach ( $query->posts as $product_id ) {
 
@@ -90,7 +90,7 @@ class WC_API_Products extends WC_API_Resource {
 
 		$this->server->add_pagination_headers( $query );
 
-		return array( 'products' => $products );
+		return [ 'products' => $products ];
 	}
 
 	/**
@@ -124,7 +124,7 @@ class WC_API_Products extends WC_API_Resource {
 			$product_data['parent'] = $this->get_product_data( $product->get_parent_id() );
 		}
 
-		return array( 'product' => apply_filters( 'woocommerce_api_product_response', $product_data, $product, $fields, $this->server ) );
+		return [ 'product' => apply_filters( 'woocommerce_api_product_response', $product_data, $product, $fields, $this->server ) ];
 	}
 
 	/**
@@ -137,19 +137,19 @@ class WC_API_Products extends WC_API_Resource {
 	 *
 	 * @return array|WP_Error
 	 */
-	public function get_products_count( $type = null, $filter = array() ) {
+	public function get_products_count( $type = null, $filter = [] ) {
 
 		if ( ! empty( $type ) ) {
 			$filter['type'] = $type;
 		}
 
 		if ( ! current_user_can( 'read_private_products' ) ) {
-			return new WP_Error( 'woocommerce_api_user_cannot_read_products_count', __( 'You do not have permission to read the products count', 'woocommerce' ), array( 'status' => 401 ) );
+			return new WP_Error( 'woocommerce_api_user_cannot_read_products_count', __( 'You do not have permission to read the products count', 'woocommerce' ), [ 'status' => 401 ] );
 		}
 
 		$query = $this->query_products( $filter );
 
-		return array( 'count' => (int) $query->found_posts );
+		return [ 'count' => (int) $query->found_posts ];
 	}
 
 	/**
@@ -204,18 +204,18 @@ class WC_API_Products extends WC_API_Resource {
 			return $id;
 		}
 
-		$args = array(
+		$args = [
 			'post_id' => $id,
 			'approve' => 'approve',
-		);
+		];
 
 		$comments = get_comments( $args );
 
-		$reviews = array();
+		$reviews = [];
 
 		foreach ( $comments as $comment ) {
 
-			$reviews[] = array(
+			$reviews[] = [
 				'id'             => $comment->comment_ID,
 				'created_at'     => $this->server->format_datetime( $comment->comment_date_gmt ),
 				'review'         => $comment->comment_content,
@@ -223,10 +223,10 @@ class WC_API_Products extends WC_API_Resource {
 				'reviewer_name'  => $comment->comment_author,
 				'reviewer_email' => $comment->comment_author_email,
 				'verified'       => wc_review_is_from_verified_owner( $comment->comment_ID ),
-			);
+			];
 		}
 
-		return array( 'product_reviews' => apply_filters( 'woocommerce_api_product_reviews_response', $reviews, $id, $fields, $comments, $this->server ) );
+		return [ 'product_reviews' => apply_filters( 'woocommerce_api_product_reviews_response', $reviews, $id, $fields, $comments, $this->server ) ];
 	}
 
 	/**
@@ -239,24 +239,24 @@ class WC_API_Products extends WC_API_Resource {
 	private function query_products( $args ) {
 
 		// set base query arguments
-		$query_args = array(
+		$query_args = [
 			'fields'      => 'ids',
 			'post_type'   => 'product',
 			'post_status' => 'publish',
-			'meta_query'  => array(),
-		);
+			'meta_query'  => [],
+		];
 
 		if ( ! empty( $args['type'] ) ) {
 
 			$types = explode( ',', $args['type'] );
 
-			$query_args['tax_query'] = array(
-				array(
+			$query_args['tax_query'] = [
+				[
 					'taxonomy' => 'product_type',
 					'field'    => 'slug',
 					'terms'    => $types,
-				),
-			);
+				],
+			];
 
 			unset( $args['type'] );
 		}
@@ -279,10 +279,10 @@ class WC_API_Products extends WC_API_Resource {
 		}
 
 		if ( ! is_a( $product, 'WC_Product' ) ) {
-			return array();
+			return [];
 		}
 
-		return array(
+		return [
 			'title'              => $product->get_name(),
 			'id'                 => $product->get_id(),
 			'created_at'         => $this->server->format_datetime( $product->get_date_created(), false, true ),
@@ -312,12 +312,12 @@ class WC_API_Products extends WC_API_Resource {
 			'catalog_visibility' => $product->get_catalog_visibility(),
 			'on_sale'            => $product->is_on_sale(),
 			'weight'             => $product->get_weight() ? wc_format_decimal( $product->get_weight(), 2 ) : null,
-			'dimensions'         => array(
+			'dimensions'         => [
 				'length' => $product->get_length(),
 				'width'  => $product->get_width(),
 				'height' => $product->get_height(),
 				'unit'   => get_option( 'woocommerce_dimension_unit' ),
-			),
+			],
 			'shipping_required'  => $product->needs_shipping(),
 			'shipping_taxable'   => $product->is_shipping_taxable(),
 			'shipping_class'     => $product->get_shipping_class(),
@@ -341,9 +341,9 @@ class WC_API_Products extends WC_API_Resource {
 			'download_type'      => 'standard',
 			'purchase_note'      => apply_filters( 'the_content', $product->get_purchase_note() ),
 			'total_sales'        => $product->get_total_sales(),
-			'variations'         => array(),
-			'parent'             => array(),
-		);
+			'variations'         => [],
+			'parent'             => [],
+		];
 	}
 
 	/**
@@ -354,7 +354,7 @@ class WC_API_Products extends WC_API_Resource {
 	 * @return array
 	 */
 	private function get_variation_data( $product ) {
-		$variations = array();
+		$variations = [];
 
 		foreach ( $product->get_children() as $child_id ) {
 			$variation = wc_get_product( $child_id );
@@ -363,7 +363,7 @@ class WC_API_Products extends WC_API_Resource {
 				continue;
 			}
 
-			$variations[] = array(
+			$variations[] = [
 				'id'                => $variation->get_id(),
 				'created_at'        => $this->server->format_datetime( $variation->get_date_created(), false, true ),
 				'updated_at'        => $this->server->format_datetime( $variation->get_date_modified(), false, true ),
@@ -384,12 +384,12 @@ class WC_API_Products extends WC_API_Resource {
 				'visible'           => $variation->variation_is_visible(),
 				'on_sale'           => $variation->is_on_sale(),
 				'weight'            => $variation->get_weight() ? wc_format_decimal( $variation->get_weight(), 2 ) : null,
-				'dimensions'        => array(
+				'dimensions'        => [
 					'length' => $variation->get_length(),
 					'width'  => $variation->get_width(),
 					'height' => $variation->get_height(),
 					'unit'   => get_option( 'woocommerce_dimension_unit' ),
-				),
+				],
 				'shipping_class'    => $variation->get_shipping_class(),
 				'shipping_class_id' => ( 0 !== $variation->get_shipping_class_id() ) ? $variation->get_shipping_class_id() : null,
 				'image'             => $this->get_images( $variation ),
@@ -397,7 +397,7 @@ class WC_API_Products extends WC_API_Resource {
 				'downloads'         => $this->get_downloads( $variation ),
 				'download_limit'    => (int) $product->get_download_limit(),
 				'download_expiry'   => (int) $product->get_download_expiry(),
-			);
+			];
 		}
 
 		return $variations;
@@ -411,7 +411,7 @@ class WC_API_Products extends WC_API_Resource {
 	 * @return array
 	 */
 	private function get_images( $product ) {
-		$images        = $attachment_ids = array();
+		$images        = $attachment_ids = [];
 		$product_image = $product->get_image_id();
 
 		// Add featured image.
@@ -437,7 +437,7 @@ class WC_API_Products extends WC_API_Resource {
 				continue;
 			}
 
-			$images[] = array(
+			$images[] = [
 				'id'         => (int) $attachment_id,
 				'created_at' => $this->server->format_datetime( $attachment_post->post_date_gmt ),
 				'updated_at' => $this->server->format_datetime( $attachment_post->post_modified_gmt ),
@@ -445,13 +445,13 @@ class WC_API_Products extends WC_API_Resource {
 				'title'      => get_the_title( $attachment_id ),
 				'alt'        => get_post_meta( $attachment_id, '_wp_attachment_image_alt', true ),
 				'position'   => $position,
-			);
+			];
 		}
 
 		// Set a placeholder image if the product has no images set.
 		if ( empty( $images ) ) {
 
-			$images[] = array(
+			$images[] = [
 				'id'         => 0,
 				'created_at' => $this->server->format_datetime( time() ), // default to now
 				'updated_at' => $this->server->format_datetime( time() ),
@@ -459,7 +459,7 @@ class WC_API_Products extends WC_API_Resource {
 				'title'      => __( 'Placeholder', 'woocommerce' ),
 				'alt'        => __( 'Placeholder', 'woocommerce' ),
 				'position'   => 0,
-			);
+			];
 		}
 
 		return $images;
@@ -474,12 +474,12 @@ class WC_API_Products extends WC_API_Resource {
 	 */
 	protected function get_attribute_options( $product_id, $attribute ) {
 		if ( isset( $attribute['is_taxonomy'] ) && $attribute['is_taxonomy'] ) {
-			return wc_get_product_terms( $product_id, $attribute['name'], array( 'fields' => 'names' ) );
+			return wc_get_product_terms( $product_id, $attribute['name'], [ 'fields' => 'names' ] );
 		} elseif ( isset( $attribute['value'] ) ) {
 			return array_map( 'trim', explode( '|', $attribute['value'] ) );
 		}
 
-		return array();
+		return [];
 	}
 
 	/**
@@ -491,7 +491,7 @@ class WC_API_Products extends WC_API_Resource {
 	 */
 	private function get_attributes( $product ) {
 
-		$attributes = array();
+		$attributes = [];
 
 		if ( $product->is_type( 'variation' ) ) {
 
@@ -499,21 +499,21 @@ class WC_API_Products extends WC_API_Resource {
 			foreach ( $product->get_variation_attributes() as $attribute_name => $attribute ) {
 
 				// taxonomy-based attributes are prefixed with `pa_`, otherwise simply `attribute_`
-				$attributes[] = array(
+				$attributes[] = [
 					'name'   => ucwords( str_replace( 'attribute_', '', wc_attribute_taxonomy_slug( $attribute_name ) ) ),
 					'option' => $attribute,
-				);
+				];
 			}
 		} else {
 
 			foreach ( $product->get_attributes() as $attribute ) {
-				$attributes[] = array(
+				$attributes[] = [
 					'name'      => ucwords( wc_attribute_taxonomy_slug( $attribute['name'] ) ),
 					'position'  => $attribute['position'],
 					'visible'   => (bool) $attribute['is_visible'],
 					'variation' => (bool) $attribute['is_variation'],
 					'options'   => $this->get_attribute_options( $product->get_id(), $attribute ),
-				);
+				];
 			}
 		}
 
@@ -529,17 +529,17 @@ class WC_API_Products extends WC_API_Resource {
 	 */
 	private function get_downloads( $product ) {
 
-		$downloads = array();
+		$downloads = [];
 
 		if ( $product->is_downloadable() ) {
 
 			foreach ( $product->get_downloads() as $file_id => $file ) {
 
-				$downloads[] = array(
+				$downloads[] = [
 					'id'   => $file_id, // do not cast as int as this is a hash
 					'name' => $file['name'],
 					'file' => $file['file'],
-				);
+				];
 			}
 		}
 

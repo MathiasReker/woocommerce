@@ -27,9 +27,9 @@ if ( ! class_exists( 'WC_Admin_Dashboard', false ) ) :
 			if ( $this->should_display_widget() ) {
 				// If on network admin, only load the widget that works in that context and skip the rest.
 				if ( is_multisite() && is_network_admin() ) {
-					add_action( 'wp_network_dashboard_setup', array( $this, 'register_network_order_widget' ) );
+					add_action( 'wp_network_dashboard_setup', [ $this, 'register_network_order_widget' ] );
 				} else {
-					add_action( 'wp_dashboard_setup', array( $this, 'init' ) );
+					add_action( 'wp_dashboard_setup', [ $this, 'init' ] );
 				}
 			}
 		}
@@ -40,9 +40,9 @@ if ( ! class_exists( 'WC_Admin_Dashboard', false ) ) :
 		public function init() {
 			// Reviews Widget.
 			if ( current_user_can( 'publish_shop_orders' ) && post_type_supports( 'product', 'comments' ) ) {
-				wp_add_dashboard_widget( 'woocommerce_dashboard_recent_reviews', __( 'WooCommerce Recent Reviews', 'woocommerce' ), array( $this, 'recent_reviews' ) );
+				wp_add_dashboard_widget( 'woocommerce_dashboard_recent_reviews', __( 'WooCommerce Recent Reviews', 'woocommerce' ), [ $this, 'recent_reviews' ] );
 			}
-			wp_add_dashboard_widget( 'woocommerce_dashboard_status', __( 'WooCommerce Status', 'woocommerce' ), array( $this, 'status_widget' ) );
+			wp_add_dashboard_widget( 'woocommerce_dashboard_status', __( 'WooCommerce Status', 'woocommerce' ), [ $this, 'status_widget' ] );
 
 			// Network Order Widget.
 			if ( is_multisite() && is_main_site() ) {
@@ -54,7 +54,7 @@ if ( ! class_exists( 'WC_Admin_Dashboard', false ) ) :
 		 * Register the network order dashboard widget.
 		 */
 		public function register_network_order_widget() {
-			wp_add_dashboard_widget( 'woocommerce_network_orders', __( 'WooCommerce Network Orders', 'woocommerce' ), array( $this, 'network_orders' ) );
+			wp_add_dashboard_widget( 'woocommerce_network_orders', __( 'WooCommerce Network Orders', 'woocommerce' ), [ $this, 'network_orders' ] );
 		}
 
 		/**
@@ -80,14 +80,14 @@ if ( ! class_exists( 'WC_Admin_Dashboard', false ) ) :
 		private function get_top_seller() {
 			global $wpdb;
 
-			$query            = array();
+			$query            = [];
 			$query['fields']  = "SELECT SUM( order_item_meta.meta_value ) as qty, order_item_meta_2.meta_value as product_id
 			FROM {$wpdb->posts} as posts";
 			$query['join']    = "INNER JOIN {$wpdb->prefix}woocommerce_order_items AS order_items ON posts.ID = order_id ";
 			$query['join']   .= "INNER JOIN {$wpdb->prefix}woocommerce_order_itemmeta AS order_item_meta ON order_items.order_item_id = order_item_meta.order_item_id ";
 			$query['join']   .= "INNER JOIN {$wpdb->prefix}woocommerce_order_itemmeta AS order_item_meta_2 ON order_items.order_item_id = order_item_meta_2.order_item_id ";
 			$query['where']   = "WHERE posts.post_type IN ( '" . implode( "','", wc_get_order_types( 'order-count' ) ) . "' ) ";
-			$query['where']  .= "AND posts.post_status IN ( 'wc-" . implode( "','wc-", apply_filters( 'woocommerce_reports_order_statuses', array( 'completed', 'processing', 'on-hold' ) ) ) . "' ) ";
+			$query['where']  .= "AND posts.post_status IN ( 'wc-" . implode( "','wc-", apply_filters( 'woocommerce_reports_order_statuses', [ 'completed', 'processing', 'on-hold' ] ) ) . "' ) ";
 			$query['where']  .= "AND order_item_meta.meta_key = '_qty' ";
 			$query['where']  .= "AND order_item_meta_2.meta_key = '_product_id' ";
 			$query['where']  .= "AND posts.post_date >= '" . gmdate( 'Y-m-01', current_time( 'timestamp' ) ) . "' ";
@@ -123,7 +123,7 @@ if ( ! class_exists( 'WC_Admin_Dashboard', false ) ) :
 			$suffix  = Constants::is_true( 'SCRIPT_DEBUG' ) ? '' : '.min';
 			$version = Constants::get_constant( 'WC_VERSION' );
 
-			wp_enqueue_script( 'wc-status-widget', WC()->plugin_url() . '/assets/js/admin/wc-status-widget' . $suffix . '.js', array( 'jquery' ), $version, true );
+			wp_enqueue_script( 'wc-status-widget', WC()->plugin_url() . '/assets/js/admin/wc-status-widget' . $suffix . '.js', [ 'jquery' ], $version, true );
 
 			include_once dirname( __FILE__ ) . '/reports/class-wc-admin-report.php';
 
@@ -391,9 +391,9 @@ if ( ! class_exists( 'WC_Admin_Dashboard', false ) ) :
 			$suffix  = Constants::is_true( 'SCRIPT_DEBUG' ) ? '' : '.min';
 			$version = Constants::get_constant( 'WC_VERSION' );
 
-			wp_enqueue_style( 'wc-network-orders', WC()->plugin_url() . '/assets/css/network-order-widget.css', array(), $version );
+			wp_enqueue_style( 'wc-network-orders', WC()->plugin_url() . '/assets/css/network-order-widget.css', [], $version );
 
-			wp_enqueue_script( 'wc-network-orders', WC()->plugin_url() . '/assets/js/admin/network-orders' . $suffix . '.js', array( 'jquery', 'underscore' ), $version, true );
+			wp_enqueue_script( 'wc-network-orders', WC()->plugin_url() . '/assets/js/admin/network-orders' . $suffix . '.js', [ 'jquery', 'underscore' ], $version, true );
 
 			$user     = wp_get_current_user();
 			$blogs    = get_blogs_of_user( $user->ID );
@@ -402,11 +402,11 @@ if ( ! class_exists( 'WC_Admin_Dashboard', false ) ) :
 			wp_localize_script(
 				'wc-network-orders',
 				'woocommerce_network_orders',
-				array(
+				[
 					'nonce'          => wp_create_nonce( 'wp_rest' ),
 					'sites'          => array_values( $blog_ids ),
 					'order_endpoint' => get_rest_url( null, 'wc/v3/orders/network' ),
-				)
+				]
 			);
 			?>
 			<div class="post-type-shop_order">
@@ -466,11 +466,11 @@ if ( ! class_exists( 'WC_Admin_Dashboard', false ) ) :
 			$start_date = gmdate( 'Y-m-01 00:00:00', current_time( 'timestamp' ) );
 			$end_date   = gmdate( 'Y-m-d 23:59:59', current_time( 'timestamp' ) );
 			$request->set_query_params(
-				array(
+				[
 					'before' => $end_date,
 					'after'  => $start_date,
 					'stats'  => 'revenue/total_sales,revenue/net_revenue,orders/orders_count,products/items_sold,variations/items_sold',
-				)
+				]
 			);
 			$response = rest_do_request( $request );
 
@@ -481,9 +481,9 @@ if ( ! class_exists( 'WC_Admin_Dashboard', false ) ) :
 			if ( 200 !== $response->get_status() ) {
 				return new \WP_Error( 'woocommerce_analytics_performance_indicators_result_failed', __( 'Sorry, fetching performance indicators failed.', 'woocommerce' ) );
 			}
-			$report_keys      = array(
+			$report_keys      = [
 				'net_revenue' => 'net_sales',
-			);
+			];
 			$performance_data = new stdClass();
 			foreach ( $response->get_data() as $indicator ) {
 				if ( isset( $indicator['chart'] ) && isset( $indicator['value'] ) ) {
@@ -513,20 +513,20 @@ if ( ! class_exists( 'WC_Admin_Dashboard', false ) ) :
 			$start_date     = gmdate( 'Y-m-d 00:00:00', current_time( 'timestamp' ) - ( ( $days - 1 ) * DAY_IN_SECONDS ) );
 			$end_date       = gmdate( 'Y-m-d 23:59:59', current_time( 'timestamp' ) );
 			$meta_key       = 'net_revenue';
-			$params         = array(
+			$params         = [
 				'order'    => 'asc',
 				'interval' => 'day',
 				'per_page' => 100,
 				'before'   => $end_date,
 				'after'    => $start_date,
-			);
+			];
 			if ( $id ) {
 				$sales_endpoint     = '/wc-analytics/reports/products/stats';
 				$meta_key           = ( 'sales' === $type ) ? 'net_revenue' : 'items_sold';
 				$params['products'] = $id;
 			}
 			$request          = new \WP_REST_Request( 'GET', $sales_endpoint );
-			$params['fields'] = array( $meta_key );
+			$params['fields'] = [ $meta_key ];
 			$request->set_query_params( $params );
 
 			$response = rest_do_request( $request );
@@ -538,11 +538,11 @@ if ( ! class_exists( 'WC_Admin_Dashboard', false ) ) :
 			$resp_data = $response->get_data();
 			$data      = $resp_data['intervals'];
 
-			$sparkline_data = array();
+			$sparkline_data = [];
 			$total          = 0;
 			foreach ( $data as $d ) {
 				$total += $d['subtotals']->$meta_key;
-				array_push( $sparkline_data, array( strval( strtotime( $d['interval'] ) * 1000 ), $d['subtotals']->$meta_key ) );
+				array_push( $sparkline_data, [ strval( strtotime( $d['interval'] ) * 1000 ), $d['subtotals']->$meta_key ] );
 			}
 
 			if ( 'sales' === $type ) {

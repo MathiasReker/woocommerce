@@ -42,14 +42,14 @@ class Order extends \WC_Order {
 	 */
 	public function get_data_without_line_items() {
 		return array_merge(
-			array(
+			[
 				'id' => $this->get_id(),
-			),
+			],
 			$this->data,
-			array(
+			[
 				'number'    => $this->get_order_number(),
 				'meta_data' => $this->get_meta_data(),
-			)
+			]
 		);
 	}
 
@@ -60,13 +60,13 @@ class Order extends \WC_Order {
 	 * @return array|bool Array of line items on success, boolean false on failure.
 	 */
 	public function get_line_item_data( $type ) {
-		$type_to_items = array(
+		$type_to_items = [
 			'line_items'     => 'line_item',
 			'tax_lines'      => 'tax',
 			'shipping_lines' => 'shipping',
 			'fee_lines'      => 'fee',
 			'coupon_lines'   => 'coupon',
-		);
+		];
 
 		if ( isset( $type_to_items[ $type ] ) ) {
 			return $this->get_items( $type_to_items[ $type ] );
@@ -79,7 +79,7 @@ class Order extends \WC_Order {
 	 * Add filter(s) required to hook this class to substitute WC_Order.
 	 */
 	public static function add_filters() {
-		add_filter( 'woocommerce_order_class', array( __CLASS__, 'order_class_name' ), 10, 3 );
+		add_filter( 'woocommerce_order_class', [ __CLASS__, 'order_class_name' ], 10, 3 );
 	}
 
 	/**

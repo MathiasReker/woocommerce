@@ -22,46 +22,46 @@ class WC_Comments {
 	 */
 	public static function init() {
 		// Rating posts.
-		add_filter( 'comments_open', array( __CLASS__, 'comments_open' ), 10, 2 );
-		add_filter( 'preprocess_comment', array( __CLASS__, 'check_comment_rating' ), 0 );
-		add_action( 'comment_post', array( __CLASS__, 'add_comment_rating' ), 1 );
-		add_action( 'comment_moderation_recipients', array( __CLASS__, 'comment_moderation_recipients' ), 10, 2 );
+		add_filter( 'comments_open', [ __CLASS__, 'comments_open' ], 10, 2 );
+		add_filter( 'preprocess_comment', [ __CLASS__, 'check_comment_rating' ], 0 );
+		add_action( 'comment_post', [ __CLASS__, 'add_comment_rating' ], 1 );
+		add_action( 'comment_moderation_recipients', [ __CLASS__, 'comment_moderation_recipients' ], 10, 2 );
 
 		// Clear transients.
-		add_action( 'wp_update_comment_count', array( __CLASS__, 'clear_transients' ) );
+		add_action( 'wp_update_comment_count', [ __CLASS__, 'clear_transients' ] );
 
 		// Secure order notes.
-		add_filter( 'comments_clauses', array( __CLASS__, 'exclude_order_comments' ), 10, 1 );
-		add_filter( 'comment_feed_where', array( __CLASS__, 'exclude_order_comments_from_feed_where' ) );
+		add_filter( 'comments_clauses', [ __CLASS__, 'exclude_order_comments' ], 10, 1 );
+		add_filter( 'comment_feed_where', [ __CLASS__, 'exclude_order_comments_from_feed_where' ] );
 
 		// Secure webhook comments.
-		add_filter( 'comments_clauses', array( __CLASS__, 'exclude_webhook_comments' ), 10, 1 );
-		add_filter( 'comment_feed_where', array( __CLASS__, 'exclude_webhook_comments_from_feed_where' ) );
+		add_filter( 'comments_clauses', [ __CLASS__, 'exclude_webhook_comments' ], 10, 1 );
+		add_filter( 'comment_feed_where', [ __CLASS__, 'exclude_webhook_comments_from_feed_where' ] );
 
 		// Exclude product reviews.
-		add_filter( 'comments_clauses', array( ReviewsUtil::class, 'comments_clauses_without_product_reviews' ), 10, 1 );
+		add_filter( 'comments_clauses', [ ReviewsUtil::class, 'comments_clauses_without_product_reviews' ], 10, 1 );
 
 		// Count comments.
-		add_filter( 'wp_count_comments', array( __CLASS__, 'wp_count_comments' ), 10, 2 );
+		add_filter( 'wp_count_comments', [ __CLASS__, 'wp_count_comments' ], 10, 2 );
 
 		// Delete comments count cache whenever there is a new comment or a comment status changes.
-		add_action( 'wp_insert_comment', array( __CLASS__, 'delete_comments_count_cache' ) );
-		add_action( 'wp_set_comment_status', array( __CLASS__, 'delete_comments_count_cache' ) );
+		add_action( 'wp_insert_comment', [ __CLASS__, 'delete_comments_count_cache' ] );
+		add_action( 'wp_set_comment_status', [ __CLASS__, 'delete_comments_count_cache' ] );
 
 		// Support avatars for `review` comment type.
-		add_filter( 'get_avatar_comment_types', array( __CLASS__, 'add_avatar_for_review_comment_type' ) );
+		add_filter( 'get_avatar_comment_types', [ __CLASS__, 'add_avatar_for_review_comment_type' ] );
 
 		// Add Product Reviews filter for `review` comment type.
-		add_filter( 'admin_comment_types_dropdown', array( __CLASS__, 'add_review_comment_filter' ) );
+		add_filter( 'admin_comment_types_dropdown', [ __CLASS__, 'add_review_comment_filter' ] );
 
 		// Review of verified purchase.
-		add_action( 'comment_post', array( __CLASS__, 'add_comment_purchase_verification' ) );
+		add_action( 'comment_post', [ __CLASS__, 'add_comment_purchase_verification' ] );
 
 		// Set comment type.
-		add_action( 'preprocess_comment', array( __CLASS__, 'update_comment_type' ), 1 );
+		add_action( 'preprocess_comment', [ __CLASS__, 'update_comment_type' ], 1 );
 
 		// Validate product reviews if requires verified owners.
-		add_action( 'pre_comment_on_post', array( __CLASS__, 'validate_product_review_verified_owners' ) );
+		add_action( 'pre_comment_on_post', [ __CLASS__, 'validate_product_review_verified_owners' ] );
 	}
 
 	/**
@@ -194,7 +194,7 @@ class WC_Comments {
 		$comment = get_comment( $comment_id );
 
 		if ( $comment && 'product' === get_post_type( $comment->comment_post_ID ) ) {
-			$emails = array( get_option( 'admin_email' ) );
+			$emails = [ get_option( 'admin_email' ) ];
 		}
 
 		return $emails;
@@ -240,10 +240,10 @@ class WC_Comments {
 			$stats = get_transient( 'wc_count_comments' );
 
 			if ( ! $stats ) {
-				$stats = array(
+				$stats = [
 					'total_comments' => 0,
 					'all'            => 0,
-				);
+				];
 
 				$count = $wpdb->get_results(
 					"
@@ -256,20 +256,20 @@ class WC_Comments {
 					ARRAY_A
 				);
 
-				$approved = array(
+				$approved = [
 					'0'            => 'moderated',
 					'1'            => 'approved',
 					'spam'         => 'spam',
 					'trash'        => 'trash',
 					'post-trashed' => 'post-trashed',
-				);
+				];
 
 				foreach ( (array) $count as $row ) {
 					// Don't count post-trashed toward totals.
-					if ( ! in_array( $row['comment_approved'], array( 'post-trashed', 'trash', 'spam' ), true ) ) {
+					if ( ! in_array( $row['comment_approved'], [ 'post-trashed', 'trash', 'spam' ], true ) ) {
 						$stats['all']            += $row['num_comments'];
 						$stats['total_comments'] += $row['num_comments'];
-					} elseif ( ! in_array( $row['comment_approved'], array( 'post-trashed', 'trash' ), true ) ) {
+					} elseif ( ! in_array( $row['comment_approved'], [ 'post-trashed', 'trash' ], true ) ) {
 						$stats['total_comments'] += $row['num_comments'];
 					}
 					if ( isset( $approved[ $row['comment_approved'] ] ) ) {
@@ -299,7 +299,7 @@ class WC_Comments {
 	 * @return array
 	 */
 	public static function add_avatar_for_review_comment_type( $comment_types ) {
-		return array_merge( $comment_types, array( 'review' ) );
+		return array_merge( $comment_types, [ 'review' ] );
 	}
 
 	/**
@@ -379,7 +379,7 @@ class WC_Comments {
 		global $wpdb;
 
 		if ( empty( $product_ids ) ) {
-			return array();
+			return [];
 		}
 
 		$product_id_string_placeholder = substr( str_repeat( ',%s', count( $product_ids ) ), 1 );
@@ -417,7 +417,7 @@ class WC_Comments {
 	 * @return int
 	 */
 	public static function get_review_count_for_product( &$product ) {
-		$counts = self::get_review_counts_for_product_ids( array( $product->get_id() ) );
+		$counts = self::get_review_counts_for_product_ids( [ $product->get_id() ] );
 
 		return $counts[ $product->get_id() ];
 	}
@@ -432,7 +432,7 @@ class WC_Comments {
 	public static function get_rating_counts_for_product( &$product ) {
 		global $wpdb;
 
-		$counts     = array();
+		$counts     = [];
 		$raw_counts = $wpdb->get_results(
 			$wpdb->prepare(
 				"
@@ -494,9 +494,9 @@ class WC_Comments {
 		wp_die(
 			esc_html__( 'Only logged in customers who have purchased this product may leave a review.', 'woocommerce' ),
 			esc_html__( 'Reviews can only be left by "verified owners"', 'woocommerce' ),
-			array(
+			[
 				'code' => 403,
-			)
+			]
 		);
 	}
 

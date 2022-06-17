@@ -20,9 +20,9 @@ class WC_Tests_REST_System_Status_V2 extends WC_REST_Unit_Test_Case {
 		parent::setUp();
 		$this->endpoint = new WC_REST_System_Status_Controller();
 		$this->user     = $this->factory->user->create(
-			array(
+			[
 				'role' => 'administrator',
-			)
+			]
 		);
 	}
 
@@ -113,10 +113,10 @@ class WC_Tests_REST_System_Status_V2 extends WC_REST_Unit_Test_Case {
 	public function test_get_system_status_info_active_plugins() {
 		wp_set_current_user( $this->user );
 
-		$actual_plugins = array( 'hello.php' );
+		$actual_plugins = [ 'hello.php' ];
 		update_option( 'active_plugins', $actual_plugins );
 		$response = $this->server->dispatch( new WP_REST_Request( 'GET', '/wc/v2/system_status' ) );
-		update_option( 'active_plugins', array() );
+		update_option( 'active_plugins', [] );
 
 		$data    = $response->get_data();
 		$plugins = (array) $data['active_plugins'];
@@ -150,8 +150,8 @@ class WC_Tests_REST_System_Status_V2 extends WC_REST_Unit_Test_Case {
 	public function test_get_system_status_info_settings() {
 		wp_set_current_user( $this->user );
 
-		$term_response = array();
-		$terms         = get_terms( 'product_type', array( 'hide_empty' => 0 ) );
+		$term_response = [];
+		$terms         = get_terms( 'product_type', [ 'hide_empty' => 0 ] );
 		foreach ( $terms as $term ) {
 			$term_response[ $term->slug ] = strtolower( $term->name );
 		}
@@ -233,20 +233,20 @@ class WC_Tests_REST_System_Status_V2 extends WC_REST_Unit_Test_Case {
 		$this->assertEquals( 200, $response->get_status() );
 		$this->assertEquals( count( $raw_tools ), count( $data ) );
 		$this->assertContains(
-			array(
+			[
 				'id'          => 'regenerate_thumbnails',
 				'name'        => 'Regenerate shop thumbnails',
 				'action'      => 'Regenerate',
 				'description' => 'This will regenerate all shop thumbnails to match your theme and/or image settings.',
-				'_links'      => array(
-					'item' => array(
-						array(
+				'_links'      => [
+					'item' => [
+						[
 							'href'       => rest_url( '/wc/v2/system_status/tools/regenerate_thumbnails' ),
 							'embeddable' => true,
-						),
-					),
-				),
-			),
+						],
+					],
+				],
+			],
 			$data
 		);
 	}

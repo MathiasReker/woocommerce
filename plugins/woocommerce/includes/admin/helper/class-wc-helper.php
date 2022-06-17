@@ -41,10 +41,10 @@ class WC_Helper {
 	public static function load() {
 		self::includes();
 
-		add_action( 'current_screen', array( __CLASS__, 'current_screen' ) );
-		add_action( 'woocommerce_helper_output', array( __CLASS__, 'render_helper_output' ) );
-		add_action( 'admin_enqueue_scripts', array( __CLASS__, 'admin_enqueue_scripts' ) );
-		add_action( 'admin_notices', array( __CLASS__, 'admin_notices' ) );
+		add_action( 'current_screen', [ __CLASS__, 'current_screen' ] );
+		add_action( 'woocommerce_helper_output', [ __CLASS__, 'render_helper_output' ] );
+		add_action( 'admin_enqueue_scripts', [ __CLASS__, 'admin_enqueue_scripts' ] );
+		add_action( 'admin_notices', [ __CLASS__, 'admin_notices' ] );
 
 		do_action( 'woocommerce_helper_loaded' );
 	}
@@ -73,12 +73,12 @@ class WC_Helper {
 		// No active connection.
 		if ( empty( $auth['access_token'] ) ) {
 			$connect_url = add_query_arg(
-				array(
+				[
 					'page'              => 'wc-addons',
 					'section'           => 'helper',
 					'wc-helper-connect' => 1,
 					'wc-helper-nonce'   => wp_create_nonce( 'connect' ),
-				),
+				],
 				admin_url( 'admin.php' )
 			);
 
@@ -86,24 +86,24 @@ class WC_Helper {
 			return;
 		}
 		$disconnect_url = add_query_arg(
-			array(
+			[
 				'page'                 => 'wc-addons',
 				'section'              => 'helper',
 				'wc-helper-disconnect' => 1,
 				'wc-helper-nonce'      => wp_create_nonce( 'disconnect' ),
-			),
+			],
 			admin_url( 'admin.php' )
 		);
 
 		$current_filter = self::get_current_filter();
 		$refresh_url    = add_query_arg(
-			array(
+			[
 				'page'              => 'wc-addons',
 				'section'           => 'helper',
 				'filter'            => $current_filter,
 				'wc-helper-refresh' => 1,
 				'wc-helper-nonce'   => wp_create_nonce( 'refresh' ),
-			),
+			],
 			admin_url( 'admin.php' )
 		);
 
@@ -120,7 +120,7 @@ class WC_Helper {
 			$subscription['active'] = in_array( $site_id, $subscription['connections'] );
 
 			$subscription['activate_url'] = add_query_arg(
-				array(
+				[
 					'page'                  => 'wc-addons',
 					'section'               => 'helper',
 					'filter'                => $current_filter,
@@ -128,12 +128,12 @@ class WC_Helper {
 					'wc-helper-product-key' => $subscription['product_key'],
 					'wc-helper-product-id'  => $subscription['product_id'],
 					'wc-helper-nonce'       => wp_create_nonce( 'activate:' . $subscription['product_key'] ),
-				),
+				],
 				admin_url( 'admin.php' )
 			);
 
 			$subscription['deactivate_url'] = add_query_arg(
-				array(
+				[
 					'page'                  => 'wc-addons',
 					'section'               => 'helper',
 					'filter'                => $current_filter,
@@ -141,19 +141,19 @@ class WC_Helper {
 					'wc-helper-product-key' => $subscription['product_key'],
 					'wc-helper-product-id'  => $subscription['product_id'],
 					'wc-helper-nonce'       => wp_create_nonce( 'deactivate:' . $subscription['product_key'] ),
-				),
+				],
 				admin_url( 'admin.php' )
 			);
 
-			$subscription['local'] = array(
+			$subscription['local'] = [
 				'installed' => false,
 				'active'    => false,
 				'version'   => null,
-			);
+			];
 
 			$subscription['update_url'] = admin_url( 'update-core.php' );
 
-			$local = wp_list_filter( array_merge( $woo_plugins, $woo_themes ), array( '_product_id' => $subscription['product_id'] ) );
+			$local = wp_list_filter( array_merge( $woo_plugins, $woo_themes ), [ '_product_id' => $subscription['product_id'] ] );
 
 			if ( ! empty( $local ) ) {
 				$local                              = array_shift( $local );
@@ -171,7 +171,7 @@ class WC_Helper {
 					$subscription['update_url'] = wp_nonce_url( self_admin_url( 'update.php?action=upgrade-plugin&plugin=' ) . $local['_filename'], 'upgrade-plugin_' . $local['_filename'] );
 
 				} elseif ( 'theme' == $local['_type'] ) {
-					if ( in_array( $local['_stylesheet'], array( get_stylesheet(), get_template() ) ) ) {
+					if ( in_array( $local['_stylesheet'], [ get_stylesheet(), get_template() ] ) ) {
 						$subscription['local']['active'] = true;
 					}
 
@@ -191,17 +191,17 @@ class WC_Helper {
 				$subscription['download_url'] = $updates[ $subscription['product_id'] ]['package'];
 			}
 
-			$subscription['actions'] = array();
+			$subscription['actions'] = [];
 
 			if ( $subscription['has_update'] && ! $subscription['expired'] ) {
-				$action = array(
+				$action = [
 					/* translators: %s: version number */
 					'message'      => sprintf( __( 'Version %s is <strong>available</strong>.', 'woocommerce' ), esc_html( $updates[ $subscription['product_id'] ]['version'] ) ),
 					'button_label' => __( 'Update', 'woocommerce' ),
 					'button_url'   => $subscription['update_url'],
 					'status'       => 'update-available',
 					'icon'         => 'dashicons-update',
-				);
+				];
 
 				// Subscription is not active on this site.
 				if ( ! $subscription['active'] ) {
@@ -214,12 +214,12 @@ class WC_Helper {
 			}
 
 			if ( $subscription['has_update'] && $subscription['expired'] ) {
-				$action = array(
+				$action = [
 					/* translators: %s: version number */
 					'message' => sprintf( __( 'Version %s is <strong>available</strong>.', 'woocommerce' ), esc_html( $updates[ $subscription['product_id'] ]['version'] ) ),
 					'status'  => 'expired',
 					'icon'    => 'dashicons-info',
-				);
+				];
 
 				$action['message']     .= ' ' . __( 'To enable this update you need to <strong>purchase</strong> a new subscription.', 'woocommerce' );
 				$action['button_label'] = __( 'Purchase', 'woocommerce' );
@@ -230,15 +230,15 @@ class WC_Helper {
 
 				$subscription['actions'][] = $action;
 			} elseif ( $subscription['expired'] && ! empty( $subscription['master_user_email'] ) ) {
-				$action = array(
+				$action = [
 					'message' => sprintf( __( 'This subscription has expired. Contact the owner to <strong>renew</strong> the subscription to receive updates and support.', 'woocommerce' ) ),
 					'status'  => 'expired',
 					'icon'    => 'dashicons-info',
-				);
+				];
 
 				$subscription['actions'][] = $action;
 			} elseif ( $subscription['expired'] ) {
-				$action = array(
+				$action = [
 					'message'      => sprintf( __( 'This subscription has expired. Please <strong>renew</strong> to receive updates and support.', 'woocommerce' ) ),
 					'button_label' => __( 'Renew', 'woocommerce' ),
 					'button_url'   => self::add_utm_params_to_url_for_subscription_link(
@@ -247,13 +247,13 @@ class WC_Helper {
 					),
 					'status'       => 'expired',
 					'icon'         => 'dashicons-info',
-				);
+				];
 
 				$subscription['actions'][] = $action;
 			}
 
 			if ( $subscription['expiring'] && ! $subscription['autorenew'] ) {
-				$action = array(
+				$action = [
 					'message'      => __( 'Subscription is <strong>expiring</strong> soon.', 'woocommerce' ),
 					'button_label' => __( 'Enable auto-renew', 'woocommerce' ),
 					'button_url'   => self::add_utm_params_to_url_for_subscription_link(
@@ -262,12 +262,12 @@ class WC_Helper {
 					),
 					'status'       => 'expired',
 					'icon'         => 'dashicons-info',
-				);
+				];
 
 				$subscription['download_primary'] = false;
 				$subscription['actions'][]        = $action;
 			} elseif ( $subscription['expiring'] ) {
-				$action = array(
+				$action = [
 					'message'      => sprintf( __( 'This subscription is expiring soon. Please <strong>renew</strong> to continue receiving updates and support.', 'woocommerce' ) ),
 					'button_label' => __( 'Renew', 'woocommerce' ),
 					'button_url'   => self::add_utm_params_to_url_for_subscription_link(
@@ -276,7 +276,7 @@ class WC_Helper {
 					),
 					'status'       => 'expired',
 					'icon'         => 'dashicons-info',
-				);
+				];
 
 				$subscription['download_primary'] = false;
 				$subscription['actions'][]        = $action;
@@ -295,7 +295,7 @@ class WC_Helper {
 		unset( $subscription );
 
 		// Installed products without a subscription.
-		$no_subscriptions = array();
+		$no_subscriptions = [];
 		foreach ( array_merge( $woo_plugins, $woo_themes ) as $filename => $data ) {
 			if ( in_array( $data['_product_id'], $subscriptions_product_ids ) ) {
 				continue;
@@ -314,10 +314,10 @@ class WC_Helper {
 				}
 			}
 
-			$data['_actions'] = array();
+			$data['_actions'] = [];
 
 			if ( $data['_has_update'] ) {
-				$action = array(
+				$action = [
 					/* translators: %s: version number */
 					'message'      => sprintf( __( 'Version %s is <strong>available</strong>. To enable this update you need to <strong>purchase</strong> a new subscription.', 'woocommerce' ), esc_html( $updates[ $data['_product_id'] ]['version'] ) ),
 					'button_label' => __( 'Purchase', 'woocommerce' ),
@@ -327,11 +327,11 @@ class WC_Helper {
 					),
 					'status'       => 'expired',
 					'icon'         => 'dashicons-info',
-				);
+				];
 
 				$data['_actions'][] = $action;
 			} else {
-				$action = array(
+				$action = [
 					/* translators: 1: subscriptions docs 2: subscriptions docs */
 					'message'      => sprintf( __( 'To receive updates and support for this extension, you need to <strong>purchase</strong> a new subscription or consolidate your extensions to one connected account by <strong><a href="%1$s" title="Sharing Docs">sharing</a> or <a href="%2$s" title="Transferring Docs">transferring</a></strong> this extension to this connected account.', 'woocommerce' ), 'https://docs.woocommerce.com/document/managing-woocommerce-com-subscriptions/#section-10', 'https://docs.woocommerce.com/document/managing-woocommerce-com-subscriptions/#section-5' ),
 					'button_label' => __( 'Purchase', 'woocommerce' ),
@@ -341,7 +341,7 @@ class WC_Helper {
 					),
 					'status'       => 'expired',
 					'icon'         => 'dashicons-info',
-				);
+				];
 
 				$data['_actions'][] = $action;
 			}
@@ -356,8 +356,8 @@ class WC_Helper {
 		}
 
 		// Sort alphabetically.
-		uasort( $subscriptions, array( __CLASS__, '_sort_by_product_name' ) );
-		uasort( $no_subscriptions, array( __CLASS__, '_sort_by_name' ) );
+		uasort( $subscriptions, [ __CLASS__, '_sort_by_product_name' ] );
+		uasort( $no_subscriptions, [ __CLASS__, '_sort_by_name' ] );
 
 		// Filters.
 		self::get_filters_counts( $subscriptions ); // Warm it up.
@@ -396,7 +396,7 @@ class WC_Helper {
 	 * @return array An array of filter keys and labels.
 	 */
 	public static function get_filters() {
-		$filters = array(
+		$filters = [
 			'all'              => __( 'All', 'woocommerce' ),
 			'active'           => __( 'Active', 'woocommerce' ),
 			'inactive'         => __( 'Inactive', 'woocommerce' ),
@@ -405,7 +405,7 @@ class WC_Helper {
 			'expiring'         => __( 'Expiring Soon', 'woocommerce' ),
 			'expired'          => __( 'Expired', 'woocommerce' ),
 			'download'         => __( 'Download', 'woocommerce' ),
-		);
+		];
 
 		return $filters;
 	}
@@ -426,7 +426,7 @@ class WC_Helper {
 
 		$filters = array_fill_keys( array_keys( self::get_filters() ), 0 );
 		if ( empty( $subscriptions ) ) {
-			return array();
+			return [];
 		}
 
 		foreach ( $filters as $key => $count ) {
@@ -463,11 +463,11 @@ class WC_Helper {
 	private static function _filter( &$subscriptions, $filter ) {
 		switch ( $filter ) {
 			case 'active':
-				$subscriptions = wp_list_filter( $subscriptions, array( 'active' => true ) );
+				$subscriptions = wp_list_filter( $subscriptions, [ 'active' => true ] );
 				break;
 
 			case 'inactive':
-				$subscriptions = wp_list_filter( $subscriptions, array( 'active' => false ) );
+				$subscriptions = wp_list_filter( $subscriptions, [ 'active' => false ] );
 				break;
 
 			case 'installed':
@@ -479,15 +479,15 @@ class WC_Helper {
 				break;
 
 			case 'update-available':
-				$subscriptions = wp_list_filter( $subscriptions, array( 'has_update' => true ) );
+				$subscriptions = wp_list_filter( $subscriptions, [ 'has_update' => true ] );
 				break;
 
 			case 'expiring':
-				$subscriptions = wp_list_filter( $subscriptions, array( 'expiring' => true ) );
+				$subscriptions = wp_list_filter( $subscriptions, [ 'expiring' => true ] );
 				break;
 
 			case 'expired':
-				$subscriptions = wp_list_filter( $subscriptions, array( 'expired' => true ) );
+				$subscriptions = wp_list_filter( $subscriptions, [ 'expired' => true ] );
 				break;
 
 			case 'download':
@@ -509,7 +509,7 @@ class WC_Helper {
 		$wc_screen_id = sanitize_title( __( 'WooCommerce', 'woocommerce' ) );
 
 		if ( $wc_screen_id . '_page_wc-addons' === $screen_id && isset( $_GET['section'] ) && 'helper' === $_GET['section'] ) {
-			wp_enqueue_style( 'woocommerce-helper', WC()->plugin_url() . '/assets/css/helper.css', array(), Constants::get_constant( 'WC_VERSION' ) );
+			wp_enqueue_style( 'woocommerce-helper', WC()->plugin_url() . '/assets/css/helper.css', [], Constants::get_constant( 'WC_VERSION' ) );
 			wp_style_add_data( 'woocommerce-helper', 'rtl', 'replace' );
 		}
 	}
@@ -523,33 +523,33 @@ class WC_Helper {
 	 */
 	private static function _get_return_notices() {
 		$return_status = isset( $_GET['wc-helper-status'] ) ? wc_clean( wp_unslash( $_GET['wc-helper-status'] ) ) : null;
-		$notices       = array();
+		$notices       = [];
 
 		switch ( $return_status ) {
 			case 'activate-success':
 				$product_id   = isset( $_GET['wc-helper-product-id'] ) ? absint( $_GET['wc-helper-product-id'] ) : 0;
 				$subscription = self::_get_subscriptions_from_product_id( $product_id );
-				$notices[]    = array(
+				$notices[]    = [
 					'type'    => 'updated',
 					'message' => sprintf(
 						/* translators: %s: product name */
 						__( '%s activated successfully. You will now receive updates for this product.', 'woocommerce' ),
 						'<strong>' . esc_html( $subscription['product_name'] ) . '</strong>'
 					),
-				);
+				];
 				break;
 
 			case 'activate-error':
 				$product_id   = isset( $_GET['wc-helper-product-id'] ) ? absint( $_GET['wc-helper-product-id'] ) : 0;
 				$subscription = self::_get_subscriptions_from_product_id( $product_id );
-				$notices[]    = array(
+				$notices[]    = [
 					'type'    => 'error',
 					'message' => sprintf(
 						/* translators: %s: product name */
 						__( 'An error has occurred when activating %s. Please try again later.', 'woocommerce' ),
 						'<strong>' . esc_html( $subscription['product_name'] ) . '</strong>'
 					),
-				);
+				];
 				break;
 
 			case 'deactivate-success':
@@ -565,14 +565,14 @@ class WC_Helper {
 
 				if ( $local && is_plugin_active( $local['_filename'] ) && current_user_can( 'activate_plugins' ) ) {
 					$deactivate_plugin_url = add_query_arg(
-						array(
+						[
 							'page'                        => 'wc-addons',
 							'section'                     => 'helper',
 							'filter'                      => self::get_current_filter(),
 							'wc-helper-deactivate-plugin' => 1,
 							'wc-helper-product-id'        => $subscription['product_id'],
 							'wc-helper-nonce'             => wp_create_nonce( 'deactivate-plugin:' . $subscription['product_id'] ),
-						),
+						],
 						admin_url( 'admin.php' )
 					);
 
@@ -584,42 +584,42 @@ class WC_Helper {
 					);
 				}
 
-				$notices[] = array(
+				$notices[] = [
 					'message' => $message,
 					'type'    => 'updated',
-				);
+				];
 				break;
 
 			case 'deactivate-error':
 				$product_id   = isset( $_GET['wc-helper-product-id'] ) ? absint( $_GET['wc-helper-product-id'] ) : 0;
 				$subscription = self::_get_subscriptions_from_product_id( $product_id );
-				$notices[]    = array(
+				$notices[]    = [
 					'type'    => 'error',
 					'message' => sprintf(
 						/* translators: %s: product name */
 						__( 'An error has occurred when deactivating the subscription for %s. Please try again later.', 'woocommerce' ),
 						'<strong>' . esc_html( $subscription['product_name'] ) . '</strong>'
 					),
-				);
+				];
 				break;
 
 			case 'deactivate-plugin-success':
 				$product_id   = isset( $_GET['wc-helper-product-id'] ) ? absint( $_GET['wc-helper-product-id'] ) : 0;
 				$subscription = self::_get_subscriptions_from_product_id( $product_id );
-				$notices[]    = array(
+				$notices[]    = [
 					'type'    => 'updated',
 					'message' => sprintf(
 						/* translators: %s: product name */
 						__( 'The extension %s has been deactivated successfully.', 'woocommerce' ),
 						'<strong>' . esc_html( $subscription['product_name'] ) . '</strong>'
 					),
-				);
+				];
 				break;
 
 			case 'deactivate-plugin-error':
 				$product_id   = isset( $_GET['wc-helper-product-id'] ) ? absint( $_GET['wc-helper-product-id'] ) : 0;
 				$subscription = self::_get_subscriptions_from_product_id( $product_id );
-				$notices[]    = array(
+				$notices[]    = [
 					'type'    => 'error',
 					'message' => sprintf(
 						/* translators: %1$s: product name, %2$s: plugins screen url */
@@ -627,28 +627,28 @@ class WC_Helper {
 						'<strong>' . esc_html( $subscription['product_name'] ) . '</strong>',
 						admin_url( 'plugins.php' )
 					),
-				);
+				];
 				break;
 
 			case 'helper-connected':
-				$notices[] = array(
+				$notices[] = [
 					'message' => __( 'You have successfully connected your store to WooCommerce.com', 'woocommerce' ),
 					'type'    => 'updated',
-				);
+				];
 				break;
 
 			case 'helper-disconnected':
-				$notices[] = array(
+				$notices[] = [
 					'message' => __( 'You have successfully disconnected your store from WooCommerce.com', 'woocommerce' ),
 					'type'    => 'updated',
-				);
+				];
 				break;
 
 			case 'helper-refreshed':
-				$notices[] = array(
+				$notices[] = [
 					'message' => __( 'Authentication and subscription caches refreshed successfully.', 'woocommerce' ),
 					'type'    => 'updated',
-				);
+				];
 				break;
 		}
 
@@ -710,23 +710,23 @@ class WC_Helper {
 		}
 
 		$redirect_uri = add_query_arg(
-			array(
+			[
 				'page'             => 'wc-addons',
 				'section'          => 'helper',
 				'wc-helper-return' => 1,
 				'wc-helper-nonce'  => wp_create_nonce( 'connect' ),
-			),
+			],
 			admin_url( 'admin.php' )
 		);
 
 		$request = WC_Helper_API::post(
 			'oauth/request_token',
-			array(
-				'body' => array(
+			[
+				'body' => [
 					'home_url'     => home_url(),
 					'redirect_uri' => $redirect_uri,
-				),
-			)
+				],
+			]
 		);
 
 		$code = wp_remote_retrieve_response_code( $request );
@@ -748,11 +748,11 @@ class WC_Helper {
 		do_action( 'woocommerce_helper_connect_start' );
 
 		$connect_url = add_query_arg(
-			array(
+			[
 				'home_url'     => rawurlencode( home_url() ),
 				'redirect_uri' => rawurlencode( $redirect_uri ),
 				'secret'       => rawurlencode( $secret ),
-			),
+			],
 			WC_Helper_API::url( 'oauth/authorize' )
 		);
 
@@ -788,12 +788,12 @@ class WC_Helper {
 		// Obtain an access token.
 		$request = WC_Helper_API::post(
 			'oauth/access_token',
-			array(
-				'body' => array(
+			[
+				'body' => [
 					'request_token' => wp_unslash( $_GET['request_token'] ), // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 					'home_url'      => home_url(),
-				),
-			)
+				],
+			]
 		);
 
 		$code = wp_remote_retrieve_response_code( $request );
@@ -811,19 +811,19 @@ class WC_Helper {
 
 		WC_Helper_Options::update(
 			'auth',
-			array(
+			[
 				'access_token'        => $access_token['access_token'],
 				'access_token_secret' => $access_token['access_token_secret'],
 				'site_id'             => $access_token['site_id'],
 				'user_id'             => get_current_user_id(),
 				'updated'             => time(),
-			)
+			]
 		);
 
 		// Obtain the connected user info.
 		if ( ! self::_flush_authentication_cache() ) {
 			self::log( 'Could not obtain connected user info in _helper_auth_return' );
-			WC_Helper_Options::update( 'auth', array() );
+			WC_Helper_Options::update( 'auth', [] );
 			wp_die( 'Something went wrong.' );
 		}
 
@@ -850,11 +850,11 @@ class WC_Helper {
 
 		wp_safe_redirect(
 			add_query_arg(
-				array(
+				[
 					'page'             => 'wc-addons',
 					'section'          => 'helper',
 					'wc-helper-status' => 'helper-connected',
-				),
+				],
 				admin_url( 'admin.php' )
 			)
 		);
@@ -876,23 +876,23 @@ class WC_Helper {
 		do_action( 'woocommerce_helper_disconnected' );
 
 		$redirect_uri = add_query_arg(
-			array(
+			[
 				'page'             => 'wc-addons',
 				'section'          => 'helper',
 				'wc-helper-status' => 'helper-disconnected',
-			),
+			],
 			admin_url( 'admin.php' )
 		);
 
 		WC_Helper_API::post(
 			'oauth/invalidate_token',
-			array(
+			[
 				'authenticated' => true,
-			)
+			]
 		);
 
-		WC_Helper_Options::update( 'auth', array() );
-		WC_Helper_Options::update( 'auth_user_data', array() );
+		WC_Helper_Options::update( 'auth', [] );
+		WC_Helper_Options::update( 'auth_user_data', [] );
 
 		self::_flush_subscriptions_cache();
 		self::_flush_updates_cache();
@@ -916,12 +916,12 @@ class WC_Helper {
 		do_action( 'woocommerce_helper_subscriptions_refresh' );
 
 		$redirect_uri = add_query_arg(
-			array(
+			[
 				'page'             => 'wc-addons',
 				'section'          => 'helper',
 				'filter'           => self::get_current_filter(),
 				'wc-helper-status' => 'helper-refreshed',
-			),
+			],
 			admin_url( 'admin.php' )
 		);
 
@@ -948,14 +948,14 @@ class WC_Helper {
 		// Activate subscription.
 		$activation_response = WC_Helper_API::post(
 			'activate',
-			array(
+			[
 				'authenticated' => true,
 				'body'          => wp_json_encode(
-					array(
+					[
 						'product_key' => $product_key,
-					)
+					]
 				),
-			)
+			]
 		);
 
 		$activated = wp_remote_retrieve_response_code( $activation_response ) === 200;
@@ -995,13 +995,13 @@ class WC_Helper {
 		self::_flush_updates_cache();
 
 		$redirect_uri = add_query_arg(
-			array(
+			[
 				'page'                 => 'wc-addons',
 				'section'              => 'helper',
 				'filter'               => self::get_current_filter(),
 				'wc-helper-status'     => $activated ? 'activate-success' : 'activate-error',
 				'wc-helper-product-id' => $product_id,
-			),
+			],
 			admin_url( 'admin.php' )
 		);
 
@@ -1023,14 +1023,14 @@ class WC_Helper {
 
 		$deactivation_response = WC_Helper_API::post(
 			'deactivate',
-			array(
+			[
 				'authenticated' => true,
 				'body'          => wp_json_encode(
-					array(
+					[
 						'product_key' => $product_key,
-					)
+					]
 				),
-			)
+			]
 		);
 
 		$code        = wp_remote_retrieve_response_code( $deactivation_response );
@@ -1061,13 +1061,13 @@ class WC_Helper {
 		self::_flush_subscriptions_cache();
 
 		$redirect_uri = add_query_arg(
-			array(
+			[
 				'page'                 => 'wc-addons',
 				'section'              => 'helper',
 				'filter'               => self::get_current_filter(),
 				'wc-helper-status'     => $deactivated ? 'deactivate-success' : 'deactivate-error',
 				'wc-helper-product-id' => $product_id,
-			),
+			],
 			admin_url( 'admin.php' )
 		);
 
@@ -1096,7 +1096,7 @@ class WC_Helper {
 				self::get_local_woo_plugins(),
 				self::get_local_woo_themes()
 			),
-			array( '_product_id' => $product_id )
+			[ '_product_id' => $product_id ]
 		);
 
 		// Attempt to deactivate this plugin or theme.
@@ -1110,13 +1110,13 @@ class WC_Helper {
 		}
 
 		$redirect_uri = add_query_arg(
-			array(
+			[
 				'page'                 => 'wc-addons',
 				'section'              => 'helper',
 				'filter'               => self::get_current_filter(),
 				'wc-helper-status'     => $deactivated ? 'deactivate-plugin-success' : 'deactivate-plugin-error',
 				'wc-helper-product-id' => $product_id,
-			),
+			],
 			admin_url( 'admin.php' )
 		);
 
@@ -1137,7 +1137,7 @@ class WC_Helper {
 				self::get_local_woo_plugins(),
 				self::get_local_woo_themes()
 			),
-			array( '_product_id' => $product_id )
+			[ '_product_id' => $product_id ]
 		);
 
 		if ( ! empty( $local ) ) {
@@ -1173,7 +1173,7 @@ class WC_Helper {
 	 * @return array|bool The array containing sub data or false.
 	 */
 	private static function _get_subscriptions_from_product_id( $product_id, $single = true ) {
-		$subscriptions = wp_list_filter( self::get_subscriptions(), array( 'product_id' => $product_id ) );
+		$subscriptions = wp_list_filter( self::get_subscriptions(), [ 'product_id' => $product_id ] );
 		if ( ! empty( $subscriptions ) ) {
 			return $single ? array_shift( $subscriptions ) : $subscriptions;
 		}
@@ -1201,16 +1201,16 @@ class WC_Helper {
 			$plugins = get_plugins();
 		}
 
-		$woo_plugins = array();
+		$woo_plugins = [];
 
 		// Backwards compatibility for woothemes_queue_update().
-		$_compat = array();
+		$_compat = [];
 		if ( ! empty( $GLOBALS['woothemes_queued_updates'] ) ) {
 			foreach ( $GLOBALS['woothemes_queued_updates'] as $_compat_plugin ) {
-				$_compat[ $_compat_plugin->file ] = array(
+				$_compat[ $_compat_plugin->file ] = [
 					'product_id' => $_compat_plugin->product_id,
 					'file_id'    => $_compat_plugin->file_id,
-				);
+				];
 			}
 		}
 
@@ -1244,7 +1244,7 @@ class WC_Helper {
 	 */
 	public static function get_local_woo_themes() {
 		$themes     = wp_get_themes();
-		$woo_themes = array();
+		$woo_themes = [];
 
 		foreach ( $themes as $theme ) {
 			$header = $theme->get( 'Woo' );
@@ -1270,7 +1270,7 @@ class WC_Helper {
 				continue;
 			}
 
-			$data = array(
+			$data = [
 				'Name'        => $theme->get( 'Name' ),
 				'Version'     => $theme->get( 'Version' ),
 				'Woo'         => $header,
@@ -1280,7 +1280,7 @@ class WC_Helper {
 				'_product_id' => absint( $product_id ),
 				'_file_id'    => $file_id,
 				'_type'       => 'theme',
-			);
+			];
 
 			$woo_themes[ $data['_filename'] ] = $data;
 		}
@@ -1303,19 +1303,19 @@ class WC_Helper {
 		// Obtain the connected user info.
 		$request = WC_Helper_API::get(
 			'subscriptions',
-			array(
+			[
 				'authenticated' => true,
-			)
+			]
 		);
 
 		if ( wp_remote_retrieve_response_code( $request ) !== 200 ) {
-			set_transient( $cache_key, array(), 15 * MINUTE_IN_SECONDS );
-			return array();
+			set_transient( $cache_key, [], 15 * MINUTE_IN_SECONDS );
+			return [];
 		}
 
 		$data = json_decode( wp_remote_retrieve_body( $request ), true );
 		if ( empty( $data ) || ! is_array( $data ) ) {
-			$data = array();
+			$data = [];
 		}
 
 		set_transient( $cache_key, $data, 1 * HOUR_IN_SECONDS );
@@ -1380,14 +1380,14 @@ class WC_Helper {
 		$product_key         = $subscription['product_key'];
 		$activation_response = WC_Helper_API::post(
 			'activate',
-			array(
+			[
 				'authenticated' => true,
 				'body'          => wp_json_encode(
-					array(
+					[
 						'product_key' => $product_key,
-					)
+					]
 				),
-			)
+			]
 		);
 
 		$activated = wp_remote_retrieve_response_code( $activation_response ) === 200;
@@ -1467,14 +1467,14 @@ class WC_Helper {
 			$product_key           = $subscription['product_key'];
 			$deactivation_response = WC_Helper_API::post(
 				'deactivate',
-				array(
+				[
 					'authenticated' => true,
 					'body'          => wp_json_encode(
-						array(
+						[
 							'product_key' => $product_key,
-						)
+						]
 					),
-				)
+				]
 			);
 
 			if ( wp_remote_retrieve_response_code( $deactivation_response ) === 200 ) {
@@ -1603,9 +1603,9 @@ class WC_Helper {
 	public static function _flush_authentication_cache() {
 		$request = WC_Helper_API::get(
 			'oauth/me',
-			array(
+			[
 				'authenticated' => true,
-			)
+			]
 		);
 
 		if ( wp_remote_retrieve_response_code( $request ) !== 200 ) {
@@ -1619,10 +1619,10 @@ class WC_Helper {
 
 		WC_Helper_Options::update(
 			'auth_user_data',
-			array(
+			[
 				'name'  => $user_data['name'],
 				'email' => $user_data['email'],
-			)
+			]
 		);
 
 		return true;
@@ -1674,7 +1674,7 @@ class WC_Helper {
 			self::$log = wc_get_logger();
 		}
 
-		self::$log->log( $level, $message, array( 'source' => 'helper' ) );
+		self::$log->log( $level, $message, [ 'source' => 'helper' ] );
 	}
 }
 

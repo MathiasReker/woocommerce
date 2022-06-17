@@ -15,7 +15,7 @@ class WC_Product_CSV_Exporter_Test extends \WC_Unit_Test_Case {
 	 *
 	 * @var array
 	 */
-	public $product_ids = array();
+	public $product_ids = [];
 
 	/**
 	 * Load up the exporter classes since they aren't loaded by default.
@@ -50,9 +50,9 @@ class WC_Product_CSV_Exporter_Test extends \WC_Unit_Test_Case {
 		$get_data_to_export = $reflected_exporter->getMethod( 'get_data_to_export' );
 		$get_data_to_export->setAccessible( true );
 
-		$this->product_ids = array_merge( array( $product->get_id() ), $product->get_children( 'edit' ) );
+		$this->product_ids = array_merge( [ $product->get_id() ], $product->get_children( 'edit' ) );
 
-		add_filter( 'woocommerce_product_export_product_query_args', array( $this, 'set_export_product_query_args' ) );
+		add_filter( 'woocommerce_product_export_product_query_args', [ $this, 'set_export_product_query_args' ] );
 		$exporter = new WC_Product_CSV_Exporter();
 		$exporter->prepare_data_to_export();
 		$data = $get_data_to_export->invoke( $exporter );
@@ -60,7 +60,7 @@ class WC_Product_CSV_Exporter_Test extends \WC_Unit_Test_Case {
 		foreach ( $data as $row ) {
 			$this->assertEquals( -1, $row['published'] );
 		}
-		remove_filter( 'woocommerce_product_export_product_query_args', array( $this, 'set_export_product_query_args' ) );
+		remove_filter( 'woocommerce_product_export_product_query_args', [ $this, 'set_export_product_query_args' ] );
 	}
 
 }

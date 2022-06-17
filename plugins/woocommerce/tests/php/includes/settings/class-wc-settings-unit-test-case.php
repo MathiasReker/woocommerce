@@ -37,7 +37,7 @@ abstract class WC_Settings_Unit_Test_Case extends WC_Unit_Test_Case {
 	 * @return array The transformed settings.
 	 */
 	public function get_ids_and_types( $settings ) {
-		$settings_ids_and_types = array();
+		$settings_ids_and_types = [];
 		foreach ( $settings as $setting ) {
 			$id   = array_key_exists( 'id', $setting ) ? $setting['id'] : null;
 			$type = $setting['type'];
@@ -46,7 +46,7 @@ abstract class WC_Settings_Unit_Test_Case extends WC_Unit_Test_Case {
 			} elseif ( is_array( $settings_ids_and_types[ $id ] ) ) {
 				$settings_ids_and_types[ $id ][] = $type;
 			} else {
-				$settings_ids_and_types[ $id ] = array( $settings_ids_and_types[ $id ], $type );
+				$settings_ids_and_types[ $id ] = [ $settings_ids_and_types[ $id ], $type ];
 			}
 		}
 

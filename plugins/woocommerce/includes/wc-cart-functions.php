@@ -95,11 +95,11 @@ function wc_get_raw_referer() {
  * @return mixed
  */
 function wc_add_to_cart_message( $products, $show_qty = false, $return = false ) {
-	$titles = array();
+	$titles = [];
 	$count  = 0;
 
 	if ( ! is_array( $products ) ) {
-		$products = array( $products => 1 );
+		$products = [ $products => 1 ];
 		$show_qty = false;
 	}
 
@@ -186,7 +186,7 @@ function wc_clear_cart_after_payment() {
 
 		if ( $order && $order->get_id() > 0 ) {
 			// If the order has not failed, or is not pending, the order must have gone through.
-			if ( ! $order->has_status( array( 'failed', 'pending', 'cancelled' ) ) ) {
+			if ( ! $order->has_status( [ 'failed', 'pending', 'cancelled' ] ) ) {
 				WC()->cart->empty_cart();
 			}
 		}
@@ -210,7 +210,7 @@ function wc_cart_totals_shipping_html() {
 
 	foreach ( $packages as $i => $package ) {
 		$chosen_method = isset( WC()->session->chosen_shipping_methods[ $i ] ) ? WC()->session->chosen_shipping_methods[ $i ] : '';
-		$product_names = array();
+		$product_names = [];
 
 		if ( count( $packages ) > 1 ) {
 			foreach ( $package['contents'] as $item_id => $values ) {
@@ -221,7 +221,7 @@ function wc_cart_totals_shipping_html() {
 
 		wc_get_template(
 			'cart/cart-shipping.php',
-			array(
+			[
 				'package'                  => $package,
 				'available_methods'        => $package['rates'],
 				'show_package_details'     => count( $packages ) > 1,
@@ -233,7 +233,7 @@ function wc_cart_totals_shipping_html() {
 				'chosen_method'            => $chosen_method,
 				'formatted_destination'    => WC()->countries->get_formatted_address( $package['destination'], ', ' ),
 				'has_calculated_shipping'  => WC()->customer->has_calculated_shipping(),
-			)
+			]
 		);
 
 		$first = false;
@@ -292,7 +292,7 @@ function wc_cart_totals_coupon_html( $coupon ) {
 	$discount_amount_html = apply_filters( 'woocommerce_coupon_discount_amount_html', $discount_amount_html, $coupon );
 	$coupon_html          = $discount_amount_html . ' <a href="' . esc_url( add_query_arg( 'remove_coupon', rawurlencode( $coupon->get_code() ), Constants::is_defined( 'WOOCOMMERCE_CHECKOUT' ) ? wc_get_checkout_url() : wc_get_cart_url() ) ) . '" class="woocommerce-remove-coupon" data-coupon="' . esc_attr( $coupon->get_code() ) . '">' . __( '[Remove]', 'woocommerce' ) . '</a>';
 
-	echo wp_kses( apply_filters( 'woocommerce_cart_totals_coupon_html', $coupon_html, $coupon, $discount_amount_html ), array_replace_recursive( wp_kses_allowed_html( 'post' ), array( 'a' => array( 'data-coupon' => true ) ) ) ); // phpcs:ignore PHPCompatibility.PHP.NewFunctions.array_replace_recursiveFound
+	echo wp_kses( apply_filters( 'woocommerce_cart_totals_coupon_html', $coupon_html, $coupon, $discount_amount_html ), array_replace_recursive( wp_kses_allowed_html( 'post' ), [ 'a' => [ 'data-coupon' => true ] ] ) ); // phpcs:ignore PHPCompatibility.PHP.NewFunctions.array_replace_recursiveFound
 }
 
 /**
@@ -303,7 +303,7 @@ function wc_cart_totals_order_total_html() {
 
 	// If prices are tax inclusive, show taxes here.
 	if ( wc_tax_enabled() && WC()->cart->display_prices_including_tax() ) {
-		$tax_string_array = array();
+		$tax_string_array = [];
 		$cart_tax_totals  = WC()->cart->get_tax_totals();
 
 		if ( get_option( 'woocommerce_tax_total_display' ) === 'itemized' ) {
@@ -352,7 +352,7 @@ function wc_cart_totals_fee_html( $fee ) {
 function wc_cart_totals_shipping_method_label( $method ) {
 	$label     = $method->get_label();
 	$has_cost  = 0 < $method->cost;
-	$hide_cost = ! $has_cost && in_array( $method->get_method_id(), array( 'free_shipping', 'local_pickup' ), true );
+	$hide_cost = ! $has_cost && in_array( $method->get_method_id(), [ 'free_shipping', 'local_pickup' ], true );
 
 	if ( $has_cost && ! $hide_cost ) {
 		if ( WC()->cart->display_prices_including_tax() ) {
@@ -389,8 +389,8 @@ function wc_cart_round_discount( $value, $precision ) {
  * @return string[]
  */
 function wc_get_chosen_shipping_method_ids() {
-	$method_ids     = array();
-	$chosen_methods = WC()->session->get( 'chosen_shipping_methods', array() );
+	$method_ids     = [];
+	$chosen_methods = WC()->session->get( 'chosen_shipping_methods', [] );
 	foreach ( $chosen_methods as $chosen_method ) {
 		$chosen_method = explode( ':', $chosen_method );
 		$method_ids[]  = current( $chosen_method );
@@ -494,10 +494,10 @@ function wc_get_cart_item_data_hash( $product ) {
 		wp_json_encode(
 			apply_filters(
 				'woocommerce_cart_item_data_to_validate',
-				array(
+				[
 					'type'       => $product->get_type(),
 					'attributes' => 'variation' === $product->get_type() ? $product->get_variation_attributes() : '',
-				),
+				],
 				$product
 			)
 		)

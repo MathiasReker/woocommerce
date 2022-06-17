@@ -34,7 +34,7 @@ class WC_Admin_Tests_Reports_Variations extends WC_Unit_Test_Case {
 		$variation->set_name( 'Test Variation' );
 		$variation->set_parent_id( $product->get_id() );
 		$variation->set_regular_price( 10 );
-		$variation->set_attributes( array( 'pa_color' => 'green' ) );
+		$variation->set_attributes( [ 'pa_color' => 'green' ] );
 		$variation->set_sku( 'test-sku' );
 		$variation->save();
 
@@ -47,28 +47,28 @@ class WC_Admin_Tests_Reports_Variations extends WC_Unit_Test_Case {
 		$data_store = new VariationsDataStore();
 		$start_time = gmdate( 'Y-m-d H:00:00', $order->get_date_created()->getOffsetTimestamp() );
 		$end_time   = gmdate( 'Y-m-d H:00:00', $order->get_date_created()->getOffsetTimestamp() + HOUR_IN_SECONDS );
-		$args       = array(
+		$args       = [
 			'after'  => $start_time,
 			'before' => $end_time,
-		);
+		];
 
 		// Test retrieving the stats through the data store.
 		$data          = $data_store->get_data( $args );
-		$expected_data = (object) array(
+		$expected_data = (object) [
 			'total'   => 1,
 			'pages'   => 1,
 			'page_no' => 1,
-			'data'    => array(
-				0 => array(
+			'data'    => [
+				0 => [
 					'product_id'    => $product->get_id(),
 					'variation_id'  => $variation->get_id(),
 					'items_sold'    => 4,
 					'net_revenue'   => 40.0, // $10 * 4.
 					'orders_count'  => 1,
 					'extended_info' => new ArrayObject(),
-				),
-			),
-		);
+				],
+			],
+		];
 		$this->assertEquals( $expected_data, $data );
 
 		// Test retrieving the stats through the query class.
@@ -95,14 +95,14 @@ class WC_Admin_Tests_Reports_Variations extends WC_Unit_Test_Case {
 		$attribute->set_options( explode( WC_DELIMITER, 'green | red' ) );
 		$attribute->set_visible( false );
 		$attribute->set_variation( true );
-		$product->set_attributes( array( $attribute ) );
+		$product->set_attributes( [ $attribute ] );
 		$product->save();
 
 		$variation = new WC_Product_Variation();
 		$variation->set_name( 'Test Variation' );
 		$variation->set_parent_id( $product->get_id() );
 		$variation->set_regular_price( 10 );
-		$variation->set_attributes( array( 'pa_color' => 'green' ) );
+		$variation->set_attributes( [ 'pa_color' => 'green' ] );
 		$variation->set_manage_stock( true );
 		$variation->set_stock_quantity( 25 );
 		$variation->save();
@@ -116,26 +116,26 @@ class WC_Admin_Tests_Reports_Variations extends WC_Unit_Test_Case {
 		$data_store = new VariationsDataStore();
 		$start_time = gmdate( 'Y-m-d H:00:00', $order->get_date_created()->getOffsetTimestamp() );
 		$end_time   = gmdate( 'Y-m-d H:00:00', $order->get_date_created()->getOffsetTimestamp() + HOUR_IN_SECONDS );
-		$args       = array(
+		$args       = [
 			'after'         => $start_time,
 			'before'        => $end_time,
 			'extended_info' => 1,
-		);
+		];
 
 		// Test retrieving the stats through the data store.
 		$data          = $data_store->get_data( $args );
-		$expected_data = (object) array(
+		$expected_data = (object) [
 			'total'   => 1,
 			'pages'   => 1,
 			'page_no' => 1,
-			'data'    => array(
-				0 => array(
+			'data'    => [
+				0 => [
 					'product_id'    => $product->get_id(),
 					'variation_id'  => $variation->get_id(),
 					'items_sold'    => 4,
 					'net_revenue'   => 40.0, // $10 * 4.
 					'orders_count'  => 1,
-					'extended_info' => array(
+					'extended_info' => [
 						'name'             => $variation->get_name(),
 						'image'            => $variation->get_image(),
 						'permalink'        => $variation->get_permalink(),
@@ -143,18 +143,18 @@ class WC_Admin_Tests_Reports_Variations extends WC_Unit_Test_Case {
 						'stock_status'     => $variation->get_stock_status(),
 						'stock_quantity'   => $variation->get_stock_quantity() - 4, // subtract the ones purchased.
 						'low_stock_amount' => get_option( 'woocommerce_notify_low_stock_amount' ),
-						'attributes'       => array(
-							0 => array(
+						'attributes'       => [
+							0 => [
 								'id'     => 0,
 								'name'   => 'color',
 								'option' => 'green',
-							),
-						),
+							],
+						],
 						'sku'              => $variation->get_sku(),
-					),
-				),
-			),
-		);
+					],
+				],
+			],
+		];
 		$this->assertEquals( $expected_data, $data );
 	}
 
@@ -164,12 +164,12 @@ class WC_Admin_Tests_Reports_Variations extends WC_Unit_Test_Case {
 	public function test_attribute_filtering() {
 		WC_Helper_Reports::reset_stats_dbs();
 
-		$global_attribute_data = WC_Helper_Product::create_attribute( 'size', array( 'Small', 'Medium', 'Large' ) );
+		$global_attribute_data = WC_Helper_Product::create_attribute( 'size', [ 'Small', 'Medium', 'Large' ] );
 
 		$local_attribute = new WC_Product_Attribute();
 		$local_attribute->set_id( 0 );
 		$local_attribute->set_name( 'Color' );
-		$local_attribute->set_options( array( 'red', 'green', 'blue' ) );
+		$local_attribute->set_options( [ 'red', 'green', 'blue' ] );
 		$local_attribute->set_visible( true );
 		$local_attribute->set_variation( true );
 
@@ -184,19 +184,19 @@ class WC_Admin_Tests_Reports_Variations extends WC_Unit_Test_Case {
 		$product = new WC_Product_Variable();
 		$product->set_name( 'Shirt' );
 		$product->set_regular_price( 25 );
-		$product->set_attributes( array( $global_attribute, $local_attribute ) );
+		$product->set_attributes( [ $global_attribute, $local_attribute ] );
 		$product->save();
 
 		$green = new WC_Product_Variation();
 		$green->set_name( 'Green Shirt' );
 		$green->set_parent_id( $product->get_id() );
-		$green->set_attributes( array( 'color' => 'green' ) );
+		$green->set_attributes( [ 'color' => 'green' ] );
 		$green->save();
 
 		$red = new WC_Product_Variation();
 		$red->set_name( 'Red Shirt' );
 		$red->set_parent_id( $product->get_id() );
-		$red->set_attributes( array( 'color' => 'red' ) );
+		$red->set_attributes( [ 'color' => 'red' ] );
 		$red->save();
 
 		// Create separate orders for two green shirts of different sizes.
@@ -234,11 +234,11 @@ class WC_Admin_Tests_Reports_Variations extends WC_Unit_Test_Case {
 
 		// Two orders of the green shirt.
 		$data = $data_store->get_data(
-			array(
-				'attribute_is' => array(
-					array( 'color', 'green' ),
-				),
-			)
+			[
+				'attribute_is' => [
+					[ 'color', 'green' ],
+				],
+			]
 		);
 
 		$this->assertEquals( 1, $data->total );
@@ -248,12 +248,12 @@ class WC_Admin_Tests_Reports_Variations extends WC_Unit_Test_Case {
 
 		// One order of a Large green shirt.
 		$data = $data_store->get_data(
-			array(
-				'attribute_is' => array(
-					array( $global_attribute_data['attribute_id'], $global_attribute_data['term_ids'][2] ),
-					array( 'color', 'green' ),
-				),
-			)
+			[
+				'attribute_is' => [
+					[ $global_attribute_data['attribute_id'], $global_attribute_data['term_ids'][2] ],
+					[ 'color', 'green' ],
+				],
+			]
 		);
 
 		$this->assertEquals( 1, $data->total );
@@ -263,13 +263,13 @@ class WC_Admin_Tests_Reports_Variations extends WC_Unit_Test_Case {
 
 		// Two large shirts sold.
 		$data = $data_store->get_data(
-			array(
-				'attribute_is' => array(
-					array( $global_attribute_data['attribute_id'], $global_attribute_data['term_ids'][2] ),
-				),
+			[
+				'attribute_is' => [
+					[ $global_attribute_data['attribute_id'], $global_attribute_data['term_ids'][2] ],
+				],
 				'orderby'      => 'sku',
 				'order'        => 'desc',
-			)
+			]
 		);
 
 		$this->assertEquals( 2, $data->total );
@@ -282,15 +282,15 @@ class WC_Admin_Tests_Reports_Variations extends WC_Unit_Test_Case {
 
 		// All orders.
 		$data = $data_store->get_data(
-			array(
+			[
 				'match'        => 'any',
-				'attribute_is' => array(
-					array( $global_attribute_data['attribute_id'], $global_attribute_data['term_ids'][2] ),
-					array( 'color', 'green' ),
-				),
+				'attribute_is' => [
+					[ $global_attribute_data['attribute_id'], $global_attribute_data['term_ids'][2] ],
+					[ 'color', 'green' ],
+				],
 				'orderby'      => 'items_sold',
 				'order'        => 'desc',
-			)
+			]
 		);
 
 		$this->assertEquals( 2, $data->total );

@@ -36,11 +36,11 @@ class OrderMilestones {
 	 *
 	 * @var array
 	 */
-	protected $allowed_statuses = array(
+	protected $allowed_statuses = [
 		'pending',
 		'processing',
 		'completed',
-	);
+	];
 
 	/**
 	 * Orders count cache.
@@ -54,7 +54,7 @@ class OrderMilestones {
 	 *
 	 * @var array
 	 */
-	protected $milestones = array(
+	protected $milestones = [
 		1,
 		10,
 		100,
@@ -65,7 +65,7 @@ class OrderMilestones {
 		10000,
 		500000,
 		1000000,
-	);
+	];
 
 	/**
 	 * Delay hook attachment until after the WC post types have been registered.
@@ -82,8 +82,8 @@ class OrderMilestones {
 		 */
 		$this->allowed_statuses = apply_filters( 'woocommerce_admin_order_milestone_statuses', $this->allowed_statuses );
 
-		add_action( 'woocommerce_after_register_post_type', array( $this, 'init' ) );
-		register_deactivation_hook( WC_PLUGIN_FILE, array( $this, 'clear_scheduled_event' ) );
+		add_action( 'woocommerce_after_register_post_type', [ $this, 'init' ] );
+		register_deactivation_hook( WC_PLUGIN_FILE, [ $this, 'clear_scheduled_event' ] );
 	}
 
 	/**
@@ -94,9 +94,9 @@ class OrderMilestones {
 			wp_schedule_event( time(), 'hourly', self::PROCESS_ORDERS_MILESTONE_HOOK );
 		}
 
-		add_action( 'wc_admin_installed', array( $this, 'backfill_last_milestone' ) );
+		add_action( 'wc_admin_installed', [ $this, 'backfill_last_milestone' ] );
 
-		add_action( self::PROCESS_ORDERS_MILESTONE_HOOK, array( $this, 'other_milestones' ) );
+		add_action( self::PROCESS_ORDERS_MILESTONE_HOOK, [ $this, 'other_milestones' ] );
 	}
 
 	/**
@@ -237,17 +237,17 @@ class OrderMilestones {
 	public function get_note_action_for_milestone( $milestone ) {
 		switch ( $milestone ) {
 			case 1:
-				return array(
+				return [
 					'name'  => 'learn-more',
 					'label' => __( 'Learn more', 'woocommerce' ),
 					'query' => 'https://woocommerce.com/document/managing-orders/?utm_source=inbox&utm_medium=product',
-				);
+				];
 			case 10:
-				return array(
+				return [
 					'name'  => 'browse',
 					'label' => __( 'Browse', 'woocommerce' ),
 					'query' => 'https://woocommerce.com/success-stories/?utm_source=inbox&utm_medium=product',
-				);
+				];
 			case 100:
 			case 250:
 			case 500:
@@ -256,17 +256,17 @@ class OrderMilestones {
 			case 10000:
 			case 500000:
 			case 1000000:
-				return array(
+				return [
 					'name'  => 'review-orders',
 					'label' => __( 'Review your orders', 'woocommerce' ),
 					'query' => '?page=wc-admin&path=/analytics/orders',
-				);
+				];
 			default:
-				return array(
+				return [
 					'name'  => '',
 					'label' => '',
 					'query' => '',
-				);
+				];
 		}
 	}
 

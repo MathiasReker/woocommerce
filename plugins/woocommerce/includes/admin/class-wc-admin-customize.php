@@ -22,8 +22,8 @@ if ( ! class_exists( 'WC_Admin_Customize', false ) ) :
 		 */
 		public function __construct() {
 			// Include custom items to customizer nav menu settings.
-			add_filter( 'customize_nav_menu_available_item_types', array( $this, 'register_customize_nav_menu_item_types' ) );
-			add_filter( 'customize_nav_menu_available_items', array( $this, 'register_customize_nav_menu_items' ), 10, 4 );
+			add_filter( 'customize_nav_menu_available_item_types', [ $this, 'register_customize_nav_menu_item_types' ] );
+			add_filter( 'customize_nav_menu_available_items', [ $this, 'register_customize_nav_menu_items' ], 10, 4 );
 		}
 
 		/**
@@ -35,12 +35,12 @@ if ( ! class_exists( 'WC_Admin_Customize', false ) ) :
 		 * @return array
 		 */
 		public function register_customize_nav_menu_item_types( $item_types ) {
-			$item_types[] = array(
+			$item_types[] = [
 				'title'      => __( 'WooCommerce Endpoints', 'woocommerce' ),
 				'type_label' => __( 'WooCommerce Endpoint', 'woocommerce' ),
 				'type'       => 'woocommerce_nav',
 				'object'     => 'woocommerce_endpoint',
-			);
+			];
 
 			return $item_types;
 		}
@@ -55,7 +55,7 @@ if ( ! class_exists( 'WC_Admin_Customize', false ) ) :
 		 * @param  integer $page   Page number.
 		 * @return array
 		 */
-		public function register_customize_nav_menu_items( $items = array(), $type = '', $object = '', $page = 0 ) {
+		public function register_customize_nav_menu_items( $items = [], $type = '', $object = '', $page = 0 ) {
 			if ( 'woocommerce_endpoint' !== $object ) {
 				return $items;
 			}
@@ -79,12 +79,12 @@ if ( ! class_exists( 'WC_Admin_Customize', false ) ) :
 			$endpoints = apply_filters( 'woocommerce_custom_nav_menu_items', $endpoints );
 
 			foreach ( $endpoints as $endpoint => $title ) {
-				$items[] = array(
+				$items[] = [
 					'id'         => $endpoint,
 					'title'      => $title,
 					'type_label' => __( 'Custom Link', 'woocommerce' ),
 					'url'        => esc_url_raw( wc_get_account_endpoint_url( $endpoint ) ),
-				);
+				];
 			}
 
 			return $items;

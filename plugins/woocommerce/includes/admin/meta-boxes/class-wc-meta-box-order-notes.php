@@ -22,9 +22,9 @@ class WC_Meta_Box_Order_Notes {
 	public static function output( $post ) {
 		global $post;
 
-		$args = array(
+		$args = [
 			'order_id' => $post->ID,
-		);
+		];
 
 		$notes = wc_get_order_notes( $args );
 

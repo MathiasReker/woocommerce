@@ -44,7 +44,7 @@ class NewSalesRecord {
 	 * @return floatval
 	 */
 	public static function sum_sales_for_date( $date ) {
-		$order_query = new \WC_Order_Query( array( 'date_created' => $date ) );
+		$order_query = new \WC_Order_Query( [ 'date_created' => $date ] );
 		$orders      = $order_query->get_orders();
 		$total       = 0;
 
@@ -117,12 +117,12 @@ class NewSalesRecord {
 				$formatted_record_date
 			);
 
-			$content_data = (object) array(
+			$content_data = (object) [
 				'old_record_date' => $record_date,
 				'old_record_amt'  => $record_amt,
 				'new_record_date' => $yesterday,
 				'new_record_amt'  => $total,
-			);
+			];
 
 			// We only want one sales record note at any time in the inbox, so we delete any other first.
 			Notes::delete_notes_with_name( self::NOTE_NAME );

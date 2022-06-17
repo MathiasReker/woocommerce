@@ -33,13 +33,13 @@ class Orders extends \WC_REST_Orders_Controller {
 	public function get_collection_params() {
 		$params = parent::get_collection_params();
 		// This needs to remain a string to support extensions that filter Order Number.
-		$params['number'] = array(
+		$params['number'] = [
 			'description'       => __( 'Limit result set to orders matching part of an order number.', 'woocommerce' ),
 			'type'              => 'string',
 			'validate_callback' => 'rest_validate_request_arg',
-		);
+		];
 		// Fix the default 'status' value until it can be patched in core.
-		$params['status']['default'] = array( 'any' );
+		$params['status']['default'] = [ 'any' ];
 
 		// Analytics settings may affect the allowed status list.
 		$params['status']['items']['enum'] = ReportsController::get_order_statuses();
@@ -74,7 +74,7 @@ class Orders extends \WC_REST_Orders_Controller {
 			);
 
 			// Force WP_Query return empty if don't found any order.
-			$order_ids        = empty( $order_ids ) ? array( 0 ) : $order_ids;
+			$order_ids        = empty( $order_ids ) ? [ 0 ] : $order_ids;
 			$args['post__in'] = $order_ids;
 		}
 
@@ -150,7 +150,7 @@ class Orders extends \WC_REST_Orders_Controller {
 	 * @return array
 	 */
 	protected function get_formatted_item_data( $object ) {
-		$extra_fields = array( 'customer', 'products' );
+		$extra_fields = [ 'customer', 'products' ];
 		$fields       = false;
 		// Determine if the response fields were specified.
 		if ( ! empty( $this->request['_fields'] ) ) {
@@ -171,13 +171,13 @@ class Orders extends \WC_REST_Orders_Controller {
 			$data = $object->get_data();
 		}
 
-		$extra_fields      = false === $fields ? array() : array_intersect( $extra_fields, $fields );
-		$format_decimal    = array( 'discount_total', 'discount_tax', 'shipping_total', 'shipping_tax', 'shipping_total', 'shipping_tax', 'cart_tax', 'total', 'total_tax' );
-		$format_date       = array( 'date_created', 'date_modified', 'date_completed', 'date_paid' );
-		$format_line_items = array( 'line_items', 'tax_lines', 'shipping_lines', 'fee_lines', 'coupon_lines' );
+		$extra_fields      = false === $fields ? [] : array_intersect( $extra_fields, $fields );
+		$format_decimal    = [ 'discount_total', 'discount_tax', 'shipping_total', 'shipping_tax', 'shipping_total', 'shipping_tax', 'cart_tax', 'total', 'total_tax' ];
+		$format_date       = [ 'date_created', 'date_modified', 'date_completed', 'date_paid' ];
+		$format_line_items = [ 'line_items', 'tax_lines', 'shipping_lines', 'fee_lines', 'coupon_lines' ];
 
 		// Add extra data as necessary.
-		$extra_data = array();
+		$extra_data = [];
 		foreach ( $extra_fields as $field ) {
 			switch ( $field ) {
 				case 'customer':
@@ -209,7 +209,7 @@ class Orders extends \WC_REST_Orders_Controller {
 		$data['status'] = 'wc-' === substr( $data['status'], 0, 3 ) ? substr( $data['status'], 3 ) : $data['status'];
 
 		// Format requested line items.
-		$formatted_line_items = array();
+		$formatted_line_items = [];
 
 		foreach ( $format_line_items as $key ) {
 			if ( false === $fields || in_array( $key, $fields, true ) ) {
@@ -218,22 +218,22 @@ class Orders extends \WC_REST_Orders_Controller {
 				} else {
 					$line_item_data = $data[ $key ];
 				}
-				$formatted_line_items[ $key ] = array_values( array_map( array( $this, 'get_order_item_data' ), $line_item_data ) );
+				$formatted_line_items[ $key ] = array_values( array_map( [ $this, 'get_order_item_data' ], $line_item_data ) );
 			}
 		}
 
 		// Refunds.
-		$data['refunds'] = array();
+		$data['refunds'] = [];
 		foreach ( $object->get_refunds() as $refund ) {
-			$data['refunds'][] = array(
+			$data['refunds'][] = [
 				'id'     => $refund->get_id(),
 				'reason' => $refund->get_reason() ? $refund->get_reason() : '',
 				'total'  => '-' . wc_format_decimal( $refund->get_amount(), $this->request['dp'] ),
-			);
+			];
 		}
 
 		return array_merge(
-			array(
+			[
 				'id'                   => $object->get_id(),
 				'parent_id'            => $data['parent_id'],
 				'number'               => $data['number'],
@@ -271,7 +271,7 @@ class Orders extends \WC_REST_Orders_Controller {
 				'cart_hash'            => $data['cart_hash'],
 				'meta_data'            => $data['meta_data'],
 				'refunds'              => $data['refunds'],
-			),
+			],
 			$formatted_line_items,
 			$extra_data
 		);

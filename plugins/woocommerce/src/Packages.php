@@ -24,9 +24,9 @@ class Packages {
 	 *
 	 * @var array Key is the package name/directory, value is the main package class which handles init.
 	 */
-	protected static $packages = array(
+	protected static $packages = [
 		'woocommerce-blocks'   => '\\Automattic\\WooCommerce\\Blocks\\Package'
-	);
+	];
 
 	/**
 	 * Init the package loader.
@@ -34,7 +34,7 @@ class Packages {
 	 * @since 3.7.0
 	 */
 	public static function init() {
-		add_action( 'plugins_loaded', array( __CLASS__, 'on_init' ) );
+		add_action( 'plugins_loaded', [ __CLASS__, 'on_init' ] );
 	}
 
 	/**
@@ -68,7 +68,7 @@ class Packages {
 				self::missing_package( $package_name );
 				continue;
 			}
-			call_user_func( array( $package_class, 'init' ) );
+			call_user_func( [ $package_class, 'init' ] );
 		}
 
 		// Proxies "activated_plugin" hook for embedded packages listen on WC plugin activation

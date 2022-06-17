@@ -23,10 +23,10 @@ class ReportsSync {
 		foreach ( self::get_schedulers() as $scheduler ) {
 			$scheduler::init();
 		}
-		add_action( 'woocommerce_update_product', array( __CLASS__, 'clear_stock_count_cache' ) );
-		add_action( 'woocommerce_new_product', array( __CLASS__, 'clear_stock_count_cache' ) );
-		add_action( 'update_option_woocommerce_notify_low_stock_amount', array( __CLASS__, 'clear_stock_count_cache' ) );
-		add_action( 'update_option_woocommerce_notify_no_stock_amount', array( __CLASS__, 'clear_stock_count_cache' ) );
+		add_action( 'woocommerce_update_product', [ __CLASS__, 'clear_stock_count_cache' ] );
+		add_action( 'woocommerce_new_product', [ __CLASS__, 'clear_stock_count_cache' ] );
+		add_action( 'update_option_woocommerce_notify_low_stock_amount', [ __CLASS__, 'clear_stock_count_cache' ] );
+		add_action( 'update_option_woocommerce_notify_no_stock_amount', [ __CLASS__, 'clear_stock_count_cache' ] );
 	}
 
 	/**
@@ -38,10 +38,10 @@ class ReportsSync {
 	public static function get_schedulers() {
 		$schedulers = apply_filters(
 			'woocommerce_analytics_report_schedulers',
-			array(
+			[
 				new CustomersScheduler(),
 				new OrdersScheduler(),
-			)
+			]
 		);
 
 		foreach ( $schedulers as $scheduler ) {
@@ -81,7 +81,7 @@ class ReportsSync {
 
 		self::reset_import_stats( $days, $skip_existing );
 		foreach ( self::get_schedulers() as $scheduler ) {
-			$scheduler::schedule_action( 'import_batch_init', array( $days, $skip_existing ) );
+			$scheduler::schedule_action( 'import_batch_init', [ $days, $skip_existing ] );
 		}
 
 		/**
@@ -102,7 +102,7 @@ class ReportsSync {
 	 * @param bool     $skip_existing Skip exisiting records.
 	 */
 	public static function reset_import_stats( $days, $skip_existing ) {
-		$import_stats = get_option( ImportScheduler::IMPORT_STATS_OPTION, array() );
+		$import_stats = get_option( ImportScheduler::IMPORT_STATS_OPTION, [] );
 		$totals       = self::get_import_totals( $days, $skip_existing );
 
 		foreach ( self::get_schedulers() as $scheduler ) {
@@ -127,7 +127,7 @@ class ReportsSync {
 	 * @return array
 	 */
 	public static function get_import_stats() {
-		$import_stats                 = get_option( ImportScheduler::IMPORT_STATS_OPTION, array() );
+		$import_stats                 = get_option( ImportScheduler::IMPORT_STATS_OPTION, [] );
 		$import_stats['is_importing'] = self::is_importing();
 
 		return $import_stats;
@@ -141,7 +141,7 @@ class ReportsSync {
 	 * @return array
 	 */
 	public static function get_import_totals( $days, $skip_existing ) {
-		$totals = array();
+		$totals = [];
 
 		foreach ( self::get_schedulers() as $scheduler ) {
 			$items                       = $scheduler::get_items( 1, 1, $days, $skip_existing );
@@ -170,7 +170,7 @@ class ReportsSync {
 		self::clear_queued_actions();
 
 		foreach ( self::get_schedulers() as $scheduler ) {
-			$scheduler::schedule_action( 'delete_batch_init', array() );
+			$scheduler::schedule_action( 'delete_batch_init', [] );
 		}
 
 		// Delete import options.

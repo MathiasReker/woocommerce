@@ -26,12 +26,12 @@ class WC_Settings_Tax extends WC_Settings_Page {
 		$this->id    = 'tax';
 		$this->label = __( 'Tax', 'woocommerce' );
 
-		add_filter( 'woocommerce_settings_tabs_array', array( $this, 'add_settings_page' ), 20 );
+		add_filter( 'woocommerce_settings_tabs_array', [ $this, 'add_settings_page' ], 20 );
 
 		if ( wc_tax_enabled() ) {
-			add_action( 'woocommerce_sections_' . $this->id, array( $this, 'output_sections' ) );
-			add_action( 'woocommerce_settings_' . $this->id, array( $this, 'output' ) );
-			add_action( 'woocommerce_settings_save_' . $this->id, array( $this, 'save' ) );
+			add_action( 'woocommerce_sections_' . $this->id, [ $this, 'output_sections' ] );
+			add_action( 'woocommerce_settings_' . $this->id, [ $this, 'output' ] );
+			add_action( 'woocommerce_settings_save_' . $this->id, [ $this, 'save' ] );
 		}
 	}
 
@@ -55,10 +55,10 @@ class WC_Settings_Tax extends WC_Settings_Page {
 	 * @return array
 	 */
 	protected function get_own_sections() {
-		$sections = array(
+		$sections = [
 			''         => __( 'Tax options', 'woocommerce' ),
 			'standard' => __( 'Standard rates', 'woocommerce' ),
-		);
+		];
 
 		// Get tax classes and display as links.
 		$tax_classes = WC_Tax::get_tax_classes();
@@ -165,31 +165,31 @@ class WC_Settings_Tax extends WC_Settings_Page {
 
 		$current_class = $this->get_current_tax_class();
 
-		$countries = array();
+		$countries = [];
 		foreach ( WC()->countries->get_allowed_countries() as $value => $label ) {
-			$countries[] = array(
+			$countries[] = [
 				'value' => $value,
 				'label' => esc_js( html_entity_decode( $label ) ),
-			);
+			];
 		}
 
-		$states = array();
+		$states = [];
 		foreach ( WC()->countries->get_allowed_country_states() as $label ) {
 			foreach ( $label as $code => $state ) {
-				$states[] = array(
+				$states[] = [
 					'value' => $code,
 					'label' => esc_js( html_entity_decode( $state ) ),
-				);
+				];
 			}
 		}
 
 		$base_url = admin_url(
 			add_query_arg(
-				array(
+				[
 					'page'    => 'wc-settings',
 					'tab'     => 'tax',
 					'section' => $current_section,
-				),
+				],
 				'admin.php'
 			)
 		);
@@ -198,7 +198,7 @@ class WC_Settings_Tax extends WC_Settings_Page {
 		wp_localize_script(
 			'wc-settings-tax',
 			'htmlSettingsTaxLocalizeScript',
-			array(
+			[
 				'current_class' => $current_class,
 				'wc_tax_nonce'  => wp_create_nonce( 'wc_tax_nonce-class:' . $current_class ),
 				'base_url'      => $base_url,
@@ -207,7 +207,7 @@ class WC_Settings_Tax extends WC_Settings_Page {
 				'limit'         => 100,
 				'countries'     => $countries,
 				'states'        => $states,
-				'default_rate'  => array(
+				'default_rate'  => [
 					'tax_rate_id'       => 0,
 					'tax_rate_country'  => '',
 					'tax_rate_state'    => '',
@@ -218,11 +218,11 @@ class WC_Settings_Tax extends WC_Settings_Page {
 					'tax_rate_shipping' => 1,
 					'tax_rate_order'    => null,
 					'tax_rate_class'    => $current_class,
-				),
-				'strings'       => array(
+				],
+				'strings'       => [
 					'no_rows_selected'        => __( 'No row(s) selected', 'woocommerce' ),
 					'unload_confirmation_msg' => __( 'Your changed data will be lost if you leave this page without saving.', 'woocommerce' ),
-					'csv_data_cols'           => array(
+					'csv_data_cols'           => [
 						__( 'Country code', 'woocommerce' ),
 						__( 'State code', 'woocommerce' ),
 						__( 'Postcode / ZIP', 'woocommerce' ),
@@ -233,9 +233,9 @@ class WC_Settings_Tax extends WC_Settings_Page {
 						__( 'Compound', 'woocommerce' ),
 						__( 'Shipping', 'woocommerce' ),
 						__( 'Tax class', 'woocommerce' ),
-					),
-				),
-			)
+					],
+				],
+			]
 		);
 		wp_enqueue_script( 'wc-settings-tax' );
 
@@ -272,14 +272,14 @@ class WC_Settings_Tax extends WC_Settings_Page {
 	 */
 	private function get_posted_tax_rate( $key, $order, $class ) {
 		// phpcs:disable WordPress.Security.NonceVerification.Missing -- this is called from 'save_tax_rates' only, where nonce is already verified.
-		$tax_rate      = array();
-		$tax_rate_keys = array(
+		$tax_rate      = [];
+		$tax_rate_keys = [
 			'tax_rate_country',
 			'tax_rate_state',
 			'tax_rate',
 			'tax_rate_name',
 			'tax_rate_priority',
-		);
+		];
 
 		// phpcs:disable WordPress.Security.NonceVerification.Missing
 		foreach ( $tax_rate_keys as $tax_rate_key ) {

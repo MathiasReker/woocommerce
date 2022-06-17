@@ -25,7 +25,7 @@ class WC_Log_Handler_File extends WC_Log_Handler {
 	 *
 	 * @var array
 	 */
-	protected $handles = array();
+	protected $handles = [];
 
 	/**
 	 * File size limit for log files in bytes.
@@ -42,7 +42,7 @@ class WC_Log_Handler_File extends WC_Log_Handler {
 	 *
 	 * @var array
 	 */
-	protected $cached_logs = array();
+	protected $cached_logs = [];
 
 	/**
 	 * Constructor for the logger.
@@ -56,7 +56,7 @@ class WC_Log_Handler_File extends WC_Log_Handler {
 
 		$this->log_size_limit = apply_filters( 'woocommerce_log_file_size_limit', $log_size_limit );
 
-		add_action( 'plugins_loaded', array( $this, 'write_cached_logs' ) );
+		add_action( 'plugins_loaded', [ $this, 'write_cached_logs' ] );
 	}
 
 	/**
@@ -370,7 +370,7 @@ class WC_Log_Handler_File extends WC_Log_Handler {
 		if ( function_exists( 'wp_hash' ) ) {
 			$date_suffix = date( 'Y-m-d', time() );
 			$hash_suffix = wp_hash( $handle );
-			return sanitize_file_name( implode( '-', array( $handle, $date_suffix, $hash_suffix ) ) . '.log' );
+			return sanitize_file_name( implode( '-', [ $handle, $date_suffix, $hash_suffix ] ) . '.log' );
 		} else {
 			wc_doing_it_wrong( __METHOD__, __( 'This method should not be called before plugins_loaded.', 'woocommerce' ), '3.3' );
 			return false;
@@ -384,10 +384,10 @@ class WC_Log_Handler_File extends WC_Log_Handler {
 	 * @param string $handle Log entry handle.
 	 */
 	protected function cache_log( $entry, $handle ) {
-		$this->cached_logs[] = array(
+		$this->cached_logs[] = [
 			'entry'  => $entry,
 			'handle' => $handle,
-		);
+		];
 	}
 
 	/**
@@ -429,11 +429,11 @@ class WC_Log_Handler_File extends WC_Log_Handler {
 	 */
 	public static function get_log_files() {
 		$files  = @scandir( WC_LOG_DIR ); // @codingStandardsIgnoreLine.
-		$result = array();
+		$result = [];
 
 		if ( ! empty( $files ) ) {
 			foreach ( $files as $key => $value ) {
-				if ( ! in_array( $value, array( '.', '..' ), true ) ) {
+				if ( ! in_array( $value, [ '.', '..' ], true ) ) {
 					if ( ! is_dir( $value ) && strstr( $value, '.log' ) ) {
 						$result[ sanitize_title( $value ) ] = $value;
 					}

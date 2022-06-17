@@ -24,15 +24,15 @@ class WC_Marketplace_Suggestions {
 		}
 
 		// Add suggestions to the product tabs.
-		add_action( 'woocommerce_product_data_tabs', array( __CLASS__, 'product_data_tabs' ) );
-		add_action( 'woocommerce_product_data_panels', array( __CLASS__, 'product_data_panels' ) );
+		add_action( 'woocommerce_product_data_tabs', [ __CLASS__, 'product_data_tabs' ] );
+		add_action( 'woocommerce_product_data_panels', [ __CLASS__, 'product_data_panels' ] );
 
 		// Register ajax api handlers.
-		add_action( 'wp_ajax_woocommerce_add_dismissed_marketplace_suggestion', array( __CLASS__, 'post_add_dismissed_suggestion_handler' ) );
+		add_action( 'wp_ajax_woocommerce_add_dismissed_marketplace_suggestion', [ __CLASS__, 'post_add_dismissed_suggestion_handler' ] );
 
 		// Register hooks for rendering suggestions container markup.
-		add_action( 'wc_marketplace_suggestions_products_empty_state', array( __CLASS__, 'render_products_list_empty_state' ) );
-		add_action( 'wc_marketplace_suggestions_orders_empty_state', array( __CLASS__, 'render_orders_list_empty_state' ) );
+		add_action( 'wc_marketplace_suggestions_products_empty_state', [ __CLASS__, 'render_products_list_empty_state' ] );
+		add_action( 'wc_marketplace_suggestions_orders_empty_state', [ __CLASS__, 'render_orders_list_empty_state' ] );
 	}
 
 	/**
@@ -45,12 +45,12 @@ class WC_Marketplace_Suggestions {
 	 * @return array
 	 */
 	public static function product_data_tabs( $tabs ) {
-		$tabs['marketplace-suggestions'] = array(
+		$tabs['marketplace-suggestions'] = [
 			'label'    => _x( 'Get more options', 'Marketplace suggestions', 'woocommerce' ),
 			'target'   => 'marketplace_suggestions',
-			'class'    => array(),
+			'class'    => [],
 			'priority' => 1000,
-		);
+		];
 
 		return $tabs;
 	}
@@ -66,13 +66,13 @@ class WC_Marketplace_Suggestions {
 	 * Return an array of suggestions the user has dismissed.
 	 */
 	public static function get_dismissed_suggestions() {
-		$dismissed_suggestions = array();
+		$dismissed_suggestions = [];
 
 		$dismissed_suggestions_data = get_user_meta( get_current_user_id(), 'wc_marketplace_suggestions_dismissed_suggestions', true );
 		if ( $dismissed_suggestions_data ) {
 			$dismissed_suggestions = $dismissed_suggestions_data;
 			if ( ! is_array( $dismissed_suggestions ) ) {
-				$dismissed_suggestions = array();
+				$dismissed_suggestions = [];
 			}
 		}
 
@@ -145,7 +145,7 @@ class WC_Marketplace_Suggestions {
 	 */
 	public static function show_suggestions_for_screen( $screen_id ) {
 		// We only show suggestions on certain admin screens.
-		if ( ! in_array( $screen_id, array( 'edit-product', 'edit-shop_order', 'product', 'woocommerce_page_wc-orders' ), true ) ) {
+		if ( ! in_array( $screen_id, [ 'edit-product', 'edit-shop_order', 'product', 'woocommerce_page_wc-orders' ], true ) ) {
 			return false;
 		}
 
@@ -161,14 +161,14 @@ class WC_Marketplace_Suggestions {
 	public static function allow_suggestions() {
 		// We currently only support English suggestions.
 		$locale             = get_locale();
-		$suggestion_locales = array(
+		$suggestion_locales = [
 			'en_AU',
 			'en_CA',
 			'en_GB',
 			'en_NZ',
 			'en_US',
 			'en_ZA',
-		);
+		];
 		if ( ! in_array( $locale, $suggestion_locales, true ) ) {
 			return false;
 		}
@@ -193,7 +193,7 @@ class WC_Marketplace_Suggestions {
 	 * @return array of json API data
 	 */
 	public static function get_suggestions_api_data() {
-		$data = get_option( 'woocommerce_marketplace_suggestions', array() );
+		$data = get_option( 'woocommerce_marketplace_suggestions', [] );
 
 		// If the options have never been updated, or were updated over a week ago, queue update.
 		if ( empty( $data['updated'] ) || ( time() - WEEK_IN_SECONDS ) > $data['updated'] ) {
@@ -204,7 +204,7 @@ class WC_Marketplace_Suggestions {
 			}
 		}
 
-		return ! empty( $data['suggestions'] ) ? $data['suggestions'] : array();
+		return ! empty( $data['suggestions'] ) ? $data['suggestions'] : [];
 	}
 }
 

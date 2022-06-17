@@ -40,38 +40,38 @@ class PostMetaToOrderMetaMigrator extends MetaToMetaTableMigrator {
 	protected function get_meta_config(): array {
 		global $wpdb;
 		// TODO: Remove hardcoding.
-		$this->table_names = array(
+		$this->table_names = [
 			'orders'    => $wpdb->prefix . 'wc_orders',
 			'addresses' => $wpdb->prefix . 'wc_order_addresses',
 			'op_data'   => $wpdb->prefix . 'wc_order_operational_data',
 			'meta'      => $wpdb->prefix . 'wc_orders_meta',
-		);
+		];
 
-		return array(
-			'source'      => array(
-				'meta'          => array(
+		return [
+			'source'      => [
+				'meta'          => [
 					'table_name'        => $wpdb->postmeta,
 					'entity_id_column'  => 'post_id',
 					'meta_key_column'   => 'meta_key',
 					'meta_value_column' => 'meta_value',
-				),
-				'entity'        => array(
+				],
+				'entity'        => [
 					'table_name'       => $this->table_names['orders'],
 					'source_id_column' => 'id',
 					'id_column'        => 'id',
-				),
+				],
 				'excluded_keys' => $this->excluded_columns,
-			),
-			'destination' => array(
-				'meta' => array(
+			],
+			'destination' => [
+				'meta' => [
 					'table_name'        => $this->table_names['meta'],
 					'entity_id_column'  => 'order_id',
 					'meta_key_column'   => 'meta_key',
 					'meta_value_column' => 'meta_value',
 					'entity_id_type'    => 'int',
 					'meta_id_column'    => 'id',
-				),
-			),
-		);
+				],
+			],
+		];
 	}
 }

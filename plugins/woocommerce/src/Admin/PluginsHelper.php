@@ -22,8 +22,8 @@ class PluginsHelper {
 	 * Initialize hooks.
 	 */
 	public static function init() {
-		add_action( 'woocommerce_plugins_install_callback', array( __CLASS__, 'install_plugins' ), 10, 2 );
-		add_action( 'woocommerce_plugins_activate_callback', array( __CLASS__, 'activate_plugins' ), 10, 2 );
+		add_action( 'woocommerce_plugins_install_callback', [ __CLASS__, 'install_plugins' ], 10, 2 );
+		add_action( 'woocommerce_plugins_activate_callback', [ __CLASS__, 'activate_plugins' ], 10, 2 );
 	}
 
 	/**
@@ -75,7 +75,7 @@ class PluginsHelper {
 	 */
 	public static function get_installed_plugins_paths() {
 		$plugins           = get_plugins();
-		$installed_plugins = array();
+		$installed_plugins = [];
 
 		foreach ( $plugins as $path => $plugin ) {
 			$path_parts                 = explode( '/', $path );
@@ -97,7 +97,7 @@ class PluginsHelper {
 				$path_parts = explode( '/', $plugin_path );
 				return $path_parts[0];
 			},
-			get_option( 'active_plugins', array() )
+			get_option( 'active_plugins', [] )
 		);
 	}
 
@@ -122,7 +122,7 @@ class PluginsHelper {
 	 */
 	public static function is_plugin_active( $plugin ) {
 		$plugin_path = self::get_plugin_path_from_slug( $plugin );
-		return $plugin_path ? in_array( $plugin_path, get_option( 'active_plugins', array() ), true ) : false;
+		return $plugin_path ? in_array( $plugin_path, get_option( 'active_plugins', [] ), true ) : false;
 	}
 
 	/**
@@ -165,9 +165,9 @@ class PluginsHelper {
 		include_once ABSPATH . '/wp-admin/includes/class-plugin-upgrader.php';
 
 		$existing_plugins  = self::get_installed_plugins_paths();
-		$installed_plugins = array();
-		$results           = array();
-		$time              = array();
+		$installed_plugins = [];
+		$results           = [];
+		$time              = [];
 		$errors            = new \WP_Error();
 
 		foreach ( $plugins as $plugin ) {
@@ -182,21 +182,21 @@ class PluginsHelper {
 
 			$api = plugins_api(
 				'plugin_information',
-				array(
+				[
 					'slug'   => $slug,
-					'fields' => array(
+					'fields' => [
 						'sections' => false,
-					),
-				)
+					],
+				]
 			);
 
 			if ( is_wp_error( $api ) ) {
-				$properties = array(
+				$properties = [
 					/* translators: %s: plugin slug (example: woocommerce-services) */
 					'error_message' => __( 'The requested plugin `%s` could not be installed. Plugin API call failed.', 'woocommerce' ),
 					'api'           => $api,
 					'slug'          => $slug,
-				);
+				];
 				wc_admin_record_tracks_event( 'install_plugin_error', $properties );
 
 				do_action( 'woocommerce_plugins_install_api_error', $slug, $api );
@@ -219,14 +219,14 @@ class PluginsHelper {
 			$time[ $plugin ]    = round( ( microtime( true ) - $start_time ) * 1000 );
 
 			if ( is_wp_error( $result ) || is_null( $result ) ) {
-				$properties = array(
+				$properties = [
 					/* translators: %s: plugin slug (example: woocommerce-services) */
 					'error_message' => __( 'The requested plugin `%s` could not be installed.', 'woocommerce' ),
 					'slug'          => $slug,
 					'api'           => $api,
 					'upgrader'      => $upgrader,
 					'result'        => $result,
-				);
+				];
 				wc_admin_record_tracks_event( 'install_plugin_error', $properties );
 
 				do_action( 'woocommerce_plugins_install_error', $slug, $api, $result, $upgrader );
@@ -245,12 +245,12 @@ class PluginsHelper {
 			$installed_plugins[] = $plugin;
 		}
 
-		$data = array(
+		$data = [
 			'installed' => $installed_plugins,
 			'results'   => $results,
 			'errors'    => $errors,
 			'time'      => $time,
-		);
+		];
 
 		return $data;
 	}
@@ -267,7 +267,7 @@ class PluginsHelper {
 		}
 
 		$job_id = uniqid();
-		WC()->queue()->schedule_single( time() + 5, 'woocommerce_plugins_install_callback', array( $plugins, $job_id ) );
+		WC()->queue()->schedule_single( time() + 5, 'woocommerce_plugins_install_callback', [ $plugins, $job_id ] );
 
 		return $job_id;
 	}
@@ -297,7 +297,7 @@ class PluginsHelper {
 
 		$plugin_paths      = self::get_installed_plugins_paths();
 		$errors            = new \WP_Error();
-		$activated_plugins = array();
+		$activated_plugins = [];
 
 		foreach ( $plugins as $plugin ) {
 			$slug = $plugin;
@@ -327,11 +327,11 @@ class PluginsHelper {
 			$activated_plugins[] = $plugin;
 		}
 
-		$data = array(
+		$data = [
 			'activated' => $activated_plugins,
 			'active'    => self::get_active_plugin_slugs(),
 			'errors'    => $errors,
-		);
+		];
 
 		return $data;
 	}
@@ -348,7 +348,7 @@ class PluginsHelper {
 		}
 
 		$job_id = uniqid();
-		WC()->queue()->schedule_single( time() + 5, 'woocommerce_plugins_activate_callback', array( $plugins, $job_id ) );
+		WC()->queue()->schedule_single( time() + 5, 'woocommerce_plugins_activate_callback', [ $plugins, $job_id ] );
 
 		return $job_id;
 	}
@@ -361,12 +361,12 @@ class PluginsHelper {
 	 */
 	public static function get_installation_status( $job_id = null ) {
 		$actions = WC()->queue()->search(
-			array(
+			[
 				'hook'    => 'woocommerce_plugins_install_callback',
 				'search'  => $job_id,
 				'orderby' => 'date',
 				'order'   => 'DESC',
-			)
+			]
 		);
 
 		return self::get_action_data( $actions );
@@ -385,11 +385,11 @@ class PluginsHelper {
 			$store  = new \ActionScheduler_DBStore();
 			$status = $store->get_status( $action_id );
 			$args   = $action->get_args();
-			$data[] = array(
+			$data[] = [
 				'job_id'  => $args[1],
 				'plugins' => $args[0],
 				'status'  => $store->get_status( $action_id ),
-			);
+			];
 		}
 
 		return $data;
@@ -403,12 +403,12 @@ class PluginsHelper {
 	 */
 	public static function get_activation_status( $job_id = null ) {
 		$actions = WC()->queue()->search(
-			array(
+			[
 				'hook'    => 'woocommerce_plugins_activate_callback',
 				'search'  => $job_id,
 				'orderby' => 'date',
 				'order'   => 'DESC',
-			)
+			]
 		);
 
 		return self::get_action_data( $actions );

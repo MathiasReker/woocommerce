@@ -57,7 +57,7 @@ class WC_Admin_Tests_CES_Tracks extends WC_Unit_Test_Case {
 
 		do_action( 'woocommerce_update_options' );
 
-		$queue_items = get_option( $ces::CES_TRACKS_QUEUE_OPTION_NAME, array() );
+		$queue_items = get_option( $ces::CES_TRACKS_QUEUE_OPTION_NAME, [] );
 		$this->assertNotEmpty( $queue_items );
 
 		$expected_queue_item = array_filter(
@@ -81,7 +81,7 @@ class WC_Admin_Tests_CES_Tracks extends WC_Unit_Test_Case {
 		do_action( 'woocommerce_update_options' );
 		do_action( 'woocommerce_update_options' );
 
-		$queue_items = get_option( $ces::CES_TRACKS_QUEUE_OPTION_NAME, array() );
+		$queue_items = get_option( $ces::CES_TRACKS_QUEUE_OPTION_NAME, [] );
 		$this->assertNotEmpty( $queue_items );
 
 		$expected_queue_item = array_filter(
@@ -104,7 +104,7 @@ class WC_Admin_Tests_CES_Tracks extends WC_Unit_Test_Case {
 
 		do_action( 'woocommerce_update_options' );
 
-		$queue_items = get_option( $ces::CES_TRACKS_QUEUE_OPTION_NAME, array() );
+		$queue_items = get_option( $ces::CES_TRACKS_QUEUE_OPTION_NAME, [] );
 
 		$this->assertEmpty( $queue_items );
 	}
@@ -120,7 +120,7 @@ class WC_Admin_Tests_CES_Tracks extends WC_Unit_Test_Case {
 
 		do_action( 'woocommerce_update_options' );
 
-		$queue_items = get_option( $ces::CES_TRACKS_QUEUE_OPTION_NAME, array() );
+		$queue_items = get_option( $ces::CES_TRACKS_QUEUE_OPTION_NAME, [] );
 		$this->assertNotEmpty( $queue_items );
 
 		$expected_queue_item = array_filter(

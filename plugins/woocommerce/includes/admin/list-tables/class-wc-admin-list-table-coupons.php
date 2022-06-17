@@ -77,7 +77,7 @@ class WC_Admin_List_Table_Coupons extends WC_Admin_List_Table {
 	 * @return array
 	 */
 	public function define_columns( $columns ) {
-		$show_columns                = array();
+		$show_columns                = [];
 		$show_columns['cb']          = $columns['cb'];
 		$show_columns['coupon_code'] = __( 'Code', 'woocommerce' );
 		$show_columns['type']        = __( 'Coupon type', 'woocommerce' );

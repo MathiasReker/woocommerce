@@ -24,9 +24,9 @@ class WC_Admin_Tests_API_Reports_Coupons_Stats extends WC_REST_Unit_Test_Case {
 		parent::setUp();
 
 		$this->user = $this->factory->user->create(
-			array(
+			[
 				'role' => 'administrator',
-			)
+			]
 		);
 	}
 
@@ -91,39 +91,39 @@ class WC_Admin_Tests_API_Reports_Coupons_Stats extends WC_REST_Unit_Test_Case {
 
 		$request = new WP_REST_Request( 'GET', $this->endpoint );
 		$request->set_query_params(
-			array(
+			[
 				'before'   => gmdate( 'Y-m-d 23:59:59', $time ),
 				'after'    => gmdate( 'Y-m-d 00:00:00', $time ),
 				'interval' => 'day',
-			)
+			]
 		);
 
 		$response = $this->server->dispatch( $request );
 		$reports  = $response->get_data();
 
-		$expected_reports = array(
-			'totals'    => array(
+		$expected_reports = [
+			'totals'    => [
 				'amount'        => 4.0,
 				'coupons_count' => 2,
 				'orders_count'  => 2,
-				'segments'      => array(),
-			),
-			'intervals' => array(
-				array(
+				'segments'      => [],
+			],
+			'intervals' => [
+				[
 					'interval'       => gmdate( 'Y-m-d', $time ),
 					'date_start'     => gmdate( 'Y-m-d 00:00:00', $time ),
 					'date_start_gmt' => gmdate( 'Y-m-d 00:00:00', $time ),
 					'date_end'       => gmdate( 'Y-m-d 23:59:59', $time ),
 					'date_end_gmt'   => gmdate( 'Y-m-d 23:59:59', $time ),
-					'subtotals'      => (object) array(
+					'subtotals'      => (object) [
 						'amount'        => 4.0,
 						'coupons_count' => 2,
 						'orders_count'  => 2,
-						'segments'      => array(),
-					),
-				),
-			),
-		);
+						'segments'      => [],
+					],
+				],
+			],
+		];
 
 		$this->assertEquals( 200, $response->get_status() );
 		$this->assertEquals( $expected_reports, $reports );

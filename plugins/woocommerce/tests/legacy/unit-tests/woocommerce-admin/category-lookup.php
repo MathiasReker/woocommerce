@@ -33,9 +33,9 @@ class WC_Admin_Tests_Category_Lookup extends WP_UnitTestCase {
 		$child                 = wp_insert_term(
 			'test_child',
 			'product_cat',
-			array(
+			[
 				'parent' => $parent['term_id'],
-			)
+			]
 		);
 		$this->parent_term_id  = $parent['term_id'];
 		$this->parent2_term_id = $parent2['term_id'];
@@ -92,9 +92,9 @@ class WC_Admin_Tests_Category_Lookup extends WP_UnitTestCase {
 		wp_update_term(
 			$this->child_term_id,
 			'product_cat',
-			array(
+			[
 				'slug' => 'test',
-			)
+			]
 		);
 		$child_parent_ids = $this->get_category_parent_id( $this->child_term_id );
 		$this->assertCount( 2, $child_parent_ids );
@@ -108,9 +108,9 @@ class WC_Admin_Tests_Category_Lookup extends WP_UnitTestCase {
 		wp_update_term(
 			$this->parent_term_id,
 			'product_cat',
-			array(
+			[
 				'parent' => $this->parent2_term_id,
-			)
+			]
 		);
 		$parent_parent_ids = $this->get_category_parent_id( $this->parent_term_id );
 
@@ -129,9 +129,9 @@ class WC_Admin_Tests_Category_Lookup extends WP_UnitTestCase {
 		wp_update_term(
 			$this->parent_term_id,
 			'product_cat',
-			array(
+			[
 				'parent' => $this->parent2_term_id,
-			)
+			]
 		);
 		$parent_parent_ids = $this->get_category_parent_id( $this->parent_term_id );
 

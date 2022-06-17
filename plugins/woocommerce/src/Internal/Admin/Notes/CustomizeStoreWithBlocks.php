@@ -34,7 +34,7 @@ class CustomizeStoreWithBlocks {
 	 * @return Note
 	 */
 	public static function get_note() {
-		$onboarding_profile = get_option( 'woocommerce_onboarding_profile', array() );
+		$onboarding_profile = get_option( 'woocommerce_onboarding_profile', [] );
 
 		// Confirm that $onboarding_profile is set.
 		if ( empty( $onboarding_profile ) ) {
@@ -57,11 +57,11 @@ class CustomizeStoreWithBlocks {
 
 		// Don't show if there aren't products.
 		$query    = new \WC_Product_Query(
-			array(
+			[
 				'limit'  => 1,
 				'return' => 'ids',
-				'status' => array( 'publish' ),
-			)
+				'status' => [ 'publish' ],
+			]
 		);
 		$products = $query->get_products();
 		if ( 0 === count( $products ) ) {
@@ -73,7 +73,7 @@ class CustomizeStoreWithBlocks {
 		$note->set_content( __( 'With our blocks, you can select and display products, categories, filters, and more virtually anywhere on your site — no need to use shortcodes or edit lines of code. Learn more about how to use each one of them.', 'woocommerce' ) );
 		$note->set_type( Note::E_WC_ADMIN_NOTE_INFORMATIONAL );
 		$note->set_name( self::NOTE_NAME );
-		$note->set_content_data( (object) array() );
+		$note->set_content_data( (object) [] );
 		$note->set_source( 'woocommerce-admin' );
 		$note->add_action(
 			'customize-store-with-blocks',

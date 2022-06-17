@@ -12,9 +12,9 @@ class WC_REST_Taxes_Controller_Tests extends WC_REST_Unit_Test_Case {
 	public function setUp(): void {
 		parent::setUp();
 		$this->user = $this->factory->user->create(
-			array(
+			[
 				'role' => 'administrator',
-			)
+			]
 		);
 	}
 
@@ -24,52 +24,52 @@ class WC_REST_Taxes_Controller_Tests extends WC_REST_Unit_Test_Case {
 	 * @return array
 	 */
 	public function data_provider_for_test_can_create_and_update_tax_rates_with_multiple_cities_and_postcodes() {
-		return array(
-			array(
-				array(
+		return [
+			[
+				[
 					'city'     => 'Osaka;Kyoto;Kobe',
 					'postcode' => '5555;7777;8888',
-				),
+				],
 				'create',
-			),
-			array(
-				array(
-					'cities'    => array(
+			],
+			[
+				[
+					'cities'    => [
 						'Osaka',
 						'Kyoto',
 						'Kobe',
-					),
-					'postcodes' => array(
+					],
+					'postcodes' => [
 						'5555',
 						'7777',
 						'8888',
-					),
-				),
+					],
+				],
 				'create',
-			),
-			array(
-				array(
+			],
+			[
+				[
 					'city'     => 'Osaka;Kyoto;Kobe',
 					'postcode' => '5555;7777;8888',
-				),
+				],
 				'update',
-			),
-			array(
-				array(
-					'cities'    => array(
+			],
+			[
+				[
+					'cities'    => [
 						'Osaka',
 						'Kyoto',
 						'Kobe',
-					),
-					'postcodes' => array(
+					],
+					'postcodes' => [
 						'5555',
 						'7777',
 						'8888',
-					),
-				),
+					],
+				],
 				'update',
-			),
-		);
+			],
+		];
 	}
 
 	/**
@@ -90,11 +90,11 @@ class WC_REST_Taxes_Controller_Tests extends WC_REST_Unit_Test_Case {
 
 			$request_body = array_merge(
 				$request_body,
-				array(
+				[
 					'country' => 'JP',
 					'rate'    => '1',
 					'name'    => 'Fake Tax',
-				)
+				]
 			);
 
 			$verb           = 'POST';
@@ -102,11 +102,11 @@ class WC_REST_Taxes_Controller_Tests extends WC_REST_Unit_Test_Case {
 			$success_status = 201;
 		} else {
 			$tax_rate_id = WC_Tax::_insert_tax_rate(
-				array(
+				[
 					'tax_rate_country' => 'JP',
 					'tax_rate'         => '1',
 					'tax_rate_name'    => 'Fake Tax',
-				)
+				]
 			);
 
 			WC_Tax::_update_tax_rate_cities( $tax_rate_id, 'Tokyo' );
@@ -150,11 +150,11 @@ class WC_REST_Taxes_Controller_Tests extends WC_REST_Unit_Test_Case {
 		wp_set_current_user( $this->user );
 
 		$tax_id = WC_Tax::_insert_tax_rate(
-			array(
+			[
 				'tax_rate_country' => 'JP',
 				'tax_rate'         => '1',
 				'tax_rate_name'    => 'Fake Tax',
-			)
+			]
 		);
 
 		WC_Tax::_update_tax_rate_cities( $tax_id, 'Osaka;Kyoto;Kobe' );
@@ -174,8 +174,8 @@ class WC_REST_Taxes_Controller_Tests extends WC_REST_Unit_Test_Case {
 
 		$this->assertEquals( 'KOBE', $data['city'] );
 		$this->assertEquals( '8888', $data['postcode'] );
-		$this->assertEquals( array( 'OSAKA', 'KYOTO', 'KOBE' ), $data['cities'] );
-		$this->assertEquals( array( '5555', '7777', '8888' ), $data['postcodes'] );
+		$this->assertEquals( [ 'OSAKA', 'KYOTO', 'KOBE' ], $data['cities'] );
+		$this->assertEquals( [ '5555', '7777', '8888' ], $data['postcodes'] );
 	}
 
 	/**
@@ -190,36 +190,36 @@ class WC_REST_Taxes_Controller_Tests extends WC_REST_Unit_Test_Case {
 		wp_set_current_user( $this->user );
 
 		$tax_id_1 = WC_Tax::_insert_tax_rate(
-			array(
+			[
 				'tax_rate_country'  => 'JP',
 				'tax_rate'          => '1',
 				'tax_rate_priority' => 1,
 				'tax_rate_name'     => 'Fake Tax 1',
-			)
+			]
 		);
 		$tax_id_3 = WC_Tax::_insert_tax_rate(
-			array(
+			[
 				'tax_rate_country'  => 'JP',
 				'tax_rate'          => '1',
 				'tax_rate_priority' => 3,
 				'tax_rate_name'     => 'Fake Tax 3',
-			)
+			]
 		);
 		$tax_id_2 = WC_Tax::_insert_tax_rate(
-			array(
+			[
 				'tax_rate_country'  => 'JP',
 				'tax_rate'          => '1',
 				'tax_rate_priority' => 2,
 				'tax_rate_name'     => 'Fake Tax 2',
-			)
+			]
 		);
 
 		$response = $this->do_rest_get_request(
 			'taxes',
-			array(
+			[
 				'orderby' => 'priority',
 				'order'   => $order_type,
-			)
+			]
 		);
 
 		$this->assertEquals( 200, $response->get_status() );
@@ -232,9 +232,9 @@ class WC_REST_Taxes_Controller_Tests extends WC_REST_Unit_Test_Case {
 		);
 
 		if ( 'asc' === $order_type ) {
-			$expected = array( $tax_id_1, $tax_id_2, $tax_id_3 );
+			$expected = [ $tax_id_1, $tax_id_2, $tax_id_3 ];
 		} else {
-			$expected = array( $tax_id_3, $tax_id_2, $tax_id_1 );
+			$expected = [ $tax_id_3, $tax_id_2, $tax_id_1 ];
 		}
 		$this->assertEquals( $expected, $ids );
 	}
@@ -251,27 +251,27 @@ class WC_REST_Taxes_Controller_Tests extends WC_REST_Unit_Test_Case {
 	public function test_can_get_taxes_filtering_by_class( $class ) {
 		wp_set_current_user( $this->user );
 
-		$classes = array( 'standard', 'reduced-rate', 'zero-rate' );
+		$classes = [ 'standard', 'reduced-rate', 'zero-rate' ];
 
-		$tax_ids_by_class = array();
+		$tax_ids_by_class = [];
 		foreach ( $classes as $class ) {
 			$tax_id                     = WC_Tax::_insert_tax_rate(
-				array(
+				[
 					'tax_rate_country'  => 'JP',
 					'tax_rate'          => '1',
 					'tax_rate_priority' => 1,
 					'tax_rate_name'     => 'Fake Tax',
 					'tax_rate_class'    => $class,
-				)
+				]
 			);
 			$tax_ids_by_class[ $class ] = $tax_id;
 		}
 
 		$response = $this->do_rest_get_request(
 			'taxes',
-			array(
+			[
 				'class' => $class,
-			)
+			]
 		);
 
 		$this->assertEquals( 200, $response->get_status() );
@@ -283,6 +283,6 @@ class WC_REST_Taxes_Controller_Tests extends WC_REST_Unit_Test_Case {
 			$data
 		);
 
-		$this->assertEquals( array( $tax_ids_by_class[ $class ] ), $ids );
+		$this->assertEquals( [ $tax_ids_by_class[ $class ] ], $ids );
 	}
 }

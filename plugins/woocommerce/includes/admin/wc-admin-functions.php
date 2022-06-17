@@ -18,7 +18,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 function wc_get_screen_ids() {
 
 	$wc_screen_id = sanitize_title( __( 'WooCommerce', 'woocommerce' ) );
-	$screen_ids   = array(
+	$screen_ids   = [
 		'toplevel_page_' . $wc_screen_id,
 		$wc_screen_id . '_page_wc-orders',
 		$wc_screen_id . '_page_wc-reports',
@@ -39,7 +39,7 @@ function wc_get_screen_ids() {
 		'edit-product_tag',
 		'profile',
 		'user-edit',
-	);
+	];
 
 	foreach ( wc_get_order_types() as $type ) {
 		$screen_ids[] = $type;
@@ -76,7 +76,7 @@ function wc_create_page( $slug, $option = '', $page_title = '', $page_content = 
 	if ( $option_value > 0 ) {
 		$page_object = get_post( $option_value );
 
-		if ( $page_object && 'page' === $page_object->post_type && ! in_array( $page_object->post_status, array( 'pending', 'trash', 'future', 'auto-draft' ), true ) ) {
+		if ( $page_object && 'page' === $page_object->post_type && ! in_array( $page_object->post_status, [ 'pending', 'trash', 'future', 'auto-draft' ], true ) ) {
 			// Valid page is already in place.
 			return $page_object->ID;
 		}
@@ -84,7 +84,7 @@ function wc_create_page( $slug, $option = '', $page_title = '', $page_content = 
 
 	if ( strlen( $page_content ) > 0 ) {
 		// Search for an existing page with the specified page content (typically a shortcode).
-		$shortcode = str_replace( array( '<!-- wp:shortcode -->', '<!-- /wp:shortcode -->' ), '', $page_content );
+		$shortcode = str_replace( [ '<!-- wp:shortcode -->', '<!-- /wp:shortcode -->' ], '', $page_content );
 		$valid_page_found = $wpdb->get_var( $wpdb->prepare( "SELECT ID FROM $wpdb->posts WHERE post_type='page' AND post_status NOT IN ( 'pending', 'trash', 'future', 'auto-draft' ) AND post_content LIKE %s LIMIT 1;", "%{$shortcode}%" ) );
 	} else {
 		// Search for an existing page with the specified page slug.
@@ -111,13 +111,13 @@ function wc_create_page( $slug, $option = '', $page_title = '', $page_content = 
 
 	if ( $trashed_page_found ) {
 		$page_id   = $trashed_page_found;
-		$page_data = array(
+		$page_data = [
 			'ID'          => $page_id,
 			'post_status' => $post_status,
-		);
+		];
 		wp_update_post( $page_data );
 	} else {
-		$page_data = array(
+		$page_data = [
 			'post_status'    => $post_status,
 			'post_type'      => 'page',
 			'post_author'    => 1,
@@ -126,7 +126,7 @@ function wc_create_page( $slug, $option = '', $page_title = '', $page_content = 
 			'post_content'   => $page_content,
 			'post_parent'    => $post_parent,
 			'comment_status' => 'closed',
-		);
+		];
 		$page_id   = wp_insert_post( $page_data );
 
 		do_action( 'woocommerce_page_created', $page_id, $page_data );
@@ -256,10 +256,10 @@ function wc_maybe_adjust_line_item_product_stock( $item, $item_quantity = -1 ) {
 		}
 	}
 
-	return array(
+	return [
 		'from' => $new_stock + $diff,
 		'to'   => $new_stock,
-	);
+	];
 }
 
 /**
@@ -273,20 +273,20 @@ function wc_save_order_items( $order_id, $items ) {
 	// Allow other plugins to check change in order items before they are saved.
 	do_action( 'woocommerce_before_save_order_items', $order_id, $items );
 
-	$qty_change_order_notes = array();
+	$qty_change_order_notes = [];
 	$order                  = wc_get_order( $order_id );
 
 	// Line items and fees.
 	if ( isset( $items['order_item_id'] ) ) {
-		$data_keys = array(
-			'line_tax'             => array(),
-			'line_subtotal_tax'    => array(),
+		$data_keys = [
+			'line_tax'             => [],
+			'line_subtotal_tax'    => [],
 			'order_item_name'      => null,
 			'order_item_qty'       => null,
 			'order_item_tax_class' => null,
 			'line_total'           => null,
 			'line_subtotal'        => null,
-		);
+		];
 		foreach ( $items['order_item_id'] as $item_id ) {
 			$item = WC_Order_Factory::get_order_item( absint( $item_id ) );
 
@@ -294,7 +294,7 @@ function wc_save_order_items( $order_id, $items ) {
 				continue;
 			}
 
-			$item_data = array();
+			$item_data = [];
 
 			foreach ( $data_keys as $key => $default ) {
 				$item_data[ $key ] = isset( $items[ $key ][ $item_id ] ) ? wc_check_invalid_utf8( wp_unslash( $items[ $key ][ $item_id ] ) ) : $default;
@@ -310,17 +310,17 @@ function wc_save_order_items( $order_id, $items ) {
 			}
 
 			$item->set_props(
-				array(
+				[
 					'name'      => $item_data['order_item_name'],
 					'quantity'  => $item_data['order_item_qty'],
 					'tax_class' => $item_data['order_item_tax_class'],
 					'total'     => $item_data['line_total'],
 					'subtotal'  => $item_data['line_subtotal'],
-					'taxes'     => array(
+					'taxes'     => [
 						'total'    => $item_data['line_tax'],
 						'subtotal' => $item_data['line_subtotal_tax'],
-					),
-				)
+					],
+				]
 			);
 
 			if ( 'fee' === $item->get_type() ) {
@@ -349,7 +349,7 @@ function wc_save_order_items( $order_id, $items ) {
 
 			$item->save();
 
-			if ( in_array( $order->get_status(), array( 'processing', 'completed', 'on-hold' ) ) ) {
+			if ( in_array( $order->get_status(), [ 'processing', 'completed', 'on-hold' ] ) ) {
 				$changed_stock = wc_maybe_adjust_line_item_product_stock( $item );
 				if ( $changed_stock && ! is_wp_error( $changed_stock ) ) {
 					$qty_change_order_notes[] = $item->get_name() . ' (' . $changed_stock['from'] . '&rarr;' . $changed_stock['to'] . ')';
@@ -360,12 +360,12 @@ function wc_save_order_items( $order_id, $items ) {
 
 	// Shipping Rows.
 	if ( isset( $items['shipping_method_id'] ) ) {
-		$data_keys = array(
+		$data_keys = [
 			'shipping_method'       => null,
 			'shipping_method_title' => null,
 			'shipping_cost'         => 0,
-			'shipping_taxes'        => array(),
-		);
+			'shipping_taxes'        => [],
+		];
 
 		foreach ( $items['shipping_method_id'] as $item_id ) {
 			$item = WC_Order_Factory::get_order_item( absint( $item_id ) );
@@ -374,21 +374,21 @@ function wc_save_order_items( $order_id, $items ) {
 				continue;
 			}
 
-			$item_data = array();
+			$item_data = [];
 
 			foreach ( $data_keys as $key => $default ) {
 				$item_data[ $key ] = isset( $items[ $key ][ $item_id ] ) ? wc_clean( wp_unslash( $items[ $key ][ $item_id ] ) ) : $default;
 			}
 
 			$item->set_props(
-				array(
+				[
 					'method_id'    => $item_data['shipping_method'],
 					'method_title' => $item_data['shipping_method_title'],
 					'total'        => $item_data['shipping_cost'],
-					'taxes'        => array(
+					'taxes'        => [
 						'total' => $item_data['shipping_taxes'],
-					),
-				)
+					],
+				]
 			);
 
 			if ( isset( $items['meta_key'][ $item_id ], $items['meta_value'][ $item_id ] ) ) {
@@ -460,7 +460,7 @@ function wc_render_invalid_variation_notice( $product_object ) {
 		return;
 	}
 
-	$variation_ids = $product_object ? $product_object->get_children() : array();
+	$variation_ids = $product_object ? $product_object->get_children() : [];
 
 	if ( empty( $variation_ids ) ) {
 		return;
@@ -518,5 +518,5 @@ function wc_get_current_admin_url() {
 		return '';
 	}
 
-	return remove_query_arg( array( '_wpnonce', '_wc_notice_nonce', 'wc_db_update', 'wc_db_update_nonce', 'wc-hide-notice' ), admin_url( $uri ) );
+	return remove_query_arg( [ '_wpnonce', '_wc_notice_nonce', 'wc_db_update', 'wc_db_update_nonce', 'wc-hide-notice' ], admin_url( $uri ) );
 }

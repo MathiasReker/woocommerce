@@ -15,7 +15,7 @@ class WC_Test_Shortcode_Products extends WC_Unit_Test_Case {
 	 */
 	public function test_get_attributes() {
 		$shortcode = new WC_Shortcode_Products();
-		$expected  = array(
+		$expected  = [
 			'limit'          => '-1',
 			'columns'        => 4,
 			'orderby'        => '',
@@ -36,16 +36,16 @@ class WC_Test_Shortcode_Products extends WC_Unit_Test_Case {
 			'paginate'       => false,
 			'cache'          => true,
 			'tag'            => '',
-		);
+		];
 		$this->assertEquals( $expected, $shortcode->get_attributes() );
 
 		$shortcode2 = new WC_Shortcode_Products(
-			array(
+			[
 				'orderby' => 'id',
 				'order'   => 'DESC',
-			)
+			]
 		);
-		$expected2  = array(
+		$expected2  = [
 			'limit'          => '-1',
 			'columns'        => '4',
 			'orderby'        => 'id',
@@ -66,7 +66,7 @@ class WC_Test_Shortcode_Products extends WC_Unit_Test_Case {
 			'paginate'       => false,
 			'cache'          => true,
 			'tag'            => '',
-		);
+		];
 		$this->assertEquals( $expected2, $shortcode2->get_attributes() );
 	}
 
@@ -79,7 +79,7 @@ class WC_Test_Shortcode_Products extends WC_Unit_Test_Case {
 
 		// Empty products shortcode.
 		$shortcode = new WC_Shortcode_Products();
-		$expected  = array(
+		$expected  = [
 			'post_type'           => 'product',
 			'post_status'         => 'publish',
 			'ignore_sticky_posts' => true,
@@ -90,17 +90,17 @@ class WC_Test_Shortcode_Products extends WC_Unit_Test_Case {
 			'meta_query'          => $meta_query, // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
 			'tax_query'           => $tax_query, // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query
 			'fields'              => 'ids',
-		);
+		];
 		$this->assertEquals( $expected, $shortcode->get_query_args() );
 
 		// products shortcode with attributes.
 		$shortcode2 = new WC_Shortcode_Products(
-			array(
+			[
 				'orderby' => 'ID',
 				'order'   => 'DESC',
-			)
+			]
 		);
-		$expected2  = array(
+		$expected2  = [
 			'post_type'           => 'product',
 			'post_status'         => 'publish',
 			'ignore_sticky_posts' => true,
@@ -111,16 +111,16 @@ class WC_Test_Shortcode_Products extends WC_Unit_Test_Case {
 			'meta_query'          => $meta_query, // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
 			'tax_query'           => $tax_query, // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query
 			'fields'              => 'ids',
-		);
+		];
 		$this->assertEquals( $expected2, $shortcode2->get_query_args() );
 
 		$shortcode3                = new WC_Shortcode_Products(
-			array(
+			[
 				'ids'  => '1,2,3',
 				'skus' => 'foo,bar',
-			)
+			]
 		);
-		$expected3                 = array(
+		$expected3                 = [
 			'post_type'           => 'product',
 			'post_status'         => 'publish',
 			'ignore_sticky_posts' => true,
@@ -130,30 +130,30 @@ class WC_Test_Shortcode_Products extends WC_Unit_Test_Case {
 			'posts_per_page'      => -1,
 			'meta_query'          => $meta_query, // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
 			'tax_query'           => $tax_query, // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query
-			'post__in'            => array( '1', '2', '3' ),
+			'post__in'            => [ '1', '2', '3' ],
 			'fields'              => 'ids',
-		);
-		$expected3['meta_query'][] = array(
+		];
+		$expected3['meta_query'][] = [
 			'key'     => '_sku',
-			'value'   => array( 'foo', 'bar' ),
+			'value'   => [ 'foo', 'bar' ],
 			'compare' => 'IN',
-		);
+		];
 
 		$this->assertEquals( $expected3, $shortcode3->get_query_args() );
 
 		// product_category shortcode.
 		$shortcode4               = new WC_Shortcode_Products(
-			array(
+			[
 				'per_page' => '12',
 				'columns'  => '4',
 				'orderby'  => 'title',
 				'order'    => 'ASC',
 				'category' => 'clothing',
 				'operator' => 'IN',
-			),
+			],
 			'product_category'
 		);
-		$expected4                = array(
+		$expected4                = [
 			'post_type'           => 'product',
 			'post_status'         => 'publish',
 			'ignore_sticky_posts' => true,
@@ -164,30 +164,30 @@ class WC_Test_Shortcode_Products extends WC_Unit_Test_Case {
 			'meta_query'          => $meta_query, // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
 			'tax_query'           => $tax_query, // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query
 			'fields'              => 'ids',
-		);
-		$expected4['tax_query'][] = array(
+		];
+		$expected4['tax_query'][] = [
 			'taxonomy'         => 'product_cat',
-			'terms'            => array( 'clothing' ),
+			'terms'            => [ 'clothing' ],
 			'field'            => 'slug',
 			'operator'         => 'IN',
 			'include_children' => true,
-		);
+		];
 
 		$this->assertEquals( $expected4, $shortcode4->get_query_args() );
 
 		// product_category shortcode using category ids.
 		$shortcode4_id               = new WC_Shortcode_Products(
-			array(
+			[
 				'per_page' => '12',
 				'columns'  => '4',
 				'orderby'  => 'title',
 				'order'    => 'ASC',
 				'category' => '123',
 				'operator' => 'IN',
-			),
+			],
 			'product_category'
 		);
-		$expected4_id                = array(
+		$expected4_id                = [
 			'post_type'           => 'product',
 			'post_status'         => 'publish',
 			'ignore_sticky_posts' => true,
@@ -198,30 +198,30 @@ class WC_Test_Shortcode_Products extends WC_Unit_Test_Case {
 			'meta_query'          => $meta_query, // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
 			'tax_query'           => $tax_query, // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query
 			'fields'              => 'ids',
-		);
-		$expected4_id['tax_query'][] = array(
+		];
+		$expected4_id['tax_query'][] = [
 			'taxonomy'         => 'product_cat',
-			'terms'            => array( 123 ),
+			'terms'            => [ 123 ],
 			'field'            => 'term_id',
 			'operator'         => 'IN',
 			'include_children' => true,
-		);
+		];
 
 		$this->assertEquals( $expected4_id, $shortcode4_id->get_query_args() );
 
 		// recent_products shortcode.
 		$shortcode5 = new WC_Shortcode_Products(
-			array(
+			[
 				'per_page' => '12',
 				'columns'  => '4',
 				'orderby'  => 'date',
 				'order'    => 'DESC',
 				'category' => '',
 				'operator' => 'IN',
-			),
+			],
 			'recent_products'
 		);
-		$expected5  = array(
+		$expected5  = [
 			'post_type'           => 'product',
 			'post_status'         => 'publish',
 			'ignore_sticky_posts' => true,
@@ -232,19 +232,19 @@ class WC_Test_Shortcode_Products extends WC_Unit_Test_Case {
 			'meta_query'          => $meta_query, // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
 			'tax_query'           => $tax_query, // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query
 			'fields'              => 'ids',
-		);
+		];
 
 		$this->assertEquals( $expected5, $shortcode5->get_query_args() );
 
 		// product shortcode.
 		$shortcode6 = new WC_Shortcode_Products(
-			array(
+			[
 				'ids'      => '1',
 				'per_page' => '1',
-			),
+			],
 			'product'
 		);
-		$expected6  = array(
+		$expected6  = [
 			'post_type'           => 'product',
 			'post_status'         => 'publish',
 			'ignore_sticky_posts' => true,
@@ -256,23 +256,23 @@ class WC_Test_Shortcode_Products extends WC_Unit_Test_Case {
 			'tax_query'           => $tax_query, // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query
 			'p'                   => '1',
 			'fields'              => 'ids',
-		);
+		];
 
 		$this->assertEquals( $expected6, $shortcode6->get_query_args() );
 
 		// sale_products shortcode.
 		$shortcode7 = new WC_Shortcode_Products(
-			array(
+			[
 				'per_page' => '12',
 				'columns'  => '4',
 				'orderby'  => 'title',
 				'order'    => 'ASC',
 				'category' => '',
 				'operator' => 'IN',
-			),
+			],
 			'sale_products'
 		);
-		$expected7  = array(
+		$expected7  = [
 			'post_type'           => 'product',
 			'post_status'         => 'publish',
 			'ignore_sticky_posts' => true,
@@ -282,23 +282,23 @@ class WC_Test_Shortcode_Products extends WC_Unit_Test_Case {
 			'posts_per_page'      => 12,
 			'meta_query'          => $meta_query, // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
 			'tax_query'           => $tax_query, // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query
-			'post__in'            => array_merge( array( 0 ), wc_get_product_ids_on_sale() ),
+			'post__in'            => array_merge( [ 0 ], wc_get_product_ids_on_sale() ),
 			'fields'              => 'ids',
-		);
+		];
 
 		$this->assertEquals( $expected7, $shortcode7->get_query_args() );
 
 		// best_selling_products shortcode.
 		$shortcode8 = new WC_Shortcode_Products(
-			array(
+			[
 				'per_page' => '12',
 				'columns'  => '4',
 				'category' => '',
 				'operator' => 'IN',
-			),
+			],
 			'best_selling_products'
 		);
-		$expected8  = array(
+		$expected8  = [
 			'post_type'           => 'product',
 			'post_status'         => 'publish',
 			'ignore_sticky_posts' => true,
@@ -310,23 +310,23 @@ class WC_Test_Shortcode_Products extends WC_Unit_Test_Case {
 			'tax_query'           => $tax_query, // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query
 			'meta_key'            => 'total_sales', // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
 			'fields'              => 'ids',
-		);
+		];
 
 		$this->assertEquals( $expected8, $shortcode8->get_query_args() );
 
 		// top_rated_products shortcode.
 		$shortcode9 = new WC_Shortcode_Products(
-			array(
+			[
 				'per_page' => '12',
 				'columns'  => '4',
 				'orderby'  => 'title',
 				'order'    => 'ASC',
 				'category' => '',
 				'operator' => 'IN',
-			),
+			],
 			'top_rated_products'
 		);
-		$expected9  = array(
+		$expected9  = [
 			'post_type'           => 'product',
 			'post_status'         => 'publish',
 			'ignore_sticky_posts' => true,
@@ -338,13 +338,13 @@ class WC_Test_Shortcode_Products extends WC_Unit_Test_Case {
 			'tax_query'           => $tax_query, // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query
 			'fields'              => 'ids',
 			'meta_key'            => '_wc_average_rating', // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
-		);
+		];
 
 		$this->assertEquals( $expected9, $shortcode9->get_query_args() );
 
 		// featured_products shortcode.
 		$shortcode10 = new WC_Shortcode_Products(
-			array(
+			[
 				'per_page'   => '12',
 				'columns'    => '4',
 				'orderby'    => 'date',
@@ -352,9 +352,9 @@ class WC_Test_Shortcode_Products extends WC_Unit_Test_Case {
 				'category'   => '',
 				'operator'   => 'IN',
 				'visibility' => 'featured',
-			)
+			]
 		);
-		$expected10  = array(
+		$expected10  = [
 			'post_type'           => 'product',
 			'post_status'         => 'publish',
 			'ignore_sticky_posts' => true,
@@ -365,34 +365,34 @@ class WC_Test_Shortcode_Products extends WC_Unit_Test_Case {
 			'meta_query'          => $meta_query, // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
 			'tax_query'           => array_merge( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query
 				$tax_query,
-				array(
-					array(
+				[
+					[
 						'taxonomy'         => 'product_visibility',
 						'terms'            => 'featured',
 						'field'            => 'name',
 						'operator'         => 'IN',
 						'include_children' => false,
-					),
-				)
+					],
+				]
 			),
 			'fields'              => 'ids',
-		);
+		];
 
 		$this->assertEquals( $expected10, $shortcode10->get_query_args() );
 
 		// product_attribute shortcode.
 		$shortcode11 = new WC_Shortcode_Products(
-			array(
+			[
 				'per_page'  => '12',
 				'columns'   => '4',
 				'orderby'   => 'title',
 				'order'     => 'asc',
 				'attribute' => 'color',
 				'filter'    => 'black',
-			),
+			],
 			'product_attribute'
 		);
-		$expected11  = array(
+		$expected11  = [
 			'post_type'           => 'product',
 			'post_status'         => 'publish',
 			'ignore_sticky_posts' => true,
@@ -403,33 +403,33 @@ class WC_Test_Shortcode_Products extends WC_Unit_Test_Case {
 			'meta_query'          => $meta_query, // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
 			'tax_query'           => array_merge( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query
 				$tax_query,
-				array(
-					array(
+				[
+					[
 						'taxonomy' => 'pa_color',
-						'terms'    => array( 'black' ),
+						'terms'    => [ 'black' ],
 						'field'    => 'slug',
 						'operator' => 'IN',
-					),
-				)
+					],
+				]
 			),
 			'fields'              => 'ids',
-		);
+		];
 
 		$this->assertEquals( $expected11, $shortcode11->get_query_args() );
 
 		// product_attribute shortcode using term ids.
 		$shortcode11_id = new WC_Shortcode_Products(
-			array(
+			[
 				'per_page'  => '12',
 				'columns'   => '4',
 				'orderby'   => 'title',
 				'order'     => 'asc',
 				'attribute' => 'color',
 				'terms'     => '123',
-			),
+			],
 			'product_attribute'
 		);
-		$expected11_id  = array(
+		$expected11_id  = [
 			'post_type'           => 'product',
 			'post_status'         => 'publish',
 			'ignore_sticky_posts' => true,
@@ -440,27 +440,27 @@ class WC_Test_Shortcode_Products extends WC_Unit_Test_Case {
 			'meta_query'          => $meta_query, // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
 			'tax_query'           => array_merge( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query
 				$tax_query,
-				array(
-					array(
+				[
+					[
 						'taxonomy' => 'pa_color',
-						'terms'    => array( 123 ),
+						'terms'    => [ 123 ],
 						'field'    => 'term_id',
 						'operator' => 'IN',
-					),
-				)
+					],
+				]
 			),
 			'fields'              => 'ids',
-		);
+		];
 
 		$this->assertEquals( $expected11_id, $shortcode11_id->get_query_args() );
 
 		// Check for visibility shortcode.
 		$shortcode12 = new WC_Shortcode_Products(
-			array(
+			[
 				'visibility' => 'hidden',
-			)
+			]
 		);
-		$expected12  = array(
+		$expected12  = [
 			'post_type'           => 'product',
 			'post_status'         => 'publish',
 			'ignore_sticky_posts' => true,
@@ -469,26 +469,26 @@ class WC_Test_Shortcode_Products extends WC_Unit_Test_Case {
 			'order'               => 'ASC',
 			'posts_per_page'      => -1,
 			'meta_query'          => $meta_query, // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
-			'tax_query'           => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query
-				array(
+			'tax_query'           => [ // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query
+				[
 					'taxonomy'         => 'product_visibility',
-					'terms'            => array( 'exclude-from-catalog', 'exclude-from-search' ),
+					'terms'            => [ 'exclude-from-catalog', 'exclude-from-search' ],
 					'field'            => 'name',
 					'operator'         => 'AND',
 					'include_children' => false,
-				),
-			),
+				],
+			],
 			'fields'              => 'ids',
-		);
+		];
 
 		$this->assertEquals( $expected12, $shortcode12->get_query_args() );
 
 		$shortcode13 = new WC_Shortcode_Products(
-			array(
+			[
 				'visibility' => 'catalog',
-			)
+			]
 		);
-		$expected13  = array(
+		$expected13  = [
 			'post_type'           => 'product',
 			'post_status'         => 'publish',
 			'ignore_sticky_posts' => true,
@@ -497,33 +497,33 @@ class WC_Test_Shortcode_Products extends WC_Unit_Test_Case {
 			'order'               => 'ASC',
 			'posts_per_page'      => -1,
 			'meta_query'          => $meta_query, // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
-			'tax_query'           => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query
-				array(
+			'tax_query'           => [ // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query
+				[
 					'taxonomy'         => 'product_visibility',
 					'terms'            => 'exclude-from-search',
 					'field'            => 'name',
 					'operator'         => 'IN',
 					'include_children' => false,
-				),
-				array(
+				],
+				[
 					'taxonomy'         => 'product_visibility',
 					'terms'            => 'exclude-from-catalog',
 					'field'            => 'name',
 					'operator'         => 'NOT IN',
 					'include_children' => false,
-				),
-			),
+				],
+			],
 			'fields'              => 'ids',
-		);
+		];
 
 		$this->assertEquals( $expected13, $shortcode13->get_query_args() );
 
 		$shortcode14 = new WC_Shortcode_Products(
-			array(
+			[
 				'visibility' => 'search',
-			)
+			]
 		);
-		$expected14  = array(
+		$expected14  = [
 			'post_type'           => 'product',
 			'post_status'         => 'publish',
 			'ignore_sticky_posts' => true,
@@ -532,35 +532,35 @@ class WC_Test_Shortcode_Products extends WC_Unit_Test_Case {
 			'order'               => 'ASC',
 			'posts_per_page'      => -1,
 			'meta_query'          => $meta_query, // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
-			'tax_query'           => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query
-				array(
+			'tax_query'           => [ // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query
+				[
 					'taxonomy'         => 'product_visibility',
 					'terms'            => 'exclude-from-catalog',
 					'field'            => 'name',
 					'operator'         => 'IN',
 					'include_children' => false,
-				),
-				array(
+				],
+				[
 					'taxonomy'         => 'product_visibility',
 					'terms'            => 'exclude-from-search',
 					'field'            => 'name',
 					'operator'         => 'NOT IN',
 					'include_children' => false,
-				),
-			),
+				],
+			],
 			'fields'              => 'ids',
-		);
+		];
 
 		$this->assertEquals( $expected14, $shortcode14->get_query_args() );
 
 		// products shortcode -- select multiple categories using AND operator.
 		$shortcode15 = new WC_Shortcode_Products(
-			array(
+			[
 				'category'     => 'cat1,cat2',
 				'cat_operator' => 'AND',
-			)
+			]
 		);
-		$expected15  = array(
+		$expected15  = [
 			'post_type'           => 'product',
 			'post_status'         => 'publish',
 			'ignore_sticky_posts' => true,
@@ -571,29 +571,29 @@ class WC_Test_Shortcode_Products extends WC_Unit_Test_Case {
 			'meta_query'          => $meta_query, // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
 			'tax_query'           => array_merge( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query
 				$tax_query,
-				array(
-					array(
+				[
+					[
 						'taxonomy'         => 'product_cat',
-						'terms'            => array( 'cat1', 'cat2' ),
+						'terms'            => [ 'cat1', 'cat2' ],
 						'field'            => 'slug',
 						'operator'         => 'AND',
 						'include_children' => false,
-					),
-				)
+					],
+				]
 			),
 			'fields'              => 'ids',
-		);
+		];
 
 		$this->assertEquals( $expected15, $shortcode15->get_query_args() );
 
 		// products shortcode -- exclude multiple categories using NOT IN operator.
 		$shortcode16 = new WC_Shortcode_Products(
-			array(
+			[
 				'category'     => 'cat1,cat2',
 				'cat_operator' => 'NOT IN',
-			)
+			]
 		);
-		$expected16  = array(
+		$expected16  = [
 			'post_type'           => 'product',
 			'post_status'         => 'publish',
 			'ignore_sticky_posts' => true,
@@ -604,18 +604,18 @@ class WC_Test_Shortcode_Products extends WC_Unit_Test_Case {
 			'meta_query'          => $meta_query, // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
 			'tax_query'           => array_merge( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query
 				$tax_query,
-				array(
-					array(
+				[
+					[
 						'taxonomy'         => 'product_cat',
-						'terms'            => array( 'cat1', 'cat2' ),
+						'terms'            => [ 'cat1', 'cat2' ],
 						'field'            => 'slug',
 						'operator'         => 'NOT IN',
 						'include_children' => true,
-					),
-				)
+					],
+				]
 			),
 			'fields'              => 'ids',
-		);
+		];
 
 		$this->assertEquals( $expected16, $shortcode16->get_query_args() );
 
@@ -648,9 +648,9 @@ class WC_Test_Shortcode_Products extends WC_Unit_Test_Case {
 		$this->assertFalse( $shortcode->set_product_as_visible( false ) );
 
 		$shortcode2 = new WC_Shortcode_Products(
-			array(
+			[
 				'visibility' => 'hidden',
-			)
+			]
 		);
 		$this->assertTrue( $shortcode2->set_product_as_visible( false ) );
 	}
@@ -661,20 +661,20 @@ class WC_Test_Shortcode_Products extends WC_Unit_Test_Case {
 	public function test_order_by_rating_post_clauses() {
 		global $wpdb;
 
-		$expected = array(
+		$expected = [
 			'where'   => " AND $wpdb->commentmeta.meta_key = 'rating' ",
 			'join'    => "LEFT JOIN $wpdb->comments ON($wpdb->posts.ID = $wpdb->comments.comment_post_ID) LEFT JOIN $wpdb->commentmeta ON($wpdb->comments.comment_ID = $wpdb->commentmeta.comment_id)",
 			'orderby' => "$wpdb->commentmeta.meta_value DESC",
 			'groupby' => "$wpdb->posts.ID",
-		);
+		];
 
 		$this->assertEquals(
 			$expected,
 			WC_Shortcode_Products::order_by_rating_post_clauses(
-				array(
+				[
 					'where' => '',
 					'join'  => '',
-				)
+				]
 			)
 		);
 	}

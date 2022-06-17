@@ -39,7 +39,7 @@ class SyncUI {
 			return;
 		}
 
-		add_filter( 'woocommerce_debug_tools', array( $this, 'add_tools' ) );
+		add_filter( 'woocommerce_debug_tools', [ $this, 'add_tools' ] );
 	}
 
 	/**
@@ -54,24 +54,24 @@ class SyncUI {
 
 		if ( ! $sync->in_progress() ) {
 			// Provide tools to trigger a fresh scan (migration) and to clear the Approved Directories list.
-			$tools['approved_directories_sync'] = array(
+			$tools['approved_directories_sync'] = [
 				'name'             => __( 'Synchronize approved download directories', 'woocommerce' ),
 				'desc'             => __( 'Updates the list of Approved Product Download Directories. Note that triggering this tool does not impact whether the Approved Download Directories list is enabled or not.', 'woocommerce' ),
 				'button'           => __( 'Update', 'woocommerce' ),
-				'callback'         => array( $this, 'trigger_sync' ),
+				'callback'         => [ $this, 'trigger_sync' ],
 				'requires_refresh' => true,
-			);
+			];
 
-			$tools['approved_directories_clear'] = array(
+			$tools['approved_directories_clear'] = [
 				'name'             => __( 'Empty the approved download directories list', 'woocommerce' ),
 				'desc'             => __( 'Removes all existing entries from the Approved Product Download Directories list.', 'woocommerce' ),
 				'button'           => __( 'Clear', 'woocommerce' ),
-				'callback'         => array( $this, 'clear_existing_entries' ),
+				'callback'         => [ $this, 'clear_existing_entries' ],
 				'requires_refresh' => true,
-			);
+			];
 		} else {
 			// Or if a scan (migration) is already in progress, offer a means of cancelling it.
-			$tools['cancel_directories_scan'] = array(
+			$tools['cancel_directories_scan'] = [
 				'name'     => __( 'Cancel synchronization of approved directories', 'woocommerce' ),
 				'desc'     => sprintf(
 				/* translators: %d is an integer between 0-100 representing the percentage complete of the current scan. */
@@ -79,8 +79,8 @@ class SyncUI {
 					$sync->get_progress()
 				),
 				'button'   => __( 'Cancel', 'woocommerce' ),
-				'callback' => array( $this, 'cancel_sync' ),
-			);
+				'callback' => [ $this, 'cancel_sync' ],
+			];
 		}
 
 		return $tools;

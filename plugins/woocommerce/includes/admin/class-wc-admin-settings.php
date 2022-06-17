@@ -25,28 +25,28 @@ if ( ! class_exists( 'WC_Admin_Settings', false ) ) :
 		 *
 		 * @var array
 		 */
-		private static $settings = array();
+		private static $settings = [];
 
 		/**
 		 * Error messages.
 		 *
 		 * @var array
 		 */
-		private static $errors = array();
+		private static $errors = [];
 
 		/**
 		 * Update messages.
 		 *
 		 * @var array
 		 */
-		private static $messages = array();
+		private static $messages = [];
 
 		/**
 		 * Include the settings page classes.
 		 */
 		public static function get_settings_pages() {
 			if ( empty( self::$settings ) ) {
-				$settings = array();
+				$settings = [];
 
 				include_once dirname( __FILE__ ) . '/settings/class-wc-settings-page.php';
 
@@ -135,21 +135,21 @@ if ( ! class_exists( 'WC_Admin_Settings', false ) ) :
 
 			do_action( 'woocommerce_settings_start' );
 
-			wp_enqueue_script( 'woocommerce_settings', WC()->plugin_url() . '/assets/js/admin/settings' . $suffix . '.js', array( 'jquery', 'wp-util', 'jquery-ui-datepicker', 'jquery-ui-sortable', 'iris', 'selectWoo' ), WC()->version, true );
+			wp_enqueue_script( 'woocommerce_settings', WC()->plugin_url() . '/assets/js/admin/settings' . $suffix . '.js', [ 'jquery', 'wp-util', 'jquery-ui-datepicker', 'jquery-ui-sortable', 'iris', 'selectWoo' ], WC()->version, true );
 
 			wp_localize_script(
 				'woocommerce_settings',
 				'woocommerce_settings_params',
-				array(
+				[
 					'i18n_nav_warning'                    => __( 'The changes you made will be lost if you navigate away from this page.', 'woocommerce' ),
 					'i18n_moved_up'                       => __( 'Item moved up', 'woocommerce' ),
 					'i18n_moved_down'                     => __( 'Item moved down', 'woocommerce' ),
 					'i18n_no_specific_countries_selected' => __( 'Selecting no country / region to sell to prevents from completing the checkout. Continue anyway?', 'woocommerce' ),
-				)
+				]
 			);
 
 			// Get tabs for the settings page.
-			$tabs = apply_filters( 'woocommerce_settings_tabs_array', array() );
+			$tabs = apply_filters( 'woocommerce_settings_tabs_array', [] );
 
 			include dirname( __FILE__ ) . '/views/html-admin-settings.php';
 		}
@@ -249,7 +249,7 @@ if ( ! class_exists( 'WC_Admin_Settings', false ) ) :
 				}
 
 				// Custom attribute handling.
-				$custom_attributes = array();
+				$custom_attributes = [];
 
 				if ( ! empty( $value['custom_attributes'] ) && is_array( $value['custom_attributes'] ) ) {
 					foreach ( $value['custom_attributes'] as $attribute => $attribute_value ) {
@@ -431,7 +431,7 @@ if ( ! class_exists( 'WC_Admin_Settings', false ) ) :
 					// Radio inputs.
 					case 'radio':
 						$option_value = $value['value'];
-						$disabled_values = ArrayUtil::get_value_or_default($value, 'disabled', array());
+						$disabled_values = ArrayUtil::get_value_or_default($value, 'disabled', []);
 
 						?>
 						<tr valign="top">
@@ -470,7 +470,7 @@ if ( ! class_exists( 'WC_Admin_Settings', false ) ) :
 					// Checkbox input.
 					case 'checkbox':
 						$option_value     = $value['value'];
-						$visibility_class = array();
+						$visibility_class = [];
 
 						if ( ! isset( $value['hide_if_checked'] ) ) {
 							$value['hide_if_checked'] = false;
@@ -567,7 +567,7 @@ if ( ! class_exists( 'WC_Admin_Settings', false ) ) :
 
 					// Single page selects.
 					case 'single_select_page':
-						$args = array(
+						$args = [
 							'name'             => $value['field_name'],
 							'id'               => $value['id'],
 							'sort_column'      => 'menu_order',
@@ -577,7 +577,7 @@ if ( ! class_exists( 'WC_Admin_Settings', false ) ) :
 							'echo'             => false,
 							'selected'         => absint( $value['value'] ),
 							'post_status'      => 'publish,private,draft',
-						);
+						];
 
 						if ( isset( $value['args'] ) ) {
 							$args = wp_parse_args( $value['args'], $args );
@@ -694,12 +694,12 @@ if ( ! class_exists( 'WC_Admin_Settings', false ) ) :
 
 					// Days/months/years selector.
 					case 'relative_date_selector':
-						$periods      = array(
+						$periods      = [
 							'days'   => __( 'Day(s)', 'woocommerce' ),
 							'weeks'  => __( 'Week(s)', 'woocommerce' ),
 							'months' => __( 'Month(s)', 'woocommerce' ),
 							'years'  => __( 'Year(s)', 'woocommerce' ),
-						);
+						];
 						$option_value = wc_parse_relative_date_option( $value['value'] );
 						?>
 						<tr valign="top">
@@ -760,24 +760,24 @@ if ( ! class_exists( 'WC_Admin_Settings', false ) ) :
 				$description = $value['desc'];
 			}
 
-			if ( $description && in_array( $value['type'], array( 'textarea', 'radio' ), true ) ) {
+			if ( $description && in_array( $value['type'], [ 'textarea', 'radio' ], true ) ) {
 				$description = '<p style="margin-top:0">' . wp_kses_post( $description ) . '</p>';
-			} elseif ( $description && in_array( $value['type'], array( 'checkbox' ), true ) ) {
+			} elseif ( $description && in_array( $value['type'], [ 'checkbox' ], true ) ) {
 				$description = wp_kses_post( $description );
 			} elseif ( $description ) {
 				$description = '<p class="description">' . wp_kses_post( $description ) . '</p>';
 			}
 
-			if ( $tooltip_html && in_array( $value['type'], array( 'checkbox' ), true ) ) {
+			if ( $tooltip_html && in_array( $value['type'], [ 'checkbox' ], true ) ) {
 				$tooltip_html = '<p class="description">' . $tooltip_html . '</p>';
 			} elseif ( $tooltip_html ) {
 				$tooltip_html = wc_help_tip( $tooltip_html );
 			}
 
-			return array(
+			return [
 				'description'  => $description,
 				'tooltip_html' => $tooltip_html,
-			);
+			];
 		}
 
 		/**
@@ -798,8 +798,8 @@ if ( ! class_exists( 'WC_Admin_Settings', false ) ) :
 			}
 
 			// Options to update will be stored here and saved later.
-			$update_options   = array();
-			$autoload_options = array();
+			$update_options   = [];
+			$autoload_options = [];
 
 			// Loop options and get values to save.
 			foreach ( $options as $option ) {
@@ -833,7 +833,7 @@ if ( ! class_exists( 'WC_Admin_Settings', false ) ) :
 						$value = array_filter( array_map( 'wc_clean', (array) $raw_value ) );
 						break;
 					case 'image_width':
-						$value = array();
+						$value = [];
 						if ( isset( $raw_value['width'] ) ) {
 							$value['width']  = wc_clean( $raw_value['width'] );
 							$value['height'] = wc_clean( $raw_value['height'] );
@@ -845,7 +845,7 @@ if ( ! class_exists( 'WC_Admin_Settings', false ) ) :
 						}
 						break;
 					case 'select':
-						$allowed_values = empty( $option['options'] ) ? array() : array_map( 'strval', array_keys( $option['options'] ) );
+						$allowed_values = empty( $option['options'] ) ? [] : array_map( 'strval', array_keys( $option['options'] ) );
 						if ( empty( $option['default'] ) && empty( $allowed_values ) ) {
 							$value = null;
 							break;
@@ -893,10 +893,10 @@ if ( ! class_exists( 'WC_Admin_Settings', false ) ) :
 				// Check if option is an array and handle that differently to single values.
 				if ( $option_name && $setting_name ) {
 					if ( ! isset( $update_options[ $option_name ] ) ) {
-						$update_options[ $option_name ] = get_option( $option_name, array() );
+						$update_options[ $option_name ] = get_option( $option_name, [] );
 					}
 					if ( ! is_array( $update_options[ $option_name ] ) ) {
-						$update_options[ $option_name ] = array();
+						$update_options[ $option_name ] = [];
 					}
 					$update_options[ $option_name ][ $setting_name ] = $value;
 				} else {

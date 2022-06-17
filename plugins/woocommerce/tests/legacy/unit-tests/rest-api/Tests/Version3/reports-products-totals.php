@@ -14,9 +14,9 @@ class WC_Tests_API_Reports_Products_Totals extends WC_REST_Unit_Test_Case {
 	public function setUp(): void {
 		parent::setUp();
 		$this->user = $this->factory->user->create(
-			array(
+			[
 				'role' => 'administrator',
-			)
+			]
 		);
 	}
 
@@ -43,23 +43,23 @@ class WC_Tests_API_Reports_Products_Totals extends WC_REST_Unit_Test_Case {
 		$report   = $response->get_data();
 		$types    = wc_get_product_types();
 		$terms    = get_terms(
-			array(
+			[
 				'taxonomy'   => 'product_type',
 				'hide_empty' => false,
-			)
+			]
 		);
-		$data     = array();
+		$data     = [];
 
 		foreach ( $terms as $product_type ) {
 			if ( ! isset( $types[ $product_type->name ] ) ) {
 				continue;
 			}
 
-			$data[] = array(
+			$data[] = [
 				'slug'  => $product_type->name,
 				'name'  => $types[ $product_type->name ],
 				'total' => (int) $product_type->count,
-			);
+			];
 		}
 
 		$this->assertEquals( 200, $response->get_status() );

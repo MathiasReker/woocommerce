@@ -41,32 +41,32 @@ class WC_REST_Data_Countries_Controller extends WC_REST_Data_Controller {
 		register_rest_route(
 			$this->namespace,
 			'/' . $this->rest_base,
-			array(
-				array(
+			[
+				[
 					'methods'             => WP_REST_Server::READABLE,
-					'callback'            => array( $this, 'get_items' ),
-					'permission_callback' => array( $this, 'get_items_permissions_check' ),
-				),
-				'schema' => array( $this, 'get_public_item_schema' ),
-			)
+					'callback'            => [ $this, 'get_items' ],
+					'permission_callback' => [ $this, 'get_items_permissions_check' ],
+				],
+				'schema' => [ $this, 'get_public_item_schema' ],
+			]
 		);
 		register_rest_route(
 			$this->namespace,
 			'/' . $this->rest_base . '/(?P<location>[\w-]+)',
-			array(
-				array(
+			[
+				[
 					'methods'             => WP_REST_Server::READABLE,
-					'callback'            => array( $this, 'get_item' ),
-					'permission_callback' => array( $this, 'get_items_permissions_check' ),
-					'args'                => array(
-						'location' => array(
+					'callback'            => [ $this, 'get_item' ],
+					'permission_callback' => [ $this, 'get_items_permissions_check' ],
+					'args'                => [
+						'location' => [
 							'description' => __( 'ISO3166 alpha-2 country code.', 'woocommerce' ),
 							'type'        => 'string',
-						),
-					),
-				),
-				'schema' => array( $this, 'get_public_item_schema' ),
-			)
+						],
+					],
+				],
+				'schema' => [ $this, 'get_public_item_schema' ],
+			]
 		);
 	}
 
@@ -80,24 +80,24 @@ class WC_REST_Data_Countries_Controller extends WC_REST_Data_Controller {
 	public function get_country( $country_code, $request ) {
 		$countries = WC()->countries->get_countries();
 		$states    = WC()->countries->get_states();
-		$data      = array();
+		$data      = [];
 
 		if ( ! array_key_exists( $country_code, $countries ) ) {
 			return false;
 		}
 
-		$country = array(
+		$country = [
 			'code' => $country_code,
 			'name' => $countries[ $country_code ],
-		);
+		];
 
-		$local_states = array();
+		$local_states = [];
 		if ( isset( $states[ $country_code ] ) ) {
 			foreach ( $states[ $country_code ] as $state_code => $state_name ) {
-				$local_states[] = array(
+				$local_states[] = [
 					'code' => $state_code,
 					'name' => $state_name,
-				);
+				];
 			}
 		}
 		$country['states'] = $local_states;
@@ -113,7 +113,7 @@ class WC_REST_Data_Countries_Controller extends WC_REST_Data_Controller {
 	 */
 	public function get_items( $request ) {
 		$countries = WC()->countries->get_countries();
-		$data      = array();
+		$data      = [];
 
 		foreach ( array_keys( $countries ) as $country_code ) {
 			$country  = $this->get_country( $country_code, $request );
@@ -134,7 +134,7 @@ class WC_REST_Data_Countries_Controller extends WC_REST_Data_Controller {
 	public function get_item( $request ) {
 		$data = $this->get_country( strtoupper( $request['location'] ), $request );
 		if ( empty( $data ) ) {
-			return new WP_Error( 'woocommerce_rest_data_invalid_location', __( 'There are no locations matching these parameters.', 'woocommerce' ), array( 'status' => 404 ) );
+			return new WP_Error( 'woocommerce_rest_data_invalid_location', __( 'There are no locations matching these parameters.', 'woocommerce' ), [ 'status' => 404 ] );
 		}
 		return $this->prepare_item_for_response( $data, $request );
 	}
@@ -174,14 +174,14 @@ class WC_REST_Data_Countries_Controller extends WC_REST_Data_Controller {
 	 */
 	protected function prepare_links( $item ) {
 		$country_code = strtolower( $item['code'] );
-		$links        = array(
-			'self'       => array(
+		$links        = [
+			'self'       => [
 				'href' => rest_url( sprintf( '/%s/%s/%s', $this->namespace, $this->rest_base, $country_code ) ),
-			),
-			'collection' => array(
+			],
+			'collection' => [
 				'href' => rest_url( sprintf( '/%s/%s', $this->namespace, $this->rest_base ) ),
-			),
-		);
+			],
+		];
 
 		return $links;
 	}
@@ -194,50 +194,50 @@ class WC_REST_Data_Countries_Controller extends WC_REST_Data_Controller {
 	 * @return array
 	 */
 	public function get_item_schema() {
-		$schema = array(
+		$schema = [
 			'$schema'    => 'http://json-schema.org/draft-04/schema#',
 			'title'      => 'data_countries',
 			'type'       => 'object',
-			'properties' => array(
-				'code'   => array(
+			'properties' => [
+				'code'   => [
 					'type'        => 'string',
 					'description' => __( 'ISO3166 alpha-2 country code.', 'woocommerce' ),
-					'context'     => array( 'view' ),
+					'context'     => [ 'view' ],
 					'readonly'    => true,
-				),
-				'name'   => array(
+				],
+				'name'   => [
 					'type'        => 'string',
 					'description' => __( 'Full name of country.', 'woocommerce' ),
-					'context'     => array( 'view' ),
+					'context'     => [ 'view' ],
 					'readonly'    => true,
-				),
-				'states' => array(
+				],
+				'states' => [
 					'type'        => 'array',
 					'description' => __( 'List of states in this country.', 'woocommerce' ),
-					'context'     => array( 'view' ),
+					'context'     => [ 'view' ],
 					'readonly'    => true,
-					'items'       => array(
+					'items'       => [
 						'type'       => 'object',
-						'context'    => array( 'view' ),
+						'context'    => [ 'view' ],
 						'readonly'   => true,
-						'properties' => array(
-							'code' => array(
+						'properties' => [
+							'code' => [
 								'type'        => 'string',
 								'description' => __( 'State code.', 'woocommerce' ),
-								'context'     => array( 'view' ),
+								'context'     => [ 'view' ],
 								'readonly'    => true,
-							),
-							'name' => array(
+							],
+							'name' => [
 								'type'        => 'string',
 								'description' => __( 'Full name of state.', 'woocommerce' ),
-								'context'     => array( 'view' ),
+								'context'     => [ 'view' ],
 								'readonly'    => true,
-							),
-						),
-					),
-				),
-			),
-		);
+							],
+						],
+					],
+				],
+			],
+		];
 
 		return $this->add_additional_fields_schema( $schema );
 	}

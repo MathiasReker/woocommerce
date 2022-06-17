@@ -81,7 +81,7 @@ if ( ! function_exists( 'is_product' ) ) {
 	 * @return bool
 	 */
 	function is_product() {
-		return is_singular( array( 'product' ) );
+		return is_singular( [ 'product' ] );
 	}
 }
 
@@ -482,10 +482,10 @@ function wc_is_file_valid_csv( $file, $check_path = true ) {
 	 */
 	$valid_filetypes = apply_filters(
 		'woocommerce_csv_import_valid_filetypes',
-		array(
+		[
 			'csv' => 'text/csv',
 			'txt' => 'text/plain',
-		)
+		]
 	);
 
 	$filetype = wp_check_filetype( $file, $valid_filetypes );

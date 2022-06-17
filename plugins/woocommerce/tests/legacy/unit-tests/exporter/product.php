@@ -64,33 +64,33 @@ class WC_Tests_Product_CSV_Exporter extends WC_Unit_Test_Case {
 	public function test_format_term_ids() {
 		$exporter = new WC_Product_CSV_Exporter();
 
-		$term1 = wp_insert_category( array( 'cat_name' => 'cat1' ) );
-		$term2 = wp_insert_category( array( 'cat_name' => 'cat2' ) );
-		$term3 = wp_insert_category( array( 'cat_name' => 'cat3' ) );
+		$term1 = wp_insert_category( [ 'cat_name' => 'cat1' ] );
+		$term2 = wp_insert_category( [ 'cat_name' => 'cat2' ] );
+		$term3 = wp_insert_category( [ 'cat_name' => 'cat3' ] );
 
 		$expected = 'cat1, cat2, cat3';
-		$this->assertEquals( $expected, $exporter->format_term_ids( array( $term1, $term2, $term3 ), 'category' ) );
+		$this->assertEquals( $expected, $exporter->format_term_ids( [ $term1, $term2, $term3 ], 'category' ) );
 
 		wp_insert_category(
-			array(
+			[
 				'cat_ID'          => $term2,
 				'cat_name'        => 'cat2',
 				'category_parent' => $term1,
-			)
+			]
 		);
 
 		$expected = 'cat1, cat1 > cat2, cat3';
-		$this->assertEquals( $expected, $exporter->format_term_ids( array( $term1, $term2, $term3 ), 'category' ) );
+		$this->assertEquals( $expected, $exporter->format_term_ids( [ $term1, $term2, $term3 ], 'category' ) );
 
 		wp_insert_category(
-			array(
+			[
 				'cat_ID'          => $term3,
 				'cat_name'        => 'cat3',
 				'category_parent' => $term2,
-			)
+			]
 		);
 		$expected = 'cat1, cat1 > cat2, cat1 > cat2 > cat3';
-		$this->assertEquals( $expected, $exporter->format_term_ids( array( $term1, $term2, $term3 ), 'category' ) );
+		$this->assertEquals( $expected, $exporter->format_term_ids( [ $term1, $term2, $term3 ], 'category' ) );
 	}
 
 	/**
@@ -98,7 +98,7 @@ class WC_Tests_Product_CSV_Exporter extends WC_Unit_Test_Case {
 	 * @since 3.1.0
 	 */
 	public function test_prepare_data_to_export() {
-		add_filter( 'woocommerce_product_export_row_data', array( $this, 'verify_exported_data' ), 10, 2 );
+		add_filter( 'woocommerce_product_export_row_data', [ $this, 'verify_exported_data' ], 10, 2 );
 		$exporter = new WC_Product_CSV_Exporter();
 
 		$product = WC_Helper_Product::create_simple_product();
@@ -119,7 +119,7 @@ class WC_Tests_Product_CSV_Exporter extends WC_Unit_Test_Case {
 		WC_Helper_Product::create_grouped_product();
 		WC_Helper_Product::create_variation_product();
 
-		$exporter->set_product_category_to_export( array() );
+		$exporter->set_product_category_to_export( [] );
 		$exporter->prepare_data_to_export();
 	}
 
@@ -147,8 +147,8 @@ class WC_Tests_Product_CSV_Exporter extends WC_Unit_Test_Case {
 		$this->assertEquals( 'instock' === $product->get_stock_status(), $row['stock_status'] );
 		$this->assertEquals( $product->get_menu_order(), $row['menu_order'] );
 
-		$this->assertContains( $row['catalog_visibility'], array( 'visible', 'catalog', 'search', 'hidden' ) );
-		$this->assertContains( $row['backorders'], array( 1, 0, 'notify' ) );
+		$this->assertContains( $row['catalog_visibility'], [ 'visible', 'catalog', 'search', 'hidden' ] );
+		$this->assertContains( $row['backorders'], [ 1, 0, 'notify' ] );
 
 		$expected_parent = '';
 		$parent_id       = $product->get_parent_id();

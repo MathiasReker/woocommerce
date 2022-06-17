@@ -26,9 +26,9 @@ class WC_Admin_Tests_API_Options extends WC_REST_Unit_Test_Case {
 		parent::setUp();
 
 		$this->user = $this->factory->user->create(
-			array(
+			[
 				'role' => 'administrator',
-			)
+			]
 		);
 	}
 
@@ -39,7 +39,7 @@ class WC_Admin_Tests_API_Options extends WC_REST_Unit_Test_Case {
 		wp_set_current_user( 0 );
 
 		$request = new WP_REST_Request( 'GET', $this->endpoint );
-		$request->set_query_params( array( 'options' => 'woocommerce_demo_store_notice' ) );
+		$request->set_query_params( [ 'options' => 'woocommerce_demo_store_notice' ] );
 		$response = $this->server->dispatch( $request );
 
 		$this->assertEquals( 401, $response->get_status() );
@@ -52,8 +52,8 @@ class WC_Admin_Tests_API_Options extends WC_REST_Unit_Test_Case {
 		wp_set_current_user( 0 );
 
 		$request = new WP_REST_Request( 'POST', $this->endpoint );
-		$request->set_headers( array( 'content-type' => 'application/json' ) );
-		$request->set_body( wp_json_encode( array( 'woocommerce_demo_store_notice' => 'Store notice updated.' ) ) );
+		$request->set_headers( [ 'content-type' => 'application/json' ] );
+		$request->set_body( wp_json_encode( [ 'woocommerce_demo_store_notice' => 'Store notice updated.' ] ) );
 		$response = $this->server->dispatch( $request );
 
 		$this->assertEquals( 401, $response->get_status() );
@@ -66,7 +66,7 @@ class WC_Admin_Tests_API_Options extends WC_REST_Unit_Test_Case {
 		wp_set_current_user( $this->user );
 
 		$request = new WP_REST_Request( 'GET', $this->endpoint );
-		$request->set_query_params( array( 'options' => 'woocommerce_demo_store_notice' ) );
+		$request->set_query_params( [ 'options' => 'woocommerce_demo_store_notice' ] );
 		$response = $this->server->dispatch( $request );
 		$data     = $response->get_data();
 
@@ -81,8 +81,8 @@ class WC_Admin_Tests_API_Options extends WC_REST_Unit_Test_Case {
 		wp_set_current_user( $this->user );
 
 		$request = new WP_REST_Request( 'POST', $this->endpoint );
-		$request->set_headers( array( 'content-type' => 'application/json' ) );
-		$request->set_body( wp_json_encode( array( 'woocommerce_demo_store_notice' => 'Store notice updated.' ) ) );
+		$request->set_headers( [ 'content-type' => 'application/json' ] );
+		$request->set_body( wp_json_encode( [ 'woocommerce_demo_store_notice' => 'Store notice updated.' ] ) );
 		$response = $this->server->dispatch( $request );
 		$data     = $response->get_data();
 

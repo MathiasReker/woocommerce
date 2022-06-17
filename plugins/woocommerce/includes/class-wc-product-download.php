@@ -24,12 +24,12 @@ class WC_Product_Download implements ArrayAccess {
 	 * @since 3.0.0
 	 * @var array
 	 */
-	protected $data = array(
+	protected $data = [
 		'id'      => '',
 		'name'    => '',
 		'file'    => '',
 		'enabled' => true,
-	);
+	];
 
 	/**
 	 * Returns all data for this object.
@@ -63,7 +63,7 @@ class WC_Product_Download implements ArrayAccess {
 			isset( $parsed_url['host'] ) && // Absolute url means that it has a host.
 			( // Theoretically we could permit any scheme (like ftp as well), but that has not been the case before. So we allow none or http(s).
 				! isset( $parsed_url['scheme'] ) ||
-				in_array( $parsed_url['scheme'], array( 'http', 'https' ), true )
+				in_array( $parsed_url['scheme'], [ 'http', 'https' ], true )
 			)
 		) {
 			return 'absolute';
@@ -388,7 +388,7 @@ class WC_Product_Download implements ArrayAccess {
 	public function offsetGet( $offset ) {
 		switch ( $offset ) {
 			default:
-				if ( is_callable( array( $this, "get_$offset" ) ) ) {
+				if ( is_callable( [ $this, "get_$offset" ] ) ) {
 					return $this->{"get_$offset"}();
 				}
 				break;
@@ -406,7 +406,7 @@ class WC_Product_Download implements ArrayAccess {
 	public function offsetSet( $offset, $value ) {
 		switch ( $offset ) {
 			default:
-				if ( is_callable( array( $this, "set_$offset" ) ) ) {
+				if ( is_callable( [ $this, "set_$offset" ] ) ) {
 					$this->{"set_$offset"}( $value );
 				}
 				break;

@@ -30,7 +30,7 @@ class WC_Coupon_Data_Store_CPT extends WC_Data_Store_WP implements WC_Coupon_Dat
 	 * @since 3.0.0
 	 * @var array
 	 */
-	protected $internal_meta_keys = array(
+	protected $internal_meta_keys = [
 		'discount_type',
 		'coupon_amount',
 		'expiry_date',
@@ -52,7 +52,7 @@ class WC_Coupon_Data_Store_CPT extends WC_Data_Store_WP implements WC_Coupon_Dat
 		'_used_by',
 		'_edit_lock',
 		'_edit_last',
-	);
+	];
 
 	/**
 	 * The updated coupon properties
@@ -60,7 +60,7 @@ class WC_Coupon_Data_Store_CPT extends WC_Data_Store_WP implements WC_Coupon_Dat
 	 * @since 4.1.0
 	 * @var array
 	 */
-	protected $updated_props = array();
+	protected $updated_props = [];
 
 	/**
 	 * Method to create a new coupon in the database.
@@ -76,7 +76,7 @@ class WC_Coupon_Data_Store_CPT extends WC_Data_Store_WP implements WC_Coupon_Dat
 		$coupon_id = wp_insert_post(
 			apply_filters(
 				'woocommerce_new_coupon_data',
-				array(
+				[
 					'post_type'     => 'shop_coupon',
 					'post_status'   => 'publish',
 					'post_author'   => get_current_user_id(),
@@ -85,7 +85,7 @@ class WC_Coupon_Data_Store_CPT extends WC_Data_Store_WP implements WC_Coupon_Dat
 					'post_excerpt'  => $coupon->get_description( 'edit' ),
 					'post_date'     => gmdate( 'Y-m-d H:i:s', $coupon->get_date_created()->getOffsetTimestamp() ),
 					'post_date_gmt' => gmdate( 'Y-m-d H:i:s', $coupon->get_date_created()->getTimestamp() ),
-				)
+				]
 			),
 			true
 		);
@@ -120,7 +120,7 @@ class WC_Coupon_Data_Store_CPT extends WC_Data_Store_WP implements WC_Coupon_Dat
 
 		$coupon_id = $coupon->get_id();
 		$coupon->set_props(
-			array(
+			[
 				'code'                        => $post_object->post_title,
 				'description'                 => $post_object->post_excerpt,
 				'status'                      => $post_object->post_status,
@@ -144,7 +144,7 @@ class WC_Coupon_Data_Store_CPT extends WC_Data_Store_WP implements WC_Coupon_Dat
 				'maximum_amount'              => get_post_meta( $coupon_id, 'maximum_amount', true ),
 				'email_restrictions'          => array_filter( (array) get_post_meta( $coupon_id, 'customer_email', true ) ),
 				'used_by'                     => array_filter( (array) get_post_meta( $coupon_id, '_used_by' ) ),
-			)
+			]
 		);
 		$coupon->read_meta_data();
 		$coupon->set_object_read( true );
@@ -161,15 +161,15 @@ class WC_Coupon_Data_Store_CPT extends WC_Data_Store_WP implements WC_Coupon_Dat
 		$coupon->save_meta_data();
 		$changes = $coupon->get_changes();
 
-		if ( array_intersect( array( 'code', 'description', 'date_created', 'date_modified' ), array_keys( $changes ) ) ) {
-			$post_data = array(
+		if ( array_intersect( [ 'code', 'description', 'date_created', 'date_modified' ], array_keys( $changes ) ) ) {
+			$post_data = [
 				'post_title'        => $coupon->get_code( 'edit' ),
 				'post_excerpt'      => $coupon->get_description( 'edit' ),
 				'post_date'         => gmdate( 'Y-m-d H:i:s', $coupon->get_date_created( 'edit' )->getOffsetTimestamp() ),
 				'post_date_gmt'     => gmdate( 'Y-m-d H:i:s', $coupon->get_date_created( 'edit' )->getTimestamp() ),
 				'post_modified'     => isset( $changes['date_modified'] ) ? gmdate( 'Y-m-d H:i:s', $coupon->get_date_modified( 'edit' )->getOffsetTimestamp() ) : current_time( 'mysql' ),
 				'post_modified_gmt' => isset( $changes['date_modified'] ) ? gmdate( 'Y-m-d H:i:s', $coupon->get_date_modified( 'edit' )->getTimestamp() ) : current_time( 'mysql', 1 ),
-			);
+			];
 
 			/**
 			 * When updating this object, to prevent infinite loops, use $wpdb
@@ -180,10 +180,10 @@ class WC_Coupon_Data_Store_CPT extends WC_Data_Store_WP implements WC_Coupon_Dat
 			 * or an update purely from CRUD.
 			 */
 			if ( doing_action( 'save_post' ) ) {
-				$GLOBALS['wpdb']->update( $GLOBALS['wpdb']->posts, $post_data, array( 'ID' => $coupon->get_id() ) );
+				$GLOBALS['wpdb']->update( $GLOBALS['wpdb']->posts, $post_data, [ 'ID' => $coupon->get_id() ] );
 				clean_post_cache( $coupon->get_id() );
 			} else {
-				wp_update_post( array_merge( array( 'ID' => $coupon->get_id() ), $post_data ) );
+				wp_update_post( array_merge( [ 'ID' => $coupon->get_id() ], $post_data ) );
 			}
 			$coupon->read_meta_data( true ); // Refresh internal meta data, in case things were hooked into `save_post` or another WP hook.
 		}
@@ -201,12 +201,12 @@ class WC_Coupon_Data_Store_CPT extends WC_Data_Store_WP implements WC_Coupon_Dat
 	 * @param WC_Coupon $coupon Coupon object.
 	 * @param array     $args Array of args to pass to the delete method.
 	 */
-	public function delete( &$coupon, $args = array() ) {
+	public function delete( &$coupon, $args = [] ) {
 		$args = wp_parse_args(
 			$args,
-			array(
+			[
 				'force_delete' => false,
-			)
+			]
 		);
 
 		$id = $coupon->get_id();
@@ -235,7 +235,7 @@ class WC_Coupon_Data_Store_CPT extends WC_Data_Store_WP implements WC_Coupon_Dat
 	 * @since 3.0.0
 	 */
 	private function update_post_meta( &$coupon ) {
-		$meta_key_to_props = array(
+		$meta_key_to_props = [
 			'discount_type'              => 'discount_type',
 			'coupon_amount'              => 'amount',
 			'individual_use'             => 'individual_use',
@@ -253,7 +253,7 @@ class WC_Coupon_Data_Store_CPT extends WC_Data_Store_WP implements WC_Coupon_Dat
 			'minimum_amount'             => 'minimum_amount',
 			'maximum_amount'             => 'maximum_amount',
 			'customer_email'             => 'email_restrictions',
-		);
+		];
 
 		$props_to_update = $this->get_props_to_update( $coupon, $meta_key_to_props );
 		foreach ( $props_to_update as $meta_key => $prop ) {
@@ -441,7 +441,7 @@ class WC_Coupon_Data_Store_CPT extends WC_Data_Store_WP implements WC_Coupon_Dat
 				$user_id
 			)
 		);
-		$tentative_usage_count = $this->get_tentative_usages_for_user( $coupon->get_id(), array( $user_id ) );
+		$tentative_usage_count = $this->get_tentative_usages_for_user( $coupon->get_id(), [ $user_id ] );
 		return $tentative_usage_count + $usage_count;
 	}
 
@@ -462,7 +462,7 @@ class WC_Coupon_Data_Store_CPT extends WC_Data_Store_WP implements WC_Coupon_Dat
 				$email
 			)
 		);
-		$tentative_usage_count = $this->get_tentative_usages_for_user( $coupon->get_id(), array( $email ) );
+		$tentative_usage_count = $this->get_tentative_usages_for_user( $coupon->get_id(), [ $email ] );
 		return $tentative_usage_count + $usage_count;
 	}
 
@@ -579,11 +579,11 @@ class WC_Coupon_Data_Store_CPT extends WC_Data_Store_WP implements WC_Coupon_Dat
 			AND {$wpdb->postmeta}.post_id = %d
 			FOR UPDATE
 			",
-			array(
+			[
 				'_coupon_held_%',
 				'_coupon_held_' . time(),
 				$coupon_id,
-			)
+			]
 		);  // WPCS: unprepared SQL ok.
 	}
 
@@ -622,7 +622,7 @@ class WC_Coupon_Data_Store_CPT extends WC_Data_Store_WP implements WC_Coupon_Dat
 				",
 			array_merge(
 				$user_aliases,
-				array( $coupon->get_id() )
+				[ $coupon->get_id() ]
 			)
 		); // WPCS: unprepared SQL ok.
 
@@ -679,11 +679,11 @@ class WC_Coupon_Data_Store_CPT extends WC_Data_Store_WP implements WC_Coupon_Dat
 				FOR UPDATE
 				",
 			array_merge(
-				array(
+				[
 					'_maybe_used_by_%',
 					'_maybe_used_by_' . time(),
 					$coupon_id,
-				),
+				],
 				$user_aliases
 			)
 		); // WPCS: unprepared SQL ok.

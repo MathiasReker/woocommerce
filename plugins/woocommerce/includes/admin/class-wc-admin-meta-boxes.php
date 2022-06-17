@@ -34,16 +34,16 @@ class WC_Admin_Meta_Boxes {
 	 *
 	 * @var array
 	 */
-	public static $meta_box_errors = array();
+	public static $meta_box_errors = [];
 
 	/**
 	 * Constructor.
 	 */
 	public function __construct() {
-		add_action( 'add_meta_boxes', array( $this, 'remove_meta_boxes' ), 10 );
-		add_action( 'add_meta_boxes', array( $this, 'rename_meta_boxes' ), 20 );
-		add_action( 'add_meta_boxes', array( $this, 'add_meta_boxes' ), 30 );
-		add_action( 'save_post', array( $this, 'save_meta_boxes' ), 1, 2 );
+		add_action( 'add_meta_boxes', [ $this, 'remove_meta_boxes' ], 10 );
+		add_action( 'add_meta_boxes', [ $this, 'rename_meta_boxes' ], 20 );
+		add_action( 'add_meta_boxes', [ $this, 'add_meta_boxes' ], 30 );
+		add_action( 'save_post', [ $this, 'save_meta_boxes' ], 1, 2 );
 
 		/**
 		 * Save Order Meta Boxes.
@@ -71,10 +71,10 @@ class WC_Admin_Meta_Boxes {
 		add_filter( 'wp_update_comment_data', 'WC_Meta_Box_Product_Reviews::save', 1 );
 
 		// Error handling (for showing errors from meta boxes on next page load).
-		add_action( 'admin_notices', array( $this, 'output_errors' ) );
-		add_action( 'shutdown', array( $this, 'append_to_error_store' ) );
+		add_action( 'admin_notices', [ $this, 'output_errors' ] );
+		add_action( 'shutdown', [ $this, 'append_to_error_store' ] );
 
-		add_filter( 'theme_product_templates', array( $this, 'remove_block_templates' ), 10, 1 );
+		add_filter( 'theme_product_templates', [ $this, 'remove_block_templates' ], 10, 1 );
 	}
 
 	/**
@@ -107,7 +107,7 @@ class WC_Admin_Meta_Boxes {
 			return;
 		}
 
-		$existing_errors = get_option( self::ERROR_STORE, array() );
+		$existing_errors = get_option( self::ERROR_STORE, [] );
 		update_option( self::ERROR_STORE, array_unique( array_merge( $existing_errors, self::$meta_box_errors ) ) );
 	}
 
@@ -244,7 +244,7 @@ class WC_Admin_Meta_Boxes {
 		// Check the post type.
 		if ( in_array( $post->post_type, wc_get_order_types( 'order-meta-boxes' ), true ) ) {
 			do_action( 'woocommerce_process_shop_order_meta', $post_id, $post );
-		} elseif ( in_array( $post->post_type, array( 'product', 'shop_coupon' ), true ) ) {
+		} elseif ( in_array( $post->post_type, [ 'product', 'shop_coupon' ], true ) ) {
 			do_action( 'woocommerce_process_' . $post->post_type . '_meta', $post_id, $post );
 		}
 	}
@@ -263,7 +263,7 @@ class WC_Admin_Meta_Boxes {
 		}
 
 		$theme              = wp_get_theme()->get_stylesheet();
-		$filtered_templates = array();
+		$filtered_templates = [];
 
 		foreach ( $templates as $template_key => $template_name ) {
 			// Filter out the single-product.html template as this is a duplicate of "Default Template".

@@ -33,13 +33,13 @@ if ( ! class_exists( 'WC_Email_Customer_Completed_Order', false ) ) :
 			$this->description    = __( 'Order complete emails are sent to customers when their orders are marked completed and usually indicate that their orders have been shipped.', 'woocommerce' );
 			$this->template_html  = 'emails/customer-completed-order.php';
 			$this->template_plain = 'emails/plain/customer-completed-order.php';
-			$this->placeholders   = array(
+			$this->placeholders   = [
 				'{order_date}'   => '',
 				'{order_number}' => '',
-			);
+			];
 
 			// Triggers for this email.
-			add_action( 'woocommerce_order_status_completed_notification', array( $this, 'trigger' ), 10, 2 );
+			add_action( 'woocommerce_order_status_completed_notification', [ $this, 'trigger' ], 10, 2 );
 
 			// Call parent constructor.
 			parent::__construct();
@@ -100,14 +100,14 @@ if ( ! class_exists( 'WC_Email_Customer_Completed_Order', false ) ) :
 		public function get_content_html() {
 			return wc_get_template_html(
 				$this->template_html,
-				array(
+				[
 					'order'              => $this->object,
 					'email_heading'      => $this->get_heading(),
 					'additional_content' => $this->get_additional_content(),
 					'sent_to_admin'      => false,
 					'plain_text'         => false,
 					'email'              => $this,
-				)
+				]
 			);
 		}
 
@@ -119,14 +119,14 @@ if ( ! class_exists( 'WC_Email_Customer_Completed_Order', false ) ) :
 		public function get_content_plain() {
 			return wc_get_template_html(
 				$this->template_plain,
-				array(
+				[
 					'order'              => $this->object,
 					'email_heading'      => $this->get_heading(),
 					'additional_content' => $this->get_additional_content(),
 					'sent_to_admin'      => false,
 					'plain_text'         => true,
 					'email'              => $this,
-				)
+				]
 			);
 		}
 

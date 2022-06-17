@@ -29,38 +29,38 @@ class OnboardingProducts {
 	 * @return array
 	 */
 	public static function get_allowed_product_types() {
-		$products         = array(
-			'physical'        => array(
+		$products         = [
+			'physical'        => [
 				'label'   => __( 'Physical products', 'woocommerce' ),
 				'default' => true,
-			),
-			'downloads'       => array(
+			],
+			'downloads'       => [
 				'label' => __( 'Downloads', 'woocommerce' ),
-			),
-			'subscriptions'   => array(
+			],
+			'subscriptions'   => [
 				'label' => __( 'Subscriptions', 'woocommerce' ),
-			),
-			'memberships'     => array(
+			],
+			'memberships'     => [
 				'label'   => __( 'Memberships', 'woocommerce' ),
 				'product' => 958589,
-			),
-			'bookings'        => array(
+			],
+			'bookings'        => [
 				'label'   => __( 'Bookings', 'woocommerce' ),
 				'product' => 390890,
-			),
-			'product-bundles' => array(
+			],
+			'product-bundles' => [
 				'label'   => __( 'Bundles', 'woocommerce' ),
 				'product' => 18716,
-			),
-			'product-add-ons' => array(
+			],
+			'product-add-ons' => [
 				'label'   => __( 'Customizable products', 'woocommerce' ),
 				'product' => 18618,
-			),
-		);
+			],
+		];
 		$base_location    = wc_get_base_location();
 		$has_cbd_industry = false;
 		if ( 'US' === $base_location['country'] ) {
-			$profile = get_option( OnboardingProfile::DATA_OPTION, array() );
+			$profile = get_option( OnboardingProfile::DATA_OPTION, [] );
 			if ( ! empty( $profile['industry'] ) ) {
 				$has_cbd_industry = in_array( 'cbd-other-hemp-derived-products', array_column( $profile['industry'], 'slug' ), true );
 			}
@@ -90,8 +90,8 @@ class OnboardingProducts {
 		}
 
 		$data         = json_decode( $woocommerce_products['body'] );
-		$products     = array();
-		$product_data = array();
+		$products     = [];
+		$product_data = [];
 
 		// Map product data by ID.
 		if ( isset( $data ) && isset( $data->products ) ) {
@@ -138,12 +138,12 @@ class OnboardingProducts {
 	 * @return array
 	 */
 	public static function get_relevant_products() {
-		$profiler_data = get_option( OnboardingProfile::DATA_OPTION, array() );
+		$profiler_data = get_option( OnboardingProfile::DATA_OPTION, [] );
 		$installed     = PluginsHelper::get_installed_plugin_slugs();
-		$product_types = isset( $profiler_data['product_types'] ) ? $profiler_data['product_types'] : array();
+		$product_types = isset( $profiler_data['product_types'] ) ? $profiler_data['product_types'] : [];
 		$product_data  = self::get_product_types_with_data();
-		$purchaseable  = array();
-		$remaining     = array();
+		$purchaseable  = [];
+		$remaining     = [];
 		foreach ( $product_types as $type ) {
 			if ( ! isset( $product_data[ $type ]['slug'] ) ) {
 				continue;
@@ -156,9 +156,9 @@ class OnboardingProducts {
 			}
 		}
 
-		return array(
+		return [
 			'purchaseable' => $purchaseable,
 			'remaining'    => $remaining,
-		);
+		];
 	}
 }

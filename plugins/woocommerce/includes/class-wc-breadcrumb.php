@@ -18,7 +18,7 @@ class WC_Breadcrumb {
 	 *
 	 * @var array
 	 */
-	protected $crumbs = array();
+	protected $crumbs = [];
 
 	/**
 	 * Add a crumb so we don't get lost.
@@ -27,17 +27,17 @@ class WC_Breadcrumb {
 	 * @param string $link Link.
 	 */
 	public function add_crumb( $name, $link = '' ) {
-		$this->crumbs[] = array(
+		$this->crumbs[] = [
 			wp_strip_all_tags( $name ),
 			$link,
-		);
+		];
 	}
 
 	/**
 	 * Reset crumbs.
 	 */
 	public function reset() {
-		$this->crumbs = array();
+		$this->crumbs = [];
 	}
 
 	/**
@@ -55,7 +55,7 @@ class WC_Breadcrumb {
 	 * @return array of breadcrumbs
 	 */
 	public function generate() {
-		$conditionals = array(
+		$conditionals = [
 			'is_home',
 			'is_404',
 			'is_attachment',
@@ -70,12 +70,12 @@ class WC_Breadcrumb {
 			'is_author',
 			'is_date',
 			'is_tax',
-		);
+		];
 
 		if ( ( ! is_front_page() && ! ( is_post_type_archive() && intval( get_option( 'page_on_front' ) ) === wc_get_page_id( 'shop' ) ) ) || is_paged() ) {
 			foreach ( $conditionals as $conditional ) {
 				if ( call_user_func( $conditional ) ) {
-					call_user_func( array( $this, 'add_crumbs_' . substr( $conditional, 3 ) ) );
+					call_user_func( [ $this, 'add_crumbs_' . substr( $conditional, 3 ) ] );
 					break;
 				}
 			}
@@ -86,7 +86,7 @@ class WC_Breadcrumb {
 			return $this->get_breadcrumb();
 		}
 
-		return array();
+		return [];
 	}
 
 	/**
@@ -152,10 +152,10 @@ class WC_Breadcrumb {
 				'product_cat',
 				apply_filters(
 					'woocommerce_breadcrumb_product_terms_args',
-					array(
+					[
 						'orderby' => 'parent',
 						'order'   => 'DESC',
-					)
+					]
 				)
 			);
 
@@ -188,13 +188,13 @@ class WC_Breadcrumb {
 		global $post;
 
 		if ( $post->post_parent ) {
-			$parent_crumbs = array();
+			$parent_crumbs = [];
 			$parent_id     = $post->post_parent;
 
 			while ( $parent_id ) {
 				$page            = get_post( $parent_id );
 				$parent_id       = $page->post_parent;
-				$parent_crumbs[] = array( get_the_title( $page->ID ), get_permalink( $page->ID ) );
+				$parent_crumbs[] = [ get_the_title( $page->ID ), get_permalink( $page->ID ) ];
 			}
 
 			$parent_crumbs = array_reverse( $parent_crumbs );

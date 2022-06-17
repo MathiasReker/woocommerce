@@ -36,19 +36,19 @@ class WC_API_Reports extends WC_API_Resource {
 	public function register_routes( $routes ) {
 
 		# GET /reports
-		$routes[ $this->base ] = array(
-			array( array( $this, 'get_reports' ),     WC_API_Server::READABLE ),
-		);
+		$routes[ $this->base ] = [
+			[ [ $this, 'get_reports' ],     WC_API_Server::READABLE ],
+		];
 
 		# GET /reports/sales
-		$routes[ $this->base . '/sales' ] = array(
-			array( array( $this, 'get_sales_report' ), WC_API_Server::READABLE ),
-		);
+		$routes[ $this->base . '/sales' ] = [
+			[ [ $this, 'get_sales_report' ], WC_API_Server::READABLE ],
+		];
 
 		# GET /reports/sales/top_sellers
-		$routes[ $this->base . '/sales/top_sellers' ] = array(
-			array( array( $this, 'get_top_sellers_report' ), WC_API_Server::READABLE ),
-		);
+		$routes[ $this->base . '/sales/top_sellers' ] = [
+			[ [ $this, 'get_top_sellers_report' ], WC_API_Server::READABLE ],
+		];
 
 		return $routes;
 	}
@@ -61,7 +61,7 @@ class WC_API_Reports extends WC_API_Resource {
 	 */
 	public function get_reports() {
 
-		return array( 'reports' => array( 'sales', 'sales/top_sellers' ) );
+		return [ 'reports' => [ 'sales', 'sales/top_sellers' ] ];
 	}
 
 	/**
@@ -72,7 +72,7 @@ class WC_API_Reports extends WC_API_Resource {
 	 * @param array $filter date filtering
 	 * @return array|WP_Error
 	 */
-	public function get_sales_report( $fields = null, $filter = array() ) {
+	public function get_sales_report( $fields = null, $filter = [] ) {
 
 		// check user permissions
 		$check = $this->validate_request();
@@ -85,78 +85,78 @@ class WC_API_Reports extends WC_API_Resource {
 		$this->setup_report( $filter );
 
 		// total sales, taxes, shipping, and order count
-		$totals = $this->report->get_order_report_data( array(
-			'data' => array(
-				'_order_total' => array(
+		$totals = $this->report->get_order_report_data( [
+			'data' => [
+				'_order_total' => [
 					'type'     => 'meta',
 					'function' => 'SUM',
 					'name'     => 'sales',
-				),
-				'_order_tax' => array(
+				],
+				'_order_tax' => [
 					'type'            => 'meta',
 					'function'        => 'SUM',
 					'name'            => 'tax',
-				),
-				'_order_shipping_tax' => array(
+				],
+				'_order_shipping_tax' => [
 					'type'            => 'meta',
 					'function'        => 'SUM',
 					'name'            => 'shipping_tax',
-				),
-				'_order_shipping' => array(
+				],
+				'_order_shipping' => [
 					'type'     => 'meta',
 					'function' => 'SUM',
 					'name'     => 'shipping',
-				),
-				'ID' => array(
+				],
+				'ID' => [
 					'type'     => 'post_data',
 					'function' => 'COUNT',
 					'name'     => 'order_count',
-				),
-			),
+				],
+			],
 			'filter_range' => true,
-		) );
+		] );
 
 		// total items ordered
-		$total_items = absint( $this->report->get_order_report_data( array(
-			'data' => array(
-				'_qty' => array(
+		$total_items = absint( $this->report->get_order_report_data( [
+			'data' => [
+				'_qty' => [
 					'type'            => 'order_item_meta',
 					'order_item_type' => 'line_item',
 					'function'        => 'SUM',
 					'name'            => 'order_item_qty',
-				),
-			),
+				],
+			],
 			'query_type' => 'get_var',
 			'filter_range' => true,
-		) ) );
+		] ) );
 
 		// total discount used
-		$total_discount = $this->report->get_order_report_data( array(
-			'data' => array(
-				'discount_amount' => array(
+		$total_discount = $this->report->get_order_report_data( [
+			'data' => [
+				'discount_amount' => [
 					'type'            => 'order_item_meta',
 					'order_item_type' => 'coupon',
 					'function'        => 'SUM',
 					'name'            => 'discount_amount',
-				),
-			),
-			'where' => array(
-				array(
+				],
+			],
+			'where' => [
+				[
 					'key'      => 'order_item_type',
 					'value'    => 'coupon',
 					'operator' => '=',
-				),
-			),
+				],
+			],
 			'query_type' => 'get_var',
 			'filter_range' => true,
-		) );
+		] );
 
 		// new customers
 		$users_query = new WP_User_Query(
-			array(
-				'fields'  => array( 'user_registered' ),
+			[
+				'fields'  => [ 'user_registered' ],
 				'role'    => 'customer',
-			)
+			]
 		);
 
 		$customers = $users_query->get_results();
@@ -170,103 +170,103 @@ class WC_API_Reports extends WC_API_Resource {
 		$total_customers = count( $customers );
 
 		// get order totals grouped by period
-		$orders = $this->report->get_order_report_data( array(
-			'data' => array(
-				'_order_total' => array(
+		$orders = $this->report->get_order_report_data( [
+			'data' => [
+				'_order_total' => [
 					'type'     => 'meta',
 					'function' => 'SUM',
 					'name'     => 'total_sales',
-				),
-				'_order_shipping' => array(
+				],
+				'_order_shipping' => [
 					'type'     => 'meta',
 					'function' => 'SUM',
 					'name'     => 'total_shipping',
-				),
-				'_order_tax' => array(
+				],
+				'_order_tax' => [
 					'type'     => 'meta',
 					'function' => 'SUM',
 					'name'     => 'total_tax',
-				),
-				'_order_shipping_tax' => array(
+				],
+				'_order_shipping_tax' => [
 					'type'     => 'meta',
 					'function' => 'SUM',
 					'name'     => 'total_shipping_tax',
-				),
-				'ID' => array(
+				],
+				'ID' => [
 					'type'     => 'post_data',
 					'function' => 'COUNT',
 					'name'     => 'total_orders',
 					'distinct' => true,
-				),
-				'post_date' => array(
+				],
+				'post_date' => [
 					'type'     => 'post_data',
 					'function' => '',
 					'name'     => 'post_date',
-				),
-			),
+				],
+			],
 			'group_by'     => $this->report->group_by_query,
 			'order_by'     => 'post_date ASC',
 			'query_type'   => 'get_results',
 			'filter_range' => true,
-		) );
+		] );
 
 		// get order item totals grouped by period
-		$order_items = $this->report->get_order_report_data( array(
-			'data' => array(
-				'_qty' => array(
+		$order_items = $this->report->get_order_report_data( [
+			'data' => [
+				'_qty' => [
 					'type'            => 'order_item_meta',
 					'order_item_type' => 'line_item',
 					'function'        => 'SUM',
 					'name'            => 'order_item_count',
-				),
-				'post_date' => array(
+				],
+				'post_date' => [
 					'type'     => 'post_data',
 					'function' => '',
 					'name'     => 'post_date',
-				),
-			),
-			'where' => array(
-				array(
+				],
+			],
+			'where' => [
+				[
 					'key'      => 'order_item_type',
 					'value'    => 'line_item',
 					'operator' => '=',
-				),
-			),
+				],
+			],
 			'group_by'     => $this->report->group_by_query,
 			'order_by'     => 'post_date ASC',
 			'query_type'   => 'get_results',
 			'filter_range' => true,
-		) );
+		] );
 
 		// get discount totals grouped by period
-		$discounts = $this->report->get_order_report_data( array(
-			'data' => array(
-				'discount_amount' => array(
+		$discounts = $this->report->get_order_report_data( [
+			'data' => [
+				'discount_amount' => [
 					'type'            => 'order_item_meta',
 					'order_item_type' => 'coupon',
 					'function'        => 'SUM',
 					'name'            => 'discount_amount',
-				),
-				'post_date' => array(
+				],
+				'post_date' => [
 					'type'     => 'post_data',
 					'function' => '',
 					'name'     => 'post_date',
-				),
-			),
-			'where' => array(
-				array(
+				],
+			],
+			'where' => [
+				[
 					'key'      => 'order_item_type',
 					'value'    => 'coupon',
 					'operator' => '=',
-				),
-			),
+				],
+			],
 			'group_by'     => $this->report->group_by_query . ', order_item_name',
 			'order_by'     => 'post_date ASC',
 			'query_type'   => 'get_results',
 			'filter_range' => true,
-		) );
+		] );
 
-		$period_totals = array();
+		$period_totals = [];
 
 		// setup period totals by ensuring each period in the interval has data
 		for ( $i = 0; $i <= $this->report->chart_interval; $i ++ ) {
@@ -289,7 +289,7 @@ class WC_API_Reports extends WC_API_Resource {
 				}
  			}
 
-			$period_totals[ $time ] = array(
+			$period_totals[ $time ] = [
 				'sales'     => wc_format_decimal( 0.00, 2 ),
 				'orders'    => 0,
 				'items'     => 0,
@@ -297,7 +297,7 @@ class WC_API_Reports extends WC_API_Resource {
 				'shipping'  => wc_format_decimal( 0.00, 2 ),
 				'discount'  => wc_format_decimal( 0.00, 2 ),
 				'customers' => $customer_count,
-			);
+			];
 		}
 
 		// add total sales, total order count, total tax and total shipping for each period
@@ -339,7 +339,7 @@ class WC_API_Reports extends WC_API_Resource {
 			$period_totals[ $time ]['discount'] = wc_format_decimal( $discount->discount_amount, 2 );
 		}
 
-		$sales_data = array(
+		$sales_data = [
 			'total_sales'       => wc_format_decimal( $totals->sales, 2 ),
 			'average_sales'     => wc_format_decimal( $totals->sales / ( $this->report->chart_interval + 1 ), 2 ),
 			'total_orders'      => (int) $totals->order_count,
@@ -350,9 +350,9 @@ class WC_API_Reports extends WC_API_Resource {
 			'totals_grouped_by' => $this->report->chart_groupby,
 			'totals'            => $period_totals,
 			'total_customers'   => $total_customers,
-		);
+		];
 
-		return array( 'sales' => apply_filters( 'woocommerce_api_report_response', $sales_data, $this->report, $fields, $this->server ) );
+		return [ 'sales' => apply_filters( 'woocommerce_api_report_response', $sales_data, $this->report, $fields, $this->server ) ];
 	}
 
 	/**
@@ -363,7 +363,7 @@ class WC_API_Reports extends WC_API_Resource {
 	 * @param array $filter date filtering
 	 * @return array|WP_Error
 	 */
-	public function get_top_sellers_report( $fields = null, $filter = array() ) {
+	public function get_top_sellers_report( $fields = null, $filter = [] ) {
 
 		// check user permissions
 		$check = $this->validate_request();
@@ -375,42 +375,42 @@ class WC_API_Reports extends WC_API_Resource {
 		// set date filtering
 		$this->setup_report( $filter );
 
-		$top_sellers = $this->report->get_order_report_data( array(
-			'data' => array(
-				'_product_id' => array(
+		$top_sellers = $this->report->get_order_report_data( [
+			'data' => [
+				'_product_id' => [
 					'type'            => 'order_item_meta',
 					'order_item_type' => 'line_item',
 					'function'        => '',
 					'name'            => 'product_id',
-				),
-				'_qty' => array(
+				],
+				'_qty' => [
 					'type'            => 'order_item_meta',
 					'order_item_type' => 'line_item',
 					'function'        => 'SUM',
 					'name'            => 'order_item_qty',
-				),
-			),
+				],
+			],
 			'order_by'     => 'order_item_qty DESC',
 			'group_by'     => 'product_id',
 			'limit'        => isset( $filter['limit'] ) ? absint( $filter['limit'] ) : 12,
 			'query_type'   => 'get_results',
 			'filter_range' => true,
-		) );
+		] );
 
-		$top_sellers_data = array();
+		$top_sellers_data = [];
 
 		foreach ( $top_sellers as $top_seller ) {
 
 			$product = wc_get_product( $top_seller->product_id );
 
-			$top_sellers_data[] = array(
+			$top_sellers_data[] = [
 				'title'      => $product->get_name(),
 				'product_id' => $top_seller->product_id,
 				'quantity'   => $top_seller->order_item_qty,
-			);
+			];
 		}
 
-		return array( 'top_sellers' => apply_filters( 'woocommerce_api_report_response', $top_sellers_data, $this->report, $fields, $this->server ) );
+		return [ 'top_sellers' => apply_filters( 'woocommerce_api_report_response', $top_sellers_data, $this->report, $fields, $this->server ) ];
 	}
 
 	/**
@@ -444,7 +444,7 @@ class WC_API_Reports extends WC_API_Resource {
 		} else {
 
 			// ensure period is valid
-			if ( ! in_array( $filter['period'], array( 'week', 'month', 'last_month', 'year' ) ) ) {
+			if ( ! in_array( $filter['period'], [ 'week', 'month', 'last_month', 'year' ] ) ) {
 				$filter['period'] = 'week';
 			}
 
@@ -472,7 +472,7 @@ class WC_API_Reports extends WC_API_Resource {
 
 		if ( ! current_user_can( 'view_woocommerce_reports' ) ) {
 
-			return new WP_Error( 'woocommerce_api_user_cannot_read_report', __( 'You do not have permission to read this report', 'woocommerce' ), array( 'status' => 401 ) );
+			return new WP_Error( 'woocommerce_api_user_cannot_read_report', __( 'You do not have permission to read this report', 'woocommerce' ), [ 'status' => 401 ] );
 
 		} else {
 

@@ -38,7 +38,7 @@ class WC_Tests_Report_Sales_By_Date extends WC_Unit_Test_Case {
 		$product = WC_Helper_Product::create_simple_product();
 		$coupon  = WC_Helper_Coupon::create_coupon();
 		$tax     = WC_Tax::_insert_tax_rate(
-			array(
+			[
 				'tax_rate_country'  => '',
 				'tax_rate_state'    => '',
 				'tax_rate'          => '10.0000',
@@ -48,7 +48,7 @@ class WC_Tests_Report_Sales_By_Date extends WC_Unit_Test_Case {
 				'tax_rate_shipping' => '1',
 				'tax_rate_order'    => '1',
 				'tax_rate_class'    => '',
-			)
+			]
 		);
 
 		// A standard order.
@@ -67,10 +67,10 @@ class WC_Tests_Report_Sales_By_Date extends WC_Unit_Test_Case {
 		$order3->set_status( 'completed' );
 		$order3->save();
 		wc_create_refund(
-			array(
+			[
 				'amount'   => 7,
 				'order_id' => $order3->get_id(),
-			)
+			]
 		);
 
 		// Parameters borrowed from WC_Admin_Dashboard::get_sales_report_data().

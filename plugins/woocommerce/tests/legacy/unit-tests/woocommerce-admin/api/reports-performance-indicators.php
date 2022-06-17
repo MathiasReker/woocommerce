@@ -24,9 +24,9 @@ class WC_Admin_Tests_API_Reports_Performance_Indicators extends WC_REST_Unit_Tes
 		parent::setUp();
 
 		$this->user = $this->factory->user->create(
-			array(
+			[
 				'role' => 'administrator',
-			)
+			]
 		);
 
 		// Mock the Jetpack endpoints and permissions.
@@ -34,7 +34,7 @@ class WC_Admin_Tests_API_Reports_Performance_Indicators extends WC_REST_Unit_Tes
 		$wp_user->add_cap( 'view_stats' );
 		$this->mock_jetpack_modules();
 
-		add_filter( 'rest_post_dispatch', array( $this, 'mock_rest_responses' ), 10, 3 );
+		add_filter( 'rest_post_dispatch', [ $this, 'mock_rest_responses' ], 10, 3 );
 	}
 
 	/**
@@ -62,7 +62,7 @@ class WC_Admin_Tests_API_Reports_Performance_Indicators extends WC_REST_Unit_Tes
 		$product = new WC_Product_Simple();
 		$product->set_name( 'Test Product' );
 		$product->set_downloadable( 'yes' );
-		$product->set_downloads( array( $prod_download ) );
+		$product->set_downloads( [ $prod_download ] );
 		$product->set_regular_price( 25 );
 		$product->save();
 
@@ -95,11 +95,11 @@ class WC_Admin_Tests_API_Reports_Performance_Indicators extends WC_REST_Unit_Tes
 		$time    = time();
 		$request = new WP_REST_Request( 'GET', $this->endpoint );
 		$request->set_query_params(
-			array(
+			[
 				'before' => gmdate( 'Y-m-d 23:59:59', $time ),
 				'after'  => gmdate( 'Y-m-d H:00:00', $time - ( 7 * DAY_IN_SECONDS ) ),
 				'stats'  => 'orders/orders_count,downloads/download_count,test/bogus_stat,jetpack/stats/views',
-			)
+			]
 		);
 		$response = $this->server->dispatch( $request );
 		$reports  = $response->get_data();
@@ -136,10 +136,10 @@ class WC_Admin_Tests_API_Reports_Performance_Indicators extends WC_REST_Unit_Tes
 		$time    = time();
 		$request = new WP_REST_Request( 'GET', $this->endpoint );
 		$request->set_query_params(
-			array(
+			[
 				'before' => gmdate( 'Y-m-d 23:59:59', $time ),
 				'after'  => gmdate( 'Y-m-d H:00:00', $time - ( 7 * DAY_IN_SECONDS ) ),
-			)
+			]
 		);
 		$response = $this->server->dispatch( $request );
 		$reports  = $response->get_data();
@@ -200,11 +200,11 @@ class WC_Admin_Tests_API_Reports_Performance_Indicators extends WC_REST_Unit_Tes
 
 		$request = new WP_REST_Request( 'GET', $this->endpoint );
 		$request->set_query_params(
-			array(
+			[
 				'before' => '2020-01-05 23:59:59',
 				'after'  => '2020-01-01 00:00:00',
 				'stats'  => 'jetpack/stats/views',
-			)
+			]
 		);
 		$response = $this->server->dispatch( $request );
 		$reports  = $response->get_data();
@@ -220,11 +220,11 @@ class WC_Admin_Tests_API_Reports_Performance_Indicators extends WC_REST_Unit_Tes
 
 		$request = new WP_REST_Request( 'GET', $this->endpoint );
 		$request->set_query_params(
-			array(
+			[
 				'before' => '2020-01-02 23:59:59',
 				'after'  => '2020-01-01 00:00:00',
 				'stats'  => 'jetpack/stats/views',
-			)
+			]
 		);
 		$response = $this->server->dispatch( $request );
 		$reports  = $response->get_data();
@@ -247,9 +247,9 @@ class WC_Admin_Tests_API_Reports_Performance_Indicators extends WC_REST_Unit_Tes
 
 		$request = new WP_REST_Request( 'GET', $this->endpoint );
 		$request->set_query_params(
-			array(
+			[
 				'stats' => 'jetpack/stats/views',
-			)
+			]
 		);
 		$response = $this->server->dispatch( $request );
 		$reports  = $response->get_data();
@@ -277,46 +277,46 @@ class WC_Admin_Tests_API_Reports_Performance_Indicators extends WC_REST_Unit_Tes
 		if ( 'GET' === $request->get_method() && '/jetpack/v4/module/stats/data' === $request->get_route() ) {
 			$general                 = new \stdClass();
 			$general->visits         = new \stdClass();
-			$general->visits->fields = array(
+			$general->visits->fields = [
 				'date',
 				'views',
 				'visits',
-			);
-			$general->visits->data   = array(
-				array(
+			];
+			$general->visits->data   = [
+				[
 					'2020-01-01',
 					1,
 					0,
-				),
-				array(
+				],
+				[
 					'2020-01-02',
 					3,
 					0,
-				),
-				array(
+				],
+				[
 					'2020-01-03',
 					1,
 					0,
-				),
-				array(
+				],
+				[
 					'2020-01-04',
 					8,
 					0,
-				),
-				array(
+				],
+				[
 					'2020-01-05',
 					5,
 					0,
-				),
-				array(
+				],
+				[
 					gmdate( 'Y-m-d' ),
 					10,
 					0,
-				),
-			);
+				],
+			];
 			$response->set_status( 200 );
 			$response->set_data(
-				array( 'general' => $general )
+				[ 'general' => $general ]
 			);
 		}
 
@@ -330,6 +330,6 @@ class WC_Admin_Tests_API_Reports_Performance_Indicators extends WC_REST_Unit_Tes
 		$api_init        = \Automattic\WooCommerce\Admin\API\Init::instance();
 		$controller_name = 'Automattic\WooCommerce\Admin\API\Reports\PerformanceIndicators\Controller';
 
-		$api_init->$controller_name->set_active_jetpack_modules( array( 'stats' ) );
+		$api_init->$controller_name->set_active_jetpack_modules( [ 'stats' ] );
 	}
 }

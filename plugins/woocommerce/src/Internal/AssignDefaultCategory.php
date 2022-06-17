@@ -17,7 +17,7 @@ class AssignDefaultCategory {
 	 * @internal
 	 */
 	final public function init() {
-		add_action( 'wc_schedule_update_product_default_cat', array( $this, 'maybe_assign_default_product_cat' ) );
+		add_action( 'wc_schedule_update_product_default_cat', [ $this, 'maybe_assign_default_product_cat' ] );
 	}
 
 	/**
@@ -32,7 +32,7 @@ class AssignDefaultCategory {
 		WC()->queue()->schedule_single(
 			time(),
 			'wc_schedule_update_product_default_cat',
-			array(),
+			[],
 			'wc_update_product_default_cat'
 		);
 	}
@@ -67,7 +67,7 @@ class AssignDefaultCategory {
 			);
 			wp_cache_flush();
 			delete_transient( 'wc_term_counts' );
-			wp_update_term_count_now( array( $default_category ), 'product_cat' );
+			wp_update_term_count_now( [ $default_category ], 'product_cat' );
 		}
 	}
 }

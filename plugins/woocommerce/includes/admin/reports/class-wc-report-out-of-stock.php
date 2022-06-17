@@ -33,7 +33,7 @@ class WC_Report_Out_Of_Stock extends WC_Report_Stock {
 		global $wpdb;
 
 		$this->max_items = 0;
-		$this->items     = array();
+		$this->items     = [];
 
 		$stock = absint( max( get_option( 'woocommerce_notify_no_stock_amount' ), 0 ) );
 

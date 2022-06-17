@@ -41,43 +41,43 @@ class WC_REST_Webhook_Deliveries_V1_Controller extends WC_REST_Controller {
 	 * Register the routes for webhook deliveries.
 	 */
 	public function register_routes() {
-		register_rest_route( $this->namespace, '/' . $this->rest_base, array(
-			'args' => array(
-				'webhook_id' => array(
+		register_rest_route( $this->namespace, '/' . $this->rest_base, [
+			'args' => [
+				'webhook_id' => [
 					'description' => __( 'Unique identifier for the webhook.', 'woocommerce' ),
 					'type'        => 'integer',
-				),
-			),
-			array(
+				],
+			],
+			[
 				'methods'             => WP_REST_Server::READABLE,
-				'callback'            => array( $this, 'get_items' ),
-				'permission_callback' => array( $this, 'get_items_permissions_check' ),
+				'callback'            => [ $this, 'get_items' ],
+				'permission_callback' => [ $this, 'get_items_permissions_check' ],
 				'args'                => $this->get_collection_params(),
-			),
-			'schema' => array( $this, 'get_public_item_schema' ),
-		) );
+			],
+			'schema' => [ $this, 'get_public_item_schema' ],
+		] );
 
-		register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<id>[\d]+)', array(
-			'args' => array(
-				'webhook_id' => array(
+		register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<id>[\d]+)', [
+			'args' => [
+				'webhook_id' => [
 					'description' => __( 'Unique identifier for the webhook.', 'woocommerce' ),
 					'type'        => 'integer',
-				),
-				'id' => array(
+				],
+				'id' => [
 					'description' => __( 'Unique identifier for the resource.', 'woocommerce' ),
 					'type'        => 'integer',
-				),
-			),
-			array(
+				],
+			],
+			[
 				'methods'             => WP_REST_Server::READABLE,
-				'callback'            => array( $this, 'get_item' ),
-				'permission_callback' => array( $this, 'get_item_permissions_check' ),
-				'args'                => array(
-					'context' => $this->get_context_param( array( 'default' => 'view' ) ),
-				),
-			),
-			'schema' => array( $this, 'get_public_item_schema' ),
-		) );
+				'callback'            => [ $this, 'get_item' ],
+				'permission_callback' => [ $this, 'get_item_permissions_check' ],
+				'args'                => [
+					'context' => $this->get_context_param( [ 'default' => 'view' ] ),
+				],
+			],
+			'schema' => [ $this, 'get_public_item_schema' ],
+		] );
 	}
 
 	/**
@@ -88,7 +88,7 @@ class WC_REST_Webhook_Deliveries_V1_Controller extends WC_REST_Controller {
 	 */
 	public function get_items_permissions_check( $request ) {
 		if ( ! wc_rest_check_manager_permissions( 'webhooks', 'read' ) ) {
-			return new WP_Error( 'woocommerce_rest_cannot_view', __( 'Sorry, you cannot list resources.', 'woocommerce' ), array( 'status' => rest_authorization_required_code() ) );
+			return new WP_Error( 'woocommerce_rest_cannot_view', __( 'Sorry, you cannot list resources.', 'woocommerce' ), [ 'status' => rest_authorization_required_code() ] );
 		}
 
 		return true;
@@ -102,7 +102,7 @@ class WC_REST_Webhook_Deliveries_V1_Controller extends WC_REST_Controller {
 	 */
 	public function get_item_permissions_check( $request ) {
 		if ( ! wc_rest_check_manager_permissions( 'webhooks', 'read' ) ) {
-			return new WP_Error( 'woocommerce_rest_cannot_view', __( 'Sorry, you cannot view this resource.', 'woocommerce' ), array( 'status' => rest_authorization_required_code() ) );
+			return new WP_Error( 'woocommerce_rest_cannot_view', __( 'Sorry, you cannot view this resource.', 'woocommerce' ), [ 'status' => rest_authorization_required_code() ] );
 		}
 
 		return true;
@@ -119,11 +119,11 @@ class WC_REST_Webhook_Deliveries_V1_Controller extends WC_REST_Controller {
 		$webhook = wc_get_webhook( (int) $request['webhook_id'] );
 
 		if ( empty( $webhook ) || is_null( $webhook ) ) {
-			return new WP_Error( 'woocommerce_rest_webhook_invalid_id', __( 'Invalid webhook ID.', 'woocommerce' ), array( 'status' => 404 ) );
+			return new WP_Error( 'woocommerce_rest_webhook_invalid_id', __( 'Invalid webhook ID.', 'woocommerce' ), [ 'status' => 404 ] );
 		}
 
-		$logs = array();
-		$data = array();
+		$logs = [];
+		$data = [];
 		foreach ( $logs as $log ) {
 			$delivery = $this->prepare_item_for_response( (object) $log, $request );
 			$delivery = $this->prepare_response_for_collection( $delivery );
@@ -144,13 +144,13 @@ class WC_REST_Webhook_Deliveries_V1_Controller extends WC_REST_Controller {
 		$webhook = wc_get_webhook( (int) $request['webhook_id'] );
 
 		if ( empty( $webhook ) || is_null( $webhook ) ) {
-			return new WP_Error( 'woocommerce_rest_webhook_invalid_id', __( 'Invalid webhook ID.', 'woocommerce' ), array( 'status' => 404 ) );
+			return new WP_Error( 'woocommerce_rest_webhook_invalid_id', __( 'Invalid webhook ID.', 'woocommerce' ), [ 'status' => 404 ] );
 		}
 
-		$log = array();
+		$log = [];
 
 		if ( empty( $id ) || empty( $log ) ) {
-			return new WP_Error( 'woocommerce_rest_invalid_id', __( 'Invalid resource ID.', 'woocommerce' ), array( 'status' => 404 ) );
+			return new WP_Error( 'woocommerce_rest_invalid_id', __( 'Invalid resource ID.', 'woocommerce' ), [ 'status' => 404 ] );
 		}
 
 		$delivery = $this->prepare_item_for_response( (object) $log, $request );
@@ -196,17 +196,17 @@ class WC_REST_Webhook_Deliveries_V1_Controller extends WC_REST_Controller {
 	protected function prepare_links( $log ) {
 		$webhook_id = (int) $log->request_headers['X-WC-Webhook-ID'];
 		$base       = str_replace( '(?P<webhook_id>[\d]+)', $webhook_id, $this->rest_base );
-		$links      = array(
-			'self' => array(
+		$links      = [
+			'self' => [
 				'href' => rest_url( sprintf( '/%s/%s/%d', $this->namespace, $base, $log->id ) ),
-			),
-			'collection' => array(
+			],
+			'collection' => [
 				'href' => rest_url( sprintf( '/%s/%s', $this->namespace, $base ) ),
-			),
-			'up' => array(
+			],
+			'up' => [
 				'href' => rest_url( sprintf( '/%s/webhooks/%d', $this->namespace, $webhook_id ) ),
-			),
-		);
+			],
+		];
 
 		return $links;
 	}
@@ -217,86 +217,86 @@ class WC_REST_Webhook_Deliveries_V1_Controller extends WC_REST_Controller {
 	 * @return array
 	 */
 	public function get_item_schema() {
-		$schema = array(
+		$schema = [
 			'$schema'    => 'http://json-schema.org/draft-04/schema#',
 			'title'      => 'webhook_delivery',
 			'type'       => 'object',
-			'properties' => array(
-				'id' => array(
+			'properties' => [
+				'id' => [
 					'description' => __( 'Unique identifier for the resource.', 'woocommerce' ),
 					'type'        => 'integer',
-					'context'     => array( 'view' ),
+					'context'     => [ 'view' ],
 					'readonly'    => true,
-				),
-				'duration' => array(
+				],
+				'duration' => [
 					'description' => __( 'The delivery duration, in seconds.', 'woocommerce' ),
 					'type'        => 'string',
-					'context'     => array( 'view' ),
+					'context'     => [ 'view' ],
 					'readonly'    => true,
-				),
-				'summary' => array(
+				],
+				'summary' => [
 					'description' => __( 'A friendly summary of the response including the HTTP response code, message, and body.', 'woocommerce' ),
 					'type'        => 'string',
-					'context'     => array( 'view' ),
+					'context'     => [ 'view' ],
 					'readonly'    => true,
-				),
-				'request_url' => array(
+				],
+				'request_url' => [
 					'description' => __( 'The URL where the webhook was delivered.', 'woocommerce' ),
 					'type'        => 'string',
 					'format'      => 'uri',
-					'context'     => array( 'view' ),
+					'context'     => [ 'view' ],
 					'readonly'    => true,
-				),
-				'request_headers' => array(
+				],
+				'request_headers' => [
 					'description' => __( 'Request headers.', 'woocommerce' ),
 					'type'        => 'array',
-					'context'     => array( 'view' ),
+					'context'     => [ 'view' ],
 					'readonly'    => true,
-					'items'       => array(
+					'items'       => [
 						'type'    => 'string',
-					),
-				),
-				'request_body' => array(
+					],
+				],
+				'request_body' => [
 					'description' => __( 'Request body.', 'woocommerce' ),
 					'type'        => 'string',
-					'context'     => array( 'view' ),
+					'context'     => [ 'view' ],
 					'readonly'    => true,
-				),
-				'response_code' => array(
+				],
+				'response_code' => [
 					'description' => __( 'The HTTP response code from the receiving server.', 'woocommerce' ),
 					'type'        => 'string',
-					'context'     => array( 'view' ),
+					'context'     => [ 'view' ],
 					'readonly'    => true,
-				),
-				'response_message' => array(
+				],
+				'response_message' => [
 					'description' => __( 'The HTTP response message from the receiving server.', 'woocommerce' ),
 					'type'        => 'string',
-					'context'     => array( 'view' ),
+					'context'     => [ 'view' ],
 					'readonly'    => true,
-				),
-				'response_headers' => array(
+				],
+				'response_headers' => [
 					'description' => __( 'Array of the response headers from the receiving server.', 'woocommerce' ),
 					'type'        => 'array',
-					'context'     => array( 'view' ),
+					'context'     => [ 'view' ],
 					'readonly'    => true,
-					'items'       => array(
+					'items'       => [
 						'type'    => 'string',
-					),
-				),
-				'response_body' => array(
+					],
+				],
+				'response_body' => [
 					'description' => __( 'The response body from the receiving server.', 'woocommerce' ),
 					'type'        => 'string',
-					'context'     => array( 'view' ),
+					'context'     => [ 'view' ],
 					'readonly'    => true,
-				),
-				'date_created' => array(
+				],
+				'date_created' => [
 					'description' => __( "The date the webhook delivery was logged, in the site's timezone.", 'woocommerce' ),
 					'type'        => 'date-time',
-					'context'     => array( 'view', 'edit' ),
+					'context'     => [ 'view', 'edit' ],
 					'readonly'    => true,
-				),
-			),
-		);
+				],
+			],
+		];
 
 		return $this->add_additional_fields_schema( $schema );
 	}
@@ -307,8 +307,8 @@ class WC_REST_Webhook_Deliveries_V1_Controller extends WC_REST_Controller {
 	 * @return array
 	 */
 	public function get_collection_params() {
-		return array(
-			'context' => $this->get_context_param( array( 'default' => 'view' ) ),
-		);
+		return [
+			'context' => $this->get_context_param( [ 'default' => 'view' ] ),
+		];
 	}
 }

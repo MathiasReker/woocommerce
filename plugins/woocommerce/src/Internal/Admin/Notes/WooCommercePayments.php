@@ -41,8 +41,8 @@ class WooCommercePayments {
 	 * Attach hooks.
 	 */
 	public function __construct() {
-		add_action( 'init', array( $this, 'install_on_action' ) );
-		add_action( 'wc-admin-woocommerce-payments_add_note', array( $this, 'add_note' ) );
+		add_action( 'init', [ $this, 'install_on_action' ] );
+		add_action( 'wc-admin-woocommerce-payments_add_note', [ $this, 'add_note' ] );
 	}
 
 	/**
@@ -114,7 +114,7 @@ class WooCommercePayments {
 				'</a>'
 			)
 		);
-		$note->set_content_data( (object) array() );
+		$note->set_content_data( (object) [] );
 		$note->set_type( Note::E_WC_ADMIN_NOTE_MARKETING );
 		$note->set_name( self::NOTE_NAME );
 		$note->set_source( 'woocommerce-admin' );
@@ -147,16 +147,16 @@ class WooCommercePayments {
 	 * @return boolean Whether the plugin was successfully activated.
 	 */
 	private function install_and_activate_wcpay() {
-		$install_request = array( 'plugins' => self::PLUGIN_SLUG );
+		$install_request = [ 'plugins' => self::PLUGIN_SLUG ];
 		$installer       = new \Automattic\WooCommerce\Admin\API\Plugins();
 		$result          = $installer->install_plugins( $install_request );
 		if ( is_wp_error( $result ) ) {
 			return false;
 		}
 
-		wc_admin_record_tracks_event( 'woocommerce_payments_install', array( 'context' => 'inbox' ) );
+		wc_admin_record_tracks_event( 'woocommerce_payments_install', [ 'context' => 'inbox' ] );
 
-		$activate_request = array( 'plugins' => self::PLUGIN_SLUG );
+		$activate_request = [ 'plugins' => self::PLUGIN_SLUG ];
 		$result           = $installer->activate_plugins( $activate_request );
 		if ( is_wp_error( $result ) ) {
 			return false;
@@ -212,10 +212,10 @@ class WooCommercePayments {
 
 		// WooCommerce Payments is installed at this point, so link straight into the onboarding flow.
 		$connect_url = add_query_arg(
-			array(
+			[
 				'wcpay-connect' => '1',
 				'_wpnonce'      => wp_create_nonce( 'wcpay-connect' ),
-			),
+			],
 			admin_url()
 		);
 		wp_safe_redirect( $connect_url );

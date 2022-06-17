@@ -19,12 +19,12 @@ class DataStore extends CustomersDataStore implements DataStoreInterface {
 	 *
 	 * @var array
 	 */
-	protected $column_types = array(
+	protected $column_types = [
 		'customers_count'     => 'intval',
 		'avg_orders_count'    => 'floatval',
 		'avg_total_spend'     => 'floatval',
 		'avg_avg_order_value' => 'floatval',
-	);
+	];
 
 	/**
 	 * Cache identifier.
@@ -44,12 +44,12 @@ class DataStore extends CustomersDataStore implements DataStoreInterface {
 	 * Assign report columns once full table name has been assigned.
 	 */
 	protected function assign_report_columns() {
-		$this->report_columns = array(
+		$this->report_columns = [
 			'customers_count'     => 'COUNT( * ) as customers_count',
 			'avg_orders_count'    => 'AVG( orders_count ) as avg_orders_count',
 			'avg_total_spend'     => 'AVG( total_spend ) as avg_total_spend',
 			'avg_avg_order_value' => 'AVG( avg_order_value ) as avg_avg_order_value',
-		);
+		];
 	}
 
 	/**
@@ -64,13 +64,13 @@ class DataStore extends CustomersDataStore implements DataStoreInterface {
 		$customers_table_name = self::get_db_table_name();
 
 		// These defaults are only partially applied when used via REST API, as that has its own defaults.
-		$defaults   = array(
+		$defaults   = [
 			'per_page' => get_option( 'posts_per_page' ),
 			'page'     => 1,
 			'order'    => 'DESC',
 			'orderby'  => 'date_registered',
 			'fields'   => '*',
-		);
+		];
 		$query_args = wp_parse_args( $query_args, $defaults );
 		$this->normalize_timezones( $query_args, $defaults );
 
@@ -84,12 +84,12 @@ class DataStore extends CustomersDataStore implements DataStoreInterface {
 		if ( false === $data ) {
 			$this->initialize_queries();
 
-			$data = (object) array(
+			$data = (object) [
 				'customers_count'     => 0,
 				'avg_orders_count'    => 0,
 				'avg_total_spend'     => 0.0,
 				'avg_avg_order_value' => 0.0,
-			);
+			];
 
 			$selections = $this->selected_columns( $query_args );
 			$this->add_sql_query_params( $query_args );
@@ -105,7 +105,7 @@ class DataStore extends CustomersDataStore implements DataStoreInterface {
 				'CASE WHEN SUM( CASE WHEN parent_id = 0 THEN 1 ELSE 0 END ) = 0 THEN NULL ELSE SUM( total_sales ) / SUM( CASE WHEN parent_id = 0 THEN 1 ELSE 0 END ) END AS avg_order_value'
 			);
 
-			$this->clear_sql_clause( array( 'order_by', 'limit' ) );
+			$this->clear_sql_clause( [ 'order_by', 'limit' ] );
 			$this->add_sql_clause( 'select', $selections );
 			$this->add_sql_clause( 'from', "({$this->subquery->get_query_statement()}) AS tt" );
 

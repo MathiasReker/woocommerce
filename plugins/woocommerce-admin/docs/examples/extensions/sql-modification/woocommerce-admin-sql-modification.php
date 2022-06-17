@@ -42,20 +42,20 @@
 	```
  */
 function add_currency_settings() {
-	$currencies = array(
-		array(
+	$currencies = [
+		[
 			'label' => __( 'United States Dollar', 'woocommerce-admin' ),
 			'value' => 'USD',
-		),
-		array(
+		],
+		[
 			'label' => __( 'New Zealand Dollar', 'woocommerce-admin' ),
 			'value' => 'NZD',
-		),
-		array(
+		],
+		[
 			'label' => __( 'South African Rand', 'woocommerce-admin' ),
 			'value' => 'ZAR',
-		),
-	);
+		],
+	];
 
 	$data_registry = Automattic\WooCommerce\Blocks\Package::container()->get(
 		Automattic\WooCommerce\Blocks\Assets\AssetDataRegistry::class

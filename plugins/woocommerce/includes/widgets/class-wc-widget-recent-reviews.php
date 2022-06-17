@@ -21,21 +21,21 @@ class WC_Widget_Recent_Reviews extends WC_Widget {
 		$this->widget_description = __( 'Display a list of recent reviews from your store.', 'woocommerce' );
 		$this->widget_id          = 'woocommerce_recent_reviews';
 		$this->widget_name        = __( 'Recent Product Reviews', 'woocommerce' );
-		$this->settings           = array(
-			'title'  => array(
+		$this->settings           = [
+			'title'  => [
 				'type'  => 'text',
 				'std'   => __( 'Recent reviews', 'woocommerce' ),
 				'label' => __( 'Title', 'woocommerce' ),
-			),
-			'number' => array(
+			],
+			'number' => [
 				'type'  => 'number',
 				'step'  => 1,
 				'min'   => 1,
 				'max'   => '',
 				'std'   => 10,
 				'label' => __( 'Number of reviews to show', 'woocommerce' ),
-			),
-		);
+			],
+		];
 
 		parent::__construct();
 	}
@@ -58,13 +58,13 @@ class WC_Widget_Recent_Reviews extends WC_Widget {
 
 		$number   = ! empty( $instance['number'] ) ? absint( $instance['number'] ) : $this->settings['number']['std'];
 		$comments = get_comments(
-			array(
+			[
 				'number'      => $number,
 				'status'      => 'approve',
 				'post_status' => 'publish',
 				'post_type'   => 'product',
 				'parent'      => 0,
-			)
+			]
 		); // WPCS: override ok.
 
 		if ( $comments ) {
@@ -75,10 +75,10 @@ class WC_Widget_Recent_Reviews extends WC_Widget {
 			foreach ( (array) $comments as $comment ) {
 				wc_get_template(
 					'content-widget-reviews.php',
-					array(
+					[
 						'comment' => $comment,
 						'product' => wc_get_product( $comment->comment_post_ID ),
-					)
+					]
 				);
 			}
 

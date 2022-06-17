@@ -15,13 +15,13 @@ class WC_Orders_Tracking {
 	 * Init tracking.
 	 */
 	public function init() {
-		add_action( 'woocommerce_order_status_changed', array( $this, 'track_order_status_change' ), 10, 3 );
-		add_action( 'load-edit.php', array( $this, 'track_orders_view' ), 10 );
-		add_action( 'pre_post_update', array( $this, 'track_created_date_change' ), 10 );
+		add_action( 'woocommerce_order_status_changed', [ $this, 'track_order_status_change' ], 10, 3 );
+		add_action( 'load-edit.php', [ $this, 'track_orders_view' ], 10 );
+		add_action( 'pre_post_update', [ $this, 'track_created_date_change' ], 10 );
 		// WC_Meta_Box_Order_Actions::save() hooks in at priority 50.
-		add_action( 'woocommerce_process_shop_order_meta', array( $this, 'track_order_action' ), 51 );
-		add_action( 'load-post-new.php', array( $this, 'track_add_order_from_edit' ), 10 );
-		add_filter( 'woocommerce_shop_order_search_results', array( $this, 'track_order_search' ), 10, 3 );
+		add_action( 'woocommerce_process_shop_order_meta', [ $this, 'track_order_action' ], 51 );
+		add_action( 'load-post-new.php', [ $this, 'track_add_order_from_edit' ], 10 );
+		add_filter( 'woocommerce_shop_order_search_results', [ $this, 'track_order_search' ], 10, 3 );
 	}
 
 	/**
@@ -55,9 +55,9 @@ class WC_Orders_Tracking {
 		if ( isset( $_GET['post_type'] ) && 'shop_order' === wp_unslash( $_GET['post_type'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 
 			// phpcs:disable WordPress.Security.NonceVerification, WordPress.Security.ValidatedSanitizedInput
-			$properties = array(
+			$properties = [
 				'status' => isset( $_GET['post_status'] ) ? sanitize_text_field( $_GET['post_status'] ) : 'all',
-			);
+			];
 			// phpcs:enable
 
 			WC_Tracks::record_event( 'orders_view', $properties );
@@ -74,14 +74,14 @@ class WC_Orders_Tracking {
 	public function track_order_status_change( $id, $previous_status, $next_status ) {
 		$order = wc_get_order( $id );
 
-		$properties = array(
+		$properties = [
 			'order_id'        => $id,
 			'next_status'     => $next_status,
 			'previous_status' => $previous_status,
 			'date_created'    => $order->get_date_created() ? $order->get_date_created()->date( 'Y-m-d' ) : '',
 			'payment_method'  => $order->get_payment_method(),
 			'order_total'     => $order->get_total(),
-		);
+		];
 
 		WC_Tracks::record_event( 'orders_edit_status_change', $properties );
 	}
@@ -115,10 +115,10 @@ class WC_Orders_Tracking {
 		// phpcs:enable
 
 		if ( $new_date !== $date_created ) {
-			$properties = array(
+			$properties = [
 				'order_id' => $id,
 				'status'   => $order->get_status(),
-			);
+			];
 
 			WC_Tracks::record_event( 'order_edit_date_created', $properties );
 		}
@@ -134,11 +134,11 @@ class WC_Orders_Tracking {
 		if ( ! empty( $_POST['wc_order_action'] ) ) {
 			$order      = wc_get_order( $order_id );
 			$action     = wc_clean( wp_unslash( $_POST['wc_order_action'] ) );
-			$properties = array(
+			$properties = [
 				'order_id' => $order_id,
 				'status'   => $order->get_status(),
 				'action'   => $action,
-			);
+			];
 
 			WC_Tracks::record_event( 'order_edit_order_action', $properties );
 		}
@@ -155,7 +155,7 @@ class WC_Orders_Tracking {
 
 			if ( $referer ) {
 				$referring_page = wp_parse_url( $referer );
-				$referring_args = array();
+				$referring_args = [];
 				$post_edit_page = wp_parse_url( admin_url( 'post.php' ) );
 
 				if ( ! empty( $referring_page['query'] ) ) {

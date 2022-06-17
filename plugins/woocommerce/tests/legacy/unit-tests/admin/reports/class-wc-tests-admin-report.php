@@ -37,15 +37,15 @@ class WC_Tests_Admin_Report extends WC_Unit_Test_Case {
 
 		$report = new WC_Admin_Report();
 		$data   = $report->get_order_report_data(
-			array(
-				'data' => array(
-					'ID' => array(
+			[
+				'data' => [
+					'ID' => [
 						'type'     => 'post_data',
 						'function' => 'COUNT',
 						'name'     => 'total_orders',
-					),
-				),
-			)
+					],
+				],
+			]
 		);
 
 		$this->assertEquals( 1, $data->total_orders, 'Expected to see one completed order in the report.' );
@@ -74,15 +74,15 @@ class WC_Tests_Admin_Report extends WC_Unit_Test_Case {
 
 		$report = new WC_Admin_Report();
 		$data   = $report->get_order_report_data(
-			array(
-				'data' => array(
-					'_billing_first_name' => array(
+			[
+				'data' => [
+					'_billing_first_name' => [
 						'type'     => 'meta',
 						'function' => null,
 						'name'     => 'customer_name',
-					),
-				),
-			)
+					],
+				],
+			]
 		);
 
 		$this->assertEquals( $order->get_billing_first_name(), $data->customer_name );
@@ -94,22 +94,22 @@ class WC_Tests_Admin_Report extends WC_Unit_Test_Case {
 	public function test_get_order_report_data_for_parent_meta() {
 		$order  = WC_Helper_Order::create_order();
 		$refund = wc_create_refund(
-			array(
+			[
 				'order_id' => $order->get_id(),
-			)
+			]
 		);
 
 		$report = new WC_Admin_Report();
 		$data   = $report->get_order_report_data(
-			array(
-				'data' => array(
-					'_order_total' => array(
+			[
+				'data' => [
+					'_order_total' => [
 						'type'     => 'parent_meta',
 						'function' => '',
 						'name'     => 'total_refund',
-					),
-				),
-			)
+					],
+				],
+			]
 		);
 
 		$this->assertEquals( $order->get_total(), $data->total_refund );
@@ -125,15 +125,15 @@ class WC_Tests_Admin_Report extends WC_Unit_Test_Case {
 
 		$report = new WC_Admin_Report();
 		$data   = $report->get_order_report_data(
-			array(
-				'data' => array(
-					'post_status' => array(
+			[
+				'data' => [
+					'post_status' => [
 						'type'     => 'post_data',
 						'function' => null,
 						'name'     => 'post_status',
-					),
-				),
-			)
+					],
+				],
+			]
 		);
 
 		$this->assertEquals( 'wc-completed', $data->post_status );
@@ -150,15 +150,15 @@ class WC_Tests_Admin_Report extends WC_Unit_Test_Case {
 
 		$report = new WC_Admin_Report();
 		$data   = $report->get_order_report_data(
-			array(
-				'data' => array(
-					'order_item_name' => array(
+			[
+				'data' => [
+					'order_item_name' => [
 						'type'     => 'order_item',
 						'function' => null,
 						'name'     => 'name',
-					),
-				),
-			)
+					],
+				],
+			]
 		);
 
 		$this->assertEquals( $product->get_name(), $data->name );

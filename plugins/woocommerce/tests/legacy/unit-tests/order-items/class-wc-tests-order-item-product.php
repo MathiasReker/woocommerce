@@ -58,10 +58,10 @@ class WC_Tests_Order_Item_Product extends WC_Unit_Test_Case {
 	public function test_set_get_taxes() {
 		$product_item = new WC_Order_Item_Product();
 
-		$taxes = array(
-			'total'    => array( '10', '2.4' ),
-			'subtotal' => array( '12', '3.1' ),
-		);
+		$taxes = [
+			'total'    => [ '10', '2.4' ],
+			'subtotal' => [ '12', '3.1' ],
+		];
 		$product_item->set_taxes( $taxes );
 		$this->assertEquals( $taxes, $product_item->get_taxes() );
 		$this->assertEquals( '12.4', $product_item->get_total_tax() );
@@ -86,7 +86,7 @@ class WC_Tests_Order_Item_Product extends WC_Unit_Test_Case {
 		$variation_product = new WC_Product_Variation();
 		$variation_product->set_name( 'Test Variation' );
 		$variation_product->set_parent_id( $parent_product->get_id() );
-		$variation_product->set_attributes( array( 'color' => 'Green' ) );
+		$variation_product->set_attributes( [ 'color' => 'Green' ] );
 		$variation_product->save();
 
 		// Simple product.
@@ -147,10 +147,10 @@ class WC_Tests_Order_Item_Product extends WC_Unit_Test_Case {
 		$variation_product->set_name( 'Test Variation' );
 		$variation_product->set_parent_id( $parent_product->get_id() );
 		$variation_product->set_attributes(
-			array(
+			[
 				'color' => 'Green',
 				'size'  => 'Large',
-			)
+			]
 		);
 		$variation_product->save();
 
@@ -161,49 +161,49 @@ class WC_Tests_Order_Item_Product extends WC_Unit_Test_Case {
 
 		// Test with show_all on.
 		$formatted          = $product_item->get_formatted_meta_data( '_', true );
-		$formatted_as_array = array();
+		$formatted_as_array = [];
 		foreach ( $formatted as $f ) {
 			$formatted_as_array[] = (array) $f;
 		}
 		$this->assertEquals(
-			array(
-				array(
+			[
+				[
 					'key'           => 'color',
 					'value'         => 'Green',
 					'display_key'   => 'color',
 					'display_value' => "<p>Green</p>\n",
-				),
-				array(
+				],
+				[
 					'key'           => 'size',
 					'value'         => 'Large',
 					'display_key'   => 'size',
 					'display_value' => "<p>Large</p>\n",
-				),
-				array(
+				],
+				[
 					'key'           => 'testkey',
 					'value'         => 'testval',
 					'display_key'   => 'testkey',
 					'display_value' => "<p>testval</p>\n",
-				),
-			),
+				],
+			],
 			$formatted_as_array
 		);
 
 		// Test with show_all off.
 		$formatted          = $product_item->get_formatted_meta_data( '_', false );
-		$formatted_as_array = array();
+		$formatted_as_array = [];
 		foreach ( $formatted as $f ) {
 			$formatted_as_array[] = (array) $f;
 		}
 		$this->assertEquals(
-			array(
-				array(
+			[
+				[
 					'key'           => 'testkey',
 					'value'         => 'testval',
 					'display_key'   => 'testkey',
 					'display_value' => "<p>testval</p>\n",
-				),
-			),
+				],
+			],
 			$formatted_as_array
 		);
 
@@ -226,10 +226,10 @@ class WC_Tests_Order_Item_Product extends WC_Unit_Test_Case {
 		$variation_product->set_name( 'Test Variation' );
 		$variation_product->set_parent_id( $parent_product->get_id() );
 		$variation_product->set_attributes(
-			array(
+			[
 				'color' => 'Green',
 				'size'  => 'Large',
-			)
+			]
 		);
 		$variation_product->save();
 
@@ -240,49 +240,49 @@ class WC_Tests_Order_Item_Product extends WC_Unit_Test_Case {
 
 		// Test with show_all set to default.
 		$formatted          = $product_item->get_all_formatted_meta_data( '_' );
-		$formatted_as_array = array();
+		$formatted_as_array = [];
 		foreach ( $formatted as $f ) {
 			$formatted_as_array[] = (array) $f;
 		}
 		$this->assertEquals(
-			array(
-				array(
+			[
+				[
 					'key'           => 'color',
 					'value'         => 'Green',
 					'display_key'   => 'color',
 					'display_value' => "<p>Green</p>\n",
-				),
-				array(
+				],
+				[
 					'key'           => 'size',
 					'value'         => 'Large',
 					'display_key'   => 'size',
 					'display_value' => "<p>Large</p>\n",
-				),
-				array(
+				],
+				[
 					'key'           => 'testkey',
 					'value'         => 'testval',
 					'display_key'   => 'testkey',
 					'display_value' => "<p>testval</p>\n",
-				),
-			),
+				],
+			],
 			$formatted_as_array
 		);
 
 		// Test with show_all off.
 		$formatted          = $product_item->get_all_formatted_meta_data( '_', false );
-		$formatted_as_array = array();
+		$formatted_as_array = [];
 		foreach ( $formatted as $f ) {
 			$formatted_as_array[] = (array) $f;
 		}
 		$this->assertEquals(
-			array(
-				array(
+			[
+				[
 					'key'           => 'testkey',
 					'value'         => 'testval',
 					'display_key'   => 'testkey',
 					'display_value' => "<p>testval</p>\n",
-				),
-			),
+				],
+			],
 			$formatted_as_array
 		);
 
@@ -326,16 +326,16 @@ class WC_Tests_Order_Item_Product extends WC_Unit_Test_Case {
 		// Test line_tax_data.
 		$this->assertTrue( isset( $item['line_tax_data'] ) );
 		$item->set_taxes(
-			array(
-				'total'    => array( 5 ),
-				'subtotal' => array( 5 ),
-			)
+			[
+				'total'    => [ 5 ],
+				'subtotal' => [ 5 ],
+			]
 		);
 		$this->assertEquals(
-			array(
-				'total'    => array( 5 ),
-				'subtotal' => array( 5 ),
-			),
+			[
+				'total'    => [ 5 ],
+				'subtotal' => [ 5 ],
+			],
 			$item->get_taxes()
 		);
 		$this->assertEquals( $item->get_taxes(), $item['line_tax_data'] );
@@ -352,7 +352,7 @@ class WC_Tests_Order_Item_Product extends WC_Unit_Test_Case {
 		$this->assertInstanceOf( 'WC_Meta_Data', current( $item->get_meta_data() ) );
 		$this->assertEquals( current( $item->get_meta_data() ), $item['item_meta_array'][''] );
 		unset( $item['item_meta_array'] );
-		$this->assertEquals( array(), $item->get_meta_data() );
+		$this->assertEquals( [], $item->get_meta_data() );
 
 		// Test default.
 		$this->assertFalse( $item->meta_exists( 'foo' ) );

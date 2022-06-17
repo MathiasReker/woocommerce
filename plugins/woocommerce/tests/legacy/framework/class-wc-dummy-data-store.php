@@ -22,7 +22,7 @@ class WC_Dummy_Data_Store_CPT implements WC_Object_Data_Store_Interface {
 	public function create( &$data ) { }
 	public function read( &$data ) { }
 	public function update( &$data ) { }
-	public function delete( &$data, $args = array() ) { }
+	public function delete( &$data, $args = [] ) { }
 	public function read_meta( &$data ) { }
 	public function delete_meta( &$data, $meta ) { }
 	public function add_meta( &$data, $meta ) { }
@@ -34,7 +34,7 @@ class WC_Dummy_Data_Store_CPT implements WC_Object_Data_Store_Interface {
 	 * @return array
 	 */
 	public function custom_method( $first_param, $second_param, $third_param ) {
-		return array( $first_param, $second_param, $third_param );
+		return [ $first_param, $second_param, $third_param ];
 	}
 }
 
@@ -49,7 +49,7 @@ class WC_Dummy_Data_Store_Custom_Table implements WC_Object_Data_Store_Interface
 	public function create( &$data ) { }
 	public function read( &$data ) { }
 	public function update( &$data ) { }
-	public function delete( &$data, $args = array() ) { }
+	public function delete( &$data, $args = [] ) { }
 	public function read_meta( &$data ) { }
 	public function delete_meta( &$data, $meta ) { }
 	public function add_meta( &$data, $meta ) { }

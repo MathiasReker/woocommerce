@@ -24,7 +24,7 @@ abstract class WC_Abstract_Legacy_Product extends WC_Data {
 	 * @return bool
 	 */
 	public function __isset( $key ) {
-		$valid = array(
+		$valid = [
 			'id',
 			'product_attributes',
 			'visibility',
@@ -38,9 +38,9 @@ abstract class WC_Abstract_Legacy_Product extends WC_Data {
 			'total_stock',
 			'crosssell_ids',
 			'parent',
-		);
+		];
 		if ( $this->is_type( 'variation' ) ) {
-			$valid = array_merge( $valid, array(
+			$valid = array_merge( $valid, [
 				'variation_id',
 				'variation_data',
 				'variation_has_stock',
@@ -52,7 +52,7 @@ abstract class WC_Abstract_Legacy_Product extends WC_Data {
 				'variation_has_weight',
 				'variation_has_tax_class',
 				'variation_has_downloadable_files',
-			) );
+			] );
 		}
 		return in_array( $key, array_merge( $valid, array_keys( $this->data ) ) ) || metadata_exists( 'post', $this->get_id(), '_' . $key ) || metadata_exists( 'post', $this->get_parent_id(), '_' . $key );
 	}
@@ -247,7 +247,7 @@ abstract class WC_Abstract_Legacy_Product extends WC_Data {
 	 */
 	protected function get_related_terms( $term ) {
 		wc_deprecated_function( 'WC_Product::get_related_terms', '3.0', 'wc_get_product_term_ids' );
-		return array_merge( array( 0 ), wc_get_product_term_ids( $this->get_id(), $term ) );
+		return array_merge( [ 0 ], wc_get_product_term_ids( $this->get_id(), $term ) );
 	}
 
 	/**
@@ -319,7 +319,7 @@ abstract class WC_Abstract_Legacy_Product extends WC_Data {
 	 */
 	public function get_price_including_tax( $qty = 1, $price = '' ) {
 		wc_deprecated_function( 'WC_Product::get_price_including_tax', '3.0', 'wc_get_price_including_tax' );
-		return wc_get_price_including_tax( $this, array( 'qty' => $qty, 'price' => $price ) );
+		return wc_get_price_including_tax( $this, [ 'qty' => $qty, 'price' => $price ] );
 	}
 
 	/**
@@ -332,7 +332,7 @@ abstract class WC_Abstract_Legacy_Product extends WC_Data {
 	 */
 	public function get_display_price( $price = '', $qty = 1 ) {
 		wc_deprecated_function( 'WC_Product::get_display_price', '3.0', 'wc_get_price_to_display' );
-		return wc_get_price_to_display( $this, array( 'qty' => $qty, 'price' => $price ) );
+		return wc_get_price_to_display( $this, [ 'qty' => $qty, 'price' => $price ] );
 	}
 
 	/**
@@ -346,7 +346,7 @@ abstract class WC_Abstract_Legacy_Product extends WC_Data {
 	 */
 	public function get_price_excluding_tax( $qty = 1, $price = '' ) {
 		wc_deprecated_function( 'WC_Product::get_price_excluding_tax', '3.0', 'wc_get_price_excluding_tax' );
-		return wc_get_price_excluding_tax( $this, array( 'qty' => $qty, 'price' => $price ) );
+		return wc_get_price_excluding_tax( $this, [ 'qty' => $qty, 'price' => $price ] );
 	}
 
 	/**
@@ -558,7 +558,7 @@ abstract class WC_Abstract_Legacy_Product extends WC_Data {
 		}
 
 		// Sync prices with children
-		if ( is_callable( array( __CLASS__, 'sync' ) ) ) {
+		if ( is_callable( [ __CLASS__, 'sync' ] ) ) {
 			self::sync( $product_id );
 		}
 	}
@@ -617,7 +617,7 @@ abstract class WC_Abstract_Legacy_Product extends WC_Data {
 	 *
 	 * @param array $match_attributes
 	 */
-	public function get_matching_variation( $match_attributes = array() ) {
+	public function get_matching_variation( $match_attributes = [] ) {
 		wc_deprecated_function( 'WC_Product::get_matching_variation', '3.0', 'Product data store find_matching_product_variation' );
 		$data_store = WC_Data_Store::load( 'product' );
 		return $data_store->find_matching_product_variation( $this, $match_attributes );

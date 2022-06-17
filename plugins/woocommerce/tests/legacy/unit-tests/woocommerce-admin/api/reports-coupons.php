@@ -24,9 +24,9 @@ class WC_Admin_Tests_API_Reports_Coupons extends WC_REST_Unit_Test_Case {
 		parent::setUp();
 
 		$this->user = $this->factory->user->create(
-			array(
+			[
 				'role' => 'administrator',
-			)
+			]
 		);
 	}
 
@@ -136,9 +136,9 @@ class WC_Admin_Tests_API_Reports_Coupons extends WC_REST_Unit_Test_Case {
 
 		$request = new WP_REST_Request( 'GET', $this->endpoint );
 		$request->set_query_params(
-			array(
+			[
 				'coupons' => $coupon_1->get_id() . ',' . $coupon_2->get_id(),
-			)
+			]
 		);
 		$response       = $this->server->dispatch( $request );
 		$coupon_reports = $response->get_data();

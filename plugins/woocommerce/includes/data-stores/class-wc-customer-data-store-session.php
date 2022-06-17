@@ -21,7 +21,7 @@ class WC_Customer_Data_Store_Session extends WC_Data_Store_WP implements WC_Cust
 	 *
 	 * @var array
 	 */
-	protected $session_keys = array(
+	protected $session_keys = [
 		'id',
 		'date_modified',
 		'billing_postcode',
@@ -49,7 +49,7 @@ class WC_Customer_Data_Store_Session extends WC_Data_Store_WP implements WC_Cust
 		'shipping_last_name',
 		'shipping_company',
 		'shipping_phone',
-	);
+	];
 
 	/**
 	 * Simply update the session.
@@ -75,7 +75,7 @@ class WC_Customer_Data_Store_Session extends WC_Data_Store_WP implements WC_Cust
 	 * @param WC_Customer $customer Customer object.
 	 */
 	public function save_to_session( $customer ) {
-		$data = array();
+		$data = [];
 		foreach ( $this->session_keys as $session_key ) {
 			$function_key = $session_key;
 			if ( 'billing_' === substr( $session_key, 0, 8 ) ) {
@@ -103,14 +103,14 @@ class WC_Customer_Data_Store_Session extends WC_Data_Store_WP implements WC_Cust
 		 */
 		if ( isset( $data['id'], $data['date_modified'] ) && $data['id'] === (string) $customer->get_id() && $data['date_modified'] === (string) $customer->get_date_modified( 'edit' ) ) {
 			foreach ( $this->session_keys as $session_key ) {
-				if ( in_array( $session_key, array( 'id', 'date_modified' ), true ) ) {
+				if ( in_array( $session_key, [ 'id', 'date_modified' ], true ) ) {
 					continue;
 				}
 				$function_key = $session_key;
 				if ( 'billing_' === substr( $session_key, 0, 8 ) ) {
 					$session_key = str_replace( 'billing_', '', $session_key );
 				}
-				if ( isset( $data[ $session_key ] ) && is_callable( array( $customer, "set_{$function_key}" ) ) ) {
+				if ( isset( $data[ $session_key ] ) && is_callable( [ $customer, "set_{$function_key}" ] ) ) {
 					$customer->{"set_{$function_key}"}( wp_unslash( $data[ $session_key ] ) );
 				}
 			}
@@ -160,7 +160,7 @@ class WC_Customer_Data_Store_Session extends WC_Data_Store_WP implements WC_Cust
 	 * @param WC_Customer $customer Customer object.
 	 * @param array       $args Array of args to pass to the delete method.
 	 */
-	public function delete( &$customer, $args = array() ) {
+	public function delete( &$customer, $args = [] ) {
 		WC()->session->set( 'customer', null );
 	}
 

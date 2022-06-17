@@ -41,7 +41,7 @@ if ( ! comments_open() ) {
 
 		<?php if ( have_comments() ) : ?>
 			<ol class="commentlist">
-				<?php wp_list_comments( apply_filters( 'woocommerce_product_review_list_args', array( 'callback' => 'woocommerce_comments' ) ) ); ?>
+				<?php wp_list_comments( apply_filters( 'woocommerce_product_review_list_args', [ 'callback' => 'woocommerce_comments' ] ) ); ?>
 			</ol>
 
 			<?php
@@ -50,11 +50,11 @@ if ( ! comments_open() ) {
 				paginate_comments_links(
 					apply_filters(
 						'woocommerce_comment_pagination_args',
-						array(
+						[
 							'prev_text' => is_rtl() ? '&rarr;' : '&larr;',
 							'next_text' => is_rtl() ? '&larr;' : '&rarr;',
 							'type'      => 'list',
-						)
+						]
 					)
 				);
 				echo '</nav>';
@@ -70,7 +70,7 @@ if ( ! comments_open() ) {
 			<div id="review_form">
 				<?php
 				$commenter    = wp_get_current_commenter();
-				$comment_form = array(
+				$comment_form = [
 					/* translators: %s is product title */
 					'title_reply'         => have_comments() ? esc_html__( 'Add a review', 'woocommerce' ) : sprintf( esc_html__( 'Be the first to review &ldquo;%s&rdquo;', 'woocommerce' ), get_the_title() ),
 					/* translators: %s is product title */
@@ -81,25 +81,25 @@ if ( ! comments_open() ) {
 					'label_submit'        => esc_html__( 'Submit', 'woocommerce' ),
 					'logged_in_as'        => '',
 					'comment_field'       => '',
-				);
+				];
 
 				$name_email_required = (bool) get_option( 'require_name_email', 1 );
-				$fields              = array(
-					'author' => array(
+				$fields              = [
+					'author' => [
 						'label'    => __( 'Name', 'woocommerce' ),
 						'type'     => 'text',
 						'value'    => $commenter['comment_author'],
 						'required' => $name_email_required,
-					),
-					'email'  => array(
+					],
+					'email'  => [
 						'label'    => __( 'Email', 'woocommerce' ),
 						'type'     => 'email',
 						'value'    => $commenter['comment_author_email'],
 						'required' => $name_email_required,
-					),
-				);
+					],
+				];
 
-				$comment_form['fields'] = array();
+				$comment_form['fields'] = [];
 
 				foreach ( $fields as $key => $field ) {
 					$field_html  = '<p class="comment-form-' . esc_attr( $key ) . '">';

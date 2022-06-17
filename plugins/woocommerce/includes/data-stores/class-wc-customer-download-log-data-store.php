@@ -38,19 +38,19 @@ class WC_Customer_Download_Log_Data_Store implements WC_Customer_Download_Log_Da
 			$download_log->set_timestamp( time() );
 		}
 
-		$data = array(
+		$data = [
 			'timestamp'       => date( 'Y-m-d H:i:s', $download_log->get_timestamp( 'edit' )->getTimestamp() ),
 			'permission_id'   => $download_log->get_permission_id( 'edit' ),
 			'user_id'         => $download_log->get_user_id( 'edit' ),
 			'user_ip_address' => $download_log->get_user_ip_address( 'edit' ),
-		);
+		];
 
-		$format = array(
+		$format = [
 			'%s',
 			'%s',
 			'%s',
 			'%s',
-		);
+		];
 
 		$result = $wpdb->insert(
 			$wpdb->prefix . self::get_table_name(),
@@ -94,12 +94,12 @@ class WC_Customer_Download_Log_Data_Store implements WC_Customer_Download_Log_Da
 		}
 
 		$download_log->set_props(
-			array(
+			[
 				'timestamp'       => strtotime( $raw_download_log->timestamp ),
 				'permission_id'   => $raw_download_log->permission_id,
 				'user_id'         => $raw_download_log->user_id,
 				'user_ip_address' => $raw_download_log->user_ip_address,
-			)
+			]
 		);
 
 		$download_log->set_object_read( true );
@@ -113,26 +113,26 @@ class WC_Customer_Download_Log_Data_Store implements WC_Customer_Download_Log_Da
 	public function update( &$download_log ) {
 		global $wpdb;
 
-		$data = array(
+		$data = [
 			'timestamp'       => date( 'Y-m-d H:i:s', $download_log->get_timestamp( 'edit' )->getTimestamp() ),
 			'permission_id'   => $download_log->get_permission_id( 'edit' ),
 			'user_id'         => $download_log->get_user_id( 'edit' ),
 			'user_ip_address' => $download_log->get_user_ip_address( 'edit' ),
-		);
+		];
 
-		$format = array(
+		$format = [
 			'%s',
 			'%s',
 			'%s',
 			'%s',
-		);
+		];
 
 		$wpdb->update(
 			$wpdb->prefix . self::get_table_name(),
 			$data,
-			array(
+			[
 				'download_log_id' => $download_log->get_id(),
-			),
+			],
 			$format
 		);
 		$download_log->apply_changes();
@@ -154,12 +154,12 @@ class WC_Customer_Download_Log_Data_Store implements WC_Customer_Download_Log_Da
 	 * @param  array $args Arguments to define download logs to retrieve.
 	 * @return array
 	 */
-	public function get_download_logs( $args = array() ) {
+	public function get_download_logs( $args = [] ) {
 		global $wpdb;
 
 		$args = wp_parse_args(
 			$args,
-			array(
+			[
 				'permission_id'   => '',
 				'user_id'         => '',
 				'user_ip_address' => '',
@@ -168,10 +168,10 @@ class WC_Customer_Download_Log_Data_Store implements WC_Customer_Download_Log_Da
 				'limit'           => -1,
 				'page'            => 1,
 				'return'          => 'objects',
-			)
+			]
 		);
 
-		$query   = array();
+		$query   = [];
 		$table   = $wpdb->prefix . self::get_table_name();
 		$query[] = "SELECT * FROM {$table} WHERE 1=1";
 
@@ -187,7 +187,7 @@ class WC_Customer_Download_Log_Data_Store implements WC_Customer_Download_Log_Da
 			$query[] = $wpdb->prepare( 'AND user_ip_address = %s', $args['user_ip_address'] );
 		}
 
-		$allowed_orders = array( 'download_log_id', 'timestamp', 'permission_id', 'user_id' );
+		$allowed_orders = [ 'download_log_id', 'timestamp', 'permission_id', 'user_id' ];
 		$orderby        = in_array( $args['orderby'], $allowed_orders, true ) ? $args['orderby'] : 'download_log_id';
 		$order          = 'DESC' === strtoupper( $args['order'] ) ? 'DESC' : 'ASC';
 		$orderby_sql    = sanitize_sql_orderby( "{$orderby} {$order}" );
@@ -203,7 +203,7 @@ class WC_Customer_Download_Log_Data_Store implements WC_Customer_Download_Log_Da
 			case 'ids':
 				return wp_list_pluck( $raw_download_logs, 'download_log_id' );
 			default:
-				return array_map( array( $this, 'get_download_log' ), $raw_download_logs );
+				return array_map( [ $this, 'get_download_log' ], $raw_download_logs );
 		}
 	}
 
@@ -216,13 +216,13 @@ class WC_Customer_Download_Log_Data_Store implements WC_Customer_Download_Log_Da
 	public function get_download_logs_for_permission( $permission_id ) {
 		// If no permission_id is passed, return an empty array.
 		if ( empty( $permission_id ) ) {
-			return array();
+			return [];
 		}
 
 		return $this->get_download_logs(
-			array(
+			[
 				'permission_id' => $permission_id,
-			)
+			]
 		);
 	}
 

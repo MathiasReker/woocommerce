@@ -40,7 +40,7 @@ class WC_Rate_Limiter {
 	 * Hook in methods.
 	 */
 	public static function init() {
-		add_action( 'woocommerce_cleanup_rate_limits', array( __CLASS__, 'cleanup' ) );
+		add_action( 'woocommerce_cleanup_rate_limits', [ __CLASS__, 'cleanup' ] );
 	}
 
 	/**
@@ -139,11 +139,11 @@ class WC_Rate_Limiter {
 
 		$result = $wpdb->replace(
 			$wpdb->prefix . 'wc_rate_limits',
-			array(
+			[
 				'rate_limit_key'    => $action_id,
 				'rate_limit_expiry' => $next_try_allowed_at,
-			),
-			array( '%s', '%d' )
+			],
+			[ '%s', '%d' ]
 		);
 
 		self::set_cache( $action_id, $next_try_allowed_at );

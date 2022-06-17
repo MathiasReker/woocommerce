@@ -25,28 +25,28 @@ class WC_Widget_Price_Filter extends WC_Widget {
 		$this->widget_description = __( 'Display a slider to filter products in your store by price.', 'woocommerce' );
 		$this->widget_id          = 'woocommerce_price_filter';
 		$this->widget_name        = __( 'Filter Products by Price', 'woocommerce' );
-		$this->settings           = array(
-			'title' => array(
+		$this->settings           = [
+			'title' => [
 				'type'  => 'text',
 				'std'   => __( 'Filter by price', 'woocommerce' ),
 				'label' => __( 'Title', 'woocommerce' ),
-			),
-		);
+			],
+		];
 		$suffix                   = Constants::is_true( 'SCRIPT_DEBUG' ) ? '' : '.min';
 		$version                  = Constants::get_constant( 'WC_VERSION' );
-		wp_register_script( 'accounting', WC()->plugin_url() . '/assets/js/accounting/accounting' . $suffix . '.js', array( 'jquery' ), '0.4.2', true );
-		wp_register_script( 'wc-jquery-ui-touchpunch', WC()->plugin_url() . '/assets/js/jquery-ui-touch-punch/jquery-ui-touch-punch' . $suffix . '.js', array( 'jquery-ui-slider' ), $version, true );
-		wp_register_script( 'wc-price-slider', WC()->plugin_url() . '/assets/js/frontend/price-slider' . $suffix . '.js', array( 'jquery-ui-slider', 'wc-jquery-ui-touchpunch', 'accounting' ), $version, true );
+		wp_register_script( 'accounting', WC()->plugin_url() . '/assets/js/accounting/accounting' . $suffix . '.js', [ 'jquery' ], '0.4.2', true );
+		wp_register_script( 'wc-jquery-ui-touchpunch', WC()->plugin_url() . '/assets/js/jquery-ui-touch-punch/jquery-ui-touch-punch' . $suffix . '.js', [ 'jquery-ui-slider' ], $version, true );
+		wp_register_script( 'wc-price-slider', WC()->plugin_url() . '/assets/js/frontend/price-slider' . $suffix . '.js', [ 'jquery-ui-slider', 'wc-jquery-ui-touchpunch', 'accounting' ], $version, true );
 		wp_localize_script(
 			'wc-price-slider',
 			'woocommerce_price_slider_params',
-			array(
+			[
 				'currency_format_num_decimals' => 0,
 				'currency_format_symbol'       => get_woocommerce_currency_symbol(),
 				'currency_format_decimal_sep'  => esc_attr( wc_get_price_decimal_separator() ),
 				'currency_format_thousand_sep' => esc_attr( wc_get_price_thousand_separator() ),
-				'currency_format'              => esc_attr( str_replace( array( '%1$s', '%2$s' ), array( '%s', '%v' ), get_woocommerce_price_format() ) ),
-			)
+				'currency_format'              => esc_attr( str_replace( [ '%1$s', '%2$s' ], [ '%s', '%v' ], get_woocommerce_price_format() ) ),
+			]
 		);
 
 		if ( is_customize_preview() ) {
@@ -118,21 +118,21 @@ class WC_Widget_Price_Filter extends WC_Widget {
 		$this->widget_start( $args, $instance );
 
 		if ( '' === get_option( 'permalink_structure' ) ) {
-			$form_action = remove_query_arg( array( 'page', 'paged', 'product-page' ), add_query_arg( $wp->query_string, '', home_url( $wp->request ) ) );
+			$form_action = remove_query_arg( [ 'page', 'paged', 'product-page' ], add_query_arg( $wp->query_string, '', home_url( $wp->request ) ) );
 		} else {
 			$form_action = preg_replace( '%\/page/[0-9]+%', '', home_url( trailingslashit( $wp->request ) ) );
 		}
 
 		wc_get_template(
 			'content-widget-price-filter.php',
-			array(
+			[
 				'form_action'       => $form_action,
 				'step'              => $step,
 				'min_price'         => $min_price,
 				'max_price'         => $max_price,
 				'current_min_price' => $current_min_price,
 				'current_max_price' => $current_max_price,
-			)
+			]
 		);
 
 		$this->widget_end( $args );
@@ -147,8 +147,8 @@ class WC_Widget_Price_Filter extends WC_Widget {
 		global $wpdb;
 
 		$args       = WC()->query->get_main_query()->query_vars;
-		$tax_query  = isset( $args['tax_query'] ) ? $args['tax_query'] : array();
-		$meta_query = isset( $args['meta_query'] ) ? $args['meta_query'] : array();
+		$tax_query  = isset( $args['tax_query'] ) ? $args['tax_query'] : [];
+		$meta_query = isset( $args['meta_query'] ) ? $args['meta_query'] : [];
 
 		if ( ! is_post_type_archive( 'product' ) && ! empty( $args['taxonomy'] ) && ! empty( $args['term'] ) ) {
 			$tax_query[] = WC()->query->get_main_tax_query();
@@ -174,7 +174,7 @@ class WC_Widget_Price_Filter extends WC_Widget {
 			WHERE product_id IN (
 				SELECT ID FROM {$wpdb->posts}
 				" . $tax_query_sql['join'] . $meta_query_sql['join'] . "
-				WHERE {$wpdb->posts}.post_type IN ('" . implode( "','", array_map( 'esc_sql', apply_filters( 'woocommerce_price_filter_post_type', array( 'product' ) ) ) ) . "')
+				WHERE {$wpdb->posts}.post_type IN ('" . implode( "','", array_map( 'esc_sql', apply_filters( 'woocommerce_price_filter_post_type', [ 'product' ] ) ) ) . "')
 				AND {$wpdb->posts}.post_status = 'publish'
 				" . $tax_query_sql['where'] . $meta_query_sql['where'] . $search_query_sql . '
 			)';

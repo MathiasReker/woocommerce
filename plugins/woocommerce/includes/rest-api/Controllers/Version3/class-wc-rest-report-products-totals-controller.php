@@ -41,23 +41,23 @@ class WC_REST_Report_Products_Totals_Controller extends WC_REST_Reports_Controll
 	protected function get_reports() {
 		$types = wc_get_product_types();
 		$terms = get_terms(
-			array(
+			[
 				'taxonomy'   => 'product_type',
 				'hide_empty' => false,
-			)
+			]
 		);
-		$data  = array();
+		$data  = [];
 
 		foreach ( $terms as $product_type ) {
 			if ( ! isset( $types[ $product_type->name ] ) ) {
 				continue;
 			}
 
-			$data[] = array(
+			$data[] = [
 				'slug'  => $product_type->name,
 				'name'  => $types[ $product_type->name ],
 				'total' => (int) $product_type->count,
-			);
+			];
 		}
 
 		return $data;
@@ -71,11 +71,11 @@ class WC_REST_Report_Products_Totals_Controller extends WC_REST_Reports_Controll
 	 * @return WP_REST_Response $response Response data.
 	 */
 	public function prepare_item_for_response( $report, $request ) {
-		$data = array(
+		$data = [
 			'slug'  => $report->slug,
 			'name'  => $report->name,
 			'total' => $report->total,
-		);
+		];
 
 		$context = ! empty( $request['context'] ) ? $request['context'] : 'view';
 		$data    = $this->add_additional_fields_to_object( $data, $request );
@@ -102,31 +102,31 @@ class WC_REST_Report_Products_Totals_Controller extends WC_REST_Reports_Controll
 	 * @return array
 	 */
 	public function get_item_schema() {
-		$schema = array(
+		$schema = [
 			'$schema'    => 'http://json-schema.org/draft-04/schema#',
 			'title'      => 'report_product_total',
 			'type'       => 'object',
-			'properties' => array(
-				'slug'  => array(
+			'properties' => [
+				'slug'  => [
 					'description' => __( 'An alphanumeric identifier for the resource.', 'woocommerce' ),
 					'type'        => 'string',
-					'context'     => array( 'view' ),
+					'context'     => [ 'view' ],
 					'readonly'    => true,
-				),
-				'name'  => array(
+				],
+				'name'  => [
 					'description' => __( 'Product type name.', 'woocommerce' ),
 					'type'        => 'string',
-					'context'     => array( 'view' ),
+					'context'     => [ 'view' ],
 					'readonly'    => true,
-				),
-				'total' => array(
+				],
+				'total' => [
 					'description' => __( 'Amount of products.', 'woocommerce' ),
 					'type'        => 'string',
-					'context'     => array( 'view' ),
+					'context'     => [ 'view' ],
 					'readonly'    => true,
-				),
-			),
-		);
+				],
+			],
+		];
 
 		return $this->add_additional_fields_schema( $schema );
 	}

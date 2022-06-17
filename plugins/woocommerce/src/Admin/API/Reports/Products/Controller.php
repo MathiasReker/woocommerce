@@ -38,11 +38,11 @@ class Controller extends \WC_REST_Reports_Controller implements ExportableInterf
 	 *
 	 * @var array
 	 */
-	protected $param_mapping = array(
+	protected $param_mapping = [
 		'categories' => 'category_includes',
 		'products'   => 'product_includes',
 		'variations' => 'variation_includes',
-	);
+	];
 
 	/**
 	 * Get items.
@@ -52,7 +52,7 @@ class Controller extends \WC_REST_Reports_Controller implements ExportableInterf
 	 * @return array|WP_Error
 	 */
 	public function get_items( $request ) {
-		$args       = array();
+		$args       = [];
 		$registered = array_keys( $this->get_collection_params() );
 		foreach ( $registered as $param_name ) {
 			if ( isset( $request[ $param_name ] ) ) {
@@ -67,7 +67,7 @@ class Controller extends \WC_REST_Reports_Controller implements ExportableInterf
 		$reports       = new Query( $args );
 		$products_data = $reports->get_data();
 
-		$data = array();
+		$data = [];
 
 		foreach ( $products_data->data as $product_data ) {
 			$item = $this->prepare_item_for_response( $product_data, $request );
@@ -138,11 +138,11 @@ class Controller extends \WC_REST_Reports_Controller implements ExportableInterf
 	 * @return array        Links for the given post.
 	 */
 	protected function prepare_links( $object ) {
-		$links = array(
-			'product' => array(
+		$links = [
+			'product' => [
 				'href' => rest_url( sprintf( '/%s/%s/%d', $this->namespace, 'products', $object['product_id'] ) ),
-			),
-		);
+			],
+		];
 
 		return $links;
 	}
@@ -153,99 +153,99 @@ class Controller extends \WC_REST_Reports_Controller implements ExportableInterf
 	 * @return array
 	 */
 	public function get_item_schema() {
-		$schema = array(
+		$schema = [
 			'$schema'    => 'http://json-schema.org/draft-04/schema#',
 			'title'      => 'report_products',
 			'type'       => 'object',
-			'properties' => array(
-				'product_id'    => array(
+			'properties' => [
+				'product_id'    => [
 					'type'        => 'integer',
 					'readonly'    => true,
-					'context'     => array( 'view', 'edit' ),
+					'context'     => [ 'view', 'edit' ],
 					'description' => __( 'Product ID.', 'woocommerce' ),
-				),
-				'items_sold'    => array(
+				],
+				'items_sold'    => [
 					'type'        => 'integer',
 					'readonly'    => true,
-					'context'     => array( 'view', 'edit' ),
+					'context'     => [ 'view', 'edit' ],
 					'description' => __( 'Number of items sold.', 'woocommerce' ),
-				),
-				'net_revenue'   => array(
+				],
+				'net_revenue'   => [
 					'type'        => 'number',
 					'readonly'    => true,
-					'context'     => array( 'view', 'edit' ),
+					'context'     => [ 'view', 'edit' ],
 					'description' => __( 'Total Net sales of all items sold.', 'woocommerce' ),
-				),
-				'orders_count'  => array(
+				],
+				'orders_count'  => [
 					'type'        => 'integer',
 					'readonly'    => true,
-					'context'     => array( 'view', 'edit' ),
+					'context'     => [ 'view', 'edit' ],
 					'description' => __( 'Number of orders product appeared in.', 'woocommerce' ),
-				),
-				'extended_info' => array(
-					'name'             => array(
+				],
+				'extended_info' => [
+					'name'             => [
 						'type'        => 'string',
 						'readonly'    => true,
-						'context'     => array( 'view', 'edit' ),
+						'context'     => [ 'view', 'edit' ],
 						'description' => __( 'Product name.', 'woocommerce' ),
-					),
-					'price'            => array(
+					],
+					'price'            => [
 						'type'        => 'number',
 						'readonly'    => true,
-						'context'     => array( 'view', 'edit' ),
+						'context'     => [ 'view', 'edit' ],
 						'description' => __( 'Product price.', 'woocommerce' ),
-					),
-					'image'            => array(
+					],
+					'image'            => [
 						'type'        => 'string',
 						'readonly'    => true,
-						'context'     => array( 'view', 'edit' ),
+						'context'     => [ 'view', 'edit' ],
 						'description' => __( 'Product image.', 'woocommerce' ),
-					),
-					'permalink'        => array(
+					],
+					'permalink'        => [
 						'type'        => 'string',
 						'readonly'    => true,
-						'context'     => array( 'view', 'edit' ),
+						'context'     => [ 'view', 'edit' ],
 						'description' => __( 'Product link.', 'woocommerce' ),
-					),
-					'category_ids'     => array(
+					],
+					'category_ids'     => [
 						'type'        => 'array',
 						'readonly'    => true,
-						'context'     => array( 'view', 'edit' ),
+						'context'     => [ 'view', 'edit' ],
 						'description' => __( 'Product category IDs.', 'woocommerce' ),
-					),
-					'stock_status'     => array(
+					],
+					'stock_status'     => [
 						'type'        => 'string',
 						'readonly'    => true,
-						'context'     => array( 'view', 'edit' ),
+						'context'     => [ 'view', 'edit' ],
 						'description' => __( 'Product inventory status.', 'woocommerce' ),
-					),
-					'stock_quantity'   => array(
+					],
+					'stock_quantity'   => [
 						'type'        => 'integer',
 						'readonly'    => true,
-						'context'     => array( 'view', 'edit' ),
+						'context'     => [ 'view', 'edit' ],
 						'description' => __( 'Product inventory quantity.', 'woocommerce' ),
-					),
-					'low_stock_amount' => array(
+					],
+					'low_stock_amount' => [
 						'type'        => 'integer',
 						'readonly'    => true,
-						'context'     => array( 'view', 'edit' ),
+						'context'     => [ 'view', 'edit' ],
 						'description' => __( 'Product inventory threshold for low stock.', 'woocommerce' ),
-					),
-					'variations'       => array(
+					],
+					'variations'       => [
 						'type'        => 'array',
 						'readonly'    => true,
-						'context'     => array( 'view', 'edit' ),
+						'context'     => [ 'view', 'edit' ],
 						'description' => __( 'Product variations IDs.', 'woocommerce' ),
-					),
-					'sku'              => array(
+					],
+					'sku'              => [
 						'type'        => 'string',
 						'readonly'    => true,
-						'context'     => array( 'view', 'edit' ),
+						'context'     => [ 'view', 'edit' ],
 						'description' => __( 'Product SKU.', 'woocommerce' ),
-					),
-				),
-			),
-		);
+					],
+				],
+			],
+		];
 
 		return $this->add_additional_fields_schema( $schema );
 	}
@@ -256,17 +256,17 @@ class Controller extends \WC_REST_Reports_Controller implements ExportableInterf
 	 * @return array
 	 */
 	public function get_collection_params() {
-		$params               = array();
-		$params['context']    = $this->get_context_param( array( 'default' => 'view' ) );
-		$params['page']       = array(
+		$params               = [];
+		$params['context']    = $this->get_context_param( [ 'default' => 'view' ] );
+		$params['page']       = [
 			'description'       => __( 'Current page of the collection.', 'woocommerce' ),
 			'type'              => 'integer',
 			'default'           => 1,
 			'sanitize_callback' => 'absint',
 			'validate_callback' => 'rest_validate_request_arg',
 			'minimum'           => 1,
-		);
-		$params['per_page']   = array(
+		];
+		$params['per_page']   = [
 			'description'       => __( 'Maximum number of items to be returned in result set.', 'woocommerce' ),
 			'type'              => 'integer',
 			'default'           => 10,
@@ -274,31 +274,31 @@ class Controller extends \WC_REST_Reports_Controller implements ExportableInterf
 			'maximum'           => 100,
 			'sanitize_callback' => 'absint',
 			'validate_callback' => 'rest_validate_request_arg',
-		);
-		$params['after']      = array(
+		];
+		$params['after']      = [
 			'description'       => __( 'Limit response to resources published after a given ISO8601 compliant date.', 'woocommerce' ),
 			'type'              => 'string',
 			'format'            => 'date-time',
 			'validate_callback' => 'rest_validate_request_arg',
-		);
-		$params['before']     = array(
+		];
+		$params['before']     = [
 			'description'       => __( 'Limit response to resources published before a given ISO8601 compliant date.', 'woocommerce' ),
 			'type'              => 'string',
 			'format'            => 'date-time',
 			'validate_callback' => 'rest_validate_request_arg',
-		);
-		$params['order']      = array(
+		];
+		$params['order']      = [
 			'description'       => __( 'Order sort attribute ascending or descending.', 'woocommerce' ),
 			'type'              => 'string',
 			'default'           => 'desc',
-			'enum'              => array( 'asc', 'desc' ),
+			'enum'              => [ 'asc', 'desc' ],
 			'validate_callback' => 'rest_validate_request_arg',
-		);
-		$params['orderby']    = array(
+		];
+		$params['orderby']    = [
 			'description'       => __( 'Sort collection by object attribute.', 'woocommerce' ),
 			'type'              => 'string',
 			'default'           => 'date',
-			'enum'              => array(
+			'enum'              => [
 				'date',
 				'net_revenue',
 				'orders_count',
@@ -306,51 +306,51 @@ class Controller extends \WC_REST_Reports_Controller implements ExportableInterf
 				'product_name',
 				'variations',
 				'sku',
-			),
+			],
 			'validate_callback' => 'rest_validate_request_arg',
-		);
-		$params['categories'] = array(
+		];
+		$params['categories'] = [
 			'description'       => __( 'Limit result to items from the specified categories.', 'woocommerce' ),
 			'type'              => 'array',
 			'sanitize_callback' => 'wp_parse_id_list',
 			'validate_callback' => 'rest_validate_request_arg',
-			'items'             => array(
+			'items'             => [
 				'type' => 'integer',
-			),
-		);
-		$params['match']      = array(
+			],
+		];
+		$params['match']      = [
 			'description'       => __( 'Indicates whether all the conditions should be true for the resulting set, or if any one of them is sufficient. Match affects the following parameters: status_is, status_is_not, product_includes, product_excludes, coupon_includes, coupon_excludes, customer, categories', 'woocommerce' ),
 			'type'              => 'string',
 			'default'           => 'all',
-			'enum'              => array(
+			'enum'              => [
 				'all',
 				'any',
-			),
+			],
 			'validate_callback' => 'rest_validate_request_arg',
-		);
-		$params['products']   = array(
+		];
+		$params['products']   = [
 			'description'       => __( 'Limit result to items with specified product ids.', 'woocommerce' ),
 			'type'              => 'array',
 			'sanitize_callback' => 'wp_parse_id_list',
 			'validate_callback' => 'rest_validate_request_arg',
-			'items'             => array(
+			'items'             => [
 				'type' => 'integer',
-			),
+			],
 
-		);
-		$params['extended_info'] = array(
+		];
+		$params['extended_info'] = [
 			'description'       => __( 'Add additional piece of info about each product to the report.', 'woocommerce' ),
 			'type'              => 'boolean',
 			'default'           => false,
 			'sanitize_callback' => 'wc_string_to_bool',
 			'validate_callback' => 'rest_validate_request_arg',
-		);
-		$params['force_cache_refresh'] = array(
+		];
+		$params['force_cache_refresh'] = [
 			'description'       => __( 'Force retrieval of fresh data instead of from the cache.', 'woocommerce' ),
 			'type'              => 'boolean',
 			'sanitize_callback' => 'wp_validate_boolean',
 			'validate_callback' => 'rest_validate_request_arg',
-		);
+		];
 
 		return $params;
 	}
@@ -375,11 +375,11 @@ class Controller extends \WC_REST_Reports_Controller implements ExportableInterf
 	 */
 	protected function get_categories( $category_ids ) {
 		$category_names = get_terms(
-			array(
+			[
 				'taxonomy' => 'product_cat',
 				'include'  => $category_ids,
 				'fields'   => 'names',
-			)
+			]
 		);
 
 		return implode( ', ', $category_names );
@@ -391,7 +391,7 @@ class Controller extends \WC_REST_Reports_Controller implements ExportableInterf
 	 * @return array Key value pair of Column ID => Label.
 	 */
 	public function get_export_columns() {
-		$export_columns = array(
+		$export_columns = [
 			'product_name' => __( 'Product title', 'woocommerce' ),
 			'sku'          => __( 'SKU', 'woocommerce' ),
 			'items_sold'   => __( 'Items sold', 'woocommerce' ),
@@ -399,7 +399,7 @@ class Controller extends \WC_REST_Reports_Controller implements ExportableInterf
 			'orders_count' => __( 'Orders', 'woocommerce' ),
 			'product_cat'  => __( 'Category', 'woocommerce' ),
 			'variations'   => __( 'Variations', 'woocommerce' ),
-		);
+		];
 
 		if ( 'yes' === get_option( 'woocommerce_manage_stock' ) ) {
 			$export_columns['stock_status'] = __( 'Status', 'woocommerce' );
@@ -425,7 +425,7 @@ class Controller extends \WC_REST_Reports_Controller implements ExportableInterf
 	 * @return array Key value pair of Column ID => Row Value.
 	 */
 	public function prepare_item_for_export( $item ) {
-		$export_item = array(
+		$export_item = [
 			'product_name' => $item['extended_info']['name'],
 			'sku'          => $item['extended_info']['sku'],
 			'items_sold'   => $item['items_sold'],
@@ -433,7 +433,7 @@ class Controller extends \WC_REST_Reports_Controller implements ExportableInterf
 			'orders_count' => $item['orders_count'],
 			'product_cat'  => $this->get_categories( $item['extended_info']['category_ids'] ),
 			'variations'   => isset( $item['extended_info']['variations'] ) ? count( $item['extended_info']['variations'] ) : 0,
-		);
+		];
 
 		if ( 'yes' === get_option( 'woocommerce_manage_stock' ) ) {
 			if ( $item['extended_info']['manage_stock'] ) {

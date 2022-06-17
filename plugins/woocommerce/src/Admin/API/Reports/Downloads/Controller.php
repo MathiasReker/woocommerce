@@ -40,7 +40,7 @@ class Controller extends ReportsController implements ExportableInterface {
 	 * @return array|WP_Error
 	 */
 	public function get_items( $request ) {
-		$args       = array();
+		$args       = [];
 		$registered = array_keys( $this->get_collection_params() );
 		foreach ( $registered as $param_name ) {
 			if ( isset( $request[ $param_name ] ) ) {
@@ -51,7 +51,7 @@ class Controller extends ReportsController implements ExportableInterface {
 		$reports        = new Query( $args );
 		$downloads_data = $reports->get_data();
 
-		$data = array();
+		$data = [];
 
 		foreach ( $downloads_data->data as $download_data ) {
 			$item   = $this->prepare_item_for_response( $download_data, $request );
@@ -142,12 +142,12 @@ class Controller extends ReportsController implements ExportableInterface {
 	 * @return array        Links for the given post.
 	 */
 	protected function prepare_links( $object ) {
-		$links = array(
-			'product' => array(
+		$links = [
+			'product' => [
 				'href'       => rest_url( sprintf( '/%s/%s/%d', $this->namespace, 'products', $object['product_id'] ) ),
 				'embeddable' => true,
-			),
-		);
+			],
+		];
 
 		return $links;
 	}
@@ -158,85 +158,85 @@ class Controller extends ReportsController implements ExportableInterface {
 	 * @return array
 	 */
 	public function get_item_schema() {
-		$schema = array(
+		$schema = [
 			'$schema'    => 'http://json-schema.org/draft-04/schema#',
 			'title'      => 'report_downloads',
 			'type'       => 'object',
-			'properties' => array(
-				'id'           => array(
+			'properties' => [
+				'id'           => [
 					'type'        => 'integer',
 					'readonly'    => true,
-					'context'     => array( 'view', 'edit' ),
+					'context'     => [ 'view', 'edit' ],
 					'description' => __( 'ID.', 'woocommerce' ),
-				),
-				'product_id'   => array(
+				],
+				'product_id'   => [
 					'type'        => 'integer',
 					'readonly'    => true,
-					'context'     => array( 'view', 'edit' ),
+					'context'     => [ 'view', 'edit' ],
 					'description' => __( 'Product ID.', 'woocommerce' ),
-				),
-				'date'         => array(
+				],
+				'date'         => [
 					'description' => __( "The date of the download, in the site's timezone.", 'woocommerce' ),
 					'type'        => 'date-time',
-					'context'     => array( 'view', 'edit' ),
+					'context'     => [ 'view', 'edit' ],
 					'readonly'    => true,
-				),
-				'date_gmt'     => array(
+				],
+				'date_gmt'     => [
 					'description' => __( 'The date of the download, as GMT.', 'woocommerce' ),
 					'type'        => 'date-time',
-					'context'     => array( 'view', 'edit' ),
+					'context'     => [ 'view', 'edit' ],
 					'readonly'    => true,
-				),
-				'download_id'  => array(
+				],
+				'download_id'  => [
 					'type'        => 'string',
 					'readonly'    => true,
-					'context'     => array( 'view', 'edit' ),
+					'context'     => [ 'view', 'edit' ],
 					'description' => __( 'Download ID.', 'woocommerce' ),
-				),
-				'file_name'    => array(
+				],
+				'file_name'    => [
 					'type'        => 'string',
 					'readonly'    => true,
-					'context'     => array( 'view', 'edit' ),
+					'context'     => [ 'view', 'edit' ],
 					'description' => __( 'File name.', 'woocommerce' ),
-				),
-				'file_path'    => array(
+				],
+				'file_path'    => [
 					'type'        => 'string',
 					'readonly'    => true,
-					'context'     => array( 'view', 'edit' ),
+					'context'     => [ 'view', 'edit' ],
 					'description' => __( 'File URL.', 'woocommerce' ),
-				),
-				'order_id'     => array(
+				],
+				'order_id'     => [
 					'type'        => 'integer',
 					'readonly'    => true,
-					'context'     => array( 'view', 'edit' ),
+					'context'     => [ 'view', 'edit' ],
 					'description' => __( 'Order ID.', 'woocommerce' ),
-				),
-				'order_number' => array(
+				],
+				'order_number' => [
 					'type'        => 'string',
 					'readonly'    => true,
-					'context'     => array( 'view', 'edit' ),
+					'context'     => [ 'view', 'edit' ],
 					'description' => __( 'Order Number.', 'woocommerce' ),
-				),
-				'user_id'      => array(
+				],
+				'user_id'      => [
 					'type'        => 'integer',
 					'readonly'    => true,
-					'context'     => array( 'view', 'edit' ),
+					'context'     => [ 'view', 'edit' ],
 					'description' => __( 'User ID for the downloader.', 'woocommerce' ),
-				),
-				'username'     => array(
+				],
+				'username'     => [
 					'type'        => 'string',
 					'readonly'    => true,
-					'context'     => array( 'view', 'edit' ),
+					'context'     => [ 'view', 'edit' ],
 					'description' => __( 'User name of the downloader.', 'woocommerce' ),
-				),
-				'ip_address'   => array(
+				],
+				'ip_address'   => [
 					'type'        => 'string',
 					'readonly'    => true,
-					'context'     => array( 'view', 'edit' ),
+					'context'     => [ 'view', 'edit' ],
 					'description' => __( 'IP address for the downloader.', 'woocommerce' ),
-				),
-			),
-		);
+				],
+			],
+		];
 
 		return $this->add_additional_fields_schema( $schema );
 	}
@@ -247,17 +247,17 @@ class Controller extends ReportsController implements ExportableInterface {
 	 * @return array
 	 */
 	public function get_collection_params() {
-		$params                        = array();
-		$params['context']             = $this->get_context_param( array( 'default' => 'view' ) );
-		$params['page']                = array(
+		$params                        = [];
+		$params['context']             = $this->get_context_param( [ 'default' => 'view' ] );
+		$params['page']                = [
 			'description'       => __( 'Current page of the collection.', 'woocommerce' ),
 			'type'              => 'integer',
 			'default'           => 1,
 			'sanitize_callback' => 'absint',
 			'validate_callback' => 'rest_validate_request_arg',
 			'minimum'           => 1,
-		);
-		$params['per_page']            = array(
+		];
+		$params['per_page']            = [
 			'description'       => __( 'Maximum number of items to be returned in result set.', 'woocommerce' ),
 			'type'              => 'integer',
 			'default'           => 10,
@@ -265,124 +265,124 @@ class Controller extends ReportsController implements ExportableInterface {
 			'maximum'           => 100,
 			'sanitize_callback' => 'absint',
 			'validate_callback' => 'rest_validate_request_arg',
-		);
-		$params['after']               = array(
+		];
+		$params['after']               = [
 			'description'       => __( 'Limit response to resources published after a given ISO8601 compliant date.', 'woocommerce' ),
 			'type'              => 'string',
 			'format'            => 'date-time',
 			'validate_callback' => 'rest_validate_request_arg',
-		);
-		$params['before']              = array(
+		];
+		$params['before']              = [
 			'description'       => __( 'Limit response to resources published before a given ISO8601 compliant date.', 'woocommerce' ),
 			'type'              => 'string',
 			'format'            => 'date-time',
 			'validate_callback' => 'rest_validate_request_arg',
-		);
-		$params['order']               = array(
+		];
+		$params['order']               = [
 			'description'       => __( 'Order sort attribute ascending or descending.', 'woocommerce' ),
 			'type'              => 'string',
 			'default'           => 'desc',
-			'enum'              => array( 'asc', 'desc' ),
+			'enum'              => [ 'asc', 'desc' ],
 			'validate_callback' => 'rest_validate_request_arg',
-		);
-		$params['orderby']             = array(
+		];
+		$params['orderby']             = [
 			'description'       => __( 'Sort collection by object attribute.', 'woocommerce' ),
 			'type'              => 'string',
 			'default'           => 'date',
-			'enum'              => array(
+			'enum'              => [
 				'date',
 				'product',
-			),
+			],
 			'validate_callback' => 'rest_validate_request_arg',
-		);
-		$params['match']               = array(
+		];
+		$params['match']               = [
 			'description'       => __( 'Indicates whether all the conditions should be true for the resulting set, or if any one of them is sufficient. Match affects the following parameters: products, orders, username, ip_address.', 'woocommerce' ),
 			'type'              => 'string',
 			'default'           => 'all',
-			'enum'              => array(
+			'enum'              => [
 				'all',
 				'any',
-			),
+			],
 			'validate_callback' => 'rest_validate_request_arg',
-		);
-		$params['product_includes']    = array(
+		];
+		$params['product_includes']    = [
 			'description'       => __( 'Limit result set to items that have the specified product(s) assigned.', 'woocommerce' ),
 			'type'              => 'array',
-			'items'             => array(
+			'items'             => [
 				'type' => 'integer',
-			),
-			'default'           => array(),
+			],
+			'default'           => [],
 			'sanitize_callback' => 'wp_parse_id_list',
 			'validate_callback' => 'rest_validate_request_arg',
-		);
-		$params['product_excludes']    = array(
+		];
+		$params['product_excludes']    = [
 			'description'       => __( 'Limit result set to items that don\'t have the specified product(s) assigned.', 'woocommerce' ),
 			'type'              => 'array',
-			'items'             => array(
+			'items'             => [
 				'type' => 'integer',
-			),
-			'default'           => array(),
+			],
+			'default'           => [],
 			'validate_callback' => 'rest_validate_request_arg',
 			'sanitize_callback' => 'wp_parse_id_list',
-		);
-		$params['order_includes']      = array(
+		];
+		$params['order_includes']      = [
 			'description'       => __( 'Limit result set to items that have the specified order ids.', 'woocommerce' ),
 			'type'              => 'array',
 			'sanitize_callback' => 'wp_parse_id_list',
 			'validate_callback' => 'rest_validate_request_arg',
-			'items'             => array(
+			'items'             => [
 				'type' => 'integer',
-			),
-		);
-		$params['order_excludes']      = array(
+			],
+		];
+		$params['order_excludes']      = [
 			'description'       => __( 'Limit result set to items that don\'t have the specified order ids.', 'woocommerce' ),
 			'type'              => 'array',
 			'sanitize_callback' => 'wp_parse_id_list',
 			'validate_callback' => 'rest_validate_request_arg',
-			'items'             => array(
+			'items'             => [
 				'type' => 'integer',
-			),
-		);
-		$params['customer_includes']   = array(
+			],
+		];
+		$params['customer_includes']   = [
 			'description'       => __( 'Limit response to objects that have the specified user ids.', 'woocommerce' ),
 			'type'              => 'array',
 			'sanitize_callback' => 'wp_parse_id_list',
 			'validate_callback' => 'rest_validate_request_arg',
-			'items'             => array(
+			'items'             => [
 				'type' => 'integer',
-			),
-		);
-		$params['customer_excludes']   = array(
+			],
+		];
+		$params['customer_excludes']   = [
 			'description'       => __( 'Limit response to objects that don\'t have the specified user ids.', 'woocommerce' ),
 			'type'              => 'array',
 			'sanitize_callback' => 'wp_parse_id_list',
 			'validate_callback' => 'rest_validate_request_arg',
-			'items'             => array(
+			'items'             => [
 				'type' => 'integer',
-			),
-		);
-		$params['ip_address_includes'] = array(
+			],
+		];
+		$params['ip_address_includes'] = [
 			'description'       => __( 'Limit response to objects that have a specified ip address.', 'woocommerce' ),
 			'type'              => 'array',
 			'validate_callback' => 'rest_validate_request_arg',
-			'items'             => array(
+			'items'             => [
 				'type' => 'string',
-			),
-		);
-		$params['ip_address_excludes'] = array(
+			],
+		];
+		$params['ip_address_excludes'] = [
 			'description'       => __( 'Limit response to objects that don\'t have a specified ip address.', 'woocommerce' ),
 			'type'              => 'array',
 			'validate_callback' => 'rest_validate_request_arg',
-			'items'             => array(
+			'items'             => [
 				'type' => 'string',
-			),
-		);
-		$params['force_cache_refresh'] = array(
+			],
+		];
+		$params['force_cache_refresh'] = [
 			'description'       => __( 'Force retrieval of fresh data instead of from the cache.', 'woocommerce' ),
 			'type'              => 'boolean',
 			'sanitize_callback' => 'wp_validate_boolean',
 			'validate_callback' => 'rest_validate_request_arg',
-		);
+		];
 
 		return $params;
 	}
@@ -393,14 +393,14 @@ class Controller extends ReportsController implements ExportableInterface {
 	 * @return array Key value pair of Column ID => Label.
 	 */
 	public function get_export_columns() {
-		$export_columns = array(
+		$export_columns = [
 			'date'         => __( 'Date', 'woocommerce' ),
 			'product'      => __( 'Product title', 'woocommerce' ),
 			'file_name'    => __( 'File name', 'woocommerce' ),
 			'order_number' => __( 'Order #', 'woocommerce' ),
 			'user_id'      => __( 'User Name', 'woocommerce' ),
 			'ip_address'   => __( 'IP', 'woocommerce' ),
-		);
+		];
 
 		/**
 		 * Filter to add or remove column names from the downloads report for
@@ -421,14 +421,14 @@ class Controller extends ReportsController implements ExportableInterface {
 	 * @return array Key value pair of Column ID => Row Value.
 	 */
 	public function prepare_item_for_export( $item ) {
-		$export_item = array(
+		$export_item = [
 			'date'         => $item['date'],
 			'product'      => $item['_embedded']['product'][0]['name'],
 			'file_name'    => $item['file_name'],
 			'order_number' => $item['order_number'],
 			'user_id'      => $item['username'],
 			'ip_address'   => $item['ip_address'],
-		);
+		];
 
 		/**
 		 * Filter to prepare extra columns in the export item for the downloads

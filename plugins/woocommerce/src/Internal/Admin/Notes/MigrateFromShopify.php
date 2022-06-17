@@ -39,7 +39,7 @@ class MigrateFromShopify {
 			return;
 		}
 
-		$onboarding_profile = get_option( 'woocommerce_onboarding_profile', array() );
+		$onboarding_profile = get_option( 'woocommerce_onboarding_profile', [] );
 		if (
 			! isset( $onboarding_profile['setup_client'] ) ||
 			! isset( $onboarding_profile['selling_venues'] ) ||
@@ -66,7 +66,7 @@ class MigrateFromShopify {
 		$note->set_content( __( 'Changing eCommerce platforms might seem like a big hurdle to overcome, but it is easier than you might think to move your products, customers, and orders to WooCommerce. This article will help you with going through this process.', 'woocommerce' ) );
 		$note->set_type( Note::E_WC_ADMIN_NOTE_INFORMATIONAL );
 		$note->set_name( self::NOTE_NAME );
-		$note->set_content_data( (object) array() );
+		$note->set_content_data( (object) [] );
 		$note->set_source( 'woocommerce-admin' );
 		$note->add_action(
 			'migrate-from-shopify',

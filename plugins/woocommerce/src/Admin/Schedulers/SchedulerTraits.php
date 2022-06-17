@@ -31,7 +31,7 @@ trait SchedulerTraits {
 	public static function init() {
 		foreach ( self::get_actions() as $action_name => $action_hook ) {
 			$method = new \ReflectionMethod( static::class, $action_name );
-			add_action( $action_hook, array( static::class, 'do_action_or_reschedule' ), 10, $method->getNumberOfParameters() );
+			add_action( $action_hook, [ static::class, 'do_action_or_reschedule' ], 10, $method->getNumberOfParameters() );
 		}
 	}
 
@@ -61,10 +61,10 @@ trait SchedulerTraits {
 	 * Gets the default scheduler actions for batching and scheduling actions.
 	 */
 	public static function get_default_scheduler_actions() {
-		return array(
+		return [
 			'schedule_action' => 'wc-admin_schedule_action_' . static::$name,
 			'queue_batches'   => 'wc-admin_queue_batches_' . static::$name,
-		);
+		];
 	}
 
 	/**
@@ -73,7 +73,7 @@ trait SchedulerTraits {
 	 * @return array
 	 */
 	public static function get_scheduler_actions() {
-		return array();
+		return [];
 	}
 
 	/**
@@ -104,7 +104,7 @@ trait SchedulerTraits {
 	 * @return array
 	 */
 	public static function get_dependencies() {
-		return array();
+		return [];
 	}
 
 	/**
@@ -122,9 +122,9 @@ trait SchedulerTraits {
 	 * Batch action size.
 	 */
 	public static function get_batch_sizes() {
-		return array(
+		return [
 			'queue_batches' => 100,
-		);
+		];
 	}
 
 	/**
@@ -153,7 +153,7 @@ trait SchedulerTraits {
 	 * @return string
 	 */
 	public static function flatten_args( $args ) {
-		$flattened = array();
+		$flattened = [];
 
 		foreach ( $args as $arg ) {
 			if ( is_array( $arg ) ) {
@@ -176,14 +176,14 @@ trait SchedulerTraits {
 	 */
 	public static function has_existing_jobs( $action_name, $args ) {
 		$existing_jobs = self::queue()->search(
-			array(
+			[
 				'status'   => 'pending',
 				'per_page' => 1,
 				'claimed'  => false,
 				'hook'     => static::get_action( $action_name ),
 				'search'   => self::flatten_args( $args ),
 				'group'    => self::$group,
-			)
+			]
 		);
 
 		if ( $existing_jobs ) {
@@ -218,14 +218,14 @@ trait SchedulerTraits {
 		}
 
 		$blocking_jobs = self::queue()->search(
-			array(
+			[
 				'status'   => 'pending',
 				'orderby'  => 'date',
 				'order'    => 'DESC',
 				'per_page' => 1,
 				'search'   => $dependency, // search is used instead of hook to find queued batch creation.
 				'group'    => static::$group,
-			)
+			]
 		);
 
 		$next_job_schedule = null;
@@ -264,7 +264,7 @@ trait SchedulerTraits {
 				static::$group
 			);
 		} else {
-			call_user_func_array( array( static::class, $action_name ), $args );
+			call_user_func_array( [ static::class, $action_name ], $args );
 		}
 	}
 
@@ -292,7 +292,7 @@ trait SchedulerTraits {
 	 * @param string $action_name Action name.
 	 * @param array  $args Array of arguments to pass to action.
 	 */
-	public static function schedule_action( $action_name, $args = array() ) {
+	public static function schedule_action( $action_name, $args = [] ) {
 		// Check for existing jobs and bail if they already exist.
 		if ( static::has_existing_jobs( $action_name, $args ) ) {
 			return;
@@ -308,7 +308,7 @@ trait SchedulerTraits {
 			! get_option( 'schema-ActionScheduler_StoreSchema' ) ||
 			apply_filters( 'woocommerce_analytics_disable_action_scheduling', false )
 		) {
-			call_user_func_array( array( static::class, $action_name ), $args );
+			call_user_func_array( [ static::class, $action_name ], $args );
 			return;
 		}
 
@@ -325,7 +325,7 @@ trait SchedulerTraits {
 	 * @param array  $action_args Action arguments.
 	 * @return void
 	 */
-	public static function queue_batches( $range_start, $range_end, $single_batch_action, $action_args = array() ) {
+	public static function queue_batches( $range_start, $range_end, $single_batch_action, $action_args = [] ) {
 		$batch_size       = static::get_batch_size( 'queue_batches' );
 		$range_size       = 1 + ( $range_end - $range_start );
 		$action_timestamp = time() + 5;
@@ -345,13 +345,13 @@ trait SchedulerTraits {
 
 				self::schedule_action(
 					'queue_batches',
-					array( $batch_start, $batch_end, $single_batch_action, $action_args )
+					[ $batch_start, $batch_end, $single_batch_action, $action_args ]
 				);
 			}
 		} else {
 			// Otherwise, queue the single batches.
 			for ( $i = $range_start; $i <= $range_end; $i++ ) {
-				$batch_action_args = array_merge( array( $i ), $action_args );
+				$batch_action_args = array_merge( [ $i ], $action_args );
 				self::schedule_action( $single_batch_action, $batch_action_args );
 			}
 		}

@@ -54,7 +54,7 @@ class Controller extends \WC_REST_Reports_Controller implements ExportableInterf
 	 * @return array
 	 */
 	protected function prepare_reports_query( $request ) {
-		$args                        = array();
+		$args                        = [];
 		$args['offset']              = $request['offset'];
 		$args['order']               = $request['order'];
 		$args['orderby']             = $request['orderby'];
@@ -73,7 +73,7 @@ class Controller extends \WC_REST_Reports_Controller implements ExportableInterf
 			$args['orderby'] = 'ID'; // ID must be capitalized.
 		}
 
-		$args['post_type'] = array( 'product', 'product_variation' );
+		$args['post_type'] = [ 'product', 'product_variation' ];
 
 		if ( 'lowstock' === $request['type'] ) {
 			$args['low_in_stock'] = true;
@@ -105,11 +105,11 @@ class Controller extends \WC_REST_Reports_Controller implements ExportableInterf
 			$total_posts = $count_query->found_posts;
 		}
 
-		return array(
+		return [
 			'objects' => array_map( 'wc_get_product', $result ),
 			'total'   => (int) $total_posts,
 			'pages'   => (int) ceil( $total_posts / (int) $query->query_vars['posts_per_page'] ),
-		);
+		];
 	}
 
 	/**
@@ -119,18 +119,18 @@ class Controller extends \WC_REST_Reports_Controller implements ExportableInterf
 	 * @return array|WP_Error
 	 */
 	public function get_items( $request ) {
-		add_filter( 'posts_where', array( __CLASS__, 'add_wp_query_filter' ), 10, 2 );
-		add_filter( 'posts_join', array( __CLASS__, 'add_wp_query_join' ), 10, 2 );
-		add_filter( 'posts_groupby', array( __CLASS__, 'add_wp_query_group_by' ), 10, 2 );
-		add_filter( 'posts_clauses', array( __CLASS__, 'add_wp_query_orderby' ), 10, 2 );
+		add_filter( 'posts_where', [ __CLASS__, 'add_wp_query_filter' ], 10, 2 );
+		add_filter( 'posts_join', [ __CLASS__, 'add_wp_query_join' ], 10, 2 );
+		add_filter( 'posts_groupby', [ __CLASS__, 'add_wp_query_group_by' ], 10, 2 );
+		add_filter( 'posts_clauses', [ __CLASS__, 'add_wp_query_orderby' ], 10, 2 );
 		$query_args    = $this->prepare_reports_query( $request );
 		$query_results = $this->get_products( $query_args );
-		remove_filter( 'posts_where', array( __CLASS__, 'add_wp_query_filter' ), 10 );
-		remove_filter( 'posts_join', array( __CLASS__, 'add_wp_query_join' ), 10 );
-		remove_filter( 'posts_groupby', array( __CLASS__, 'add_wp_query_group_by' ), 10 );
-		remove_filter( 'posts_clauses', array( __CLASS__, 'add_wp_query_orderby' ), 10 );
+		remove_filter( 'posts_where', [ __CLASS__, 'add_wp_query_filter' ], 10 );
+		remove_filter( 'posts_join', [ __CLASS__, 'add_wp_query_join' ], 10 );
+		remove_filter( 'posts_groupby', [ __CLASS__, 'add_wp_query_group_by' ], 10 );
+		remove_filter( 'posts_clauses', [ __CLASS__, 'add_wp_query_orderby' ], 10 );
 
-		$objects = array();
+		$objects = [];
 		foreach ( $query_results['objects'] as $object ) {
 			$data      = $this->prepare_item_for_response( $object, $request );
 			$objects[] = $this->prepare_response_for_collection( $data );
@@ -304,7 +304,7 @@ class Controller extends \WC_REST_Reports_Controller implements ExportableInterf
 	 * @return WP_REST_Response
 	 */
 	public function prepare_item_for_response( $product, $request ) {
-		$data = array(
+		$data = [
 			'id'               => $product->get_id(),
 			'parent_id'        => $product->get_parent_id(),
 			'name'             => wp_strip_all_tags( $product->get_name() ),
@@ -313,7 +313,7 @@ class Controller extends \WC_REST_Reports_Controller implements ExportableInterf
 			'stock_quantity'   => (float) $product->get_stock_quantity(),
 			'manage_stock'     => $product->get_manage_stock(),
 			'low_stock_amount' => $product->get_low_stock_amount(),
-		);
+		];
 
 		if ( '' === $data['low_stock_amount'] ) {
 			$data['low_stock_amount'] = absint( max( get_option( 'woocommerce_notify_low_stock_amount' ), 1 ) );
@@ -347,29 +347,29 @@ class Controller extends \WC_REST_Reports_Controller implements ExportableInterf
 	 */
 	protected function prepare_links( $product ) {
 		if ( $product->is_type( 'variation' ) ) {
-			$links = array(
-				'product' => array(
+			$links = [
+				'product' => [
 					'href' => rest_url( sprintf( '/%s/products/%d/variations/%d', $this->namespace, $product->get_parent_id(), $product->get_id() ) ),
-				),
-				'parent'  => array(
+				],
+				'parent'  => [
 					'href' => rest_url( sprintf( '/%s/products/%d', $this->namespace, $product->get_parent_id() ) ),
-				),
-			);
+				],
+			];
 		} elseif ( $product->get_parent_id() ) {
-			$links = array(
-				'product' => array(
+			$links = [
+				'product' => [
 					'href' => rest_url( sprintf( '/%s/products/%d', $this->namespace, $product->get_id() ) ),
-				),
-				'parent'  => array(
+				],
+				'parent'  => [
 					'href' => rest_url( sprintf( '/%s/products/%d', $this->namespace, $product->get_parent_id() ) ),
-				),
-			);
+				],
+			];
 		} else {
-			$links = array(
-				'product' => array(
+			$links = [
+				'product' => [
 					'href' => rest_url( sprintf( '/%s/products/%d', $this->namespace, $product->get_id() ) ),
-				),
-			);
+				],
+			];
 		}
 
 		return $links;
@@ -381,56 +381,56 @@ class Controller extends \WC_REST_Reports_Controller implements ExportableInterf
 	 * @return array
 	 */
 	public function get_item_schema() {
-		$schema = array(
+		$schema = [
 			'$schema'    => 'http://json-schema.org/draft-04/schema#',
 			'title'      => 'report_stock',
 			'type'       => 'object',
-			'properties' => array(
-				'id'             => array(
+			'properties' => [
+				'id'             => [
 					'description' => __( 'Unique identifier for the resource.', 'woocommerce' ),
 					'type'        => 'integer',
-					'context'     => array( 'view', 'edit' ),
+					'context'     => [ 'view', 'edit' ],
 					'readonly'    => true,
-				),
-				'parent_id'      => array(
+				],
+				'parent_id'      => [
 					'description' => __( 'Product parent ID.', 'woocommerce' ),
 					'type'        => 'integer',
-					'context'     => array( 'view', 'edit' ),
+					'context'     => [ 'view', 'edit' ],
 					'readonly'    => true,
-				),
-				'name'           => array(
+				],
+				'name'           => [
 					'description' => __( 'Product name.', 'woocommerce' ),
 					'type'        => 'string',
-					'context'     => array( 'view', 'edit' ),
+					'context'     => [ 'view', 'edit' ],
 					'readonly'    => true,
-				),
-				'sku'            => array(
+				],
+				'sku'            => [
 					'description' => __( 'Unique identifier.', 'woocommerce' ),
 					'type'        => 'string',
-					'context'     => array( 'view', 'edit' ),
+					'context'     => [ 'view', 'edit' ],
 					'readonly'    => true,
-				),
-				'stock_status'   => array(
+				],
+				'stock_status'   => [
 					'description' => __( 'Stock status.', 'woocommerce' ),
 					'type'        => 'string',
 					'enum'        => array_keys( wc_get_product_stock_status_options() ),
-					'context'     => array( 'view', 'edit' ),
+					'context'     => [ 'view', 'edit' ],
 					'readonly'    => true,
-				),
-				'stock_quantity' => array(
+				],
+				'stock_quantity' => [
 					'description' => __( 'Stock quantity.', 'woocommerce' ),
 					'type'        => 'integer',
-					'context'     => array( 'view', 'edit' ),
+					'context'     => [ 'view', 'edit' ],
 					'readonly'    => true,
-				),
-				'manage_stock'   => array(
+				],
+				'manage_stock'   => [
 					'description' => __( 'Manage stock.', 'woocommerce' ),
 					'type'        => 'boolean',
-					'context'     => array( 'view', 'edit' ),
+					'context'     => [ 'view', 'edit' ],
 					'readonly'    => true,
-				),
-			),
-		);
+				],
+			],
+		];
 
 		return $this->add_additional_fields_schema( $schema );
 	}
@@ -441,17 +441,17 @@ class Controller extends \WC_REST_Reports_Controller implements ExportableInterf
 	 * @return array
 	 */
 	public function get_collection_params() {
-		$params                   = array();
-		$params['context']        = $this->get_context_param( array( 'default' => 'view' ) );
-		$params['page']           = array(
+		$params                   = [];
+		$params['context']        = $this->get_context_param( [ 'default' => 'view' ] );
+		$params['page']           = [
 			'description'       => __( 'Current page of the collection.', 'woocommerce' ),
 			'type'              => 'integer',
 			'default'           => 1,
 			'sanitize_callback' => 'absint',
 			'validate_callback' => 'rest_validate_request_arg',
 			'minimum'           => 1,
-		);
-		$params['per_page']       = array(
+		];
+		$params['per_page']       = [
 			'description'       => __( 'Maximum number of items to be returned in result set.', 'woocommerce' ),
 			'type'              => 'integer',
 			'default'           => 10,
@@ -459,43 +459,43 @@ class Controller extends \WC_REST_Reports_Controller implements ExportableInterf
 			'maximum'           => 100,
 			'sanitize_callback' => 'absint',
 			'validate_callback' => 'rest_validate_request_arg',
-		);
-		$params['exclude']        = array(
+		];
+		$params['exclude']        = [
 			'description'       => __( 'Ensure result set excludes specific IDs.', 'woocommerce' ),
 			'type'              => 'array',
-			'items'             => array(
+			'items'             => [
 				'type' => 'integer',
-			),
-			'default'           => array(),
+			],
+			'default'           => [],
 			'sanitize_callback' => 'wp_parse_id_list',
-		);
-		$params['include']        = array(
+		];
+		$params['include']        = [
 			'description'       => __( 'Limit result set to specific ids.', 'woocommerce' ),
 			'type'              => 'array',
-			'items'             => array(
+			'items'             => [
 				'type' => 'integer',
-			),
-			'default'           => array(),
+			],
+			'default'           => [],
 			'sanitize_callback' => 'wp_parse_id_list',
-		);
-		$params['offset']         = array(
+		];
+		$params['offset']         = [
 			'description'       => __( 'Offset the result set by a specific number of items.', 'woocommerce' ),
 			'type'              => 'integer',
 			'sanitize_callback' => 'absint',
 			'validate_callback' => 'rest_validate_request_arg',
-		);
-		$params['order']          = array(
+		];
+		$params['order']          = [
 			'description'       => __( 'Order sort attribute ascending or descending.', 'woocommerce' ),
 			'type'              => 'string',
 			'default'           => 'asc',
-			'enum'              => array( 'asc', 'desc' ),
+			'enum'              => [ 'asc', 'desc' ],
 			'validate_callback' => 'rest_validate_request_arg',
-		);
-		$params['orderby']        = array(
+		];
+		$params['orderby']        = [
 			'description'       => __( 'Sort collection by object attribute.', 'woocommerce' ),
 			'type'              => 'string',
 			'default'           => 'stock_status',
-			'enum'              => array(
+			'enum'              => [
 				'stock_status',
 				'stock_quantity',
 				'date',
@@ -503,33 +503,33 @@ class Controller extends \WC_REST_Reports_Controller implements ExportableInterf
 				'include',
 				'title',
 				'sku',
-			),
+			],
 			'validate_callback' => 'rest_validate_request_arg',
-		);
-		$params['parent']         = array(
+		];
+		$params['parent']         = [
 			'description'       => __( 'Limit result set to those of particular parent IDs.', 'woocommerce' ),
 			'type'              => 'array',
-			'items'             => array(
+			'items'             => [
 				'type' => 'integer',
-			),
+			],
 			'sanitize_callback' => 'wp_parse_id_list',
-			'default'           => array(),
-		);
-		$params['parent_exclude'] = array(
+			'default'           => [],
+		];
+		$params['parent_exclude'] = [
 			'description'       => __( 'Limit result set to all items except those of a particular parent ID.', 'woocommerce' ),
 			'type'              => 'array',
-			'items'             => array(
+			'items'             => [
 				'type' => 'integer',
-			),
+			],
 			'sanitize_callback' => 'wp_parse_id_list',
-			'default'           => array(),
-		);
-		$params['type']           = array(
+			'default'           => [],
+		];
+		$params['type']           = [
 			'description' => __( 'Limit result set to items assigned a stock report type.', 'woocommerce' ),
 			'type'        => 'string',
 			'default'     => 'all',
-			'enum'        => array_merge( array( 'all', 'lowstock' ), array_keys( wc_get_product_stock_status_options() ) ),
-		);
+			'enum'        => array_merge( [ 'all', 'lowstock' ], array_keys( wc_get_product_stock_status_options() ) ),
+		];
 
 		return $params;
 	}
@@ -540,12 +540,12 @@ class Controller extends \WC_REST_Reports_Controller implements ExportableInterf
 	 * @return array Key value pair of Column ID => Label.
 	 */
 	public function get_export_columns() {
-		$export_columns = array(
+		$export_columns = [
 			'title'          => __( 'Product / Variation', 'woocommerce' ),
 			'sku'            => __( 'SKU', 'woocommerce' ),
 			'stock_status'   => __( 'Status', 'woocommerce' ),
 			'stock_quantity' => __( 'Stock', 'woocommerce' ),
-		);
+		];
 
 		/**
 		 * Filter to add or remove column names from the stock report for
@@ -571,12 +571,12 @@ class Controller extends \WC_REST_Reports_Controller implements ExportableInterf
 			$status = $this->status_options[ $item['stock_status'] ];
 		}
 
-		$export_item = array(
+		$export_item = [
 			'title'          => $item['name'],
 			'sku'            => $item['sku'],
 			'stock_status'   => $status,
 			'stock_quantity' => $item['stock_quantity'],
-		);
+		];
 
 		/**
 		 * Filter to prepare extra columns in the export item for the stock

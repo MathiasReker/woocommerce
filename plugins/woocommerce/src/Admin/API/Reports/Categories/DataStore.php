@@ -50,13 +50,13 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 	 *
 	 * @var array
 	 */
-	protected $column_types = array(
+	protected $column_types = [
 		'category_id'    => 'intval',
 		'items_sold'     => 'intval',
 		'net_revenue'    => 'floatval',
 		'orders_count'   => 'intval',
 		'products_count' => 'intval',
-	);
+	];
 
 	/**
 	 * Data store context used to pass to filters.
@@ -70,12 +70,12 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 	 */
 	protected function assign_report_columns() {
 		$table_name           = self::get_db_table_name();
-		$this->report_columns = array(
+		$this->report_columns = [
 			'items_sold'     => 'SUM(product_qty) as items_sold',
 			'net_revenue'    => 'SUM(product_net_revenue) AS net_revenue',
 			'orders_count'   => "COUNT(DISTINCT {$table_name}.order_id) as orders_count",
 			'products_count' => "COUNT(DISTINCT {$table_name}.product_id) as products_count",
-		);
+		];
 	}
 
 	/**
@@ -168,7 +168,7 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 		if ( isset( $query_args['category_includes'] ) && is_array( $query_args['category_includes'] ) && count( $query_args['category_includes'] ) > 0 ) {
 			return $query_args['category_includes'];
 		}
-		return array();
+		return [];
 	}
 
 	/**
@@ -212,7 +212,7 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 		$table_name = self::get_db_table_name();
 
 		// These defaults are only partially applied when used via REST API, as that has its own defaults.
-		$defaults   = array(
+		$defaults   = [
 			'per_page'          => get_option( 'posts_per_page' ),
 			'page'              => 1,
 			'order'             => 'DESC',
@@ -220,9 +220,9 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 			'before'            => TimeInterval::default_before(),
 			'after'             => TimeInterval::default_after(),
 			'fields'            => '*',
-			'category_includes' => array(),
+			'category_includes' => [],
 			'extended_info'     => false,
-		);
+		];
 		$query_args = wp_parse_args( $query_args, $defaults );
 		$this->normalize_timezones( $query_args, $defaults );
 
@@ -236,12 +236,12 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 		if ( false === $data ) {
 			$this->initialize_queries();
 
-			$data = (object) array(
-				'data'    => array(),
+			$data = (object) [
+				'data'    => [],
 				'total'   => 0,
 				'pages'   => 0,
 				'page_no' => 0,
-			);
+			];
 
 			$this->subquery->add_sql_clause( 'select', $this->selected_columns( $query_args ) );
 			$included_categories = $this->get_included_categories_array( $query_args );
@@ -251,7 +251,7 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 				$fields    = $this->get_fields( $query_args );
 				$ids_table = $this->get_ids_table( $included_categories, 'category_id' );
 
-				$this->add_sql_clause( 'select', $this->format_join_selections( array_merge( array( 'category_id' ), $fields ), array( 'category_id' ) ) );
+				$this->add_sql_clause( 'select', $this->format_join_selections( array_merge( [ 'category_id' ], $fields ), [ 'category_id' ] ) );
 				$this->add_sql_clause( 'from', '(' );
 				$this->add_sql_clause( 'from', $this->subquery->get_query_statement() );
 				$this->add_sql_clause( 'from', ") AS {$table_name}" );
@@ -272,7 +272,7 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 			);
 
 			if ( null === $categories_data ) {
-				return new \WP_Error( 'woocommerce_analytics_categories_result_failed', __( 'Sorry, fetching revenue data failed.', 'woocommerce' ), array( 'status' => 500 ) );
+				return new \WP_Error( 'woocommerce_analytics_categories_result_failed', __( 'Sorry, fetching revenue data failed.', 'woocommerce' ), [ 'status' => 500 ] );
 			}
 
 			$record_count = count( $categories_data );
@@ -283,13 +283,13 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 
 			$categories_data = $this->page_records( $categories_data, $query_args['page'], $query_args['per_page'] );
 			$this->include_extended_info( $categories_data, $query_args );
-			$categories_data = array_map( array( $this, 'cast_numbers' ), $categories_data );
-			$data            = (object) array(
+			$categories_data = array_map( [ $this, 'cast_numbers' ], $categories_data );
+			$data            = (object) [
 				'data'    => $categories_data,
 				'total'   => $record_count,
 				'pages'   => $total_pages,
 				'page_no' => (int) $query_args['page'],
-			);
+			];
 
 			$this->set_cached_data( $cache_key, $data );
 		}

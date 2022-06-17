@@ -21,14 +21,14 @@ class WC_Admin_Notices {
 	 *
 	 * @var array
 	 */
-	private static $notices = array();
+	private static $notices = [];
 
 	/**
 	 * Array of notices - name => callback.
 	 *
 	 * @var array
 	 */
-	private static $core_notices = array(
+	private static $core_notices = [
 		'update'                             => 'update_notice',
 		'template_files'                     => 'template_file_check_notice',
 		'legacy_shipping'                    => 'legacy_shipping_notice',
@@ -42,28 +42,28 @@ class WC_Admin_Notices {
 		'uploads_directory_is_unprotected'   => 'uploads_directory_is_unprotected_notice',
 		'base_tables_missing'                => 'base_tables_missing_notice',
 		'download_directories_sync_complete' => 'download_directories_sync_complete',
-	);
+	];
 
 	/**
 	 * Constructor.
 	 */
 	public static function init() {
-		self::$notices = get_option( 'woocommerce_admin_notices', array() );
+		self::$notices = get_option( 'woocommerce_admin_notices', [] );
 
-		add_action( 'switch_theme', array( __CLASS__, 'reset_admin_notices' ) );
-		add_action( 'woocommerce_installed', array( __CLASS__, 'reset_admin_notices' ) );
-		add_action( 'wp_loaded', array( __CLASS__, 'add_redirect_download_method_notice' ) );
-		add_action( 'admin_init', array( __CLASS__, 'hide_notices' ), 20 );
+		add_action( 'switch_theme', [ __CLASS__, 'reset_admin_notices' ] );
+		add_action( 'woocommerce_installed', [ __CLASS__, 'reset_admin_notices' ] );
+		add_action( 'wp_loaded', [ __CLASS__, 'add_redirect_download_method_notice' ] );
+		add_action( 'admin_init', [ __CLASS__, 'hide_notices' ], 20 );
 
 		// @TODO: This prevents Action Scheduler async jobs from storing empty list of notices during WC installation.
 		// That could lead to OBW not starting and 'Run setup wizard' notice not appearing in WP admin, which we want
 		// to avoid.
 		if ( ! WC_Install::is_new_install() || ! wc_is_running_from_async_action_scheduler() ) {
-			add_action( 'shutdown', array( __CLASS__, 'store_notices' ) );
+			add_action( 'shutdown', [ __CLASS__, 'store_notices' ] );
 		}
 
 		if ( current_user_can( 'manage_woocommerce' ) ) {
-			add_action( 'admin_print_styles', array( __CLASS__, 'add_notices' ) );
+			add_action( 'admin_print_styles', [ __CLASS__, 'add_notices' ] );
 		}
 	}
 
@@ -100,7 +100,7 @@ class WC_Admin_Notices {
 	 * Remove all notices.
 	 */
 	public static function remove_all_notices() {
-		self::$notices = array();
+		self::$notices = [];
 	}
 
 	/**
@@ -125,7 +125,7 @@ class WC_Admin_Notices {
 	 * @param bool   $force_save Force saving inside this method instead of at the 'shutdown'.
 	 */
 	public static function add_notice( $name, $force_save = false ) {
-		self::$notices = array_unique( array_merge( self::get_notices(), array( $name ) ) );
+		self::$notices = array_unique( array_merge( self::get_notices(), [ $name ] ) );
 
 		if ( $force_save ) {
 			// Adding early save to prevent more race conditions with notices.
@@ -140,7 +140,7 @@ class WC_Admin_Notices {
 	 * @param bool   $force_save Force saving inside this method instead of at the 'shutdown'.
 	 */
 	public static function remove_notice( $name, $force_save = false ) {
-		self::$notices = array_diff( self::get_notices(), array( $name ) );
+		self::$notices = array_diff( self::get_notices(), [ $name ] );
 		delete_option( 'woocommerce_admin_notice_' . $name );
 
 		if ( $force_save ) {
@@ -214,26 +214,26 @@ class WC_Admin_Notices {
 
 		$screen          = get_current_screen();
 		$screen_id       = $screen ? $screen->id : '';
-		$show_on_screens = array(
+		$show_on_screens = [
 			'dashboard',
 			'plugins',
-		);
+		];
 
 		// Notices should only show on WooCommerce screens, the main dashboard, and on the plugins screen.
 		if ( ! in_array( $screen_id, wc_get_screen_ids(), true ) && ! in_array( $screen_id, $show_on_screens, true ) ) {
 			return;
 		}
 
-		wp_enqueue_style( 'woocommerce-activation', plugins_url( '/assets/css/activation.css', WC_PLUGIN_FILE ), array(), Constants::get_constant( 'WC_VERSION' ) );
+		wp_enqueue_style( 'woocommerce-activation', plugins_url( '/assets/css/activation.css', WC_PLUGIN_FILE ), [], Constants::get_constant( 'WC_VERSION' ) );
 
 		// Add RTL support.
 		wp_style_add_data( 'woocommerce-activation', 'rtl', 'replace' );
 
 		foreach ( $notices as $notice ) {
 			if ( ! empty( self::$core_notices[ $notice ] ) && apply_filters( 'woocommerce_show_admin_notice', true, $notice ) ) {
-				add_action( 'admin_notices', array( __CLASS__, self::$core_notices[ $notice ] ) );
+				add_action( 'admin_notices', [ __CLASS__, self::$core_notices[ $notice ] ] );
 			} else {
-				add_action( 'admin_notices', array( __CLASS__, 'output_custom_notices' ) );
+				add_action( 'admin_notices', [ __CLASS__, 'output_custom_notices' ] );
 			}
 		}
 	}
@@ -344,7 +344,7 @@ class WC_Admin_Notices {
 	 * @todo remove in 4.0.0
 	 */
 	public static function legacy_shipping_notice() {
-		$maybe_load_legacy_methods = array( 'flat_rate', 'free_shipping', 'international_delivery', 'local_delivery', 'local_pickup' );
+		$maybe_load_legacy_methods = [ 'flat_rate', 'free_shipping', 'international_delivery', 'local_delivery', 'local_pickup' ];
 		$enabled                   = false;
 
 		foreach ( $maybe_load_legacy_methods as $method ) {
@@ -475,7 +475,7 @@ class WC_Admin_Notices {
 	public static function add_maxmind_missing_license_key_notice() {
 		$default_address = get_option( 'woocommerce_default_customer_address' );
 
-		if ( ! in_array( $default_address, array( 'geolocation', 'geolocation_ajax' ), true ) ) {
+		if ( ! in_array( $default_address, [ 'geolocation', 'geolocation_ajax' ], true ) ) {
 			return;
 		}
 
@@ -639,9 +639,9 @@ class WC_Admin_Notices {
 		// Check for the "uploads/woocommerce_uploads" directory.
 		$response         = wp_safe_remote_get(
 			esc_url_raw( $uploads['baseurl'] . '/woocommerce_uploads/' ),
-			array(
+			[
 				'redirection' => 0,
-			)
+			]
 		);
 		$response_code    = intval( wp_remote_retrieve_response_code( $response ) );
 		$response_content = wp_remote_retrieve_body( $response );

@@ -22,9 +22,9 @@ class DataStore extends DownloadsDataStore implements DataStoreInterface {
 	 *
 	 * @var array
 	 */
-	protected $column_types = array(
+	protected $column_types = [
 		'download_count' => 'intval',
-	);
+	];
 
 	/**
 	 * Cache identifier.
@@ -44,9 +44,9 @@ class DataStore extends DownloadsDataStore implements DataStoreInterface {
 	 * Assign report columns once full table name has been assigned.
 	 */
 	protected function assign_report_columns() {
-		$this->report_columns = array(
+		$this->report_columns = [
 			'download_count' => 'COUNT(DISTINCT download_log_id) as download_count',
-		);
+		];
 	}
 
 	/**
@@ -61,7 +61,7 @@ class DataStore extends DownloadsDataStore implements DataStoreInterface {
 		$table_name = self::get_db_table_name();
 
 		// These defaults are only partially applied when used via REST API, as that has its own defaults.
-		$defaults   = array(
+		$defaults   = [
 			'per_page' => get_option( 'posts_per_page' ),
 			'page'     => 1,
 			'order'    => 'DESC',
@@ -70,7 +70,7 @@ class DataStore extends DownloadsDataStore implements DataStoreInterface {
 			'interval' => 'week',
 			'before'   => TimeInterval::default_before(),
 			'after'    => TimeInterval::default_after(),
-		);
+		];
 		$query_args = wp_parse_args( $query_args, $defaults );
 		$this->normalize_timezones( $query_args, $defaults );
 
@@ -102,7 +102,7 @@ class DataStore extends DownloadsDataStore implements DataStoreInterface {
 			$expected_interval_count = TimeInterval::intervals_between( $query_args['after'], $query_args['before'], $query_args['interval'] );
 			$total_pages             = (int) ceil( $expected_interval_count / $params['per_page'] );
 			if ( $query_args['page'] < 1 || $query_args['page'] > $total_pages ) {
-				return array();
+				return [];
 			}
 
 			$this->update_intervals_sql_params( $query_args, $db_records_count, $expected_interval_count, $table_name );
@@ -137,13 +137,13 @@ class DataStore extends DownloadsDataStore implements DataStoreInterface {
 			}
 
 			$totals = (object) $this->cast_numbers( $totals[0] );
-			$data   = (object) array(
+			$data   = (object) [
 				'totals'    => $totals,
 				'intervals' => $intervals,
 				'total'     => $expected_interval_count,
 				'pages'     => $total_pages,
 				'page_no'   => (int) $query_args['page'],
-			);
+			];
 
 			if ( $this->intervals_missing( $expected_interval_count, $db_records_count, $params['per_page'], $query_args['page'], $query_args['order'], $query_args['orderby'], count( $intervals ) ) ) {
 				$this->fill_in_missing_intervals( $db_intervals, $query_args['adj_after'], $query_args['adj_before'], $query_args['interval'], $data );

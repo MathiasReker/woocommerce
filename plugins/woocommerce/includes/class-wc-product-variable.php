@@ -288,7 +288,7 @@ class WC_Product_Variable extends WC_Product {
 	 */
 	public function get_available_variations( $return = 'array' ) {
 		$variation_ids        = $this->get_children();
-		$available_variations = array();
+		$available_variations = [];
 
 		if ( is_callable( '_prime_post_caches' ) ) {
 			_prime_post_caches( $variation_ids );
@@ -362,14 +362,14 @@ class WC_Product_Variable extends WC_Product {
 
 		return apply_filters(
 			'woocommerce_available_variation',
-			array(
+			[
 				'attributes'            => $variation->get_variation_attributes(),
 				'availability_html'     => wc_get_stock_html( $variation ),
 				'backorders_allowed'    => $variation->backorders_allowed(),
 				'dimensions'            => $variation->get_dimensions( false ),
 				'dimensions_html'       => wc_format_dimensions( $variation->get_dimensions( false ) ),
 				'display_price'         => wc_get_price_to_display( $variation ),
-				'display_regular_price' => wc_get_price_to_display( $variation, array( 'price' => $variation->get_regular_price() ) ),
+				'display_regular_price' => wc_get_price_to_display( $variation, [ 'price' => $variation->get_regular_price() ] ),
 				'image'                 => wc_get_product_attachment_props( $variation->get_image_id() ),
 				'image_id'              => $variation->get_image_id(),
 				'is_downloadable'       => $variation->is_downloadable(),
@@ -387,7 +387,7 @@ class WC_Product_Variable extends WC_Product {
 				'variation_is_visible'  => $variation->variation_is_visible(),
 				'weight'                => $variation->get_weight(),
 				'weight_html'           => wc_format_weight( $variation->get_weight() ),
-			),
+			],
 			$this,
 			$variation
 		);
@@ -459,10 +459,10 @@ class WC_Product_Variable extends WC_Product {
 		$previous_name = $this->data['name'];
 		$new_name      = $this->get_name( 'edit' );
 
-		return array(
+		return [
 			'previous_name' => $previous_name,
 			'new_name'      => $new_name,
-		);
+		];
 	}
 
 	/**
@@ -610,10 +610,10 @@ class WC_Product_Variable extends WC_Product {
 
 			wc_do_deprecated_action(
 				'woocommerce_variable_product_sync',
-				array(
+				[
 					$product->get_id(),
 					$product->get_visible_children(),
-				),
+				],
 				'3.0',
 				'woocommerce_variable_product_sync_data, woocommerce_new_product or woocommerce_update_product'
 			);

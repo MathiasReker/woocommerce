@@ -22,12 +22,12 @@ class DataStore extends VariationsDataStore implements DataStoreInterface {
 	 *
 	 * @var array
 	 */
-	protected $column_types = array(
+	protected $column_types = [
 		'items_sold'       => 'intval',
 		'net_revenue'      => 'floatval',
 		'orders_count'     => 'intval',
 		'variations_count' => 'intval',
-	);
+	];
 
 	/**
 	 * Cache identifier.
@@ -48,12 +48,12 @@ class DataStore extends VariationsDataStore implements DataStoreInterface {
 	 */
 	protected function assign_report_columns() {
 		$table_name           = self::get_db_table_name();
-		$this->report_columns = array(
+		$this->report_columns = [
 			'items_sold'       => 'SUM(product_qty) as items_sold',
 			'net_revenue'      => 'SUM(product_net_revenue) AS net_revenue',
 			'orders_count'     => "COUNT( DISTINCT ( CASE WHEN product_gross_revenue >= 0 THEN {$table_name}.order_id END ) ) as orders_count",
 			'variations_count' => 'COUNT(DISTINCT variation_id) as variations_count',
-		);
+		];
 	}
 
 	/**
@@ -66,7 +66,7 @@ class DataStore extends VariationsDataStore implements DataStoreInterface {
 
 		$products_where_clause      = '';
 		$products_from_clause       = '';
-		$where_subquery             = array();
+		$where_subquery             = [];
 		$order_product_lookup_table = self::get_db_table_name();
 		$order_item_meta_table      = $wpdb->prefix . 'woocommerce_order_itemmeta';
 
@@ -145,7 +145,7 @@ class DataStore extends VariationsDataStore implements DataStoreInterface {
 		$table_name = self::get_db_table_name();
 
 		// These defaults are only partially applied when used via REST API, as that has its own defaults.
-		$defaults   = array(
+		$defaults   = [
 			'per_page'           => get_option( 'posts_per_page' ),
 			'page'               => 1,
 			'order'              => 'DESC',
@@ -153,11 +153,11 @@ class DataStore extends VariationsDataStore implements DataStoreInterface {
 			'before'             => TimeInterval::default_before(),
 			'after'              => TimeInterval::default_after(),
 			'fields'             => '*',
-			'category_includes'  => array(),
+			'category_includes'  => [],
 			'interval'           => 'week',
-			'product_includes'   => array(),
-			'variation_includes' => array(),
-		);
+			'product_includes'   => [],
+			'variation_includes' => [],
+		];
 		$query_args = wp_parse_args( $query_args, $defaults );
 		$this->normalize_timezones( $query_args, $defaults );
 
@@ -188,10 +188,10 @@ class DataStore extends VariationsDataStore implements DataStoreInterface {
 			$expected_interval_count = TimeInterval::intervals_between( $query_args['after'], $query_args['before'], $query_args['interval'] );
 			$total_pages             = (int) ceil( $expected_interval_count / $params['per_page'] );
 			if ( $query_args['page'] < 1 || $query_args['page'] > $total_pages ) {
-				return array();
+				return [];
 			}
 
-			$intervals = array();
+			$intervals = [];
 			$this->update_intervals_sql_params( $query_args, $db_interval_count, $expected_interval_count, $table_name );
 			$this->total_query->add_sql_clause( 'select', $selections );
 			$this->total_query->add_sql_clause( 'where_time', $this->get_sql_clause( 'where_time' ) );
@@ -204,19 +204,19 @@ class DataStore extends VariationsDataStore implements DataStoreInterface {
 			/* phpcs:enable */
 
 			// @todo remove these assignements when refactoring segmenter classes to use query objects.
-			$totals_query          = array(
+			$totals_query          = [
 				'from_clause'       => $this->total_query->get_sql_clause( 'join' ),
 				'where_time_clause' => $this->total_query->get_sql_clause( 'where_time' ),
 				'where_clause'      => $this->total_query->get_sql_clause( 'where' ),
-			);
-			$intervals_query       = array(
+			];
+			$intervals_query       = [
 				'select_clause'     => $this->get_sql_clause( 'select' ),
 				'from_clause'       => $this->interval_query->get_sql_clause( 'join' ),
 				'where_time_clause' => $this->interval_query->get_sql_clause( 'where_time' ),
 				'where_clause'      => $this->interval_query->get_sql_clause( 'where' ),
 				'order_by'          => $this->get_sql_clause( 'order_by' ),
 				'limit'             => $this->get_sql_clause( 'limit' ),
-			);
+			];
 			$segmenter             = new Segmenter( $query_args, $this->report_columns );
 			$totals[0]['segments'] = $segmenter->get_totals_segments( $totals_query, $table_name );
 
@@ -244,13 +244,13 @@ class DataStore extends VariationsDataStore implements DataStoreInterface {
 
 			$totals = (object) $this->cast_numbers( $totals[0] );
 
-			$data = (object) array(
+			$data = (object) [
 				'totals'    => $totals,
 				'intervals' => $intervals,
 				'total'     => $expected_interval_count,
 				'pages'     => $total_pages,
 				'page_no'   => (int) $query_args['page'],
-			);
+			];
 
 			if ( TimeInterval::intervals_missing( $expected_interval_count, $db_interval_count, $params['per_page'], $query_args['page'], $query_args['order'], $query_args['orderby'], count( $intervals ) ) ) {
 				$this->fill_in_missing_intervals( $db_intervals, $query_args['adj_after'], $query_args['adj_before'], $query_args['interval'], $data );

@@ -19,12 +19,12 @@ class OptionSanitizer {
 	 */
 	public function __construct() {
 		// Sanitize color options.
-		$color_options = array(
+		$color_options = [
 			'woocommerce_email_base_color',
 			'woocommerce_email_background_color',
 			'woocommerce_email_body_background_color',
 			'woocommerce_email_text_color',
-		);
+		];
 
 		foreach ( $color_options as $option_name ) {
 			add_filter(

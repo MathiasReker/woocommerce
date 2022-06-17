@@ -52,12 +52,12 @@ class WC_Payment_Token_Data_Store extends WC_Data_Store_WP implements WC_Payment
 			}
 		}
 
-		$payment_token_data = array(
+		$payment_token_data = [
 			'gateway_id' => $token->get_gateway_id( 'edit' ),
 			'token'      => $token->get_token( 'edit' ),
 			'user_id'    => $token->get_user_id( 'edit' ),
 			'type'       => $token->get_type( 'edit' ),
-		);
+		];
 
 		$wpdb->insert( $wpdb->prefix . 'woocommerce_payment_tokens', $payment_token_data );
 		$token_id = $wpdb->insert_id;
@@ -90,8 +90,8 @@ class WC_Payment_Token_Data_Store extends WC_Data_Store_WP implements WC_Payment
 
 		global $wpdb;
 
-		$updated_props = array();
-		$core_props    = array( 'gateway_id', 'token', 'user_id', 'type' );
+		$updated_props = [];
+		$core_props    = [ 'gateway_id', 'token', 'user_id', 'type' ];
 		$changed_props = array_keys( $token->get_changes() );
 
 		foreach ( $changed_props as $prop ) {
@@ -106,7 +106,7 @@ class WC_Payment_Token_Data_Store extends WC_Data_Store_WP implements WC_Payment
 			$wpdb->update(
 				$wpdb->prefix . 'woocommerce_payment_tokens',
 				$payment_token_data,
-				array( 'token_id' => $token->get_id() )
+				[ 'token_id' => $token->get_id() ]
 			);
 		}
 
@@ -133,8 +133,8 @@ class WC_Payment_Token_Data_Store extends WC_Data_Store_WP implements WC_Payment
 	 */
 	public function delete( &$token, $force_delete = false ) {
 		global $wpdb;
-		$wpdb->delete( $wpdb->prefix . 'woocommerce_payment_tokens', array( 'token_id' => $token->get_id() ), array( '%d' ) );
-		$wpdb->delete( $wpdb->prefix . 'woocommerce_payment_tokenmeta', array( 'payment_token_id' => $token->get_id() ), array( '%d' ) );
+		$wpdb->delete( $wpdb->prefix . 'woocommerce_payment_tokens', [ 'token_id' => $token->get_id() ], [ '%d' ] );
+		$wpdb->delete( $wpdb->prefix . 'woocommerce_payment_tokenmeta', [ 'payment_token_id' => $token->get_id() ], [ '%d' ] );
 		do_action( 'woocommerce_payment_token_deleted', $token->get_id(), $token );
 	}
 
@@ -159,12 +159,12 @@ class WC_Payment_Token_Data_Store extends WC_Data_Store_WP implements WC_Payment
 
 		if ( $data ) {
 			$token->set_props(
-				array(
+				[
 					'token'      => $data->token,
 					'user_id'    => $data->user_id,
 					'gateway_id' => $data->gateway_id,
 					'default'    => $data->is_default,
-				)
+				]
 			);
 			$this->read_extra_data( $token );
 			$token->read_meta_data();
@@ -184,7 +184,7 @@ class WC_Payment_Token_Data_Store extends WC_Data_Store_WP implements WC_Payment
 	protected function read_extra_data( &$token ) {
 		foreach ( $token->get_extra_data_keys() as $key ) {
 			$function = 'set_' . $key;
-			if ( is_callable( array( $token, $function ) ) ) {
+			if ( is_callable( [ $token, $function ] ) ) {
 				$token->{$function}( get_metadata( 'payment_token', $token->get_id(), $key, true ) );
 			}
 		}
@@ -200,12 +200,12 @@ class WC_Payment_Token_Data_Store extends WC_Data_Store_WP implements WC_Payment
 	 */
 	protected function save_extra_data( &$token, $force = false ) {
 		if ( $this->extra_data_saved ) {
-			return array();
+			return [];
 		}
 
-		$updated_props     = array();
+		$updated_props     = [];
 		$extra_data_keys   = $token->get_extra_data_keys();
-		$meta_key_to_props = ! empty( $extra_data_keys ) ? array_combine( $extra_data_keys, $extra_data_keys ) : array();
+		$meta_key_to_props = ! empty( $extra_data_keys ) ? array_combine( $extra_data_keys, $extra_data_keys ) : [];
 		$props_to_update   = $force ? $meta_key_to_props : $this->get_props_to_update( $token, $meta_key_to_props );
 
 		foreach ( $extra_data_keys as $key ) {
@@ -213,7 +213,7 @@ class WC_Payment_Token_Data_Store extends WC_Data_Store_WP implements WC_Payment
 				continue;
 			}
 			$function = 'get_' . $key;
-			if ( is_callable( array( $token, $function ) ) ) {
+			if ( is_callable( [ $token, $function ] ) ) {
 				if ( update_metadata( 'payment_token', $token->get_id(), $key, $token->{$function}( 'edit' ) ) ) {
 					$updated_props[] = $key;
 				}
@@ -236,19 +236,19 @@ class WC_Payment_Token_Data_Store extends WC_Data_Store_WP implements WC_Payment
 		global $wpdb;
 		$args = wp_parse_args(
 			$args,
-			array(
+			[
 				'token_id'   => '',
 				'user_id'    => '',
 				'gateway_id' => '',
 				'type'       => '',
-			)
+			]
 		);
 
 		$sql   = "SELECT * FROM {$wpdb->prefix}woocommerce_payment_tokens";
-		$where = array( '1=1' );
+		$where = [ '1=1' ];
 
 		if ( $args['token_id'] ) {
-			$token_ids = array_map( 'absint', is_array( $args['token_id'] ) ? $args['token_id'] : array( $args['token_id'] ) );
+			$token_ids = array_map( 'absint', is_array( $args['token_id'] ) ? $args['token_id'] : [ $args['token_id'] ] );
 			$where[]   = "token_id IN ('" . implode( "','", array_map( 'esc_sql', $token_ids ) ) . "')";
 		}
 
@@ -257,7 +257,7 @@ class WC_Payment_Token_Data_Store extends WC_Data_Store_WP implements WC_Payment
 		}
 
 		if ( $args['gateway_id'] ) {
-			$gateway_ids = array( $args['gateway_id'] );
+			$gateway_ids = [ $args['gateway_id'] ];
 		} else {
 			$gateways    = WC_Payment_Gateways::instance();
 			$gateway_ids = $gateways->get_payment_gateway_ids();
@@ -362,10 +362,10 @@ class WC_Payment_Token_Data_Store extends WC_Data_Store_WP implements WC_Payment
 		global $wpdb;
 		$wpdb->update(
 			$wpdb->prefix . 'woocommerce_payment_tokens',
-			array( 'is_default' => (int) $status ),
-			array(
+			[ 'is_default' => (int) $status ],
+			[
 				'token_id' => $token_id,
-			)
+			]
 		);
 	}
 

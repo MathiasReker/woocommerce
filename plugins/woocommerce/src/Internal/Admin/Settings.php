@@ -39,11 +39,11 @@ class Settings {
 	 */
 	public function __construct() {
 		// Old settings injection.
-		add_filter( 'woocommerce_components_settings', array( $this, 'add_component_settings' ) );
+		add_filter( 'woocommerce_components_settings', [ $this, 'add_component_settings' ] );
 		// New settings injection.
-		add_filter( 'woocommerce_admin_shared_settings', array( $this, 'add_component_settings' ) );
-		add_filter( 'woocommerce_settings_groups', array( $this, 'add_settings_group' ) );
-		add_filter( 'woocommerce_settings-wc_admin', array( $this, 'add_settings' ) );
+		add_filter( 'woocommerce_admin_shared_settings', [ $this, 'add_component_settings' ] );
+		add_filter( 'woocommerce_settings_groups', [ $this, 'add_settings_group' ] );
+		add_filter( 'woocommerce_settings-wc_admin', [ $this, 'add_settings' ] );
 	}
 
 	/**
@@ -53,7 +53,7 @@ class Settings {
 	 * @return array formatted statuses.
 	 */
 	public static function get_order_statuses( $statuses ) {
-		$formatted_statuses = array();
+		$formatted_statuses = [];
 		foreach ( $statuses as $key => $value ) {
 			$formatted_key                        = preg_replace( '/^wc-/', '', $key );
 			$formatted_statuses[ $formatted_key ] = $value;
@@ -93,7 +93,7 @@ class Settings {
 		//phpcs:ignore
 		return apply_filters(
 			'wc_currency_settings',
-			array(
+			[
 				'code'              => $code,
 				'precision'         => wc_get_price_decimals(),
 				'symbol'            => html_entity_decode( get_woocommerce_currency_symbol( $code ) ),
@@ -101,7 +101,7 @@ class Settings {
 				'decimalSeparator'  => wc_get_price_decimal_separator(),
 				'thousandSeparator' => wc_get_price_thousand_separator(),
 				'priceFormat'       => html_entity_decode( get_woocommerce_price_format() ),
-			)
+			]
 		);
 	}
 
@@ -122,7 +122,7 @@ class Settings {
 			$settings['orderStatuses'] = self::get_order_statuses( wc_get_order_statuses() );
 			$settings['stockStatuses'] = self::get_order_statuses( wc_get_product_stock_status_options() );
 			$settings['currency']      = self::get_currency_settings();
-			$settings['locale']        = array(
+			$settings['locale']        = [
 				'siteLocale'    => isset( $settings['siteLocale'] )
 					? $settings['siteLocale']
 					: get_locale(),
@@ -132,11 +132,11 @@ class Settings {
 				'weekdaysShort' => isset( $settings['l10n']['weekdaysShort'] )
 					? $settings['l10n']['weekdaysShort']
 					: array_values( $wp_locale->weekday_abbrev ),
-			);
+			];
 		}
 
 		//phpcs:ignore
-		$preload_data_endpoints = apply_filters( 'woocommerce_component_settings_preload_endpoints', array() );
+		$preload_data_endpoints = apply_filters( 'woocommerce_component_settings_preload_endpoints', [] );
 		if ( class_exists( 'Jetpack' ) ) {
 			$preload_data_endpoints['jetpackStatus'] = '/jetpack/v4/connection';
 		}
@@ -148,7 +148,7 @@ class Settings {
 		}
 
 		//phpcs:ignore
-		$preload_options = apply_filters( 'woocommerce_admin_preload_options', array() );
+		$preload_options = apply_filters( 'woocommerce_admin_preload_options', [] );
 		if ( ! empty( $preload_options ) ) {
 			foreach ( $preload_options as $option ) {
 				$settings['preloadOptions'][ $option ] = get_option( $option );
@@ -156,12 +156,12 @@ class Settings {
 		}
 
 		//phpcs:ignore
-		$preload_settings = apply_filters( 'woocommerce_admin_preload_settings', array() );
+		$preload_settings = apply_filters( 'woocommerce_admin_preload_settings', [] );
 		if ( ! empty( $preload_settings ) ) {
 			$setting_options = new \WC_REST_Setting_Options_V2_Controller();
 			foreach ( $preload_settings as $group ) {
 				$group_settings   = $setting_options->get_group_settings( $group );
-				$preload_settings = array();
+				$preload_settings = [];
 				foreach ( $group_settings as $option ) {
 					if ( array_key_exists( 'id', $option ) && array_key_exists( 'value', $option ) ) {
 						$preload_settings[ $option['id'] ] = $option['value'];
@@ -173,9 +173,9 @@ class Settings {
 
 		$user_controller = new \WP_REST_Users_Controller();
 		$request         = new \WP_REST_Request();
-		$request->set_query_params( array( 'context' => 'edit' ) );
+		$request->set_query_params( [ 'context' => 'edit' ] );
 		$user_response     = $user_controller->get_current_item( $request );
-		$current_user_data = is_wp_error( $user_response ) ? (object) array() : $user_response->get_data();
+		$current_user_data = is_wp_error( $user_response ) ? (object) [] : $user_response->get_data();
 
 		$settings['currentUserData']      = $current_user_data;
 		$settings['reviewsEnabled']       = get_option( 'woocommerce_enable_reviews' );
@@ -197,10 +197,10 @@ class Settings {
 		$settings['homeUrl']         = home_url();
 		$settings['dateFormat']      = get_option( 'date_format' );
 		$settings['timeZone']        = wc_timezone_string();
-		$settings['plugins']         = array(
+		$settings['plugins']         = [
 			'installedPlugins' => PluginsHelper::get_installed_plugin_slugs(),
 			'activePlugins'    => Plugins::get_active_plugins(),
-		);
+		];
 		// Plugins that depend on changing the translation work on the server but not the client -
 		// WooCommerce Branding is an example of this - so pass through the translation of
 		// 'WooCommerce' to wcSettings.
@@ -215,11 +215,11 @@ class Settings {
 		if ( ! empty( $preload_data_endpoints ) ) {
 			$settings['dataEndpoints'] = isset( $settings['dataEndpoints'] )
 				? $settings['dataEndpoints']
-				: array();
+				: [];
 			foreach ( $preload_data_endpoints as $key => $endpoint ) {
 				// Handle error case: rest_do_request() doesn't guarantee success.
 				if ( empty( $preload_data[ $endpoint ] ) ) {
-					$settings['dataEndpoints'][ $key ] = array();
+					$settings['dataEndpoints'][ $key ] = [];
 				} else {
 					$settings['dataEndpoints'][ $key ] = $preload_data[ $endpoint ]['body'];
 				}
@@ -244,11 +244,11 @@ class Settings {
 	 * @return array
 	 */
 	public function add_settings_group( $groups ) {
-		$groups[] = array(
+		$groups[] = [
 			'id'          => 'wc_admin',
 			'label'       => __( 'WooCommerce Admin', 'woocommerce' ),
 			'description' => __( 'Settings for WooCommerce admin reporting.', 'woocommerce' ),
-		);
+		];
 		return $groups;
 	}
 
@@ -263,32 +263,32 @@ class Settings {
 		$registered_statuses   = self::get_order_statuses( wc_get_order_statuses() );
 		$all_statuses          = array_merge( $unregistered_statuses, $registered_statuses );
 
-		$settings[] = array(
+		$settings[] = [
 			'id'          => 'woocommerce_excluded_report_order_statuses',
 			'option_key'  => 'woocommerce_excluded_report_order_statuses',
 			'label'       => __( 'Excluded report order statuses', 'woocommerce' ),
 			'description' => __( 'Statuses that should not be included when calculating report totals.', 'woocommerce' ),
-			'default'     => array( 'pending', 'cancelled', 'failed' ),
+			'default'     => [ 'pending', 'cancelled', 'failed' ],
 			'type'        => 'multiselect',
 			'options'     => $all_statuses,
-		);
-		$settings[] = array(
+		];
+		$settings[] = [
 			'id'          => 'woocommerce_actionable_order_statuses',
 			'option_key'  => 'woocommerce_actionable_order_statuses',
 			'label'       => __( 'Actionable order statuses', 'woocommerce' ),
 			'description' => __( 'Statuses that require extra action on behalf of the store admin.', 'woocommerce' ),
-			'default'     => array( 'processing', 'on-hold' ),
+			'default'     => [ 'processing', 'on-hold' ],
 			'type'        => 'multiselect',
 			'options'     => $all_statuses,
-		);
-		$settings[] = array(
+		];
+		$settings[] = [
 			'id'          => 'woocommerce_default_date_range',
 			'option_key'  => 'woocommerce_default_date_range',
 			'label'       => __( 'Default Date Range', 'woocommerce' ),
 			'description' => __( 'Default Date Range', 'woocommerce' ),
 			'default'     => 'period=month&compare=previous_year',
 			'type'        => 'text',
-		);
+		];
 		return $settings;
 	}
 
@@ -301,7 +301,7 @@ class Settings {
 	private function get_custom_settings( $settings ) {
 		$wc_rest_settings_options_controller = new \WC_REST_Setting_Options_Controller();
 		$wc_admin_group_settings             = $wc_rest_settings_options_controller->get_group_settings( 'wc_admin' );
-		$settings['wcAdminSettings']         = array();
+		$settings['wcAdminSettings']         = [];
 
 		foreach ( $wc_admin_group_settings as $setting ) {
 			if ( ! empty( $setting['id'] ) ) {

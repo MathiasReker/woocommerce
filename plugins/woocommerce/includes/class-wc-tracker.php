@@ -31,7 +31,7 @@ class WC_Tracker {
 	 * Hook into cron event.
 	 */
 	public static function init() {
-		add_action( 'woocommerce_tracker_send_event', array( __CLASS__, 'send_tracking_data' ) );
+		add_action( 'woocommerce_tracker_send_event', [ __CLASS__, 'send_tracking_data' ] );
 	}
 
 	/**
@@ -65,16 +65,16 @@ class WC_Tracker {
 		$params = self::get_tracking_data();
 		wp_safe_remote_post(
 			self::$api_url,
-			array(
+			[
 				'method'      => 'POST',
 				'timeout'     => 45,
 				'redirection' => 5,
 				'httpversion' => '1.0',
 				'blocking'    => false,
-				'headers'     => array( 'user-agent' => 'WooCommerceTracker/' . md5( esc_url_raw( home_url( '/' ) ) ) . ';' ),
+				'headers'     => [ 'user-agent' => 'WooCommerceTracker/' . md5( esc_url_raw( home_url( '/' ) ) ) . ';' ],
 				'body'        => wp_json_encode( $params ),
-				'cookies'     => array(),
-			)
+				'cookies'     => [],
+			]
 		);
 	}
 
@@ -101,7 +101,7 @@ class WC_Tracker {
 		if ( class_exists( '\Automattic\Jetpack\Status' ) ) {
 			// Preferred way of checking with Jetpack 8.1+.
 			$jp_status = new \Automattic\Jetpack\Status();
-			if ( is_callable( array( $jp_status, 'is_staging_site' ) ) ) {
+			if ( is_callable( [ $jp_status, 'is_staging_site' ] ) ) {
 				return $jp_status->is_staging_site();
 			}
 		}
@@ -115,7 +115,7 @@ class WC_Tracker {
 	 * @return array
 	 */
 	public static function get_tracking_data() {
-		$data = array();
+		$data = [];
 
 		// General site info.
 		$data['url']   = home_url();
@@ -192,13 +192,13 @@ class WC_Tracker {
 		$theme_wc_support     = wc_bool_to_string( current_theme_supports( 'woocommerce' ) );
 		$theme_is_block_theme = wc_bool_to_string( wc_current_theme_is_fse_theme() );
 
-		return array(
+		return [
 			'name'        => $theme_data->Name, // @phpcs:ignore
 			'version'     => $theme_data->Version, // @phpcs:ignore
 			'child_theme' => $theme_child_theme,
 			'wc_support'  => $theme_wc_support,
 			'block_theme' => $theme_is_block_theme,
-		);
+		];
 	}
 
 	/**
@@ -207,7 +207,7 @@ class WC_Tracker {
 	 * @return array
 	 */
 	private static function get_wordpress_info() {
-		$wp_data = array();
+		$wp_data = [];
 
 		$memory = wc_let_to_num( WP_MEMORY_LIMIT );
 
@@ -240,7 +240,7 @@ class WC_Tracker {
 	 * @return array
 	 */
 	private static function get_server_info() {
-		$server_data = array();
+		$server_data = [];
 
 		if ( ! empty( $_SERVER['SERVER_SOFTWARE'] ) ) {
 			$server_data['software'] = $_SERVER['SERVER_SOFTWARE']; // @phpcs:ignore
@@ -281,12 +281,12 @@ class WC_Tracker {
 		}
 
 		$plugins             = get_plugins();
-		$active_plugins_keys = get_option( 'active_plugins', array() );
-		$active_plugins      = array();
+		$active_plugins_keys = get_option( 'active_plugins', [] );
+		$active_plugins      = [];
 
 		foreach ( $plugins as $k => $v ) {
 			// Take care of formatting the data how we want it.
-			$formatted         = array();
+			$formatted         = [];
 			$formatted['name'] = strip_tags( $v['Name'] );
 			if ( isset( $v['Version'] ) ) {
 				$formatted['version'] = strip_tags( $v['Version'] );
@@ -309,10 +309,10 @@ class WC_Tracker {
 			}
 		}
 
-		return array(
+		return [
 			'active_plugins'   => $active_plugins,
 			'inactive_plugins' => $plugins,
-		);
+		];
 	}
 
 	/**
@@ -345,7 +345,7 @@ class WC_Tracker {
 	 * @return array
 	 */
 	private static function get_user_counts() {
-		$user_count          = array();
+		$user_count          = [];
 		$user_count_data     = count_users();
 		$user_count['total'] = $user_count_data['total_users'];
 
@@ -363,11 +363,11 @@ class WC_Tracker {
 	 * @return array
 	 */
 	public static function get_product_counts() {
-		$product_count          = array();
+		$product_count          = [];
 		$product_count_data     = wp_count_posts( 'product' );
 		$product_count['total'] = $product_count_data->publish;
 
-		$product_statuses = get_terms( 'product_type', array( 'hide_empty' => 0 ) );
+		$product_statuses = get_terms( 'product_type', [ 'hide_empty' => 0 ] );
 		foreach ( $product_statuses as $product_status ) {
 			$product_count[ $product_status->name ] = $product_status->count;
 		}
@@ -381,7 +381,7 @@ class WC_Tracker {
 	 * @return array
 	 */
 	private static function get_order_counts() {
-		$order_count      = array();
+		$order_count      = [];
 		$order_count_data = wp_count_posts( 'shop_order' );
 		foreach ( wc_get_order_statuses() as $status_slug => $status_name ) {
 			$order_count[ $status_slug ] = $order_count_data->{ $status_slug };
@@ -444,10 +444,10 @@ class WC_Tracker {
 			$processing_gross_total = 0;
 		}
 
-		return array(
+		return [
 			'gross'            => $gross_total,
 			'processing_gross' => $processing_gross_total,
-		);
+		];
 	}
 
 	/**
@@ -470,10 +470,10 @@ class WC_Tracker {
 		);
 
 		if ( is_null( $min_max ) ) {
-			$min_max = array(
+			$min_max = [
 				'first' => '-',
 				'last'  => '-',
-			);
+			];
 		}
 
 		$processing_min_max = $wpdb->get_row(
@@ -488,10 +488,10 @@ class WC_Tracker {
 		);
 
 		if ( is_null( $processing_min_max ) ) {
-			$processing_min_max = array(
+			$processing_min_max = [
 				'processing_first' => '-',
 				'processing_last'  => '-',
-			);
+			];
 		}
 
 		return array_merge( $min_max, $processing_min_max );
@@ -528,7 +528,7 @@ class WC_Tracker {
 			"
 		);
 
-		$orders_by_gateway_currency = array();
+		$orders_by_gateway_currency = [];
 		foreach ( $orders_by_gateway as $orders_details ) {
 			$gateway  = 'gateway_' . $orders_details->gateway;
 			$currency = $orders_details->currency;
@@ -549,13 +549,13 @@ class WC_Tracker {
 	 */
 	private static function get_review_counts() {
 		global $wpdb;
-		$review_count = array( 'total' => 0 );
-		$status_map   = array(
+		$review_count = [ 'total' => 0 ];
+		$status_map   = [
 			'0'     => 'pending',
 			'1'     => 'approved',
 			'trash' => 'trash',
 			'spam'  => 'spam',
-		);
+		];
 		$counts       = $wpdb->get_results(
 			"
 			SELECT comment_approved, COUNT(*) AS num_reviews
@@ -596,14 +596,14 @@ class WC_Tracker {
 	 * @return array
 	 */
 	private static function get_active_payment_gateways() {
-		$active_gateways = array();
+		$active_gateways = [];
 		$gateways        = WC()->payment_gateways->payment_gateways();
 		foreach ( $gateways as $id => $gateway ) {
 			if ( isset( $gateway->enabled ) && 'yes' === $gateway->enabled ) {
-				$active_gateways[ $id ] = array(
+				$active_gateways[ $id ] = [
 					'title'    => $gateway->title,
 					'supports' => $gateway->supports,
-				);
+				];
 			}
 		}
 
@@ -617,14 +617,14 @@ class WC_Tracker {
 	 * @return array
 	 */
 	private static function get_active_shipping_methods() {
-		$active_methods   = array();
+		$active_methods   = [];
 		$shipping_methods = WC()->shipping()->get_shipping_methods();
 		foreach ( $shipping_methods as $id => $shipping_method ) {
 			if ( isset( $shipping_method->enabled ) && 'yes' === $shipping_method->enabled ) {
-				$active_methods[ $id ] = array(
+				$active_methods[ $id ] = [
 					'title'      => $shipping_method->title,
 					'tax_status' => $shipping_method->tax_status,
-				);
+				];
 			}
 		}
 
@@ -637,7 +637,7 @@ class WC_Tracker {
 	 * @return array
 	 */
 	private static function get_all_woocommerce_options_values() {
-		return array(
+		return [
 			'version'                               => WC()->version,
 			'currency'                              => get_woocommerce_currency(),
 			'base_location'                         => WC()->countries->get_base_country(),
@@ -658,7 +658,7 @@ class WC_Tracker {
 			'enable_myaccount_registration'         => get_option( 'woocommerce_enable_myaccount_registration' ),
 			'registration_generate_username'        => get_option( 'woocommerce_registration_generate_username' ),
 			'registration_generate_password'        => get_option( 'woocommerce_registration_generate_password' ),
-		);
+		];
 	}
 
 	/**
@@ -667,9 +667,9 @@ class WC_Tracker {
 	 * @return array
 	 */
 	private static function get_all_template_overrides() {
-		$override_data  = array();
-		$template_paths = apply_filters( 'woocommerce_template_overrides_scan_paths', array( 'WooCommerce' => WC()->plugin_path() . '/templates/' ) );
-		$scanned_files  = array();
+		$override_data  = [];
+		$template_paths = apply_filters( 'woocommerce_template_overrides_scan_paths', [ 'WooCommerce' => WC()->plugin_path() . '/templates/' ] );
+		$scanned_files  = [];
 
 		require_once WC()->plugin_path() . '/includes/admin/class-wc-admin-status.php';
 
@@ -719,7 +719,7 @@ class WC_Tracker {
 				WHERE ID=%d
 				AND {$wpdb->prefix}posts.post_content LIKE %s
 				",
-				array( $post_id, $wildcarded )
+				[ $post_id, $wildcarded ]
 			)
 		);
 
@@ -740,17 +740,17 @@ class WC_Tracker {
 		$blocks = WC_Blocks_Utils::get_blocks_from_page( $block_name, $woo_page_name );
 
 		$block_present = false;
-		$attributes    = array();
+		$attributes    = [];
 		if ( $blocks && count( $blocks ) ) {
 			// Return any customised attributes from the first block.
 			$block_present = true;
 			$attributes    = $blocks[0]['attrs'];
 		}
 
-		return array(
+		return [
 			'page_contains_block' => $block_present ? 'Yes' : 'No',
 			'block_attributes'    => $attributes,
-		);
+		];
 	}
 
 	/**
@@ -765,7 +765,7 @@ class WC_Tracker {
 		$cart_block_data     = self::get_block_tracker_data( 'woocommerce/cart', 'cart' );
 		$checkout_block_data = self::get_block_tracker_data( 'woocommerce/checkout', 'checkout' );
 
-		return array(
+		return [
 			'cart_page_contains_cart_shortcode'         => self::post_contains_text(
 				$cart_page_id,
 				'[woocommerce_cart]'
@@ -779,7 +779,7 @@ class WC_Tracker {
 			'cart_block_attributes'                     => $cart_block_data['block_attributes'],
 			'checkout_page_contains_checkout_block'     => $checkout_block_data['page_contains_block'],
 			'checkout_block_attributes'                 => $checkout_block_data['block_attributes'],
-		);
+		];
 	}
 
 	/**
@@ -790,10 +790,10 @@ class WC_Tracker {
 	private static function get_mini_cart_info() {
 		$mini_cart_block_name = 'woocommerce/mini-cart';
 		$mini_cart_block_data = wc_current_theme_is_fse_theme() ? BlocksUtil::get_block_from_template_part( $mini_cart_block_name, 'header' ) : BlocksUtil::get_blocks_from_widget_area( $mini_cart_block_name );
-		return array(
+		return [
 			'mini_cart_used'             => empty( $mini_cart_block_data[0] ) ? 'No' : 'Yes',
-			'mini_cart_block_attributes' => empty( $mini_cart_block_data[0] ) ? array() : $mini_cart_block_data[0]['attrs'],
-		);
+			'mini_cart_block_attributes' => empty( $mini_cart_block_data[0] ) ? [] : $mini_cart_block_data[0]['attrs'],
+		];
 	}
 
 	/**

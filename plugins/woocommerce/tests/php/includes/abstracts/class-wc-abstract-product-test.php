@@ -30,8 +30,8 @@ class WC_Abstract_Product_Test extends WC_Unit_Test_Case {
 	 * Setup items we need repeatedly across tests in this class.
 	 */
 	public function set_up() {
-		$this->admin_user           = self::factory()->user->create( array( 'role' => 'administrator' ) );
-		$this->shop_manager_user    = self::factory()->user->create( array( 'role' => 'shop_manager' ) );
+		$this->admin_user           = self::factory()->user->create( [ 'role' => 'administrator' ] );
+		$this->shop_manager_user    = self::factory()->user->create( [ 'role' => 'shop_manager' ] );
 		$this->download_directories = wc_get_container()->get( Download_Directories::class );
 
 		$this->download_directories->set_mode( Download_Directories::MODE_ENABLED );
@@ -39,16 +39,16 @@ class WC_Abstract_Product_Test extends WC_Unit_Test_Case {
 		$this->download_directories->add_approved_directory( 'https://new.supplier/' );
 
 		$this->product = WC_Helper_Product::create_downloadable_product(
-			array(
-				array(
+			[
+				[
 					'name' => 'Book 1',
 					'file' => 'https://always.trusted/123.pdf',
-				),
-				array(
+				],
+				[
 					'name' => 'Book 2',
 					'file' => 'https://new.supplier/456.pdf',
-				),
-			)
+				],
+			]
 		);
 
 		parent::set_up();
@@ -93,11 +93,11 @@ class WC_Abstract_Product_Test extends WC_Unit_Test_Case {
 	public function test_updating_of_product_downloads_by_admin_user() {
 		wp_set_current_user( $this->admin_user );
 		$downloads   = $this->product->get_downloads();
-		$downloads[] = array(
+		$downloads[] = [
 			'id'   => '',
 			'file' => 'https://not.yet.added/file.pdf',
 			'name' => 'A file',
-		);
+		];
 
 		$this->product->set_downloads( $downloads );
 		$this->product->save();
@@ -114,11 +114,11 @@ class WC_Abstract_Product_Test extends WC_Unit_Test_Case {
 	public function test_addition_of_invalid_product_downloads_by_shop_manager() {
 		wp_set_current_user( $this->shop_manager_user );
 		$downloads        = $this->product->get_downloads();
-		$downloads[]      = array(
+		$downloads[]      = [
 			'id'   => '',
 			'file' => 'https://also.not.yet.added/file.pdf',
 			'name' => 'Another file',
-		);
+		];
 
 		$this->expectException( WC_Data_Exception::class );
 		$this->product->set_downloads( $downloads );
@@ -131,11 +131,11 @@ class WC_Abstract_Product_Test extends WC_Unit_Test_Case {
 	public function test_invalid_update_of_product_downloads_by_shop_manager() {
 		$downloads                       = $this->product->get_downloads();
 		$existing_file_key               = key( $downloads );
-		$downloads[ $existing_file_key ] = array(
+		$downloads[ $existing_file_key ] = [
 			'id'   => $existing_file_key,
 			'file' => 'https://another.bad.location/file.pdf',
 			'name' => 'Yet another file',
-		);
+		];
 
 		$this->expectException( WC_Data_Exception::class );
 		$this->product->set_downloads( $downloads );
@@ -148,11 +148,11 @@ class WC_Abstract_Product_Test extends WC_Unit_Test_Case {
 	public function test_valid_update_of_product_downloads_by_shop_manager() {
 		$downloads                       = $this->product->get_downloads();
 		$existing_file_key               = key( $downloads );
-		$downloads[ $existing_file_key ] = array(
+		$downloads[ $existing_file_key ] = [
 			'id'   => $existing_file_key,
 			'file' => 'https://always.trusted/why-we-test-code.pdf',
 			'name' => 'And one more file',
-		);
+		];
 
 		$this->product->set_downloads( $downloads );
 		$this->product->save();

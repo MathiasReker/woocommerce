@@ -21,7 +21,7 @@ class WC_CLI_Update_Command {
 	 * Registers the update command.
 	 */
 	public static function register_commands() {
-		WC()->call_static( WP_CLI::class, 'add_command', 'wc update', array( 'WC_CLI_Update_Command', 'update' ) );
+		WC()->call_static( WP_CLI::class, 'add_command', 'wc update', [ 'WC_CLI_Update_Command', 'update' ] );
 	}
 
 	/**
@@ -38,7 +38,7 @@ class WC_CLI_Update_Command {
 		$current_db_version = get_option( 'woocommerce_db_version' );
 		$update_count       = 0;
 		$callbacks          = WC_Install::get_db_update_callbacks();
-		$callbacks_to_run   = array();
+		$callbacks_to_run   = [];
 
 		foreach ( $callbacks as $version => $update_callbacks ) {
 			if ( version_compare( $current_db_version, $version, '<' ) ) {

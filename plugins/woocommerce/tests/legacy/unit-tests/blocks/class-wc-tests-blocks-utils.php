@@ -15,11 +15,11 @@ class WC_Test_Blocks_Utils extends WC_Unit_Test_Case {
 	 *
 	 */
 	public function test_has_block_in_page_on_page_with_single_block() {
-		$page = array(
+		$page = [
 			'name'    => 'blocks-page',
 			'title'   => 'Checkout',
 			'content' => '<!-- wp:woocommerce/checkout {"showOrderNotes":false} --> <div class="wp-block-woocommerce-checkout is-loading"></div> <!-- /wp:woocommerce/checkout -->',
-		);
+		];
 
 		$page_id = wc_create_page( $page['name'], '', $page['title'], $page['content'] );
 
@@ -33,11 +33,11 @@ class WC_Test_Blocks_Utils extends WC_Unit_Test_Case {
 	 *
 	 */
 	public function test_has_block_in_page_on_page_with_no_blocks() {
-		$page = array(
+		$page = [
 			'name'    => 'shortcode-page',
 			'title'   => 'Checkout',
 			'content' => '<!-- wp:shortcode --> [woocommerce_checkout] <!-- /wp:shortcode -->',
-		);
+		];
 
 		$page_id = wc_create_page( $page['name'], '', $page['title'], $page['content'] );
 
@@ -51,7 +51,7 @@ class WC_Test_Blocks_Utils extends WC_Unit_Test_Case {
 	 *
 	 */
 	public function test_has_block_in_page_on_page_with_multiple_blocks() {
-		$page = array(
+		$page = [
 			'name'    => 'shortcode-page',
 			'title'   => 'Checkout',
 			'content' => '<!-- wp:woocommerce/featured-product {"editMode":false,"productId":17} -->
@@ -63,7 +63,7 @@ class WC_Test_Blocks_Utils extends WC_Unit_Test_Case {
 				<!-- wp:heading -->
 				<h2>test</h2>
 				<!-- /wp:heading -->',
-		);
+		];
 
 		$page_id = wc_create_page( $page['name'], '', $page['title'], $page['content'] );
 
@@ -77,34 +77,34 @@ class WC_Test_Blocks_Utils extends WC_Unit_Test_Case {
 	 *
 	 */
 	public function test_get_all_blocks_from_page() {
-		$page = array(
+		$page = [
 			'name'    => 'cart',
 			'title'   => 'Checkout',
 			'content' => '<!-- wp:heading --><h2>test1</h2><!-- /wp:heading --><!-- wp:heading --><h1>test2</h1><!-- /wp:heading -->',
-		);
+		];
 
 		wc_create_page( $page['name'], 'woocommerce_cart_page_id', $page['title'], $page['content'] );
 
-		$expected = array(
-			0 => array(
+		$expected = [
+			0 => [
 				'blockName' => 'core/heading',
-				'attrs' => array(),
-				'innerBlocks' => array(),
+				'attrs' => [],
+				'innerBlocks' => [],
 				'innerHTML' => '<h2>test1</h2>',
-				'innerContent' => array(
+				'innerContent' => [
 					0 => '<h2>test1</h2>',
-				),
-			),
-			1 => array(
+				],
+			],
+			1 => [
 				'blockName' => 'core/heading',
-				'attrs' => array(),
-				'innerBlocks' => array(),
+				'attrs' => [],
+				'innerBlocks' => [],
 				'innerHTML' => '<h1>test2</h1>',
-				'innerContent' => array(
+				'innerContent' => [
 					0 => '<h1>test2</h1>',
-				),
-			),
-		);
+				],
+			],
+		];
 
 		$blocks = WC_Blocks_Utils::get_blocks_from_page( 'core/heading', 'cart' );
 

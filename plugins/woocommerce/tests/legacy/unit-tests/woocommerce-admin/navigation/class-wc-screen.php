@@ -112,9 +112,9 @@ class WC_Admin_Tests_Navigation_Screen extends WC_Unit_Test_Case {
 		global $pagenow, $current_screen;
 
 		$this->assertFalse( $this->instance->is_woocommerce_page() );
-		$current_screen = (object) array( 'id' => 'admin_page_my-screen' );
+		$current_screen = (object) [ 'id' => 'admin_page_my-screen' ];
 		$this->assertTrue( $this->instance->is_woocommerce_page() );
-		$current_screen = (object) array( 'id' => 'admin_page_different-screen' );
+		$current_screen = (object) [ 'id' => 'admin_page_different-screen' ];
 		$this->assertFalse( $this->instance->is_woocommerce_page() );
 
 		$this->reset_globals();
@@ -173,17 +173,17 @@ class WC_Admin_Tests_Navigation_Screen extends WC_Unit_Test_Case {
 		$this->assertFalse( $this->instance->is_woocommerce_page() );
 
 		$my_post_id = wp_insert_post(
-			array(
+			[
 				'post_title' => 'Test post type',
 				'post_type'  => 'my-post-type',
-			)
+			]
 		);
 
 		$different_post_id = wp_insert_post(
-			array(
+			[
 				'post_title' => 'Different post type',
 				'post_type'  => 'post',
-			)
+			]
 		);
 
 		$_GET['post'] = $my_post_id;

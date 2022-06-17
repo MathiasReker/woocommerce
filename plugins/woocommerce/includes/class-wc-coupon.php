@@ -25,7 +25,7 @@ class WC_Coupon extends WC_Legacy_Coupon {
 	 * @since 3.0.0
 	 * @var array
 	 */
-	protected $data = array(
+	protected $data = [
 		'code'                        => '',
 		'amount'                      => 0,
 		'status'                      => null,
@@ -36,21 +36,21 @@ class WC_Coupon extends WC_Legacy_Coupon {
 		'description'                 => '',
 		'usage_count'                 => 0,
 		'individual_use'              => false,
-		'product_ids'                 => array(),
-		'excluded_product_ids'        => array(),
+		'product_ids'                 => [],
+		'excluded_product_ids'        => [],
 		'usage_limit'                 => 0,
 		'usage_limit_per_user'        => 0,
 		'limit_usage_to_x_items'      => null,
 		'free_shipping'               => false,
-		'product_categories'          => array(),
-		'excluded_product_categories' => array(),
+		'product_categories'          => [],
+		'excluded_product_categories' => [],
 		'exclude_sale_items'          => false,
 		'minimum_amount'              => '',
 		'maximum_amount'              => '',
-		'email_restrictions'          => array(),
-		'used_by'                     => array(),
+		'email_restrictions'          => [],
+		'used_by'                     => [],
 		'virtual'                     => false,
-	);
+	];
 
 	// Coupon message codes.
 	const E_WC_COUPON_INVALID_FILTERED               = 100;
@@ -438,7 +438,7 @@ class WC_Coupon extends WC_Legacy_Coupon {
 		$discount      = 0;
 		$cart_item_qty = is_null( $cart_item ) ? 1 : $cart_item['quantity'];
 
-		if ( $this->is_type( array( 'percent' ) ) ) {
+		if ( $this->is_type( [ 'percent' ] ) ) {
 			$discount = (float) $this->get_amount() * ( $discounting_amount / 100 );
 		} elseif ( $this->is_type( 'fixed_cart' ) && ! is_null( $cart_item ) && WC()->cart->subtotal_ex_tax ) {
 			/**
@@ -719,7 +719,7 @@ class WC_Coupon extends WC_Legacy_Coupon {
 	 * @since 3.0.0
 	 * @param array $emails List of emails.
 	 */
-	public function set_email_restrictions( $emails = array() ) {
+	public function set_email_restrictions( $emails = [] ) {
 		$emails = array_filter( array_map( 'sanitize_email', array_map( 'strtolower', (array) $emails ) ) );
 		foreach ( $emails as $email ) {
 			if ( ! is_email( $email ) ) {
@@ -888,14 +888,14 @@ class WC_Coupon extends WC_Legacy_Coupon {
 	 * @param array      $values  Values.
 	 * @return bool
 	 */
-	public function is_valid_for_product( $product, $values = array() ) {
+	public function is_valid_for_product( $product, $values = [] ) {
 		if ( ! $this->is_type( wc_get_product_coupon_types() ) ) {
 			return apply_filters( 'woocommerce_coupon_is_valid_for_product', false, $product, $this, $values );
 		}
 
 		$valid        = false;
 		$product_cats = wc_get_product_cat_ids( $product->is_type( 'variation' ) ? $product->get_parent_id() : $product->get_id() );
-		$product_ids  = array( $product->get_id(), $product->get_parent_id() );
+		$product_ids  = [ $product->get_id(), $product->get_parent_id() ];
 
 		// Specific products get the discount.
 		if ( count( $this->get_product_ids() ) && count( array_intersect( $product_ids, $this->get_product_ids() ) ) ) {
@@ -1031,7 +1031,7 @@ class WC_Coupon extends WC_Legacy_Coupon {
 				break;
 			case self::E_WC_COUPON_EXCLUDED_PRODUCTS:
 				// Store excluded products that are in cart in $products.
-				$products = array();
+				$products = [];
 				if ( ! WC()->cart->is_empty() ) {
 					foreach ( WC()->cart->get_cart() as $cart_item_key => $cart_item ) {
 						if ( in_array( intval( $cart_item['product_id'] ), $this->get_excluded_product_ids(), true ) || in_array( intval( $cart_item['variation_id'] ), $this->get_excluded_product_ids(), true ) || in_array( intval( $cart_item['data']->get_parent_id() ), $this->get_excluded_product_ids(), true ) ) {
@@ -1045,7 +1045,7 @@ class WC_Coupon extends WC_Legacy_Coupon {
 				break;
 			case self::E_WC_COUPON_EXCLUDED_CATEGORIES:
 				// Store excluded categories that are in cart in $categories.
-				$categories = array();
+				$categories = [];
 				if ( ! WC()->cart->is_empty() ) {
 					foreach ( WC()->cart->get_cart() as $cart_item_key => $cart_item ) {
 						$product_cats = wc_get_product_cat_ids( $cart_item['product_id'] );

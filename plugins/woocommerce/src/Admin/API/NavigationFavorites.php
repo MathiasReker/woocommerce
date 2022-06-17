@@ -38,13 +38,13 @@ class NavigationFavorites extends \WC_REST_Data_Controller {
 	 *
 	 * @var array
 	 */
-	protected $error_to_status_map = array(
+	protected $error_to_status_map = [
 		'woocommerce_favorites_invalid_request' => 400,
 		'woocommerce_favorites_already_exists'  => 409,
 		'woocommerce_favorites_does_not_exist'  => 404,
 		'woocommerce_favorites_invalid_user'    => 400,
 		'woocommerce_favorites_unauthenticated' => 401,
-	);
+	];
 
 	/**
 	 * Register the routes
@@ -53,34 +53,34 @@ class NavigationFavorites extends \WC_REST_Data_Controller {
 		register_rest_route(
 			$this->namespace,
 			'/' . $this->rest_base . '/me',
-			array(
-				array(
+			[
+				[
 					'methods'             => \WP_REST_Server::READABLE,
-					'callback'            => array( $this, 'get_items' ),
-					'permission_callback' => array( $this, 'current_user_permissions_check' ),
-				),
-				array(
+					'callback'            => [ $this, 'get_items' ],
+					'permission_callback' => [ $this, 'current_user_permissions_check' ],
+				],
+				[
 					'methods'             => \WP_REST_Server::CREATABLE,
-					'callback'            => array( $this, 'add_item' ),
-					'permission_callback' => array( $this, 'current_user_permissions_check' ),
-					'args'                => array(
-						'item_id' => array(
+					'callback'            => [ $this, 'add_item' ],
+					'permission_callback' => [ $this, 'current_user_permissions_check' ],
+					'args'                => [
+						'item_id' => [
 							'required' => true,
-						),
-					),
-				),
-				array(
+						],
+					],
+				],
+				[
 					'methods'             => \WP_REST_Server::DELETABLE,
-					'callback'            => array( $this, 'delete_item' ),
-					'permission_callback' => array( $this, 'current_user_permissions_check' ),
-					'args'                => array(
-						'item_id' => array(
+					'callback'            => [ $this, 'delete_item' ],
+					'permission_callback' => [ $this, 'current_user_permissions_check' ],
+					'args'                => [
+						'item_id' => [
 							'required' => true,
-						),
-					),
-				),
-				'schema' => array( $this, 'get_public_item_schema' ),
-			)
+						],
+					],
+				],
+				'schema' => [ $this, 'get_public_item_schema' ],
+			]
 		);
 
 	}
@@ -193,9 +193,9 @@ class NavigationFavorites extends \WC_REST_Data_Controller {
 		}
 
 		$error->add_data(
-			array(
+			[
 				'status' => $this->error_to_status_map[ $error->get_error_code() ] ?? 500,
-			)
+			]
 		);
 
 		return $error;

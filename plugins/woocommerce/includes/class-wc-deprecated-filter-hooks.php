@@ -20,7 +20,7 @@ class WC_Deprecated_Filter_Hooks extends WC_Deprecated_Hooks {
 	 *
 	 * @var array
 	 */
-	protected $deprecated_hooks = array(
+	protected $deprecated_hooks = [
 		'woocommerce_structured_data_order'               => 'woocommerce_email_order_schema_markup',
 		'woocommerce_add_to_cart_fragments'               => 'add_to_cart_fragments',
 		'woocommerce_add_to_cart_redirect'                => 'add_to_cart_redirect',
@@ -59,14 +59,14 @@ class WC_Deprecated_Filter_Hooks extends WC_Deprecated_Hooks {
 		'woocommerce_settings_tabs_advanced'              => 'woocommerce_settings_tabs_api',
 		'woocommerce_settings_advanced'                   => 'woocommerce_settings_api',
 		'woocommerce_csv_importer_check_import_file_path' => 'woocommerce_product_csv_importer_check_import_file_path',
-	);
+	];
 
 	/**
 	 * Array of versions on each hook has been deprecated.
 	 *
 	 * @var array
 	 */
-	protected $deprecated_version = array(
+	protected $deprecated_version = [
 		'woocommerce_email_order_schema_markup'      => '3.0.0',
 		'add_to_cart_fragments'                      => '3.0.0',
 		'add_to_cart_redirect'                       => '3.0.0',
@@ -105,7 +105,7 @@ class WC_Deprecated_Filter_Hooks extends WC_Deprecated_Hooks {
 		'woocommerce_settings_tabs_api'              => '3.4.0',
 		'woocommerce_settings_api'                   => '3.4.0',
 		'woocommerce_product_csv_importer_check_import_file_path' => '6.5.0',
-	);
+	];
 
 	/**
 	 * Hook into the new hook so we can handle deprecated hooks once fired.
@@ -113,7 +113,7 @@ class WC_Deprecated_Filter_Hooks extends WC_Deprecated_Hooks {
 	 * @param string $hook_name Hook name.
 	 */
 	public function hook_in( $hook_name ) {
-		add_filter( $hook_name, array( $this, 'maybe_handle_deprecated_hook' ), -1000, 8 );
+		add_filter( $hook_name, [ $this, 'maybe_handle_deprecated_hook' ], -1000, 8 );
 	}
 
 	/**

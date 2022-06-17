@@ -36,7 +36,7 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 	 *
 	 * @var array
 	 */
-	protected $column_types = array(
+	protected $column_types = [
 		'id'          => 'intval',
 		'date'        => 'strval',
 		'date_gmt'    => 'strval',
@@ -46,7 +46,7 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 		'order_id'    => 'intval',
 		'user_id'     => 'intval',
 		'ip_address'  => 'strval',
-	);
+	];
 
 	/**
 	 * Data store context used to pass to filters.
@@ -59,7 +59,7 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 	 * Assign report columns once full table name has been assigned.
 	 */
 	protected function assign_report_columns() {
-		$this->report_columns = array(
+		$this->report_columns = [
 			'id'          => 'download_log_id as id',
 			'date'        => 'timestamp as date_gmt',
 			'download_id' => 'product_permissions.download_id',
@@ -67,7 +67,7 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 			'order_id'    => 'product_permissions.order_id',
 			'user_id'     => 'product_permissions.user_id',
 			'ip_address'  => 'user_ip_address as ip_address',
-		);
+		];
 	}
 
 	/**
@@ -81,7 +81,7 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 		$lookup_table     = self::get_db_table_name();
 		$permission_table = $wpdb->prefix . 'woocommerce_downloadable_product_permissions';
 		$operator         = $this->get_match_operator( $query_args );
-		$where_filters    = array();
+		$where_filters    = [];
 		$join             = "JOIN {$permission_table} as product_permissions ON {$lookup_table}.permission_id = product_permissions.permission_id";
 
 		$where_time = $this->add_time_period_sql_params( $query_args, $lookup_table );
@@ -305,7 +305,7 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 		$table_name = self::get_db_table_name();
 
 		// These defaults are only partially applied when used via REST API, as that has its own defaults.
-		$defaults   = array(
+		$defaults   = [
 			'per_page' => get_option( 'posts_per_page' ),
 			'page'     => 1,
 			'order'    => 'DESC',
@@ -313,7 +313,7 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 			'before'   => TimeInterval::default_before(),
 			'after'    => TimeInterval::default_after(),
 			'fields'   => '*',
-		);
+		];
 		$query_args = wp_parse_args( $query_args, $defaults );
 		$this->normalize_timezones( $query_args, $defaults );
 
@@ -327,12 +327,12 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 		if ( false === $data ) {
 			$this->initialize_queries();
 
-			$data = (object) array(
-				'data'    => array(),
+			$data = (object) [
+				'data'    => [],
 				'total'   => 0,
 				'pages'   => 0,
 				'page_no' => 0,
-			);
+			];
 
 			$selections = $this->selected_columns( $query_args );
 			$this->add_sql_query_params( $query_args );
@@ -365,13 +365,13 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 				return $data;
 			}
 
-			$download_data = array_map( array( $this, 'cast_numbers' ), $download_data );
-			$data          = (object) array(
+			$download_data = array_map( [ $this, 'cast_numbers' ], $download_data );
+			$data          = (object) [
 				'data'    => $download_data,
 				'total'   => $db_records_count,
 				'pages'   => $total_pages,
 				'page_no' => (int) $query_args['page'],
-			);
+			];
 
 			$this->set_cached_data( $cache_key, $data );
 		}

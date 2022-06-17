@@ -22,14 +22,14 @@ class WC_Report_Customers extends WC_Admin_Report {
 	 *
 	 * @var array
 	 */
-	public $chart_colours = array();
+	public $chart_colours = [];
 
 	/**
 	 * Customers.
 	 *
 	 * @var array
 	 */
-	public $customers = array();
+	public $customers = [];
 
 	/**
 	 * Get the legend for the main chart sidebar.
@@ -37,14 +37,14 @@ class WC_Report_Customers extends WC_Admin_Report {
 	 * @return array
 	 */
 	public function get_chart_legend() {
-		$legend = array();
+		$legend = [];
 
-		$legend[] = array(
+		$legend[] = [
 			/* translators: %s: signups amount */
 			'title'            => sprintf( __( '%s signups in this period', 'woocommerce' ), '<strong>' . count( $this->customers ) . '</strong>' ),
 			'color'            => $this->chart_colours['signups'],
 			'highlight_series' => 2,
-		);
+		];
 
 		return $legend;
 	}
@@ -55,12 +55,12 @@ class WC_Report_Customers extends WC_Admin_Report {
 	 * @return array
 	 */
 	public function get_chart_widgets() {
-		$widgets = array();
+		$widgets = [];
 
-		$widgets[] = array(
+		$widgets[] = [
 			'title'    => '',
-			'callback' => array( $this, 'customers_vs_guests' ),
-		);
+			'callback' => [ $this, 'customers_vs_guests' ],
+		];
 
 		return $widgets;
 	}
@@ -71,43 +71,43 @@ class WC_Report_Customers extends WC_Admin_Report {
 	public function customers_vs_guests() {
 
 		$customer_order_totals = $this->get_order_report_data(
-			array(
-				'data'         => array(
-					'ID' => array(
+			[
+				'data'         => [
+					'ID' => [
 						'type'     => 'post_data',
 						'function' => 'COUNT',
 						'name'     => 'total_orders',
-					),
-				),
-				'where_meta'   => array(
-					array(
+					],
+				],
+				'where_meta'   => [
+					[
 						'meta_key'   => '_customer_user',
 						'meta_value' => '0',
 						'operator'   => '>',
-					),
-				),
+					],
+				],
 				'filter_range' => true,
-			)
+			]
 		);
 
 		$guest_order_totals = $this->get_order_report_data(
-			array(
-				'data'         => array(
-					'ID' => array(
+			[
+				'data'         => [
+					'ID' => [
 						'type'     => 'post_data',
 						'function' => 'COUNT',
 						'name'     => 'total_orders',
-					),
-				),
-				'where_meta'   => array(
-					array(
+					],
+				],
+				'where_meta'   => [
+					[
 						'meta_key'   => '_customer_user',
 						'meta_value' => '0',
 						'operator'   => '=',
-					),
-				),
+					],
+				],
 				'filter_range' => true,
-			)
+			]
 		);
 		?>
 		<div class="chart-container">
@@ -166,22 +166,22 @@ class WC_Report_Customers extends WC_Admin_Report {
 	 */
 	public function output_report() {
 
-		$ranges = array(
+		$ranges = [
 			'year'       => __( 'Year', 'woocommerce' ),
 			'last_month' => __( 'Last month', 'woocommerce' ),
 			'month'      => __( 'This month', 'woocommerce' ),
 			'7day'       => __( 'Last 7 days', 'woocommerce' ),
-		);
+		];
 
-		$this->chart_colours = array(
+		$this->chart_colours = [
 			'signups'   => '#3498db',
 			'customers' => '#1abc9c',
 			'guests'    => '#8fdece',
-		);
+		];
 
 		$current_range = ! empty( $_GET['range'] ) ? sanitize_text_field( wp_unslash( $_GET['range'] ) ) : '7day';
 
-		if ( ! in_array( $current_range, array( 'custom', 'year', 'last_month', 'month', '7day' ), true ) ) {
+		if ( ! in_array( $current_range, [ 'custom', 'year', 'last_month', 'month', '7day' ], true ) ) {
 			$current_range = '7day';
 		}
 
@@ -189,26 +189,26 @@ class WC_Report_Customers extends WC_Admin_Report {
 		$this->calculate_current_range( $current_range );
 
 		$admin_users = new WP_User_Query(
-			array(
+			[
 				'role'   => 'administrator',
 				'fields' => 'ID',
-			)
+			]
 		);
 
 		$manager_users = new WP_User_Query(
-			array(
+			[
 				'role'   => 'shop_manager',
 				'fields' => 'ID',
-			)
+			]
 		);
 
 		$users_query = new WP_User_Query(
 			apply_filters(
 				'woocommerce_admin_report_customers_user_query_args',
-				array(
-					'fields'  => array( 'user_registered' ),
+				[
+					'fields'  => [ 'user_registered' ],
 					'exclude' => array_merge( $admin_users->get_results(), $manager_users->get_results() ),
-				)
+				]
 			)
 		);
 
@@ -250,59 +250,59 @@ class WC_Report_Customers extends WC_Admin_Report {
 		global $wp_locale;
 
 		$customer_orders = $this->get_order_report_data(
-			array(
-				'data'         => array(
-					'ID'        => array(
+			[
+				'data'         => [
+					'ID'        => [
 						'type'     => 'post_data',
 						'function' => 'COUNT',
 						'name'     => 'total_orders',
-					),
-					'post_date' => array(
+					],
+					'post_date' => [
 						'type'     => 'post_data',
 						'function' => '',
 						'name'     => 'post_date',
-					),
-				),
-				'where_meta'   => array(
-					array(
+					],
+				],
+				'where_meta'   => [
+					[
 						'meta_key'   => '_customer_user',
 						'meta_value' => '0',
 						'operator'   => '>',
-					),
-				),
+					],
+				],
 				'group_by'     => $this->group_by_query,
 				'order_by'     => 'post_date ASC',
 				'query_type'   => 'get_results',
 				'filter_range' => true,
-			)
+			]
 		);
 
 		$guest_orders = $this->get_order_report_data(
-			array(
-				'data'         => array(
-					'ID'        => array(
+			[
+				'data'         => [
+					'ID'        => [
 						'type'     => 'post_data',
 						'function' => 'COUNT',
 						'name'     => 'total_orders',
-					),
-					'post_date' => array(
+					],
+					'post_date' => [
 						'type'     => 'post_data',
 						'function' => '',
 						'name'     => 'post_date',
-					),
-				),
-				'where_meta'   => array(
-					array(
+					],
+				],
+				'where_meta'   => [
+					[
 						'meta_key'   => '_customer_user',
 						'meta_value' => '0',
 						'operator'   => '=',
-					),
-				),
+					],
+				],
 				'group_by'     => $this->group_by_query,
 				'order_by'     => 'post_date ASC',
 				'query_type'   => 'get_results',
 				'filter_range' => true,
-			)
+			]
 		);
 
 		$signups         = $this->prepare_chart_data( $this->customers, 'user_registered', '', $this->chart_interval, $this->start_date, $this->chart_groupby );
@@ -310,11 +310,11 @@ class WC_Report_Customers extends WC_Admin_Report {
 		$guest_orders    = $this->prepare_chart_data( $guest_orders, 'post_date', 'total_orders', $this->chart_interval, $this->start_date, $this->chart_groupby );
 
 		$chart_data = wp_json_encode(
-			array(
+			[
 				'signups'         => array_values( $signups ),
 				'customer_orders' => array_values( $customer_orders ),
 				'guest_orders'    => array_values( $guest_orders ),
-			)
+			]
 		);
 		?>
 		<div class="chart-container">

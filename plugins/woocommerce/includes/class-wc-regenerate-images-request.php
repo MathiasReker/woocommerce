@@ -107,9 +107,9 @@ class WC_Regenerate_Images_Request extends WC_Background_Process {
 				__( 'Regenerating images for attachment ID: %s', 'woocommerce' ),
 				$this->attachment_id
 			),
-			array(
+			[
 				'source' => 'wc-image-regeneration',
-			)
+			]
 		);
 
 		$fullsizepath = get_attached_file( $this->attachment_id );
@@ -122,17 +122,17 @@ class WC_Regenerate_Images_Request extends WC_Background_Process {
 		$old_metadata = wp_get_attachment_metadata( $this->attachment_id );
 
 		// We only want to regen WC images.
-		add_filter( 'intermediate_image_sizes', array( $this, 'adjust_intermediate_image_sizes' ) );
+		add_filter( 'intermediate_image_sizes', [ $this, 'adjust_intermediate_image_sizes' ] );
 
 		// We only want to resize images if they do not already exist.
-		add_filter( 'intermediate_image_sizes_advanced', array( $this, 'filter_image_sizes_to_only_missing_thumbnails' ), 10, 3 );
+		add_filter( 'intermediate_image_sizes_advanced', [ $this, 'filter_image_sizes_to_only_missing_thumbnails' ], 10, 3 );
 
 		// This function will generate the new image sizes.
 		$new_metadata = wp_generate_attachment_metadata( $this->attachment_id, $fullsizepath );
 
 		// Remove custom filters.
-		remove_filter( 'intermediate_image_sizes', array( $this, 'adjust_intermediate_image_sizes' ) );
-		remove_filter( 'intermediate_image_sizes_advanced', array( $this, 'filter_image_sizes_to_only_missing_thumbnails' ), 10, 3 );
+		remove_filter( 'intermediate_image_sizes', [ $this, 'adjust_intermediate_image_sizes' ] );
+		remove_filter( 'intermediate_image_sizes_advanced', [ $this, 'filter_image_sizes_to_only_missing_thumbnails' ], 10, 3 );
 
 		// If something went wrong lets just remove the item from the queue.
 		if ( is_wp_error( $new_metadata ) || empty( $new_metadata ) ) {
@@ -242,7 +242,7 @@ class WC_Regenerate_Images_Request extends WC_Background_Process {
 	 */
 	public function adjust_intermediate_image_sizes( $sizes ) {
 		// Prevent a filter loop.
-		$unfiltered_sizes = array( 'woocommerce_thumbnail', 'woocommerce_gallery_thumbnail', 'woocommerce_single' );
+		$unfiltered_sizes = [ 'woocommerce_thumbnail', 'woocommerce_gallery_thumbnail', 'woocommerce_single' ];
 		static $in_filter = false;
 		if ( $in_filter ) {
 			return $unfiltered_sizes;
@@ -263,9 +263,9 @@ class WC_Regenerate_Images_Request extends WC_Background_Process {
 		$log = wc_get_logger();
 		$log->info(
 			__( 'Completed product image regeneration job.', 'woocommerce' ),
-			array(
+			[
 				'source' => 'wc-image-regeneration',
-			)
+			]
 		);
 	}
 }

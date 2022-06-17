@@ -37,7 +37,7 @@ class AdminNotesHelper {
 		$note_1 = new Note();
 		$note_1->set_title( 'PHPUNIT_TEST_NOTE_1_TITLE' );
 		$note_1->set_content( 'PHPUNIT_TEST_NOTE_1_CONTENT' );
-		$note_1->set_content_data( (object) array( 'amount' => 1.23 ) );
+		$note_1->set_content_data( (object) [ 'amount' => 1.23 ] );
 		$note_1->set_type( Note::E_WC_ADMIN_NOTE_INFORMATIONAL );
 		$note_1->set_icon( 'info' );
 		$note_1->set_name( 'PHPUNIT_TEST_NOTE_NAME' );
@@ -57,7 +57,7 @@ class AdminNotesHelper {
 		$note_2 = new Note();
 		$note_2->set_title( 'PHPUNIT_TEST_NOTE_2_TITLE' );
 		$note_2->set_content( 'PHPUNIT_TEST_NOTE_2_CONTENT' );
-		$note_2->set_content_data( (object) array( 'amount' => 4.56 ) );
+		$note_2->set_content_data( (object) [ 'amount' => 4.56 ] );
 		$note_2->set_type( Note::E_WC_ADMIN_NOTE_WARNING );
 		$note_2->set_icon( 'info' );
 		$note_2->set_name( 'PHPUNIT_TEST_NOTE_NAME' );
@@ -69,7 +69,7 @@ class AdminNotesHelper {
 		$note_3 = new Note();
 		$note_3->set_title( 'PHPUNIT_TEST_NOTE_3_TITLE' );
 		$note_3->set_content( 'PHPUNIT_TEST_NOTE_3_CONTENT' );
-		$note_3->set_content_data( (object) array( 'amount' => 7.89 ) );
+		$note_3->set_content_data( (object) [ 'amount' => 7.89 ] );
 		$note_3->set_type( Note::E_WC_ADMIN_NOTE_INFORMATIONAL );
 		$note_3->set_icon( 'info' );
 		$note_3->set_name( 'PHPUNIT_TEST_NOTE_NAME' );

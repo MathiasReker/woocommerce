@@ -59,7 +59,7 @@ class WC_Product_Variation_Data_Store_CPT extends WC_Product_Data_Store_CPT impl
 		}
 
 		$product->set_props(
-			array(
+			[
 				'name'              => $post_object->post_title,
 				'slug'              => $post_object->post_name,
 				'date_created'      => $this->string_to_timestamp( $post_object->post_date_gmt ),
@@ -69,7 +69,7 @@ class WC_Product_Variation_Data_Store_CPT extends WC_Product_Data_Store_CPT impl
 				'reviews_allowed'   => 'open' === $post_object->comment_status,
 				'parent_id'         => $post_object->post_parent,
 				'attribute_summary' => $post_object->post_excerpt,
-			)
+			]
 		);
 
 		// The post parent is not a valid variable product so we should prevent this.
@@ -82,7 +82,7 @@ class WC_Product_Variation_Data_Store_CPT extends WC_Product_Data_Store_CPT impl
 		$this->read_extra_data( $product );
 		$product->set_attributes( wc_get_product_variation_attributes( $product->get_id() ) );
 
-		$updates = array();
+		$updates = [];
 		/**
 		 * If a variation title is not in sync with the parent e.g. saved prior to 3.0, or if the parent title has changed, detect here and update.
 		 */
@@ -90,7 +90,7 @@ class WC_Product_Variation_Data_Store_CPT extends WC_Product_Data_Store_CPT impl
 
 		if ( $post_object->post_title !== $new_title ) {
 			$product->set_name( $new_title );
-			$updates = array_merge( $updates, array( 'post_title' => $new_title ) );
+			$updates = array_merge( $updates, [ 'post_title' => $new_title ] );
 		}
 
 		/**
@@ -102,11 +102,11 @@ class WC_Product_Variation_Data_Store_CPT extends WC_Product_Data_Store_CPT impl
 
 		if ( $new_attribute_summary !== $post_object->post_excerpt ) {
 			$product->set_attribute_summary( $new_attribute_summary );
-			$updates = array_merge( $updates, array( 'post_excerpt' => $new_attribute_summary ) );
+			$updates = array_merge( $updates, [ 'post_excerpt' => $new_attribute_summary ] );
 		}
 
 		if ( ! empty( $updates ) ) {
-			$GLOBALS['wpdb']->update( $GLOBALS['wpdb']->posts, $updates, array( 'ID' => $product->get_id() ) );
+			$GLOBALS['wpdb']->update( $GLOBALS['wpdb']->posts, $updates, [ 'ID' => $product->get_id() ] );
 			clean_post_cache( $product->get_id() );
 		}
 
@@ -142,7 +142,7 @@ class WC_Product_Variation_Data_Store_CPT extends WC_Product_Data_Store_CPT impl
 		$id = wp_insert_post(
 			apply_filters(
 				'woocommerce_new_product_variation_data',
-				array(
+				[
 					'post_type'      => 'product_variation',
 					'post_status'    => $product->get_status() ? $product->get_status() : 'publish',
 					'post_author'    => get_current_user_id(),
@@ -156,7 +156,7 @@ class WC_Product_Variation_Data_Store_CPT extends WC_Product_Data_Store_CPT impl
 					'post_date'      => gmdate( 'Y-m-d H:i:s', $product->get_date_created( 'edit' )->getOffsetTimestamp() ),
 					'post_date_gmt'  => gmdate( 'Y-m-d H:i:s', $product->get_date_created( 'edit' )->getTimestamp() ),
 					'post_name'      => $product->get_slug( 'edit' ),
-				)
+				]
 			),
 			true
 		);
@@ -208,13 +208,13 @@ class WC_Product_Variation_Data_Store_CPT extends WC_Product_Data_Store_CPT impl
 
 		$changes = $product->get_changes();
 
-		if ( array_intersect( array( 'attributes' ), array_keys( $changes ) ) ) {
+		if ( array_intersect( [ 'attributes' ], array_keys( $changes ) ) ) {
 			$product->set_attribute_summary( $this->generate_attribute_summary( $product ) );
 		}
 
 		// Only update the post when the post data changes.
-		if ( array_intersect( array( 'name', 'parent_id', 'status', 'menu_order', 'date_created', 'date_modified', 'attributes' ), array_keys( $changes ) ) ) {
-			$post_data = array(
+		if ( array_intersect( [ 'name', 'parent_id', 'status', 'menu_order', 'date_created', 'date_modified', 'attributes' ], array_keys( $changes ) ) ) {
+			$post_data = [
 				'post_title'        => $product->get_name( 'edit' ),
 				'post_excerpt'      => $product->get_attribute_summary( 'edit' ),
 				'post_parent'       => $product->get_parent_id( 'edit' ),
@@ -227,7 +227,7 @@ class WC_Product_Variation_Data_Store_CPT extends WC_Product_Data_Store_CPT impl
 				'post_modified_gmt' => isset( $changes['date_modified'] ) ? gmdate( 'Y-m-d H:i:s', $product->get_date_modified( 'edit' )->getTimestamp() ) : current_time( 'mysql', 1 ),
 				'post_type'         => 'product_variation',
 				'post_name'         => $product->get_slug( 'edit' ),
-			);
+			];
 
 			/**
 			 * When updating this object, to prevent infinite loops, use $wpdb
@@ -238,23 +238,23 @@ class WC_Product_Variation_Data_Store_CPT extends WC_Product_Data_Store_CPT impl
 			 * or an update purely from CRUD.
 			 */
 			if ( doing_action( 'save_post' ) ) {
-				$GLOBALS['wpdb']->update( $GLOBALS['wpdb']->posts, $post_data, array( 'ID' => $product->get_id() ) );
+				$GLOBALS['wpdb']->update( $GLOBALS['wpdb']->posts, $post_data, [ 'ID' => $product->get_id() ] );
 				clean_post_cache( $product->get_id() );
 			} else {
-				wp_update_post( array_merge( array( 'ID' => $product->get_id() ), $post_data ) );
+				wp_update_post( array_merge( [ 'ID' => $product->get_id() ], $post_data ) );
 			}
 			$product->read_meta_data( true ); // Refresh internal meta data, in case things were hooked into `save_post` or another WP hook.
 
 		} else { // Only update post modified time to record this save event.
 			$GLOBALS['wpdb']->update(
 				$GLOBALS['wpdb']->posts,
-				array(
+				[
 					'post_modified'     => current_time( 'mysql' ),
 					'post_modified_gmt' => current_time( 'mysql', 1 ),
-				),
-				array(
+				],
+				[
 					'ID' => $product->get_id(),
-				)
+				]
 			);
 			clean_post_cache( $product->get_id() );
 		}
@@ -349,7 +349,7 @@ class WC_Product_Variation_Data_Store_CPT extends WC_Product_Data_Store_CPT impl
 		$id = $product->get_id();
 
 		$product->set_props(
-			array(
+			[
 				'description'       => get_post_meta( $id, '_variation_description', true ),
 				'regular_price'     => get_post_meta( $id, '_regular_price', true ),
 				'sale_price'        => get_post_meta( $id, '_sale_price', true ),
@@ -373,7 +373,7 @@ class WC_Product_Variation_Data_Store_CPT extends WC_Product_Data_Store_CPT impl
 				'width'             => get_post_meta( $id, '_width', true ),
 				'height'            => get_post_meta( $id, '_height', true ),
 				'tax_class'         => ! metadata_exists( 'post', $id, '_tax_class' ) ? 'parent' : get_post_meta( $id, '_tax_class', true ),
-			)
+			]
 		);
 
 		if ( $product->is_on_sale( 'edit' ) ) {
@@ -384,7 +384,7 @@ class WC_Product_Variation_Data_Store_CPT extends WC_Product_Data_Store_CPT impl
 
 		$parent_object   = get_post( $product->get_parent_id() );
 		$terms           = get_the_terms( $product->get_parent_id(), 'product_visibility' );
-		$term_names      = is_array( $terms ) ? wp_list_pluck( $terms, 'name' ) : array();
+		$term_names      = is_array( $terms ) ? wp_list_pluck( $terms, 'name' ) : [];
 		$exclude_search  = in_array( 'exclude-from-search', $term_names, true );
 		$exclude_catalog = in_array( 'exclude-from-catalog', $term_names, true );
 
@@ -399,7 +399,7 @@ class WC_Product_Variation_Data_Store_CPT extends WC_Product_Data_Store_CPT impl
 		}
 
 		$product->set_parent_data(
-			array(
+			[
 				'title'              => $parent_object ? $parent_object->post_title : '',
 				'status'             => $parent_object ? $parent_object->post_status : '',
 				'sku'                => get_post_meta( $product->get_parent_id(), '_sku', true ),
@@ -415,7 +415,7 @@ class WC_Product_Variation_Data_Store_CPT extends WC_Product_Data_Store_CPT impl
 				'image_id'           => get_post_thumbnail_id( $product->get_parent_id() ),
 				'purchase_note'      => get_post_meta( $product->get_parent_id(), '_purchase_note', true ),
 				'catalog_visibility' => $catalog_visibility,
-			)
+			]
 		);
 
 		// Pull data from the parent when there is no user-facing way to set props.
@@ -435,7 +435,7 @@ class WC_Product_Variation_Data_Store_CPT extends WC_Product_Data_Store_CPT impl
 		$changes = $product->get_changes();
 
 		if ( $force || array_key_exists( 'shipping_class_id', $changes ) ) {
-			wp_set_post_terms( $product->get_id(), array( $product->get_shipping_class_id( 'edit' ) ), 'product_shipping_class', false );
+			wp_set_post_terms( $product->get_id(), [ $product->get_shipping_class_id( 'edit' ) ], 'product_shipping_class', false );
 		}
 	}
 
@@ -450,8 +450,8 @@ class WC_Product_Variation_Data_Store_CPT extends WC_Product_Data_Store_CPT impl
 	protected function update_visibility( &$product, $force = false ) {
 		$changes = $product->get_changes();
 
-		if ( $force || array_intersect( array( 'stock_status' ), array_keys( $changes ) ) ) {
-			$terms = array();
+		if ( $force || array_intersect( [ 'stock_status' ], array_keys( $changes ) ) ) {
+			$terms = [];
 
 			if ( 'outofstock' === $product->get_stock_status() ) {
 				$terms[] = 'outofstock';
@@ -476,7 +476,7 @@ class WC_Product_Variation_Data_Store_CPT extends WC_Product_Data_Store_CPT impl
 
 			$product_id             = $product->get_id();
 			$attributes             = $product->get_attributes();
-			$updated_attribute_keys = array();
+			$updated_attribute_keys = [];
 			foreach ( $attributes as $key => $value ) {
 				update_post_meta( $product_id, 'attribute_' . $key, wp_slash( $value ) );
 				$updated_attribute_keys[] = 'attribute_' . $key;
@@ -506,9 +506,9 @@ class WC_Product_Variation_Data_Store_CPT extends WC_Product_Data_Store_CPT impl
 	 * @param bool       $force Force update. Used during create.
 	 */
 	public function update_post_meta( &$product, $force = false ) {
-		$meta_key_to_props = array(
+		$meta_key_to_props = [
 			'_variation_description' => 'description',
-		);
+		];
 
 		$props_to_update = $force ? $meta_key_to_props : $this->get_props_to_update( $product, $meta_key_to_props );
 
@@ -535,13 +535,13 @@ class WC_Product_Variation_Data_Store_CPT extends WC_Product_Data_Store_CPT impl
 
 		$guid = home_url(
 			add_query_arg(
-				array(
+				[
 					'post_type' => 'product_variation',
 					'p'         => $product->get_id(),
-				),
+				],
 				''
 			)
 		);
-		$wpdb->update( $wpdb->posts, array( 'guid' => $guid ), array( 'ID' => $product->get_id() ) );
+		$wpdb->update( $wpdb->posts, [ 'guid' => $guid ], [ 'ID' => $product->get_id() ] );
 	}
 }

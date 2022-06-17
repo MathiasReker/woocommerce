@@ -17,7 +17,7 @@ class WC_Tests_MaxMind_Database extends WC_Unit_Test_Case {
 		parent::setUp();
 
 		// Callback used by WP_HTTP_TestCase to decide whether to perform HTTP requests or to provide a mocked response.
-		$this->http_responder = array( $this, 'mock_http_responses' );
+		$this->http_responder = [ $this, 'mock_http_responses' ];
 	}
 
 	/**
@@ -31,15 +31,15 @@ class WC_Tests_MaxMind_Database extends WC_Unit_Test_Case {
 		$path = $database_service->get_database_path();
 		$this->assertEquals( WP_CONTENT_DIR . '/uploads/woocommerce_uploads/' . WC_Integration_MaxMind_Database_Service::DATABASE . WC_Integration_MaxMind_Database_Service::DATABASE_EXTENSION, $path );
 
-		add_filter( 'woocommerce_geolocation_local_database_path', array( $this, 'filter_database_path_deprecated' ), 1, 2 );
+		add_filter( 'woocommerce_geolocation_local_database_path', [ $this, 'filter_database_path_deprecated' ], 1, 2 );
 		$path = $database_service->get_database_path();
-		remove_filter( 'woocommerce_geolocation_local_database_path', array( $this, 'filter_database_path_deprecated' ), 1 );
+		remove_filter( 'woocommerce_geolocation_local_database_path', [ $this, 'filter_database_path_deprecated' ], 1 );
 
 		$this->assertEquals( '/deprecated_filter', $path );
 
-		add_filter( 'woocommerce_geolocation_local_database_path', array( $this, 'filter_database_path' ) );
+		add_filter( 'woocommerce_geolocation_local_database_path', [ $this, 'filter_database_path' ] );
 		$path = $database_service->get_database_path();
-		remove_filter( 'woocommerce_geolocation_local_database_path', array( $this, 'filter_database_path' ) );
+		remove_filter( 'woocommerce_geolocation_local_database_path', [ $this, 'filter_database_path' ] );
 
 		$this->assertEquals( '/filter', $path );
 
@@ -133,17 +133,17 @@ class WC_Tests_MaxMind_Database extends WC_Unit_Test_Case {
 			// We need to copy the file to where the request is supposed to have streamed it.
 			self::file_copy( WC_Unit_Tests_Bootstrap::instance()->tests_dir . '/data/GeoLite2-Country.tar.gz', $request['filename'] );
 
-			$mocked_response = array(
-				'response' => array( 'code' => 200 ),
-			);
+			$mocked_response = [
+				'response' => [ 'code' => 200 ],
+			];
 		} elseif ( 'https://download.maxmind.com/app/geoip_download?edition_id=GeoLite2-Country&license_key=invalid_license&suffix=tar.gz' === $url ) {
-			return new WP_Error( 'http_404', 'Unauthorized', array( 'code' => 401 ) );
+			return new WP_Error( 'http_404', 'Unauthorized', [ 'code' => 401 ] );
 		} elseif ( 'https://download.maxmind.com/app/geoip_download?edition_id=GeoLite2-Country&license_key=generic_error&suffix=tar.gz' === $url ) {
-			return new WP_Error( 'http_404', 'Unauthorized', array( 'code' => 500 ) );
+			return new WP_Error( 'http_404', 'Unauthorized', [ 'code' => 500 ] );
 		} elseif ( 'https://download.maxmind.com/app/geoip_download?edition_id=GeoLite2-Country&license_key=archive_error&suffix=tar.gz' === $url ) {
-			$mocked_response = array(
-				'response' => array( 'code' => 200 ),
-			);
+			$mocked_response = [
+				'response' => [ 'code' => 200 ],
+			];
 		}
 
 		return $mocked_response;

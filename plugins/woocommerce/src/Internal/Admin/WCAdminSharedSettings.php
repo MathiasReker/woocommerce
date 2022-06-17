@@ -32,7 +32,7 @@ class WCAdminSharedSettings {
 		if ( did_action( 'woocommerce_blocks_loaded' ) ) {
 			$this->on_woocommerce_blocks_loaded();
 		} else {
-			add_action( 'woocommerce_blocks_loaded', array( $this, 'on_woocommerce_blocks_loaded' ), 10 );
+			add_action( 'woocommerce_blocks_loaded', [ $this, 'on_woocommerce_blocks_loaded' ], 10 );
 		}
 	}
 
@@ -58,7 +58,7 @@ class WCAdminSharedSettings {
 			\Automattic\WooCommerce\Blocks\Package::container()->get( \Automattic\WooCommerce\Blocks\Assets\AssetDataRegistry::class )->add(
 				$this->settings_prefix,
 				function() {
-					return apply_filters( 'woocommerce_admin_shared_settings', array() );
+					return apply_filters( 'woocommerce_admin_shared_settings', [] );
 				},
 				true
 			);

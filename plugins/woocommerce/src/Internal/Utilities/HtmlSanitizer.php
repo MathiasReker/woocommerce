@@ -9,28 +9,28 @@ class HtmlSanitizer {
 	/**
 	 * Rules for allowing minimal HTML (breaks, images, paragraphs and spans) without any links.
 	 */
-	public const LOW_HTML_BALANCED_TAGS_NO_LINKS = array(
-		'pre_processors'  => array(
+	public const LOW_HTML_BALANCED_TAGS_NO_LINKS = [
+		'pre_processors'  => [
 			'stripslashes',
 			'force_balance_tags',
-		),
-		'wp_kses_rules'   => array(
+		],
+		'wp_kses_rules'   => [
 			'br'   => true,
-			'img'  => array(
+			'img'  => [
 				'alt'   => true,
 				'class' => true,
 				'src'   => true,
 				'title' => true,
-			),
-			'p'    => array(
+			],
+			'p'    => [
 				'class' => true,
-			),
-			'span' => array(
+			],
+			'span' => [
 				'class' => true,
 				'title' => true,
-			),
-		),
-	);
+			],
+		],
+	];
 
 	/**
 	 * Sanitizes the HTML according to the provided rules.
@@ -56,7 +56,7 @@ class HtmlSanitizer {
 		// If no KSES rules are specified, assume all HTML should be stripped.
 		$kses_rules = isset( $sanitizer_rules['wp_kses_rules'] ) && is_array( $sanitizer_rules['wp_kses_rules'] )
 			? $sanitizer_rules['wp_kses_rules']
-			: array();
+			: [];
 
 		return wp_kses( $html, $kses_rules );
 	}

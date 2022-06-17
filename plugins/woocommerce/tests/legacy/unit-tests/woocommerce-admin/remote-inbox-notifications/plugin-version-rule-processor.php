@@ -17,7 +17,7 @@ class WC_Admin_Tests_RemoteInboxNotifications_PluginVersionRuleProcessor extends
 	 * @group fast
 	 */
 	public function test_spec_does_not_pass_if_plugin_not_activated() {
-		$mock_plugins_provider = new MockPluginsProvider( array(), array() );
+		$mock_plugins_provider = new MockPluginsProvider( [], [] );
 		$processor             = new PluginVersionRuleProcessor( $mock_plugins_provider );
 		$rule                  = json_decode(
 			'{
@@ -40,10 +40,10 @@ class WC_Admin_Tests_RemoteInboxNotifications_PluginVersionRuleProcessor extends
 	 */
 	public function test_spec_does_not_pass_if_plugin_not_in_data() {
 		$mock_plugins_provider = new MockPluginsProvider(
-			array(
+			[
 				'jetpack',
-			),
-			array()
+			],
+			[]
 		);
 		$processor             = new PluginVersionRuleProcessor( $mock_plugins_provider );
 		$rule                  = json_decode(
@@ -68,14 +68,14 @@ class WC_Admin_Tests_RemoteInboxNotifications_PluginVersionRuleProcessor extends
 	 */
 	public function test_spec_does_not_pass_if_installed_version_less_than_required_version() {
 		$mock_plugins_provider = new MockPluginsProvider(
-			array(
+			[
 				'jetpack',
-			),
-			array(
-				'jetpack/jetpack.php' => array(
+			],
+			[
+				'jetpack/jetpack.php' => [
 					'Version' => '1.2.4',
-				),
-			)
+				],
+			]
 		);
 		$processor             = new PluginVersionRuleProcessor( $mock_plugins_provider );
 		$rule                  = json_decode(
@@ -100,14 +100,14 @@ class WC_Admin_Tests_RemoteInboxNotifications_PluginVersionRuleProcessor extends
 	 */
 	public function test_spec_passes_if_installed_version_equals_required_version() {
 		$mock_plugins_provider = new MockPluginsProvider(
-			array(
+			[
 				'jetpack',
-			),
-			array(
-				'jetpack/jetpack.php' => array(
+			],
+			[
+				'jetpack/jetpack.php' => [
 					'Version' => '1.2.3',
-				),
-			)
+				],
+			]
 		);
 		$processor             = new PluginVersionRuleProcessor( $mock_plugins_provider );
 		$rule                  = json_decode(
@@ -132,14 +132,14 @@ class WC_Admin_Tests_RemoteInboxNotifications_PluginVersionRuleProcessor extends
 	 */
 	public function test_spec_passes_if_installed_version_is_later_than_required_version() {
 		$mock_plugins_provider = new MockPluginsProvider(
-			array(
+			[
 				'jetpack',
-			),
-			array(
-				'jetpack/jetpack.php' => array(
+			],
+			[
+				'jetpack/jetpack.php' => [
 					'Version' => '1.2.4',
-				),
-			)
+				],
+			]
 		);
 		$processor             = new PluginVersionRuleProcessor( $mock_plugins_provider );
 		$rule                  = json_decode(

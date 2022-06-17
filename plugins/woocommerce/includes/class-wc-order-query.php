@@ -23,7 +23,7 @@ class WC_Order_Query extends WC_Object_Query {
 	protected function get_default_query_vars() {
 		return array_merge(
 			parent::get_default_query_vars(),
-			array(
+			[
 				'status'               => array_keys( wc_get_order_statuses() ),
 				'type'                 => wc_get_order_types( 'view-orders' ),
 				'currency'             => '',
@@ -71,7 +71,7 @@ class WC_Order_Query extends WC_Object_Query {
 				'customer_user_agent'  => '',
 				'created_via'          => '',
 				'customer_note'        => '',
-			)
+			]
 		);
 	}
 

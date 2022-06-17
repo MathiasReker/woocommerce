@@ -33,7 +33,7 @@ class SellingOnlineCourses {
 	public function __construct() {
 		add_action(
 			'update_option_' . OnboardingProfile::DATA_OPTION,
-			array( $this, 'check_onboarding_profile' ),
+			[ $this, 'check_onboarding_profile' ],
 			10,
 			3
 		);
@@ -69,7 +69,7 @@ class SellingOnlineCourses {
 
 		$note->set_title( __( 'Do you want to sell online courses?', 'woocommerce' ) );
 		$note->set_content( __( 'Online courses are a great solution for any business that can teach a new skill. Since courses don’t require physical product development or shipping, they’re affordable, fast to create, and can generate passive income for years to come. In this article, we provide you more information about selling courses using WooCommerce.', 'woocommerce' ) );
-		$note->set_content_data( (object) array() );
+		$note->set_content_data( (object) [] );
 		$note->set_type( Note::E_WC_ADMIN_NOTE_MARKETING );
 		$note->set_name( self::NOTE_NAME );
 		$note->set_source( 'woocommerce-admin' );

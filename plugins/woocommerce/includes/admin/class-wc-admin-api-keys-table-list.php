@@ -22,11 +22,11 @@ class WC_Admin_API_Keys_Table_List extends WP_List_Table {
 	 */
 	public function __construct() {
 		parent::__construct(
-			array(
+			[
 				'singular' => 'key',
 				'plural'   => 'keys',
 				'ajax'     => false,
-			)
+			]
 		);
 	}
 
@@ -43,14 +43,14 @@ class WC_Admin_API_Keys_Table_List extends WP_List_Table {
 	 * @return array
 	 */
 	public function get_columns() {
-		return array(
+		return [
 			'cb'            => '<input type="checkbox" />',
 			'title'         => __( 'Description', 'woocommerce' ),
 			'truncated_key' => __( 'Consumer key ending in', 'woocommerce' ),
 			'user'          => __( 'User', 'woocommerce' ),
 			'permissions'   => __( 'Permissions', 'woocommerce' ),
 			'last_access'   => __( 'Last access', 'woocommerce' ),
-		);
+		];
 	}
 
 	/**
@@ -91,19 +91,19 @@ class WC_Admin_API_Keys_Table_List extends WP_List_Table {
 		$output .= '</strong>';
 
 		// Get actions.
-		$actions = array(
+		$actions = [
 			/* translators: %s: API key ID. */
 			'id' => sprintf( __( 'ID: %d', 'woocommerce' ), $key['key_id'] ),
-		);
+		];
 
 		if ( $can_edit ) {
 			$actions['edit']  = '<a href="' . esc_url( $url ) . '">' . __( 'View/Edit', 'woocommerce' ) . '</a>';
 			$actions['trash'] = '<a class="submitdelete" aria-label="' . esc_attr__( 'Revoke API key', 'woocommerce' ) . '" href="' . esc_url(
 				wp_nonce_url(
 					add_query_arg(
-						array(
+						[
 							'revoke-key' => $key['key_id'],
-						),
+						],
 						admin_url( 'admin.php?page=wc-settings&tab=advanced&section=keys' )
 					),
 					'revoke'
@@ -111,7 +111,7 @@ class WC_Admin_API_Keys_Table_List extends WP_List_Table {
 			) . '">' . esc_html__( 'Revoke', 'woocommerce' ) . '</a>';
 		}
 
-		$row_actions = array();
+		$row_actions = [];
 
 		foreach ( $actions as $action => $link ) {
 			$row_actions[] = '<span class="' . esc_attr( $action ) . '">' . $link . '</span>';
@@ -146,7 +146,7 @@ class WC_Admin_API_Keys_Table_List extends WP_List_Table {
 		}
 
 		if ( current_user_can( 'edit_user', $user->ID ) ) {
-			return '<a href="' . esc_url( add_query_arg( array( 'user_id' => $user->ID ), admin_url( 'user-edit.php' ) ) ) . '">' . esc_html( $user->display_name ) . '</a>';
+			return '<a href="' . esc_url( add_query_arg( [ 'user_id' => $user->ID ], admin_url( 'user-edit.php' ) ) ) . '">' . esc_html( $user->display_name ) . '</a>';
 		}
 
 		return esc_html( $user->display_name );
@@ -160,11 +160,11 @@ class WC_Admin_API_Keys_Table_List extends WP_List_Table {
 	 */
 	public function column_permissions( $key ) {
 		$permission_key = $key['permissions'];
-		$permissions    = array(
+		$permissions    = [
 			'read'       => __( 'Read', 'woocommerce' ),
 			'write'      => __( 'Write', 'woocommerce' ),
 			'read_write' => __( 'Read/Write', 'woocommerce' ),
-		);
+		];
 
 		if ( isset( $permissions[ $permission_key ] ) ) {
 			return esc_html( $permissions[ $permission_key ] );
@@ -197,12 +197,12 @@ class WC_Admin_API_Keys_Table_List extends WP_List_Table {
 	 */
 	protected function get_bulk_actions() {
 		if ( ! current_user_can( 'remove_users' ) ) {
-			return array();
+			return [];
 		}
 
-		return array(
+		return [
 			'revoke' => __( 'Revoke', 'woocommerce' ),
-		);
+		];
 	}
 
 	/**
@@ -227,9 +227,9 @@ class WC_Admin_API_Keys_Table_List extends WP_List_Table {
 			'',
 			'',
 			false,
-			array(
+			[
 				'id' => 'search-submit',
-			)
+			]
 		);
 		echo '</p>';
 	}
@@ -268,11 +268,11 @@ class WC_Admin_API_Keys_Table_List extends WP_List_Table {
 
 		// Set the pagination.
 		$this->set_pagination_args(
-			array(
+			[
 				'total_items' => $count,
 				'per_page'    => $per_page,
 				'total_pages' => ceil( $count / $per_page ),
-			)
+			]
 		);
 	}
 }

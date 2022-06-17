@@ -42,7 +42,7 @@ class PageController {
 	 *
 	 * @var array
 	 */
-	private $pages = array();
+	private $pages = [];
 
 	/**
 	 * We want a single instance of this class so we can accurately track registered menus and pages.
@@ -60,11 +60,11 @@ class PageController {
 	 * Hooks added here should be removed in `wc_admin_initialize` via the feature plugin.
 	 */
 	public function __construct() {
-		add_action( 'admin_menu', array( $this, 'register_page_handler' ) );
-		add_action( 'admin_menu', array( $this, 'register_store_details_page' ) );
+		add_action( 'admin_menu', [ $this, 'register_page_handler' ] );
+		add_action( 'admin_menu', [ $this, 'register_store_details_page' ] );
 
 		// priority is 20 to run after https://github.com/woocommerce/woocommerce/blob/a55ae325306fc2179149ba9b97e66f32f84fdd9c/includes/admin/class-wc-admin-menus.php#L165.
-		add_action( 'admin_head', array( $this, 'remove_app_entry_page_menu_item' ), 20 );
+		add_action( 'admin_head', [ $this, 'remove_app_entry_page_menu_item' ], 20 );
 	}
 
 	/**
@@ -85,7 +85,7 @@ class PageController {
 	 */
 	public function connect_page( $options ) {
 		if ( ! is_array( $options['title'] ) ) {
-			$options['title'] = array( $options['title'] );
+			$options['title'] = [ $options['title'] ];
 		}
 
 		/**
@@ -164,7 +164,7 @@ class PageController {
 		// Bail if this isn't a page registered with this controller.
 		if ( false === $current_page ) {
 			// Filter documentation below.
-			return apply_filters( 'woocommerce_navigation_get_breadcrumbs', array( '' ), $current_page );
+			return apply_filters( 'woocommerce_navigation_get_breadcrumbs', [ '' ], $current_page );
 		}
 
 		if ( 1 === count( $current_page['title'] ) ) {
@@ -172,9 +172,9 @@ class PageController {
 		} else {
 			// If this page has multiple title pieces, only link the first one.
 			$breadcrumbs = array_merge(
-				array(
-					array( $current_page['path'], reset( $current_page['title'] ) ),
-				),
+				[
+					[ $current_page['path'], reset( $current_page['title'] ) ],
+				],
 				array_slice( $current_page['title'], 1 )
 			);
 		}
@@ -190,7 +190,7 @@ class PageController {
 						$parent['path'] = 'admin.php?page=' . $parent['path'];
 					}
 
-					array_unshift( $breadcrumbs, array( $parent['path'], reset( $parent['title'] ) ) );
+					array_unshift( $breadcrumbs, [ $parent['path'], reset( $parent['title'] ) ] );
 					$parent_id = isset( $parent['parent'] ) ? $parent['parent'] : false;
 				} else {
 					$parent_id = false;
@@ -198,7 +198,7 @@ class PageController {
 			}
 		}
 
-		$woocommerce_breadcrumb = array( 'admin.php?page=' . self::PAGE_ROOT, __( 'WooCommerce', 'woocommerce' ) );
+		$woocommerce_breadcrumb = [ 'admin.php?page=' . self::PAGE_ROOT, __( 'WooCommerce', 'woocommerce' ) ];
 
 		array_unshift( $breadcrumbs, $woocommerce_breadcrumb );
 
@@ -253,7 +253,7 @@ class PageController {
 			return apply_filters( 'woocommerce_navigation_current_screen_id', false, $current_screen );
 		}
 
-		$screen_pieces = array( $current_screen->id );
+		$screen_pieces = [ $current_screen->id ];
 
 		if ( $current_screen->action ) {
 			$screen_pieces[] = $current_screen->action;
@@ -266,24 +266,24 @@ class PageController {
 		) {
 			// Editing a product attribute.
 			if ( 0 === strpos( $current_screen->taxonomy, 'pa_' ) ) {
-				$screen_pieces = array( 'product_page_product_attribute-edit' );
+				$screen_pieces = [ 'product_page_product_attribute-edit' ];
 			}
 
 			// Editing a product taxonomy term.
 			if ( ! empty( $_GET['tag_ID'] ) ) {
-				$screen_pieces = array( $current_screen->taxonomy );
+				$screen_pieces = [ $current_screen->taxonomy ];
 			}
 		}
 
 		// Pages with default tab values.
 		$pages_with_tabs = apply_filters(
 			'woocommerce_navigation_pages_with_tabs',
-			array(
+			[
 				'wc-reports'  => 'orders',
 				'wc-settings' => 'general',
 				'wc-status'   => 'status',
 				'wc-addons'   => 'browse-extensions',
-			)
+			]
 		);
 
 		// Tabs that have sections as well.
@@ -292,20 +292,20 @@ class PageController {
 
 		$tabs_with_sections = apply_filters(
 			'woocommerce_navigation_page_tab_sections',
-			array(
-				'products'          => array( '', 'inventory', 'downloadable' ),
-				'shipping'          => array( '', 'options', 'classes' ),
-				'checkout'          => array( 'bacs', 'cheque', 'cod', 'paypal' ),
+			[
+				'products'          => [ '', 'inventory', 'downloadable' ],
+				'shipping'          => [ '', 'options', 'classes' ],
+				'checkout'          => [ 'bacs', 'cheque', 'cod', 'paypal' ],
 				'email'             => $wc_email_ids,
-				'advanced'          => array(
+				'advanced'          => [
 					'',
 					'keys',
 					'webhooks',
 					'legacy_api',
 					'woocommerce_com',
-				),
-				'browse-extensions' => array( 'helper' ),
-			)
+				],
+				'browse-extensions' => [ 'helper' ],
+			]
 		);
 
 		if ( ! empty( $_GET['page'] ) ) {
@@ -433,7 +433,7 @@ class PageController {
 	 * }
 	 */
 	public function register_page( $options ) {
-		$defaults = array(
+		$defaults = [
 			'id'         => null,
 			'parent'     => null,
 			'title'      => '',
@@ -442,7 +442,7 @@ class PageController {
 			'icon'       => '',
 			'position'   => null,
 			'js_page'    => true,
-		);
+		];
 
 		$options = wp_parse_args( $options, $defaults );
 
@@ -456,7 +456,7 @@ class PageController {
 				$options['title'],
 				$options['capability'],
 				$options['path'],
-				array( __CLASS__, 'page_wrapper' ),
+				[ __CLASS__, 'page_wrapper' ],
 				$options['icon'],
 				intval( round( $options['position'] ) )
 			);
@@ -469,7 +469,7 @@ class PageController {
 				$options['title'],
 				$options['capability'],
 				$options['path'],
-				array( __CLASS__, 'page_wrapper' )
+				[ __CLASS__, 'page_wrapper' ]
 			);
 		}
 
@@ -506,11 +506,11 @@ class PageController {
 	 */
 	public function register_store_details_page() {
 		wc_admin_register_page(
-			array(
+			[
 				'title'  => __( 'Setup Wizard', 'woocommerce' ),
 				'parent' => '',
 				'path'   => '/setup-wizard',
-			)
+			]
 		);
 	}
 

@@ -28,15 +28,15 @@ class WooSubscriptionsNotes {
 	 * @return array
 	 */
 	private function get_bump_thresholds() {
-		return array( 60, 45, 20, 7, 1 ); // days.
+		return [ 60, 45, 20, 7, 1 ]; // days.
 	}
 
 	/**
 	 * Hook all the things.
 	 */
 	public function __construct() {
-		add_action( 'admin_init', array( $this, 'admin_init' ) );
-		add_action( 'update_option_woocommerce_helper_data', array( $this, 'update_option_woocommerce_helper_data' ), 10, 2 );
+		add_action( 'admin_init', [ $this, 'admin_init' ] );
+		add_action( 'update_option_woocommerce_helper_data', [ $this, 'update_option_woocommerce_helper_data' ], 10, 2 );
 	}
 
 	/**
@@ -47,14 +47,14 @@ class WooSubscriptionsNotes {
 	 */
 	public function update_option_woocommerce_helper_data( $old_value, $value ) {
 		if ( ! is_array( $old_value ) ) {
-			$old_value = array();
+			$old_value = [];
 		}
 		if ( ! is_array( $value ) ) {
-			$value = array();
+			$value = [];
 		}
 
-		$old_auth  = array_key_exists( 'auth', $old_value ) ? $old_value['auth'] : array();
-		$new_auth  = array_key_exists( 'auth', $value ) ? $value['auth'] : array();
+		$old_auth  = array_key_exists( 'auth', $old_value ) ? $old_value['auth'] : [];
+		$new_auth  = array_key_exists( 'auth', $value ) ? $value['auth'] : [];
 		$old_token = array_key_exists( 'access_token', $old_auth ) ? $old_auth['access_token'] : '';
 		$new_token = array_key_exists( 'access_token', $new_auth ) ? $new_auth['access_token'] : '';
 
@@ -151,10 +151,10 @@ class WooSubscriptionsNotes {
 	public function get_subscription_active_product_ids() {
 		$site_id = $this->get_connected_site_id();
 		if ( ! $site_id ) {
-			return array();
+			return [];
 		}
 
-		$product_ids = array();
+		$product_ids = [];
 
 		if ( $this->is_connected() ) {
 			$subscriptions = \WC_Helper::get_subscriptions();
@@ -184,7 +184,7 @@ class WooSubscriptionsNotes {
 		$note = new Note();
 		$note->set_title( __( 'Connect to WooCommerce.com', 'woocommerce' ) );
 		$note->set_content( __( 'Connect to get important product notifications and updates.', 'woocommerce' ) );
-		$note->set_content_data( (object) array() );
+		$note->set_content_data( (object) [] );
 		$note->set_type( Note::E_WC_ADMIN_NOTE_INFORMATIONAL );
 		$note->set_name( self::CONNECTION_NOTE_NAME );
 		$note->set_source( 'woocommerce-admin' );
@@ -321,12 +321,12 @@ class WooSubscriptionsNotes {
 			$days_until_expiration
 		);
 
-		$note_content_data = (object) array(
+		$note_content_data = (object) [
 			'product_id'            => $product_id,
 			'product_name'          => $product_name,
 			'expired'               => false,
 			'days_until_expiration' => $days_until_expiration,
-		);
+		];
 
 		if ( ! $note ) {
 			$note = new Note();
@@ -382,13 +382,13 @@ class WooSubscriptionsNotes {
 			$expires_date
 		);
 
-		$note_content_data = (object) array(
+		$note_content_data = (object) [
 			'product_id'   => $product_id,
 			'product_name' => $product_name,
 			'expired'      => true,
 			'expires'      => $expires,
 			'expires_date' => $expires_date,
-		);
+		];
 
 		if ( ! $note ) {
 			$note = new Note();

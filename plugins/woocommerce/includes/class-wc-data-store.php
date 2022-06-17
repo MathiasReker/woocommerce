@@ -32,7 +32,7 @@ class WC_Data_Store {
 	 *
 	 * @var array
 	 */
-	private $stores = array(
+	private $stores = [
 		'coupon'                => 'WC_Coupon_Data_Store_CPT',
 		'customer'              => 'WC_Customer_Data_Store',
 		'customer-download'     => 'WC_Customer_Download_Data_Store',
@@ -53,7 +53,7 @@ class WC_Data_Store {
 		'product-variation'     => 'WC_Product_Variation_Data_Store_CPT',
 		'shipping-zone'         => 'WC_Shipping_Zone_Data_Store',
 		'webhook'               => 'WC_Webhook_Data_Store',
-	);
+	];
 
 	/**
 	 * Contains the name of the current data store's class name.
@@ -114,7 +114,7 @@ class WC_Data_Store {
 	 * @return array
 	 */
 	public function __sleep() {
-		return array( 'object_type' );
+		return [ 'object_type' ];
 	}
 
 	/**
@@ -186,7 +186,7 @@ class WC_Data_Store {
 	 * @param WC_Data $data WooCommerce data instance.
 	 * @param array   $args Array of args to pass to the delete method.
 	 */
-	public function delete( &$data, $args = array() ) {
+	public function delete( &$data, $args = [] ) {
 		$this->instance->delete( $data, $args );
 	}
 
@@ -201,9 +201,9 @@ class WC_Data_Store {
 	 * @return mixed
 	 */
 	public function __call( $method, $parameters ) {
-		if ( is_callable( array( $this->instance, $method ) ) ) {
+		if ( is_callable( [ $this->instance, $method ] ) ) {
 			$object     = array_shift( $parameters );
-			$parameters = array_merge( array( &$object ), $parameters );
+			$parameters = array_merge( [ &$object ], $parameters );
 			return $this->instance->$method( ...$parameters );
 		}
 	}

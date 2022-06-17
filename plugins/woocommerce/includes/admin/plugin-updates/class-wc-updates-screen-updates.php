@@ -25,7 +25,7 @@ class WC_Updates_Screen_Updates extends WC_Plugin_Updates {
 	 * Constructor.
 	 */
 	public function __construct() {
-		add_action( 'admin_print_footer_scripts', array( $this, 'update_screen_modal' ) );
+		add_action( 'admin_print_footer_scripts', [ $this, 'update_screen_modal' ] );
 	}
 
 	/**

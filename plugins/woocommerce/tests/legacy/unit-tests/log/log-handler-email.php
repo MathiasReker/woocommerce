@@ -39,8 +39,8 @@ class WC_Tests_Log_Handler_Email extends WC_Unit_Test_Case {
 		$site_name = get_bloginfo( 'name' );
 
 		$handler = new WC_Log_Handler_Email();
-		$handler->handle( $time, 'emergency', 'msg_emergency', array() );
-		$handler->handle( $time, 'emergency', 'msg_emergency 2', array() );
+		$handler->handle( $time, 'emergency', 'msg_emergency', [] );
+		$handler->handle( $time, 'emergency', 'msg_emergency 2', [] );
 		$handler->send_log_email();
 
 		$this->assertEquals(
@@ -66,7 +66,7 @@ class WC_Tests_Log_Handler_Email extends WC_Unit_Test_Case {
 		);
 		$this->assertEquals( get_option( 'admin_email' ), $mailer->get_recipient( 'to' )->address );
 
-		$handler->handle( $time, 'emergency', 'msg_emergency', array() );
+		$handler->handle( $time, 'emergency', 'msg_emergency', [] );
 		$handler->send_log_email();
 		$this->assertEquals(
 			(
@@ -106,12 +106,12 @@ class WC_Tests_Log_Handler_Email extends WC_Unit_Test_Case {
 		$site_name = get_bloginfo( 'name' );
 
 		$handler = new WC_Log_Handler_Email( null, WC_Log_Levels::DEBUG );
-		$handler->handle( $time, 'debug', '', array() );
+		$handler->handle( $time, 'debug', '', [] );
 		$handler->send_log_email();
 
-		$handler->handle( $time, 'alert', '', array() );
-		$handler->handle( $time, 'critical', '', array() );
-		$handler->handle( $time, 'debug', '', array() );
+		$handler->handle( $time, 'alert', '', [] );
+		$handler->handle( $time, 'critical', '', [] );
+		$handler->handle( $time, 'debug', '', [] );
 		$handler->send_log_email();
 
 		$this->assertEquals(
@@ -134,12 +134,12 @@ class WC_Tests_Log_Handler_Email extends WC_Unit_Test_Case {
 		$mailer = tests_retrieve_phpmailer_instance();
 
 		$handler = new WC_Log_Handler_Email(
-			array(
+			[
 				'first@test.com',
 				'Second Recipient <second@test.com>',
-			)
+			]
 		);
-		$handler->handle( time(), 'emergency', '', array() );
+		$handler->handle( time(), 'emergency', '', [] );
 		$handler->send_log_email();
 
 		$first_recipient  = $mailer->get_recipient( 'to', 0, 0 );
@@ -159,7 +159,7 @@ class WC_Tests_Log_Handler_Email extends WC_Unit_Test_Case {
 		$mailer = tests_retrieve_phpmailer_instance();
 
 		$handler = new WC_Log_Handler_Email( 'User <user@test.com>' );
-		$handler->handle( time(), 'emergency', '', array() );
+		$handler->handle( time(), 'emergency', '', [] );
 		$handler->send_log_email();
 
 		$recipient = $mailer->get_recipient( 'to' );
@@ -176,13 +176,13 @@ class WC_Tests_Log_Handler_Email extends WC_Unit_Test_Case {
 		$mailer = tests_retrieve_phpmailer_instance();
 
 		$handler = new WC_Log_Handler_Email( null, 'notice' );
-		$handler->handle( time(), 'info', '', array() );
+		$handler->handle( time(), 'info', '', [] );
 		$handler->send_log_email();
 
 		// Info should not be handled, get_sent is false.
 		$this->assertFalse( $mailer->get_sent( 0 ) );
 
-		$handler->handle( time(), 'notice', '', array() );
+		$handler->handle( time(), 'notice', '', [] );
 		$handler->send_log_email();
 		$this->assertObjectHasAttribute( 'body', $mailer->get_sent( 0 ) );
 	}
@@ -196,14 +196,14 @@ class WC_Tests_Log_Handler_Email extends WC_Unit_Test_Case {
 		$mailer = tests_retrieve_phpmailer_instance();
 
 		$handler = new WC_Log_Handler_Email( null, 'notice' );
-		$handler->handle( time(), 'info', '', array() );
+		$handler->handle( time(), 'info', '', [] );
 		$handler->send_log_email();
 
 		// Info should not be handled, get_sent is false.
 		$this->assertFalse( $mailer->get_sent( 0 ) );
 
 		$handler->set_threshold( 'info' );
-		$handler->handle( time(), 'info', '', array() );
+		$handler->handle( time(), 'info', '', [] );
 		$handler->send_log_email();
 
 		$this->assertObjectHasAttribute( 'body', $mailer->get_sent( 0 ) );
@@ -222,9 +222,9 @@ class WC_Tests_Log_Handler_Email extends WC_Unit_Test_Case {
 
 		$handler = new WC_Log_Handler_Email();
 		$time    = time();
-		$handler->handle( $time, 'emergency', 'message 1', array() );
+		$handler->handle( $time, 'emergency', 'message 1', [] );
 		$handler->send_log_email();
-		$handler->handle( $time, 'emergency', 'message 2', array() );
+		$handler->handle( $time, 'emergency', 'message 2', [] );
 		$handler->send_log_email();
 
 		$site_name = get_bloginfo( 'name' );

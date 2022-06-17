@@ -37,11 +37,11 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 	 *
 	 * @var array
 	 */
-	protected $column_types = array(
+	protected $column_types = [
 		'coupon_id'    => 'intval',
 		'amount'       => 'floatval',
 		'orders_count' => 'intval',
-	);
+	];
 
 	/**
 	 * Data store context used to pass to filters.
@@ -55,18 +55,18 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 	 */
 	protected function assign_report_columns() {
 		$table_name           = self::get_db_table_name();
-		$this->report_columns = array(
+		$this->report_columns = [
 			'coupon_id'    => 'coupon_id',
 			'amount'       => 'SUM(discount_amount) as amount',
 			'orders_count' => "COUNT(DISTINCT {$table_name}.order_id) as orders_count",
-		);
+		];
 	}
 
 	/**
 	 * Set up all the hooks for maintaining and populating table data.
 	 */
 	public static function init() {
-		add_action( 'woocommerce_analytics_delete_order_stats', array( __CLASS__, 'sync_on_order_delete' ), 5 );
+		add_action( 'woocommerce_analytics_delete_order_stats', [ __CLASS__, 'sync_on_order_delete' ], 5 );
 	}
 
 	/**
@@ -79,7 +79,7 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 		if ( isset( $query_args['coupons'] ) && is_array( $query_args['coupons'] ) && count( $query_args['coupons'] ) > 0 ) {
 			return $query_args['coupons'];
 		}
-		return array();
+		return [];
 	}
 
 	/**
@@ -169,14 +169,14 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 
 				if ( 0 === $coupon->get_id() ) {
 					// Deleted or otherwise invalid coupon.
-					$extended_info = array(
+					$extended_info = [
 						'code'             => __( '(Deleted)', 'woocommerce' ),
 						'date_created'     => '',
 						'date_created_gmt' => '',
 						'date_expires'     => '',
 						'date_expires_gmt' => '',
 						'discount_type'    => __( 'N/A', 'woocommerce' ),
-					);
+					];
 				} else {
 					$gmt_timzone = new \DateTimeZone( 'UTC' );
 
@@ -202,14 +202,14 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 						$date_created_gmt = '';
 					}
 
-					$extended_info = array(
+					$extended_info = [
 						'code'             => $coupon->get_code(),
 						'date_created'     => $date_created,
 						'date_created_gmt' => $date_created_gmt,
 						'date_expires'     => $date_expires,
 						'date_expires_gmt' => $date_expires_gmt,
 						'discount_type'    => $coupon->get_discount_type(),
-					);
+					];
 				}
 			}
 			$coupon_data[ $idx ]['extended_info'] = $extended_info;
@@ -228,7 +228,7 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 		$table_name = self::get_db_table_name();
 
 		// These defaults are only partially applied when used via REST API, as that has its own defaults.
-		$defaults   = array(
+		$defaults   = [
 			'per_page'      => get_option( 'posts_per_page' ),
 			'page'          => 1,
 			'order'         => 'DESC',
@@ -236,9 +236,9 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 			'before'        => TimeInterval::default_before(),
 			'after'         => TimeInterval::default_after(),
 			'fields'        => '*',
-			'coupons'       => array(),
+			'coupons'       => [],
 			'extended_info' => false,
-		);
+		];
 		$query_args = wp_parse_args( $query_args, $defaults );
 		$this->normalize_timezones( $query_args, $defaults );
 
@@ -252,12 +252,12 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 		if ( false === $data ) {
 			$this->initialize_queries();
 
-			$data = (object) array(
-				'data'    => array(),
+			$data = (object) [
+				'data'    => [],
 				'total'   => 0,
 				'pages'   => 0,
 				'page_no' => 0,
-			);
+			];
 
 			$selections       = $this->selected_columns( $query_args );
 			$included_coupons = $this->get_included_coupons_array( $query_args );
@@ -272,7 +272,7 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 				$fields    = $this->get_fields( $query_args );
 				$ids_table = $this->get_ids_table( $included_coupons, 'coupon_id' );
 
-				$this->add_sql_clause( 'select', $this->format_join_selections( $fields, array( 'coupon_id' ) ) );
+				$this->add_sql_clause( 'select', $this->format_join_selections( $fields, [ 'coupon_id' ] ) );
 				$this->add_sql_clause( 'from', '(' );
 				$this->add_sql_clause( 'from', $this->subquery->get_query_statement() );
 				$this->add_sql_clause( 'from', ") AS {$table_name}" );
@@ -288,7 +288,7 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 				$this->subquery->add_sql_clause( 'limit', $this->get_sql_clause( 'limit' ) );
 				$coupons_query = $this->subquery->get_query_statement();
 
-				$this->subquery->clear_sql_clause( array( 'select', 'order_by', 'limit' ) );
+				$this->subquery->clear_sql_clause( [ 'select', 'order_by', 'limit' ] );
 				$this->subquery->add_sql_clause( 'select', 'coupon_id' );
 				$coupon_subquery = "SELECT COUNT(*) FROM (
 					{$this->subquery->get_query_statement()}
@@ -315,13 +315,13 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 
 			$this->include_extended_info( $coupon_data, $query_args );
 
-			$coupon_data = array_map( array( $this, 'cast_numbers' ), $coupon_data );
-			$data        = (object) array(
+			$coupon_data = array_map( [ $this, 'cast_numbers' ], $coupon_data );
+			$data        = (object) [
 				'data'    => $coupon_data,
 				'total'   => $total_results,
 				'pages'   => $total_pages,
 				'page_no' => (int) $query_args['page'],
-			);
+			];
 
 			$this->set_cached_data( $cache_key, $data );
 		}
@@ -398,18 +398,18 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 
 			$result = $wpdb->replace(
 				self::get_db_table_name(),
-				array(
+				[
 					'order_id'        => $order_id,
 					'coupon_id'       => $coupon_id,
 					'discount_amount' => $coupon_item->get_discount(),
 					'date_created'    => $order->get_date_created( 'edit' )->date( TimeInterval::$sql_datetime_format ),
-				),
-				array(
+				],
+				[
 					'%d',
 					'%d',
 					'%f',
 					'%s',
-				)
+				]
 			);
 
 			/**
@@ -449,7 +449,7 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 	public static function sync_on_order_delete( $order_id ) {
 		global $wpdb;
 
-		$wpdb->delete( self::get_db_table_name(), array( 'order_id' => $order_id ) );
+		$wpdb->delete( self::get_db_table_name(), [ 'order_id' => $order_id ] );
 		/**
 		 * Fires when coupon's reports are removed from database.
 		 *

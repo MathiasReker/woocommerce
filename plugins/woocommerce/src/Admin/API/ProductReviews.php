@@ -30,25 +30,25 @@ class ProductReviews extends \WC_REST_Product_Reviews_Controller {
 	 * @return array Links for the given product review.
 	 */
 	protected function prepare_links( $review ) {
-		$links = array(
-			'self'       => array(
+		$links = [
+			'self'       => [
 				'href' => rest_url( sprintf( '/%s/%s/%d', $this->namespace, $this->rest_base, $review->comment_ID ) ),
-			),
-			'collection' => array(
+			],
+			'collection' => [
 				'href' => rest_url( sprintf( '/%s/%s', $this->namespace, $this->rest_base ) ),
-			),
-		);
+			],
+		];
 		if ( 0 !== (int) $review->comment_post_ID ) {
-			$links['up'] = array(
+			$links['up'] = [
 				'href'       => rest_url( sprintf( '/%s/products/%d', $this->namespace, $review->comment_post_ID ) ),
 				'embeddable' => true,
-			);
+			];
 		}
 		if ( 0 !== (int) $review->user_id ) {
-			$links['reviewer'] = array(
+			$links['reviewer'] = [
 				'href'       => rest_url( 'wp/v2/users/' . $review->user_id ),
 				'embeddable' => true,
-			);
+			];
 		}
 		return $links;
 	}

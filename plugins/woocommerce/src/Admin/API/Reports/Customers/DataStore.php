@@ -37,13 +37,13 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 	 *
 	 * @var array
 	 */
-	protected $column_types = array(
+	protected $column_types = [
 		'id'              => 'intval',
 		'user_id'         => 'intval',
 		'orders_count'    => 'intval',
 		'total_spend'     => 'floatval',
 		'avg_order_value' => 'floatval',
-	);
+	];
 
 	/**
 	 * Data store context used to pass to filters.
@@ -60,7 +60,7 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 		$table_name           = self::get_db_table_name();
 		$orders_count         = 'SUM( CASE WHEN parent_id = 0 THEN 1 ELSE 0 END )';
 		$total_spend          = 'SUM( total_sales )';
-		$this->report_columns = array(
+		$this->report_columns = [
 			'id'               => "{$table_name}.customer_id as id",
 			'user_id'          => 'user_id',
 			'username'         => 'username',
@@ -76,15 +76,15 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 			'orders_count'     => "{$orders_count} as orders_count",
 			'total_spend'      => "{$total_spend} as total_spend",
 			'avg_order_value'  => "CASE WHEN {$orders_count} = 0 THEN NULL ELSE {$total_spend} / {$orders_count} END AS avg_order_value",
-		);
+		];
 	}
 
 	/**
 	 * Set up all the hooks for maintaining and populating table data.
 	 */
 	public static function init() {
-		add_action( 'edit_user_profile_update', array( __CLASS__, 'update_registered_customer' ) );
-		add_action( 'woocommerce_analytics_delete_order_stats', array( __CLASS__, 'sync_on_order_delete' ), 15, 2 );
+		add_action( 'edit_user_profile_update', [ __CLASS__, 'update_registered_customer' ] );
+		add_action( 'woocommerce_analytics_delete_order_stats', [ __CLASS__, 'sync_on_order_delete' ], 15, 2 );
 	}
 
 	/**
@@ -139,7 +139,7 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 
 		list($data, $format) = self::get_customer_order_data_and_format( $order );
 
-		$result = $wpdb->update( self::get_db_table_name(), $data, array( 'customer_id' => $customer_id ), $format );
+		$result = $wpdb->update( self::get_db_table_name(), $data, [ 'customer_id' => $customer_id ], $format );
 
 		/**
 		 * Fires when a customer is updated.
@@ -175,31 +175,31 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 	protected function add_time_period_sql_params( $query_args, $table_name ) {
 		global $wpdb;
 
-		$this->clear_sql_clause( array( 'where', 'where_time', 'having' ) );
-		$date_param_mapping  = array(
-			'registered'  => array(
+		$this->clear_sql_clause( [ 'where', 'where_time', 'having' ] );
+		$date_param_mapping  = [
+			'registered'  => [
 				'clause' => 'where',
 				'column' => $table_name . '.date_registered',
-			),
-			'order'       => array(
+			],
+			'order'       => [
 				'clause' => 'where',
 				'column' => $wpdb->prefix . 'wc_order_stats.date_created',
-			),
-			'last_active' => array(
+			],
+			'last_active' => [
 				'clause' => 'where',
 				'column' => $table_name . '.date_last_active',
-			),
-			'last_order'  => array(
+			],
+			'last_order'  => [
 				'clause' => 'having',
 				'column' => "MAX( {$wpdb->prefix}wc_order_stats.date_created )",
-			),
-		);
+			],
+		];
 		$match_operator      = $this->get_match_operator( $query_args );
-		$where_time_clauses  = array();
-		$having_time_clauses = array();
+		$where_time_clauses  = [];
+		$having_time_clauses = [];
 
 		foreach ( $date_param_mapping as $query_param => $param_info ) {
-			$subclauses  = array();
+			$subclauses  = [];
 			$before_arg  = $query_param . '_before';
 			$after_arg   = $query_param . '_after';
 			$column_name = $param_info['column'];
@@ -250,15 +250,15 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 		$this->subquery->add_sql_clause( 'left_join', "LEFT JOIN {$order_stats_table_name} ON {$customer_lookup_table}.customer_id = {$order_stats_table_name}.customer_id" );
 
 		$match_operator = $this->get_match_operator( $query_args );
-		$where_clauses  = array();
-		$having_clauses = array();
+		$where_clauses  = [];
+		$having_clauses = [];
 
-		$exact_match_params = array(
+		$exact_match_params = [
 			'name',
 			'username',
 			'email',
 			'country',
-		);
+		];
 
 		foreach ( $exact_match_params as $exact_match_param ) {
 			if ( ! empty( $query_args[ $exact_match_param . '_includes' ] ) ) {
@@ -280,11 +280,11 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 			}
 		}
 
-		$search_params = array(
+		$search_params = [
 			'name',
 			'username',
 			'email',
-		);
+		];
 
 		if ( ! empty( $query_args['search'] ) ) {
 			$name_like = '%' . $wpdb->esc_like( $query_args['search'] ) . '%';
@@ -310,23 +310,23 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 			$where_clauses[] = "{$customer_lookup_table}.user_id IN ({$included_users})";
 		}
 
-		$numeric_params = array(
-			'orders_count'    => array(
+		$numeric_params = [
+			'orders_count'    => [
 				'column' => 'COUNT( order_id )',
 				'format' => '%d',
-			),
-			'total_spend'     => array(
+			],
+			'total_spend'     => [
 				'column' => 'SUM( total_sales )',
 				'format' => '%f',
-			),
-			'avg_order_value' => array(
+			],
+			'avg_order_value' => [
 				'column' => '( SUM( total_sales ) / COUNT( order_id ) )',
 				'format' => '%f',
-			),
-		);
+			],
+		];
 
 		foreach ( $numeric_params as $numeric_param => $param_info ) {
-			$subclauses = array();
+			$subclauses = [];
 			$min_param  = $numeric_param . '_min';
 			$max_param  = $numeric_param . '_max';
 			$or_equal   = isset( $query_args[ $min_param ] ) && isset( $query_args[ $max_param ] ) ? '=' : '';
@@ -381,7 +381,7 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 		$order_stats_table_name = $wpdb->prefix . 'wc_order_stats';
 
 		// These defaults are only partially applied when used via REST API, as that has its own defaults.
-		$defaults   = array(
+		$defaults   = [
 			'per_page'     => get_option( 'posts_per_page' ),
 			'page'         => 1,
 			'order'        => 'DESC',
@@ -389,7 +389,7 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 			'order_before' => TimeInterval::default_before(),
 			'order_after'  => TimeInterval::default_after(),
 			'fields'       => '*',
-		);
+		];
 		$query_args = wp_parse_args( $query_args, $defaults );
 		$this->normalize_timezones( $query_args, $defaults );
 
@@ -403,12 +403,12 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 		if ( false === $data ) {
 			$this->initialize_queries();
 
-			$data = (object) array(
-				'data'    => array(),
+			$data = (object) [
+				'data'    => [],
 				'total'   => 0,
 				'pages'   => 0,
 				'page_no' => 0,
-			);
+			];
 
 			$selections       = $this->selected_columns( $query_args );
 			$sql_query_params = $this->add_sql_query_params( $query_args );
@@ -440,13 +440,13 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 				return $data;
 			}
 
-			$customer_data = array_map( array( $this, 'cast_numbers' ), $customer_data );
-			$data          = (object) array(
+			$customer_data = array_map( [ $this, 'cast_numbers' ], $customer_data );
+			$data          = (object) [
 				'data'    => $customer_data,
 				'total'   => $db_records_count,
 				'pages'   => $total_pages,
 				'page_no' => (int) $query_args['page'],
-			);
+			];
 
 			$this->set_cached_data( $cache_key, $data );
 		}
@@ -540,7 +540,7 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 	 * @return array ($data, $format)
 	 */
 	public static function get_customer_order_data_and_format( $order, $customer_user = null ) {
-		$data   = array(
+		$data   = [
 			'first_name'       => $order->get_customer_first_name(),
 			'last_name'        => $order->get_customer_last_name(),
 			'email'            => $order->get_billing_email( 'edit' ),
@@ -549,8 +549,8 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 			'postcode'         => $order->get_billing_postcode( 'edit' ),
 			'country'          => $order->get_billing_country( 'edit' ),
 			'date_last_active' => gmdate( 'Y-m-d H:i:s', $order->get_date_created( 'edit' )->getTimestamp() ),
-		);
-		$format = array(
+		];
+		$format = [
 			'%s',
 			'%s',
 			'%s',
@@ -559,7 +559,7 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 			'%s',
 			'%s',
 			'%s',
-		);
+		];
 
 		// Add registered customer data.
 		if ( 0 !== $order->get_user_id() ) {
@@ -574,7 +574,7 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 			$format[]                = '%s';
 			$format[]                = '%s';
 		}
-		return array( $data, $format );
+		return [ $data, $format ];
 	}
 
 	/**
@@ -654,7 +654,7 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 	public static function get_oldest_orders( $customer_id ) {
 		global $wpdb;
 		$orders_table                = $wpdb->prefix . 'wc_order_stats';
-		$excluded_statuses           = array_map( array( __CLASS__, 'normalize_order_status' ), self::get_excluded_report_order_statuses() );
+		$excluded_statuses           = array_map( [ __CLASS__, 'normalize_order_status' ], self::get_excluded_report_order_statuses() );
 		$excluded_statuses_condition = '';
 		if ( ! empty( $excluded_statuses ) ) {
 			$excluded_statuses_str       = implode( "','", $excluded_statuses );
@@ -724,7 +724,7 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 		}
 
 		$last_active = $customer->get_meta( 'wc_last_active', true, 'edit' );
-		$data        = array(
+		$data        = [
 			'user_id'          => $user_id,
 			'username'         => $customer->get_username( 'edit' ),
 			'first_name'       => $first_name,
@@ -736,8 +736,8 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 			'country'          => $customer->get_billing_country( 'edit' ),
 			'date_registered'  => $customer->get_date_created( 'edit' )->date( TimeInterval::$sql_datetime_format ),
 			'date_last_active' => $last_active ? gmdate( 'Y-m-d H:i:s', $last_active ) : null,
-		);
-		$format      = array(
+		];
+		$format      = [
 			'%d',
 			'%s',
 			'%s',
@@ -749,7 +749,7 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 			'%s',
 			'%s',
 			'%s',
-		);
+		];
 
 		$customer_id = self::get_customer_id_by_user_id( $user_id );
 
@@ -793,7 +793,7 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 		 * @param array List of customer roles.
 		 * @since 4.0.0
 		 */
-		$customer_roles = (array) apply_filters( 'woocommerce_analytics_customer_roles', array( 'customer' ) );
+		$customer_roles = (array) apply_filters( 'woocommerce_analytics_customer_roles', [ 'customer' ] );
 
 		if ( empty( $user->roles ) || empty( array_intersect( $user->roles, $customer_roles ) ) ) {
 			return false;
@@ -811,7 +811,7 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 		global $wpdb;
 
 		$customer_id = (int) $customer_id;
-		$num_deleted = $wpdb->delete( self::get_db_table_name(), array( 'customer_id' => $customer_id ) );
+		$num_deleted = $wpdb->delete( self::get_db_table_name(), [ 'customer_id' => $customer_id ] );
 
 		if ( $num_deleted ) {
 			/**
@@ -835,7 +835,7 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 		global $wpdb;
 
 		$user_id     = (int) $user_id;
-		$num_deleted = $wpdb->delete( self::get_db_table_name(), array( 'user_id' => $user_id ) );
+		$num_deleted = $wpdb->delete( self::get_db_table_name(), [ 'user_id' => $user_id ] );
 
 		if ( $num_deleted ) {
 			ReportsCache::invalidate();

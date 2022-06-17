@@ -3,7 +3,7 @@ class WC_Mock_WC_Data_Store extends WC_Data_Store_WP implements WC_Object_Data_S
 
 	protected $meta_type                = 'post';
 	protected $object_id_field_for_meta = '';
-	protected $internal_meta_keys       = array();
+	protected $internal_meta_keys       = [];
 
 	/*
 	|--------------------------------------------------------------------------
@@ -35,7 +35,7 @@ class WC_Mock_WC_Data_Store extends WC_Data_Store_WP implements WC_Object_Data_S
 		if ( 'user' === $this->meta_type ) {
 			$content_id = wc_create_new_customer( $object->get_content(), 'username-' . time(), 'hunter2' );
 		} else {
-			$content_id = wp_insert_post( array( 'post_title' => $object->get_content() ) );
+			$content_id = wp_insert_post( [ 'post_title' => $object->get_content() ] );
 		}
 		if ( $content_id ) {
 			$object->set_id( $content_id );
@@ -76,17 +76,17 @@ class WC_Mock_WC_Data_Store extends WC_Data_Store_WP implements WC_Object_Data_S
 
 		if ( 'user' === $this->meta_type ) {
 			wp_update_user(
-				array(
+				[
 					'ID'         => $customer_id,
 					'user_email' => $object->get_content(),
-				)
+				]
 			);
 		} else {
 			wp_update_post(
-				array(
+				[
 					'ID'         => $content_id,
 					'post_title' => $object->get_content(),
-				)
+				]
 			);
 		}
 	}
@@ -94,7 +94,7 @@ class WC_Mock_WC_Data_Store extends WC_Data_Store_WP implements WC_Object_Data_S
 	/**
 	 * Simple delete.
 	 */
-	public function delete( &$object, $args = array() ) {
+	public function delete( &$object, $args = [] ) {
 		if ( 'user' === $this->meta_type ) {
 			wp_delete_user( $object->get_id() );
 		} else {
@@ -114,10 +114,10 @@ class WC_Mock_WC_Data extends WC_Data {
 	/**
 	 * Data array
 	 */
-	protected $data = array(
+	protected $data = [
 		'content'    => '',
 		'bool_value' => false,
-	);
+	];
 
 	// see WC_Data
 	protected $cache_group = '';
@@ -197,9 +197,9 @@ class WC_Mock_WC_Data extends WC_Data {
 	public function get_data() {
 		return array_merge(
 			$this->data,
-			array(
+			[
 				'meta_data' => $this->get_meta_data(),
-			)
+			]
 		);
 	}
 

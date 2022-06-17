@@ -34,11 +34,11 @@ class WC_Report_Downloads extends WP_List_Table {
 	public function __construct() {
 
 		parent::__construct(
-			array(
+			[
 				'singular' => 'download',
 				'plural'   => 'downloads',
 				'ajax'     => false,
-			)
+			]
 		);
 	}
 
@@ -79,15 +79,15 @@ class WC_Report_Downloads extends WP_List_Table {
 		echo '<h1>' . esc_html__( 'Customer downloads', 'woocommerce' );
 
 		$filters      = $this->get_filter_vars();
-		$filter_list  = array();
-		$filter_names = array(
+		$filter_list  = [];
+		$filter_names = [
 			'product_id'      => __( 'Product', 'woocommerce' ),
 			'download_id'     => __( 'File ID', 'woocommerce' ),
 			'permission_id'   => __( 'Permission ID', 'woocommerce' ),
 			'order_id'        => __( 'Order', 'woocommerce' ),
 			'user_id'         => __( 'User', 'woocommerce' ),
 			'user_ip_address' => __( 'IP address', 'woocommerce' ),
-		);
+		];
 
 		foreach ( $filters as $key => $value ) {
 			if ( is_null( $value ) ) {
@@ -214,14 +214,14 @@ class WC_Report_Downloads extends WP_List_Table {
 	 * @return array
 	 */
 	public function get_columns() {
-		$columns = array(
+		$columns = [
 			'timestamp'       => __( 'Timestamp', 'woocommerce' ),
 			'product'         => __( 'Product', 'woocommerce' ),
 			'file'            => __( 'File', 'woocommerce' ),
 			'order'           => __( 'Order', 'woocommerce' ),
 			'user'            => __( 'User', 'woocommerce' ),
 			'user_ip_address' => __( 'IP address', 'woocommerce' ),
-		);
+		];
 
 		return $columns;
 	}
@@ -231,7 +231,7 @@ class WC_Report_Downloads extends WP_List_Table {
 	 */
 	public function prepare_items() {
 
-		$this->_column_headers = array( $this->get_columns(), array(), $this->get_sortable_columns() );
+		$this->_column_headers = [ $this->get_columns(), [], $this->get_sortable_columns() ];
 		$current_page          = absint( $this->get_pagenum() );
 		// Allow filtering per_page value, but ensure it's at least 1.
 		$per_page = max( 1, apply_filters( 'woocommerce_admin_downloads_report_downloads_per_page', 20 ) );
@@ -242,11 +242,11 @@ class WC_Report_Downloads extends WP_List_Table {
 		 * Pagination.
 		 */
 		$this->set_pagination_args(
-			array(
+			[
 				'total_items' => $this->max_items,
 				'per_page'    => $per_page,
 				'total_pages' => ceil( $this->max_items / $per_page ),
-			)
+			]
 		);
 	}
 
@@ -270,14 +270,14 @@ class WC_Report_Downloads extends WP_List_Table {
 		$user_id         = ! empty( $_GET['user_id'] ) ? absint( wp_unslash( $_GET['user_id'] ) ) : null; // WPCS: input var ok.
 		$user_ip_address = ! empty( $_GET['user_ip_address'] ) ? wc_clean( wp_unslash( $_GET['user_ip_address'] ) ) : null; // WPCS: input var ok.
 
-		return (object) array(
+		return (object) [
 			'product_id'      => $product_id,
 			'download_id'     => $download_id,
 			'permission_id'   => $permission_id,
 			'order_id'        => $order_id,
 			'user_id'         => $user_id,
 			'user_ip_address' => $user_ip_address,
-		);
+		];
 	}
 
 	/**
@@ -290,7 +290,7 @@ class WC_Report_Downloads extends WP_List_Table {
 		global $wpdb;
 
 		$this->max_items = 0;
-		$this->items     = array();
+		$this->items     = [];
 		$filters         = $this->get_filter_vars();
 
 		// Get downloads from database.

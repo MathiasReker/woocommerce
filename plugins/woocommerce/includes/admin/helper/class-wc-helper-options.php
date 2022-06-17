@@ -34,7 +34,7 @@ class WC_Helper_Options {
 	 * @return bool True if the option has been updated.
 	 */
 	public static function update( $key, $value ) {
-		$options         = get_option( self::$option_name, array() );
+		$options         = get_option( self::$option_name, [] );
 		$options[ $key ] = $value;
 		return update_option( self::$option_name, $options, true );
 	}
@@ -50,7 +50,7 @@ class WC_Helper_Options {
 	 * @return mixed An option or the default.
 	 */
 	public static function get( $key, $default = false ) {
-		$options = get_option( self::$option_name, array() );
+		$options = get_option( self::$option_name, [] );
 		if ( array_key_exists( $key, $options ) ) {
 			return $options[ $key ];
 		}

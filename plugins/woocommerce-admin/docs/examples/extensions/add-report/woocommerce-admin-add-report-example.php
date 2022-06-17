@@ -34,12 +34,12 @@ add_action( 'admin_enqueue_scripts', 'add_report_register_script' );
  * @return array Updated report page menu items.
  */
 function add_report_add_report_menu_item( $report_pages ) {
-	$report_pages[] = array(
+	$report_pages[] = [
 		'id'     => 'example-analytics-report',
 		'title'  => __( 'Example', 'woocommerce-admin' ),
 		'parent' => 'woocommerce-analytics',
 		'path'   => '/analytics/example',
-	);
+	];
 
 	return $report_pages;
 }

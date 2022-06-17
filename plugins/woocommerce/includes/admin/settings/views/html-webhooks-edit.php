@@ -64,7 +64,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 							$topics = apply_filters(
 								'woocommerce_webhook_topics',
-								array(
+								[
 									''                 => __( 'Select an option&hellip;', 'woocommerce' ),
 									'coupon.created'   => __( 'Coupon created', 'woocommerce' ),
 									'coupon.updated'   => __( 'Coupon updated', 'woocommerce' ),
@@ -82,7 +82,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 									'product.deleted'  => __( 'Product deleted', 'woocommerce' ),
 									'product.restored' => __( 'Product restored', 'woocommerce' ),
 									'action'           => __( 'Action', 'woocommerce' ),
-								)
+								]
 							);
 
 							foreach ( $topics as $topic_slug => $topic_name ) :
@@ -203,9 +203,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 						if ( $webhook->get_id() ) :
 							$delete_url = wp_nonce_url(
 								add_query_arg(
-									array(
+									[
 										'delete' => $webhook->get_id(),
-									),
+									],
 									admin_url( 'admin.php?page=wc-settings&tab=advanced&section=webhooks' )
 								),
 								'delete-webhook'

@@ -70,7 +70,7 @@ interface WC_Product_Data_Store_Interface {
 	 * @param array      $match_attributes Array of attributes we want to try to match.
 	 * @return int Matching variation ID or 0.
 	 */
-	public function find_matching_product_variation( $product, $match_attributes = array() );
+	public function find_matching_product_variation( $product, $match_attributes = [] );
 
 	/**
 	 * Make sure all variations have a sort order set so they can be reordered correctly.
@@ -127,7 +127,7 @@ interface WC_Product_Data_Store_Interface {
 	 * @param array $args @see wc_get_products.
 	 * @return array
 	 */
-	public function get_products( $args = array() );
+	public function get_products( $args = [] );
 
 	/**
 	 * Get the product type based on product ID.

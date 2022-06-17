@@ -87,6 +87,6 @@ class WC_Geolite_Integration {
 			$this->log = wc_get_logger();
 		}
 
-		$this->log->log( $level, $message, array( 'source' => 'geoip' ) );
+		$this->log->log( $level, $message, [ 'source' => 'geoip' ] );
 	}
 }

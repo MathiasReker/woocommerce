@@ -19,9 +19,9 @@ class Settings extends WC_REST_Unit_Test_Case {
 		$this->endpoint = new WC_REST_Setting_Options_Controller();
 		\Automattic\WooCommerce\RestApi\UnitTests\Helpers\SettingsHelper::register();
 		$this->user = $this->factory->user->create(
-			array(
+			[
 				'role' => 'administrator',
-			)
+			]
 		);
 	}
 
@@ -51,38 +51,38 @@ class Settings extends WC_REST_Unit_Test_Case {
 		$this->assertEquals( 200, $response->get_status() );
 
 		$this->assertContains(
-			array(
+			[
 				'id'          => 'test',
 				'label'       => 'Test extension',
 				'parent_id'   => '',
 				'description' => 'My awesome test settings.',
-				'sub_groups'  => array( 'sub-test' ),
-				'_links'      => array(
-					'options' => array(
-						array(
+				'sub_groups'  => [ 'sub-test' ],
+				'_links'      => [
+					'options' => [
+						[
 							'href' => rest_url( '/wc/v3/settings/test' ),
-						),
-					),
-				),
-			),
+						],
+					],
+				],
+			],
 			$data
 		);
 
 		$this->assertContains(
-			array(
+			[
 				'id'          => 'sub-test',
 				'label'       => 'Sub test',
 				'parent_id'   => 'test',
 				'description' => '',
-				'sub_groups'  => array(),
-				'_links'      => array(
-					'options' => array(
-						array(
+				'sub_groups'  => [],
+				'_links'      => [
+					'options' => [
+						[
 							'href' => rest_url( '/wc/v3/settings/sub-test' ),
-						),
-					),
-				),
-			),
+						],
+					],
+				],
+			],
 			$data
 		);
 	}
@@ -213,9 +213,9 @@ class Settings extends WC_REST_Unit_Test_Case {
 		// test updating shop display setting.
 		$request = new WP_REST_Request( 'PUT', sprintf( '/wc/v3/settings/%s/%s', 'test', 'woocommerce_shop_page_display' ) );
 		$request->set_body_params(
-			array(
+			[
 				'value' => 'both',
-			)
+			]
 		);
 		$response = $this->server->dispatch( $request );
 		$data     = $response->get_data();
@@ -225,9 +225,9 @@ class Settings extends WC_REST_Unit_Test_Case {
 
 		$request = new WP_REST_Request( 'PUT', sprintf( '/wc/v3/settings/%s/%s', 'test', 'woocommerce_shop_page_display' ) );
 		$request->set_body_params(
-			array(
+			[
 				'value' => 'subcategories',
-			)
+			]
 		);
 		$response = $this->server->dispatch( $request );
 		$data     = $response->get_data();
@@ -237,9 +237,9 @@ class Settings extends WC_REST_Unit_Test_Case {
 
 		$request = new WP_REST_Request( 'PUT', sprintf( '/wc/v3/settings/%s/%s', 'test', 'woocommerce_shop_page_display' ) );
 		$request->set_body_params(
-			array(
+			[
 				'value' => '',
-			)
+			]
 		);
 		$response = $this->server->dispatch( $request );
 		$data     = $response->get_data();
@@ -264,14 +264,14 @@ class Settings extends WC_REST_Unit_Test_Case {
 		// test setting both at once.
 		$request = new WP_REST_Request( 'POST', '/wc/v3/settings/test/batch' );
 		$request->set_body_params(
-			array(
-				'update' => array(
-					array(
+			[
+				'update' => [
+					[
 						'id'    => 'woocommerce_shop_page_display',
 						'value' => 'both',
-					),
-				),
-			)
+					],
+				],
+			]
 		);
 		$response = $this->server->dispatch( $request );
 		$data     = $response->get_data();
@@ -282,14 +282,14 @@ class Settings extends WC_REST_Unit_Test_Case {
 		// test updating one, but making sure the other value stays the same.
 		$request = new WP_REST_Request( 'POST', '/wc/v3/settings/test/batch' );
 		$request->set_body_params(
-			array(
-				'update' => array(
-					array(
+			[
+				'update' => [
+					[
 						'id'    => 'woocommerce_shop_page_display',
 						'value' => 'subcategories',
-					),
-				),
-			)
+					],
+				],
+			]
 		);
 		$response = $this->server->dispatch( $request );
 		$data     = $response->get_data();
@@ -369,12 +369,12 @@ class Settings extends WC_REST_Unit_Test_Case {
 	 */
 	public function test_get_setting_invalid_setting_type() {
 		// $controller = $this->getMock( 'WC_Rest_Setting_Options_Controller', array( 'get_group_settings', 'is_setting_type_valid' ) );
-		$controller = $this->getMockBuilder( 'WC_Rest_Setting_Options_Controller' )->setMethods( array( 'get_group_settings', 'is_setting_type_valid' ) )->getMock();
+		$controller = $this->getMockBuilder( 'WC_Rest_Setting_Options_Controller' )->setMethods( [ 'get_group_settings', 'is_setting_type_valid' ] )->getMock();
 
 		$controller
 			->expects( $this->any() )
 			->method( 'get_group_settings' )
-			->will( $this->returnValue( \Automattic\WooCommerce\RestApi\UnitTests\Helpers\SettingsHelper::register_test_settings( array() ) ) );
+			->will( $this->returnValue( \Automattic\WooCommerce\RestApi\UnitTests\Helpers\SettingsHelper::register_test_settings( [] ) ) );
 
 		$controller
 			->expects( $this->any() )
@@ -396,9 +396,9 @@ class Settings extends WC_REST_Unit_Test_Case {
 
 		$request = new WP_REST_Request( 'PUT', sprintf( '/wc/v3/settings/%s/%s', 'test', 'woocommerce_shop_page_display' ) );
 		$request->set_body_params(
-			array(
+			[
 				'value' => 'subcategories',
-			)
+			]
 		);
 		$response = $this->server->dispatch( $request );
 		$this->assertEquals( 401, $response->get_status() );
@@ -415,14 +415,14 @@ class Settings extends WC_REST_Unit_Test_Case {
 
 		$request = new WP_REST_Request( 'POST', '/wc/v3/settings/test/batch' );
 		$request->set_body_params(
-			array(
-				'update' => array(
-					array(
+			[
+				'update' => [
+					[
 						'id'    => 'woocommerce_shop_page_display',
 						'value' => 'subcategories',
-					),
-				),
-			)
+					],
+				],
+			]
 		);
 		$response = $this->server->dispatch( $request );
 		$this->assertEquals( 401, $response->get_status() );
@@ -439,9 +439,9 @@ class Settings extends WC_REST_Unit_Test_Case {
 
 		$request = new WP_REST_Request( 'PUT', '/wc/v3/settings/test/invalid' );
 		$request->set_body_params(
-			array(
+			[
 				'value' => 'test',
-			)
+			]
 		);
 		$response = $this->server->dispatch( $request );
 		$this->assertEquals( 404, $response->get_status() );
@@ -460,7 +460,7 @@ class Settings extends WC_REST_Unit_Test_Case {
 		$data     = $response->get_data();
 		$this->assertTrue( is_array( $data ) );
 		$this->assertContains(
-			array(
+			[
 				'id'          => 'woocommerce_downloads_require_login',
 				'label'       => 'Access restriction',
 				'description' => 'Downloads require login',
@@ -468,19 +468,19 @@ class Settings extends WC_REST_Unit_Test_Case {
 				'default'     => 'no',
 				'tip'         => 'This setting does not apply to guest purchases.',
 				'value'       => 'no',
-				'_links'      => array(
-					'self'       => array(
-						array(
+				'_links'      => [
+					'self'       => [
+						[
 							'href' => rest_url( '/wc/v3/settings/products/woocommerce_downloads_require_login' ),
-						),
-					),
-					'collection' => array(
-						array(
+						],
+					],
+					'collection' => [
+						[
 							'href' => rest_url( '/wc/v3/settings/products' ),
-						),
-					),
-				),
-			),
+						],
+					],
+				],
+			],
 			$data
 		);
 
@@ -493,9 +493,9 @@ class Settings extends WC_REST_Unit_Test_Case {
 		// test update.
 		$request = new WP_REST_Request( 'PUT', sprintf( '/wc/v3/settings/%s/%s', 'products', 'woocommerce_dimension_unit' ) );
 		$request->set_body_params(
-			array(
+			[
 				'value' => 'yd',
-			)
+			]
 		);
 		$response = $this->server->dispatch( $request );
 		$data     = $response->get_data();
@@ -518,7 +518,7 @@ class Settings extends WC_REST_Unit_Test_Case {
 		$this->assertEquals( 200, $response->get_status() );
 
 		$this->assertContains(
-			array(
+			[
 				'id'          => 'recipient',
 				'label'       => 'Recipient(s)',
 				'description' => 'Enter recipients (comma separated) for this email. Defaults to <code>admin@example.org</code>.',
@@ -526,19 +526,19 @@ class Settings extends WC_REST_Unit_Test_Case {
 				'default'     => '',
 				'tip'         => 'Enter recipients (comma separated) for this email. Defaults to <code>admin@example.org</code>.',
 				'value'       => '',
-				'_links'      => array(
-					'self'       => array(
-						array(
+				'_links'      => [
+					'self'       => [
+						[
 							'href' => rest_url( '/wc/v3/settings/email_new_order/recipient' ),
-						),
-					),
-					'collection' => array(
-						array(
+						],
+					],
+					'collection' => [
+						[
 							'href' => rest_url( '/wc/v3/settings/email_new_order' ),
-						),
-					),
-				),
-			),
+						],
+					],
+				],
+			],
 			$settings
 		);
 
@@ -547,7 +547,7 @@ class Settings extends WC_REST_Unit_Test_Case {
 		$setting  = $response->get_data();
 
 		$this->assertEquals(
-			array(
+			[
 				'id'          => 'subject',
 				'label'       => 'Subject',
 				'description' => 'Available placeholders: <code>{site_title}</code>, <code>{site_address}</code>, <code>{site_url}</code>, <code>{order_date}</code>, <code>{order_number}</code>',
@@ -556,22 +556,22 @@ class Settings extends WC_REST_Unit_Test_Case {
 				'tip'         => 'Available placeholders: <code>{site_title}</code>, <code>{site_address}</code>, <code>{site_url}</code>, <code>{order_date}</code>, <code>{order_number}</code>',
 				'value'       => '',
 				'group_id'    => 'email_new_order',
-			),
+			],
 			$setting
 		);
 
 		// test update.
 		$request = new WP_REST_Request( 'PUT', sprintf( '/wc/v3/settings/%s/%s', 'email_new_order', 'subject' ) );
 		$request->set_body_params(
-			array(
+			[
 				'value' => 'This is my subject',
-			)
+			]
 		);
 		$response = $this->server->dispatch( $request );
 		$setting  = $response->get_data();
 
 		$this->assertEquals(
-			array(
+			[
 				'id'          => 'subject',
 				'label'       => 'Subject',
 				'description' => 'Available placeholders: <code>{site_title}</code>, <code>{site_address}</code>, <code>{site_url}</code>, <code>{order_date}</code>, <code>{order_number}</code>',
@@ -580,7 +580,7 @@ class Settings extends WC_REST_Unit_Test_Case {
 				'tip'         => 'Available placeholders: <code>{site_title}</code>, <code>{site_address}</code>, <code>{site_url}</code>, <code>{order_date}</code>, <code>{order_number}</code>',
 				'value'       => 'This is my subject',
 				'group_id'    => 'email_new_order',
-			),
+			],
 			$setting
 		);
 
@@ -594,9 +594,9 @@ class Settings extends WC_REST_Unit_Test_Case {
 		// test update.
 		$request = new WP_REST_Request( 'PUT', sprintf( '/wc/v3/settings/%s/%s', 'email_customer_new_account', 'subject' ) );
 		$request->set_body_params(
-			array(
+			[
 				'value' => 'This is my new subject',
-			)
+			]
 		);
 		$response = $this->server->dispatch( $request );
 		$setting  = $response->get_data();
@@ -621,9 +621,9 @@ class Settings extends WC_REST_Unit_Test_Case {
 		// test bogus value.
 		$request = new WP_REST_Request( 'PUT', sprintf( '/wc/v3/settings/%s/%s', 'email_cancelled_order', 'enabled' ) );
 		$request->set_body_params(
-			array(
+			[
 				'value' => 'not_yes_or_no',
-			)
+			]
 		);
 		$response = $this->server->dispatch( $request );
 		$this->assertEquals( 400, $response->get_status() );
@@ -631,9 +631,9 @@ class Settings extends WC_REST_Unit_Test_Case {
 		// test yes.
 		$request = new WP_REST_Request( 'PUT', sprintf( '/wc/v3/settings/%s/%s', 'email_cancelled_order', 'enabled' ) );
 		$request->set_body_params(
-			array(
+			[
 				'value' => 'yes',
-			)
+			]
 		);
 		$response = $this->server->dispatch( $request );
 		$this->assertEquals( 200, $response->get_status() );
@@ -641,9 +641,9 @@ class Settings extends WC_REST_Unit_Test_Case {
 		// test no.
 		$request = new WP_REST_Request( 'PUT', sprintf( '/wc/v3/settings/%s/%s', 'email_cancelled_order', 'enabled' ) );
 		$request->set_body_params(
-			array(
+			[
 				'value' => 'no',
-			)
+			]
 		);
 		$response = $this->server->dispatch( $request );
 		$this->assertEquals( 200, $response->get_status() );
@@ -660,9 +660,9 @@ class Settings extends WC_REST_Unit_Test_Case {
 		// not a valid option.
 		$request = new WP_REST_Request( 'PUT', sprintf( '/wc/v3/settings/%s/%s', 'shipping', 'woocommerce_ship_to_destination' ) );
 		$request->set_body_params(
-			array(
+			[
 				'value' => 'billing2',
-			)
+			]
 		);
 		$response = $this->server->dispatch( $request );
 		$this->assertEquals( 400, $response->get_status() );
@@ -670,9 +670,9 @@ class Settings extends WC_REST_Unit_Test_Case {
 		// valid.
 		$request = new WP_REST_Request( 'PUT', sprintf( '/wc/v3/settings/%s/%s', 'shipping', 'woocommerce_ship_to_destination' ) );
 		$request->set_body_params(
-			array(
+			[
 				'value' => 'billing',
-			)
+			]
 		);
 		$response = $this->server->dispatch( $request );
 		$this->assertEquals( 200, $response->get_status() );
@@ -692,13 +692,13 @@ class Settings extends WC_REST_Unit_Test_Case {
 
 		$request = new WP_REST_Request( 'PUT', sprintf( '/wc/v3/settings/%s/%s', 'general', 'woocommerce_specific_allowed_countries' ) );
 		$request->set_body_params(
-			array(
-				'value' => array( 'AX', 'DZ', 'MMM' ),
-			)
+			[
+				'value' => [ 'AX', 'DZ', 'MMM' ],
+			]
 		);
 		$response = $this->server->dispatch( $request );
 		$setting  = $response->get_data();
-		$this->assertEquals( array( 'AX', 'DZ' ), $setting['value'] );
+		$this->assertEquals( [ 'AX', 'DZ' ], $setting['value'] );
 	}
 
 	/**
@@ -716,9 +716,9 @@ class Settings extends WC_REST_Unit_Test_Case {
 		// invalid.
 		$request = new WP_REST_Request( 'PUT', sprintf( '/wc/v3/settings/%s/%s', 'products', 'woocommerce_weight_unit' ) );
 		$request->set_body_params(
-			array(
+			[
 				'value' => 'pounds', // invalid, should be lbs.
-			)
+			]
 		);
 		$response = $this->server->dispatch( $request );
 		$this->assertEquals( 400, $response->get_status() );
@@ -726,9 +726,9 @@ class Settings extends WC_REST_Unit_Test_Case {
 		// valid.
 		$request = new WP_REST_Request( 'PUT', sprintf( '/wc/v3/settings/%s/%s', 'products', 'woocommerce_weight_unit' ) );
 		$request->set_body_params(
-			array(
+			[
 				'value' => 'lbs', // invalid, should be lbs.
-			)
+			]
 		);
 		$response = $this->server->dispatch( $request );
 		$setting  = $response->get_data();
@@ -770,9 +770,9 @@ class Settings extends WC_REST_Unit_Test_Case {
 		$new_value = $old_value . ' ' . rand( 1000, 9999 );
 		$request   = new WP_REST_Request( 'PUT', '/wc/v3/settings/general/woocommerce_store_address' );
 		$request->set_body_params(
-			array(
+			[
 				'value' => $new_value,
-			)
+			]
 		);
 		$response = $this->server->dispatch( $request );
 		$setting  = $response->get_data();
@@ -781,9 +781,9 @@ class Settings extends WC_REST_Unit_Test_Case {
 		// Put the original value back.
 		$request = new WP_REST_Request( 'PUT', '/wc/v3/settings/general/woocommerce_store_address' );
 		$request->set_body_params(
-			array(
+			[
 				'value' => $old_value,
-			)
+			]
 		);
 		$response = $this->server->dispatch( $request );
 		$setting  = $response->get_data();
@@ -808,9 +808,9 @@ class Settings extends WC_REST_Unit_Test_Case {
 		$new_value = $old_value . ' ' . rand( 1000, 9999 );
 		$request   = new WP_REST_Request( 'PUT', '/wc/v3/settings/general/woocommerce_store_address_2' );
 		$request->set_body_params(
-			array(
+			[
 				'value' => $new_value,
-			)
+			]
 		);
 		$response = $this->server->dispatch( $request );
 		$setting  = $response->get_data();
@@ -819,9 +819,9 @@ class Settings extends WC_REST_Unit_Test_Case {
 		// Put the original value back.
 		$request = new WP_REST_Request( 'PUT', '/wc/v3/settings/general/woocommerce_store_address_2' );
 		$request->set_body_params(
-			array(
+			[
 				'value' => $old_value,
-			)
+			]
 		);
 		$response = $this->server->dispatch( $request );
 		$setting  = $response->get_data();
@@ -846,9 +846,9 @@ class Settings extends WC_REST_Unit_Test_Case {
 		$new_value = $old_value . ' ' . rand( 1000, 9999 );
 		$request   = new WP_REST_Request( 'PUT', '/wc/v3/settings/general/woocommerce_store_city' );
 		$request->set_body_params(
-			array(
+			[
 				'value' => $new_value,
-			)
+			]
 		);
 		$response = $this->server->dispatch( $request );
 		$setting  = $response->get_data();
@@ -857,9 +857,9 @@ class Settings extends WC_REST_Unit_Test_Case {
 		// Put the original value back.
 		$request = new WP_REST_Request( 'PUT', '/wc/v3/settings/general/woocommerce_store_city' );
 		$request->set_body_params(
-			array(
+			[
 				'value' => $old_value,
-			)
+			]
 		);
 		$response = $this->server->dispatch( $request );
 		$setting  = $response->get_data();
@@ -884,9 +884,9 @@ class Settings extends WC_REST_Unit_Test_Case {
 		$new_value = $old_value . ' ' . rand( 1000, 9999 );
 		$request   = new WP_REST_Request( 'PUT', '/wc/v3/settings/general/woocommerce_store_postcode' );
 		$request->set_body_params(
-			array(
+			[
 				'value' => $new_value,
-			)
+			]
 		);
 		$response = $this->server->dispatch( $request );
 		$setting  = $response->get_data();
@@ -895,9 +895,9 @@ class Settings extends WC_REST_Unit_Test_Case {
 		// Put the original value back.
 		$request = new WP_REST_Request( 'PUT', '/wc/v3/settings/general/woocommerce_store_postcode' );
 		$request->set_body_params(
-			array(
+			[
 				'value' => $old_value,
-			)
+			]
 		);
 		$response = $this->server->dispatch( $request );
 		$setting  = $response->get_data();

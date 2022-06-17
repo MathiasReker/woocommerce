@@ -41,14 +41,14 @@ class WC_Product_CSV_Exporter extends WC_CSV_Batch_Exporter {
 	 *
 	 * @var array
 	 */
-	protected $product_types_to_export = array();
+	protected $product_types_to_export = [];
 
 	/**
 	 * Products belonging to what category should be exported.
 	 *
 	 * @var string
 	 */
-	protected $product_category_to_export = array();
+	protected $product_category_to_export = [];
 
 	/**
 	 * Constructor.
@@ -101,7 +101,7 @@ class WC_Product_CSV_Exporter extends WC_CSV_Batch_Exporter {
 	public function get_default_column_names() {
 		return apply_filters(
 			"woocommerce_product_export_{$this->export_type}_default_columns",
-			array(
+			[
 				'id'                 => __( 'ID', 'woocommerce' ),
 				'type'               => __( 'Type', 'woocommerce' ),
 				'sku'                => __( 'SKU', 'woocommerce' ),
@@ -145,7 +145,7 @@ class WC_Product_CSV_Exporter extends WC_CSV_Batch_Exporter {
 				'product_url'        => __( 'External URL', 'woocommerce' ),
 				'button_text'        => __( 'Button text', 'woocommerce' ),
 				'menu_order'         => __( 'Position', 'woocommerce' ),
-			)
+			]
 		);
 	}
 
@@ -155,17 +155,17 @@ class WC_Product_CSV_Exporter extends WC_CSV_Batch_Exporter {
 	 * @since 3.1.0
 	 */
 	public function prepare_data_to_export() {
-		$args = array(
-			'status'   => array( 'private', 'publish', 'draft', 'future', 'pending' ),
+		$args = [
+			'status'   => [ 'private', 'publish', 'draft', 'future', 'pending' ],
 			'type'     => $this->product_types_to_export,
 			'limit'    => $this->get_limit(),
 			'page'     => $this->get_page(),
-			'orderby'  => array(
+			'orderby'  => [
 				'ID' => 'ASC',
-			),
+			],
 			'return'   => 'objects',
 			'paginate' => true,
-		);
+		];
 
 		if ( ! empty( $this->product_category_to_export ) ) {
 			$args['category'] = $this->product_category_to_export;
@@ -173,8 +173,8 @@ class WC_Product_CSV_Exporter extends WC_CSV_Batch_Exporter {
 		$products = wc_get_products( apply_filters( "woocommerce_product_export_{$this->export_type}_query_args", $args ) );
 
 		$this->total_rows  = $products->total;
-		$this->row_data    = array();
-		$variable_products = array();
+		$this->row_data    = [];
+		$variable_products = [];
 
 		foreach ( $products->products as $product ) {
 			// Check if the category is set, this means we need to fetch variations seperately as they are not tied to a category.
@@ -189,12 +189,12 @@ class WC_Product_CSV_Exporter extends WC_CSV_Batch_Exporter {
 		if ( ! empty( $variable_products ) ) {
 			foreach ( $variable_products as $parent_id ) {
 				$products = wc_get_products(
-					array(
+					[
 						'parent' => $parent_id,
-						'type'   => array( 'variation' ),
+						'type'   => [ 'variation' ],
 						'return' => 'objects',
 						'limit'  => -1,
-					)
+					]
 				);
 
 				if ( ! $products ) {
@@ -217,13 +217,13 @@ class WC_Product_CSV_Exporter extends WC_CSV_Batch_Exporter {
 	 */
 	protected function generate_row_data( $product ) {
 		$columns = $this->get_column_names();
-		$row     = array();
+		$row     = [];
 		foreach ( $columns as $column_id => $column_name ) {
 			$column_id = strstr( $column_id, ':' ) ? current( explode( ':', $column_id ) ) : $column_id;
 			$value     = '';
 
 			// Skip some columns if dynamically handled later or if we're being selective.
-			if ( in_array( $column_id, array( 'downloads', 'attributes', 'meta' ), true ) || ! $this->is_column_exporting( $column_id ) ) {
+			if ( in_array( $column_id, [ 'downloads', 'attributes', 'meta' ], true ) || ! $this->is_column_exporting( $column_id ) ) {
 				continue;
 			}
 
@@ -231,11 +231,11 @@ class WC_Product_CSV_Exporter extends WC_CSV_Batch_Exporter {
 				// Filter for 3rd parties.
 				$value = apply_filters( "woocommerce_product_export_{$this->export_type}_column_{$column_id}", '', $product, $column_id );
 
-			} elseif ( is_callable( array( $this, "get_column_value_{$column_id}" ) ) ) {
+			} elseif ( is_callable( [ $this, "get_column_value_{$column_id}" ] ) ) {
 				// Handle special columns which don't map 1:1 to product data.
 				$value = $this->{"get_column_value_{$column_id}"}( $product );
 
-			} elseif ( is_callable( array( $product, "get_{$column_id}" ) ) ) {
+			} elseif ( is_callable( [ $product, "get_{$column_id}" ] ) ) {
 				// Default and custom handling.
 				$value = $product->{"get_{$column_id}"}( 'edit' );
 			}
@@ -262,11 +262,11 @@ class WC_Product_CSV_Exporter extends WC_CSV_Batch_Exporter {
 	 * @return int
 	 */
 	protected function get_column_value_published( $product ) {
-		$statuses = array(
+		$statuses = [
 			'draft'   => -1,
 			'private' => 0,
 			'publish' => 1,
-		);
+		];
 
 		// Fix display for variations when parent product is a draft.
 		if ( 'variation' === $product->get_type() ) {
@@ -349,8 +349,8 @@ class WC_Product_CSV_Exporter extends WC_CSV_Batch_Exporter {
 	 * @return string
 	 */
 	protected function get_column_value_images( $product ) {
-		$image_ids = array_merge( array( $product->get_image_id( 'edit' ) ), $product->get_gallery_image_ids( 'edit' ) );
-		$images    = array();
+		$image_ids = array_merge( [ $product->get_image_id( 'edit' ) ], $product->get_gallery_image_ids( 'edit' ) );
+		$images    = [];
 
 		foreach ( $image_ids as $image_id ) {
 			$image = wp_get_attachment_image_src( $image_id, 'full' );
@@ -372,7 +372,7 @@ class WC_Product_CSV_Exporter extends WC_CSV_Batch_Exporter {
 	 * @return string
 	 */
 	protected function prepare_linked_products_for_export( $linked_products ) {
-		$product_list = array();
+		$product_list = [];
 
 		foreach ( $linked_products as $linked_product ) {
 			if ( $linked_product->get_sku() ) {
@@ -442,7 +442,7 @@ class WC_Product_CSV_Exporter extends WC_CSV_Batch_Exporter {
 			return '';
 		}
 
-		$grouped_products = array();
+		$grouped_products = [];
 		$child_ids        = $product->get_children( 'edit' );
 		foreach ( $child_ids as $child_id ) {
 			$child = wc_get_product( $child_id );
@@ -558,7 +558,7 @@ class WC_Product_CSV_Exporter extends WC_CSV_Batch_Exporter {
 	 * @return string
 	 */
 	protected function get_column_value_type( $product ) {
-		$types   = array();
+		$types   = [];
 		$types[] = $product->get_type();
 
 		if ( $product->is_downloadable() ) {
@@ -646,7 +646,7 @@ class WC_Product_CSV_Exporter extends WC_CSV_Batch_Exporter {
 
 						if ( $attribute->is_taxonomy() ) {
 							$terms  = $attribute->get_terms();
-							$values = array();
+							$values = [];
 
 							foreach ( $terms as $term ) {
 								$values[] = $term->name;
@@ -706,7 +706,7 @@ class WC_Product_CSV_Exporter extends WC_CSV_Batch_Exporter {
 			$meta_data = $product->get_meta_data();
 
 			if ( count( $meta_data ) ) {
-				$meta_keys_to_skip = apply_filters( 'woocommerce_product_export_skip_meta_keys', array(), $product );
+				$meta_keys_to_skip = apply_filters( 'woocommerce_product_export_skip_meta_keys', [], $product );
 
 				$i = 1;
 				foreach ( $meta_data as $meta ) {
