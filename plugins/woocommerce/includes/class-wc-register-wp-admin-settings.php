@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Take settings registered for WP-Admin and hooks them up to the REST API
  *

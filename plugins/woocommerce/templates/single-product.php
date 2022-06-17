@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * The Template for displaying all single products
  *

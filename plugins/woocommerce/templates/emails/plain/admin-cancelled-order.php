@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Admin cancelled order email (plain text)
  *

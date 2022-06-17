@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * This class represents an event used to record a Tracks event
  *

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * This tests when creating a product with tags, it will properly assign
  * the tags when they exist or will create them if they don't.

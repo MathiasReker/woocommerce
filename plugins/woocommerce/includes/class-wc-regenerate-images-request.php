@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * All functionality to regenerate images in the background when settings change.
  *

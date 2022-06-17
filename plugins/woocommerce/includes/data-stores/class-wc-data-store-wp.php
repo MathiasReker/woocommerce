@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Shared logic for WP based data.
  * Contains functions like meta handling for all default data stores.

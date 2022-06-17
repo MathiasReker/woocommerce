@@ -1,4 +1,5 @@
-<?php defined( 'ABSPATH' ) or exit(); ?>
+<?php declare(strict_types=1);
+defined( 'ABSPATH' ) or exit(); ?>
 
 <a class="button button-update" href="<?php echo esc_url( $refresh_url ); ?>"><span class="dashicons dashicons-image-rotate"></span> <?php _e( 'Update', 'woocommerce' ); ?></a>
 <div class="user-info">

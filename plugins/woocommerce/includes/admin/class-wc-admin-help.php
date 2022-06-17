@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Add some content to the help tab
  *

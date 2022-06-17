@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Class Notice_Functions.
  * @package WooCommerce\Tests\Util

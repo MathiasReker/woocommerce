@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Class for implementing migration from wp_posts and wp_postmeta to custom order tables.
  */

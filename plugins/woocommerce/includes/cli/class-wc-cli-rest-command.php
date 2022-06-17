@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * WP_CLI_Rest_Command class file.
  *

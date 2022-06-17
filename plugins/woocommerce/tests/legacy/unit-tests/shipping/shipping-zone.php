@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Tests for the WC_Shopping_Zone class.
  *

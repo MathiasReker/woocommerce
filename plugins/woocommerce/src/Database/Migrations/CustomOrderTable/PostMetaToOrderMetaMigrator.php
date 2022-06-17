@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Migration class for migrating from WPPostMeta to OrderMeta table.
  */

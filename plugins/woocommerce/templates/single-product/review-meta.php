@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * The template to display the reviewers meta data (name, verified owner, review date)
  *

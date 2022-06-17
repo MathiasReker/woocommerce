@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Class for parameter-based Revenue Reports querying
  *

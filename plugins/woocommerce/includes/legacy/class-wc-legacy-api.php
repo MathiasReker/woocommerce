@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * WooCommerce Legacy API. Was deprecated with 2.6.0.
  *

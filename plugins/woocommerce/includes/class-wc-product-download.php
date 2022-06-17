@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Represents a file which can be downloaded.
  *

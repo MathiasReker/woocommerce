@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Logic for extending WC_REST_Payment_Gateways_Controller.
  */

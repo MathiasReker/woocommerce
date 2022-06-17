@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Class WC_Email_Customer_New_Account file.
  *

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * This file includes functions that bypass the typical install process for the sake of the example.
  *

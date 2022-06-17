@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * The Template for displaying product archives, including the main shop page which is a post type archive
  *

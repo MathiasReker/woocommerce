@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * A facade to allow deprecating an entire class. Calling instance or static
  * functions on the facade triggers a deprecation notice before calling the

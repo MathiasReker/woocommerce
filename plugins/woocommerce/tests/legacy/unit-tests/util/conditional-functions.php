@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * File for class Conditional_Functions tests.
  * @package WooCommerce\Tests\Util

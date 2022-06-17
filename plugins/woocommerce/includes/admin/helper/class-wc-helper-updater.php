@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * The update helper for WooCommerce.com plugins.
  *

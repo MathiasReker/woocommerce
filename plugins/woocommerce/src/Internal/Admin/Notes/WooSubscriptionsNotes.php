@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * WooCommerce Admin (Dashboard) WooCommerce.com Extension Subscriptions Note Provider.
  *

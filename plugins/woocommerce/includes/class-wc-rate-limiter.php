@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Provide basic rate limiting functionality via WP Options API.
  *

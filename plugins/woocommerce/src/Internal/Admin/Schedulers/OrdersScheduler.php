@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Order syncing related functions and actions.
  */

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Interface for a provider for getting access to plugin queries,
  * designed to be mockable for unit tests.

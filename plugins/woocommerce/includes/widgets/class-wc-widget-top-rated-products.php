@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Top Rated Products Widget.
  * Gets and displays top rated products in an unordered list.

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Refund and Returns Policy Page Note Provider.
  *

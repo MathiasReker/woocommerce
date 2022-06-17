@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Keeps the product category lookup table in sync with live data.
  */

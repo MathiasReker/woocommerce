@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Rule processor for sending when the provided plugin is activated and
  * matches the specified version.

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Products Factory Tests
  * @package WooCommerce\Tests\Product

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Manages the WC Admin settings that need to be pre-loaded.
  */

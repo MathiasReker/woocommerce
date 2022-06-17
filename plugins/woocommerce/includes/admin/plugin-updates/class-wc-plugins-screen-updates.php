@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Manages WooCommerce plugin updating on the Plugins screen.
  *

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Generic Migration class to move any meta data associated to an entity, to a different meta table associated with a custom entity table.
  */

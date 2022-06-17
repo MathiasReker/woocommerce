@@ -1,4 +1,5 @@
-<?php // phpcs:ignore WordPress.Files.FileName
+<?php declare(strict_types=1);
+// phpcs:ignore WordPress.Files.FileName
 /**
  * Admin notes helper for wc-admin unit tests.
  *

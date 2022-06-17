@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * API\Reports\Stock\Stats\DataStore class file.
  */

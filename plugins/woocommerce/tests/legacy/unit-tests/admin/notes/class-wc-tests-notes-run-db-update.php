@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Class WC_Notes_Run_Db_Update file.
  *

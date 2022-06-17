@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Helpers for managing connection to WooCommerce.com.
  */

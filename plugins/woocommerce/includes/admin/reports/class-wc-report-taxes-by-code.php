@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Taxes by tax code report.
  *

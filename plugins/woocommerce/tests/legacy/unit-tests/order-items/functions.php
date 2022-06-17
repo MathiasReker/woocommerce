@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Order Item Function Tests
  * @package WooCommerce\Tests\Order_Items

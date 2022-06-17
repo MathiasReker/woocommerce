@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * The WooCommerce customer class handles storage of the current customer's data, such as location.
  *

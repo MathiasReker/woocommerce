@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Trait for easier testing of objects that have `mixed` data type somewhere.
  *

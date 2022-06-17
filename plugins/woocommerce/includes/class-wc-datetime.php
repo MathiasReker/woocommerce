@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * WC Wrapper for PHP DateTime which adds support for gmt/utc offset when a
  * timezone is absent

@@ -1,4 +1,5 @@
-<?php // phpcs:ignore
+<?php declare(strict_types=1);
+// phpcs:ignore
 
 /**
  * Orders helper.

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * WC REST API Unit Test Case (for WP-API Endpoints).
  *

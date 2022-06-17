@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Admin View: Report by Date (with date filters)
  *

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 $filters = get_option(WCA_Test_Helper_Rest_Api_Filters::WC_ADMIN_TEST_HELPER_REST_API_FILTER_OPTION, [] );
 

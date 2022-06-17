@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * Class WC_Cart_Totals_Tests. Tests for WC_Cart_Total class.

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 register_woocommerce_admin_test_helper_rest_route(
 	'/tools/toggle-emails/v1',
 	'toggle_emails'

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Class WC_Legacy_Settings_Example file.
  *

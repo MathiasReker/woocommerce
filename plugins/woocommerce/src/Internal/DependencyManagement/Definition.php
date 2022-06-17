@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * An extension to the Definition class to prevent constructor injection from being possible.
  */

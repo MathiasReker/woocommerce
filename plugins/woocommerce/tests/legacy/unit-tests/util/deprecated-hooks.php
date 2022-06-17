@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Classes WC_Deprecated_Filter_Hooks & WC_Deprecated_Action_Hooks.
  * @package WooCommerce\Tests\Util

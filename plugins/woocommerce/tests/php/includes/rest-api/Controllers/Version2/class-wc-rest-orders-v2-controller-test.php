@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * class WC_REST_Order_V2_Controller_Test.

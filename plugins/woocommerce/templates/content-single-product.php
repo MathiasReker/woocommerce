@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * The template for displaying product content in the single-product.php template
  *

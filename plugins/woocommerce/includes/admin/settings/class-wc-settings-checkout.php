@@ -1,4 +1,5 @@
-<?php // @codingStandardsIgnoreFile.
+<?php declare(strict_types=1);
+// @codingStandardsIgnoreFile.
 /**
  * Settings class file.
  *

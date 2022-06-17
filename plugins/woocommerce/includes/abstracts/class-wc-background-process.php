@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Abstract WP_Background_Process class.
  *

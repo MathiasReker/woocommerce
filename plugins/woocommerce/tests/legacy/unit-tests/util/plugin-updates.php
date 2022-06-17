@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * File for the WC_Tests_Plugin_Updates class.
  *

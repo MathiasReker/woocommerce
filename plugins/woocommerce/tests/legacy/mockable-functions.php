@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * This array contains the names of the standalone functions that will become mockable via FunctionsMockerHack
  * when running unit tests. If you need to mock a function that isn't in the list, simply add it.

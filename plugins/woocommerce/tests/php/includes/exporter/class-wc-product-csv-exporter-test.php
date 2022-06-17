@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Unit tests for the WC_Product_CSV_Exporter_Test class.
  *

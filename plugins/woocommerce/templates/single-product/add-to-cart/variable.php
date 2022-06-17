@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Variable product add to cart
  *

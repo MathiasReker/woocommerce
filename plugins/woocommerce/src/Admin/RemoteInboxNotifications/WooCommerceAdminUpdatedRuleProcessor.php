@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Rule processor for sending when WooCommerce Admin has been updated.
  */

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Send Tracks events on behalf of a user using pixel images in page footer.
  *

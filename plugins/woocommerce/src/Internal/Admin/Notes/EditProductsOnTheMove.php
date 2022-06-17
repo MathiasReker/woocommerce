@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * WooCommerce Admin Edit products on the move note.
  *

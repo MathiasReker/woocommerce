@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Deprecated notice: This class is deprecated as of version 4.5.0. WooCommerce API is now part of core and not packaged separately.
  *

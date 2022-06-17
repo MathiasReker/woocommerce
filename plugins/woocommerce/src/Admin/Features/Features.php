@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Features loader for features developed in WooCommerce Admin.
  */

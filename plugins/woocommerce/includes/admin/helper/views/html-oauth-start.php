@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Admin -> WooCommerce -> Extensions -> WooCommerce.com Subscriptions main page.
  *

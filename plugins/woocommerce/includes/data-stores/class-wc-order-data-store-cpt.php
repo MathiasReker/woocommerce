@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * WC_Order_Data_Store_CPT class file.
  *

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * WC_Product_Cat_Dropdown_Walker class
  *

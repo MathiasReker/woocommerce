@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * Tests relating to the WC_Customer_Data_Store_Session class.

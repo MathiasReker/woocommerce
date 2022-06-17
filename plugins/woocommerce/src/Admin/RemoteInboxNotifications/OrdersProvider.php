@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Provider for order-related queries and operations.
  */

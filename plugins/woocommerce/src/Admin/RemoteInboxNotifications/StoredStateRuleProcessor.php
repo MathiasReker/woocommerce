@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Rule processor that performs a comparison operation against a value in the
  * stored state object.

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Base test case for all WooCommerce tests.
  *

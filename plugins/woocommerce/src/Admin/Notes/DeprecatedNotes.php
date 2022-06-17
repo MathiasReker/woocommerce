@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Define deprecated classes to support changing the naming convention of
  * admin notes.

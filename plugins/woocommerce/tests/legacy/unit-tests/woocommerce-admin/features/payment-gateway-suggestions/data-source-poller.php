@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Test the data source poller for payment gateway suggestions.
  *

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 use Automattic\WooCommerce\Internal\ProductDownloads\ApprovedDirectories\Register as Download_Directories;
 /**

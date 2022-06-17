@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Adds options to the customizer for WooCommerce.
  *

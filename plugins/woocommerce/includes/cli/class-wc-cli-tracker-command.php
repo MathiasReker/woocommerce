@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * WC_CLI_Tracker_Command class file.
  *

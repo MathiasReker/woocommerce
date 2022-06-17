@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Connect existing WooCommerce pages to WooCommerce Admin.
  *

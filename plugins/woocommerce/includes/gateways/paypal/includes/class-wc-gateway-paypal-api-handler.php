@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Class WC_Gateway_Paypal_API_Handler file.
  *

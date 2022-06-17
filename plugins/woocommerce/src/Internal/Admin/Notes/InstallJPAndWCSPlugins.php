@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * WooCommerce Admin Add Install Jetpack and WooCommerce Shipping & Tax Plugin Note Provider.
  *

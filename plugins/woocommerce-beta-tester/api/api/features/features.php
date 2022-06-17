@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 use Automattic\WooCommerce\Admin\Features\Features;
 
 const OPTION_NAME_PREFIX = 'wc_admin_helper_feature_values';

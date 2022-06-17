@@ -1,4 +1,5 @@
-<?php // @codingStandardsIgnoreLine.
+<?php declare(strict_types=1);
+// @codingStandardsIgnoreLine.
 /**
  * WooCommerce Checkout Settings
  *

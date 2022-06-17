@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 class WC_Mock_WC_Data_Store extends WC_Data_Store_WP implements WC_Object_Data_Store_Interface {
 
 	protected $meta_type                = 'post';

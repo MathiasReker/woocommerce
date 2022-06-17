@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Test WC_Shortcode_Products
  *

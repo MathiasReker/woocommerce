@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 add_action( 'admin_menu', function() {
 	add_management_page(
 		'WooCommerce Admin Test Helper',

@@ -1,4 +1,5 @@
-<?php defined( 'ABSPATH' ) or exit(); ?>
+<?php declare(strict_types=1);
+defined( 'ABSPATH' ) or exit(); ?>
 
 <div class="wrap">
 	<h1><?php _e( 'Looking for the WooCommerce Helper?', 'woocommerce' ); ?></h1>

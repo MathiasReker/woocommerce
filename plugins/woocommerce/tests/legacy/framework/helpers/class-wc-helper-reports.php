@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Helper code for wc-admin unit tests.
  *

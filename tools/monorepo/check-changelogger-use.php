@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Tool to list whether projects have been touched so as to need a changelog entry.
  *

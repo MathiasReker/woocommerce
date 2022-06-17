@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Theme upgrader used in REST API response.
  */

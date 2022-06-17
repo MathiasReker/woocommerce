@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Rule processor that compares against the status of another note. For
  * example, this could be used to conditionally create a note only if another

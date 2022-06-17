@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Interface for a provider for getting the current DateTime,
  * designed to be mockable for unit tests.

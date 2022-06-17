@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Wrapper for MaxMind GeoLite2 Reader
  *

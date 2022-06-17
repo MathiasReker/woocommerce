@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Test meta for https://github.com/woocommerce/woocommerce/issues/13533.
  *

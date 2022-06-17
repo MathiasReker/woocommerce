@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Structured data's handler and generator using JSON-LD format.
  *

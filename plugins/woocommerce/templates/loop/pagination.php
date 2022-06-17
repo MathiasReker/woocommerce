@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Pagination - Show numbered pagination for catalog pages
  *

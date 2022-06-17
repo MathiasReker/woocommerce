@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Returns information about the package and handles init.
  */

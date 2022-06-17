@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Contains the query functions for WooCommerce which alter the front-end post queries and loops
  *

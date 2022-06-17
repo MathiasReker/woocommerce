@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Generic migration class to move any entity, entity_meta table combination to custom table.
  */

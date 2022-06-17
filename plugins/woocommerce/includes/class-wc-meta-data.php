@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Wraps an array (meta data for now) and tells if there was any changes.
  *

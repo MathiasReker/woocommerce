@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * List products. One widget to rule them all.
  *

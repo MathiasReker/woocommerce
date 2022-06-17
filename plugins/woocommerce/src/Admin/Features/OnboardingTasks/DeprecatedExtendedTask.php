@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * A temporary class for creating tasks on the fly from deprecated tasks.
  */

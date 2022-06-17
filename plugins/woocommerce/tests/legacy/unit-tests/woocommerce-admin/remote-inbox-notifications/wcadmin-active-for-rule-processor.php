@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * WCAdmin active for rule processor tests.
  *

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * A Trait to help with managing the legacy coupon menu.
  */

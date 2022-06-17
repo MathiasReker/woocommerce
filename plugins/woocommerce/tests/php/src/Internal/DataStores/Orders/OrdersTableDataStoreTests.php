@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 use Automattic\WooCommerce\Database\Migrations\CustomOrderTable\PostsToOrdersMigrationController;
 use Automattic\WooCommerce\Internal\DataStores\Orders\DataSynchronizer;

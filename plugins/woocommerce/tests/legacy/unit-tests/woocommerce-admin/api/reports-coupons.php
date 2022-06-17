@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Reports Coupons REST API Test
  *

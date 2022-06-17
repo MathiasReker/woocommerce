@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * This ongoing trait will have shared calculation logic between WC_Abstract_Order and WC_Cart_Totals classes.
  *

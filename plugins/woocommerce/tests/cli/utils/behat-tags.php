@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Generate a list of tags to skip during the test run.
  *

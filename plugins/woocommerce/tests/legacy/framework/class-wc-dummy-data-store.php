@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Dummy WC data stores used to test data store functionality.
  *

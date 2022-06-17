@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Class for adding segmenting support to coupons/stats without cluttering the data store.
  */

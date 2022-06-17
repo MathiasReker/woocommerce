@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Helper to upload files via the REST API.
  *

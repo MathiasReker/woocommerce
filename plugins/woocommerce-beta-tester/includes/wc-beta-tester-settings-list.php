@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * List of settings to be exported.
  */

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Class WC_Product_Variation_Data_Store_CPT file.
  *

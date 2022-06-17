@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Template used to form individual rows within the downloadable files table.
  *

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Displays the inventory tab in the product data meta box.
  *

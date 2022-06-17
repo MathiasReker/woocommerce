@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Test for the discounts class.
  * @package WooCommerce\Tests\Discounts

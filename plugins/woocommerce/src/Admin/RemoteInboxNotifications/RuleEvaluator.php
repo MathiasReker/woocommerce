@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Evaluate the given rules as an AND operation - return false early if a
  * rule evaluates to false.

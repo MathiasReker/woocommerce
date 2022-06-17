@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Handles stored state setup for products.
  */

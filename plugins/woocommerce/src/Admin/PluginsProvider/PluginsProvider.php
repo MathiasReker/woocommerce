@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * A provider for getting access to plugin queries.
  */

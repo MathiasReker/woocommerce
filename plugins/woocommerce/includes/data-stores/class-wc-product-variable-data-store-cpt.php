@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * File for WC Variable Product Data Store class.
  *

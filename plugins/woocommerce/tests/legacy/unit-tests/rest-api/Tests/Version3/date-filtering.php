@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Trait for testing the date filtering on controllers that inherit from WC_REST_CRUD_Controller.
  *

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * The marketplace suggestions tab HTML in the product tabs
  *

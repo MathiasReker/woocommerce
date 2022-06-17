@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * Class WC_Product_CSV_Importer_Controller_Test

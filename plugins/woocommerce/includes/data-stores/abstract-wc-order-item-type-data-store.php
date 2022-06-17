@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Class Abstract_WC_Order_Item_Type_Data_Store file.
  *

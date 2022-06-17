@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Theme upgrader skin used in REST API response.
  */

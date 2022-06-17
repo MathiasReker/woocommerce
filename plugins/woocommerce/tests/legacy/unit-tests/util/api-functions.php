@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * File for the WC_Tests_API_Functions class.
  *

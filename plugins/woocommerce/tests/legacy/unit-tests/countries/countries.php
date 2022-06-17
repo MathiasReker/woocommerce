@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Unit tests for the WP_Countries class.
  *

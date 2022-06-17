@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * Dummy Logger implements WC_Logger_Interface.

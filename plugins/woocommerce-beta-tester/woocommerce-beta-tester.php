@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Plugin Name: WooCommerce Beta Tester
  * Plugin URI: https://github.com/woocommerce/woocommerce-beta-tester

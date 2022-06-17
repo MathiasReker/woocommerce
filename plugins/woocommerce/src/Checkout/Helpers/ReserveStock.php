@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Handle product stock reservation during checkout.
  */

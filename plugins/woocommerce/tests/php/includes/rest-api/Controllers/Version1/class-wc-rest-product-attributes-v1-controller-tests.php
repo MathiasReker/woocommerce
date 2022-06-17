@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * class WC_REST_Product_Attributes_V1_Controller_Tests.

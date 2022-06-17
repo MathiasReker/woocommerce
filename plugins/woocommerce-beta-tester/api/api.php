@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 function register_woocommerce_admin_test_helper_rest_route( $route, $callback, $additional_options = array() ) {
     add_action( 'rest_api_init', function() use ( $route, $callback, $additional_options ) {
 

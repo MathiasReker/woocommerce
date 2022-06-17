@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * A class of utilities for dealing with arrays.
  */

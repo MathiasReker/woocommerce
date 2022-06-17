@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Data Tests: Tests WC_Coupon's WC_Data Implementation.
  * @package WooCommerce\Tests\Coupon

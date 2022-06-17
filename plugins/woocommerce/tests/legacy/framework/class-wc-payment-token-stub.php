@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Stub/Dummy class to test WC_Payment_Token methods only
  *

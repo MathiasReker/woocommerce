@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 use Automattic\WooCommerce\RestApi\UnitTests\Helpers\OrderHelper;
 use Automattic\WooCommerce\RestApi\UnitTests\Helpers\ProductHelper;

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Rule processor that performs an OR operation on the rule's left and right
  * operands.

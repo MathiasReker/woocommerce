@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * The Template for displaying products in a product category. Simply includes the archive template
  *

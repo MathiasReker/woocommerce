@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Traits for handling custom product attributes and their terms.
  */

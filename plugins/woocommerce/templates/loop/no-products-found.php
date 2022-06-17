@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Displayed when no products are found matching the current query
  *

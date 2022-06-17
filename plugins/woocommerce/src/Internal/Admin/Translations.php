@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Register the scripts, and handles items needed for managing translations within WooCommerce Admin.
  */

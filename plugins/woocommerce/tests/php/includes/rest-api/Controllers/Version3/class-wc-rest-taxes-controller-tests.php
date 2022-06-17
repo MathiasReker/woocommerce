@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * class WC_REST_Taxes_Controller_Tests.

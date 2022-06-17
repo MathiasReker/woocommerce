@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Reports Products Stats REST API Test
  *

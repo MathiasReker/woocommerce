@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Order refund. Refunds are based on orders (essentially negative orders) and
  * contain much of the same data.

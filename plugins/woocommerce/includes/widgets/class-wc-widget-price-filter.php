@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Price Filter Widget and related functions.
  *

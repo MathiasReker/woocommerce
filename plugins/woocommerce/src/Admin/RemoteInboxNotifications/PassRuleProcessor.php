@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Rule processor that passes. This is required because an empty set of rules
  * (or predicate) evaluates to false.

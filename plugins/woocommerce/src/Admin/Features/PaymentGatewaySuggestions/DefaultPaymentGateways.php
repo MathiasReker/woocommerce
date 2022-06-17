@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Gets a list of fallback methods if remote fetching is disabled.
  */

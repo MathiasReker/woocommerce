@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 register_woocommerce_admin_test_helper_rest_route(
 	'/admin-notes/delete-all-notes/v1',
 	'admin_notes_delete_all_notes'

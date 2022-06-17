@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 use Automattic\WooCommerce\Admin\Notes\Note;
 
 register_woocommerce_admin_test_helper_rest_route(

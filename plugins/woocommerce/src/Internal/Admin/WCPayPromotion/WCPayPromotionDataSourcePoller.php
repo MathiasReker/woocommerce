@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 namespace Automattic\WooCommerce\Internal\Admin\WCPayPromotion;
 
 use Automattic\WooCommerce\Admin\DataSourcePoller;

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Sales by category report functionality
  *

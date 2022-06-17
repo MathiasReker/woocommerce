@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * NOTE: this is a temporary class and can be replaced by jetpack-abtest after
  * https://github.com/Automattic/jetpack/issues/19596 has been fixed.

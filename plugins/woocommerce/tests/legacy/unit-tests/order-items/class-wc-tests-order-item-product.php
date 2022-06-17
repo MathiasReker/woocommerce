@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Unit tests for the WC_Order_Item_Product class.
  *

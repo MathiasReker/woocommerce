@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /** Account permission tests
  *
  * @package WooCommerce\Tests\Account

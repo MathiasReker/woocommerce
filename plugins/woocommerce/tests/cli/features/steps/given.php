@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 use Behat\Gherkin\Node\PyStringNode,
     Behat\Gherkin\Node\TableNode,

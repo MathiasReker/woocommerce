@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Load up extra automatic mappings for the CSV importer.
  *

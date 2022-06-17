@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Includes the composer Autoloader used for packages and classes in the src/ directory.
  */

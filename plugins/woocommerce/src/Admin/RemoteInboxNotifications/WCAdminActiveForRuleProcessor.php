@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Rule processor for publishing if wc-admin has been active for at least the
  * given number of seconds.
