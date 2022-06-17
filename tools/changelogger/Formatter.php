@@ -109,7 +109,7 @@ class Formatter extends KeepAChangelogParser {
 		// Fix newlines and expand tabs.
 		$changelog = strtr( $changelog, array( "\r\n" => "\n" ) );
 		$changelog = strtr( $changelog, array( "\r" => "\n" ) );
-		while ( strpos( $changelog, "\t" ) !== false ) {
+		while ( str_contains( $changelog, "\t" )   ) {
 			$changelog = preg_replace_callback(
 				'/^([^\t\n]*)\t/m',
 				function ( $m ) {

@@ -88,7 +88,7 @@ class WC_Template_Loader {
 			$template     = locate_template( $search_files );
 
 			if ( ! $template || WC_TEMPLATE_DEBUG_MODE ) {
-				if ( false !== strpos( $default_file, 'product_cat' ) || false !== strpos( $default_file, 'product_tag' ) ) {
+				if (   str_contains( $default_file, 'product_cat' ) ||   str_contains( $default_file, 'product_tag' ) ) {
 					$cs_template = str_replace( '_', '-', $default_file );
 					$template    = WC()->plugin_path() . '/templates/' . $cs_template;
 				} else {

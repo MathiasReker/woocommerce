@@ -61,12 +61,12 @@ class WC_Cache_Helper {
 		 *
 		 * @see https://support.google.com/webmasters/answer/1061943?hl=en
 		 */
-		if ( false !== strpos( $agent, 'googleweblight' ) ) {
+		if (   str_contains( $agent, 'googleweblight' ) ) {
 			// no-transform: Opt-out of Google weblight. https://support.google.com/webmasters/answer/6211428?hl=en.
 			$set_cache = true;
 		}
 
-		if ( false !== strpos( $agent, 'Chrome' ) && isset( $wp_query ) && is_cart() ) {
+		if (   str_contains( $agent, 'Chrome' ) && isset( $wp_query ) && is_cart() ) {
 			$set_cache = true;
 		}
 

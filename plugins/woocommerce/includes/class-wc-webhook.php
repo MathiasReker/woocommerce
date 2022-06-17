@@ -191,7 +191,7 @@ class WC_Webhook extends WC_Legacy_Webhook {
 				break;
 		}
 
-		if ( 0 === strpos( $current_action, 'woocommerce_process_shop' ) || 0 === strpos( $current_action, 'woocommerce_process_product' ) ) {
+		if (   str_starts_with( $current_action, 'woocommerce_process_shop' ) ||   str_starts_with( $current_action, 'woocommerce_process_product' ) ) {
 			$return = $this->is_valid_processing_action( $arg );
 		}
 

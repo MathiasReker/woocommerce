@@ -194,7 +194,7 @@ class WC_Gateway_COD extends WC_Payment_Gateway {
 
 		if ( Constants::is_true( 'REST_REQUEST' ) ) {
 			global $wp;
-			if ( isset( $wp->query_vars['rest_route'] ) && false !== strpos( $wp->query_vars['rest_route'], '/payment_gateways' ) ) {
+			if ( isset( $wp->query_vars['rest_route'] ) &&   str_contains( $wp->query_vars['rest_route'], '/payment_gateways' ) ) {
 				return true;
 			}
 		}

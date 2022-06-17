@@ -177,7 +177,7 @@ class WC_API_XML_Handler implements WC_API_Handler {
 			} else {
 
 				// wrap element in CDATA tags if it contains illegal characters
-				if ( false !== strpos( $element_value, '<' ) || false !== strpos( $element_value, '>' ) ) {
+				if (   str_contains( $element_value, '<' ) ||   str_contains( $element_value, '>' ) ) {
 
 					$this->xml->startElement( $element_key );
 					$this->xml->writeCdata( $element_value );

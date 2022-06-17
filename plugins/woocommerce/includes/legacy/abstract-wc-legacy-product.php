@@ -589,7 +589,7 @@ abstract class WC_Abstract_Legacy_Product extends WC_Data {
 				$all_meta = get_post_meta( $child_id );
 
 				foreach ( $all_meta as $name => $value ) {
-					if ( 0 !== strpos( $name, 'attribute_' ) ) {
+					if (   !str_starts_with( $name, 'attribute_' ) ) {
 						continue;
 					}
 					if ( sanitize_title( $value[0] ) === $value[0] ) {

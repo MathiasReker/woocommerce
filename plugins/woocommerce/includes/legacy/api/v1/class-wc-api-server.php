@@ -471,7 +471,7 @@ class WC_API_Server {
 					}
 
 					// For non-variable routes, generate links
-					if ( strpos( $route, '<' ) === false ) {
+					if ( !str_contains( $route, '<' )   ) {
 						$data['meta'] = array(
 							'self' => get_woocommerce_api_url( $route ),
 						);
@@ -649,7 +649,7 @@ class WC_API_Server {
 	public function parse_datetime( $datetime ) {
 
 		// Strip millisecond precision (a full stop followed by one or more digits)
-		if ( strpos( $datetime, '.' ) !== false ) {
+		if ( str_contains( $datetime, '.' )   ) {
 			$datetime = preg_replace( '/\.\d+/', '', $datetime );
 		}
 
@@ -726,7 +726,7 @@ class WC_API_Server {
 		$additional = array( 'CONTENT_LENGTH' => true, 'CONTENT_MD5' => true, 'CONTENT_TYPE' => true );
 
 		foreach ( $server as $key => $value ) {
-			if ( strpos( $key, 'HTTP_' ) === 0 ) {
+			if ( str_starts_with( $key, 'HTTP_' )   ) {
 				$headers[ substr( $key, 5 ) ] = $value;
 			} elseif ( isset( $additional[ $key ] ) ) {
 				$headers[ $key ] = $value;

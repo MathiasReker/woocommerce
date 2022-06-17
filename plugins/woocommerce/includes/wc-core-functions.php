@@ -180,7 +180,7 @@ function wc_tokenize_path( $path, $path_tokens ) {
 	);
 
 	foreach ( $path_tokens as $token => $token_path ) {
-		if ( 0 !== strpos( $path, $token_path ) ) {
+		if (   !str_starts_with( $path, $token_path ) ) {
 			continue;
 		}
 
@@ -388,7 +388,7 @@ function wc_locate_template( $template_name, $template_path = '', $default_path 
 	}
 
 	// Look within passed path within the theme - this is priority.
-	if ( false !== strpos( $template_name, 'product_cat' ) || false !== strpos( $template_name, 'product_tag' ) ) {
+	if (   str_contains( $template_name, 'product_cat' ) ||   str_contains( $template_name, 'product_tag' ) ) {
 		$cs_template = str_replace( '_', '-', $template_name );
 		$template    = locate_template(
 			array(
@@ -1741,7 +1741,7 @@ function wc_get_shipping_method_count( $include_legacy = false, $enabled_only = 
  * @param int $limit Time limit.
  */
 function wc_set_time_limit( $limit = 0 ) {
-	if ( function_exists( 'set_time_limit' ) && false === strpos( ini_get( 'disable_functions' ), 'set_time_limit' ) && ! ini_get( 'safe_mode' ) ) { // phpcs:ignore PHPCompatibility.IniDirectives.RemovedIniDirectives.safe_modeDeprecatedRemoved
+	if ( function_exists( 'set_time_limit' ) &&   !str_contains( ini_get( 'disable_functions' ), 'set_time_limit' ) && ! ini_get( 'safe_mode' ) ) { // phpcs:ignore PHPCompatibility.IniDirectives.RemovedIniDirectives.safe_modeDeprecatedRemoved
 		@set_time_limit( $limit ); // @codingStandardsIgnoreLine
 	}
 }

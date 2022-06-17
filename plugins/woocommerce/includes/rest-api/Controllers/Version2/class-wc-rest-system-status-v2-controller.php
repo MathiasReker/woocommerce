@@ -897,7 +897,7 @@ class WC_REST_System_Status_V2_Controller extends WC_REST_Controller {
 			$global_tables      = $wpdb->tables( 'global', true );
 			foreach ( $database_table_information as $table ) {
 				// Only include tables matching the prefix of the current site, this is to prevent displaying all tables on a MS install not relating to the current.
-				if ( is_multisite() && 0 !== strpos( $table->name, $site_tables_prefix ) && ! in_array( $table->name, $global_tables, true ) ) {
+				if ( is_multisite() &&   !str_starts_with( $table->name, $site_tables_prefix ) && ! in_array( $table->name, $global_tables, true ) ) {
 					continue;
 				}
 				$table_type = in_array( $table->name, $core_tables, true ) ? 'woocommerce' : 'other';
@@ -1133,7 +1133,7 @@ class WC_REST_System_Status_V2_Controller extends WC_REST_Controller {
 					$core_file = $file;
 
 					// Update *-product_<cat|tag> template name before searching in core.
-					if ( false !== strpos( $core_file, '-product_cat' ) || false !== strpos( $core_file, '-product_tag' ) ) {
+					if (   str_contains( $core_file, '-product_cat' ) ||   str_contains( $core_file, '-product_tag' ) ) {
 						$core_file = str_replace( '_', '-', $core_file );
 					}
 

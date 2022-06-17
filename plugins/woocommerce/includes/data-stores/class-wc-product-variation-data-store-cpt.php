@@ -298,7 +298,7 @@ class WC_Product_Variation_Data_Store_CPT extends WC_Product_Data_Store_CPT impl
 		// product has multiple attributes.
 		if ( $should_include_attributes && 1 < count( $attributes ) ) {
 			foreach ( $attributes as $name => $value ) {
-				if ( false !== strpos( $name, '-' ) ) {
+				if (   str_contains( $name, '-' ) ) {
 					$should_include_attributes = false;
 					break;
 				}

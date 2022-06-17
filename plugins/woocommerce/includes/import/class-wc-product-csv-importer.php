@@ -614,7 +614,7 @@ class WC_Product_CSV_Importer extends WC_Product_Importer {
 	 */
 	public function parse_download_file_field( $value ) {
 		// Absolute file paths.
-		if ( 0 === strpos( $value, 'http' ) ) {
+		if (   str_starts_with( $value, 'http' ) ) {
 			return esc_url_raw( $value );
 		}
 		// Relative and shortcode paths.

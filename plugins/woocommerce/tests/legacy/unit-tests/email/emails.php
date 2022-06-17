@@ -59,8 +59,8 @@ class WC_Tests_WC_Emails extends WC_Unit_Test_Case {
 		$str_present = 'Should be present!';
 		$str_removed = 'Should be removed!';
 		$result = $email->style_inline( "<div><div class='text'>$str_present</div><div style='display: none'>$str_removed</div> </div>" );
-		$this->assertTrue( false !== strpos( $result, $str_present ) );
-		$this->assertTrue( false === strpos( $result, $str_removed ) );
+		$this->assertTrue(   str_contains( $result, $str_present ) );
+		$this->assertTrue(   !str_contains( $result, $str_removed ) );
 	}
 
 }

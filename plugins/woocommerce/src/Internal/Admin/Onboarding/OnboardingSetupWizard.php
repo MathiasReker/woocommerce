@@ -196,7 +196,7 @@ class OnboardingSetupWizard {
 			return false;
 		}
 
-		return 0 === strpos( $current_page['path'], 'wc-admin' );
+		return   str_starts_with( $current_page['path'], 'wc-admin' );
 	}
 
 	/**

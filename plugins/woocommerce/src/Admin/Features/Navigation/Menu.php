@@ -112,7 +112,7 @@ class Menu {
 	 */
 	public static function get_callback_url( $callback ) {
 		// Return the full URL.
-		if ( strpos( $callback, 'http' ) === 0 ) {
+		if ( str_starts_with( $callback, 'http' )   ) {
 			return $callback;
 		}
 
@@ -582,7 +582,7 @@ class Menu {
 			// phpcs:disable
 			if ( ! isset( $menu_item[ self::CSS_CLASSES ] ) ) {
 				$submenu['woocommerce'][ $key ][] .= ' hide-if-js';
-			} else if ( strpos( $submenu['woocommerce'][ $key ][ self::CSS_CLASSES ], 'hide-if-js' ) !== false ) {
+			} else if ( str_contains( $submenu['woocommerce'][ $key ][ self::CSS_CLASSES ], 'hide-if-js' )   ) {
 				continue;
 			} else {
 				$submenu['woocommerce'][ $key ][ self::CSS_CLASSES ] .= ' hide-if-js';

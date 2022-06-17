@@ -105,7 +105,7 @@ $current_section_name = __( 'Browse Categories', 'woocommerce' );
 								// Do not show USPS or Canada Post extensions for US and CA stores, respectively.
 								$country = WC()->countries->get_base_country();
 								if ( 'US' === $country
-									 && false !== strpos(
+									 &&   str_contains(
 										$addon->link,
 										'woocommerce.com/products/usps-shipping-method'
 									)
@@ -113,7 +113,7 @@ $current_section_name = __( 'Browse Categories', 'woocommerce' );
 									continue;
 								}
 								if ( 'CA' === $country
-									 && false !== strpos(
+									 &&   str_contains(
 										$addon->link,
 										'woocommerce.com/products/canada-post-shipping-method'
 									)

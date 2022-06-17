@@ -128,7 +128,7 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 		$order_by_clause = $this->add_order_by_clause( $query_args, $this );
 		$this->add_orderby_order_clause( $query_args, $this );
 
-		if ( false !== strpos( $order_by_clause, '_terms' ) ) {
+		if (   str_contains( $order_by_clause, '_terms' ) ) {
 			$join = "JOIN {$wpdb->terms} AS _terms ON {$id_cell_identifier} = _terms.term_id";
 			if ( 'inner' === $from_arg ) {
 				// Even though this is an (inner) JOIN, we're adding it as a `left_join` to

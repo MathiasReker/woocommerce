@@ -409,7 +409,7 @@ EOT;
 		$route                = $this->route;
 
 		foreach ( $this->get_supported_ids() as $id_name => $id_desc ) {
-			if ( 'id' !== $id_name && strpos( $route, '<' . $id_name . '>' ) !== false && ! empty( $args ) ) {
+			if ( 'id' !== $id_name && str_contains( $route, '<' . $id_name . '>' )   && ! empty( $args ) ) {
 				$route                = str_replace( array( '(?P<' . $id_name . '>[\d]+)', '(?P<' . $id_name . '>\w[\w\s\-]*)' ), $args[0], $route );
 				$supported_id_matched = true;
 			}

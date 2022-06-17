@@ -321,7 +321,7 @@ class WC_API_Resource {
 		// get sub fields
 		foreach ( $fields as $field ) {
 
-			if ( false !== strpos( $field, '.' ) ) {
+			if (   str_contains( $field, '.' ) ) {
 
 				list( $name, $value ) = explode( '.', $field );
 

@@ -50,7 +50,7 @@ class WC_Admin_Tests_NewSalesRecord_Note extends WC_Unit_Test_Case {
 		NewSalesRecord::possibly_add_note();
 		$expected_date = date_i18n( 'F jS', strtotime( $this->yesterday ) );
 		$note          = Notes::get_note_by_name( NewSalesRecord::NOTE_NAME );
-		$this->assertTrue( strpos( $note->get_content(), "Woohoo, $expected_date" ) === 0 );
+		$this->assertTrue( str_starts_with( $note->get_content(), "Woohoo, $expected_date" )   );
 	}
 
 	/**
@@ -67,6 +67,6 @@ class WC_Admin_Tests_NewSalesRecord_Note extends WC_Unit_Test_Case {
 		NewSalesRecord::possibly_add_note();
 		$expected_date = date_i18n( get_option( 'date_format' ), strtotime( $this->yesterday ) );
 		$note          = Notes::get_note_by_name( NewSalesRecord::NOTE_NAME );
-		$this->assertTrue( strpos( $note->get_content(), $expected_date ) !== false );
+		$this->assertTrue( str_contains( $note->get_content(), $expected_date )   );
 	}
 }

@@ -348,7 +348,7 @@ final class WooCommerce {
 		}
 
 		$rest_prefix         = trailingslashit( rest_get_url_prefix() );
-		$is_rest_api_request = ( false !== strpos( $_SERVER['REQUEST_URI'], $rest_prefix ) ); // phpcs:disable WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+		$is_rest_api_request = (   str_contains( $_SERVER['REQUEST_URI'], $rest_prefix ) ); // phpcs:disable WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 
 		/**
 		 * Filter to specify if the current request is a REST API request.

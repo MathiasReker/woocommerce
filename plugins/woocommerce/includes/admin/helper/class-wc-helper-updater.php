@@ -474,7 +474,7 @@ class WC_Helper_Updater {
 		}
 
 		// Only for packages with expired subscriptions.
-		if ( 0 !== strpos( $package, 'woocommerce-com-expired-' ) ) {
+		if (   !str_starts_with( $package, 'woocommerce-com-expired-' ) ) {
 			return false;
 		}
 

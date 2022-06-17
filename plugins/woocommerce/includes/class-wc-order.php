@@ -1665,7 +1665,7 @@ class WC_Order extends WC_Abstract_Order {
 			$cancel_endpoint = home_url();
 		}
 
-		if ( false === strpos( $cancel_endpoint, '?' ) ) {
+		if (   !str_contains( $cancel_endpoint, '?' ) ) {
 			$cancel_endpoint = trailingslashit( $cancel_endpoint );
 		}
 

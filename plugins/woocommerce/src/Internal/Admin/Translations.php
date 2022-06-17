@@ -101,8 +101,8 @@ class Translations {
 
 			// Only combine "app" files (not scripts registered with WP).
 			if (
-				false === strpos( $reference_file, WC_ADMIN_DIST_JS_FOLDER . 'app/index.js' ) &&
-				false === strpos( $reference_file, WC_ADMIN_DIST_JS_FOLDER . 'chunks/' )
+				  !str_contains( $reference_file, WC_ADMIN_DIST_JS_FOLDER . 'app/index.js' ) &&
+				  !str_contains( $reference_file, WC_ADMIN_DIST_JS_FOLDER . 'chunks/' )
 			) {
 				continue;
 			}

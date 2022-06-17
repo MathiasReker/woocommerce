@@ -360,7 +360,7 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 				 */
 				$separator = apply_filters( 'woocommerce_product_variation_title_attributes_separator', ' - ', $variation );
 
-				if ( false === strpos( $product_data['name'], $separator ) ) {
+				if (   !str_contains( $product_data['name'], $separator ) ) {
 					$attributes            = wc_get_formatted_variation( $variation, true, false );
 					$product_data['name'] .= $separator . $attributes;
 				}

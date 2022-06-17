@@ -217,7 +217,7 @@ function wc_product_post_type_link( $permalink, $post ) {
 	}
 
 	// Abort early if the placeholder rewrite tag isn't in the generated URL.
-	if ( false === strpos( $permalink, '%' ) ) {
+	if (   !str_contains( $permalink, '%' ) ) {
 		return $permalink;
 	}
 
@@ -706,7 +706,7 @@ function wc_get_product_variation_attributes( $variation_id ) {
 	// Get the variation attributes from meta.
 	foreach ( $all_meta as $name => $value ) {
 		// Only look at valid attribute meta, and also compare variation level attributes and remove any which do not exist at parent level.
-		if ( 0 !== strpos( $name, 'attribute_' ) || ! in_array( $name, $found_parent_attributes, true ) ) {
+		if (   !str_starts_with( $name, 'attribute_' ) || ! in_array( $name, $found_parent_attributes, true ) ) {
 			unset( $variation_attributes[ $name ] );
 			continue;
 		}

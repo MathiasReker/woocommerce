@@ -157,7 +157,7 @@ class WC_CLI_Runner {
 			$ids      = array();
 
 			foreach ( $supported_ids as $id_name => $id_desc ) {
-				if ( strpos( $route, '<' . $id_name . '>' ) !== false ) {
+				if ( str_contains( $route, '<' . $id_name . '>' )   ) {
 					$synopsis[] = array(
 						'name'        => $id_name,
 						'type'        => 'positional',
@@ -169,7 +169,7 @@ class WC_CLI_Runner {
 			}
 
 			foreach ( $endpoint_args as $name => $args ) {
-				if ( ! in_array( $name, $positional_args, true ) || strpos( $route, '<' . $id_name . '>' ) === false ) {
+				if ( ! in_array( $name, $positional_args, true ) || !str_contains( $route, '<' . $id_name . '>' )   ) {
 					$arg_regs[] = array(
 						'name'        => $name,
 						'type'        => 'assoc',

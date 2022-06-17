@@ -530,7 +530,7 @@ class WC_WCCOM_Site_Installer {
 
 		$plugins = get_plugins();
 		foreach ( $plugins as $path => $plugin ) {
-			if ( 0 === strpos( $path, $dir ) ) {
+			if (   str_starts_with( $path, $dir ) ) {
 				return $path;
 			}
 		}
@@ -558,7 +558,7 @@ class WC_WCCOM_Site_Installer {
 		$related_plugins = array_filter(
 			$plugins,
 			function( $key ) use ( $plugin_folder ) {
-				return strpos( $key, $plugin_folder . '/' ) === 0;
+				return str_starts_with( $key, $plugin_folder . '/' )  ;
 			},
 			ARRAY_FILTER_USE_KEY
 		);

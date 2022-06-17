@@ -88,10 +88,10 @@ class WC_Customer_Data_Store extends WC_Data_Store_WP implements WC_Customer_Dat
 		$table_prefix = $wpdb->prefix ? $wpdb->prefix : 'wp_';
 
 		return ! in_array( $meta->meta_key, $this->internal_meta_keys, true )
-			&& 0 !== strpos( $meta->meta_key, '_woocommerce_persistent_cart' )
-			&& 0 !== strpos( $meta->meta_key, 'closedpostboxes_' )
-			&& 0 !== strpos( $meta->meta_key, 'metaboxhidden_' )
-			&& 0 !== strpos( $meta->meta_key, 'manageedit-' )
+			&&   !str_starts_with( $meta->meta_key, '_woocommerce_persistent_cart' )
+			&&   !str_starts_with( $meta->meta_key, 'closedpostboxes_' )
+			&&   !str_starts_with( $meta->meta_key, 'metaboxhidden_' )
+			&&   !str_starts_with( $meta->meta_key, 'manageedit-' )
 			&& ! strstr( $meta->meta_key, $table_prefix )
 			&& 0 !== stripos( $meta->meta_key, 'wp_' );
 	}

@@ -201,7 +201,7 @@ class WC_WCCOM_Site {
 			$rest_prefix = trailingslashit( rest_get_url_prefix() );
 		}
 
-		return false !== strpos( $route, $rest_prefix . 'wccom-site/' );
+		return   str_contains( $route, $rest_prefix . 'wccom-site/' );
 	}
 
 	/**

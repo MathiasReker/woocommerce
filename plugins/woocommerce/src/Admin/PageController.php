@@ -186,7 +186,7 @@ class PageController {
 				if ( isset( $this->pages[ $parent_id ] ) ) {
 					$parent = $this->pages[ $parent_id ];
 
-					if ( 0 === strpos( $parent['path'], self::PAGE_ROOT ) ) {
+					if (   str_starts_with( $parent['path'], self::PAGE_ROOT ) ) {
 						$parent['path'] = 'admin.php?page=' . $parent['path'];
 					}
 
@@ -265,7 +265,7 @@ class PageController {
 			'product' === $current_screen->post_type
 		) {
 			// Editing a product attribute.
-			if ( 0 === strpos( $current_screen->taxonomy, 'pa_' ) ) {
+			if (   str_starts_with( $current_screen->taxonomy, 'pa_' ) ) {
 				$screen_pieces = array( 'product_page_product_attribute-edit' );
 			}
 
@@ -446,7 +446,7 @@ class PageController {
 
 		$options = wp_parse_args( $options, $defaults );
 
-		if ( 0 !== strpos( $options['path'], self::PAGE_ROOT ) ) {
+		if (   !str_starts_with( $options['path'], self::PAGE_ROOT ) ) {
 			$options['path'] = self::PAGE_ROOT . '&path=' . $options['path'];
 		}
 

@@ -28,11 +28,11 @@ function checkString( $output, $expected, $action, $message = false ) {
 		break;
 
 	case 'contain':
-		$r = false !== strpos( $output, $expected );
+		$r =   str_contains( $output, $expected );
 		break;
 
 	case 'not contain':
-		$r = false === strpos( $output, $expected );
+		$r =   !str_contains( $output, $expected );
 		break;
 
 	default:

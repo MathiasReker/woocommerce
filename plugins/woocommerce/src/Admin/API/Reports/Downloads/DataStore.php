@@ -286,7 +286,7 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 			$this->add_sql_clause( 'order_by', $order_by );
 		}
 
-		if ( false !== strpos( $order_by, '_products' ) ) {
+		if (   str_contains( $order_by, '_products' ) ) {
 			$this->subquery->add_sql_clause( 'join', "JOIN {$wpdb->posts} AS _products ON product_permissions.product_id = _products.ID" );
 		}
 

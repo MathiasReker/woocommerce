@@ -41,7 +41,7 @@ class WC_API extends WC_Legacy_API {
 		}
 		if ( method_exists( \Automattic\WooCommerce\RestApi\Server::class, 'get_path' ) ) {
 			$path = \Automattic\WooCommerce\RestApi\Server::get_path();
-			if ( 0 === strpos( $path, __DIR__ ) ) {
+			if (   str_starts_with( $path, __DIR__ ) ) {
 				// We are loading API from included version.
 				return WC()->version;
 			}

@@ -157,7 +157,7 @@ class WC_Post_Data {
 	 * @param  string $taxonomy Taxonomy slug.
 	 */
 	public static function edit_term( $term_id, $tt_id, $taxonomy ) {
-		if ( strpos( $taxonomy, 'pa_' ) === 0 ) {
+		if ( str_starts_with( $taxonomy, 'pa_' )   ) {
 			self::$editing_term = get_term_by( 'id', $term_id, $taxonomy );
 		} else {
 			self::$editing_term = null;
@@ -172,7 +172,7 @@ class WC_Post_Data {
 	 * @param  string $taxonomy Taxonomy slug.
 	 */
 	public static function edited_term( $term_id, $tt_id, $taxonomy ) {
-		if ( ! is_null( self::$editing_term ) && strpos( $taxonomy, 'pa_' ) === 0 ) {
+		if ( ! is_null( self::$editing_term ) && str_starts_with( $taxonomy, 'pa_' )   ) {
 			$edited_term = get_term_by( 'id', $term_id, $taxonomy );
 
 			if ( $edited_term->slug !== self::$editing_term->slug ) {

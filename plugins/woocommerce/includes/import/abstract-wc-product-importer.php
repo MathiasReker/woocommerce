@@ -564,7 +564,7 @@ abstract class WC_Product_Importer implements WC_Importer_Interface {
 		$base_url   = $upload_dir['baseurl'] . '/';
 
 		// Check first if attachment is inside the WordPress uploads directory, or we're given a filename only.
-		if ( false !== strpos( $url, $base_url ) || false === strpos( $url, '://' ) ) {
+		if (   str_contains( $url, $base_url ) ||   !str_contains( $url, '://' ) ) {
 			// Search for yyyy/mm/slug.extension or slug.extension - remove the base URL.
 			$file = str_replace( $base_url, '', $url );
 			$args = array(

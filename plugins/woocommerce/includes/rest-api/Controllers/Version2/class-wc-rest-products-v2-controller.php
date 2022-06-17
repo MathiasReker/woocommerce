@@ -496,7 +496,7 @@ class WC_REST_Products_V2_Controller extends WC_REST_CRUD_Controller {
 
 		if ( $product->is_type( 'variable' ) ) {
 			foreach ( array_filter( (array) $product->get_default_attributes(), 'strlen' ) as $key => $value ) {
-				if ( 0 === strpos( $key, 'pa_' ) ) {
+				if (   str_starts_with( $key, 'pa_' ) ) {
 					$default[] = array(
 						'id'     => wc_attribute_taxonomy_id_by_name( $key ),
 						'name'   => $this->get_attribute_taxonomy_name( $key, $product ),
@@ -559,7 +559,7 @@ class WC_REST_Products_V2_Controller extends WC_REST_CRUD_Controller {
 				}
 
 				// Taxonomy-based attributes are prefixed with `pa_`, otherwise simply `attribute_`.
-				if ( 0 === strpos( $attribute_name, 'attribute_pa_' ) ) {
+				if (   str_starts_with( $attribute_name, 'attribute_pa_' ) ) {
 					$option_term  = get_term_by( 'slug', $attribute, $name );
 					$attributes[] = array(
 						'id'     => wc_attribute_taxonomy_id_by_name( $name ),

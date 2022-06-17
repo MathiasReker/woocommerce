@@ -538,7 +538,7 @@ class WC_Admin_List_Table_Orders extends WC_Admin_List_Table {
 					$changed++;
 				}
 			}
-		} elseif ( false !== strpos( $action, 'mark_' ) ) {
+		} elseif (   str_contains( $action, 'mark_' ) ) {
 			$order_statuses = wc_get_order_statuses();
 			$new_status     = substr( $action, 5 ); // Get the status name from action.
 			$report_action  = 'marked_' . $new_status;

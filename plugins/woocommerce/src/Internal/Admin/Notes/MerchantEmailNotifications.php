@@ -57,7 +57,7 @@ class MerchantEmailNotifications {
 		$url = $triggered_action->query;
 
 		// We will use "wp_safe_redirect" when it's an internal redirect.
-		if ( strpos( $url, 'http' ) === false ) {
+		if ( !str_contains( $url, 'http' )   ) {
 			wp_safe_redirect( $url );
 		} else {
 			header( 'Location: ' . $url );

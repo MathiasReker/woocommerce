@@ -44,8 +44,8 @@ class WC_Admin_Tests_API_Init extends WC_REST_Unit_Test_Case {
 		global $wpdb;
 
 		if (
-			0 === strpos( $query, 'REPLACE INTO' ) &&
-			false !== strpos( $query, OrdersStatsDataStore::get_db_table_name() )
+			  str_starts_with( $query, 'REPLACE INTO' ) &&
+			  str_contains( $query, OrdersStatsDataStore::get_db_table_name() )
 		) {
 			remove_filter( 'query', array( $this, 'filter_order_query' ) );
 			return "DESCRIBE $wpdb->posts"; // Execute any random query.

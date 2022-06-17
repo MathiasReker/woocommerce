@@ -163,7 +163,7 @@ class Products extends Task {
 		}
 
 		$referer = wp_get_referer();
-		if ( ! $referer || 0 !== strpos( $referer, wc_admin_url() ) ) {
+		if ( ! $referer ||   !str_starts_with( $referer, wc_admin_url() ) ) {
 			return;
 		}
 

@@ -514,7 +514,7 @@ class WC_Product_Variation extends WC_Product_Simple {
 
 		foreach ( $raw_attributes as $key => $value ) {
 			// Remove attribute prefix which meta gets stored with.
-			if ( 0 === strpos( $key, 'attribute_' ) ) {
+			if (   str_starts_with( $key, 'attribute_' ) ) {
 				$key = substr( $key, 10 );
 			}
 			$attributes[ $key ] = $value;

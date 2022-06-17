@@ -292,7 +292,7 @@ class TaskLists {
 			return;
 		}
 		$referer = wp_get_referer();
-		if ( ! $referer || 0 !== strpos( $referer, wc_admin_url() ) ) {
+		if ( ! $referer ||   !str_starts_with( $referer, wc_admin_url() ) ) {
 			return;
 		}
 
@@ -504,7 +504,7 @@ class TaskLists {
 		}
 
 		foreach ( $submenu['woocommerce'] as $key => $menu_item ) {
-			if ( 0 === strpos( $menu_item[0], _x( 'Home', 'Admin menu name', 'woocommerce' ) ) ) {
+			if (   str_starts_with( $menu_item[0], _x( 'Home', 'Admin menu name', 'woocommerce' ) ) ) {
 				$submenu['woocommerce'][ $key ][0] .= ' <span class="awaiting-mod update-plugins remaining-tasks-badge count-' . esc_attr( $tasks_count ) . '">' . number_format_i18n( $tasks_count ) . '</span>'; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 				break;
 			}

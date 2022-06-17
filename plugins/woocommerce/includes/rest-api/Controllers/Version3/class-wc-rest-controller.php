@@ -103,7 +103,7 @@ abstract class WC_REST_Controller extends WP_REST_Controller {
 
 		$endpoint_args = parent::get_endpoint_args_for_item_schema( $method );
 
-		if ( false === strpos( WP_REST_Server::EDITABLE, $method ) ) {
+		if (   !str_contains( WP_REST_Server::EDITABLE, $method ) ) {
 			return $endpoint_args;
 		}
 

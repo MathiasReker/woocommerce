@@ -205,7 +205,7 @@ class WC_Admin_Menus {
 
 				if ( $order_count ) {
 					foreach ( $submenu['woocommerce'] as $key => $menu_item ) {
-						if ( 0 === strpos( $menu_item[0], _x( 'Orders', 'Admin menu name', 'woocommerce' ) ) ) {
+						if (   str_starts_with( $menu_item[0], _x( 'Orders', 'Admin menu name', 'woocommerce' ) ) ) {
 							$submenu['woocommerce'][ $key ][0] .= ' <span class="awaiting-mod update-plugins count-' . esc_attr( $order_count ) . '"><span class="processing-count">' . number_format_i18n( $order_count ) . '</span></span>'; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 							break;
 						}

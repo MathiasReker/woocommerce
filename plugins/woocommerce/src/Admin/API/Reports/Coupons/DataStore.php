@@ -127,12 +127,12 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 
 		if ( 'inner' === $from_arg ) {
 			$this->subquery->clear_sql_clause( 'join' );
-			if ( false !== strpos( $order_by_clause, '_coupons' ) ) {
+			if (   str_contains( $order_by_clause, '_coupons' ) ) {
 				$this->subquery->add_sql_clause( 'join', $join );
 			}
 		} else {
 			$this->clear_sql_clause( 'join' );
-			if ( false !== strpos( $order_by_clause, '_coupons' ) ) {
+			if (   str_contains( $order_by_clause, '_coupons' ) ) {
 				$this->add_sql_clause( 'join', $join );
 			}
 		}

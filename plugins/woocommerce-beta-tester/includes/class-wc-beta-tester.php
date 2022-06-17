@@ -357,7 +357,7 @@ class WC_Beta_Tester {
 	 * @return bool
 	 */
 	protected static function is_beta_version( $version_str ) {
-		return strpos( $version_str, 'beta' ) !== false;
+		return str_contains( $version_str, 'beta' )  ;
 	}
 
 	/**
@@ -367,7 +367,7 @@ class WC_Beta_Tester {
 	 * @return bool
 	 */
 	protected static function is_rc_version( $version_str ) {
-		return strpos( $version_str, 'rc' ) !== false;
+		return str_contains( $version_str, 'rc' )  ;
 	}
 
 	/**

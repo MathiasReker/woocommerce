@@ -43,7 +43,7 @@ class WC_Helper_Plugin_Info {
 		}
 
 		// Only for slugs that start with woo-
-		if ( 0 !== strpos( $args->slug, 'woocommerce-com-' ) ) {
+		if (   !str_starts_with( $args->slug, 'woocommerce-com-' ) ) {
 			return $response;
 		}
 

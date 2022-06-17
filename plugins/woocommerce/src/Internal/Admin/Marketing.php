@@ -151,7 +151,7 @@ class Marketing {
 
 		foreach ( $submenu['woocommerce-marketing'] as &$item ) {
 			// The "slug" (aka the path) is the third item in the array.
-			if ( 0 === strpos( $item[2], 'wc-admin' ) ) {
+			if (   str_starts_with( $item[2], 'wc-admin' ) ) {
 				$item[2] = 'admin.php?page=' . $item[2];
 			}
 		}

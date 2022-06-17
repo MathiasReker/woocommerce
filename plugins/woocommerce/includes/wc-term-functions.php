@@ -97,7 +97,7 @@ function wc_terms_clauses( $clauses, $taxonomies, $args ) {
 	global $wpdb;
 
 	// No need to filter when counting.
-	if ( strpos( $clauses['fields'], 'COUNT(*)' ) !== false ) {
+	if ( str_contains( $clauses['fields'], 'COUNT(*)' )   ) {
 		return $clauses;
 	}
 

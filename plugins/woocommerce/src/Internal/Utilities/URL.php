@@ -300,7 +300,7 @@ class URL {
 		$parent_path .= '/';
 
 		// For absolute paths, apply a leading slash (does not apply if we have a root path).
-		if ( $this->is_absolute && 0 !== strpos( $parent_path, '/' ) ) {
+		if ( $this->is_absolute &&   !str_starts_with( $parent_path, '/' ) ) {
 			$parent_path = '/' . $parent_path;
 		}
 

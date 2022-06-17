@@ -320,7 +320,7 @@ class WC_Settings_Tax extends WC_Settings_Page {
 		// Loop posted fields.
 		// phpcs:disable WordPress.Security.NonceVerification.Missing
 		foreach ( $posted_countries as $key => $value ) {
-			$mode     = ( 0 === strpos( $key, 'new-' ) ) ? 'insert' : 'update';
+			$mode     = (   str_starts_with( $key, 'new-' ) ) ? 'insert' : 'update';
 			$tax_rate = $this->get_posted_tax_rate( $key, $index ++, $current_class );
 
 			if ( 'insert' === $mode ) {

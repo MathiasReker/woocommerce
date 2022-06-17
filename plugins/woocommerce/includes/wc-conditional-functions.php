@@ -378,7 +378,7 @@ if ( ! function_exists( 'wc_prices_include_tax' ) ) {
 function wc_is_valid_url( $url ) {
 
 	// Must start with http:// or https://.
-	if ( 0 !== strpos( $url, 'http://' ) && 0 !== strpos( $url, 'https://' ) ) {
+	if (   !str_starts_with( $url, 'http://' ) &&   !str_starts_with( $url, 'https://' ) ) {
 		return false;
 	}
 

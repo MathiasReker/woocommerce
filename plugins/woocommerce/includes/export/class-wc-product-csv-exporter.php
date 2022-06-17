@@ -663,7 +663,7 @@ class WC_Product_CSV_Exporter extends WC_CSV_Batch_Exporter {
 					} else {
 						$row[ 'attributes:name' . $i ] = wc_attribute_label( $attribute_name, $product );
 
-						if ( 0 === strpos( $attribute_name, 'pa_' ) ) {
+						if (   str_starts_with( $attribute_name, 'pa_' ) ) {
 							$option_term = get_term_by( 'slug', $attribute, $attribute_name ); // @codingStandardsIgnoreLine.
 							$row[ 'attributes:value' . $i ]    = $option_term && ! is_wp_error( $option_term ) ? str_replace( ',', '\\,', $option_term->name ) : str_replace( ',', '\\,', $attribute );
 							$row[ 'attributes:taxonomy' . $i ] = 1;
@@ -680,7 +680,7 @@ class WC_Product_CSV_Exporter extends WC_CSV_Batch_Exporter {
 						$this->column_names[ 'attributes:default' . $i ] = sprintf( __( 'Attribute %d default', 'woocommerce' ), $i );
 						$default_value                                   = $default_attributes[ sanitize_title( $attribute_name ) ];
 
-						if ( 0 === strpos( $attribute_name, 'pa_' ) ) {
+						if (   str_starts_with( $attribute_name, 'pa_' ) ) {
 							$option_term = get_term_by( 'slug', $default_value, $attribute_name ); // @codingStandardsIgnoreLine.
 							$row[ 'attributes:default' . $i ] = $option_term && ! is_wp_error( $option_term ) ? $option_term->name : $default_value;
 						} else {
