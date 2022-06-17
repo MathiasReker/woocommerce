@@ -47,10 +47,10 @@ class NotRuleProcessor implements RuleProcessorInterface {
 	 * @return bool Pass/fail.
 	 */
 	public function validate( $rule ) {
-		if ( ! isset( $rule->operand ) ) {
-			return false;
-		}
+		return ! ( ! isset( $rule->operand ) ) 
+			 
+		
 
-		return true;
+		 ;
 	}
 }

@@ -105,11 +105,11 @@ class WC_Payment_Token_CC extends WC_Payment_Token {
 			return false;
 		}
 
-		if ( 2 !== strlen( $this->get_expiry_month( 'edit' ) ) ) {
-			return false;
-		}
+		return ! ( 2 !== strlen( $this->get_expiry_month( 'edit' ) ) ) 
+			 
+		
 
-		return true;
+		 ;
 	}
 
 	/**

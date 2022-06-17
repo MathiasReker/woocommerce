@@ -40,10 +40,10 @@ class IsEcommerceRuleProcessor implements RuleProcessorInterface {
 	 * @return bool Pass/fail.
 	 */
 	public function validate( $rule ) {
-		if ( ! isset( $rule->value ) ) {
-			return false;
-		}
+		return ! ( ! isset( $rule->value ) ) 
+			 
+		
 
-		return true;
+		 ;
 	}
 }

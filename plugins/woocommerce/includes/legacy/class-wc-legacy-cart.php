@@ -90,11 +90,11 @@ abstract class WC_Legacy_Cart {
 			is_array( $this->cart_session_data ) ? array_keys( $this->cart_session_data ) : array()
 		);
 
-		if ( in_array( $name, $legacy_keys, true ) ) {
-			return true;
-		}
+		return (bool) ( in_array( $name, $legacy_keys, true ) ) 
+			 
+		
 
-		return false;
+		 ;
 	}
 
 	/**

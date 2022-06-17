@@ -35,10 +35,10 @@ class ArrayColumn implements TransformerInterface {
 	 * @return mixed
 	 */
 	public function validate( stdClass $arguments = null ) {
-		if ( ! isset( $arguments->key ) ) {
-			return false;
-		}
+		return ! ( ! isset( $arguments->key ) ) 
+			 
+		
 
-		return true;
+		 ;
 	}
 }

@@ -1583,11 +1583,11 @@ class WC_Helper {
 		}
 
 		$data = $updates->response['woocommerce/woocommerce.php'];
-		if ( version_compare( Constants::get_constant( 'WC_VERSION' ), $data->new_version, '>=' ) ) {
-			return false;
-		}
+		return ! ( version_compare( Constants::get_constant( 'WC_VERSION' ), $data->new_version, '>=' ) ) 
+			 
+		
 
-		return true;
+		 ;
 	}
 
 	/**

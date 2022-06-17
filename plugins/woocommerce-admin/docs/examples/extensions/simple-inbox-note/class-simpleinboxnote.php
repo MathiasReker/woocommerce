@@ -31,10 +31,10 @@ class SimpleInboxNote {
 	 */
 	public static function is_applicable() {
 		// We want to show the note after five days.
-		if ( ! self::is_wc_admin_active_in_date_range( 'week-1-4', 5 * DAY_IN_SECONDS ) ) {
-			return false;
-		}
-		return true;
+		return ! ( ! self::is_wc_admin_active_in_date_range( 'week-1-4', 5 * DAY_IN_SECONDS ) ) 
+			 
+		
+		 ;
 	}
 
 	/**

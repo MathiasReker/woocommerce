@@ -655,11 +655,11 @@ class WC_Checkout {
 			return true;
 		}
 
-		if ( 'account' === $fieldset_key && ( is_user_logged_in() || ( ! $this->is_registration_required() && empty( $data['createaccount'] ) ) ) ) {
-			return true;
-		}
+		return (bool) ( 'account' === $fieldset_key && ( is_user_logged_in() || ( ! $this->is_registration_required() && empty( $data['createaccount'] ) ) ) ) 
+			 
+		
 
-		return false;
+		 ;
 	}
 
 	/**

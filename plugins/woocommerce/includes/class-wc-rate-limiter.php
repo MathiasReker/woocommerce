@@ -117,12 +117,12 @@ class WC_Rate_Limiter {
 		}
 
 		// Before the next run is allowed, retry forbidden.
-		if ( time() <= $next_try_allowed_at ) {
-			return true;
-		}
+		return (bool) ( time() <= $next_try_allowed_at ) 
+			 
+		
 
 		// After the next run is allowed, retry allowed.
-		return false;
+		 ;
 	}
 
 	/**

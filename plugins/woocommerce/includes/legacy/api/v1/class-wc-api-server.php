@@ -751,11 +751,11 @@ class WC_API_Server {
 		}
 
 		// check ACCEPT header, only 'application/json' is acceptable, see RFC 4627
-		if ( isset( $this->headers['ACCEPT'] ) && 'application/json' == $this->headers['ACCEPT'] ) {
-			return true;
-		}
+		return (bool) ( isset( $this->headers['ACCEPT'] ) && 'application/json' == $this->headers['ACCEPT'] ) 
+			 
+		
 
-		return false;
+		 ;
 	}
 
 	/**
@@ -773,10 +773,10 @@ class WC_API_Server {
 		}
 
 		// check headers, 'application/xml' or 'text/xml' are acceptable, see RFC 2376
-		if ( isset( $this->headers['ACCEPT'] ) && ( 'application/xml' == $this->headers['ACCEPT'] || 'text/xml' == $this->headers['ACCEPT'] ) ) {
-			return true;
-		}
+		return (bool) ( isset( $this->headers['ACCEPT'] ) && ( 'application/xml' == $this->headers['ACCEPT'] || 'text/xml' == $this->headers['ACCEPT'] ) ) 
+			 
+		
 
-		return false;
+		 ;
 	}
 }

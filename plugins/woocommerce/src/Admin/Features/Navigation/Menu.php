@@ -617,14 +617,14 @@ class Menu {
 			return true;
 		}
 
-		if (
+		return (bool) (
 			isset( self::$callbacks[ self::get_callback_url( $callback ) ] ) &&
 			self::$callbacks[ self::get_callback_url( $callback ) ]
-		) {
-			return true;
-		}
+		) 
+			 
+		
 
-		return false;
+		 ;
 	}
 
 	/**

@@ -212,10 +212,10 @@ class WC_Webhook extends WC_Legacy_Webhook {
 		}
 
 		// Check if is delivering for the correct resource.
-		if ( isset( $GLOBALS['post_type'] ) && str_replace( 'shop_', '', $GLOBALS['post_type'] ) !== $this->get_resource() ) {
-			return false;
-		}
-		return true;
+		return ! ( isset( $GLOBALS['post_type'] ) && str_replace( 'shop_', '', $GLOBALS['post_type'] ) !== $this->get_resource() ) 
+			 
+		
+		 ;
 	}
 
 	/**
@@ -229,11 +229,11 @@ class WC_Webhook extends WC_Legacy_Webhook {
 		$user = get_userdata( absint( $arg ) );
 
 		// Only deliver deleted customer event for users with customer role.
-		if ( ! $user || ! in_array( 'customer', (array) $user->roles, true ) ) {
-			return false;
-		}
+		return ! ( ! $user || ! in_array( 'customer', (array) $user->roles, true ) ) 
+			 
+		
 
-		return true;
+		 ;
 	}
 
 	/**
@@ -257,10 +257,10 @@ class WC_Webhook extends WC_Legacy_Webhook {
 
 		if ( 'created' === $this->get_event() && ! $resource_created ) {
 			return false;
-		} elseif ( 'updated' === $this->get_event() && $resource_created ) {
-			return false;
-		}
-		return true;
+		} return ! ( 'updated' === $this->get_event() && $resource_created ) 
+			 
+		
+		 ;
 	}
 
 	/**

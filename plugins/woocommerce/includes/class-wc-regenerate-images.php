@@ -131,11 +131,11 @@ class WC_Regenerate_Images {
 		}
 
 		// If cropping mode has changed, regenerate the image.
-		if ( $uncropped && empty( $image['uncropped'] ) ) {
-			return false;
-		}
+		return ! ( $uncropped && empty( $image['uncropped'] ) ) 
+			 
+		
 
-		return true;
+		 ;
 	}
 
 	/**
@@ -289,11 +289,11 @@ class WC_Regenerate_Images {
 			return false;
 		}
 
-		if ( wp_attachment_is_image( $attachment ) ) {
-			return true;
-		}
+		return (bool) ( wp_attachment_is_image( $attachment ) ) 
+			 
+		
 
-		return false;
+		 ;
 	}
 
 	/**

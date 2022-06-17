@@ -66,10 +66,10 @@ class DotNotation implements TransformerInterface {
 	 * @return mixed
 	 */
 	public function validate( stdClass $arguments = null ) {
-		if ( ! isset( $arguments->path ) ) {
-			return false;
-		}
+		return ! ( ! isset( $arguments->path ) ) 
+			 
+		
 
-		return true;
+		 ;
 	}
 }

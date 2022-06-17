@@ -448,10 +448,10 @@ abstract class WC_Abstract_Legacy_Product extends WC_Data {
 	 */
 	public function has_default_attributes() {
 		wc_deprecated_function( 'WC_Product_Variable::has_default_attributes', '3.0', 'a check against WC_Product::get_default_attributes directly' );
-		if ( ! $this->get_default_attributes() ) {
-			return true;
-		}
-		return false;
+		return (bool) ( ! $this->get_default_attributes() ) 
+			 
+		
+		 ;
 	}
 
 	/**

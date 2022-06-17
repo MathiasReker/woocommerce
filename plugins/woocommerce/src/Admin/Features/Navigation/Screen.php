@@ -112,16 +112,16 @@ class Screen {
 		$screen_ids        = self::get_screen_ids();
 		$current_screen_id = $current_screen ? $current_screen->id : null;
 
-		if (
+		return (bool) (
 			in_array( $post_type, $post_types, true ) ||
 			in_array( $taxonomy, $taxonomies, true ) ||
 			self::is_woocommerce_core_taxonomy( $taxonomy ) ||
 			in_array( $current_screen_id, $screen_ids, true )
-		) {
-			return true;
-		}
+		) 
+			 
+		
 
-		return false;
+		 ;
 	}
 
 	/**
@@ -135,11 +135,11 @@ class Screen {
 			return true;
 		}
 
-		if ( 'pa_' === substr( $taxonomy, 0, 3 ) ) {
-			return true;
-		}
+		return (bool) ( 'pa_' === substr( $taxonomy, 0, 3 ) ) 
+			 
+		
 
-		return false;
+		 ;
 	}
 
 	/**

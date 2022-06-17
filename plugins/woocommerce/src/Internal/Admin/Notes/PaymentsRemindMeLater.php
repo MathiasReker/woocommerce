@@ -50,12 +50,12 @@ class PaymentsRemindMeLater {
 
 		// Less than 3 days since viewing welcome page.
 		$view_timestamp = get_option( 'wc_pay_welcome_page_viewed_timestamp', false );
-		if ( ! $view_timestamp ||
+		return ! ( ! $view_timestamp ||
 			( time() - $view_timestamp < 3 * DAY_IN_SECONDS )
-		) {
-			return false;
-		}
-		return true;
+		) 
+			 
+		
+		 ;
 	}
 
 

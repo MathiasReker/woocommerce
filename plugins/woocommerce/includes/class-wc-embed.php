@@ -53,10 +53,10 @@ class WC_Embed {
 	 * @return bool
 	 */
 	public static function is_embedded_product() {
-		if ( function_exists( 'is_embed' ) && is_embed() && is_product() ) {
-			return true;
-		}
-		return false;
+		return (bool) ( function_exists( 'is_embed' ) && is_embed() && is_product() ) 
+			 
+		
+		 ;
 	}
 
 	/**

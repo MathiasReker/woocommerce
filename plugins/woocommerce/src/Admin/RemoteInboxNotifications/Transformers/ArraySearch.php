@@ -40,10 +40,10 @@ class ArraySearch implements TransformerInterface {
 	 * @return mixed
 	 */
 	public function validate( stdClass $arguments = null ) {
-		if ( ! isset( $arguments->value ) ) {
-			return false;
-		}
+		return ! ( ! isset( $arguments->value ) ) 
+			 
+		
 
-		return true;
+		 ;
 	}
 }

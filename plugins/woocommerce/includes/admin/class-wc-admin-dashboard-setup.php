@@ -187,11 +187,11 @@ if ( ! class_exists( 'WC_Admin_Dashboard_Setup', false ) ) :
 				return false;
 			}
 
-			if ( ! $this->get_task_list() || $this->get_task_list()->is_complete() || $this->get_task_list()->is_hidden() ) {
-				return false;
-			}
+			return ! ( ! $this->get_task_list() || $this->get_task_list()->is_complete() || $this->get_task_list()->is_hidden() ) 
+				 
+			
 
-			return true;
+			 ;
 		}
 
 	}

@@ -152,11 +152,11 @@ abstract class WC_CSV_Exporter {
 			return true;
 		}
 
-		if ( in_array( $column_id, $columns_to_export, true ) || 'meta' === $column_id ) {
-			return true;
-		}
+		return (bool) ( in_array( $column_id, $columns_to_export, true ) || 'meta' === $column_id ) 
+			 
+		
 
-		return false;
+		 ;
 	}
 
 	/**

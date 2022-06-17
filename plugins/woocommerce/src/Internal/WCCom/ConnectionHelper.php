@@ -21,9 +21,9 @@ final class ConnectionHelper {
 	 */
 	public static function is_connected() {
 		$helper_options    = get_option( 'woocommerce_helper_data', array() );
-		if ( array_key_exists( 'auth', $helper_options ) && ! empty( $helper_options['auth'] ) ) {
-			return true;
-		}
-		return false;
+		return (bool) ( array_key_exists( 'auth', $helper_options ) && ! empty( $helper_options['auth'] ) ) 
+			 
+		
+		 ;
 	}
 }

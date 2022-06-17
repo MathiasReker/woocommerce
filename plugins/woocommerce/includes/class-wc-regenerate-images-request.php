@@ -70,11 +70,11 @@ class WC_Regenerate_Images_Request extends WC_Background_Process {
 			return false;
 		}
 
-		if ( wp_attachment_is_image( $attachment ) ) {
-			return true;
-		}
+		return (bool) ( wp_attachment_is_image( $attachment ) ) 
+			 
+		
 
-		return false;
+		 ;
 	}
 
 	/**

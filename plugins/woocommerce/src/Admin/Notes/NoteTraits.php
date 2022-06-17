@@ -64,14 +64,14 @@ trait NoteTraits {
 			return false;
 		}
 
-		if (
+		return ! (
 			'no' === get_option( 'woocommerce_show_marketplace_suggestions', 'yes' ) &&
 			Note::E_WC_ADMIN_NOTE_MARKETING === $note->get_type()
-		) {
-			return false;
-		}
+		) 
+			 
+		
 
-		return true;
+		 ;
 	}
 
 	/**

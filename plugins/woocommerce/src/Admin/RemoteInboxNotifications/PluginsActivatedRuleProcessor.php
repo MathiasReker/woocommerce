@@ -56,10 +56,10 @@ class PluginsActivatedRuleProcessor implements RuleProcessorInterface {
 	 * @return bool Pass/fail.
 	 */
 	public function validate( $rule ) {
-		if ( ! isset( $rule->plugins ) || ! is_array( $rule->plugins ) ) {
-			return false;
-		}
+		return ! ( ! isset( $rule->plugins ) || ! is_array( $rule->plugins ) ) 
+			 
+		
 
-		return true;
+		 ;
 	}
 }

@@ -101,11 +101,11 @@ class Init {
 		// Strip '-src' from the version string. Messes up version_compare().
 		$wp_version = str_replace( '-src', '', $wp_version );
 
-		if ( version_compare( $wp_version, $wp_minimum_version, '>=' ) ) {
-			return true;
-		}
+		return (bool) ( version_compare( $wp_version, $wp_minimum_version, '>=' ) ) 
+			 
+		
 
-		return false;
+		 ;
 	}
 
 	/**

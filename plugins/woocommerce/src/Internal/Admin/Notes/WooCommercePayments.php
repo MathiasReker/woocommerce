@@ -158,11 +158,11 @@ class WooCommercePayments {
 
 		$activate_request = array( 'plugins' => self::PLUGIN_SLUG );
 		$result           = $installer->activate_plugins( $activate_request );
-		if ( is_wp_error( $result ) ) {
-			return false;
-		}
+		return ! ( is_wp_error( $result ) ) 
+			 
+		
 
-		return true;
+		 ;
 	}
 
 	/**

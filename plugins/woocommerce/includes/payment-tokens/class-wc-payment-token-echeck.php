@@ -76,10 +76,10 @@ class WC_Payment_Token_ECheck extends WC_Payment_Token {
 			return false;
 		}
 
-		if ( ! $this->get_last4( 'edit' ) ) {
-			return false;
-		}
-		return true;
+		return ! ( ! $this->get_last4( 'edit' ) ) 
+			 
+		
+		 ;
 	}
 
 	/**

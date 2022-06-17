@@ -211,12 +211,12 @@ abstract class WP_Background_Process extends WP_Async_Request {
 	 * in a background process.
 	 */
 	protected function is_process_running() {
-		if ( get_site_transient( $this->identifier . '_process_lock' ) ) {
+		return (bool) ( get_site_transient( $this->identifier . '_process_lock' ) ) 
 			// Process already running.
-			return true;
-		}
+			 
+		
 
-		return false;
+		 ;
 	}
 
 	/**

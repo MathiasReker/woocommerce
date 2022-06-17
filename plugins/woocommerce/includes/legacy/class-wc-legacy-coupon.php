@@ -46,10 +46,10 @@ abstract class WC_Legacy_Coupon extends WC_Data {
 			'maximum_amount',
 			'customer_email',
 		);
-		if ( in_array( $key, $legacy_keys ) ) {
-			return true;
-		}
-		return false;
+		return (bool) ( in_array( $key, $legacy_keys ) ) 
+			 
+		
+		 ;
 	}
 
 	/**

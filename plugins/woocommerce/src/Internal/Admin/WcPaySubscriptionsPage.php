@@ -132,11 +132,11 @@ class WcPaySubscriptionsPage {
 		}
 
 		// Ineligible if store has not had any sales in the last 30 days.
-		if ( ! $this->get_store_recent_sales_eligibility() ) {
-			return false;
-		}
+		return ! ( ! $this->get_store_recent_sales_eligibility() ) 
+			 
+		
 
-		return true;
+		 ;
 	}
 
 	/**

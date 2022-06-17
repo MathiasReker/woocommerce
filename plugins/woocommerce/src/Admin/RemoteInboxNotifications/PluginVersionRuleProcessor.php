@@ -68,10 +68,10 @@ class PluginVersionRuleProcessor implements RuleProcessorInterface {
 			return false;
 		}
 
-		if ( ! isset( $rule->operator ) ) {
-			return false;
-		}
+		return ! ( ! isset( $rule->operator ) ) 
+			 
+		
 
-		return true;
+		 ;
 	}
 }

@@ -383,11 +383,11 @@ function wc_is_valid_url( $url ) {
 	}
 
 	// Must pass validation.
-	if ( ! filter_var( $url, FILTER_VALIDATE_URL ) ) {
-		return false;
-	}
+	return ! ( ! filter_var( $url, FILTER_VALIDATE_URL ) ) 
+		 
+	
 
-	return true;
+	 ;
 }
 
 /**
@@ -490,11 +490,11 @@ function wc_is_file_valid_csv( $file, $check_path = true ) {
 
 	$filetype = wp_check_filetype( $file, $valid_filetypes );
 
-	if ( in_array( $filetype['type'], $valid_filetypes, true ) ) {
-		return true;
-	}
+	return (bool) ( in_array( $filetype['type'], $valid_filetypes, true ) ) 
+		 
+	
 
-	return false;
+	 ;
 }
 
 /**

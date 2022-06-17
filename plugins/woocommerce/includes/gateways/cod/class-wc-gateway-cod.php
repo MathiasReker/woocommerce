@@ -184,12 +184,12 @@ class WC_Gateway_COD extends WC_Payment_Gateway {
 			if ( ! isset( $_REQUEST['tab'] ) || 'checkout' !== $_REQUEST['tab'] ) {
 				return false;
 			}
-			if ( ! isset( $_REQUEST['section'] ) || 'cod' !== $_REQUEST['section'] ) {
-				return false;
-			}
+			return ! ( ! isset( $_REQUEST['section'] ) || 'cod' !== $_REQUEST['section'] ) 
+				 
+			
 			// phpcs:enable WordPress.Security.NonceVerification
 
-			return true;
+			 ;
 		}
 
 		if ( Constants::is_true( 'REST_REQUEST' ) ) {

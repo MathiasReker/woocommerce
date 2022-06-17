@@ -55,10 +55,10 @@ class OrRuleProcessor implements RuleProcessorInterface {
 	 * @return bool Pass/fail.
 	 */
 	public function validate( $rule ) {
-		if ( ! isset( $rule->operands ) || ! is_array( $rule->operands ) ) {
-			return false;
-		}
+		return ! ( ! isset( $rule->operands ) || ! is_array( $rule->operands ) ) 
+			 
+		
 
-		return true;
+		 ;
 	}
 }

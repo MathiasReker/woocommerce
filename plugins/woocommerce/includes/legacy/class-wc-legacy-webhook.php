@@ -41,11 +41,11 @@ abstract class WC_Legacy_Webhook extends WC_Data {
 			'api_version',
 		);
 
-		if ( in_array( $key, $legacy_keys, true ) ) {
-			return true;
-		}
+		return (bool) ( in_array( $key, $legacy_keys, true ) ) 
+			 
+		
 
-		return false;
+		 ;
 	}
 
 	/**

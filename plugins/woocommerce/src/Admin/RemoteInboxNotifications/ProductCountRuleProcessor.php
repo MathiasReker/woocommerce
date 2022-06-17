@@ -61,10 +61,10 @@ class ProductCountRuleProcessor implements RuleProcessorInterface {
 			return false;
 		}
 
-		if ( ! isset( $rule->operation ) ) {
-			return false;
-		}
+		return ! ( ! isset( $rule->operation ) ) 
+			 
+		
 
-		return true;
+		 ;
 	}
 }

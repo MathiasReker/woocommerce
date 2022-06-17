@@ -44,10 +44,10 @@ class PublishAfterTimeRuleProcessor implements RuleProcessorInterface {
 	 * @return bool Pass/fail.
 	 */
 	public function validate( $rule ) {
-		if ( ! isset( $rule->publish_after ) ) {
-			return false;
-		}
+		return ! ( ! isset( $rule->publish_after ) ) 
+			 
+		
 
-		return true;
+		 ;
 	}
 }

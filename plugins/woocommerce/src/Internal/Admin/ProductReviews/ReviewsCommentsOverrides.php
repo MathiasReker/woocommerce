@@ -76,11 +76,11 @@ class ReviewsCommentsOverrides {
 		}
 
 		// Do not display if the current user has dismissed this notice.
-		if ( WC()->call_function( 'get_user_meta', get_current_user_id(), 'dismissed_' . static::REVIEWS_MOVED_NOTICE_ID . '_notice', true ) ) {
-			return false;
-		}
+		return ! ( WC()->call_function( 'get_user_meta', get_current_user_id(), 'dismissed_' . static::REVIEWS_MOVED_NOTICE_ID . '_notice', true ) ) 
+			 
+		
 
-		return true;
+		 ;
 	}
 
 	/**

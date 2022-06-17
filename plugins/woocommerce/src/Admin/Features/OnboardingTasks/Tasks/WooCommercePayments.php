@@ -151,9 +151,9 @@ class WooCommercePayments extends Task {
 			)
 		);
 		$woocommerce_payments_ids = array_search( 'woocommerce-payments', $suggestion_plugins, true );
-		if ( false !== $woocommerce_payments_ids ) {
-			return true;
-		}
-		return false;
+		return (bool) ( false !== $woocommerce_payments_ids ) 
+			 
+		
+		 ;
 	}
 }

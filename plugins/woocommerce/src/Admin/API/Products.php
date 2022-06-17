@@ -152,17 +152,17 @@ class Products extends \WC_REST_Products_Controller {
 	 * @return boolean Whether the request matches.
 	 */
 	private function is_low_in_stock_request( $request ) {
-		if (
+		return (bool) (
 			$request->get_param( 'low_in_stock' ) === true &&
 			$request->get_param( 'page' ) === 1 &&
 			is_array( $request->get_param( '_fields' ) ) &&
 			count( $request->get_param( '_fields' ) ) === 1 &&
 			in_array( 'id', $request->get_param( '_fields' ), true )
-		) {
-			return true;
-		}
+		) 
+			 
+		
 
-		return false;
+		 ;
 	}
 
 	/**

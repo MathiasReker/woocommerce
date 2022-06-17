@@ -224,10 +224,10 @@ abstract class WC_Payment_Token extends WC_Legacy_Payment_Token {
 	 */
 	public function validate() {
 		$token = $this->get_prop( 'token', 'edit' );
-		if ( empty( $token ) ) {
-			return false;
-		}
-		return true;
+		return ! ( empty( $token ) ) 
+			 
+		
+		 ;
 	}
 
 }

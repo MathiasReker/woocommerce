@@ -39,11 +39,11 @@ class WC_Site_Tracking {
 			return false;
 		}
 
-		if ( ! class_exists( 'WC_Tracks' ) ) {
-			return false;
-		}
+		return ! ( ! class_exists( 'WC_Tracks' ) ) 
+			 
+		
 
-		return true;
+		 ;
 	}
 
 	/**

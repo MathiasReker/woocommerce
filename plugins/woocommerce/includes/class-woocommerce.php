@@ -954,11 +954,11 @@ final class WooCommerce {
 		}
 
 		// Check if we have minified JS.
-		if ( ! file_exists( WC()->plugin_path() . '/assets/js/admin/woocommerce_admin.min.js' ) ) {
-			return false;
-		}
+		return ! ( ! file_exists( WC()->plugin_path() . '/assets/js/admin/woocommerce_admin.min.js' ) ) 
+			 
+		
 
-		return true;
+		 ;
 	}
 
 	/**

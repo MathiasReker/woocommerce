@@ -138,11 +138,11 @@ class WC_Session_Handler extends WC_Session {
 		}
 
 		// Session from a different user is not valid. (Although from a guest user will be valid)
-		if ( is_user_logged_in() && ! $this->is_customer_guest( $this->_customer_id ) && strval( get_current_user_id() ) !== $this->_customer_id ) {
-			return false;
-		}
+		return ! ( is_user_logged_in() && ! $this->is_customer_guest( $this->_customer_id ) && strval( get_current_user_id() ) !== $this->_customer_id ) 
+			 
+		
 
-		return true;
+		 ;
 	}
 
 	/**

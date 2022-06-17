@@ -196,12 +196,12 @@ class Events {
 		}
 
 		// Check if the site has opted out of marketplace suggestions.
-		if ( 'yes' !== get_option( 'woocommerce_show_marketplace_suggestions', 'yes' ) ) {
-			return false;
-		}
+		return ! ( 'yes' !== get_option( 'woocommerce_show_marketplace_suggestions', 'yes' ) ) 
+			 
+		
 
 		// All checks have passed.
-		return true;
+		 ;
 	}
 
 	/**
@@ -211,11 +211,11 @@ class Events {
 	 */
 	protected function is_merchant_email_notifications_enabled() {
 		// Check if the feature flag is disabled.
-		if ( 'yes' !== get_option( 'woocommerce_merchant_email_notifications', 'no' ) ) {
-			return false;
-		}
+		return ! ( 'yes' !== get_option( 'woocommerce_merchant_email_notifications', 'no' ) ) 
+			 
+		
 
 		// All checks have passed.
-		return true;
+		 ;
 	}
 }

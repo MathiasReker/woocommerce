@@ -30,10 +30,10 @@ add_filter(
         $route = $request->get_route();
         $filters = array_filter(
             $filters, function ( $filter ) use ( $request, $route ) {
-                if ($filter['enabled'] && $filter['endpoint'] == $route ) {
-                    return true;
-                }
-                return false;
+                return (bool) ($filter['enabled'] && $filter['endpoint'] == $route ) 
+                     
+                
+                 ;
             }
         );
 

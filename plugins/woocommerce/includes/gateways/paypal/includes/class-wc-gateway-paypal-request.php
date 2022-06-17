@@ -537,11 +537,11 @@ class WC_Gateway_Paypal_Request {
 	 * @return bool
 	 */
 	protected function currency_has_decimals( $currency ) {
-		if ( in_array( $currency, array( 'HUF', 'JPY', 'TWD' ), true ) ) {
-			return false;
-		}
+		return ! ( in_array( $currency, array( 'HUF', 'JPY', 'TWD' ), true ) ) 
+			 
+		
 
-		return true;
+		 ;
 	}
 
 	/**

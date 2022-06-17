@@ -336,11 +336,11 @@ class WC_Product_Variable extends WC_Product {
 		}
 
 		// Filter 'woocommerce_hide_invisible_variations' to optionally hide invisible variations (disabled variations and variations with empty price).
-		if ( apply_filters( 'woocommerce_hide_invisible_variations', true, $this->get_id(), $variation ) && ! $variation->variation_is_visible() ) {
-			return false;
-		}
+		return ! ( apply_filters( 'woocommerce_hide_invisible_variations', true, $this->get_id(), $variation ) && ! $variation->variation_is_visible() ) 
+			 
+		
 
-		return true;
+		 ;
 	}
 
 	/**

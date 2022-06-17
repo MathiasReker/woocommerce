@@ -617,11 +617,11 @@ function wc_product_has_unique_sku( $product_id, $sku ) {
 	$data_store = WC_Data_Store::load( 'product' );
 	$sku_found  = $data_store->is_existing_sku( $product_id, $sku );
 
-	if ( apply_filters( 'wc_product_has_unique_sku', $sku_found, $product_id, $sku ) ) {
-		return false;
-	}
+	return ! ( apply_filters( 'wc_product_has_unique_sku', $sku_found, $product_id, $sku ) ) 
+		 
+	
 
-	return true;
+	 ;
 }
 
 /**
